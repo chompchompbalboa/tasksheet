@@ -7,11 +7,19 @@ import styled from 'styled-components'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const BoilerplateStateless = () => <Container></Container>
+const Sidebar = () => <Container>Sidebar</Container>
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div``
+const Container = styled.div`
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 15vw;
+	height: 100vh;
+	overflow-y: scroll;
+	background-color: red;
+`
 
-export default BoilerplateStateless
+export default Sidebar

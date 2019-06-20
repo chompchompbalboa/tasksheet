@@ -16,10 +16,10 @@ class CreateOrganization extends Migration
         Schema::create('organizations', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->uuid('folder_id')->nullable();
+            $table->uuid('folderId')->nullable();
             $table->timestamps();
 
-            $table->foreign('folder_id')->references('id')->on('folders');
+            $table->foreign('folderId')->references('id')->on('folders');
         });
     }
 

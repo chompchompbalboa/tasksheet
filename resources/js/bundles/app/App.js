@@ -4,10 +4,20 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import Header from '@app/bundles/Header/Header'
+import Sidebar from '@app/bundles/Sidebar/Sidebar'
+import Sheets from '@app/bundles/Sheets/Sheets'
+
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const App = () => <Container></Container>
+const App = () => (
+	<Container>
+		<Sidebar />
+		<Header />
+		<Sheets />
+	</Container>
+)
 
 //-----------------------------------------------------------------------------
 // Styled Components

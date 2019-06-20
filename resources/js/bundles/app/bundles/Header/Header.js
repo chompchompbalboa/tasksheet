@@ -7,11 +7,11 @@ import styled from 'styled-components'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const BoilerplateStateless = () => <Container></Container>
+const Header = () => <Container>Header</Container>
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div``
 
-export default BoilerplateStateless
+export default Header

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFolder extends Migration
+class CreateUserLayout extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,14 @@ class CreateFolder extends Migration
      */
     public function up()
     {
-        Schema::create('folders', function (Blueprint $table) {
+        Schema::create('userLayout', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('folderId')->nullable();
-            $table->string('name');
+            $table->uuid('userId');
+            $table->string('sidebarWidth')->nullable();
             $table->timestamps();
-        });
 
-        Schema::table('folders', function (Blueprint $table) {
-          $table->foreign('folderId')->references('id')->on('folders')->onDelete('cascade');
-      });
+            $table->foreign('userId')->references('id')->on('users');
+        });
     }
 
     /**
@@ -32,6 +30,6 @@ class CreateFolder extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('folders');
+        Schema::dropIfExists('userLayout');
     }
 }

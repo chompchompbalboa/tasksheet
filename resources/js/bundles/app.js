@@ -13,28 +13,19 @@ import App from '@app/App'
 // Component
 //-----------------------------------------------------------------------------
 export default class Root extends Component {
+	store = createStore(reducers, applyMiddleware(thunkMiddleware))
 
-  store = createStore(
-    reducers,
-    applyMiddleware(
-      thunkMiddleware
-    )
-  )
-
-  render() {
-
-    return (
-      <ReduxProvider store={this.store}>
-        <App />
-      </ReduxProvider>
-    )
-  }
+	render() {
+		return (
+			<ReduxProvider store={this.store}>
+				<App />
+			</ReduxProvider>
+		)
+	}
 }
 //-----------------------------------------------------------------------------
 // Mount to DOM
 //-----------------------------------------------------------------------------
 if (document.getElementById('react-container')) {
-    ReactDOM.render(
-      <Root />,
-    document.getElementById('react-container'));
+	ReactDOM.render(<Root />, document.getElementById('react-container'))
 }

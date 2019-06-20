@@ -18,13 +18,15 @@ class CreateUser extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->uuid('organization_id')->nullable();
-            $table->uuid('folder_id')->nullable();
+            $table->uuid('organizationId')->nullable();
+            $table->uuid('folderId');
+            $table->uuid('userColorsId');
             $table->rememberToken();
             $table->timestamps();
 
-            $table->foreign('organization_id')->references('id')->on('organizations');
-            $table->foreign('folder_id')->references('id')->on('folders');
+            $table->foreign('organizationId')->references('id')->on('organizations');
+            $table->foreign('folderId')->references('id')->on('folders');
+            $table->foreign('userColorsId')->references('id')->on('userColors');
         });
     }
 
