@@ -13,13 +13,8 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(App\Models\User::class, function (Faker $faker) {
+$factory->define(App\Models\UserLayout::class, function (Faker $faker) {
     return [
-        'id' => '75e3c4f9-b261-3343-a320-8ee9fb0c931e',
-        'organizationid' => null,
-        'name' => 'Rocky Eastman',
-        'email' => 'rockye@dillonworks.com',
-        'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
-        'remember_token' => str_random(10)
+      'sidebarWidth' => 15
     ];
 });

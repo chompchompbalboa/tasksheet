@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateColors extends Migration
+class CreateUserColor extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateColors extends Migration
      */
     public function up()
     {
-        Schema::create('userColors', function (Blueprint $table) {
+        Schema::create('userColor', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('userId');
             $table->string('primary')->nullable();
@@ -32,6 +32,6 @@ class CreateColors extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('userColors');
+        Schema::dropIfExists('userColor');
     }
 }

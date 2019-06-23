@@ -18,8 +18,8 @@ Route::prefix('app')->group(function () {
 
   // Initial load
   Route::get('/', function () {
-    /*
     $user = Auth::loginUsingId('75e3c4f9-b261-3343-a320-8ee9fb0c931e', true);
+    /*
     $organization = $user->organization()->first();
 
     $userFolders = $user->folder()->get();
@@ -27,7 +27,7 @@ Route::prefix('app')->group(function () {
     $folders = $userFolders->merge($organizationFolders)->values()->all();
     */
     return view('app')->with([
-      //'user' => $user,
+      'user' => $user,
       //'organization' => $organization,
       //'folders' => $folders
     ]);

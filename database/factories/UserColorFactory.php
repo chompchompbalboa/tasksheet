@@ -13,7 +13,7 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(App\Models\UserColors::class, function (Faker $faker) {
+$factory->define(App\Models\UserColor::class, function (Faker $faker) {
     return [
         'primary' => 'red',
         'secondary' => 'green',
