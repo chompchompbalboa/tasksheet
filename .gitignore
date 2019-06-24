@@ -16,3 +16,4 @@ composer.lock
 package-lock.json
 **/.DS_STORE
 .editorconfig
+public/mix-manifest.json
