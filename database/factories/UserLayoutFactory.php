@@ -15,6 +15,6 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Models\UserLayout::class, function (Faker $faker) {
     return [
-      'sidebarWidth' => 15
+      'sidebarWidth' => 0.15
     ];
 });

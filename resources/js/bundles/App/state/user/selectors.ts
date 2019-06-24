@@ -1,10 +1,9 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import { combineReducers } from 'redux'
+import { AppState } from '@app/state'
 
 //-----------------------------------------------------------------------------
-// Combine Reducers
+// Select User Layout Sidebar Width
 //-----------------------------------------------------------------------------
-export default combineReducers({
-})
+export const selectUserLayoutSidebarWidth = (state: AppState) => state.user.layout.sidebarWidth

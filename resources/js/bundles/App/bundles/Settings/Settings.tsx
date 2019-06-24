@@ -12,6 +12,10 @@ const Header = () => <Container>Header</Container>
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div``
+const Container = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+`
 
 export default Header

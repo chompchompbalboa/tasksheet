@@ -1,30 +1,35 @@
 //-----------------------------------------------------------------------------
-// Imports
+// User
 //-----------------------------------------------------------------------------
-import * as React from 'react'
-import styled from 'styled-components'
+export interface User {
+	id: string
+	name: string
+	email: string
+	color: UserColor
+	layout: UserLayout
+}
 
-import Settings from '@app/bundles/Settings/Settings'
-import Sidebar from '@app/bundles/Sidebar/Sidebar'
-import Sheets from '@app/bundles/Sheets/Sheets'
+export interface UserColor {
+	id: string
+	primary: string
+	secondary: string
+	tertiary: string
+}
+
+export interface UserLayout {
+	id: string
+	sidebarWidth: number
+}
 
 //-----------------------------------------------------------------------------
-// Component
+// Set User
 //-----------------------------------------------------------------------------
-const App = () => (
-	<Container>
-		<Sidebar />
-		<Settings />
-		<Sheets />
-	</Container>
-)
+export const SET_USER = 'SET_USER'
+interface SetUserAction {
+	type: typeof SET_USER
+}
 
 //-----------------------------------------------------------------------------
-// Styled Components
+// Actions
 //-----------------------------------------------------------------------------
-const Container = styled.div`
-	width: 100vw;
-	min-height: 100vh;
-`
-
-export default App
+export type UserActions = SetUserAction
