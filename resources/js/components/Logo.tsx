@@ -1,32 +1,32 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import * as React from 'react'
 import { string } from 'prop-types'
 import styled from 'styled-components'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Logo = ({ 
-  alignItems, 
-  fontSize, 
-}) => {
-  return (
-    <Container
-      alignItems={alignItems}>
-      <Name>
-        <Build
-          fontSize={fontSize}>
-          simple
-        </Build>
-        <That
-          fontSize={fontSize}>
-          sheet
-        </That>
-      </Name>
-    </Container>
+export const Logo = ({ alignItems, fontSize }: LogoProps) => (
+  <Container alignItems={alignItems}>
+    <Name>
+      <Build fontSize={fontSize}>
+        simple
+      </Build>
+      <That fontSize={fontSize}>
+        sheet
+      </That>
+    </Name>
+  </Container>
   )
+
+//-----------------------------------------------------------------------------
+// Props
+//-----------------------------------------------------------------------------
+export interface LogoProps {
+  alignItems: string
+  fontSize: string
 }
 
 //-----------------------------------------------------------------------------
@@ -48,20 +48,27 @@ Logo.defaultProps = {
 const Container = styled.h1`
   display: flex;
   flex-direction: column;
-  align-items: ${ props => props.alignItems };
+  align-items: ${ ({ alignItems }: ContainerProps) => alignItems };
 `
+interface ContainerProps {
+  alignItems: string
+}
 
 const Name = styled.div`
   display: flex;
 `
 
 const Build = styled.div`
-  font-size: ${ props => props.fontSize };
+  font-size: ${ ({ fontSize }: BuildProps) => fontSize };
   font-weight: bold;
 `
+interface BuildProps {
+  fontSize: string
+}
 
 const That = styled.div`
-  font-size: ${ props => props.fontSize };
+  font-size: ${ ({ fontSize }: ThatProps) => fontSize };
 `
-
-export default Logo
+interface ThatProps {
+  fontSize: string
+}

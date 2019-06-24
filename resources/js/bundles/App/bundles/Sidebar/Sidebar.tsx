@@ -1,21 +1,25 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Site = () => <Container>Site</Container>
+const Sidebar = () => <Container>Sidebar</Container>
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-	width: 100vw;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 15vw;
 	height: 100vh;
-	display: flex;
+	overflow-y: scroll;
+	background-color: red;
 `
 
-export default Site
+export default Sidebar

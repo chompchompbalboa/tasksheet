@@ -12,6 +12,5 @@ mix.webpackConfig({
 	},
 })
 
-mix.react('resources/js/bundles/App.js', 'public/js/app.js').sourceMaps()
-
-mix.react('resources/js/bundles/Site.js', 'public/js/site.js').sourceMaps()
+mix.ts('resources/js/bundles/App.tsx', 'public/js/app.js').sourceMaps()
+mix.ts('resources/js/bundles/Site.tsx', 'public/js/site.js').sourceMaps()

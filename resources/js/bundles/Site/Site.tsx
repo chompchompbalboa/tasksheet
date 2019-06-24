@@ -1,24 +1,21 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
-import ReactDOM from 'react-dom'
+import * as React from 'react'
+import styled from 'styled-components'
 
-import Site from '@site/Site'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Root = () => {
-  return (
-    <Site />
-  )
-}
+const Site = () => <Container>Site</Container>
 
 //-----------------------------------------------------------------------------
-// Mount to DOM
+// Styled Components
 //-----------------------------------------------------------------------------
-if (document.getElementById('react-container')) {
-    ReactDOM.render(
-      <Root />,
-    document.getElementById('react-container'));
-}
+const Container = styled.div`
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+`
+
+export default Site

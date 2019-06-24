@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "outDir": "./public/js",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "target": "es6",
+    "jsx": "react",
+    "baseUrl": "./resources/js",
+    "paths": {
+      "@/*": ["./*"],
+      "@app/*": ["./bundles/app/*"],
+      "@site/*": ["./bundles/site/*"]
+    }
+  },
+  "include": [
+    "./resources/**/*"
+  ],
+  "exclude": [
+    "./resources/js/components/__Boilerplate"
+  ]
+}

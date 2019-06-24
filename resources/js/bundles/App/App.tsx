@@ -1,25 +1,30 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
+
+import Header from '@app/bundles/Header/Header'
+import Sidebar from '@app/bundles/Sidebar/Sidebar'
+import Sheets from '@app/bundles/Sheets/Sheets'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Sidebar = () => <Container>Sidebar</Container>
+const App = () => (
+	<Container>
+		<Sidebar />
+		<Header />
+		<Sheets />
+	</Container>
+)
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 15vw;
-	height: 100vh;
-	overflow-y: scroll;
-	background-color: red;
+	width: 100vw;
+	min-height: 100vh;
 `
 
-export default Sidebar
+export default App

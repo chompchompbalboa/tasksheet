@@ -1,30 +1,24 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
-import styled from 'styled-components'
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
 
-import Header from '@app/bundles/Header/Header'
-import Sidebar from '@app/bundles/Sidebar/Sidebar'
-import Sheets from '@app/bundles/Sheets/Sheets'
-
+import Site from '@site/Site'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const App = () => (
-	<Container>
-		<Sidebar />
-		<Header />
-		<Sheets />
-	</Container>
-)
+const Root = () => {
+  return (
+    <Site />
+  )
+}
 
 //-----------------------------------------------------------------------------
-// Styled Components
+// Mount to DOM
 //-----------------------------------------------------------------------------
-const Container = styled.div`
-	width: 100vw;
-	min-height: 100vh;
-`
-
-export default App
+if (document.getElementById('react-container')) {
+    ReactDOM.render(
+      <Root />,
+    document.getElementById('react-container'));
+}
