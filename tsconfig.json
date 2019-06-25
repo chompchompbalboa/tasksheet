@@ -9,14 +9,16 @@
     "baseUrl": "./resources/js",
     "paths": {
       "@/*": ["./*"],
-      "@app/*": ["./bundles/app/*"],
-      "@site/*": ["./bundles/site/*"]
-    }
+      "@app/*": ["./bundles/App/*"],
+      "@site/*": ["./bundles/Site/*"]
+    },
+    "skipLibCheck": true
   },
   "include": [
     "./resources/**/*"
   ],
   "exclude": [
+    "node_modules",
     "./resources/js/components/__Boilerplate"
   ]
 }

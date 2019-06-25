@@ -18,3 +18,4 @@ package-lock.json
 .editorconfig
 /public/mix-manifest.json
 public/mix-manifest.json
+.htaccess
