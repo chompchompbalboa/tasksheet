@@ -32,7 +32,6 @@ export default class ResizeContainer extends React.Component<ResizeContainerProp
   handleMouseMove = (e: Event) => {
     document.body.style.cursor = 'col-resize'
     e.preventDefault()
-    console.log(e)
     this.setState({
       // @ts-ignore
       currentPageX: e.pageX
@@ -65,6 +64,7 @@ export default class ResizeContainer extends React.Component<ResizeContainerProp
       currentPageX,
       startPageX
     } = this.state
+    console.log((currentPageX - startPageX) === -startPageX ? "0" : (currentPageX - startPageX) + "px")
     return (
       <Container
         containerBackgroundColor={containerBackgroundColor}

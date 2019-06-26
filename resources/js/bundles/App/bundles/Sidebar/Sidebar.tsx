@@ -9,7 +9,6 @@ import { AppState } from '@app/state'
 import { selectUserColorPrimary } from '@app/state/user/selectors'
 import { selectUserLayoutSidebarWidth } from '@app/state/user/selectors'
 
-import HiddenScrollbarContainer from '@app/components/HiddenScrollbarContainer'
 import ResizeContainer from '@app/components/ResizeContainer'
 import SidebarFolders from '@app/bundles/Sidebar/SidebarFolders'
 
@@ -44,13 +43,12 @@ type SidebarProps = {
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled(HiddenScrollbarContainer)`
+const Container = styled.div`
 	position: fixed;
 	top: 0;
 	left: 0;
 	width: ${ ({ sidebarWidth }: ContainerProps) => (sidebarWidth * 100) + 'vw' };
 	height: 100vh;
-	overflow-y: scroll;
   background-color: ${ ({ sidebarBackgroundColor }: ContainerProps) => sidebarBackgroundColor };
   display: flex;
   justify-content: space-between;
