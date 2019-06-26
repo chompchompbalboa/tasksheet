@@ -7,15 +7,31 @@ import styled from 'styled-components'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Settings = () => <Container>Settings</Container>
+const HiddenScrollbarContainer = ({ children, className }: HiddenScrollbarContainerProps) => (
+	<Container className={className}>
+    {children}
+  </Container>
+)
+
+//-----------------------------------------------------------------------------
+// Props
+//-----------------------------------------------------------------------------
+type HiddenScrollbarContainerProps = {
+  className?: string // Required by styled=components
+  children: any
+}
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  position: fixed;
-  top: 0;
-  right: 0;
+	overflow-y: scroll;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+	&::-webkit-scrollbar {
+		width: 0;
+		height: 0;
+	}
 `
 
-export default Settings
+export default HiddenScrollbarContainer

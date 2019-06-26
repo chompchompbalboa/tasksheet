@@ -6,44 +6,58 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
+import { selectUserColorPrimary } from '@app/state/user/selectors'
 import { selectUserLayoutSidebarWidth } from '@app/state/user/selectors'
+
+import ResizeContainer from '@app/components/ResizeContainer'
 
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
 const mapStateToProps = (state: AppState) => ({
-  userLayoutSidebarWidth: selectUserLayoutSidebarWidth(state)
+  sidebarBackgroundColor: selectUserColorPrimary(state),
+  sidebarWidth: selectUserLayoutSidebarWidth(state)
 })
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Sidebar = ({ userLayoutSidebarWidth }: SidebarProps) => (
-  <Container sidebarWidth={userLayoutSidebarWidth}>
-    Sidebar
+const Sidebar = ({ sidebarBackgroundColor, sidebarWidth }: SidebarProps) => (
+  <Container
+    sidebarBackgroundColor={sidebarBackgroundColor}
+    sidebarWidth={sidebarWidth}>
   </Container>
 )
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SidebarProps {
-  userLayoutSidebarWidth: number
+type SidebarProps = {
+  sidebarBackgroundColor: string
+  sidebarWidth: number
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div`
+const Container = styled(ResizeContainer)`
 	position: fixed;
 	top: 0;
 	left: 0;
 	width: ${ ({ sidebarWidth }: ContainerProps) => (sidebarWidth * 100) + 'vw' };
 	height: 100vh;
 	overflow-y: scroll;
-	background-color: red;
+	background-color: ${ ({ sidebarBackgroundColor }: ContainerProps) => sidebarBackgroundColor };
+	overflow-y: scroll;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+	&::-webkit-scrollbar {
+		width: 0;
+		height: 0;
+	}
 `
-interface ContainerProps {
+type ContainerProps = {
+  sidebarBackgroundColor: string
   sidebarWidth: number
 }
 

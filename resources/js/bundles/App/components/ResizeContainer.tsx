@@ -7,15 +7,24 @@ import styled from 'styled-components'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Settings = () => <Container>Settings</Container>
+const ResizeContainer = ({ children, className }: ResizeContainerProps) => (
+	<Container className={className}>
+    {children}
+  </Container>
+)
+
+//-----------------------------------------------------------------------------
+// Props
+//-----------------------------------------------------------------------------
+type ResizeContainerProps = {
+  className?: string // Required by styled=components
+  children: any
+}
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  position: fixed;
-  top: 0;
-  right: 0;
 `
 
-export default Settings
+export default ResizeContainer
