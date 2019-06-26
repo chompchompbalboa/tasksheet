@@ -12,7 +12,8 @@
       "@app/*": ["./bundles/App/*"],
       "@site/*": ["./bundles/Site/*"]
     },
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "esModuleInterop": true
   },
   "include": [
     "./resources/**/*"
