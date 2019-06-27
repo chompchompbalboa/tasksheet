@@ -11,6 +11,7 @@ export default class ResizeContainer extends React.Component<ResizeContainerProp
 
   state: ResizeContainerState = {
     currentPageX: null,
+    isResizing: false,
     startPageX: null
   }
 
@@ -25,6 +26,7 @@ export default class ResizeContainer extends React.Component<ResizeContainerProp
     window.addEventListener('mousemove', this.handleMouseMove)
     window.addEventListener('mouseup', this.handleMouseUp)
     this.setState({
+      isResizing: true,
       startPageX: e.pageX
     })
   }
@@ -52,6 +54,7 @@ export default class ResizeContainer extends React.Component<ResizeContainerProp
     onResize(currentPageX - startPageX)
     this.setState({
       currentPageX: null,
+      isResizing: false,
       startPageX: null
     })
   }
@@ -62,14 +65,15 @@ export default class ResizeContainer extends React.Component<ResizeContainerProp
     } = this.props
     const {
       currentPageX,
+      isResizing,
       startPageX
     } = this.state
-    console.log((currentPageX - startPageX) === -startPageX ? "0" : (currentPageX - startPageX) + "px")
     return (
       <Container
         containerBackgroundColor={containerBackgroundColor}
         containerLeft={(currentPageX - startPageX) === -startPageX ? "0" : (currentPageX - startPageX) + "px"}
         containerWidth={containerWidth}
+        isResizing={isResizing}
         onMouseDown={(e: MouseEvent<HTMLDivElement>) => this.handleMouseDown(e)}/>
     )
   }
@@ -81,11 +85,12 @@ export default class ResizeContainer extends React.Component<ResizeContainerProp
 type ResizeContainerProps = {
   containerBackgroundColor: string
   containerWidth: string
-  onResize(value: number): () => void 
+  onResize(widthChange: number): void
 }
 
 type ResizeContainerState = {
   currentPageX: number
+  isResizing: boolean
   startPageX: number
 }
 
@@ -98,10 +103,11 @@ const Container = styled.div`
   left: ${ ({ containerLeft }: ContainerProps) => containerLeft };
   width: ${ ({ containerWidth }: ContainerProps) => containerWidth };
   height: 100%;
-  background-color: ${ ({ containerBackgroundColor }: ContainerProps) => containerBackgroundColor };
+  background-color: ${ ({ containerBackgroundColor, isResizing }: ContainerProps) => isResizing ? containerBackgroundColor : 'transparent' };
 `
 type ContainerProps = {
   containerBackgroundColor: string
   containerLeft: string
   containerWidth: string
+  isResizing: boolean
 }

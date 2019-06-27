@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
-import { User, UserActions, UserColor, UserLayout } from '@app/state/user/types'
+import { User, UserActions, UserColor, UserLayout, UPDATE_USER_LAYOUT } from '@app/state/user/types'
 
 //-----------------------------------------------------------------------------
 // Initial
@@ -27,6 +27,13 @@ const initialState: User = {
 //-----------------------------------------------------------------------------
 const userReducers = (state = initialState, action: UserActions): User => {
 	switch (action.type) {
+      
+    case UPDATE_USER_LAYOUT:
+      const {
+        updates
+      } = action
+      return { ...state, layout: { ...state.layout, ...updates }}
+      
 		default:
 			return state
 	}

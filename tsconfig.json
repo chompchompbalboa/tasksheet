@@ -13,7 +13,9 @@
       "@site/*": ["./bundles/Site/*"]
     },
     "skipLibCheck": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
     "./resources/**/*"

@@ -24,12 +24,18 @@ export interface UserLayout {
 //-----------------------------------------------------------------------------
 // Set User
 //-----------------------------------------------------------------------------
-export const SET_USER = 'SET_USER'
-interface SetUserAction {
-	type: typeof SET_USER
+export const UPDATE_USER_LAYOUT = 'UPDATE_USER_LAYOUT'
+interface UpdateUserLayoutAction {
+	type: typeof UPDATE_USER_LAYOUT
+  updates: {
+    sidebarWidth?: number
+  }
+}
+export type UserLayoutUpdates = {
+  sidebarWidth?: number
 }
 
 //-----------------------------------------------------------------------------
 // Actions
 //-----------------------------------------------------------------------------
-export type UserActions = SetUserAction
+export type UserActions = UpdateUserLayoutAction

@@ -2,12 +2,14 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
+import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { selectUserColorPrimary } from '@app/state/user/selectors'
-import { selectUserLayoutSidebarWidth } from '@app/state/user/selectors'
+import { selectUserColorPrimary, selectUserColorSecondary, selectUserLayoutSidebarWidth } from '@app/state/user/selectors'
+import { updateUserLayout as updateUserLayoutAction } from '@app/state/user/actions'
+import { UserLayoutUpdates } from '@app/state/user/types'
 
 import ResizeContainer from '@app/components/ResizeContainer'
 import SidebarFolders from '@app/bundles/Sidebar/SidebarFolders'
@@ -16,19 +18,31 @@ import SidebarFolders from '@app/bundles/Sidebar/SidebarFolders'
 // Redux
 //-----------------------------------------------------------------------------
 const mapStateToProps = (state: AppState) => ({
+  resizeContainerBackgroundColor: selectUserColorSecondary(state),
   sidebarBackgroundColor: selectUserColorPrimary(state),
   sidebarWidth: selectUserLayoutSidebarWidth(state)
+})
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  updateUserLayout: (updates: UserLayoutUpdates) => dispatch(updateUserLayoutAction(updates))
 })
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Sidebar = ({ sidebarBackgroundColor, sidebarWidth }: SidebarProps) => (
+const Sidebar = ({ 
+  resizeContainerBackgroundColor, 
+  sidebarBackgroundColor, 
+  sidebarWidth,
+  updateUserLayout
+}: SidebarProps) => (
   <Container
     sidebarBackgroundColor={sidebarBackgroundColor}
     sidebarWidth={sidebarWidth}>
     <SidebarFolders />
-    <ResizeContainer />
+    <ResizeContainer
+      containerBackgroundColor={resizeContainerBackgroundColor}
+      onResize={(widthChange: number) => updateUserLayout({ sidebarWidth: sidebarWidth + widthChange / window.innerWidth })}/>
   </Container>
 )
 
@@ -36,8 +50,10 @@ const Sidebar = ({ sidebarBackgroundColor, sidebarWidth }: SidebarProps) => (
 // Props
 //-----------------------------------------------------------------------------
 type SidebarProps = {
+  resizeContainerBackgroundColor: string
   sidebarBackgroundColor: string
   sidebarWidth: number
+  updateUserLayout(updates: UserLayoutUpdates): void
 }
 
 //-----------------------------------------------------------------------------
@@ -62,5 +78,6 @@ type ContainerProps = {
 // Export
 //-----------------------------------------------------------------------------
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Sidebar)

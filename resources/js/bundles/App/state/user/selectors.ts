@@ -9,6 +9,11 @@ import { AppState } from '@app/state'
 export const selectUserColorPrimary = (state: AppState) => state.user.color.primary
 
 //-----------------------------------------------------------------------------
+// Select User Color Secondary
+//-----------------------------------------------------------------------------
+export const selectUserColorSecondary = (state: AppState) => state.user.color.secondary
+
+//-----------------------------------------------------------------------------
 // Select User Layout Sidebar Width
 //-----------------------------------------------------------------------------
 export const selectUserLayoutSidebarWidth = (state: AppState) => state.user.layout.sidebarWidth
