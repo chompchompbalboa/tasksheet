@@ -1,97 +1,75 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { MouseEvent } from 'react'
+import React, { MouseEvent, useState, useEffect } from 'react'
 import styled from 'styled-components'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-export default class ResizeContainer extends React.Component<ResizeContainerProps, ResizeContainerState> {
+export const ResizeContainer = ({ 
+  containerBackgroundColor = 'red',
+  containerWidth = '5px',
+  onResize = null
+}: ResizeContainerProps) => {
 
-  state: ResizeContainerState = {
-    currentPageX: null,
-    isResizing: false,
-    startPageX: null
-  }
+  const [ currentClientX, setCurrentClientX ] = useState(null)
+  const [ isResizing, setIsResizing ] = useState(false)
+  const [ startClientX, setStartClientX ] = useState(null)
 
-  static defaultProps: ResizeContainerProps = {
-    containerBackgroundColor: 'red',
-    containerWidth: '5px',
-    onResize: null
-  }
+  useEffect(() => {
+    if (isResizing) {
+      window.addEventListener('mousemove', handleMouseMove)
+      window.addEventListener('mouseup', handleMouseUp)
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseup', handleMouseUp)
+    }
+  })
   
-  handleMouseDown = (e: MouseEvent) => {
+  const handleMouseDown = (e: MouseEvent) => {
     e.preventDefault()
-    window.addEventListener('mousemove', this.handleMouseMove)
-    window.addEventListener('mouseup', this.handleMouseUp)
-    this.setState({
-      isResizing: true,
-      startPageX: e.pageX
-    })
+    setIsResizing(true)
+    setStartClientX(e.clientX)
+    setCurrentClientX(e.clientX)
   }
   
-  handleMouseMove = (e: Event) => {
+  const handleMouseMove = (e: Event) => {
     document.body.style.cursor = 'col-resize'
     e.preventDefault()
-    this.setState({
-      // @ts-ignore
-      currentPageX: e.pageX
-    })
+    // @ts-ignore
+    setCurrentClientX(e.clientX)
   }
   
-  handleMouseUp = () => {
+  const handleMouseUp = () => {
     document.body.style.cursor = null
-    const {
-      onResize
-    } = this.props
-    const {
-      currentPageX,
-      startPageX
-    } = this.state
-    window.removeEventListener('mousemove', this.handleMouseMove)
-    window.removeEventListener('mouseup', this.handleMouseUp)
-    onResize(currentPageX - startPageX)
-    this.setState({
-      currentPageX: null,
-      isResizing: false,
-      startPageX: null
-    })
+    window.removeEventListener('mousemove', handleMouseMove)
+    window.removeEventListener('mouseup', handleMouseUp)
+    onResize(currentClientX - startClientX)
+    setCurrentClientX(null)
+    setIsResizing(null)
+    setStartClientX(null)
   }
-  render() {
-    const {
-      containerBackgroundColor,
-      containerWidth
-    } = this.props
-    const {
-      currentPageX,
-      isResizing,
-      startPageX
-    } = this.state
-    return (
-      <Container
-        containerBackgroundColor={containerBackgroundColor}
-        containerLeft={(currentPageX - startPageX) === -startPageX ? "0" : (currentPageX - startPageX) + "px"}
-        containerWidth={containerWidth}
-        isResizing={isResizing}
-        onMouseDown={(e: MouseEvent<HTMLDivElement>) => this.handleMouseDown(e)}/>
-    )
-  }
+
+  return (
+    <Container
+      data-testid="resizeContainer"
+      containerBackgroundColor={containerBackgroundColor}
+      containerLeft={(currentClientX - startClientX) === -startClientX ? "0" : (currentClientX - startClientX) + "px"}
+      containerWidth={containerWidth}
+      isResizing={isResizing}
+      onMouseDown={(e: MouseEvent<HTMLDivElement>) => handleMouseDown(e)}/>
+  )
 }
 
 //-----------------------------------------------------------------------------
 // Props & State
 //-----------------------------------------------------------------------------
-type ResizeContainerProps = {
-  containerBackgroundColor: string
-  containerWidth: string
+export type ResizeContainerProps = {
+  containerBackgroundColor?: string
+  containerWidth?: string
   onResize(widthChange: number): void
-}
-
-type ResizeContainerState = {
-  currentPageX: number
-  isResizing: boolean
-  startPageX: number
 }
 
 //-----------------------------------------------------------------------------
@@ -111,3 +89,5 @@ type ContainerProps = {
   containerWidth: string
   isResizing: boolean
 }
+
+export default ResizeContainer

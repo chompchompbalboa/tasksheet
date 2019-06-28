@@ -2,7 +2,7 @@
 
 @section('react-script')
   <script>
-    const initialData = {
+    window.initialData = {
       user: @json($user)
     }
   </script>

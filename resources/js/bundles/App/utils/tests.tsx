@@ -2,33 +2,29 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import ReactDOM from 'react-dom'
 import { Provider as ReduxProvider } from 'react-redux'
 import { applyMiddleware, createStore } from 'redux'
-import thunkMiddleware, { ThunkMiddleware } from 'redux-thunk'
-import { appReducer, AppState } from '@app/state'
+import thunkMiddleware from 'redux-thunk'
+import { render } from '@testing-library/react'
 
-import App from '@app/App'
+import { appReducer } from '@app/state'
 
 //-----------------------------------------------------------------------------
-// Component
+// With Redux
 //-----------------------------------------------------------------------------
-export default class Root extends React.Component {
-
-	store = createStore(appReducer, applyMiddleware(thunkMiddleware as ThunkMiddleware<AppState>))
-
-	render() {
-		return (
-			<ReduxProvider store={this.store}>
-				<App />
-			</ReduxProvider>
-		)
-	}
+// @ts-ignore
+const WithRedux = ({ children }) => {
+  const store = createStore(appReducer, applyMiddleware(thunkMiddleware))
+  return (
+    <ReduxProvider store={store}>
+      { children }
+    </ReduxProvider>
+  )
 }
 
 //-----------------------------------------------------------------------------
-// Mount to DOM
+// Exports
 //-----------------------------------------------------------------------------
-if (document.getElementById('react-container')) {
-	ReactDOM.render(<Root />, document.getElementById('react-container'))
-}
+export * from '@testing-library/react'
+// @ts-ignore
+export const renderWithRedux = (ui, options?) => render(ui, { wrapper: WithRedux, ...options })

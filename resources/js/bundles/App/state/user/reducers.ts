@@ -1,42 +1,27 @@
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
-import { User, UserActions, UserColor, UserLayout, UPDATE_USER_LAYOUT } from '@app/state/user/types'
+import defaultInitialData from '@app/state/initialData'
+import { User } from '@app/state/user/types'
+import { UserActions, UPDATE_USER_LAYOUT } from '@app/state/user/actions'
 
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
-const initialState: User = {
-	id: initialData.user.id,
-	name: initialData.user.name,
-	email: initialData.user.email,
-	color: <UserColor>{
-		id: initialData.user.color.id,
-		primary: initialData.user.color.primary,
-		secondary: initialData.user.color.secondary,
-		tertiary: initialData.user.color.tertiary,
-	},
-	layout: <UserLayout>{
-		id: initialData.user.layout.id,
-		sidebarWidth: initialData.user.layout.sidebarWidth,
-	},
-}
+export const initialUserState: User = typeof initialData !== 'undefined' ? initialData.user : defaultInitialData.user
 
 //-----------------------------------------------------------------------------
 // Reducers
 //-----------------------------------------------------------------------------
-const userReducers = (state = initialState, action: UserActions): User => {
+export const userReducer = (state = initialUserState, action: UserActions): User => {
 	switch (action.type) {
-      
-    case UPDATE_USER_LAYOUT:
-      const {
-        updates
-      } = action
-      return { ...state, layout: { ...state.layout, ...updates }}
-      
+		case UPDATE_USER_LAYOUT:
+			const { updates } = action
+			return { ...state, layout: { ...state.layout, ...updates } }
+
 		default:
 			return state
 	}
 }
 
-export default userReducers
+export default userReducer

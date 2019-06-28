@@ -8,8 +8,9 @@ import styled from 'styled-components'
 
 import { AppState } from '@app/state'
 import { selectUserColorPrimary, selectUserColorSecondary, selectUserLayoutSidebarWidth } from '@app/state/user/selectors'
-import { updateUserLayout as updateUserLayoutAction } from '@app/state/user/actions'
-import { UserLayoutUpdates } from '@app/state/user/types'
+import { 
+  updateUserLayout as updateUserLayoutAction, UserLayoutUpdates
+} from '@app/state/user/actions'
 
 import ResizeContainer from '@app/components/ResizeContainer'
 import SidebarFolders from '@app/bundles/Sidebar/SidebarFolders'
@@ -24,19 +25,21 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
+  // @ts-ignore thunk-action
   updateUserLayout: (updates: UserLayoutUpdates) => dispatch(updateUserLayoutAction(updates))
 })
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Sidebar = ({ 
+export const Sidebar = ({ 
   resizeContainerBackgroundColor, 
   sidebarBackgroundColor, 
   sidebarWidth,
   updateUserLayout
 }: SidebarProps) => (
   <Container
+    data-testid="sidebarContainer"
     sidebarBackgroundColor={sidebarBackgroundColor}
     sidebarWidth={sidebarWidth}>
     <SidebarFolders />
@@ -49,7 +52,7 @@ const Sidebar = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-type SidebarProps = {
+export type SidebarProps = {
   resizeContainerBackgroundColor: string
   sidebarBackgroundColor: string
   sidebarWidth: number
