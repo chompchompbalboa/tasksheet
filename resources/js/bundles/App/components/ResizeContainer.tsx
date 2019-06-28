@@ -38,7 +38,7 @@ export const ResizeContainer = ({
   const handleMouseMove = (e: Event) => {
     document.body.style.cursor = 'col-resize'
     e.preventDefault()
-    // @ts-ignore
+    // @ts-ignore mouse-move
     setCurrentClientX(e.clientX)
   }
   

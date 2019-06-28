@@ -1,4 +1,10 @@
 //-----------------------------------------------------------------------------
+// @ts-ignore mouse-move
+//-----------------------------------------------------------------------------
+// addEventListener('mousemove') provides the event handler e.clientX, but the
+// typings don't reflect that and throw an error
+
+//-----------------------------------------------------------------------------
 // @ts-ignore thunk-action
 //-----------------------------------------------------------------------------
 // In order to correctly type thunk actions, we need to add a lot of verbosity
