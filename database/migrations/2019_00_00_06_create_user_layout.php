@@ -16,7 +16,7 @@ class CreateUserLayout extends Migration
         Schema::create('userLayout', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('userId');
-            $table->float('sidebarWidth', 4, 2)->nullable();
+            $table->float('sidebarWidth', 4, 3)->nullable();
             $table->timestamps();
 
             $table->foreign('userId')->references('id')->on('users');

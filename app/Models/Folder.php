@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Folder extends Model
 {
+  use Traits\UsesUuid;
   public $incrementing = false;
 
   protected $appends = ['folders', 'files'];

@@ -39,9 +39,10 @@ Route::prefix('app')->group(function () {
   Route::post('/folders/copy', 'FolderController@copyFromRequest');
   Route::post('/notes/copy', 'NoteController@copyFromRequest');
   Route::post('/sheets/copy', 'SheetController@copyFromRequest');
-
+  */
   // Resource Controllers
   Route::resources([
+    /*
     // Folders
     'folders' => 'FolderController',
     'files' => 'FileController',
@@ -56,8 +57,10 @@ Route::prefix('app')->group(function () {
     'sheets/columns' => 'SheetColumnController',
     'sheets/breakdowns/formulas' => 'SheetBreakdownFormulaController',
     'sheets/rows' => 'SheetRowController'
+    */
+    // User
+    'user/layout' => 'UserLayoutController',
   ]);
-  */
 });
 
 //-----------------------------------------------------------------------------

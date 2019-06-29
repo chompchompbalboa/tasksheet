@@ -15,7 +15,8 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Models\User::class, function (Faker $faker) {
     return [
-        'id' => '75e3c4f9-b261-3343-a320-8ee9fb0c931e',
+        'id' => $faker->uuid(),
+        'folderId' => $faker->uuid(),
         'organizationid' => null,
         'name' => 'Rocky Eastman',
         'email' => 'rockye@dillonworks.com',

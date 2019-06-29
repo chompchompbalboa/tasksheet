@@ -12,7 +12,10 @@ class OrganizationTableSeeder extends Seeder
     public function run()
     {
       $userFolder = factory(App\Models\Folder::class)->create();
-      $users = factory(App\Models\User::class)->create([ 'folderId' => $userFolder->id ])->each(function($user) {
+      $users = factory(App\Models\User::class)->create([ 
+        'id' => '75e3c4f9-b261-3343-a320-8ee9fb0c931e', 
+        'folderId' => $userFolder->id 
+      ])->each(function($user) {
         $user->color()->save(factory(App\Models\UserColor::class)->make());
         $user->layout()->save(factory(App\Models\UserLayout::class)->make());
       });

@@ -42,11 +42,12 @@ export const ResizeContainer = ({
     setCurrentClientX(e.clientX)
   }
   
-  const handleMouseUp = () => {
+  const handleMouseUp = (e: Event) => {
     document.body.style.cursor = null
     window.removeEventListener('mousemove', handleMouseMove)
     window.removeEventListener('mouseup', handleMouseUp)
-    onResize(currentClientX - startClientX)
+    // @ts-ignore mouse-move
+    onResize(e.clientX - startClientX)
     setCurrentClientX(null)
     setIsResizing(null)
     setStartClientX(null)

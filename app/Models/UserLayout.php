@@ -10,6 +10,7 @@ class UserLayout extends Model
 
   protected $table = 'userLayout';
   protected $visible = ['id', 'sidebarWidth'];
+  protected $fillable = ['sidebarWidth'];
   
   public function user() {
     return $this->belongsTo('App\Models\User', 'userId');

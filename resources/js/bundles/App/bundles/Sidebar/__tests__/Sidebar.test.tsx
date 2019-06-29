@@ -59,8 +59,7 @@ test("Calls the action to update the app state when the mouse is released", asyn
   global.innerWidth = 100
   const resizeContainer = getByTestId('resizeContainer')
   fireEvent.mouseDown(resizeContainer, { clientX: 0 })
-  fireEvent.mouseMove(resizeContainer, { clientX: 10 })
-  fireEvent.mouseUp(resizeContainer)
+  fireEvent.mouseUp(resizeContainer, { clientX: 10 })
   expect(props.updateUserLayout).toHaveBeenCalledWith({ sidebarWidth: 0.35 })
 })
 
@@ -73,7 +72,6 @@ test("Updates its width in response to the updated app state", async () => {
   const resizeContainer = getByTestId('resizeContainer')
   const sidebarContainer = getByTestId('sidebarContainer')
   fireEvent.mouseDown(resizeContainer, { clientX: 0 })
-  fireEvent.mouseMove(resizeContainer, { clientX: 10 })
-  fireEvent.mouseUp(resizeContainer)
+  fireEvent.mouseUp(resizeContainer, { clientX: 10 })
   expect(sidebarContainer).toHaveStyleRule('width', '35vw')
 })

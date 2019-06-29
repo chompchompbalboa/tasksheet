@@ -11,6 +11,7 @@ const initalData: InitialData = {
 			tertiary: '',
 		},
 		layout: <UserLayout>{
+			id: 'uuid',
 			sidebarWidth: 0.25,
 		},
 	},

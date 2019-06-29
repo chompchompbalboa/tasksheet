@@ -45,7 +45,7 @@ export const Sidebar = ({
     <SidebarFolders />
     <ResizeContainer
       containerBackgroundColor={resizeContainerBackgroundColor}
-      onResize={(widthChange: number) => updateUserLayout({ sidebarWidth: sidebarWidth + widthChange / window.innerWidth })}/>
+      onResize={(widthChange: number) => updateUserLayout({ sidebarWidth: calculateSidebarWidth(sidebarWidth, widthChange) })}/>
   </Container>
 )
 
@@ -75,6 +75,14 @@ const Container = styled.div`
 type ContainerProps = {
   sidebarBackgroundColor: string
   sidebarWidth: number
+}
+
+//-----------------------------------------------------------------------------
+// Calculate Sidebar Width
+//-----------------------------------------------------------------------------
+const calculateSidebarWidth = (sidebarWidth: number, widthChange: number) => {
+  const nextSidebarWidth = Number((sidebarWidth + widthChange / window.innerWidth).toFixed(3))
+  return nextSidebarWidth > 0.025 ? nextSidebarWidth : 0.025
 }
 
 //-----------------------------------------------------------------------------

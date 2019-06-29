@@ -4,7 +4,7 @@
 import { Dispatch } from 'redux'
 import { AppState } from '@app/state'
 
-//import { mutation } from '@app/api'
+import { mutation } from '@app/api'
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -19,7 +19,7 @@ export const UPDATE_USER_LAYOUT = 'UPDATE_USER_LAYOUT'
 export const updateUserLayout = (updates: UserLayoutUpdates) => {
 	return async (dispatch: Dispatch, getState: () => AppState) => {
 		dispatch(updateUserLayoutReducer(updates))
-		//mutation.updateUserLayout(getState().user.id, updates)
+		mutation.updateUserLayout(getState().user.layout.id, updates)
 	}
 }
 
