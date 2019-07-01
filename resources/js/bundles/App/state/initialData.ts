@@ -7,8 +7,7 @@ const initalData: InitialData = {
 		email: '',
 		color: <UserColor>{
 			primary: '',
-			secondary: '',
-			tertiary: '',
+			secondary: ''
 		},
 		layout: <UserLayout>{
 			id: 'uuid',
