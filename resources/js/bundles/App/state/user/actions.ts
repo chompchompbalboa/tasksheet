@@ -9,7 +9,39 @@ import { mutation } from '@app/api'
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-export type UserActions = UpdateUserLayout
+export type UserActions = UpdateUserColor | UpdateUserLayout
+
+//-----------------------------------------------------------------------------
+// Update User Color
+//-----------------------------------------------------------------------------
+export const UPDATE_USER_COLOR = 'UPDATE_USER_COLOR'
+
+let userColorTimeout: number = null
+export const updateUserColor = (updates: UserColorUpdates) => {
+	return async (dispatch: Dispatch, getState: () => AppState) => {
+		window.clearTimeout(userColorTimeout)
+		dispatch(updateUserColorReducer(updates))
+		userColorTimeout = window.setTimeout(() => mutation.updateUserColor(getState().user.color.id, updates), 1500)
+	}
+}
+
+export const updateUserColorReducer = (updates: UserColorUpdates): UserActions => {
+	return {
+		type: UPDATE_USER_COLOR,
+		updates: updates,
+	}
+}
+
+export type UserColorUpdates = {
+	primary?: string
+	secondary?: string
+	tertiary?: string
+}
+
+interface UpdateUserColor {
+	type: typeof UPDATE_USER_COLOR
+	updates: UserColorUpdates
+}
 
 //-----------------------------------------------------------------------------
 // Update User Layout

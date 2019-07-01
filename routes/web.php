@@ -59,6 +59,7 @@ Route::prefix('app')->group(function () {
     'sheets/rows' => 'SheetRowController'
     */
     // User
+    'user/color' => 'UserColorController',
     'user/layout' => 'UserLayoutController',
   ]);
 });

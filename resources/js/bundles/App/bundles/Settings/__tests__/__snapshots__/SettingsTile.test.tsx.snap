@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Renders correctly 1`] = `
+.c0 {
+  cursor: pointer;
+  width: 100%;
+}
+
+.c0:hover {
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+
+.c1 {
+  display: none;
+}
+
+<div>
+  <div
+    class=""
+  >
+    <h3
+      class="c0"
+      data-testid="settingsTileHeader"
+    >
+      Header
+    </h3>
+    <div
+      class="c1"
+      data-testid="settingsTileItems"
+    />
+  </div>
+</div>
+`;

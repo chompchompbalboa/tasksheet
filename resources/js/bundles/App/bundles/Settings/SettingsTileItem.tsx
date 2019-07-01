@@ -4,17 +4,29 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import HiddenScrollbarContainer from '@app/components/HiddenScrollbarContainer'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SidebarFolders = () => <Container> </Container>
+const SettingsTileItem = ({
+  children
+}: SettingsTileItemProps) => (
+  <Container>
+    {children}
+  </Container>
+)
+
+//-----------------------------------------------------------------------------
+// Props
+//-----------------------------------------------------------------------------
+export type SettingsTileItemProps = {
+  children?: any
+}
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled(HiddenScrollbarContainer)`
-  width: 100%;
+const Container = styled.div`
+  position: relative;
 `
 
-export default SidebarFolders
+export default SettingsTileItem

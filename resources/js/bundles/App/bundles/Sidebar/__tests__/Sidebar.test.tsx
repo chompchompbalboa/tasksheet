@@ -63,15 +63,27 @@ test("Calls the action to update the app state when the mouse is released", asyn
   expect(props.updateUserLayout).toHaveBeenCalledWith({ sidebarWidth: 0.35 })
 })
 
+test("Doesn't allow a sidebarWidth less than 0.025", async () => {
+  const { getByTestId } = render(<Sidebar {...props} />)
+  const innerWidth = 1000
+  // @ts-ignore
+  global.innerWidth = innerWidth
+  const mouseUpClientX = (innerWidth * 0.024) - (props.sidebarWidth * innerWidth)
+  const resizeContainer = getByTestId('resizeContainer')
+  fireEvent.mouseDown(resizeContainer, { clientX: 0 })
+  fireEvent.mouseUp(resizeContainer, { clientX: mouseUpClientX })
+  expect(props.updateUserLayout).toHaveBeenCalledWith({ sidebarWidth: 0.025 })
+})
+
 test("Updates its width in response to the updated app state", async () => {
   const { getByTestId } = renderWithRedux(
     <ConnectedSidebar updateUserLayout={updateUserLayout} {...props} />
   )
   // @ts-ignore
-  global.innerWidth = 100
+  global.innerWidth = 1000
   const resizeContainer = getByTestId('resizeContainer')
   const sidebarContainer = getByTestId('sidebarContainer')
   fireEvent.mouseDown(resizeContainer, { clientX: 0 })
-  fireEvent.mouseUp(resizeContainer, { clientX: 10 })
+  fireEvent.mouseUp(resizeContainer, { clientX: 100 })
   expect(sidebarContainer).toHaveStyleRule('width', '35vw')
 })

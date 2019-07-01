@@ -20,7 +20,6 @@ const mapStateToProps = (state: AppState) => ({
 //-----------------------------------------------------------------------------
 const Sheets = ({ userLayoutSidebarWidth }: SheetsProps) => (
   <Container sidebarWidth={userLayoutSidebarWidth}>
-    Sheets
   </Container>
 )
 

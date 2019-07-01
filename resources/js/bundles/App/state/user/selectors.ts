@@ -4,6 +4,11 @@
 import { AppState } from '@app/state'
 
 //-----------------------------------------------------------------------------
+// Select User Colors
+//-----------------------------------------------------------------------------
+export const selectUserColors = (state: AppState) => state.user.color
+
+//-----------------------------------------------------------------------------
 // Select User Color Primary
 //-----------------------------------------------------------------------------
 export const selectUserColorPrimary = (state: AppState) => state.user.color.primary

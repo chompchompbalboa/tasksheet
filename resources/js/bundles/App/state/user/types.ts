@@ -13,7 +13,6 @@ export interface UserColor {
 	id: string
 	primary: string
 	secondary: string
-	tertiary: string
 }
 
 export interface UserLayout {
