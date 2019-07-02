@@ -14,7 +14,7 @@ import {
 } from '@app/state/user/actions'
 
 import SettingsTile from './SettingsTile'
-import SettingsUserColorColor from './SettingsUserColorColor';
+import SettingsUserColorColor from './SettingsUserColorColor'
 
 //-----------------------------------------------------------------------------
 // Redux

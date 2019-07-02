@@ -39,6 +39,7 @@ const SettingsUserColorColor = ({
   return (
     <SettingsTileItem>
       <Description
+        data-testid="description"
         onClick={() => setIsColorPickerVisible(!isColorPickerVisible)}>
         <Label>
           {label}
@@ -46,13 +47,14 @@ const SettingsUserColorColor = ({
         <Color
           colorBackgroundColor={color}/>
       </Description>
-      <ColorPickerContainer
+      <ColorPicker
+        data-testid="colorPicker"
         ref={colorPickerContainer}
         isColorPickerVisible={isColorPickerVisible}>
         <ChromePicker
           color={color}
           onChangeComplete={nextColor => onColorChange(nextColor.hex)}/>
-      </ColorPickerContainer>
+      </ColorPicker>
     </SettingsTileItem>
   )
 }
@@ -94,14 +96,14 @@ type ColorProps = {
 
 const Label = styled.div``
 
-const ColorPickerContainer = styled.div`
+const ColorPicker = styled.div`
   z-index: 10;
-  display: ${ ({ isColorPickerVisible }: ColorPickerContainerProps) => isColorPickerVisible ? 'block' : 'none'};
+  display: ${ ({ isColorPickerVisible }: ColorPickerProps) => isColorPickerVisible ? 'block' : 'none'};
   position: absolute;
   top: 100%;
   right: 0;
 `
-type ColorPickerContainerProps = {
+type ColorPickerProps = {
   isColorPickerVisible: boolean
 }
 

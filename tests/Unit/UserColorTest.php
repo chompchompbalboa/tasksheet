@@ -19,15 +19,25 @@ class UserColorTest extends TestCase
     public function testUpdateUserColor()
     {
       $user = User::first();
-      $response = $this->actingAs($user)->json('PATCH', 'app/user/color/'.$user->color->id, [
+      $responsePrimary = $this->actingAs($user)->json('PATCH', 'app/user/color/'.$user->color->id, [
         'primary' => 'rgb(255, 255, 0)'
       ]);
+      $responseSecondary = $this->actingAs($user)->json('PATCH', 'app/user/color/'.$user->color->id, [
+        'secondary' => 'rgb(0, 255, 255)'
+      ]);
 
-      $response
+      $responsePrimary
         ->assertStatus(200)
         ->assertJson([
           'id' => $user->color->id,
           'primary' => 'rgb(255, 255, 0)'
+        ]);
+
+      $responseSecondary
+        ->assertStatus(200)
+        ->assertJson([
+          'id' => $user->color->id,
+          'secondary' => 'rgb(0, 255, 255)'
         ]);
     }
 }

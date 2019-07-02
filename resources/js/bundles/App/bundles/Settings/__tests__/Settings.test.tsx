@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 import 'jest-styled-components'
-import { cleanup, fireEvent, render, renderWithRedux } from '@app/utils/tests'
+import { cleanup, fireEvent, renderWithRedux } from '@app/utils/tests'
 import Settings from '../Settings'
 
 //-----------------------------------------------------------------------------
@@ -15,12 +15,12 @@ afterEach(cleanup)
 // Tests
 //-----------------------------------------------------------------------------
 test("Renders correctly", async () => {
-  const { container } = render(<Settings />)
+  const { container } = renderWithRedux(<Settings />)
   expect(container).toMatchSnapshot()
 })
 
 test("Opens and closes when clicking the link", async () => {
-  const { getByTestId } = render(<Settings />)
+  const { getByTestId } = renderWithRedux(<Settings />)
   const settingsLink = getByTestId('settingsLink')
   const settingsContainer = getByTestId('settingsContainer')
   expect(settingsContainer).toHaveStyleRule('left', '100vw')

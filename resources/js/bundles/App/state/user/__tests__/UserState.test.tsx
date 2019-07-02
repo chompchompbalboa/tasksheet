@@ -8,6 +8,7 @@ import thunkMiddleware from 'redux-thunk'
 
 import { AppState, appReducer } from '@app/state'
 import {
+  updateUserColor, UserColorUpdates,
   updateUserLayout, UserLayoutUpdates
 } from '../actions'
 
@@ -36,6 +37,35 @@ describe('Update User Layout', () => {
     return store.dispatch(updateUserLayout(updates)).then(() => {
       const state: AppState = store.getState()
       expect(state.user.layout.sidebarWidth).toEqual(0.13)
+    })
+  })
+})
+
+//-----------------------------------------------------------------------------
+// Update User Color
+//-----------------------------------------------------------------------------
+
+describe('Update User Color', () => {
+
+  const store = mockStore
+  
+  axiosMock.onPatch('/app/user/color/uuid').reply(200)
+  
+  it('Should update the primary color', () => {
+    const updatePrimary: UserColorUpdates = { primary: '#FFFFFF' }
+    // @ts-ignore thunk-action
+    return store.dispatch(updateUserColor(updatePrimary)).then(() => {
+      const state: AppState = store.getState()
+      expect(state.user.color.primary).toEqual("#FFFFFF")
+    })
+  })
+  
+  it('Should update the secondary color', () => {
+    const updateSecondary: UserColorUpdates = { secondary: '#CCCCCC' }
+    // @ts-ignore thunk-action
+    return store.dispatch(updateUserColor(updateSecondary)).then(() => {
+      const state: AppState = store.getState()
+      expect(state.user.color.secondary).toEqual("#CCCCCC")
     })
   })
 })
