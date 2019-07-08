@@ -79,7 +79,9 @@ type ContainerProps = {
   sidebarWidth: number
 }
 
-const SidebarContent = styled.div``
+const SidebarContent = styled.div`
+  width: calc(100% - 5px);
+`
 
 //-----------------------------------------------------------------------------
 // Calculate Sidebar Width

@@ -20,8 +20,14 @@ class Folder extends Model
   public function folders() {
     return $this->hasMany('App\Models\Folder', 'folderId');
   }
+  public function getFoldersAttribute() {
+    return $this->folders()->orderBy('name')->get();
+  }
   
   public function files() {
-    return $this->hasMany('App\Models\File');
+    return $this->hasMany('App\Models\File', 'folderId');
+  }
+  public function getFilesAttribute() {
+    return $this->files()->orderBy('name')->get();
   }
 }

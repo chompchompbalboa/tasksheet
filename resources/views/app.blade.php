@@ -2,8 +2,9 @@
 
 @section('react-script')
   <script>
-    window.initialData = {
-      user: @json($user)
+    const initialData = {
+      user: @json($user),
+      folders: @json($folders)
     }
   </script>
   <script src="{{ mix('js/app.js') }}"></script>

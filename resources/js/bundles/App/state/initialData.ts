@@ -1,3 +1,4 @@
+import { File, Folder } from '@app/state/folder/types'
 import { User, UserColor, UserLayout } from '@app/state/user/types'
 
 const initalData: InitialData = {
@@ -7,13 +8,21 @@ const initalData: InitialData = {
 		email: '',
 		color: <UserColor>{
 			primary: '',
-			secondary: ''
+			secondary: '',
 		},
 		layout: <UserLayout>{
 			id: 'uuid',
 			sidebarWidth: 0.25,
 		},
 	},
+	folders: [
+		{
+			id: 'uuid',
+			name: 'name',
+			folders: <Folder[]>[],
+			files: <File[]>[],
+		},
+	],
 }
 
 export default initalData

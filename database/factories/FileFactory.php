@@ -13,9 +13,12 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(App\Models\UserColor::class, function (Faker $faker) {
+$factory->define(App\Models\File::class, function (Faker $faker) {
     return [
-        'primary' => 'rgb(28, 27, 39)',
-        'secondary' => 'rgb(224, 131, 45)'
+        'id' => $faker->uuid,
+        'type' => 'STORE',
+        'typeId' => null,
+        'folderId' => null,
+        'name' => 'Module'
     ];
 });

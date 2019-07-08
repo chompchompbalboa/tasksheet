@@ -15,6 +15,15 @@ export type UserActions = UpdateUserColor | UpdateUserLayout
 // Update User Color
 //-----------------------------------------------------------------------------
 export const UPDATE_USER_COLOR = 'UPDATE_USER_COLOR'
+export type UserColorUpdates = {
+	primary?: string
+	secondary?: string
+	tertiary?: string
+}
+interface UpdateUserColor {
+	type: typeof UPDATE_USER_COLOR
+	updates: UserColorUpdates
+}
 
 let userColorTimeout: number = null
 export const updateUserColor = (updates: UserColorUpdates) => {
@@ -32,21 +41,17 @@ export const updateUserColorReducer = (updates: UserColorUpdates): UserActions =
 	}
 }
 
-export type UserColorUpdates = {
-	primary?: string
-	secondary?: string
-	tertiary?: string
-}
-
-interface UpdateUserColor {
-	type: typeof UPDATE_USER_COLOR
-	updates: UserColorUpdates
-}
-
 //-----------------------------------------------------------------------------
 // Update User Layout
 //-----------------------------------------------------------------------------
 export const UPDATE_USER_LAYOUT = 'UPDATE_USER_LAYOUT'
+export type UserLayoutUpdates = {
+	sidebarWidth?: number
+}
+interface UpdateUserLayout {
+	type: typeof UPDATE_USER_LAYOUT
+	updates: UserLayoutUpdates
+}
 
 export const updateUserLayout = (updates: UserLayoutUpdates) => {
 	return async (dispatch: Dispatch, getState: () => AppState) => {
@@ -60,13 +65,4 @@ export const updateUserLayoutReducer = (updates: UserLayoutUpdates): UserActions
 		type: UPDATE_USER_LAYOUT,
 		updates: updates,
 	}
-}
-
-export type UserLayoutUpdates = {
-	sidebarWidth?: number
-}
-
-interface UpdateUserLayout {
-	type: typeof UPDATE_USER_LAYOUT
-	updates: UserLayoutUpdates
 }

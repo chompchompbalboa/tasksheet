@@ -15,6 +15,6 @@ class Organization extends Model
   }
   
   public function folder() {
-    return $this->belongsTo('App\Models\Folder');
+    return $this->belongsTo('App\Models\Folder', 'folderId');
   }
 }

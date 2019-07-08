@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------
 import axios from '@/api/axios'
 
+import { FileUpdates, FolderUpdates } from '@app/state/folder/actions'
 import { UserColorUpdates, UserLayoutUpdates } from '@app/state/user/actions'
 
 //-----------------------------------------------------------------------------
@@ -16,6 +17,24 @@ export const updateUserColor = async (id: string, updates: UserColorUpdates) => 
 
 export const updateUserLayout = async (id: string, updates: UserLayoutUpdates) => {
 	return axios.patch('/app/user/layout/' + id, updates).then(response => {
+		return response.data
+	})
+}
+
+//-----------------------------------------------------------------------------
+// File
+//-----------------------------------------------------------------------------
+export const updateFile = async (id: string, updates: FileUpdates) => {
+	return axios.patch('/app/file/' + id, updates).then(response => {
+		return response.data
+	})
+}
+
+//-----------------------------------------------------------------------------
+// Folder
+//-----------------------------------------------------------------------------
+export const updateFolder = async (id: string, updates: FolderUpdates) => {
+	return axios.patch('/app/folder/' + id, updates).then(response => {
 		return response.data
 	})
 }

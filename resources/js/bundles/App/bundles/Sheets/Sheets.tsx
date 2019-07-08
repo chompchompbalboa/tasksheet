@@ -6,27 +6,36 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
+import { selectTabs } from '@app/state/tab/selectors'
 import { selectUserLayoutSidebarWidth } from '@app/state/user/selectors'
 
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
 const mapStateToProps = (state: AppState) => ({
+  tabs: selectTabs(state),
   userLayoutSidebarWidth: selectUserLayoutSidebarWidth(state)
 })
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Sheets = ({ userLayoutSidebarWidth }: SheetsProps) => (
-  <Container sidebarWidth={userLayoutSidebarWidth}>
-  </Container>
-)
+const Sheets = ({ 
+  tabs,
+  userLayoutSidebarWidth
+}: SheetsProps) => {
+  console.log(tabs)
+  return (
+    <Container sidebarWidth={userLayoutSidebarWidth}>
+    </Container>
+  )
+}
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
 interface SheetsProps {
+  tabs: string[]
   userLayoutSidebarWidth: number
 }
 
