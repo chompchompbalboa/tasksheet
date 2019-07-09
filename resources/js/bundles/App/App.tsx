@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import Settings from '@app/bundles/Settings/Settings'
 import Sidebar from '@app/bundles/Sidebar/Sidebar'
-import Sheets from '@app/bundles/Sheets/Sheets'
+import Tabs from '@app/bundles/Tabs/Tabs'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -15,7 +15,7 @@ const App = () => (
 	<Container>
 		<Sidebar />
 		<Settings />
-		<Sheets />
+		<Tabs />
 	</Container>
 )
 

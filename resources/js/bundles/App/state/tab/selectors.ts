@@ -4,6 +4,11 @@
 import { AppState } from '@app/state'
 
 //-----------------------------------------------------------------------------
+// Select Active Tab
+//-----------------------------------------------------------------------------
+export const selectActiveTab = (state: AppState): number => state.tab.activeTab
+
+//-----------------------------------------------------------------------------
 // Select Tabs
 //-----------------------------------------------------------------------------
 export const selectTabs = (state: AppState): string[] => state.tab.tabs

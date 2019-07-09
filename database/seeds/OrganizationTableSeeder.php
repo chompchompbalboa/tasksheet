@@ -28,14 +28,14 @@ class OrganizationTableSeeder extends Seeder
           $user->organizationId = $organization->id;
           $user->save();
           // Folders
-          factory(App\Models\Folder::class, 10)->create()->each(function ($folder, $key) use($organizationFolder) {
+          factory(App\Models\Folder::class, 10)->create()->each(function ($folder, $folderKey) use($organizationFolder) {
             $folder->folderId = $organizationFolder->id;
-            $folder->name = 'Folder '.($key + 1);
+            $folder->name = 'Folder '.($folderKey + 1);
             $folder->save();
             // Files
-            factory(App\Models\File::class, 5)->create()->each(function ($file, $key) use($folder) {
+            factory(App\Models\File::class, 5)->create()->each(function ($file, $fileKey) use($folder, $folderKey) {
               $file->folderId = $folder->id;
-              $file->name = 'File '.($key + 1);
+              $file->name = 'File '.($folderKey + 1).'.'.($fileKey + 1);
               $file->save();
             });
           });
