@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-export type TabActions = OpenFile | OpenFileInNewTab
+export type TabActions = OpenFile | OpenFileInNewTab | UpdateActiveTabId
 
 //-----------------------------------------------------------------------------
 // Open File
@@ -36,5 +36,21 @@ export const openFileInNewTab = (fileId: string): TabActions => {
 	return {
 		type: OPEN_FILE_IN_NEW_TAB,
 		fileId: fileId,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Active Tab
+//-----------------------------------------------------------------------------
+export const UPDATE_ACTIVE_TAB_ID = 'UPDATE_ACTIVE_TAB_ID'
+interface UpdateActiveTabId {
+	type: typeof UPDATE_ACTIVE_TAB_ID
+	nextActiveTabId: string
+}
+
+export const updateActiveTabId = (nextActiveTabId: string): TabActions => {
+	return {
+		type: UPDATE_ACTIVE_TAB_ID,
+		nextActiveTabId: nextActiveTabId,
 	}
 }

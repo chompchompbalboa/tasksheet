@@ -3,17 +3,17 @@
 //-----------------------------------------------------------------------------
 import clone from '@/utils/clone'
 
-import { TabActions, OPEN_FILE, OPEN_FILE_IN_NEW_TAB } from '@app/state/tab/actions'
+import { TabActions, OPEN_FILE, OPEN_FILE_IN_NEW_TAB, UPDATE_ACTIVE_TAB_ID } from '@app/state/tab/actions'
 
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
 export const initialTabState: TabState = {
-	activeTab: 0,
+	activeTabId: null,
 	tabs: [],
 }
 export type TabState = {
-	activeTab: number
+	activeTabId: string
 	tabs: string[]
 }
 
@@ -23,17 +23,39 @@ export type TabState = {
 export const userReducer = (state = initialTabState, action: TabActions): TabState => {
 	switch (action.type) {
 		case OPEN_FILE: {
-			const { activeTab } = state
+			const { activeTabId, tabs } = state
 			const { fileId } = action
 			const nextTabs = clone(state.tabs)
-			nextTabs[activeTab] = fileId
-			return { ...state, tabs: nextTabs }
+			const activeTabIndex = tabs.findIndex(tabId => tabId === activeTabId)
+			nextTabs[activeTabIndex] = fileId
+			return {
+				...state,
+				activeTabId: fileId,
+				tabs: nextTabs,
+			}
 		}
 
 		case OPEN_FILE_IN_NEW_TAB: {
 			const { fileId } = action
-			return { ...state, tabs: [...state.tabs, fileId] }
+			const { tabs } = state
+			if (!tabs.includes(fileId)) {
+				return { ...state, activeTabId: fileId, tabs: [...state.tabs, fileId] }
+			} else {
+				return {
+					...state,
+					activeTabId: fileId,
+				}
+			}
 		}
+
+		case UPDATE_ACTIVE_TAB_ID: {
+			const { nextActiveTabId } = action
+			return {
+				...state,
+				activeTabId: nextActiveTabId,
+			}
+		}
+
 		default:
 			return state
 	}

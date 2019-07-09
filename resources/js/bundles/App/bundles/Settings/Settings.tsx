@@ -25,7 +25,7 @@ const Settings = () => {
         onClick={() => setIsVisible(!isVisible)}>
         <Icon
           icon={SETTINGS} 
-          size="1.5rem" />
+          size="1rem" />
       </SettingsLink>
       <SettingsContainer
         data-testid="settingsContainer"
@@ -44,9 +44,12 @@ const SettingsLink = styled.div`
   z-index: 3;
   position: fixed;
   top: 0;
-  right: 0;
+  right: 0.25rem;
+  height: 1.75rem;
   cursor: pointer;
-  padding: 0.375rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   color: ${ ({ isVisible }: SettingsLinkProps) => isVisible ? 'rgb(40, 40, 40)' : 'rgb(80, 80, 80)'};
   transform: ${ ({ isVisible }: SettingsLinkProps) => isVisible ? 'none' : 'scale(-1, 1)'};
   &:hover {

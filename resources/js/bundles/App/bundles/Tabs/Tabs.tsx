@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { selectActiveTab, selectTabs } from '@app/state/tab/selectors'
+import { selectActiveTabId, selectTabs } from '@app/state/tab/selectors'
 import { selectUserLayoutSidebarWidth } from '@app/state/user/selectors'
 
 import File from '@app/bundles/File/File'
@@ -16,7 +16,7 @@ import Tab from '@app/bundles/Tabs/Tab'
 // Redux
 //-----------------------------------------------------------------------------
 const mapStateToProps = (state: AppState) => ({
-  activeTab: selectActiveTab(state),
+  activeTabId: selectActiveTabId(state),
   tabs: selectTabs(state),
   userLayoutSidebarWidth: selectUserLayoutSidebarWidth(state)
 })
@@ -25,26 +25,26 @@ const mapStateToProps = (state: AppState) => ({
 // Component
 //-----------------------------------------------------------------------------
 const Tabs = ({ 
-  activeTab,
+  activeTabId,
   tabs,
   userLayoutSidebarWidth
 }: TabsProps) => {
   return (
     <Container sidebarWidth={userLayoutSidebarWidth}>
       <TabsContainer>
-        {tabs.map((fileId, index) => (
+        {tabs.map((fileId) => (
           <Tab
             key={fileId}
             fileId={fileId}
-            isActiveTab={activeTab === index}/>
+            isActiveTab={activeTabId === fileId}/>
         ))}
       </TabsContainer>
-      {tabs.map((fileId, index) => (
+      {tabs.map((fileId) => (
         <FileContainer
-            key={fileId}
-            isActiveTab={activeTab === index}>
-            <File
-              fileId={fileId}/>
+          key={fileId}
+          isActiveTab={activeTabId === fileId}>
+          <File
+            fileId={fileId}/>
         </FileContainer>
       ))}
     </Container>
@@ -55,7 +55,7 @@ const Tabs = ({
 // Props
 //-----------------------------------------------------------------------------
 interface TabsProps {
-  activeTab: number
+  activeTabId: string
   tabs: string[]
   userLayoutSidebarWidth: number
 }
@@ -76,6 +76,9 @@ interface ContainerProps {
 const TabsContainer = styled.div`
   width: 100%;
   display: flex;
+  height: 1.75rem;
+  border-bottom: 1px solid rgb(180, 180, 180);
+  background-color: rgb(245, 245, 245);
 `
 
 const FileContainer = styled.div`

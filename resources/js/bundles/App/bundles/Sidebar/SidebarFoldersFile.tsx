@@ -10,7 +10,7 @@ import { FILE_STORE } from '@app/assets/icons'
 import { AppState } from '@app/state'
 import { selectFile } from '@app/state/folder/selectors'
 import { File } from '@app/state/folder/types'
-import { openFile as openFileAction } from '@app/state/tab/actions'
+import { openFileInNewTab as openFileInNewTabAction } from '@app/state/tab/actions'
 
 import SidebarFoldersItem from './SidebarFoldersItem'
 
@@ -23,7 +23,7 @@ const mapStateToProps = (state: AppState, props: SidebarFoldersFileProps) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   // @ts-ignore thunk-action
-  openFile: (fileId: string) => dispatch(openFileAction(fileId))
+  openFileInNewTab: (fileId: string) => dispatch(openFileInNewTabAction(fileId))
 })
 
 //-----------------------------------------------------------------------------
@@ -31,7 +31,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 //-----------------------------------------------------------------------------
 export const SidebarFoldersFile = ({
   file,
-  openFile
+  openFileInNewTab
 }: SidebarFoldersFileProps) => {
   const {
     id,
@@ -44,7 +44,7 @@ export const SidebarFoldersFile = ({
   return (
     <SidebarFoldersItem
       icon={icons[type]}
-      onClick={() => openFile(id)}
+      onClick={() => openFileInNewTab(id)}
       text={name}/>
   )
 }
@@ -55,7 +55,7 @@ export const SidebarFoldersFile = ({
 export type SidebarFoldersFileProps = {
   id: string
   file?: File
-  openFile?(fileId: string): void
+  openFileInNewTab?(fileId: string): void
 }
 
 export default connect(
