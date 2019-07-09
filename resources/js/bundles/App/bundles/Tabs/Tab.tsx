@@ -60,7 +60,7 @@ interface TabProps {
 const Container = styled.div`
   cursor: ${ ({ isActiveTab }: ContainerProps) => isActiveTab ? 'auto' : 'pointer'};
   height: 100%;
-  width: 15%;
+  width: 12.5%;
   background-color: ${ ({ isActiveTab }: ContainerProps) => isActiveTab ? 'rgb(255, 255, 255)' : 'rgb(245, 245, 245)'};
   border: 1px solid rgb(180, 180, 180);
   border-left: none;

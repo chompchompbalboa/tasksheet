@@ -22,6 +22,17 @@ export type TabState = {
 //-----------------------------------------------------------------------------
 export const userReducer = (state = initialTabState, action: TabActions): TabState => {
 	switch (action.type) {
+
+		case CLOSE_TAB: {
+			const { fileId } = action
+      const { tabs } = state
+			const nextTabs = tabs.filter(tabId => tabId === activeTabId)
+			return {
+				...state,
+				tabs: nextTabs,
+			}
+		}
+      
 		case OPEN_FILE: {
 			const { activeTabId, tabs } = state
 			const { fileId } = action
