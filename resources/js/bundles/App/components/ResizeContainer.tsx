@@ -53,8 +53,6 @@ export const ResizeContainer = ({
     setStartClientX(null)
   }
 
-  console.log(isResizing)
-
   return (
     <Container
       data-testid="resizeContainer"

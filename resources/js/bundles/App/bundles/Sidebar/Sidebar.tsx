@@ -65,8 +65,6 @@ export type SidebarProps = {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  z-index: 1;
-	position: fixed;
 	top: 0;
 	left: 0;
 	width: ${ ({ sidebarWidth }: ContainerProps) => (sidebarWidth * 100) + 'vw' };

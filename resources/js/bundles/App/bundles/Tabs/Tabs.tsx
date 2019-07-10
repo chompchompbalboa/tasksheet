@@ -81,14 +81,12 @@ const TabsContainer = styled.div`
   display: flex;
   height: 1.75rem;
   padding-top: 2px;
-  padding-left: 2px;
 `
 
 const FilesContainer = styled.div`
   width: 100%;
   height: calc(100vh - 1.75rem);
   background-color: rgb(250, 250, 250);
-  border-top-left-radius: 3px;
 `
 
 const FileContainer = styled.div`

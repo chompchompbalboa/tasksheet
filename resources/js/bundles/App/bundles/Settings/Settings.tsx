@@ -50,11 +50,8 @@ const SettingsLink = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  color: ${ ({ isVisible }: SettingsLinkProps) => isVisible ? 'rgb(40, 40, 40)' : 'rgb(80, 80, 80)'};
+  color: ${ ({ isVisible }: SettingsLinkProps) => isVisible ? 'rgb(40, 40, 40)' : 'rgb(180, 180, 180)'};
   transform: ${ ({ isVisible }: SettingsLinkProps) => isVisible ? 'none' : 'scale(-1, 1)'};
-  &:hover {
-    color: rgb(40, 40, 40);
-  }
   transition: transform 0.25s;
 `
 type SettingsLinkProps = {
@@ -72,6 +69,7 @@ const SettingsContainer = styled.div`
   width: 25vw;
   padding: 1rem;
   transition: all 0.25s;
+  border-left: 1px solid rgb(80, 80, 80);
 `
 type SettingsContainerProps = {
   isVisible: boolean
