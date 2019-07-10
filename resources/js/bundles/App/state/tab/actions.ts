@@ -5,7 +5,23 @@
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-export type TabActions = OpenFile | OpenFileInNewTab | UpdateActiveTabId
+export type TabActions = CloseTab | OpenFile | OpenFileInNewTab | UpdateActiveTabId
+
+//-----------------------------------------------------------------------------
+// Close Tab
+//-----------------------------------------------------------------------------
+export const CLOSE_TAB = 'CLOSE_TAB'
+interface CloseTab {
+	type: typeof CLOSE_TAB
+	fileId: string
+}
+
+export const closeTab = (fileId: string): TabActions => {
+	return {
+		type: CLOSE_TAB,
+		fileId: fileId,
+	}
+}
 
 //-----------------------------------------------------------------------------
 // Open File

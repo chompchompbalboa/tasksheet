@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 import clone from '@/utils/clone'
 
-import { TabActions, OPEN_FILE, OPEN_FILE_IN_NEW_TAB, UPDATE_ACTIVE_TAB_ID } from '@app/state/tab/actions'
+import { TabActions, CLOSE_TAB, OPEN_FILE, OPEN_FILE_IN_NEW_TAB, UPDATE_ACTIVE_TAB_ID } from '@app/state/tab/actions'
 
 //-----------------------------------------------------------------------------
 // Initial
@@ -22,17 +22,20 @@ export type TabState = {
 //-----------------------------------------------------------------------------
 export const userReducer = (state = initialTabState, action: TabActions): TabState => {
 	switch (action.type) {
-
 		case CLOSE_TAB: {
 			const { fileId } = action
-      const { tabs } = state
-			const nextTabs = tabs.filter(tabId => tabId === activeTabId)
+			const { activeTabId, tabs } = state
+			const tabIndex = tabs.findIndex(tabId => tabId === fileId)
+			const nextTabs = tabs.filter(tabFileId => tabFileId !== fileId)
+			const nextActiveTabId =
+				fileId === activeTabId ? (nextTabs.length > 0 ? nextTabs[tabIndex - 1] : null) : activeTabId
 			return {
 				...state,
+				activeTabId: nextActiveTabId,
 				tabs: nextTabs,
 			}
 		}
-      
+
 		case OPEN_FILE: {
 			const { activeTabId, tabs } = state
 			const { fileId } = action

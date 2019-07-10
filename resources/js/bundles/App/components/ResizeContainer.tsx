@@ -9,7 +9,7 @@ import styled from 'styled-components'
 //-----------------------------------------------------------------------------
 export const ResizeContainer = ({ 
   containerBackgroundColor = 'red',
-  containerWidth = '5px',
+  containerWidth = '3px',
   onResize = null
 }: ResizeContainerProps) => {
 
