@@ -23,7 +23,7 @@ Route::prefix('app')->group(function () {
 
     $userFolders = $user->folder()->get();
     $organizationFolders = $organization->folder()->get();
-    $folders = $userFolders->merge($organizationFolders)->values()->all();
+    $folders = $organizationFolders->merge($userFolders)->values()->all();
     
     return view('app')->with([
       'user' => $user,

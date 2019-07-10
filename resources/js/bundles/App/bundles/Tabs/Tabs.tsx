@@ -39,14 +39,16 @@ const Tabs = ({
             isActiveTab={activeTabId === fileId}/>
         ))}
       </TabsContainer>
-      {tabs.map((fileId) => (
-        <FileContainer
-          key={fileId}
-          isActiveTab={activeTabId === fileId}>
-          <File
-            fileId={fileId}/>
-        </FileContainer>
-      ))}
+      <FilesContainer>
+        {tabs.map((fileId) => (
+          <FileContainer
+            key={fileId}
+            isActiveTab={activeTabId === fileId}>
+            <File
+              fileId={fileId}/>
+          </FileContainer>
+        ))}
+      </FilesContainer>
     </Container>
   )
 }
@@ -64,6 +66,7 @@ interface TabsProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  z-index: 1;
   position: fixed;
   top: 0;
   left: ${ ({ sidebarWidth }: ContainerProps) => (sidebarWidth * 100) + 'vw'};
@@ -77,13 +80,21 @@ const TabsContainer = styled.div`
   width: 100%;
   display: flex;
   height: 1.75rem;
-  border-bottom: 1px solid rgb(180, 180, 180);
-  background-color: rgb(245, 245, 245);
+  padding-top: 2px;
+  padding-left: 2px;
+`
+
+const FilesContainer = styled.div`
+  width: 100%;
+  height: calc(100vh - 1.75rem);
+  background-color: rgb(250, 250, 250);
+  border-top-left-radius: 3px;
 `
 
 const FileContainer = styled.div`
   display: ${ ({ isActiveTab }: FileContainerProps) => isActiveTab ? 'block' : 'none' };
   width: 100%;
+  height: 100%;
 `
 interface FileContainerProps {
   isActiveTab: boolean

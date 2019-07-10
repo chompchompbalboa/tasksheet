@@ -24,7 +24,6 @@ const File = ({
 }: FileProps) => {
   return (
     <Container>
-      {file.name}
     </Container>
   )
 }
@@ -41,6 +40,8 @@ interface FileProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  width: 100%;
+  height; 100%;
 `
 
 //-----------------------------------------------------------------------------

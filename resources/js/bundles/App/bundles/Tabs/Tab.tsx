@@ -54,8 +54,6 @@ const Tab = ({
             icon={TAB_CLOSE}/>
         </CloseTab>
       </Content>
-      {isActiveTab &&
-        <HideBottomBorder />}
     </Container>
   )
 }
@@ -78,7 +76,8 @@ const Container = styled.div`
   cursor: ${ ({ isActiveTab }: ContainerProps) => isActiveTab ? 'default' : 'pointer'};
   height: 100%;
   width: 12.5%;
-  background-color: ${ ({ isActiveTab }: ContainerProps) => isActiveTab ? 'rgb(255, 255, 255)' : 'rgb(245, 245, 245)'};
+  opacity: ${ ({ isActiveTab }: ContainerProps) => isActiveTab ? '1' : '0.75'};
+  background-color: rgb(250, 250, 250);
   border: 1px solid rgb(180, 180, 180);
   border-left: none;
   border-bottom: none;
@@ -110,15 +109,6 @@ const CloseTab = styled.div`
   &:hover {
     color: rgb(200, 0, 0);
   }
-`
-
-const HideBottomBorder = styled.div`
-  position: relative;
-  top: -2px;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background-color: rgb(255, 255, 255);
 `
 
 //-----------------------------------------------------------------------------

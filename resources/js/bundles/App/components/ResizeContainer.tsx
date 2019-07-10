@@ -13,7 +13,7 @@ export const ResizeContainer = ({
   onResize = null
 }: ResizeContainerProps) => {
 
-  const [ currentClientX, setCurrentClientX ] = useState(null)
+  const [ currentClientX, setCurrentClientX ] = useState(0)
   const [ isResizing, setIsResizing ] = useState(false)
   const [ startClientX, setStartClientX ] = useState(null)
 
@@ -49,15 +49,17 @@ export const ResizeContainer = ({
     // @ts-ignore mouse-move
     onResize(e.clientX - startClientX)
     setCurrentClientX(null)
-    setIsResizing(null)
+    setIsResizing(false)
     setStartClientX(null)
   }
+
+  console.log(isResizing)
 
   return (
     <Container
       data-testid="resizeContainer"
       containerBackgroundColor={containerBackgroundColor}
-      containerLeft={(currentClientX - startClientX) === -startClientX ? "0" : (currentClientX - startClientX) + "px"}
+      containerLeft={currentClientX + "px"}
       containerWidth={containerWidth}
       isResizing={isResizing}
       onMouseDown={(e: MouseEvent<HTMLDivElement>) => handleMouseDown(e)}/>
@@ -77,7 +79,8 @@ export type ResizeContainerProps = {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  position: relative;
+  z-index: 100;
+  position: ${ ({ isResizing }: ContainerProps) => isResizing ? 'fixed' : 'relative' };
   cursor: col-resize;
   left: ${ ({ containerLeft }: ContainerProps) => containerLeft };
   width: ${ ({ containerWidth }: ContainerProps) => containerWidth };
