@@ -20,6 +20,5 @@ export interface File {
 }
 
 export enum FileType {
-	STORE = 'STORE',
 	SHEET = 'SHEET',
 }

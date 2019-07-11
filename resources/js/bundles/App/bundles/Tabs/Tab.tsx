@@ -39,7 +39,6 @@ const Tab = ({
   isActiveTab,
   updateActiveTabId
 }: TabProps) => {
-  console.log(isActiveTab)
   return (
     <Container
       isActiveTab={isActiveTab}>

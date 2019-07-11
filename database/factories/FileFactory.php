@@ -16,7 +16,7 @@ use Faker\Generator as Faker;
 $factory->define(App\Models\File::class, function (Faker $faker) {
     return [
         'id' => $faker->uuid,
-        'type' => 'STORE',
+        'type' => 'SHEET',
         'typeId' => null,
         'folderId' => null,
         'name' => 'Module'
