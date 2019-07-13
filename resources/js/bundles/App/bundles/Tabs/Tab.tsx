@@ -43,15 +43,19 @@ const Tab = ({
     <Container
       isActiveTab={isActiveTab}>
       <Content>
-        <Name
-          onClick={() => updateActiveTabId(file.id)}>
-          {file.name}
-        </Name>
-        <CloseTab
-          onClick={() => closeTab(file.id)}>
-          <Icon
-            icon={TAB_CLOSE}/>
-        </CloseTab>
+        {file && 
+          <>
+            <Name
+              onClick={() => updateActiveTabId(file.id)}>
+              {file.name}
+            </Name>
+            <CloseTab
+              onClick={() => closeTab(file.id)}>
+              <Icon
+                icon={TAB_CLOSE}/>
+            </CloseTab>
+          </>
+        }
       </Content>
     </Container>
   )
@@ -62,7 +66,7 @@ const Tab = ({
 //-----------------------------------------------------------------------------
 interface TabProps {
   closeTab?(fileId: string): void
-  file?: TFile,
+  file?: TFile
   fileId: string
   isActiveTab: boolean
   updateActiveTabId?(nextActiveTabId: string): void
@@ -80,7 +84,7 @@ const Container = styled.div`
   border: 1px solid rgb(180, 180, 180);
   border-left: none;
   border-bottom: none;
-  border-radius: 5px 5px 0 0;
+  border-radius: 3px 3px 0 0;
 `
 interface ContainerProps {
   isActiveTab: boolean

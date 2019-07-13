@@ -32,22 +32,29 @@ const Tabs = ({
   return (
     <Container sidebarWidth={userLayoutSidebarWidth}>
       <TabsContainer>
-        {tabs.map((fileId) => (
-          <Tab
-            key={fileId}
-            fileId={fileId}
-            isActiveTab={activeTabId === fileId}/>
-        ))}
+        {tabs.length > 0 
+          ? tabs.map((fileId) => (
+            <Tab
+              key={fileId}
+              fileId={fileId}
+              isActiveTab={activeTabId === fileId}/>))
+          : <Tab
+              fileId={null}
+              isActiveTab />
+        }
       </TabsContainer>
       <FilesContainer>
-        {tabs.map((fileId) => (
-          <FileContainer
-            key={fileId}
-            isActiveTab={activeTabId === fileId}>
-            <File
-              fileId={fileId}/>
-          </FileContainer>
-        ))}
+        {tabs.length > 0 
+          ? tabs.map((fileId) => (
+            <FileContainer
+              key={fileId}
+              isActiveTab={activeTabId === fileId}>
+              <File
+                fileId={fileId}/>
+            </FileContainer>))
+          : <File
+               fileId={null}/>
+        }
       </FilesContainer>
     </Container>
   )

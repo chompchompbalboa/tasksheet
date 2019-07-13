@@ -28,7 +28,7 @@ export const userReducer = (state = initialTabState, action: TabActions): TabSta
 			const tabIndex = tabs.findIndex(tabId => tabId === fileId)
 			const nextTabs = tabs.filter(tabFileId => tabFileId !== fileId)
 			const nextActiveTabId =
-				fileId === activeTabId ? (nextTabs.length > 0 ? nextTabs[tabIndex - 1] : null) : activeTabId
+				fileId === activeTabId ? (nextTabs.length > 0 ? nextTabs[(tabIndex - 1 >= 0 ? tabIndex : 0)] : null) : activeTabId
 			return {
 				...state,
 				activeTabId: nextActiveTabId,

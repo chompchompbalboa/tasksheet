@@ -24,6 +24,9 @@ const File = ({
 }: FileProps) => {
   return (
     <Container>
+      {file 
+        ? file.name
+        : 'Please select a sheet to get started'}
     </Container>
   )
 }
@@ -41,7 +44,10 @@ interface FileProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   width: 100%;
-  height; 100%;
+  height: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
 `
 
 //-----------------------------------------------------------------------------
