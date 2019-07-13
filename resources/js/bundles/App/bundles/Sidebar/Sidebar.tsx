@@ -79,7 +79,7 @@ type ContainerProps = {
 }
 
 const SidebarContent = styled.div`
-  width: calc(100% - 5px);
+  width: calc(100% - 3px);
 `
 
 //-----------------------------------------------------------------------------
@@ -87,7 +87,7 @@ const SidebarContent = styled.div`
 //-----------------------------------------------------------------------------
 const calculateSidebarWidth = (sidebarWidth: number, widthChange: number) => {
   const nextSidebarWidth = Number((sidebarWidth + widthChange / window.innerWidth).toFixed(3))
-  return nextSidebarWidth > 0.025 ? nextSidebarWidth : 0.025
+  return nextSidebarWidth > (9 / window.innerWidth) ? nextSidebarWidth : (9 / window.innerWidth)
 }
 
 //-----------------------------------------------------------------------------

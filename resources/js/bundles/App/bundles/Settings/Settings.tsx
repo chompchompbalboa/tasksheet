@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { SETTINGS_BACKGROUND_COLOR } from '@app/assets/colors'
@@ -15,7 +15,23 @@ import SettingsUserColor from './SettingsUserColor'
 //-----------------------------------------------------------------------------
 const Settings = () => {
 
+  const settingsContainer = useRef(null)
   const [ isVisible, setIsVisible ] = useState(false)
+
+  useEffect(() => {
+    if(isVisible) {
+      window.addEventListener('click', handleClick)
+    }
+    return () => {
+      window.removeEventListener('click', handleClick)
+    }
+  }, [ isVisible ])
+
+  const handleClick = (e: Event) => {
+    if(!settingsContainer.current.contains(e.target)) {
+      setIsVisible(false)
+    }
+  }
 
   return (
     <>
@@ -29,6 +45,7 @@ const Settings = () => {
       </SettingsLink>
       <SettingsContainer
         data-testid="settingsContainer"
+        ref={settingsContainer}
         isVisible={isVisible}>
         <SettingsHeader>Settings</SettingsHeader>
         <SettingsUserColor />
@@ -50,7 +67,7 @@ const SettingsLink = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  color: ${ ({ isVisible }: SettingsLinkProps) => isVisible ? 'rgb(40, 40, 40)' : 'rgb(180, 180, 180)'};
+  color: ${ ({ isVisible }: SettingsLinkProps) => isVisible ? 'rgb(40, 40, 40)' : 'rgb(255, 255, 255)'};
   transform: ${ ({ isVisible }: SettingsLinkProps) => isVisible ? 'none' : 'scale(-1, 1)'};
   transition: transform 0.25s;
 `
@@ -69,7 +86,8 @@ const SettingsContainer = styled.div`
   width: 25vw;
   padding: 1rem;
   transition: all 0.25s;
-  border-left: 1px solid rgb(80, 80, 80);
+  box-shadow: -1px 0px 10px 0px rgba(0,0,0,0.5);
+
 `
 type SettingsContainerProps = {
   isVisible: boolean

@@ -81,7 +81,7 @@ const Container = styled.div`
   position: ${ ({ isResizing }: ContainerProps) => isResizing ? 'fixed' : 'relative' };
   cursor: col-resize;
   left: ${ ({ containerLeft }: ContainerProps) => containerLeft };
-  width: ${ ({ containerWidth }: ContainerProps) => containerWidth };
+  width: ${ ({ containerWidth, isResizing }: ContainerProps) => isResizing ? containerWidth : '10px' };
   height: 100%;
   background-color: ${ ({ containerBackgroundColor, isResizing }: ContainerProps) => isResizing ? containerBackgroundColor : 'transparent' };
 `

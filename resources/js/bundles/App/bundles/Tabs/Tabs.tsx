@@ -87,13 +87,14 @@ const TabsContainer = styled.div`
   width: 100%;
   display: flex;
   height: 1.75rem;
-  padding-top: 2px;
+  padding-top: 1.5px;
 `
 
 const FilesContainer = styled.div`
   width: 100%;
   height: calc(100vh - 1.75rem);
   background-color: rgb(250, 250, 250);
+  box-shadow: -1px 0px 10px 0px rgba(0,0,0,0.5);
 `
 
 const FileContainer = styled.div`
