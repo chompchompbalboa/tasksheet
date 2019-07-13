@@ -3,14 +3,17 @@
 //-----------------------------------------------------------------------------
 import clone from '@/utils/clone'
 
+import defaultInitialData from '@app/state/initialData'
+
 import { TabActions, CLOSE_TAB, OPEN_FILE, OPEN_FILE_IN_NEW_TAB, UPDATE_ACTIVE_TAB_ID } from '@app/state/tab/actions'
 
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
+const initialActiveState = typeof initialData !== 'undefined' ? initialData.user.active : defaultInitialData.user.active
 export const initialTabState: TabState = {
-	activeTabId: null,
-	tabs: [],
+	activeTabId: initialActiveState.tabId,
+	tabs: initialActiveState.tabs === null ? [] : initialActiveState.tabs,
 }
 export type TabState = {
 	activeTabId: string

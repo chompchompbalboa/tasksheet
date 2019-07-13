@@ -13,8 +13,12 @@ class User extends Authenticatable
     use Traits\UsesUuid;
   
     protected $fillable = ['name', 'email', 'password'];
-    protected $visible = ['id', 'name', 'email', 'color', 'layout'];
-    protected $with = ['color', 'layout'];
+    protected $visible = ['id', 'name', 'email', 'active', 'color', 'layout'];
+    protected $with = ['active', 'color', 'layout'];
+  
+    public function active() {
+      return $this->hasOne('App\Models\UserActive', 'userId');
+    }
   
     public function color() {
       return $this->hasOne('App\Models\UserColor', 'userId');

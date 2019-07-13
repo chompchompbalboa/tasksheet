@@ -3,10 +3,10 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 import { connect } from 'react-redux'
-import { Dispatch } from 'redux'
 import changeCase from 'change-case'
 
 import { AppState } from '@app/state'
+import { ThunkDispatch } from '@app/state/types'
 import { UserColor } from '@app/state/user/types'
 import { selectUserColors } from '@app/state/user/selectors'
 import { 
@@ -23,8 +23,7 @@ const mapStateToProps = (state: AppState) => ({
   userColors: selectUserColors(state)
 })
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  // @ts-ignore thunk-action
+const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   updateUserColor: (updates: UserColorUpdates) => dispatch(updateUserColorAction(updates))
 })
 

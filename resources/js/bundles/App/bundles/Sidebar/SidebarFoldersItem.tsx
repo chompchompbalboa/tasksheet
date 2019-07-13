@@ -46,7 +46,7 @@ const Container = styled.div`
   padding: 0.125rem 0.5rem;
   display: flex;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   color: white;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -55,10 +55,17 @@ const Container = styled.div`
   }
 `
 
-const IconContainer = styled.div``
+const IconContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
 
 const Name = styled.div`
   margin-left: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 export default SidebarFoldersItem

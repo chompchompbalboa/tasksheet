@@ -2,11 +2,11 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
+import { ThunkDispatch } from '@app/state/types'
 import { selectUserColorPrimary, selectUserColorSecondary, selectUserLayoutSidebarWidth } from '@app/state/user/selectors'
 import { 
   updateUserLayout as updateUserLayoutAction, UserLayoutUpdates
@@ -24,8 +24,7 @@ const mapStateToProps = (state: AppState) => ({
   sidebarWidth: selectUserLayoutSidebarWidth(state)
 })
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  // @ts-ignore thunk-action
+const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   updateUserLayout: (updates: UserLayoutUpdates) => dispatch(updateUserLayoutAction(updates))
 })
 

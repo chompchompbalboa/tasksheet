@@ -17,7 +17,8 @@ class OrganizationTableSeeder extends Seeder
         'id' => '75e3c4f9-b261-3343-a320-8ee9fb0c931e', 
         'folderId' => $userFolder->id 
       ])->each(function($user) {
-        // Layout + Color
+        // Layout + Color + Active
+        $user->active()->save(factory(App\Models\UserActive::class)->make());
         $user->color()->save(factory(App\Models\UserColor::class)->make());
         $user->layout()->save(factory(App\Models\UserLayout::class)->make());
         // Organization

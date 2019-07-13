@@ -1,6 +1,9 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
+import { AppState } from '@app/state'
+import { ThunkAction, ThunkDispatch } from '@app/state/types'
+import { updateUserActive } from '@app/state/user/actions'
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -16,7 +19,15 @@ interface CloseTab {
 	fileId: string
 }
 
-export const closeTab = (fileId: string): TabActions => {
+export const closeTab = (fileId: string): ThunkAction => {
+	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+		dispatch(closeTabReducer(fileId))
+		const tabState = getState().tab
+		dispatch(updateUserActive({ tabId: tabState.activeTabId, tabs: tabState.tabs }))
+	}
+}
+
+const closeTabReducer = (fileId: string): TabActions => {
 	return {
 		type: CLOSE_TAB,
 		fileId: fileId,
@@ -32,7 +43,15 @@ interface OpenFile {
 	fileId: string
 }
 
-export const openFile = (fileId: string): TabActions => {
+export const openFile = (fileId: string): ThunkAction => {
+	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+		dispatch(openFileReducer(fileId))
+		const tab = getState().tab
+		dispatch(updateUserActive({ tabId: tab.activeTabId, tabs: tab.tabs }))
+	}
+}
+
+const openFileReducer = (fileId: string): TabActions => {
 	return {
 		type: OPEN_FILE,
 		fileId: fileId,
@@ -48,7 +67,15 @@ interface OpenFileInNewTab {
 	fileId: string
 }
 
-export const openFileInNewTab = (fileId: string): TabActions => {
+export const openFileInNewTab = (fileId: string): ThunkAction => {
+	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+		dispatch(openFileInNewTabReducer(fileId))
+		const tab = getState().tab
+		dispatch(updateUserActive({ tabId: tab.activeTabId, tabs: tab.tabs }))
+	}
+}
+
+const openFileInNewTabReducer = (fileId: string): TabActions => {
 	return {
 		type: OPEN_FILE_IN_NEW_TAB,
 		fileId: fileId,
@@ -64,7 +91,15 @@ interface UpdateActiveTabId {
 	nextActiveTabId: string
 }
 
-export const updateActiveTabId = (nextActiveTabId: string): TabActions => {
+export const updateActiveTabId = (nextActiveTabId: string): ThunkAction => {
+	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+		dispatch(updateActiveTabIdReducer(nextActiveTabId))
+		const tab = getState().tab
+		dispatch(updateUserActive({ tabId: tab.activeTabId, tabs: tab.tabs }))
+	}
+}
+
+const updateActiveTabIdReducer = (nextActiveTabId: string): TabActions => {
 	return {
 		type: UPDATE_ACTIVE_TAB_ID,
 		nextActiveTabId: nextActiveTabId,

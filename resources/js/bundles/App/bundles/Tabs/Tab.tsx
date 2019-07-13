@@ -2,13 +2,13 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { TAB_CLOSE } from '@app/assets/icons'
 
 import { AppState } from '@app/state'
+import { ThunkDispatch } from '@app/state/types'
 import { selectFile } from '@app/state/folder/selectors'
 import { File as TFile } from '@app/state/folder/types'
 import { 
@@ -25,7 +25,7 @@ const mapStateToProps = (state: AppState, props: TabProps) => ({
   file: selectFile(props.fileId, state)
 })
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   closeTab: (fileId: string) => dispatch(closeTabAction(fileId)),
   updateActiveTabId: (nextActiveTabId: string) => dispatch(updateActiveTabIdAction(nextActiveTabId))
 })

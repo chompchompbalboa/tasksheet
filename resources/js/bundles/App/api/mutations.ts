@@ -4,11 +4,17 @@
 import axios from '@/api/axios'
 
 import { FileUpdates, FolderUpdates } from '@app/state/folder/actions'
-import { UserColorUpdates, UserLayoutUpdates } from '@app/state/user/actions'
+import { UserActiveUpdates, UserColorUpdates, UserLayoutUpdates } from '@app/state/user/actions'
 
 //-----------------------------------------------------------------------------
 // User
 //-----------------------------------------------------------------------------
+export const updateUserActive = async (id: string, updates: UserActiveUpdates) => {
+	return axios.patch('/app/user/active/' + id, updates).then(response => {
+		return response.data
+	})
+}
+
 export const updateUserColor = async (id: string, updates: UserColorUpdates) => {
 	return axios.patch('/app/user/color/' + id, updates).then(response => {
 		return response.data

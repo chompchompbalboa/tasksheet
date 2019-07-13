@@ -5,7 +5,7 @@ import React from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 
-import { FILE_STORE } from '@app/assets/icons'
+import { FILE_SHEET } from '@app/assets/icons'
 
 import { AppState } from '@app/state'
 import { selectFile } from '@app/state/folder/selectors'
@@ -39,7 +39,7 @@ export const SidebarFoldersFile = ({
     type
   } = file
   const icons: { [type: string]: string } = {
-    STORE: FILE_STORE
+    SHEET: FILE_SHEET
   }
   return (
     <SidebarFoldersItem
