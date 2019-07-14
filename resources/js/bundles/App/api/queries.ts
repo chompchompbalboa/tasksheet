@@ -6,8 +6,8 @@ import axios from '@/api/axios'
 //-----------------------------------------------------------------------------
 // Queries
 //-----------------------------------------------------------------------------
-export const getCalendar = async (calendarId: string) => {
-	return axios.get('/app/calendars/' + calendarId).then(response => {
+export const getSheet = async (sheetId: string) => {
+	return axios.get('/app/sheets/' + sheetId).then(response => {
 		return response.data
 	})
 }

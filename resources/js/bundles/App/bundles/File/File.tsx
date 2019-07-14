@@ -9,6 +9,8 @@ import { AppState } from '@app/state'
 import { selectFile } from '@app/state/folder/selectors'
 import { File as TFile } from '@app/state/folder/types'
 
+import Sheet from '@app/bundles/Sheet/Sheet'
+
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
@@ -22,10 +24,18 @@ const mapStateToProps = (state: AppState, props: FileProps) => ({
 const File = ({
   file
 }: FileProps) => {
+
+  const fileComponents = {
+    SHEET: Sheet
+  }
+  const FileComponent = file ? fileComponents[file.type] : null
+
   return (
     <Container>
       {file 
-        ? file.name
+        ? <FileComponent 
+            fileId={file.id}
+            id={file.typeId}/>
         : 'Please select a sheet to get started'}
     </Container>
   )
@@ -45,9 +55,9 @@ interface FileProps {
 const Container = styled.div`
   width: 100%;
   height: 100%;
-display: flex;
-justify-content: center;
-align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 //-----------------------------------------------------------------------------

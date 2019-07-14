@@ -48,14 +48,14 @@ Route::prefix('app')->group(function () {
     'calendars' => 'CalendarController',
     // Notes
     'notes' => 'NoteController',
+    */
     // Sheet
     'sheets' => 'SheetController',
     'sheets/breakdowns' => 'SheetBreakdownController',
     'sheets/cells' => 'SheetCellController',
     'sheets/columns' => 'SheetColumnController',
     'sheets/breakdowns/formulas' => 'SheetBreakdownFormulaController',
-    'sheets/rows' => 'SheetRowController'
-    */
+    'sheets/rows' => 'SheetRowController',
     // User
     'user/active' => 'UserActiveController',
     'user/color' => 'UserColorController',

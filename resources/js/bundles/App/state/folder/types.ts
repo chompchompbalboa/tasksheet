@@ -17,6 +17,7 @@ export interface File {
 	id: string
 	name: string
 	type: FileType
+	typeId: string
 }
 
 export enum FileType {

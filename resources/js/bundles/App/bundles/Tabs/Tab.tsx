@@ -103,6 +103,8 @@ const Content = styled.div`
 
 const Name = styled.div`
   width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `
 
 const CloseTab = styled.div`
