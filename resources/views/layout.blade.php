@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <link rel="shortcut icon" href="" type="image/x-icon"/>
     <link rel="stylesheet" type="text/css" href="/css/base.css">
-    <title>Simplesheet</title>
+    <title>Sheetbit</title>
   </head>
   <body>
     <section id="react-container"></section>

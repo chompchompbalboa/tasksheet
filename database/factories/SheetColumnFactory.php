@@ -16,18 +16,10 @@ use Faker\Generator as Faker;
 $factory->define(App\Models\SheetColumn::class, function (Faker $faker) {
 
     $type = $faker->randomElement([
-      [
-        'type' => 'STRING',
-      ],
-      [
-        'type' => 'NUMBER',
-      ],
-      [
-        'type' => 'BOOLEAN',
-      ],
-      [
-        'type' => 'DATETIME',
-      ]
+      'STRING',
+      'NUMBER',
+      'DATETIME',
+      'BOOLEAN',
     ]);
 
     return [
@@ -35,6 +27,6 @@ $factory->define(App\Models\SheetColumn::class, function (Faker $faker) {
       'position' => 1,
       'width' => 250,
       'name' => $faker->streetSuffix,
-      'type' => 'STRING',
+      'type' => $type,
     ];
 });

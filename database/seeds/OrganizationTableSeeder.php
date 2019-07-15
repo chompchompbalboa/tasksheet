@@ -32,13 +32,13 @@ class OrganizationTableSeeder extends Seeder
           $user->save();
 
           // Organization Folders
-          factory(App\Models\Folder::class, 10)->create()->each(function ($folder, $folderKey) use($organizationFolder) {
+          factory(App\Models\Folder::class, 2)->create()->each(function ($folder, $folderKey) use($organizationFolder) {
             $folder->folderId = $organizationFolder->id;
             $folder->name = 'Folder '.($folderKey + 1);
             $folder->save();
 
             // Files
-            factory(App\Models\File::class, 5)->create()->each(function ($file, $fileKey) use($folder, $folderKey) {
+            factory(App\Models\File::class, 2)->create()->each(function ($file, $fileKey) use($folder, $folderKey) {
               $file->folderId = $folder->id;
               $file->name = 'File '.($folderKey + 1).'.'.($fileKey + 1);
               $file->save();
@@ -58,7 +58,7 @@ class OrganizationTableSeeder extends Seeder
                     $file->save();
 
                     // Columns
-                    $columns = factory(App\Models\SheetColumn::class, 8)->create();
+                    $columns = factory(App\Models\SheetColumn::class, 7)->create();
                     $columns->each(function($column, $key) use ($sheet) {
                       $column->sheetId = $sheet->id;
                       $column->position = $key;
@@ -66,17 +66,23 @@ class OrganizationTableSeeder extends Seeder
                     });
 
                     // Rows
-                    $rows = factory(App\Models\SheetRow::class, 25)->create();
+                    $rows = factory(App\Models\SheetRow::class, 20)->create();
                     $rows->each(function($row) use($columns, $sheet) {
                       $row->sheetId = $sheet->id;
                       $row->save();
 
                       // Cells
                       $columns->each(function($column) use($row, $sheet) {
+                        $cellValues = [
+                          'NUMBER' => strval(rand(0, 100)),
+                          'BOOLEAN' => strval(rand(0, 1)),
+                          'DATETIME' => null,
+                        ];
                         $cell = factory(App\Models\SheetCell::class)->create();
                         $cell->sheetId = $sheet->id;
                         $cell->rowId = $row->id;
                         $cell->columnId = $column->id;
+                        $cell->value = $column->type === 'STRING' ? $cell->value : $cellValues[$column->type];
                         $cell->save();
                       });
                     });

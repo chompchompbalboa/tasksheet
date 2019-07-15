@@ -22,6 +22,9 @@ const Settings = () => {
     if(isVisible) {
       window.addEventListener('click', handleClick)
     }
+    else {
+      window.removeEventListener('click', handleClick)
+    }
     return () => {
       window.removeEventListener('click', handleClick)
     }

@@ -6,38 +6,40 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { ThunkDispatch } from '@app/state/types'
-import { Row } from '@app/state/sheet/types'
+import { selectSheetCells, selectSheetColumns } from '@app/state/sheet/selectors'
+import { Cells, Columns, Row } from '@app/state/sheet/types'
 
 import SheetCell from '@app/bundles/Sheet/SheetCell'
 
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
-})
-
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+const mapStateToProps = (state: AppState, props: SheetRowProps) => ({
+  cells: selectSheetCells(state, props.sheetId),
+  columns: selectSheetColumns(state, props.sheetId)
 })
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetRow = ({
-  row: {
-    cells
-  },
+  cells,
+  columns,
+  row,
   sheetId
 }: SheetRowProps) => {
 
   return (
     <Container>
-      {cells.map(cellId => (
-        <SheetCell 
-          key={cellId}
-          cellId={cellId}
-          sheetId={sheetId}/>
-      ))}
+      {columns !== {} && Object.keys(columns).map(columnId => {
+        const cell = cells[row.cells.find(cellId => cells[cellId].columnId === columnId)]
+        return (
+          <SheetCell 
+            key={cell.id}
+            cell={cell}
+            sheetId={sheetId}/>
+        )
+      })}
     </Container>
   )
 }
@@ -46,6 +48,8 @@ const SheetRow = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetRowProps {
+  cells?: Cells
+  columns?: Columns
   row: Row
   sheetId: string
 }
@@ -60,6 +64,5 @@ const Container = styled.tr`
 // Export
 //-----------------------------------------------------------------------------
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(SheetRow)

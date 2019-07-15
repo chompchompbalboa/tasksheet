@@ -3,13 +3,18 @@
 //-----------------------------------------------------------------------------
 import { AppState } from '@app/state'
 
-import { Cell, Columns, Rows } from './types'
+import { Cell, Cells, Columns, Rows } from './types'
 
 //-----------------------------------------------------------------------------
 // Select Sheet Cell
 //-----------------------------------------------------------------------------
 export const selectSheetCell = (state: AppState, sheetId: string, cellId: string): Cell =>
 	state.sheet[sheetId].cells[cellId]
+
+//-----------------------------------------------------------------------------
+// Select Sheet Cells
+//-----------------------------------------------------------------------------
+export const selectSheetCells = (state: AppState, sheetId: string): Cells => state.sheet[sheetId].cells
 
 //-----------------------------------------------------------------------------
 // Select Sheet Columns
