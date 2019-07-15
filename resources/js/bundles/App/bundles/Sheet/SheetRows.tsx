@@ -9,7 +9,7 @@ import { AppState } from '@app/state'
 import { selectSheetRows } from '@app/state/sheet/selectors'
 import { Rows } from '@app/state/sheet/types'
 
-import SheetRow from '@app/bundles/sheet/SheetRow'
+import SheetRow from '@app/bundles/Sheet/SheetRow'
 
 //-----------------------------------------------------------------------------
 // Redux
