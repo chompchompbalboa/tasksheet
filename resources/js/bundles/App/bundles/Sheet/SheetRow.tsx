@@ -7,6 +7,9 @@ import styled from 'styled-components'
 
 import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
+import { Row } from '@app/state/sheet/types'
+
+import SheetCell from '@app/bundles/Sheet/SheetCell'
 
 //-----------------------------------------------------------------------------
 // Redux
@@ -20,11 +23,21 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetComponent = ({
-}: SheetProps) => {
+const SheetRow = ({
+  row: {
+    cells
+  },
+  sheetId
+}: SheetRowProps) => {
 
   return (
     <Container>
+      {cells.map(cellId => (
+        <SheetCell 
+          key={cellId}
+          cellId={cellId}
+          sheetId={sheetId}/>
+      ))}
     </Container>
   )
 }
@@ -32,16 +45,15 @@ const SheetComponent = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetProps {
+interface SheetRowProps {
+  row: Row
+  sheetId: string
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  overflow-x: scroll;
+const Container = styled.tr`
 `
 
 //-----------------------------------------------------------------------------
@@ -50,4 +62,4 @@ const Container = styled.div`
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SheetComponent)
+)(SheetRow)

@@ -6,25 +6,35 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { ThunkDispatch } from '@app/state/types'
+import { selectSheetColumns } from '@app/state/sheet/selectors'
+import { Columns } from '@app/state/sheet/types'
+
+import SheetColumn from '@app/bundles/Sheet/SheetColumn'
 
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
-})
-
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+const mapStateToProps = (state: AppState, props: SheetColumnsProps) => ({
+  columns: selectSheetColumns(state, props.sheetId)
 })
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetComponent = ({
-}: SheetProps) => {
-
+const SheetColumns = ({
+  columns
+}: SheetColumnsProps) => {
   return (
     <Container>
+      <TableRow>
+        {columns !== {} && Object.keys(columns).map(columnId => {
+          const column = columns[columnId]
+          return (
+            <SheetColumn 
+              key={columnId}
+              column={column}/>
+        )})}
+      </TableRow>
     </Container>
   )
 }
@@ -32,22 +42,27 @@ const SheetComponent = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetProps {
+interface SheetColumnsProps {
+  sheetId: string
+  columns?: Columns
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div`
+const Container = styled.thead`
+  position: relative;
+  z-index: 10;
   width: 100%;
-  height: 100%;
-  overflow-x: scroll;
+`
+
+const TableRow = styled.tr`
+  position: relative;
 `
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SheetComponent)
+  mapStateToProps
+)(SheetColumns)

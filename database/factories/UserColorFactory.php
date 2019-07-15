@@ -15,7 +15,7 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Models\UserColor::class, function (Faker $faker) {
     return [
-        'primary' => 'rgb(28, 27, 39)',
-        'secondary' => 'rgb(224, 131, 45)'
+        'primary' => '#38406B',
+        'secondary' => '#C5C5C5'
     ];
 });

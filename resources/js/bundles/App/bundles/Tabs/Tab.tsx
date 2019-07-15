@@ -80,7 +80,7 @@ const Container = styled.div`
   height: 100%;
   width: 12.5%;
   opacity: ${ ({ isActiveTab }: ContainerProps) => isActiveTab ? '1' : '0.75'};
-  background-color: rgb(250, 250, 250);
+  background-color: white;
   border: 1px solid rgb(180, 180, 180);
   border-left: none;
   border-bottom: none;

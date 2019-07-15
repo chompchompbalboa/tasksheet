@@ -58,7 +58,7 @@ class OrganizationTableSeeder extends Seeder
                     $file->save();
 
                     // Columns
-                    $columns = factory(App\Models\SheetColumn::class, 3)->create();
+                    $columns = factory(App\Models\SheetColumn::class, 8)->create();
                     $columns->each(function($column, $key) use ($sheet) {
                       $column->sheetId = $sheet->id;
                       $column->position = $key;
@@ -66,7 +66,7 @@ class OrganizationTableSeeder extends Seeder
                     });
 
                     // Rows
-                    $rows = factory(App\Models\SheetRow::class, 10)->create();
+                    $rows = factory(App\Models\SheetRow::class, 25)->create();
                     $rows->each(function($row) use($columns, $sheet) {
                       $row->sheetId = $sheet->id;
                       $row->save();

@@ -5,6 +5,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
+
 import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
 
@@ -20,11 +21,12 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetComponent = ({
-}: SheetProps) => {
+const SheetActions = ({
+}: SheetActionsProps) => {
 
   return (
     <Container>
+      &nbsp;
     </Container>
   )
 }
@@ -32,16 +34,20 @@ const SheetComponent = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetProps {
+interface SheetActionsProps {
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  z-index: 10;
   width: 100%;
-  height: 100%;
-  overflow-x: scroll;
+  position: sticky;
+  top: 0;
+  height: 2rem;
+  background-color: white;
+  border-bottom: 1px dashed black;
 `
 
 //-----------------------------------------------------------------------------
@@ -50,4 +56,4 @@ const Container = styled.div`
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SheetComponent)
+)(SheetActions)

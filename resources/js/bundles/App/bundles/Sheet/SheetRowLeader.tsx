@@ -2,52 +2,45 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { connect } from 'react-redux'
 import styled from 'styled-components'
-
-import { AppState } from '@app/state'
-import { ThunkDispatch } from '@app/state/types'
-
-//-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
-})
-
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-})
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetComponent = ({
-}: SheetProps) => {
-
-  return (
-    <Container>
-    </Container>
-  )
-}
+const SheetRowLeader = ({ 
+  isHeader = false
+}: SheetRowLeaderProps) => (
+  <Container
+    isHeader={isHeader}>
+      &nbsp;
+  </Container>
+)
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetProps {
+type SheetRowLeaderProps = {
+  isHeader?: boolean
 }
-
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  overflow-x: scroll;
+const Container = styled.td`
+  position: sticky;
+  top: ${ ({ isHeader }: ContainerProps) => isHeader ? '2rem' : 'auto'};
+  width: 2rem;
+  padding: 0.15rem 0 0.15rem 0.25rem;
+  background-color: ${ ({ isHeader }: ContainerProps) => isHeader ? 'white' : 'transparent'};
+  border: ${ ({ isHeader }: ContainerProps) => isHeader ? 'none' : '0.5px dashed black'};
+  border-bottom: ${ ({ isHeader }: ContainerProps) => isHeader ? 'none' : '0.5px dashed black'};
+  border-left: none;
+  box-shadow: ${ ({ isHeader }: ContainerProps) => isHeader ? '0px 1px 0px 0px rgba(0,0,0,1)' : 'none'};
 `
+interface ContainerProps {
+  isHeader: boolean
+}
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SheetComponent)
+export default SheetRowLeader

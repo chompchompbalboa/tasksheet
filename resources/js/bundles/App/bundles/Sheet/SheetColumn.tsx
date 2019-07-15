@@ -7,6 +7,7 @@ import styled from 'styled-components'
 
 import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
+import { Column } from '@app/state/sheet/types'
 
 //-----------------------------------------------------------------------------
 // Redux
@@ -20,11 +21,17 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetComponent = ({
-}: SheetProps) => {
+const SheetColumn = ({
+  column: {
+    name,
+    width
+  }
+}: SheetColumnProps) => {
 
   return (
-    <Container>
+    <Container
+      containerWidth={width}>
+      {name}
     </Container>
   )
 }
@@ -32,17 +39,25 @@ const SheetComponent = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetProps {
+interface SheetColumnProps {
+  column: Column
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  overflow-x: scroll;
+const Container = styled.th`
+  position: sticky;
+  top: 2rem;
+  width: ${ ({ containerWidth }: ContainerProps ) => containerWidth + 'px'};
+  padding: 0.15rem 0 0.15rem 0.25rem;
+  text-align: left;
+  background-color: white;
+  box-shadow: 0px 1px 0px 0px rgba(0,0,0,1);
 `
+interface ContainerProps {
+  containerWidth: number
+}
 
 //-----------------------------------------------------------------------------
 // Export
@@ -50,4 +65,4 @@ const Container = styled.div`
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SheetComponent)
+)(SheetColumn)

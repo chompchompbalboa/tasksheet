@@ -14,8 +14,7 @@
     },
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "noUnusedLocals": true,
-    "forceConsistentCasingInFileNames": true
+    "noUnusedLocals": true
   },
   "include": [
     "./resources/**/*"

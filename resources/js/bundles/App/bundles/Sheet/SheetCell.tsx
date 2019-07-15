@@ -6,25 +6,29 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { ThunkDispatch } from '@app/state/types'
+import { Cell } from '@app/state/sheet/types'
+
+import { selectSheetCell } from '@app/state/sheet/selectors'
 
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
-})
-
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+const mapStateToProps = (state: AppState, props: SheetCellProps) => ({
+  cell: selectSheetCell(state, props.sheetId, props.cellId)
 })
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetComponent = ({
-}: SheetProps) => {
+const SheetCell = ({
+  cell: {
+    value
+  }
+}: SheetCellProps) => {
 
   return (
     <Container>
+      {value}
     </Container>
   )
 }
@@ -32,22 +36,24 @@ const SheetComponent = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetProps {
+interface SheetCellProps {
+  cellId: string
+  cell?: Cell
+  sheetId: string
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  overflow-x: scroll;
+const Container = styled.td`
+  padding: 0.15rem 0 0.15rem 0.25rem;
+  border: 0.5px dashed black;
+  border-left: none;
 `
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SheetComponent)
+  mapStateToProps
+)(SheetCell)

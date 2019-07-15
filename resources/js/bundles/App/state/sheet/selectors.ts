@@ -1,53 +1,34 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
-import { connect } from 'react-redux'
-import styled from 'styled-components'
-
 import { AppState } from '@app/state'
-import { ThunkDispatch } from '@app/state/types'
+
+import { Cell, Columns, Rows } from './types'
 
 //-----------------------------------------------------------------------------
-// Redux
+// Select Sheet Cell
 //-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
-})
-
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-})
+export const selectSheetCell = (state: AppState, sheetId: string, cellId: string): Cell =>
+	state.sheet[sheetId].cells[cellId]
 
 //-----------------------------------------------------------------------------
-// Component
+// Select Sheet Columns
 //-----------------------------------------------------------------------------
-const SheetComponent = ({
-}: SheetProps) => {
+export const selectSheetColumns = (state: AppState, sheetId: string): Columns => state.sheet[sheetId].columns
 
-  return (
-    <Container>
-    </Container>
-  )
+//-----------------------------------------------------------------------------
+// Select Sheet Rows
+//-----------------------------------------------------------------------------
+export const selectSheetRows = (state: AppState, sheetId: string): Rows => state.sheet[sheetId].rows
+
+//-----------------------------------------------------------------------------
+// Select Sheet Width
+//-----------------------------------------------------------------------------
+export const selectSheetWidth = (state: AppState, sheetId: string): string => {
+	const columns = state.sheet[sheetId] ? state.sheet[sheetId].columns : null
+	return columns && Object.keys(columns).length !== 0
+		? Object.keys(columns)
+				.map(columnId => columns[columnId].width)
+				.reduce((sheetWidth, columnWidth) => sheetWidth + columnWidth) + 'px'
+		: null
 }
-
-//-----------------------------------------------------------------------------
-// Props
-//-----------------------------------------------------------------------------
-interface SheetProps {
-}
-
-//-----------------------------------------------------------------------------
-// Styled Components
-//-----------------------------------------------------------------------------
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  overflow-x: scroll;
-`
-
-//-----------------------------------------------------------------------------
-// Export
-//-----------------------------------------------------------------------------
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SheetComponent)

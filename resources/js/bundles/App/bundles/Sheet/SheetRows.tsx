@@ -6,25 +6,37 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { ThunkDispatch } from '@app/state/types'
+import { selectSheetRows } from '@app/state/sheet/selectors'
+import { Rows } from '@app/state/sheet/types'
+
+import SheetRow from '@app/bundles/sheet/SheetRow'
 
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
-})
-
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+const mapStateToProps = (state: AppState, props: SheetRowsProps) => ({
+  rows: selectSheetRows(state, props.sheetId)
 })
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetComponent = ({
-}: SheetProps) => {
+const SheetRows = ({
+  rows,
+  sheetId
+}: SheetRowsProps) => {
 
   return (
     <Container>
+      {rows !== {} && Object.keys(rows).map(rowId => {
+        const row = rows[rowId]
+        return (
+          <SheetRow
+            key={rowId}
+            row={row}
+            sheetId={sheetId}/>
+        )
+      })}
     </Container>
   )
 }
@@ -32,22 +44,22 @@ const SheetComponent = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetProps {
+interface SheetRowsProps {
+  sheetId: string
+  rows?: Rows
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div`
+const Container = styled.tbody`
+  z-index: 5;
   width: 100%;
-  height: 100%;
-  overflow-x: scroll;
 `
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SheetComponent)
+  mapStateToProps
+)(SheetRows)

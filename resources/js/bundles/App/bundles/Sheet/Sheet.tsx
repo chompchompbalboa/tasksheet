@@ -11,13 +11,19 @@ import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
 import { loadSheet as loadSheetAction } from '@app/state/sheet/actions'
 import { NestedSheet } from '@app/state/sheet/types'
+import { selectSheetWidth } from '@app/state/sheet/selectors'
 import { selectActiveTabId } from '@app/state/tab/selectors'
+
+import SheetActions from '@app/bundles/Sheet/SheetActions'
+import SheetColumns from '@app/bundles/Sheet/SheetColumns'
+import SheetRows from '@app/bundles/Sheet/SheetRows'
 
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
-  activeTabId: selectActiveTabId(state)
+const mapStateToProps = (state: AppState, props: SheetComponentProps) => ({
+  activeTabId: selectActiveTabId(state),
+  sheetWidth: selectSheetWidth(state, props.id)
 })
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
@@ -31,8 +37,9 @@ const SheetComponent = ({
   activeTabId,
   fileId,
   id,
-  loadSheet
-}: SheetProps) => {
+  loadSheet,
+  sheetWidth
+}: SheetComponentProps) => {
 
   const [ hasLoaded, setHasLoaded ] = useState(false)
 
@@ -48,14 +55,17 @@ const SheetComponent = ({
 
   return (
     <Container>
-      {!hasLoaded 
-        ? 'Loading...'
-        : <SheetContainer>
-            <Sheet>
-              <tbody><tr><td>{id}</td></tr></tbody>
+      <SheetContainer
+        sheetWidth={sheetWidth}>
+        <SheetActions />
+        {!hasLoaded 
+          ? 'Loading...'
+          : <Sheet>
+              <SheetColumns sheetId={id}/>
+              <SheetRows sheetId={id}/>
             </Sheet>
-          </SheetContainer>
         }
+        </SheetContainer>
     </Container>
   )
 }
@@ -63,29 +73,36 @@ const SheetComponent = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetProps {
-  activeTabId: string
+interface SheetComponentProps {
+  activeTabId?: string
   fileId: string
   id: string
   loadSheet?(sheet: NestedSheet): Promise<void>
+  sheetWidth?: string
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  position: relative;
   width: 100%;
   height: 100%;
   overflow-x: scroll;
 `
 
 const SheetContainer = styled.div`
-  width: 100%;
-  z-index: 5;
+  position: relative;
+  width: ${ ({ sheetWidth }: SheetContainerProps) => sheetWidth};
 `
+interface SheetContainerProps {
+  sheetWidth: string
+}
 
 const Sheet = styled.table`
+  position: relative;
   width: 100%;
+  border-collapse: collapse;
 `
 
 //-----------------------------------------------------------------------------

@@ -2,11 +2,23 @@ export interface Sheets {
 	[key: string]: Sheet
 }
 
+export interface Columns {
+	[key: string]: Column
+}
+
+export interface Rows {
+	[key: string]: Row
+}
+
+export interface Cells {
+	[key: string]: Cell
+}
+
 export interface Sheet {
 	id: string
-	rows: [Row]
-	columns: [Column]
-	cells: [Cell]
+	rows: Rows
+	columns: Columns
+	cells: Cells
 }
 
 export interface Column {
@@ -28,6 +40,7 @@ export enum ColumnType {
 export interface Row {
 	id: string
 	sheetId: string
+	cells: string[]
 }
 
 export interface Cell {

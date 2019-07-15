@@ -84,6 +84,8 @@ interface ContainerProps {
 }
 
 const TabsContainer = styled.div`
+  z-index: 2;
+  position: relative;
   width: 100%;
   display: flex;
   height: 1.75rem;
@@ -91,6 +93,8 @@ const TabsContainer = styled.div`
 `
 
 const FilesContainer = styled.div`
+  z-index: 1;
+  position: relative;
   width: 100%;
   height: calc(100vh - 1.75rem);
   background-color: rgb(250, 250, 250);
@@ -98,6 +102,7 @@ const FilesContainer = styled.div`
 `
 
 const FileContainer = styled.div`
+  position: relative;
   display: ${ ({ isActiveTab }: FileContainerProps) => isActiveTab ? 'block' : 'none' };
   width: 100%;
   height: 100%;
