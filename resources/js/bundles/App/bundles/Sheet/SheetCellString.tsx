@@ -1,10 +1,11 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import styled from 'styled-components'
 
 import AutosizeTextArea from 'react-autosize-textarea'
+import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -13,44 +14,24 @@ const SheetCellString = ({
   updateCellValue,
   value
 }: SheetCellStringProps) => {
-
-  const textarea = useRef(null)
-  const [ isEditing, setIsEditing ] = useState(false)
   
-  useEffect(() => {
-    if(isEditing) {
-      textarea.current.select()
-      window.addEventListener('click', closeOnClickOutside)
-    }
-    else {
-      window.removeEventListener('click', closeOnClickOutside)
-    }
-    return () => {
-      window.removeEventListener('click', closeOnClickOutside)
-    }
-  }, [ isEditing ])
-
-  const closeOnClickOutside = (e: Event) => {
-    if(!textarea.current.contains(e.target)) {
-      setIsEditing(false)
-    }
+  const textarea = useRef(null)
+  
+  const focusCell = () => {
+    textarea.current.select()
   }
-
-  const handleDoubleClick = (e: any) => {
-    e.preventDefault()
-    setIsEditing(true)
-  }
+  
+  const safeValue = value === null ? "" : value
 
   return (
-    <StyledTextarea
-      ref={textarea}
-      onChange={(e: any) => updateCellValue(e.target.value)}
-      onDoubleClick={(e) => handleDoubleClick(e)}
-      readOnly={!isEditing}
-      style={{
-        cursor: isEditing ? 'text' : 'default'
-      }}
-      value={value === null ? "" : value}/>
+    <SheetCellContainer
+      focusCell={focusCell}
+      value={safeValue}>
+      <StyledTextarea
+        ref={textarea}
+        onChange={(e: any) => updateCellValue(e.target.value)}
+        value={safeValue}/>
+    </SheetCellContainer>
   )
 
 }

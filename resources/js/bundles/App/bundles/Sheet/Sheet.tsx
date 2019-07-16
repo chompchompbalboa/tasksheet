@@ -93,7 +93,7 @@ const Container = styled.div`
 
 const SheetContainer = styled.div`
   position: relative;
-  width: ${ ({ sheetWidth }: SheetContainerProps) => sheetWidth};
+  width: ${ ({ sheetWidth }: SheetContainerProps) => sheetWidth };
 `
 interface SheetContainerProps {
   sheetWidth: string
@@ -102,6 +102,7 @@ interface SheetContainerProps {
 const Sheet = styled.table`
   position: relative;
   width: 100%;
+  height: 1px;
   border-collapse: collapse;
 `
 

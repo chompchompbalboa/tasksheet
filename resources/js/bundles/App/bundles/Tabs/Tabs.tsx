@@ -97,7 +97,7 @@ const FilesContainer = styled.div`
   position: relative;
   width: 100%;
   height: calc(100vh - 1.75rem);
-  background-color: rgb(250, 250, 250);
+  background-color: white;
   box-shadow: -1px 0px 10px 0px rgba(0,0,0,0.5);
 `
 

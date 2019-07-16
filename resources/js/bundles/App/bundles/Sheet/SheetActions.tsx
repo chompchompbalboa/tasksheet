@@ -46,8 +46,8 @@ const Container = styled.div`
   position: sticky;
   top: 0;
   height: 2rem;
-  background-color: white;
-  border-bottom: 1px dashed black;
+  background-color: rgb(250, 250, 250);
+  border-bottom: 1px solid black;
 `
 
 //-----------------------------------------------------------------------------

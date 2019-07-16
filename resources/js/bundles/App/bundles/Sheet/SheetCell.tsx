@@ -115,9 +115,11 @@ interface SheetCellProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.td`
+  position: relative;
   cursor: default;
   padding: 0.15rem 0 0.15rem 0.25rem;
-  border: 0.5px dashed black;
+  font-size: 0.9rem;
+  border: 0.5px solid rgb(180, 180, 180);
   border-left: none;
   box-shadow: ${ ({ boxShadowColor, isHighlighted }: ContainerProps ) => isHighlighted ? 'inset 0px 0px 0px 2px ' + boxShadowColor : 'none' };
   user-select: none;

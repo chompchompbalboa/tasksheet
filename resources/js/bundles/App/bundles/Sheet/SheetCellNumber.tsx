@@ -1,8 +1,10 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import styled from 'styled-components'
+
+import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -11,51 +13,26 @@ const SheetCellNumber = ({
   updateCellValue,
   value
 }: SheetCellNumberProps) => {
-
-  const input = useRef(null)
-  const [ isEditing, setIsEditing ] = useState(false)
   
-  useEffect(() => {
-    if(isEditing) {
-      input.current.select()
-      window.addEventListener('click', closeOnClickOutside)
-    }
-    else {
-      window.removeEventListener('click', closeOnClickOutside)
-    }
-    return () => {
-      window.removeEventListener('click', closeOnClickOutside)
-    }
-  }, [ isEditing ])
-
-  const closeOnClickOutside = (e: Event) => {
-    if(!input.current.contains(e.target)) {
-      setIsEditing(false)
-    }
+  const input = useRef(null)
+  
+  const focusCell = () => {
+    input.current.select()
   }
+  
+  const safeValue = value === null ? "" : value
 
-  const handleDoubleClick = (e: any) => {
-    e.preventDefault()
-    setIsEditing(true)
-  }
-
-  if (isEditing) {
-    return (
+  return (
+    <SheetCellContainer
+      focusCell={focusCell}
+      value={safeValue}>
       <StyledInput
         ref={input}
-        autoFocus
         type="number"
         onChange={(e) => updateCellValue(e.target.value)}
-        value={value === null ? "" : value}/>
-    )
-  }
-  return (
-    <Container
-      onDoubleClick={(e) => handleDoubleClick(e)}>
-      {value}
-    </Container>
+        value={safeValue}/>
+    </SheetCellContainer>
   )
-
 }
 
 //-----------------------------------------------------------------------------
@@ -69,11 +46,6 @@ interface SheetCellNumberProps {
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-`
-
 const StyledInput = styled.input`
   width: 100%;
   height: 100%;

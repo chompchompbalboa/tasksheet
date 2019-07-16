@@ -47,12 +47,13 @@ interface SheetColumnProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.th`
+  z-index: 50;
   position: sticky;
   top: 2rem;
   width: ${ ({ containerWidth }: ContainerProps ) => containerWidth + 'px'};
   padding: 0.15rem 0 0.15rem 0.25rem;
   text-align: left;
-  background-color: white;
+  background-color: rgb(250, 250, 250);
   box-shadow: 0px 1px 0px 0px rgba(0,0,0,1);
 `
 interface ContainerProps {

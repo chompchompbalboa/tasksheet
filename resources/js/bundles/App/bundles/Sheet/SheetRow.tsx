@@ -58,6 +58,8 @@ interface SheetRowProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.tr`
+  position: relative;
+  height: 100%;
 `
 
 //-----------------------------------------------------------------------------

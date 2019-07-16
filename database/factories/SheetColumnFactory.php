@@ -18,7 +18,7 @@ $factory->define(App\Models\SheetColumn::class, function (Faker $faker) {
     $type = $faker->randomElement([
       'STRING',
       'NUMBER',
-      //'DATETIME',
+      'DATETIME',
       'BOOLEAN',
     ]);
 
