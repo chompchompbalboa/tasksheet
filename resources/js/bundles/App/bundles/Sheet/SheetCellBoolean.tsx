@@ -8,13 +8,13 @@ import styled from 'styled-components'
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellBoolean = ({
-  setCellValue,
+  updateCellValue,
   value
 }: SheetCellBooleanProps) => {
   
   const handleChange = (checked: boolean) => {
     const nextCellValue = checked ? '1' : '0'
-    setCellValue(nextCellValue)
+    updateCellValue(nextCellValue)
   }
   
   return (
@@ -29,7 +29,7 @@ const SheetCellBoolean = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetCellBooleanProps {
-  setCellValue(nextCellValue: string): void
+  updateCellValue(nextCellValue: string): void
   value: string
 }
 

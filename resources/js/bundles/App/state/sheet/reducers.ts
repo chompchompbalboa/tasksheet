@@ -2,7 +2,7 @@
 // Initial
 //-----------------------------------------------------------------------------
 import { Sheets } from '@app/state/sheet/types'
-import { SheetActions, LOAD_SHEET } from '@app/state/sheet/actions'
+import { SheetActions, LOAD_SHEET, UPDATE_SHEET_CELL } from '@app/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
 // Reducers
@@ -14,6 +14,23 @@ export const userReducer = (state: Sheets = {}, action: SheetActions): Sheets =>
 			return {
 				...state,
 				[sheet.id]: sheet,
+			}
+		}
+
+		case UPDATE_SHEET_CELL: {
+			const { sheetId, cellId, updates } = action
+			return {
+				...state,
+				[sheetId]: {
+					...state[sheetId],
+					cells: {
+						...state[sheetId].cells,
+						[cellId]: {
+							...state[sheetId].cells[cellId],
+							...updates,
+						},
+					},
+				},
 			}
 		}
 

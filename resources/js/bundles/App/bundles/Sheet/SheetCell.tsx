@@ -6,6 +6,8 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
+import { ThunkDispatch } from '@app/state/types'
+import { updateSheetCell as updateSheetCellAction, CellUpdates } from '@app/state/sheet/actions'
 import { Cell, Columns } from '@app/state/sheet/types'
 
 import { selectSheetColumns } from '@app/state/sheet/selectors'
@@ -24,16 +26,23 @@ const mapStateToProps = (state: AppState, props: SheetCellProps) => ({
   columns: selectSheetColumns(state, props.sheetId)
 })
 
+const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+  updateSheetCell: (sheetId: string, cellId: string, updates: CellUpdates) => dispatch(updateSheetCellAction(sheetId, cellId, updates))
+})
+
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetCell = ({
   boxShadowColor,
   cell: {
+    id,
     columnId,
     value
   },
-  columns
+  columns,
+  sheetId,
+  updateSheetCell
 }: SheetCellProps) => {
   
   const cellContainer = useRef(null)
@@ -42,21 +51,32 @@ const SheetCell = ({
   
   useEffect(() => {
     if(isHighlighted) {
-      window.addEventListener('click', handleClick)
+      window.addEventListener('mousedown', removeHighlightOnClickOutisde)
     }
     else {
-      window.removeEventListener('click', handleClick)
+      window.removeEventListener('mousedown', removeHighlightOnClickOutisde)
     }
     return () => {
-      window.removeEventListener('click', handleClick)
+      window.removeEventListener('mousedown', removeHighlightOnClickOutisde)
     }
   }, [ isHighlighted ])
 
-  const handleClick = (e: Event) => {
+  const removeHighlightOnClickOutisde = (e: Event) => {
     if(!cellContainer.current.contains(e.target)) {
       setIsHighlighted(false)
     }
   }
+
+  useEffect(() => {
+    let updateSheetCellTimer: number = null
+    if(cellValue !== value) {
+      clearTimeout(updateSheetCellTimer)
+      updateSheetCellTimer = setTimeout(() => {
+        updateSheetCell(sheetId, id, { value: cellValue })
+      }, 1000);
+    }
+    return () => clearTimeout(updateSheetCellTimer);
+  }, [ cellValue ])
   
   const sheetCellTypes = {
     STRING: SheetCellString,
@@ -73,8 +93,8 @@ const SheetCell = ({
       boxShadowColor={boxShadowColor}
       isHighlighted={isHighlighted}
       onClick={() => setIsHighlighted(true)}>
-      <SheetCellType 
-        setCellValue={setCellValue}
+      <SheetCellType
+        updateCellValue={setCellValue}
         value={cellValue}/>
     </Container>
   )
@@ -88,6 +108,7 @@ interface SheetCellProps {
   cell: Cell
   columns?: Columns
   sheetId: string
+  updateSheetCell?(sheetId: string, cellId: string, updates: CellUpdates): void
 }
 
 //-----------------------------------------------------------------------------
@@ -99,6 +120,7 @@ const Container = styled.td`
   border: 0.5px dashed black;
   border-left: none;
   box-shadow: ${ ({ boxShadowColor, isHighlighted }: ContainerProps ) => isHighlighted ? 'inset 0px 0px 0px 2px ' + boxShadowColor : 'none' };
+  user-select: none;
 `
 interface ContainerProps {
   boxShadowColor: string
@@ -109,5 +131,6 @@ interface ContainerProps {
 // Export
 //-----------------------------------------------------------------------------
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(SheetCell)

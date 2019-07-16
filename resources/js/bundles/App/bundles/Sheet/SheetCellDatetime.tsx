@@ -21,7 +21,8 @@ const SheetCellDatetime = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetCellDatetimeProps {
-  setCellValue(nextCellValue: string): void
+  isEditing: boolean
+  updateCellValue(nextCellValue: string): void
   value: string
 }
 
