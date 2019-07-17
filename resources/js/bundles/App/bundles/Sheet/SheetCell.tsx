@@ -117,7 +117,7 @@ interface SheetCellProps {
 const Container = styled.td`
   position: relative;
   cursor: default;
-  padding: 0.15rem 0 0.15rem 0.25rem;
+  padding: 0.15rem 0.25rem;
   font-size: 0.9rem;
   border: 0.5px solid rgb(180, 180, 180);
   border-left: none;

@@ -62,6 +62,7 @@ const StyledTextarea = styled(AutosizeTextArea)`
   background-color: transparent;
   -moz-appearance: textfield;
   resize: none;
+  white-space: pre-wrap;
   &::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;

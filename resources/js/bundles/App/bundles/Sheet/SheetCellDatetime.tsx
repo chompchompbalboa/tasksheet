@@ -19,6 +19,10 @@ const SheetCellDatetime = ({
   
   const safeValue = value === null ? "" : moment(value).format('MM/DD/YYYY')
 
+  const formatNextCellValue = (date: any) => {
+    return date !== null ? moment(date).format('YYYY-MM-DD HH:mm:ss') : null
+  }
+
   return (
     <SheetCellContainer
       focusCell={() => {}}
@@ -28,7 +32,7 @@ const SheetCellDatetime = ({
         autoFocus
         customInput={<StyledInput/>}
         selected={value !== null ? moment(value).toDate() : null}
-        onChange={(date: any) => updateCellValue(moment(date).format('YYYY-MM-DD HH:mm:ss'))}/>
+        onChange={(date: any) => updateCellValue(formatNextCellValue(date))}/>
     </SheetCellContainer>
   )
 }

@@ -1,79 +1,73 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetCellContainer = ({
+const Dropdown = ({
   children,
-  focusCell,
-  value
-}: SheetCellContainerProps) => {
+  closeDropdown,
+  dropdownLeft,
+  dropdownTop
+}: DropdownProps) => {
 
   const container = useRef(null)
-  const [ isEditing, setIsEditing ] = useState(false)
-  
+
   useEffect(() => {
-    if(isEditing) {
-      focusCell()
-      window.addEventListener('click', closeOnClickOutside)
-    }
-    else {
-      window.removeEventListener('click', closeOnClickOutside)
-    }
+    window.addEventListener('mousedown', closeDropdownOnClickOutside)
     return () => {
-      window.removeEventListener('click', closeOnClickOutside)
+      window.removeEventListener('mousedown', closeDropdownOnClickOutside)
     }
-  }, [ isEditing ])
+  }, [])
 
-  const closeOnClickOutside = (e: Event) => {
+  const closeDropdownOnClickOutside = (e: Event) => {
     if(!container.current.contains(e.target)) {
-      setIsEditing(false)
+      closeDropdown()
     }
   }
 
-  const handleDoubleClick = (e: any) => {
-    e.preventDefault()
-    setIsEditing(true)
-  }
-  
   return (
     <Container
       ref={container}
-      onDoubleClick={(e) => handleDoubleClick(e)}>
-      {isEditing 
-        ? children
-        : value === null ? " " : value}
+      dropdownTop={dropdownTop}
+      dropdownLeft={dropdownLeft}>
+      {children}
     </Container>
   )
-
 }
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetCellContainerProps {
+interface DropdownProps {
   children?: any
-  focusCell?(): void
-  value: string
+  closeDropdown(): void
+  dropdownTop: number
+  dropdownLeft: number
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  white-space: pre-wrap;
+  z-index: 10000;
+  position: fixed;
+  top: ${( { dropdownTop }: ContainerProps ) => dropdownTop + 'px'};
+  left: ${( { dropdownLeft }: ContainerProps ) => dropdownLeft + 'px'};
+  padding: 0.5rem;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 3px 3px 10px 0px rgba(150,150,150,1)
 `
+interface ContainerProps {
+  dropdownTop: number
+  dropdownLeft: number
+}
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetCellContainer
+export default Dropdown
