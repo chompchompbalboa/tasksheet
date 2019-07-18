@@ -76,7 +76,7 @@ interface TabProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  cursor: ${ ({ isActiveTab }: ContainerProps) => isActiveTab ? 'default' : 'pointer'};
+  cursor: default;
   height: 100%;
   width: 12.5%;
   opacity: ${ ({ isActiveTab }: ContainerProps) => isActiveTab ? '1' : '0.75'};

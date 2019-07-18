@@ -7,33 +7,33 @@ import styled from 'styled-components'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Dropdown = ({
+const ContextMenu = ({
   children,
-  closeDropdown,
-  dropdownLeft,
-  dropdownTop
-}: DropdownProps) => {
+  closeContextMenu,
+  contextMenuLeft,
+  contextMenuTop
+}: ContextMenuProps) => {
 
   const container = useRef(null)
 
   useEffect(() => {
-    window.addEventListener('mousedown', closeDropdownOnClickOutside)
+    window.addEventListener('mousedown', closeContextMenuOnClickOutside)
     return () => {
-      window.removeEventListener('mousedown', closeDropdownOnClickOutside)
+      window.removeEventListener('mousedown', closeContextMenuOnClickOutside)
     }
   }, [])
 
-  const closeDropdownOnClickOutside = (e: Event) => {
+  const closeContextMenuOnClickOutside = (e: Event) => {
     if(!container.current.contains(e.target)) {
-      closeDropdown()
+      closeContextMenu()
     }
   }
 
   return (
     <Container
       ref={container}
-      dropdownTop={dropdownTop}
-      dropdownLeft={dropdownLeft}>
+      contextMenuTop={contextMenuTop}
+      contextMenuLeft={contextMenuLeft}>
       {children}
     </Container>
   )
@@ -42,11 +42,11 @@ const Dropdown = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface DropdownProps {
+interface ContextMenuProps {
   children?: any
-  closeDropdown(): void
-  dropdownTop: number
-  dropdownLeft: number
+  closeContextMenu(): void
+  contextMenuTop: number
+  contextMenuLeft: number
 }
 
 //-----------------------------------------------------------------------------
@@ -55,19 +55,18 @@ interface DropdownProps {
 const Container = styled.div`
   z-index: 10000;
   position: fixed;
-  top: ${( { dropdownTop }: ContainerProps ) => dropdownTop + 'px'};
-  left: ${( { dropdownLeft }: ContainerProps ) => dropdownLeft + 'px'};
-  padding: 0.5rem;
+  top: ${( { contextMenuTop }: ContainerProps ) => contextMenuTop + 'px'};
+  left: ${( { contextMenuLeft }: ContainerProps ) => contextMenuLeft + 'px'};
   background-color: white;
-  border-radius: 5px;
-  box-shadow: 3px 3px 10px 0px rgba(150,150,150,1)
+  border-radius: 3px;
+  box-shadow: 3px 3px 10px 0px rgba(150,150,150,1);
 `
 interface ContainerProps {
-  dropdownTop: number
-  dropdownLeft: number
+  contextMenuTop: number
+  contextMenuLeft: number
 }
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default Dropdown
+export default ContextMenu

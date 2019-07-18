@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
+use App\Utils\Csv;
+
 class OrganizationTableSeeder extends Seeder
 {
     /**
@@ -32,13 +34,13 @@ class OrganizationTableSeeder extends Seeder
           $user->save();
 
           // Organization Folders
-          factory(App\Models\Folder::class, 2)->create()->each(function ($folder, $folderKey) use($organizationFolder) {
+          factory(App\Models\Folder::class, 1)->create()->each(function ($folder, $folderKey) use($organizationFolder) {
             $folder->folderId = $organizationFolder->id;
             $folder->name = 'Folder '.($folderKey + 1);
             $folder->save();
 
             // Files
-            factory(App\Models\File::class, 2)->create()->each(function ($file, $fileKey) use($folder, $folderKey) {
+            factory(App\Models\File::class, 1)->create()->each(function ($file, $fileKey) use($folder, $folderKey) {
               $file->folderId = $folder->id;
               $file->name = 'File '.($folderKey + 1).'.'.($fileKey + 1);
               $file->save();
@@ -50,6 +52,8 @@ class OrganizationTableSeeder extends Seeder
 
                 // Sheets
                 case 'SHEET': 
+                  
+                  $source = Csv::toArray('database/sources/2019_Pitching_Advanced.csv');
                   $sheets = factory(App\Models\Sheet::class, 1)->create();
                   $sheets->each(function($sheet) use ($file) {
 
@@ -58,7 +62,7 @@ class OrganizationTableSeeder extends Seeder
                     $file->save();
 
                     // Columns
-                    $columns = factory(App\Models\SheetColumn::class, 8)->create();
+                    $columns = factory(App\Models\SheetColumn::class, 1)->create();
                     $columns->each(function($column, $key) use ($sheet) {
                       $column->sheetId = $sheet->id;
                       $column->position = $key;
@@ -66,7 +70,7 @@ class OrganizationTableSeeder extends Seeder
                     });
 
                     // Rows
-                    $rows = factory(App\Models\SheetRow::class, 30)->create();
+                    $rows = factory(App\Models\SheetRow::class, 5)->create();
                     $rows->each(function($row) use($columns, $sheet) {
                       $row->sheetId = $sheet->id;
                       $row->save();

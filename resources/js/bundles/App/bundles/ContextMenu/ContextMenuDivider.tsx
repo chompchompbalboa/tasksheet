@@ -2,39 +2,24 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-
-import Dropdown from '@app/bundles/Dropdown/Dropdown'
-import DropdownItem from '@app/bundles/Dropdown/DropdownItem'
+import styled from 'styled-components'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetColumnDropdown = ({
-  closeDropdown,
-  dropdownLeft,
-  dropdownTop,
-}: SheetColumnDropdownProps) => {
-
-  return (
-    <Dropdown
-      closeDropdown={closeDropdown}
-      dropdownTop={dropdownTop}
-      dropdownLeft={dropdownLeft}>
-      <DropdownItem text="SheetColumnDropdown" />
-    </Dropdown>
-  )
-}
+const ContextMenuDivider = () => <Container/>
 
 //-----------------------------------------------------------------------------
-// Props
+// Styled Components
 //-----------------------------------------------------------------------------
-interface SheetColumnDropdownProps {
-  closeDropdown(): void
-  dropdownLeft: number
-  dropdownTop: number
-}
+const Container = styled.div`
+  width: calc(100% - 2.5rem);
+  margin-left: auto;
+  height: 1px;
+  background-color: rgb(225, 225, 225);
+`
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetColumnDropdown
+export default ContextMenuDivider
