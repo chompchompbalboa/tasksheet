@@ -38,9 +38,13 @@ class OrganizationTableSeeder extends Seeder
             $folder->folderId = $organizationFolder->id;
             $folder->name = 'Folder '.($folderKey + 1);
             $folder->save();
+     
+            $sheets = [
+              'database/sources/2019_Pitching_Advanced.csv'
+            ];
 
             // Files
-            factory(App\Models\File::class, 1)->create()->each(function ($file, $fileKey) use($folder, $folderKey) {
+            factory(App\Models\File::class, count($sheets))->create()->each(function ($file, $fileKey) use($folder, $folderKey, $sheets) {
               $file->folderId = $folder->id;
               $file->name = 'File '.($folderKey + 1).'.'.($fileKey + 1);
               $file->save();
@@ -52,41 +56,53 @@ class OrganizationTableSeeder extends Seeder
 
                 // Sheets
                 case 'SHEET': 
-                  
-                  $source = Csv::toArray('database/sources/2019_Pitching_Advanced.csv');
+
+                  $source  = Csv::toArray($sheets[$fileKey]);
+                  $sourceCount = count($source);
+                  $sourceColumnNames = [];
+                  foreach($source[0] as $columnName => $value) {
+                    array_push($sourceColumnNames, $columnName);
+                  }
+
                   $sheets = factory(App\Models\Sheet::class, 1)->create();
-                  $sheets->each(function($sheet) use ($file) {
+                  $sheets->each(function($sheet) use ($file, $source, $sourceColumnNames, $sourceCount) {
 
                     $file->type = 'SHEET';
                     $file->typeId = $sheet->id;
                     $file->save();
 
                     // Columns
-                    $columns = factory(App\Models\SheetColumn::class, 1)->create();
-                    $columns->each(function($column, $key) use ($sheet) {
+                    $columnCount = count($source[0]);
+                    $columns = factory(App\Models\SheetColumn::class, $columnCount)->create();
+                    $columns->each(function($column, $key) use ($sheet, $source, $sourceColumnNames) {
                       $column->sheetId = $sheet->id;
                       $column->position = $key;
+                      $column->name = $sourceColumnNames[$key];
+                      $column->type = 'NUMBER';
                       $column->save();
                     });
 
                     // Rows
-                    $rows = factory(App\Models\SheetRow::class, 5)->create();
-                    $rows->each(function($row) use($columns, $sheet) {
+                    $rows = factory(App\Models\SheetRow::class, $sourceCount)->create();
+                    $rows->each(function($row, $rowKey) use($columns, $sheet, $source) {
                       $row->sheetId = $sheet->id;
                       $row->save();
 
                       // Cells
-                      $columns->each(function($column) use($row, $sheet) {
+                      $columns->each(function($column, $columnKey) use($row, $rowKey, $sheet, $source) {
+                        /*
                         $cellValues = [
                           'NUMBER' => strval(rand(0, 100)),
                           'BOOLEAN' => strval(rand(0, 1)),
                           'DATETIME' => null,
                         ];
+                        */
                         $cell = factory(App\Models\SheetCell::class)->create();
                         $cell->sheetId = $sheet->id;
                         $cell->rowId = $row->id;
                         $cell->columnId = $column->id;
-                        $cell->value = $column->type === 'STRING' ? $cell->value : $cellValues[$column->type];
+                        //$cell->value = $column->type === 'STRING' ? $cell->value : $cellValues[$column->type];
+                        $cell->value = $source[$rowKey][$column->name];
                         $cell->save();
                       });
                     });

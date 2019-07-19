@@ -9,11 +9,9 @@ class Csv
         return false;
 
     $header = null;
-    $data = array();
-    if (($handle = fopen($filename, 'r')) !== false)
-    {
-        while (($row = fgetcsv($handle, 1000, $delimiter)) !== false)
-        {
+    $data = [];
+    if (($handle = fopen($filename, 'r')) !== false){
+        while (($row = fgetcsv($handle, 1000, $delimiter)) !== false){
             if (!$header)
                 $header = $row;
             else
