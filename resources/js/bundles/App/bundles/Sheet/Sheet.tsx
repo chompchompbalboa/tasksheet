@@ -1,9 +1,9 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { VariableSizeGrid as Grid } from 'react-window'
+import { areEqual, VariableSizeGrid as Grid } from 'react-window'
 import styled from 'styled-components'
 
 import useTraceUpdate from 'use-trace-update'
@@ -42,7 +42,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetComponent = ({
+const SheetComponent = memo(({
   activeTabId,
   columns,
   fileId,
@@ -105,14 +105,14 @@ const SheetComponent = ({
               rowHeight={index => 20}
               rowCount={rows.length}
               overscanColumnCount={2}
-              overscanRowCount={2}>
+              overscanRowCount={15}>
               {Cell}
             </Grid>
         }
         </SheetContainer>
     </Container>
   )
-}
+}, areEqual)
 
 //-----------------------------------------------------------------------------
 // Props

@@ -1,7 +1,8 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { MouseEvent, useEffect, useRef, useState } from 'react'
+import React, { memo, MouseEvent, useEffect, useRef, useState } from 'react'
+import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
 import { SheetCellUpdates } from '@app/state/sheet/actions'
@@ -15,7 +16,7 @@ import SheetCellString from '@app/bundles/Sheet/SheetCellString'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetCell = ({
+const SheetCell = memo(({
   cell,
   highlightColor,
   sheetId,
@@ -81,7 +82,7 @@ const SheetCell = ({
         value={cellValue}/>
     </Container>
   )
-}
+}, areEqual)
 
 //-----------------------------------------------------------------------------
 // Props
