@@ -6,17 +6,17 @@ import styled from 'styled-components'
 
 import { Column } from '@app/state/sheet/types'
 
-import SheetColumnContextMenu from '@app/bundles/ContextMenu/SheetColumnContextMenu'
+import SheetHeaderContextMenu from '@app/bundles/ContextMenu/SheetHeaderContextMenu'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetColumn = ({
+const SheetHeader = ({
   column: {
     name,
     width
   }
-}: SheetColumnProps) => {
+}: SheetHeaderProps) => {
 
   const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
   const [ contextMenuTop, setContextMenuTop ] = useState(null)
@@ -36,7 +36,7 @@ const SheetColumn = ({
       onContextMenu={(e: MouseEvent) => handleContextMenu(e)}>
       {name}
     {isContextMenuVisible && 
-      <SheetColumnContextMenu
+      <SheetHeaderContextMenu
         contextMenuTop={contextMenuTop}
         contextMenuLeft={contextMenuLeft}
         closeContextMenu={() => setIsContextMenuVisible(false)}/>}
@@ -47,7 +47,7 @@ const SheetColumn = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetColumnProps {
+interface SheetHeaderProps {
   column: Column
 }
 
@@ -73,4 +73,4 @@ interface ContainerProps {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetColumn
+export default SheetHeader

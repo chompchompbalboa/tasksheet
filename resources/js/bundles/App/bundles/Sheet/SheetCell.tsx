@@ -104,8 +104,8 @@ const Container = styled.div`
   cursor: default;
   padding: 0.15rem 0.25rem;
   font-size: 0.9rem;
-  border: 0.5px solid rgb(180, 180, 180);
-  border-left: none;
+  border-right: 0.5px solid rgb(180, 180, 180);
+  border-bottom: 0.5px solid rgb(180, 180, 180);
   box-shadow: ${ ({ highlightColor, isHighlighted }: ContainerProps ) => isHighlighted ? 'inset 0px 0px 0px 2px ' + highlightColor : 'none' };
   user-select: none;
 `

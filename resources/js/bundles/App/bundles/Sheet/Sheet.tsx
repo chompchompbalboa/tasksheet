@@ -6,8 +6,6 @@ import { connect } from 'react-redux'
 import { areEqual, VariableSizeGrid as Grid } from 'react-window'
 import styled from 'styled-components'
 
-import useTraceUpdate from 'use-trace-update'
-
 import { query } from '@app/api'
 
 import { AppState } from '@app/state'
@@ -17,9 +15,17 @@ import {
   updateSheetCell as updateSheetCellAction, SheetCellUpdates
 } from '@app/state/sheet/actions'
 import { Columns, Rows, Sheet } from '@app/state/sheet/types'
-import { selectSheetColumns, selectSheetRows } from '@app/state/sheet/selectors'
+import { 
+  selectSheetColumns, 
+  selectSheetRows
+} from '@app/state/sheet/selectors'
 import { selectActiveTabId } from '@app/state/tab/selectors'
-import { selectUserColorSecondary } from '@app/state/user/selectors'
+import { 
+  selectUserColorSecondary,
+  selectUserLayoutSheetActionsHeight,
+  selectUserLayoutSidebarWidth,
+  selectUserLayoutTabsHeight
+} from '@app/state/user/selectors'
 
 import SheetActions from '@app/bundles/Sheet/SheetActions'
 import SheetCell from '@app/bundles/Sheet/SheetCell'
@@ -31,7 +37,10 @@ const mapStateToProps = (state: AppState, props: SheetComponentProps) => ({
   activeTabId: selectActiveTabId(state),
   columns: selectSheetColumns(state, props.id),
   rows: selectSheetRows(state, props.id),
-  userColorSecondary: selectUserColorSecondary(state)
+  userColorSecondary: selectUserColorSecondary(state),
+  userLayoutSheetActionsHeight: selectUserLayoutSheetActionsHeight(state),
+  userLayoutSidebarWidth: selectUserLayoutSidebarWidth(state),
+  userLayoutTabsHeight: selectUserLayoutTabsHeight(state)
 })
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
@@ -50,19 +59,11 @@ const SheetComponent = memo(({
   loadSheet,
   rows,
   updateSheetCell,
-  userColorSecondary
+  userColorSecondary,
+  userLayoutSheetActionsHeight,
+  userLayoutSidebarWidth,
+  userLayoutTabsHeight
 }: SheetComponentProps) => {
-
-  useTraceUpdate({
-    activeTabId,
-    columns,
-    fileId,
-    id,
-    loadSheet,
-    rows,
-    updateSheetCell,
-    userColorSecondary
-  })
 
   const [ hasLoaded, setHasLoaded ] = useState(false)
 
@@ -89,25 +90,25 @@ const SheetComponent = memo(({
       type={columns[columnIndex].type}
       style={style}/>
   )
-  
 
   return (
     <Container>
       <SheetContainer>
-        <SheetActions />
+        <SheetActions
+          sheetActionsHeight={userLayoutSheetActionsHeight}/>
         {!hasLoaded 
           ? 'Loading...'
           :  <Grid
-              width={1300}
-              height={800}
-              columnWidth={index => 100}
-              columnCount={columns.length}
-              rowHeight={index => 20}
-              rowCount={rows.length}
-              overscanColumnCount={2}
-              overscanRowCount={15}>
-              {Cell}
-            </Grid>
+                width={window.innerWidth - (userLayoutSidebarWidth * window.innerWidth)}
+                height={window.innerHeight - (userLayoutTabsHeight * window.innerHeight) - (userLayoutSheetActionsHeight * window.innerHeight)}
+                columnWidth={index => 100}
+                columnCount={columns.length}
+                rowHeight={index => 20}
+                rowCount={rows.length}
+                overscanColumnCount={2}
+                overscanRowCount={15}>
+                {Cell}
+              </Grid>
         }
         </SheetContainer>
     </Container>
@@ -126,6 +127,9 @@ interface SheetComponentProps {
   rows?: Rows
   updateSheetCell?(sheetId: string, cellId: string, updates: SheetCellUpdates): void
   userColorSecondary?: string
+  userLayoutSheetActionsHeight?: number
+  userLayoutSidebarWidth?: number
+  userLayoutTabsHeight?: number
 }
 
 interface CellRenderProps {
@@ -141,7 +145,6 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  overflow-x: scroll;
 `
 
 const SheetContainer = styled.div`

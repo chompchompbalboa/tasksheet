@@ -7,7 +7,10 @@ import styled from 'styled-components'
 
 import { AppState } from '@app/state'
 import { selectActiveTabId, selectTabs } from '@app/state/tab/selectors'
-import { selectUserLayoutSidebarWidth } from '@app/state/user/selectors'
+import {  
+  selectUserLayoutSidebarWidth, 
+  selectUserLayoutTabsHeight, 
+} from '@app/state/user/selectors'
 
 import File from '@app/bundles/File/File'
 import Tab from '@app/bundles/Tabs/Tab'
@@ -18,7 +21,8 @@ import Tab from '@app/bundles/Tabs/Tab'
 const mapStateToProps = (state: AppState) => ({
   activeTabId: selectActiveTabId(state),
   tabs: selectTabs(state),
-  userLayoutSidebarWidth: selectUserLayoutSidebarWidth(state)
+  userLayoutSidebarWidth: selectUserLayoutSidebarWidth(state),
+  userLayoutTabsHeight: selectUserLayoutTabsHeight(state)
 })
 
 //-----------------------------------------------------------------------------
@@ -27,11 +31,14 @@ const mapStateToProps = (state: AppState) => ({
 const Tabs = ({ 
   activeTabId,
   tabs,
-  userLayoutSidebarWidth
+  userLayoutSidebarWidth,
+  userLayoutTabsHeight,
 }: TabsProps) => {
   return (
-    <Container sidebarWidth={userLayoutSidebarWidth}>
-      <TabsContainer>
+    <Container 
+      sidebarWidth={userLayoutSidebarWidth}>
+      <TabsContainer
+        tabsHeight={userLayoutTabsHeight}>
         {tabs.length > 0 
           ? tabs.map((fileId) => (
             <Tab
@@ -43,7 +50,8 @@ const Tabs = ({
               isActiveTab />
         }
       </TabsContainer>
-      <FilesContainer>
+      <FilesContainer
+        tabsHeight={userLayoutTabsHeight}>
         {tabs.length > 0 
           ? tabs.map((fileId) => (
             <FileContainer
@@ -67,6 +75,7 @@ interface TabsProps {
   activeTabId: string
   tabs: string[]
   userLayoutSidebarWidth: number
+  userLayoutTabsHeight: number
 }
 
 //-----------------------------------------------------------------------------
@@ -88,18 +97,24 @@ const TabsContainer = styled.div`
   position: relative;
   width: 100%;
   display: flex;
-  height: 1.75rem;
-  padding-top: 1.5px;
+  height: ${ ({ tabsHeight }: TabsContainerProps) => (tabsHeight * 100) + 'vh'};
+  align-items: center;
 `
+interface TabsContainerProps {
+  tabsHeight: number
+}
 
 const FilesContainer = styled.div`
   z-index: 1;
   position: relative;
   width: 100%;
-  height: calc(100vh - 1.75rem);
+  height: calc(100vh - ${ ({ tabsHeight }: FilesContainerProps) => (tabsHeight * 100) + 'vh'});
   background-color: white;
   box-shadow: -1px 0px 10px 0px rgba(0,0,0,0.5);
 `
+interface FilesContainerProps {
+  tabsHeight: number
+}
 
 const FileContainer = styled.div`
   position: relative;

@@ -2,39 +2,24 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { connect } from 'react-redux'
 import styled from 'styled-components'
-
-
-import { AppState } from '@app/state'
-import { ThunkDispatch } from '@app/state/types'
-
-//-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
-})
-
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-})
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetActions = ({
-}: SheetActionsProps) => {
-
-  return (
-    <Container>
-      &nbsp;
-    </Container>
-  )
-}
+  sheetActionsHeight
+}: SheetActionsProps) => (
+  <Container
+    sheetActionsHeight={sheetActionsHeight}>
+  </Container>
+)
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionsProps {
+  sheetActionsHeight: number
 }
 
 //-----------------------------------------------------------------------------
@@ -44,16 +29,16 @@ const Container = styled.div`
   z-index: 10;
   width: 100%;
   position: sticky;
-  top: 0;
-  height: 2rem;
+  top: 0
+  height: ${ ({ sheetActionsHeight }: ContainerProps) => (sheetActionsHeight * 100) + 'vh'};
   background-color: rgb(250, 250, 250);
   border-bottom: 1px solid rgb(180, 180, 180);
 `
+interface ContainerProps {
+  sheetActionsHeight: number
+}
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SheetActions)
+export default SheetActions

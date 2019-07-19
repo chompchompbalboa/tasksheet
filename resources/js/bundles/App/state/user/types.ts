@@ -24,5 +24,7 @@ export interface UserColor {
 
 export interface UserLayout {
 	id: string
+  sheetActionsHeight: number
 	sidebarWidth: number
+  tabsHeight: number
 }

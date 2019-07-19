@@ -17,7 +17,9 @@ const initalData: InitialData = {
 		},
 		layout: <UserLayout>{
 			id: 'uuid',
+      sheetActionsHeight: 0.05,
 			sidebarWidth: 0.25,
+      tabsHeight: 0.03,
 		},
 	},
 	folders: [
