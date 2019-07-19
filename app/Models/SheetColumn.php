@@ -10,7 +10,7 @@ class SheetColumn extends Model
 
   protected $table = 'sheetColumns';
 
-  protected $visible = ['id', 'sheetId', 'name', 'position', 'width', 'type'];
+  protected $visible = ['id', 'name', 'position', 'width', 'type'];
   protected $fillable = ['id', 'sheetId', 'name', 'position', 'width', 'type'];
   
   public function sheet() {

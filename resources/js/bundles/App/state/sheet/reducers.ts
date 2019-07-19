@@ -18,20 +18,8 @@ export const userReducer = (state: Sheets = {}, action: SheetActions): Sheets =>
 		}
 
 		case UPDATE_SHEET_CELL: {
-			const { sheetId, cellId, updates } = action
-			return {
-				...state,
-				[sheetId]: {
-					...state[sheetId],
-					cells: {
-						...state[sheetId].cells,
-						[cellId]: {
-							...state[sheetId].cells[cellId],
-							...updates,
-						},
-					},
-				},
-			}
+			//const { sheetId, cellId, updates } = action
+			return state
 		}
 
 		default:

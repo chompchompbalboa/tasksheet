@@ -4,7 +4,7 @@
 import axios from '@/api/axios'
 
 import { FileUpdates, FolderUpdates } from '@app/state/folder/actions'
-import { CellUpdates } from '@app/state/sheet/actions'
+import { SheetCellUpdates } from '@app/state/sheet/actions'
 import { UserActiveUpdates, UserColorUpdates, UserLayoutUpdates } from '@app/state/user/actions'
 
 //-----------------------------------------------------------------------------
@@ -49,7 +49,7 @@ export const updateFolder = async (id: string, updates: FolderUpdates) => {
 //-----------------------------------------------------------------------------
 // Sheet
 //-----------------------------------------------------------------------------
-export const updateSheetCell = async (id: string, updates: CellUpdates) => {
+export const updateSheetCell = async (id: string, updates: SheetCellUpdates) => {
 	return axios.patch('/app/sheets/cells/' + id, updates).then(response => {
 		return response.data
 	})

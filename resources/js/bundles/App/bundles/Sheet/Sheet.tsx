@@ -3,31 +3,40 @@
 //-----------------------------------------------------------------------------
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
+import { VariableSizeGrid as Grid } from 'react-window'
 import styled from 'styled-components'
+
+import useTraceUpdate from 'use-trace-update'
 
 import { query } from '@app/api'
 
 import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
-import { loadSheet as loadSheetAction } from '@app/state/sheet/actions'
-import { NestedSheet } from '@app/state/sheet/types'
-import { selectSheetWidth } from '@app/state/sheet/selectors'
+import { 
+  loadSheet as loadSheetAction,
+  updateSheetCell as updateSheetCellAction, SheetCellUpdates
+} from '@app/state/sheet/actions'
+import { Columns, Rows, Sheet } from '@app/state/sheet/types'
+import { selectSheetColumns, selectSheetRows } from '@app/state/sheet/selectors'
 import { selectActiveTabId } from '@app/state/tab/selectors'
+import { selectUserColorSecondary } from '@app/state/user/selectors'
 
 import SheetActions from '@app/bundles/Sheet/SheetActions'
-import SheetColumns from '@app/bundles/Sheet/SheetColumns'
-import SheetRows from '@app/bundles/Sheet/SheetRows'
+import SheetCell from '@app/bundles/Sheet/SheetCell'
 
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
 const mapStateToProps = (state: AppState, props: SheetComponentProps) => ({
   activeTabId: selectActiveTabId(state),
-  sheetWidth: selectSheetWidth(state, props.id)
+  columns: selectSheetColumns(state, props.id),
+  rows: selectSheetRows(state, props.id),
+  userColorSecondary: selectUserColorSecondary(state)
 })
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-  loadSheet: (sheet: NestedSheet) => dispatch(loadSheetAction(sheet))
+  loadSheet: (sheet: Sheet) => dispatch(loadSheetAction(sheet)),
+  updateSheetCell: (sheetId: string, cellId: string, updates: SheetCellUpdates) => dispatch(updateSheetCellAction(sheetId, cellId, updates))
 })
 
 //-----------------------------------------------------------------------------
@@ -35,11 +44,25 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
 //-----------------------------------------------------------------------------
 const SheetComponent = ({
   activeTabId,
+  columns,
   fileId,
   id,
   loadSheet,
-  sheetWidth
+  rows,
+  updateSheetCell,
+  userColorSecondary
 }: SheetComponentProps) => {
+
+  useTraceUpdate({
+    activeTabId,
+    columns,
+    fileId,
+    id,
+    loadSheet,
+    rows,
+    updateSheetCell,
+    userColorSecondary
+  })
 
   const [ hasLoaded, setHasLoaded ] = useState(false)
 
@@ -53,17 +76,38 @@ const SheetComponent = ({
     }
   }, [ activeTabId ])
 
+  const Cell = ({ 
+    columnIndex, 
+    rowIndex, 
+    style 
+  }: CellRenderProps) => (
+    <SheetCell
+      cell={rows[rowIndex].cells[columnIndex]}
+      highlightColor={userColorSecondary}
+      sheetId={id}
+      updateSheetCell={updateSheetCell}
+      type={columns[columnIndex].type}
+      style={style}/>
+  )
+  
+
   return (
     <Container>
-      <SheetContainer
-        sheetWidth={sheetWidth}>
+      <SheetContainer>
         <SheetActions />
         {!hasLoaded 
           ? 'Loading...'
-          : <Sheet>
-              <SheetColumns sheetId={id}/>
-              <SheetRows sheetId={id}/>
-            </Sheet>
+          :  <Grid
+              width={1300}
+              height={800}
+              columnWidth={index => 100}
+              columnCount={columns.length}
+              rowHeight={index => 20}
+              rowCount={rows.length}
+              overscanColumnCount={2}
+              overscanRowCount={2}>
+              {Cell}
+            </Grid>
         }
         </SheetContainer>
     </Container>
@@ -75,10 +119,19 @@ const SheetComponent = ({
 //-----------------------------------------------------------------------------
 interface SheetComponentProps {
   activeTabId?: string
+  columns?: Columns
   fileId: string
   id: string
-  loadSheet?(sheet: NestedSheet): Promise<void>
-  sheetWidth?: string
+  loadSheet?(sheet: Sheet): Promise<void>
+  rows?: Rows
+  updateSheetCell?(sheetId: string, cellId: string, updates: SheetCellUpdates): void
+  userColorSecondary?: string
+}
+
+interface CellRenderProps {
+  columnIndex: number
+  rowIndex: number
+  style: {}
 }
 
 //-----------------------------------------------------------------------------
@@ -93,11 +146,9 @@ const Container = styled.div`
 
 const SheetContainer = styled.div`
   position: relative;
-  width: ${ ({ sheetWidth }: SheetContainerProps) => sheetWidth };
+  width: 100%;
+  height: 100%;
 `
-interface SheetContainerProps {
-  sheetWidth: string
-}
 
 const Sheet = styled.table`
   position: relative;

@@ -9,7 +9,7 @@ import { AppState } from '@app/state'
 import { selectSheetColumns } from '@app/state/sheet/selectors'
 import { Columns } from '@app/state/sheet/types'
 
-import SheetColumn from '@app/bundles/Sheet/SheetColumn'
+import SheetHeader from '@app/bundles/Sheet/SheetHeader'
 
 //-----------------------------------------------------------------------------
 // Redux
@@ -27,11 +27,10 @@ const SheetColumns = ({
   return (
     <Container>
       <TableRow>
-        {columns !== {} && Object.keys(columns).map(columnId => {
-          const column = columns[columnId]
+        {columns.map(column => {
           return (
-            <SheetColumn 
-              key={columnId}
+            <SheetHeader
+              key={column.id}
               column={column}/>
         )})}
       </TableRow>

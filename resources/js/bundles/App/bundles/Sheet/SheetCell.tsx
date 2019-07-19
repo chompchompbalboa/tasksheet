@@ -1,17 +1,11 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
+import React, { MouseEvent, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { AppState } from '@app/state'
-import { ThunkDispatch } from '@app/state/types'
-import { updateSheetCell as updateSheetCellAction, CellUpdates } from '@app/state/sheet/actions'
-import { Cell, Columns } from '@app/state/sheet/types'
-
-import { selectSheetColumns } from '@app/state/sheet/selectors'
-import { selectUserColorSecondary } from '@app/state/user/selectors'
+import { SheetCellUpdates } from '@app/state/sheet/actions'
+import { Cell, ColumnType } from '@app/state/sheet/types'
 
 import SheetCellBoolean from '@app/bundles/Sheet/SheetCellBoolean'
 import SheetCellDatetime from '@app/bundles/Sheet/SheetCellDatetime'
@@ -19,34 +13,19 @@ import SheetCellNumber from '@app/bundles/Sheet/SheetCellNumber'
 import SheetCellString from '@app/bundles/Sheet/SheetCellString'
 
 //-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState, props: SheetCellProps) => ({
-  boxShadowColor: selectUserColorSecondary(state),
-  columns: selectSheetColumns(state, props.sheetId)
-})
-
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-  updateSheetCell: (sheetId: string, cellId: string, updates: CellUpdates) => dispatch(updateSheetCellAction(sheetId, cellId, updates))
-})
-
-//-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetCell = ({
-  boxShadowColor,
-  cell: {
-    id,
-    columnId,
-    value
-  },
-  columns,
+  cell,
+  highlightColor,
   sheetId,
-  updateSheetCell
+  style,
+  type,
+  updateSheetCell,
 }: SheetCellProps) => {
   
   const cellContainer = useRef(null)
-  const [ cellValue, setCellValue ] = useState(value)
+  const [ cellValue, setCellValue ] = useState(cell ? cell.value : null)
   const [ isHighlighted, setIsHighlighted ] = useState(false)
   
   useEffect(() => {
@@ -61,6 +40,10 @@ const SheetCell = ({
     }
   }, [ isHighlighted ])
 
+  const handleClick = (e: MouseEvent) => {
+    setIsHighlighted(true)
+  }
+
   const removeHighlightOnClickOutisde = (e: Event) => {
     if(!cellContainer.current.contains(e.target)) {
       setIsHighlighted(false)
@@ -69,10 +52,10 @@ const SheetCell = ({
 
   useEffect(() => {
     let updateSheetCellTimer: number = null
-    if(cellValue !== value) {
+    if(cell && cellValue !== cell.value) {
       clearTimeout(updateSheetCellTimer)
       updateSheetCellTimer = setTimeout(() => {
-        updateSheetCell(sheetId, id, { value: cellValue })
+        updateSheetCell(sheetId, cell.id, { value: cellValue })
       }, 1000);
     }
     return () => clearTimeout(updateSheetCellTimer);
@@ -85,14 +68,14 @@ const SheetCell = ({
     DATETIME: SheetCellDatetime,
   }
   
-  const SheetCellType = columns[columnId] ? sheetCellTypes[columns[columnId].type] : null
-
+  const SheetCellType = sheetCellTypes[type]
   return (
     <Container
       ref={cellContainer}
-      boxShadowColor={boxShadowColor}
+      highlightColor={highlightColor}
       isHighlighted={isHighlighted}
-      onClick={() => setIsHighlighted(true)}>
+      onClick={handleClick}
+      style={style}>
       <SheetCellType
         updateCellValue={setCellValue}
         value={cellValue}/>
@@ -104,35 +87,33 @@ const SheetCell = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetCellProps {
-  boxShadowColor?: string
   cell: Cell
-  columns?: Columns
+  highlightColor: string
   sheetId: string
-  updateSheetCell?(sheetId: string, cellId: string, updates: CellUpdates): void
+  style: {}
+  type: ColumnType
+  updateSheetCell(sheetId: string, cellId: string, updates: SheetCellUpdates): void
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.td`
+const Container = styled.div`
   position: relative;
   cursor: default;
   padding: 0.15rem 0.25rem;
   font-size: 0.9rem;
   border: 0.5px solid rgb(180, 180, 180);
   border-left: none;
-  box-shadow: ${ ({ boxShadowColor, isHighlighted }: ContainerProps ) => isHighlighted ? 'inset 0px 0px 0px 2px ' + boxShadowColor : 'none' };
+  box-shadow: ${ ({ highlightColor, isHighlighted }: ContainerProps ) => isHighlighted ? 'inset 0px 0px 0px 2px ' + highlightColor : 'none' };
   user-select: none;
 `
 interface ContainerProps {
-  boxShadowColor: string
+  highlightColor: string
   isHighlighted: boolean
 }
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SheetCell)
+export default SheetCell

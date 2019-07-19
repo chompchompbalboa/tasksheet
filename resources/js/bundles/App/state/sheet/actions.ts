@@ -2,9 +2,8 @@
 // Imports
 //-----------------------------------------------------------------------------
 import { mutation } from '@app/api'
-import normalizer from '@app/state/sheet/normalizer'
 
-import { NestedSheet, Sheet } from '@app/state/sheet/types'
+import { Sheet } from '@app/state/sheet/types'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
 
 //-----------------------------------------------------------------------------
@@ -21,15 +20,13 @@ interface LoadSheet {
 	sheet: Sheet
 }
 
-export const loadSheet = (sheet: NestedSheet): ThunkAction => {
+export const loadSheet = (sheet: Sheet): ThunkAction => {
 	return async (dispatch: ThunkDispatch) => {
-		const normalizedSheet = normalizer(sheet)
 		dispatch(
 			loadSheetReducer({
 				id: sheet.id,
-				cells: normalizedSheet.entities.cells,
-				columns: normalizedSheet.entities.columns,
-				rows: normalizedSheet.entities.rows,
+				columns: sheet.columns,
+				rows: sheet.rows,
 			})
 		)
 	}
@@ -50,13 +47,13 @@ interface UpdateSheetCell {
 	type: typeof UPDATE_SHEET_CELL
 	sheetId: string
 	cellId: string
-	updates: CellUpdates
+	updates: SheetCellUpdates
 }
-export interface CellUpdates {
+export interface SheetCellUpdates {
 	value?: string
 }
 
-export const updateSheetCell = (sheetId: string, cellId: string, updates: CellUpdates): ThunkAction => {
+export const updateSheetCell = (sheetId: string, cellId: string, updates: SheetCellUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch) => {
 		mutation.updateSheetCell(cellId, updates).then(() => {
 			dispatch(updateSheetCellReducer(sheetId, cellId, updates))
@@ -64,7 +61,7 @@ export const updateSheetCell = (sheetId: string, cellId: string, updates: CellUp
 	}
 }
 
-export const updateSheetCellReducer = (sheetId: string, cellId: string, updates: CellUpdates): SheetActions => {
+export const updateSheetCellReducer = (sheetId: string, cellId: string, updates: SheetCellUpdates): SheetActions => {
 	return {
 		type: UPDATE_SHEET_CELL,
 		sheetId,

@@ -2,23 +2,11 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { MouseEvent, useState } from 'react'
-import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { AppState } from '@app/state'
-import { ThunkDispatch } from '@app/state/types'
 import { Column } from '@app/state/sheet/types'
 
 import SheetColumnContextMenu from '@app/bundles/ContextMenu/SheetColumnContextMenu'
-
-//-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
-})
-
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-})
 
 //-----------------------------------------------------------------------------
 // Component
@@ -85,7 +73,4 @@ interface ContainerProps {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SheetColumn)
+export default SheetColumn

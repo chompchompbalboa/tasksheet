@@ -1,27 +1,14 @@
-export interface Sheets {
-	[key: string]: Sheet
-}
+export type Sheets = { [key: string]: Sheet }
+export type Columns = Column[]
+export type Rows = Row[]
 
-export interface Columns {
-	[key: string]: Column
-}
-
-export interface Rows {
-	[key: string]: Row
-}
-
-export interface Cells {
-	[key: string]: Cell
-}
-
-export interface Sheet {
+export type Sheet = {
 	id: string
 	rows: Rows
 	columns: Columns
-	cells: Cells
 }
 
-export interface Column {
+export type Column = {
 	id: string
 	sheetId: string
 	name: string
@@ -37,28 +24,16 @@ export enum ColumnType {
 	NUMBER = 'NUMBER',
 }
 
-export interface Row {
+export type Row = {
 	id: string
 	sheetId: string
-	cells: string[]
+	cells: Cell[]
 }
 
-export interface Cell {
+export type Cell = {
 	id: string
 	sheetId: string
 	columnId: string
 	rowId: string
 	value: string
-}
-
-export interface NestedSheet {
-	id: string
-	rows: [NestedRow]
-	columns: [Column]
-}
-
-export interface NestedRow {
-	id: string
-	sheetId: string
-	cells: [Cell]
 }
