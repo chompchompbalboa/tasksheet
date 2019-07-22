@@ -13,7 +13,8 @@ class Sheet extends Model
    */
   protected $visible = ['id', 'rows', 'columns'];
   protected $fillable = ['id'];
-  protected $with = ['rows', 'columns'];
+  protected $with = ['rows'];
+  protected $appends = ['columns'];
   
   /**
    * Get all the rows that belong to this table
@@ -27,5 +28,11 @@ class Sheet extends Model
    */
   public function columns() {
     return $this->hasMany('App\Models\SheetColumn', 'sheetId');
+  }
+  
+  public function getColumnsAttribute() {
+    return SheetColumn::where('sheetId', '=', $this->id)
+    ->orderBy('position', 'ASC')
+    ->get();
   }
 }

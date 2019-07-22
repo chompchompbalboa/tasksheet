@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { memo, useEffect, useState } from 'react'
+import React, { forwardRef, memo, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { areEqual, VariableSizeGrid as Grid } from 'react-window'
 import styled from 'styled-components'
@@ -29,6 +29,7 @@ import {
 
 import SheetActions from '@app/bundles/Sheet/SheetActions'
 import SheetCell from '@app/bundles/Sheet/SheetCell'
+import SheetHeader from '@app/bundles/Sheet/SheetHeader'
 
 //-----------------------------------------------------------------------------
 // Redux
@@ -77,11 +78,28 @@ const SheetComponent = memo(({
     }
   }, [ activeTabId ])
 
+  const GridWrapper = forwardRef(({ children, ...rest }, ref) => (
+    <GridContainer
+      //@ts-ignore ref={ref}
+      ref={ref} {...rest}>
+      <SheetHeaders>
+      {columns.map(column => (
+        <SheetHeader
+          key={column.id}
+          column={column}/>))}
+      </SheetHeaders>
+      <GridItems>
+        {children}
+      </GridItems>
+    </GridContainer> 
+  ))
+
+
   const Cell = ({ 
     columnIndex, 
     rowIndex, 
     style 
-  }: CellRenderProps) => (
+  }: CellProps) => (
     <SheetCell
       cell={rows[rowIndex].cells[columnIndex]}
       highlightColor={userColorSecondary}
@@ -95,17 +113,19 @@ const SheetComponent = memo(({
     <Container>
       <SheetContainer>
         <SheetActions
+          columns={columns}
           sheetActionsHeight={userLayoutSheetActionsHeight}/>
         {!hasLoaded 
           ? 'Loading...'
           :  <Grid
+                innerElementType={GridWrapper}
                 width={window.innerWidth - (userLayoutSidebarWidth * window.innerWidth)}
                 height={window.innerHeight - (userLayoutTabsHeight * window.innerHeight) - (userLayoutSheetActionsHeight * window.innerHeight)}
-                columnWidth={index => 100}
+                columnWidth={columnIndex => columns[columnIndex].width}
                 columnCount={columns.length}
                 rowHeight={index => 20}
                 rowCount={rows.length}
-                overscanColumnCount={2}
+                overscanColumnCount={columns.length}
                 overscanRowCount={15}>
                 {Cell}
               </Grid>
@@ -132,7 +152,7 @@ interface SheetComponentProps {
   userLayoutTabsHeight?: number
 }
 
-interface CellRenderProps {
+interface CellProps {
   columnIndex: number
   rowIndex: number
   style: {}
@@ -158,6 +178,24 @@ const Sheet = styled.table`
   width: 100%;
   height: 1px;
   border-collapse: collapse;
+`
+
+const GridContainer = styled.div`
+  width: 100%;
+  height: 100%;
+`
+
+const SheetHeaders = styled.div`
+  z-index: 1000;
+  position: sticky;
+  top: 0;
+  left: 0;
+`
+
+const GridItems = styled.div`
+  width: 100%;
+  height: 100%;
+  position: relative;
 `
 
 //-----------------------------------------------------------------------------

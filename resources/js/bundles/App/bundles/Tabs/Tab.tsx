@@ -105,7 +105,7 @@ const Name = styled.div`
   width: 100%;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-size: 1.35vh;
+  font-size: 0.85rem;
 `
 
 const CloseTab = styled.div`

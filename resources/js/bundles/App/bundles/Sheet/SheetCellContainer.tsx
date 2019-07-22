@@ -44,9 +44,9 @@ const SheetCellContainer = ({
     <Container
       ref={container}
       onDoubleClick={(e) => handleDoubleClick(e)}>
-      {isEditing 
-        ? children
-        : value === null ? " " : value}
+        {isEditing 
+          ? children
+          : value === null ? " " : value}
     </Container>
   )
 
@@ -70,7 +70,8 @@ const Container = styled.div`
   height: 100%;
   display: flex;
   align-items: center;
-  white-space: pre-wrap;
+  white-space: nowrap;
+  overflow: hidden;
 `
 
 //-----------------------------------------------------------------------------

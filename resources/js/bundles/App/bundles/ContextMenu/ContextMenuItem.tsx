@@ -80,7 +80,7 @@ const Decorator = styled.div`
 
 const SubItems = styled.div`
   display: ${ ({ isSubItemsVisible }: SubItemProps ) => isSubItemsVisible ? 'block' : 'none'};
-  align-self: flex-start
+  align-self: flex-start;
   position: absolute;
   left: 100%;
   margin-top: -0.625rem;

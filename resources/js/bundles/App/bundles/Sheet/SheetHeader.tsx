@@ -24,8 +24,8 @@ const SheetHeader = ({
 
   const handleContextMenu = (e: MouseEvent) => {
     e.preventDefault()
-    setContextMenuTop(e.pageY)
-    setContextMenuLeft(e.pageX)
+    setContextMenuTop(e.clientY)
+    setContextMenuLeft(e.clientX)
     setIsContextMenuVisible(true)
   }
 
@@ -54,16 +54,19 @@ interface SheetHeaderProps {
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.th`
+const Container = styled.div`
+  display: inline-block;
+  overflow: auto;
   z-index: ${ ({ isContextMenuVisible }: ContainerProps ) => isContextMenuVisible ? '100' : '50'};
-  position: sticky;
-  top: 2rem;
   width: ${ ({ containerWidth }: ContainerProps ) => containerWidth + 'px'};
-  padding: 0.25rem 0 0.25rem 0.25rem;
+  height: 3.5vh;
+  line-height: 3.5vh;
+  padding: 0 0.25rem;
   text-align: left;
   background-color: rgb(250, 250, 250);
   box-shadow: 0px 1px 0px 0px rgba(180,180,180,1);
-  font-size: 0.85rem;
+  font-size: 1.75vh;
+  font-weight: bold;
 `
 interface ContainerProps {
   containerWidth: number
