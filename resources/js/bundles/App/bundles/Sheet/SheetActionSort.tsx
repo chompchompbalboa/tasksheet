@@ -22,7 +22,7 @@ const SheetActionSort = ({
       <SheetActionDropdown
         options={sortOptions}
         placeholder={"Sort By..."}
-        selectedOptions={null}/>
+        selectedOptions={[{ label: "Name", value: "Name"}]}/>
     </SheetAction>
   )
 }

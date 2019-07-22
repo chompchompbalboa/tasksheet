@@ -1,11 +1,11 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, FocusEvent, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import ContentEditable from 'react-sane-contenteditable'
+import AutosizeInput from 'react-input-autosize'
 
 import { AppState } from '@app/state'
 import { selectUserColorPrimary } from '@app/state/user/selectors'
@@ -23,69 +23,98 @@ const mapStateToProps = (state: AppState) => ({
 const SheetActionDropdown = ({
   options,
   placeholder = '...',
-  selectedOptions,
+  selectedOptions = [{ label: "", value: ""}],
   userColorPrimary
 }: SheetActionDropdownProps) => {
 
-  const [ contentEditableValue, setContentEditableValue ] = useState(placeholder)
+  const [ autosizeInputValue, setAutosizeInputValue ] = useState("")
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
-  //const [ visibleOptions, setVisibleOptions ] = useState(options)
+  const [ visibleOptions, setVisibleOptions ] = useState(options)
 
-  const contentEditable = useRef(null)
+  const container = useRef(null)
   const dropdown = useRef(null)
 
   useEffect(() => {
-    window.addEventListener('mousedown', closeContextMenuOnClickOutside)
+    if(isDropdownVisible) {
+      if (!visibleOptions) { setVisibleOptions(options) }
+      window.addEventListener('mousedown', closeContextMenuOnClickOutside)
+    }
+    else {
+      window.removeEventListener('mousedown', closeContextMenuOnClickOutside)
+    }
     return () => {
       window.removeEventListener('mousedown', closeContextMenuOnClickOutside)
     }
-  }, [])
+  }, [ isDropdownVisible ])
 
   const closeContextMenuOnClickOutside = (e: Event) => {
-    if(dropdown !== null && dropdown.current !== null && !dropdown.current.contains(e.target)) {
+    if(!dropdown.current.contains(e.target) && !container.current.contains(e.target)) {
       setIsDropdownVisible(false)
     }
   }
 
-  const handleContentEditableChange = (e: Event, value: string) => {
-    setContentEditableValue(value)
+  const handleAutosizeInputBlur = (e: FocusEvent<HTMLInputElement>) => {
+    setAutosizeInputValue("")
+    setVisibleOptions(options)
   }
 
-  const handleContentEditableClick = () => {
-    const range = document.createRange();
-    range.selectNodeContents(contentEditable.current._element);
-    let selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
+  const handleAutosizeInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setAutosizeInputValue(e.target.value)
+    setVisibleOptions(options && options.filter(option => {
+      const searchString = e.target.value.toLowerCase().replace(/ /g, "")
+      return option.label.toLowerCase().replace(/ /g, "").includes(searchString)
+    }))
   }
 
+  const handleAutosizeInputFocus = (e: FocusEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    setIsDropdownVisible(true)
+  }
+  
+  const handleSheetActionClick = (option: SheetActionDropdownOption) => {
+    console.log(option)
+    setIsDropdownVisible(false)
+  }
+  
   return (
-    <Container>
-      <Wrapper
-        onClick={() => setIsDropdownVisible(true)}>
+    <Container
+      ref={container}>
+      <Wrapper>
         <SelectedOptions>
           {selectedOptions && selectedOptions.map(option => (
             <SelectedOption
-              optionBackgroundColor={userColorPrimary}>Name</SelectedOption>
+              key={option.value}
+              optionBackgroundColor={userColorPrimary}>{option.label}</SelectedOption>
           ))}
         </SelectedOptions>
-        <StyledContentEditable
-          ref={contentEditable}
-          content={contentEditableValue}
-          onChange={handleContentEditableChange}
-          onClick={handleContentEditableClick}/>
+        <AutosizeInput
+          placeholder={placeholder}
+          value={autosizeInputValue}
+          onBlur={handleAutosizeInputBlur}
+          onChange={handleAutosizeInputChange}
+          onFocus={handleAutosizeInputFocus}
+          inputStyle={{
+            marginRight: '0.25rem',
+            height: '100%',
+            border: 'none',
+            backgroundColor: 'transparent',
+            outline: 'none',
+            fontFamily: 'inherit',
+            fontSize: 'inherit',
+            fontWeight: 'inherit',
+          }}/>
       </Wrapper>
-      {isDropdownVisible &&
-        <Dropdown
-          ref={dropdown}>
-          {options && options.map(option => (
-            <DropdownOption
-              key={option.value}>
-              {option.label}
-            </DropdownOption>
-          ))}
-        </Dropdown>
-      }
+      <Dropdown
+        ref={dropdown}
+        isDropdownVisible={isDropdownVisible}>
+        {visibleOptions && visibleOptions.map(option => (
+          <DropdownOption
+            key={option.value}
+            onClick={() => handleSheetActionClick(option)}>
+            {option.label}
+          </DropdownOption>
+        ))}
+      </Dropdown>
     </Container>
   )
 }
@@ -133,29 +162,27 @@ const SelectedOption = styled.div`
   margin-right: 0.25rem;
   background-color: ${ ({ optionBackgroundColor }: SelectedOptionProps ) => optionBackgroundColor};
   color: white;
-  border-radius: 50%;
+  border-radius: 10px;
   font-size: 0.75rem;
 `
 interface SelectedOptionProps {
   optionBackgroundColor: string
 }
 
-const StyledContentEditable = styled(ContentEditable)`
-  margin-right: 0.25rem;
-  height: 100%;
-  outline: none;
-  user-select: all;
-`
-
 const Dropdown = styled.div`
+  display: ${ ({ isDropdownVisible }: DropdownProps ) => isDropdownVisible ? 'block' : 'none'};
   position: absolute;
-  top: 100%;
+  top: 95%;
   left: 0.25rem;
-  min-width: 5rem;
+  min-width: 7.5rem;
   background-color: white;
   border-radius: 5px;
+  background-color: rgb(250, 250, 250);
   box-shadow: 3px 3px 10px 0px rgba(150,150,150,1);
 `
+interface DropdownProps {
+  isDropdownVisible: boolean
+}
 
 const DropdownOption = styled.div`
   cursor: default;
