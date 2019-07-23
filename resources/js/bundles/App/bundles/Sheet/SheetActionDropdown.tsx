@@ -5,10 +5,11 @@ import React, { ChangeEvent, FocusEvent, useEffect, useRef, useState } from 'rea
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import AutosizeInput from 'react-input-autosize'
-
 import { AppState } from '@app/state'
 import { selectUserColorPrimary } from '@app/state/user/selectors'
+
+import AutosizeInput from 'react-input-autosize'
+import SheetActionDropdownSelectedOption from '@app/bundles/Sheet/SheetActionDropdownSelectedOption'
 
 //-----------------------------------------------------------------------------
 // Redux
@@ -22,10 +23,12 @@ const mapStateToProps = (state: AppState) => ({
 //-----------------------------------------------------------------------------
 const SheetActionDropdown = ({
   onOptionSelect,
+  onOptionDelete,
   options,
   placeholder = '...',
   selectedOptions,
-  userColorPrimary
+  userColorPrimary,
+  selectedOptionComponent
 }: SheetActionDropdownProps) => {
 
   const [ autosizeInputValue, setAutosizeInputValue ] = useState("")
@@ -73,11 +76,19 @@ const SheetActionDropdown = ({
     setIsDropdownVisible(true)
   }
   
-  const handleSheetActionClick = (option: SheetActionDropdownOption) => {
+  const handleOptionDelete = (option: SheetActionDropdownOption) => {
+    const nextVisibleSelectedOptions = visibleSelectedOptions.filter(visibleSelectedOption => visibleSelectedOption.value !== option.value)
+    setVisibleSelectedOptions(nextVisibleSelectedOptions)
+    setTimeout(() => onOptionDelete(option), 50)
+  }
+  
+  const handleOptionSelect = (option: SheetActionDropdownOption) => {
     setIsDropdownVisible(false)
     setVisibleSelectedOptions([...visibleSelectedOptions, option])
-    setTimeout(() => onOptionSelect(option), 1)
+    setTimeout(() => onOptionSelect(option), 50)
   }
+  
+  const SelectedOption = selectedOptionComponent
   
   return (
     <Container
@@ -85,9 +96,12 @@ const SheetActionDropdown = ({
       <Wrapper>
         <SelectedOptions>
           {visibleSelectedOptions && visibleSelectedOptions.map(option => (
-            <SelectedOption
+            <SheetActionDropdownSelectedOption
               key={option.value}
-              optionBackgroundColor={userColorPrimary}>{option.label}</SelectedOption>
+              onOptionDelete={() => handleOptionDelete(option)}
+              optionBackgroundColor={userColorPrimary}>
+              <SelectedOption option={option}/>
+            </SheetActionDropdownSelectedOption>
           ))}
         </SelectedOptions>
         <AutosizeInput
@@ -113,7 +127,7 @@ const SheetActionDropdown = ({
         {visibleOptions && visibleOptions.map(option => (
           <DropdownOption
             key={option.value}
-            onClick={() => handleSheetActionClick(option)}>
+            onClick={() => handleOptionSelect(option)}>
             {option.label}
           </DropdownOption>
         ))}
@@ -126,11 +140,13 @@ const SheetActionDropdown = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionDropdownProps {
+  onOptionDelete(optionToDelete: SheetActionDropdownOption): void
   onOptionSelect(selectedOption: SheetActionDropdownOption): void
   options: SheetActionDropdownOptions
   placeholder: string
   selectedOptions: SheetActionDropdownOptions
   userColorPrimary: string
+  selectedOptionComponent: any
 }
 
 export interface SheetActionDropdownOption {
@@ -161,18 +177,6 @@ const SelectedOptions = styled.div`
   height: 100%;
   display: flex;
 `
-
-const SelectedOption = styled.div`
-  padding: 0.125rem 0.25rem;
-  margin-right: 0.25rem;
-  background-color: ${ ({ optionBackgroundColor }: SelectedOptionProps ) => optionBackgroundColor};
-  color: white;
-  border-radius: 10px;
-  font-size: 0.75rem;
-`
-interface SelectedOptionProps {
-  optionBackgroundColor: string
-}
 
 const Dropdown = styled.div`
   display: ${ ({ isDropdownVisible }: DropdownProps ) => isDropdownVisible ? 'block' : 'none'};

@@ -31,7 +31,6 @@ export const userReducer = (state: Sheets = {}, action: SheetActions): Sheets =>
           ...state[sheetId], ...updates
         }
       }
-			return state
 		}
 
 		default:

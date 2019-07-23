@@ -50,6 +50,7 @@ export type Cell = {
 }
 
 export type Sort = {
+  id: string
   columnId: string
   order: SortOrder
 }
