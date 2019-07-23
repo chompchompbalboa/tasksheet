@@ -6,8 +6,8 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { selectSheetColumns } from '@app/state/sheet/selectors'
-import { Columns } from '@app/state/sheet/types'
+import { selectSheetColumns, selectSheetVisibleColumns } from '@app/state/sheet/selectors'
+import { Columns, VisibleColumns } from '@app/state/sheet/types'
 
 import SheetHeader from '@app/bundles/Sheet/SheetHeader'
 
@@ -15,23 +15,25 @@ import SheetHeader from '@app/bundles/Sheet/SheetHeader'
 // Redux
 //-----------------------------------------------------------------------------
 const mapStateToProps = (state: AppState, props: SheetColumnsProps) => ({
-  columns: selectSheetColumns(state, props.sheetId)
+  columns: selectSheetColumns(state, props.sheetId),
+  visibleColumns: selectSheetVisibleColumns(state, props.sheetId)
 })
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetColumns = ({
-  columns
+  columns,
+  visibleColumns
 }: SheetColumnsProps) => {
   return (
     <Container>
       <TableRow>
-        {columns.map(column => {
+        {visibleColumns.map(columnId => {
           return (
             <SheetHeader
-              key={column.id}
-              column={column}/>
+              key={columnId}
+              column={columns[columnId]}/>
         )})}
       </TableRow>
     </Container>
@@ -44,6 +46,7 @@ const SheetColumns = ({
 interface SheetColumnsProps {
   sheetId: string
   columns?: Columns
+  visibleColumns?: VisibleColumns
 }
 
 //-----------------------------------------------------------------------------

@@ -58,6 +58,7 @@
         "use-trace-update": "^1.2.0"
     },
     "dependencies": {
+        "@types/lodash": "^4.14.136",
         "axios": "^0.18",
         "change-case": "^3.1.0",
         "lodash": "^4.17.14",

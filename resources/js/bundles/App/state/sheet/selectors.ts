@@ -2,7 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import { AppState } from '@app/state'
-import { Cell, Column, Columns, Row, Rows } from './types'
+import { Cell, Column, Columns, Row, Rows, Sorts, VisibleColumns, VisibleRows } from './types'
 
 //-----------------------------------------------------------------------------
 // Select Sheet Cell
@@ -23,6 +23,14 @@ export const selectSheetColumns = (
 ): Columns => state.sheet[sheetId] && state.sheet[sheetId].columns
 
 //-----------------------------------------------------------------------------
+// Select Sheet Columns
+//-----------------------------------------------------------------------------
+export const selectSheetVisibleColumns = (
+  state: AppState, 
+  sheetId: string
+): VisibleColumns => state.sheet[sheetId] && state.sheet[sheetId].visibleColumns
+
+//-----------------------------------------------------------------------------
 // Select Sheet Column
 //-----------------------------------------------------------------------------
 export const selectSheetColumn = (
@@ -40,6 +48,14 @@ export const selectSheetRows = (
 ): Rows => state.sheet[sheetId] && state.sheet[sheetId].rows
 
 //-----------------------------------------------------------------------------
+// Select Sheet Rows
+//-----------------------------------------------------------------------------
+export const selectSheetVisibleRows = (
+  state: AppState, 
+  sheetId: string
+): VisibleRows => state.sheet[sheetId] && state.sheet[sheetId].visibleRows
+
+//-----------------------------------------------------------------------------
 // Select Sheet Row
 //-----------------------------------------------------------------------------
 export const selectSheetRow = (
@@ -47,3 +63,11 @@ export const selectSheetRow = (
 	sheetId: string,
 	rowIndex: number
 ): Row => state.sheet[sheetId] && state.sheet[sheetId].rows[rowIndex]
+
+//-----------------------------------------------------------------------------
+// Select Sheet Sorts
+//-----------------------------------------------------------------------------
+export const selectSheetSorts = (
+  state: AppState, 
+  sheetId: string
+): Sorts => state.sheet[sheetId] && state.sheet[sheetId].sorts

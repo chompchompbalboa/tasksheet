@@ -4,7 +4,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Columns } from '@app/state/sheet/types'
+import { Columns, Sorts } from '@app/state/sheet/types'
 
 import SheetActionSort from '@app/bundles/Sheet/SheetActionSort'
 
@@ -12,14 +12,18 @@ import SheetActionSort from '@app/bundles/Sheet/SheetActionSort'
 // Component
 //-----------------------------------------------------------------------------
 const SheetActions = ({
+  sheetId,
   columns,
-  sheetActionsHeight
+  sheetActionsHeight,
+  sorts
 }: SheetActionsProps) => {
   return (
     <Container
       sheetActionsHeight={sheetActionsHeight}>
       <SheetActionSort
-        columns={columns}/>
+        sheetId={sheetId}
+        columns={columns}
+        sorts={sorts}/>
     </Container>
   )
 }
@@ -29,6 +33,8 @@ const SheetActions = ({
 //-----------------------------------------------------------------------------
 interface SheetActionsProps {
   columns: Columns
+  sorts: Sorts
+  sheetId: string
   sheetActionsHeight: number
 }
 

@@ -1,11 +1,23 @@
 export type Sheets = { [key: string]: Sheet }
-export type Columns = Column[]
-export type Rows = Row[]
+export type Columns = { [key: string]: Column }
+export type VisibleColumns = string[]
+export type Rows = { [key: string]: Row }
+export type VisibleRows = string[]
+export type Sorts = Sort[]
 
 export type Sheet = {
 	id: string
-	rows: Rows
-	columns: Columns
+	rows: { [key: string]: Row }
+  visibleRows: VisibleRows
+  columns: Columns
+  visibleColumns: VisibleColumns
+  sorts: Sorts
+}
+
+export type SheetFromServer = {
+  id: string
+  rows: Row[]
+  columns: Column[]
 }
 
 export type Column = {
@@ -17,12 +29,11 @@ export type Column = {
 	type: ColumnType
 }
 
-export enum ColumnType {
-	STRING = 'STRING',
-	DATETIME = 'DATETIME',
-	BOOLEAN = 'BOOLEAN',
-	NUMBER = 'NUMBER',
-}
+export type ColumnType = 
+	'STRING'|
+	'DATETIME'|
+	'BOOLEAN'|
+	'NUMBER'
 
 export type Row = {
 	id: string
@@ -37,3 +48,10 @@ export type Cell = {
 	rowId: string
 	value: string
 }
+
+export type Sort = {
+  columnId: string
+  order: SortOrder
+}
+
+export type SortOrder = 'ASC' | 'DESC'

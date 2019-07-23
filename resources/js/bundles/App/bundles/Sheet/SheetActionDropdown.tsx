@@ -21,15 +21,17 @@ const mapStateToProps = (state: AppState) => ({
 // Component
 //-----------------------------------------------------------------------------
 const SheetActionDropdown = ({
+  onOptionSelect,
   options,
   placeholder = '...',
-  selectedOptions = [{ label: "", value: ""}],
+  selectedOptions,
   userColorPrimary
 }: SheetActionDropdownProps) => {
 
   const [ autosizeInputValue, setAutosizeInputValue ] = useState("")
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
   const [ visibleOptions, setVisibleOptions ] = useState(options)
+  const [ visibleSelectedOptions, setVisibleSelectedOptions ] = useState(selectedOptions || [])
 
   const container = useRef(null)
   const dropdown = useRef(null)
@@ -72,8 +74,9 @@ const SheetActionDropdown = ({
   }
   
   const handleSheetActionClick = (option: SheetActionDropdownOption) => {
-    console.log(option)
     setIsDropdownVisible(false)
+    setVisibleSelectedOptions([...visibleSelectedOptions, option])
+    setTimeout(() => onOptionSelect(option), 1)
   }
   
   return (
@@ -81,7 +84,7 @@ const SheetActionDropdown = ({
       ref={container}>
       <Wrapper>
         <SelectedOptions>
-          {selectedOptions && selectedOptions.map(option => (
+          {visibleSelectedOptions && visibleSelectedOptions.map(option => (
             <SelectedOption
               key={option.value}
               optionBackgroundColor={userColorPrimary}>{option.label}</SelectedOption>
@@ -123,13 +126,14 @@ const SheetActionDropdown = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionDropdownProps {
+  onOptionSelect(selectedOption: SheetActionDropdownOption): void
   options: SheetActionDropdownOptions
   placeholder: string
   selectedOptions: SheetActionDropdownOptions
   userColorPrimary: string
 }
 
-interface SheetActionDropdownOption {
+export interface SheetActionDropdownOption {
   label: string
   value: string
 }
@@ -155,6 +159,7 @@ const Wrapper = styled.div`
 
 const SelectedOptions = styled.div`
   height: 100%;
+  display: flex;
 `
 
 const SelectedOption = styled.div`

@@ -14,10 +14,13 @@ import {
   loadSheet as loadSheetAction,
   updateSheetCell as updateSheetCellAction, SheetCellUpdates
 } from '@app/state/sheet/actions'
-import { Columns, Rows, Sheet } from '@app/state/sheet/types'
+import { Columns, Rows, SheetFromServer, Sorts, VisibleColumns, VisibleRows } from '@app/state/sheet/types'
 import { 
   selectSheetColumns, 
-  selectSheetRows
+  selectSheetRows,
+  selectSheetSorts,
+  selectSheetVisibleColumns,
+  selectSheetVisibleRows
 } from '@app/state/sheet/selectors'
 import { selectActiveTabId } from '@app/state/tab/selectors'
 import { 
@@ -38,6 +41,9 @@ const mapStateToProps = (state: AppState, props: SheetComponentProps) => ({
   activeTabId: selectActiveTabId(state),
   columns: selectSheetColumns(state, props.id),
   rows: selectSheetRows(state, props.id),
+  sorts: selectSheetSorts(state, props.id),
+  visibleRows: selectSheetVisibleRows(state, props.id),
+  visibleColumns: selectSheetVisibleColumns(state, props.id),
   userColorSecondary: selectUserColorSecondary(state),
   userLayoutSheetActionsHeight: selectUserLayoutSheetActionsHeight(state),
   userLayoutSidebarWidth: selectUserLayoutSidebarWidth(state),
@@ -45,7 +51,7 @@ const mapStateToProps = (state: AppState, props: SheetComponentProps) => ({
 })
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-  loadSheet: (sheet: Sheet) => dispatch(loadSheetAction(sheet)),
+  loadSheet: (sheet: SheetFromServer) => dispatch(loadSheetAction(sheet)),
   updateSheetCell: (sheetId: string, cellId: string, updates: SheetCellUpdates) => dispatch(updateSheetCellAction(sheetId, cellId, updates))
 })
 
@@ -59,6 +65,9 @@ const SheetComponent = memo(({
   id,
   loadSheet,
   rows,
+  sorts,
+  visibleRows,
+  visibleColumns,
   updateSheetCell,
   userColorSecondary,
   userLayoutSheetActionsHeight,
@@ -83,10 +92,10 @@ const SheetComponent = memo(({
       //@ts-ignore ref={ref}
       ref={ref} {...rest}>
       <SheetHeaders>
-      {columns.map(column => (
+      {visibleColumns.map(columnId => (
         <SheetHeader
-          key={column.id}
-          column={column}/>))}
+          key={columnId}
+          column={columns[columnId]}/>))}
       </SheetHeaders>
       <GridItems>
         {children}
@@ -101,11 +110,11 @@ const SheetComponent = memo(({
     style 
   }: CellProps) => (
     <SheetCell
-      cell={rows[rowIndex].cells[columnIndex]}
+      cell={rows[visibleRows[rowIndex]].cells[columnIndex]}
       highlightColor={userColorSecondary}
       sheetId={id}
       updateSheetCell={updateSheetCell}
-      type={columns[columnIndex].type}
+      type={columns[visibleColumns[columnIndex]].type}
       style={style}/>
   )
 
@@ -113,19 +122,21 @@ const SheetComponent = memo(({
     <Container>
       <SheetContainer>
         <SheetActions
+          sheetId={id}
           columns={columns}
-          sheetActionsHeight={userLayoutSheetActionsHeight}/>
+          sheetActionsHeight={userLayoutSheetActionsHeight}
+          sorts={sorts}/>
         {!hasLoaded 
           ? 'Loading...'
           :  <Grid
                 innerElementType={GridWrapper}
                 width={window.innerWidth - (userLayoutSidebarWidth * window.innerWidth)}
                 height={window.innerHeight - (userLayoutTabsHeight * window.innerHeight) - (userLayoutSheetActionsHeight * window.innerHeight)}
-                columnWidth={columnIndex => columns[columnIndex].width}
-                columnCount={columns.length}
+                columnWidth={columnIndex => columns[visibleColumns[columnIndex]].width}
+                columnCount={visibleColumns.length}
                 rowHeight={index => 20}
-                rowCount={rows.length}
-                overscanColumnCount={columns.length}
+                rowCount={visibleRows.length}
+                overscanColumnCount={visibleColumns.length}
                 overscanRowCount={15}>
                 {Cell}
               </Grid>
@@ -143,8 +154,11 @@ interface SheetComponentProps {
   columns?: Columns
   fileId: string
   id: string
-  loadSheet?(sheet: Sheet): Promise<void>
+  loadSheet?(sheet: SheetFromServer): Promise<void>
   rows?: Rows
+  sorts?: Sorts
+  visibleColumns?: VisibleColumns
+  visibleRows?: VisibleRows
   updateSheetCell?(sheetId: string, cellId: string, updates: SheetCellUpdates): void
   userColorSecondary?: string
   userLayoutSheetActionsHeight?: number
@@ -171,13 +185,6 @@ const SheetContainer = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-`
-
-const Sheet = styled.table`
-  position: relative;
-  width: 100%;
-  height: 1px;
-  border-collapse: collapse;
 `
 
 const GridContainer = styled.div`
