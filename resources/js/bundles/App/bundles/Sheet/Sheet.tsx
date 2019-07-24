@@ -14,9 +14,10 @@ import {
   loadSheet as loadSheetAction,
   updateSheetCell as updateSheetCellAction, SheetCellUpdates
 } from '@app/state/sheet/actions'
-import { Columns, Rows, SheetFromServer, Sorts, VisibleColumns, VisibleRows } from '@app/state/sheet/types'
+import { Columns, Filters, Rows, SheetFromServer, Sorts, VisibleColumns, VisibleRows } from '@app/state/sheet/types'
 import { 
   selectSheetColumns, 
+  selectSheetFilters,
   selectSheetRows,
   selectSheetSorts,
   selectSheetVisibleColumns,
@@ -40,6 +41,7 @@ import SheetHeader from '@app/bundles/Sheet/SheetHeader'
 const mapStateToProps = (state: AppState, props: SheetComponentProps) => ({
   activeTabId: selectActiveTabId(state),
   columns: selectSheetColumns(state, props.id),
+  filters: selectSheetFilters(state, props.id),
   rows: selectSheetRows(state, props.id),
   sorts: selectSheetSorts(state, props.id),
   visibleRows: selectSheetVisibleRows(state, props.id),
@@ -62,6 +64,7 @@ const SheetComponent = memo(({
   activeTabId,
   columns,
   fileId,
+  filters,
   id,
   loadSheet,
   rows,
@@ -124,6 +127,7 @@ const SheetComponent = memo(({
         <SheetActions
           sheetId={id}
           columns={columns}
+          filters={filters}
           sheetActionsHeight={userLayoutSheetActionsHeight}
           sorts={sorts}/>
         {!hasLoaded 
@@ -153,6 +157,7 @@ interface SheetComponentProps {
   activeTabId?: string
   columns?: Columns
   fileId: string
+  filters?: Filters
   id: string
   loadSheet?(sheet: SheetFromServer): Promise<void>
   rows?: Rows

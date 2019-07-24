@@ -4,6 +4,7 @@ export type VisibleColumns = string[]
 export type Rows = { [key: string]: Row }
 export type VisibleRows = string[]
 export type Sorts = Sort[]
+export type Filters = Filter[]
 
 export type Sheet = {
 	id: string
@@ -12,6 +13,7 @@ export type Sheet = {
   columns: Columns
   visibleColumns: VisibleColumns
   sorts: Sorts
+  filters: Filters
 }
 
 export type SheetFromServer = {
@@ -56,3 +58,12 @@ export type Sort = {
 }
 
 export type SortOrder = 'ASC' | 'DESC'
+
+export type Filter = {
+  id: string
+  columnId: string
+  type: FilterType
+  value: string
+}
+
+export type FilterType = 'EQUALS' | 'GREATER_THAN' | 'LESS_THAN'
