@@ -25,7 +25,7 @@ $factory->define(App\Models\SheetColumn::class, function (Faker $faker) {
     return [
       'sheetId' => null,
       'position' => 1,
-      'width' => 250,
+      'width' => 100,
       'name' => $faker->streetSuffix,
       'type' => $type,
     ];

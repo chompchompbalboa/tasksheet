@@ -58,11 +58,6 @@ const SheetActionDropdown = ({
     }
   }
 
-  const handleAutosizeInputBlur = (e: FocusEvent<HTMLInputElement>) => {
-    setAutosizeInputValue("")
-    setVisibleOptions(options)
-  }
-
   const handleAutosizeInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setAutosizeInputValue(e.target.value)
     setVisibleOptions(options && options.filter(option => {
@@ -85,6 +80,8 @@ const SheetActionDropdown = ({
   const handleOptionSelect = (option: SheetActionDropdownOption) => {
     setIsDropdownVisible(false)
     setVisibleSelectedOptions([...visibleSelectedOptions, option])
+    setAutosizeInputValue("")
+    setVisibleOptions(options)
     setTimeout(() => onOptionSelect(option), 50)
   }
   
@@ -92,7 +89,8 @@ const SheetActionDropdown = ({
   
   return (
     <Container
-      ref={container}>
+      ref={container}
+      isDropdownVisible={isDropdownVisible}>
       <Wrapper>
         <SelectedOptions>
           {visibleSelectedOptions && visibleSelectedOptions.map(option => (
@@ -104,34 +102,36 @@ const SheetActionDropdown = ({
             </SheetActionDropdownSelectedOption>
           ))}
         </SelectedOptions>
-        <AutosizeInput
-          placeholder={placeholder}
-          value={autosizeInputValue}
-          onBlur={handleAutosizeInputBlur}
-          onChange={handleAutosizeInputChange}
-          onFocus={handleAutosizeInputFocus}
-          inputStyle={{
-            marginRight: '0.25rem',
-            height: '100%',
-            border: 'none',
-            backgroundColor: 'transparent',
-            outline: 'none',
-            fontFamily: 'inherit',
-            fontSize: 'inherit',
-            fontWeight: 'inherit',
-          }}/>
+        <InputContainer>
+          <AutosizeInput
+            placeholder={placeholder}
+            value={autosizeInputValue}
+            onChange={handleAutosizeInputChange}
+            onFocus={handleAutosizeInputFocus}
+            inputStyle={{
+              marginRight: '0.25rem',
+              padding: '0.125rem 0',
+              height: '100%',
+              border: 'none',
+              backgroundColor: 'transparent',
+              outline: 'none',
+              fontFamily: 'inherit',
+              fontSize: 'inherit',
+              fontWeight: 'inherit',
+            }}/>
+            <Dropdown
+              ref={dropdown}
+              isDropdownVisible={isDropdownVisible}>
+              {visibleOptions && visibleOptions.map(option => (
+                <DropdownOption
+                  key={option.value}
+                  onClick={() => handleOptionSelect(option)}>
+                  {option.label}
+                </DropdownOption>
+              ))}
+            </Dropdown>
+        </InputContainer>
       </Wrapper>
-      <Dropdown
-        ref={dropdown}
-        isDropdownVisible={isDropdownVisible}>
-        {visibleOptions && visibleOptions.map(option => (
-          <DropdownOption
-            key={option.value}
-            onClick={() => handleOptionSelect(option)}>
-            {option.label}
-          </DropdownOption>
-        ))}
-      </Dropdown>
     </Container>
   )
 }
@@ -160,9 +160,15 @@ export type SheetActionDropdownOptions = SheetActionDropdownOption[]
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  z-index: ${ ({ isDropdownVisible }: ContainerProps ) => isDropdownVisible ? '100' : '50'};
+  position: relative;
   width: 100%;
   height: 100%;
+  margin-right: 0.25rem;
 `
+interface ContainerProps {
+  isDropdownVisible: boolean
+}
 
 const Wrapper = styled.div`
   height: 100%;
@@ -178,15 +184,19 @@ const SelectedOptions = styled.div`
   display: flex;
 `
 
+const InputContainer = styled.div`
+  position: relative;
+`
+
 const Dropdown = styled.div`
   display: ${ ({ isDropdownVisible }: DropdownProps ) => isDropdownVisible ? 'block' : 'none'};
   position: absolute;
-  top: 95%;
-  left: 0.25rem;
+  left: -0.25rem;
+  top: calc(100% + 0.25rem);
   min-width: 7.5rem;
   background-color: white;
   border-radius: 5px;
-  background-color: rgb(250, 250, 250);
+  background-color: rgb(253, 253, 253);
   box-shadow: 3px 3px 10px 0px rgba(150,150,150,1);
 `
 interface DropdownProps {

@@ -2,7 +2,6 @@
 // Imports
 //-----------------------------------------------------------------------------
 import * as React from 'react'
-import { string } from 'prop-types'
 import styled from 'styled-components'
 
 //-----------------------------------------------------------------------------
@@ -27,19 +26,6 @@ export const Logo = ({ alignItems, fontSize }: LogoProps) => (
 export interface LogoProps {
   alignItems: string
   fontSize: string
-}
-
-//-----------------------------------------------------------------------------
-// Styled Components
-//-----------------------------------------------------------------------------
-Logo.propTypes = {
-  alignItems: string,
-  fontSize: string,
-}
-
-Logo.defaultProps = {
-  alignItems: 'center',
-  fontSize: '3em',
 }
 
 //-----------------------------------------------------------------------------

@@ -31,6 +31,7 @@ import {
   selectUserLayoutTabsHeight
 } from '@app/state/user/selectors'
 
+import LoadingTimer from '@/components/LoadingTimer'
 import SheetActions from '@app/bundles/Sheet/SheetActions'
 import SheetCell from '@app/bundles/Sheet/SheetCell'
 import SheetHeader from '@app/bundles/Sheet/SheetHeader'
@@ -79,7 +80,6 @@ const SheetComponent = memo(({
 }: SheetComponentProps) => {
 
   const [ hasLoaded, setHasLoaded ] = useState(false)
-
   useEffect(() => {
     if(!hasLoaded && fileId === activeTabId) {
       query.getSheet(id).then(sheet => {
@@ -89,6 +89,21 @@ const SheetComponent = memo(({
       })
     }
   }, [ activeTabId ])
+  
+  const calculateGridWidth = () => window.innerWidth - (userLayoutSidebarWidth * window.innerWidth)
+  const calculateGridHeight = () => window.innerHeight - (userLayoutTabsHeight * window.innerHeight) - (userLayoutSheetActionsHeight * window.innerHeight)
+  const [ gridWidth, setGridWidth ] = useState(calculateGridWidth())
+  const [ gridHeight, setGridHeight ] = useState(calculateGridHeight())
+  const handleResize = () => {
+    setGridWidth(calculateGridWidth())
+    setGridHeight(calculateGridHeight())
+  }
+  useEffect(() => {
+    addEventListener('resize', () => handleResize())
+    return () => {
+      removeEventListener('resize', () => handleResize())
+    }
+  }, [])
 
   const GridWrapper = forwardRef(({ children, ...rest }, ref) => (
     <GridContainer
@@ -105,7 +120,6 @@ const SheetComponent = memo(({
       </GridItems>
     </GridContainer> 
   ))
-
 
   const Cell = ({ 
     columnIndex, 
@@ -131,17 +145,17 @@ const SheetComponent = memo(({
           sheetActionsHeight={userLayoutSheetActionsHeight}
           sorts={sorts}/>
         {!hasLoaded 
-          ? 'Loading...'
+          ?  <LoadingTimer />
           :  <Grid
                 innerElementType={GridWrapper}
-                width={window.innerWidth - (userLayoutSidebarWidth * window.innerWidth)}
-                height={window.innerHeight - (userLayoutTabsHeight * window.innerHeight) - (userLayoutSheetActionsHeight * window.innerHeight)}
+                width={gridWidth}
+                height={gridHeight}
                 columnWidth={columnIndex => columns[visibleColumns[columnIndex]].width}
                 columnCount={visibleColumns.length}
-                rowHeight={index => 20}
+                rowHeight={index => 24}
                 rowCount={visibleRows.length}
                 overscanColumnCount={visibleColumns.length}
-                overscanRowCount={15}>
+                overscanRowCount={12}>
                 {Cell}
               </Grid>
         }
@@ -202,6 +216,7 @@ const SheetHeaders = styled.div`
   position: sticky;
   top: 0;
   left: 0;
+  height: 3.5vh;
 `
 
 const GridItems = styled.div`
