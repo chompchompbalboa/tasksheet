@@ -66,4 +66,4 @@ export type Filter = {
   value: string
 }
 
-export type FilterType = 'EQUALS' | 'GREATER_THAN' | 'LESS_THAN'
+export type FilterType = '=' | '>' | '>=' | '<' | '<='

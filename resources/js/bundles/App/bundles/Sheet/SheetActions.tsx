@@ -22,14 +22,18 @@ const SheetActions = ({
   return (
     <Container
       sheetActionsHeight={sheetActionsHeight}>
-      <SheetActionFilter
-        sheetId={sheetId}
-        columns={columns}
-        filters={filters}/>
-      <SheetActionSort
-        sheetId={sheetId}
-        columns={columns}
-        sorts={sorts}/>
+      {columns && 
+        <>
+          <SheetActionFilter
+            sheetId={sheetId}
+            columns={columns}
+            filters={filters}/>
+          <SheetActionSort
+            sheetId={sheetId}
+            columns={columns}
+            sorts={sorts}/>
+        </>
+      }
     </Container>
   )
 }

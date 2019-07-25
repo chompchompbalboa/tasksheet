@@ -25,7 +25,7 @@ const SheetActionFilterSelectedOption = ({
     return (
       <Container
         onClick={() => handleOptionClick(filter)}>
-        {option.label}
+        {option.label} {filter.type} {filter.value}
       </Container>
     )
   }

@@ -5,7 +5,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { v4 as createUuid } from 'uuid'
 
-import { Columns, Filter, Filters } from '@app/state/sheet/types'
+import { Columns, Filter, Filters, FilterType } from '@app/state/sheet/types'
 
 import { ThunkDispatch } from '@app/state/types'
 import { 
@@ -23,8 +23,8 @@ import SheetActionFilterSelectedOption from '@app/bundles/Sheet/SheetActionFilte
 // Redux
 //-----------------------------------------------------------------------------
 const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionProps) => ({
-  createFilter: (newFilter: Filter) => dispatch(createFilterAction(props.sheetId, newFilter)),
-  deleteFilter: (columnId: string) => dispatch(deleteFilterAction(props.sheetId, columnId)),
+  createFilter: (sheetId: string, newFilter: Filter) => dispatch(createFilterAction(props.sheetId, newFilter)),
+  deleteFilter: (filterId: string) => dispatch(deleteFilterAction(props.sheetId, filterId)),
   updateFilter: (filterId: string, updates: FilterUpdates) => dispatch(updateFilterAction(props.sheetId, filterId, updates))
 })
 
@@ -36,18 +36,49 @@ const SheetActionFilter = ({
   createFilter,
   deleteFilter,
   filters,
+  sheetId,
   updateFilter
 }: SheetActionProps) => {
 
-  const options = columns && Object.keys(columns).map((columnId: string) => { return { label: columns[columnId].name, value: columnId }})
   const selectedOptions = filters && filters.map((filter: Filter) => { return { label: columns[filter.columnId].name, value: filter.id }})
 
+  const columnIds = Object.keys(columns)
+  const columnNames = columnIds.map(columnId => columns[columnId].name)
+  const filterTypes: FilterType[] = ['=', '>', '>=', '<', '<=']
+
+  const isValidFilter = ([
+    columnName,
+    filterType,
+    filterValue
+  ]: string[]) => {
+    return (
+      columnName && filterType && filterValue &&
+      columnNames.includes(columnName) && // First string is a column name
+      filterTypes.includes(filterType as FilterType) && // Second string is a FilterType
+      filterValue[filterValue.length - 1] === ';' // Third string ends with a semicolon
+    )
+  }
+
+  const handleInputChange = (nextValue: string) => {
+    const splitNextValue = nextValue.split(" ")
+    const [ columnName, filterType, ...filterValue ] = splitNextValue
+    if(isValidFilter([ columnName, filterType, filterValue.join(" ") ])) {
+      createFilter(sheetId, {
+        id: createUuid(), 
+        columnId: columnIds[columnNames.findIndex(_columnName => _columnName === columnName)], 
+        value: filterValue.join(" ").slice(0, -1), 
+        type: filterTypes.find(_filterType => _filterType === filterType)
+      })
+    }
+  }
+  
   return (
     <SheetAction>
       <SheetActionDropdown
+        onInputChange={(nextValue: string) => handleInputChange(nextValue)}
         onOptionDelete={(optionToDelete: SheetActionDropdownOption) => deleteFilter(optionToDelete.value)}
-        onOptionSelect={(selectedOption: SheetActionDropdownOption) => createFilter({ id: createUuid(), columnId: selectedOption.value, value: "", type: "EQUALS" })}
-        options={options}
+        onOptionSelect={null}
+        options={null}
         placeholder={"Filter By..."}
         selectedOptions={selectedOptions}
         selectedOptionComponent={({ option }: { option: SheetActionDropdownOption }) => <SheetActionFilterSelectedOption option={option} filters={filters} updateFilter={updateFilter} />}/>
@@ -60,7 +91,7 @@ const SheetActionFilter = ({
 //-----------------------------------------------------------------------------
 interface SheetActionProps {
   columns: Columns
-  createFilter?(newFilter: Filter): void
+  createFilter?(sheetId: string, newFilter: Filter): void
   deleteFilter?(columnId: string): void
   updateFilter?(filterId: string, updates: FilterUpdates): void
   filters: Filters

@@ -22,10 +22,11 @@ const mapStateToProps = (state: AppState) => ({
 // Component
 //-----------------------------------------------------------------------------
 const SheetActionDropdown = ({
+  onInputChange,
   onOptionSelect,
   onOptionDelete,
   options,
-  placeholder = '...',
+  placeholder,
   selectedOptions,
   userColorPrimary,
   selectedOptionComponent
@@ -41,16 +42,36 @@ const SheetActionDropdown = ({
 
   useEffect(() => {
     if(isDropdownVisible) {
-      if (!visibleOptions) { setVisibleOptions(options) }
+      !visibleOptions && setVisibleOptions(options)
       window.addEventListener('mousedown', closeContextMenuOnClickOutside)
-    }
-    else {
+    } else {
       window.removeEventListener('mousedown', closeContextMenuOnClickOutside)
     }
     return () => {
       window.removeEventListener('mousedown', closeContextMenuOnClickOutside)
     }
   }, [ isDropdownVisible ])
+
+  useEffect(() => {
+    if(visibleOptions && visibleOptions.length === 1) {
+      window.addEventListener('keypress', selectOptionOnKeydownEnter)
+    }
+    else {
+      window.removeEventListener('keypress', selectOptionOnKeydownEnter)
+    }
+    return () => {
+      window.removeEventListener('keypress', selectOptionOnKeydownEnter)
+    }
+  }, [ visibleOptions ])
+
+  useEffect(() => {
+    setVisibleOptions(options)
+  }, [ options ])
+
+  useEffect(() => {
+    setVisibleSelectedOptions(selectedOptions)
+    setAutosizeInputValue("")
+  }, [ selectedOptions ])
 
   const closeContextMenuOnClickOutside = (e: Event) => {
     if(!dropdown.current.contains(e.target) && !container.current.contains(e.target)) {
@@ -59,9 +80,12 @@ const SheetActionDropdown = ({
   }
 
   const handleAutosizeInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setAutosizeInputValue(e.target.value)
+    const nextAutosizeInputValue = e.target.value
+    onInputChange && onInputChange(nextAutosizeInputValue)
+    setIsDropdownVisible(true)
+    setAutosizeInputValue(nextAutosizeInputValue)
     setVisibleOptions(options && options.filter(option => {
-      const searchString = e.target.value.toLowerCase().replace(/ /g, "")
+      const searchString = nextAutosizeInputValue.toLowerCase().replace(/ /g, "")
       return option.label.toLowerCase().replace(/ /g, "").includes(searchString)
     }))
   }
@@ -83,6 +107,12 @@ const SheetActionDropdown = ({
     setAutosizeInputValue("")
     setVisibleOptions(options)
     setTimeout(() => onOptionSelect(option), 50)
+  }
+
+  const selectOptionOnKeydownEnter = (e: KeyboardEvent) => {
+    if(e.key === "Enter") {
+      handleOptionSelect(visibleOptions[0])
+    }
   }
   
   const SelectedOption = selectedOptionComponent
@@ -140,6 +170,7 @@ const SheetActionDropdown = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionDropdownProps {
+  onInputChange?(nextValue: string): void
   onOptionDelete(optionToDelete: SheetActionDropdownOption): void
   onOptionSelect(selectedOption: SheetActionDropdownOption): void
   options: SheetActionDropdownOptions

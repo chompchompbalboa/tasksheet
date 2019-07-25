@@ -7,7 +7,7 @@ import clone from '@/utils/clone'
 import { mutation } from '@app/api'
 
 import { AppState } from '@app/state'
-import { Columns, Filter, Filters, Rows, Sheet, SheetFromServer, Sort, SortOrder, Sorts, VisibleRows } from '@app/state/sheet/types'
+import { Columns, Filter, Filters, Rows, Sheet, SheetFromServer, Sort, SortOrder, Sorts, VisibleRows, FilterType } from '@app/state/sheet/types'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
 
 //-----------------------------------------------------------------------------
@@ -21,16 +21,54 @@ export type SheetActions =
 //-----------------------------------------------------------------------------
 // Resolvers
 //-----------------------------------------------------------------------------
+const resolveValue = (value: string) => {
+  const filteredValue = value.replace('%', '')
+  return isNaN(Number(filteredValue)) ? filteredValue : Number(filteredValue)
+}
+
+const resolveFilter = (cellValue: string, filterValue: string, type: FilterType) => {
+  switch (type) {
+    case '=': {
+      return resolveValue(cellValue) === resolveValue(filterValue)
+    }
+    case '>': {
+      return resolveValue(cellValue) > resolveValue(filterValue)
+    }
+    case '>=': {
+      return resolveValue(cellValue) >= resolveValue(filterValue)
+    }
+    case '<': {
+      return resolveValue(cellValue) < resolveValue(filterValue)
+    }
+    case '<=': {
+      return resolveValue(cellValue) <= resolveValue(filterValue)
+    }
+  }
+}
+
 const resolveVisibleRows = (rows: Rows, sorts?: Sorts, filters?: Filters) => {
+
+  const rowIds: string[] = Object.keys(rows)
+
+  const filteredRowIds: string[] = !filters ? rowIds : rowIds.map(rowId => {
+    const row = rows[rowId]
+    let passesFilter = true
+    filters.forEach(filter => {
+      const cellValue = row.cells.find(cell => cell.columnId === filter.columnId).value
+      if(!resolveFilter(cellValue, filter.value, filter.type)) { passesFilter = false }
+    })
+    return passesFilter ? rowId : undefined
+  }).filter(Boolean)
+
   const sortBy = sorts && sorts.map(sort => {
     return (rowId: string) => {
       const value = rows[rowId].cells.find(cell => cell.columnId === sort.columnId).value
-      return isNaN(Number(value)) ? value : Number(value)
+      return resolveValue(value)
     }
   })
   const sortOrder = sorts && sorts.map(sort => sort.order === 'ASC' ? 'asc' : 'desc')
 
-  return orderBy(Object.keys(rows), sortBy, sortOrder)
+  return orderBy(filteredRowIds, sortBy, sortOrder)
 }
 
 const resolveVisibleColumns = (columns: Columns) => {
@@ -45,19 +83,30 @@ interface CreateFilter {
 	type: typeof CREATE_FILTER
 }
 
+let createFilterUpdateVisibleRowsTimeout: number = null
 export const createFilter = (sheetId: string, newFilter: Filter): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    // Update Filters
     const {
-      filters,
-      rows,
-      sorts
+      filters
     } = getState().sheet[sheetId]
     const nextFilters = [...filters, newFilter]
-    const nextVisibleRows = resolveVisibleRows(rows, sorts, nextFilters)
     dispatch(updateSheetReducer(sheetId, {
-      filters: nextFilters,
-      visibleRows: nextVisibleRows
+      filters: nextFilters
     }))
+    // Update Visible Rows
+    clearTimeout(createFilterUpdateVisibleRowsTimeout)
+    createFilterUpdateVisibleRowsTimeout = setTimeout(() => {
+      const {
+        filters,
+        rows,
+        sorts
+      } = getState().sheet[sheetId]
+      const nextVisibleRows = resolveVisibleRows(rows, sorts, filters)
+      dispatch(updateSheetReducer(sheetId, {
+        visibleRows: nextVisibleRows
+      }))
+    }, 50)
 	}
 }
 
@@ -69,14 +118,14 @@ interface DeleteFilter {
 	type: typeof DELETE_FILTER
 }
 
-export const deleteFilter = (sheetId: string, columnId: string): ThunkAction => {
+export const deleteFilter = (sheetId: string, filterId: string): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       filters,
       rows,
       sorts
     } = getState().sheet[sheetId]
-    const nextFilters = filters.filter(filter => filter.columnId !== columnId)
+    const nextFilters = filters.filter(filter => filter.id !== filterId)
     const nextVisibleRows = resolveVisibleRows(rows, sorts, nextFilters)
     dispatch(updateSheetReducer(sheetId, {
       filters: nextFilters,
@@ -122,10 +171,11 @@ export const createSort = (sheetId: string, newSort: Sort): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       rows,
-      sorts
+      sorts,
+      filters
     } = getState().sheet[sheetId]
     const nextSorts = [...sorts, newSort]
-    const nextVisibleRows = resolveVisibleRows(rows, nextSorts)
+    const nextVisibleRows = resolveVisibleRows(rows, nextSorts, filters)
     dispatch(updateSheetReducer(sheetId, {
       sorts: nextSorts,
       visibleRows: nextVisibleRows
@@ -145,10 +195,11 @@ export const deleteSort = (sheetId: string, columnId: string): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       rows,
-      sorts
+      sorts,
+      filters
     } = getState().sheet[sheetId]
     const nextSorts = sorts.filter(sort => sort.columnId !== columnId)
-    const nextVisibleRows = resolveVisibleRows(rows, nextSorts)
+    const nextVisibleRows = resolveVisibleRows(rows, nextSorts, filters)
     dispatch(updateSheetReducer(sheetId, {
       sorts: nextSorts,
       visibleRows: nextVisibleRows
@@ -167,14 +218,15 @@ export const updateSort = (sheetId: string, sortId: string, updates: SortUpdates
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       rows,
-      sorts
+      sorts,
+      filters
     } = getState().sheet[sheetId]
     const sortIndex = sorts.findIndex(sort => sort.id === sortId)
     const nextSorts = clone(sorts)
     if(sortIndex > -1) {
       nextSorts[sortIndex] = { ...nextSorts[sortIndex], ...updates }
     }
-    const nextVisibleRows = resolveVisibleRows(rows, nextSorts)
+    const nextVisibleRows = resolveVisibleRows(rows, nextSorts, filters)
     dispatch(updateSheetReducer(sheetId, {
       sorts: nextSorts,
       visibleRows: nextVisibleRows
