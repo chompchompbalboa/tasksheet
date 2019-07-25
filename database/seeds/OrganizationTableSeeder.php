@@ -40,7 +40,8 @@ class OrganizationTableSeeder extends Seeder
             $folder->save();
      
             $sheets = [
-              'database/sources/2019_Pitching_Advanced.csv'
+              'Purchasing_250',
+              '2019_Pitching_Advanced',
             ];
 
             // Files
@@ -57,7 +58,7 @@ class OrganizationTableSeeder extends Seeder
                 // Sheets
                 case 'SHEET': 
 
-                  $source  = Csv::toArray($sheets[$fileKey]);
+                  $source  = Csv::toArray('database/sources/'.$sheets[$fileKey].'.csv');
                   $sourceCount = count($source);
                   $sourceColumnNames = [];
                   foreach($source[0] as $columnName => $value) {

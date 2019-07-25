@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import useInterval from '@/utils/useInterval'
@@ -9,9 +9,15 @@ import useInterval from '@/utils/useInterval'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const LoadingTimer = () => {
+const LoadingTimer = ({
+  fromId
+}: LoadingTimerProps) => {
   
   const [ time, setTime ] = useState(0)
+  console.log(fromId)
+  useEffect(() => {
+    setTime(0)
+  }, [ fromId ])
   
   useInterval(() => {
     setTime(time => time + 5)
@@ -20,11 +26,16 @@ const LoadingTimer = () => {
   return (
     <Container>
       <Time>{(time / 1000).toFixed(3)} seconds</Time>
-      <Message>Thank you for your patience.</Message>
     </Container>
   )
 }
 
+//-----------------------------------------------------------------------------
+// Styled Components
+//-----------------------------------------------------------------------------
+interface LoadingTimerProps {
+  fromId: string
+}
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
@@ -39,7 +50,5 @@ const Container = styled.div`
 `
 
 const Time = styled.div``
-
-const Message = styled.div``
 
 export default LoadingTimer

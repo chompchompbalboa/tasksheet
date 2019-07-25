@@ -78,10 +78,12 @@ const SheetComponent = memo(({
   userLayoutSidebarWidth,
   userLayoutTabsHeight
 }: SheetComponentProps) => {
+  
+  const isActiveFile = fileId === activeTabId
 
   const [ hasLoaded, setHasLoaded ] = useState(false)
   useEffect(() => {
-    if(!hasLoaded && fileId === activeTabId) {
+    if(!hasLoaded && isActiveFile) {
       query.getSheet(id).then(sheet => {
         loadSheet(sheet).then(() => {
           setHasLoaded(true)
@@ -144,8 +146,8 @@ const SheetComponent = memo(({
           filters={filters}
           sheetActionsHeight={userLayoutSheetActionsHeight}
           sorts={sorts}/>
-        {!hasLoaded 
-          ?  <LoadingTimer />
+        {!hasLoaded
+          ?  isActiveFile ? <LoadingTimer fromId={id}/> : null
           :  <Grid
                 innerElementType={GridWrapper}
                 width={gridWidth}
@@ -155,7 +157,7 @@ const SheetComponent = memo(({
                 rowHeight={index => 24}
                 rowCount={visibleRows.length}
                 overscanColumnCount={visibleColumns.length}
-                overscanRowCount={12}>
+                overscanRowCount={5}>
                 {Cell}
               </Grid>
         }
@@ -204,11 +206,13 @@ const SheetContainer = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
+  background-color: rgb(230, 230, 230);
 `
 
 const GridContainer = styled.div`
   width: 100%;
   height: 100%;
+  background-color: white;
 `
 
 const SheetHeaders = styled.div`

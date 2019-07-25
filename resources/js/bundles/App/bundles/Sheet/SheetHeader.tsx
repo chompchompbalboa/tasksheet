@@ -56,7 +56,8 @@ interface SheetHeaderProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   display: inline-block;
-  overflow: auto;
+  overflow: hidden;
+  text-overflow: hidden;
   z-index: ${ ({ isContextMenuVisible }: ContainerProps ) => isContextMenuVisible ? '100' : '50'};
   width: ${ ({ containerWidth }: ContainerProps ) => containerWidth + 'px'};
   height: 3.5vh;
@@ -64,8 +65,8 @@ const Container = styled.div`
   padding: 0 0.25rem;
   text-align: left;
   background-color: rgb(250, 250, 250);
-  box-shadow: 0px 1px 0px 0px rgba(180,180,180,1);
-  font-size: 1.75vh;
+  box-shadow: inset 0 -1px 0px 0px rgba(180,180,180,1);
+  font-size: 1.5vh;
   font-weight: bold;
 `
 interface ContainerProps {

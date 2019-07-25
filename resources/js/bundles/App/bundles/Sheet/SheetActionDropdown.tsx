@@ -237,7 +237,7 @@ interface DropdownProps {
 const DropdownOption = styled.div`
   cursor: default;
   width: 100%;
-  padding: 0.125rem;
+  padding: 0.15rem 0.25rem;
   &:hover {
     background-color: rgb(240, 240, 240);
   }

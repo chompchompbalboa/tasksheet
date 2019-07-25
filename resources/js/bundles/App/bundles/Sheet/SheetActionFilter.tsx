@@ -5,7 +5,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { v4 as createUuid } from 'uuid'
 
-import { Columns, Filter, Filters, FilterType } from '@app/state/sheet/types'
+import clone from '@/utils/clone'
 
 import { ThunkDispatch } from '@app/state/types'
 import { 
@@ -14,6 +14,7 @@ import {
   deleteFilter as deleteFilterAction,
   updateFilter as updateFilterAction 
 } from '@app/state/sheet/actions'
+import { Columns, Filter, Filters, FilterType } from '@app/state/sheet/types'
 
 import SheetAction from '@app/bundles/Sheet/SheetAction'
 import SheetActionDropdown, { SheetActionDropdownOption } from '@app/bundles/Sheet/SheetActionDropdown'
@@ -62,11 +63,11 @@ const SheetActionFilter = ({
   const handleInputChange = (nextValue: string) => {
     const splitNextValue = nextValue.split(" ")
     const [ columnName, filterType, ...filterValue ] = splitNextValue
-    if(isValidFilter([ columnName, filterType, filterValue.join(" ") ])) {
+    if(isValidFilter([ columnName, filterType, clone(filterValue).join(" ") ])) {
       createFilter(sheetId, {
         id: createUuid(), 
         columnId: columnIds[columnNames.findIndex(_columnName => _columnName === columnName)], 
-        value: filterValue.join(" ").slice(0, -1), 
+        value: clone(filterValue).join(" ").slice(0, -1), 
         type: filterTypes.find(_filterType => _filterType === filterType)
       })
     }
