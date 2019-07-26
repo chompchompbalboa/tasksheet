@@ -5,14 +5,19 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
+import { FOLDER } from '@app/assets/icons'
+
 import { AppState } from '@app/state'
+import { ThunkDispatch } from '@app/state/types'
+import { 
+  closeTab as closeTabAction,
+  updateActiveTabId as updateActiveTabIdAction 
+} from '@app/state/tab/actions'
 import { selectActiveTabId, selectTabs } from '@app/state/tab/selectors'
-import {  
-  selectUserLayoutSidebarWidth, 
-  selectUserLayoutTabsHeight, 
-} from '@app/state/user/selectors'
+import {  selectUserLayoutTabsHeight } from '@app/state/user/selectors'
 
 import File from '@app/bundles/File/File'
+import Icon from '@/components/Icon'
 import Tab from '@app/bundles/Tabs/Tab'
 
 //-----------------------------------------------------------------------------
@@ -21,8 +26,12 @@ import Tab from '@app/bundles/Tabs/Tab'
 const mapStateToProps = (state: AppState) => ({
   activeTabId: selectActiveTabId(state),
   tabs: selectTabs(state),
-  userLayoutSidebarWidth: selectUserLayoutSidebarWidth(state),
   userLayoutTabsHeight: selectUserLayoutTabsHeight(state)
+})
+
+const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+  closeTab: (fileId: string) => dispatch(closeTabAction(fileId)),
+  updateActiveTabId: (nextActiveTabId: string) => dispatch(updateActiveTabIdAction(nextActiveTabId))
 })
 
 //-----------------------------------------------------------------------------
@@ -30,13 +39,13 @@ const mapStateToProps = (state: AppState) => ({
 //-----------------------------------------------------------------------------
 const Tabs = ({ 
   activeTabId,
+  closeTab,
   tabs,
-  userLayoutSidebarWidth,
+  updateActiveTabId,
   userLayoutTabsHeight,
 }: TabsProps) => {
   return (
-    <Container 
-      sidebarWidth={userLayoutSidebarWidth}>
+    <Container>
       <TabsContainer
         tabsHeight={userLayoutTabsHeight}>
         {tabs.length > 0 
@@ -44,11 +53,19 @@ const Tabs = ({
             <Tab
               key={fileId}
               fileId={fileId}
-              isActiveTab={activeTabId === fileId}/>))
+              isActiveTab={activeTabId === fileId}
+              closeTab={closeTab}
+              updateActiveTabId={updateActiveTabId}/>))
           : <Tab
               fileId={null}
               isActiveTab />
         }
+        <FoldersTab
+          isActiveTab={activeTabId === 'FOLDERS'}
+          onClick={() => updateActiveTabId('FOLDERS')}>
+          <Icon
+            icon={FOLDER}/>
+        </FoldersTab>
       </TabsContainer>
       <FilesContainer
         tabsHeight={userLayoutTabsHeight}>
@@ -73,8 +90,9 @@ const Tabs = ({
 //-----------------------------------------------------------------------------
 interface TabsProps {
   activeTabId: string
+  closeTab?(fileId: string): void
   tabs: string[]
-  userLayoutSidebarWidth: number
+  updateActiveTabId?(nextActiveTabId: string): void
   userLayoutTabsHeight: number
 }
 
@@ -85,12 +103,9 @@ const Container = styled.div`
   z-index: 1;
   position: fixed;
   top: 0;
-  left: ${ ({ sidebarWidth }: ContainerProps) => (sidebarWidth * 100) + 'vw'};
-  width: calc(100vw - ${ ({ sidebarWidth }: ContainerProps) => (sidebarWidth * 100) + 'vw'});
+  left: 2px;
+  width: calc(100% - 2px);
 `
-interface ContainerProps {
-  sidebarWidth: number
-}
 
 const TabsContainer = styled.div`
   z-index: 2;
@@ -98,10 +113,27 @@ const TabsContainer = styled.div`
   width: 100%;
   display: flex;
   height: ${ ({ tabsHeight }: TabsContainerProps) => (tabsHeight * 100) + 'vh'};
-  align-items: center;
+  align-items: flex-end;
 `
 interface TabsContainerProps {
   tabsHeight: number
+}
+
+const FoldersTab = styled.div`
+  cursor: default;
+  margin-left: 2px;
+  height: calc(100% - 1.5px);
+  padding: 0 0.5rem;
+  background-color: rgb(250, 250, 250);
+  color: rgb(80, 80, 80);
+  border-radius: 3px 3px 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: ${ ({ isActiveTab }: FoldersTabProps) => isActiveTab ? '1' : '0.75'};
+`
+interface FoldersTabProps {
+  isActiveTab: boolean
 }
 
 const FilesContainer = styled.div`
@@ -130,5 +162,6 @@ interface FileContainerProps {
 // Export
 //-----------------------------------------------------------------------------
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Tabs)

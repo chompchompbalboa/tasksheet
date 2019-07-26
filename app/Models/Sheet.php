@@ -11,9 +11,9 @@ class Sheet extends Model
   /**
    * Define which attributes will be visible
    */
-  protected $visible = ['id', 'rows', 'columns', 'filters', 'sorts'];
+  protected $visible = ['id', 'rows', 'columns', 'filters', 'groups', 'sorts'];
   protected $fillable = ['id'];
-  protected $with = ['rows', 'filters', 'sorts'];
+  protected $with = ['rows', 'filters', 'groups', 'sorts'];
   protected $appends = ['columns'];
   
   /**
@@ -33,6 +33,13 @@ class Sheet extends Model
    */
   public function filters() {
     return $this->hasMany('App\Models\SheetFilter', 'sheetId');
+  }
+  
+  /**
+   * Get all the groups that belong to this table
+   */
+  public function groups() {
+    return $this->hasMany('App\Models\SheetGroup', 'sheetId');
   }
   
   /**

@@ -51,10 +51,10 @@ Route::prefix('app')->group(function () {
     */
     // Sheet
     'sheets' => 'SheetController',
-    'sheets/breakdowns' => 'SheetBreakdownController',
     'sheets/cells' => 'SheetCellController',
     'sheets/columns' => 'SheetColumnController',
     'sheets/filters' => 'SheetFilterController',
+    'sheets/groups' => 'SheetGroupController',
     'sheets/rows' => 'SheetRowController',
     'sheets/sorts' => 'SheetSortController',
     // User

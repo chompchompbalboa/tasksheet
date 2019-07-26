@@ -18,6 +18,7 @@ class CreateSheetGroup extends Migration
           $table->uuid('sheetId')->nullable();
           $table->uuid('viewId')->nullable();
           $table->uuid('columnId');
+          $table->string('order', 4);
           $table->timestamps();
 
           $table->foreign('sheetId')->references('id')->on('sheets');

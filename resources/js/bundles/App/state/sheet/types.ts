@@ -3,8 +3,9 @@ export type Columns = { [key: string]: Column }
 export type VisibleColumns = string[]
 export type Rows = { [key: string]: Row }
 export type VisibleRows = string[]
-export type SheetSorts = SheetSort[]
 export type SheetFilters = SheetFilter[]
+export type SheetGroups = SheetGroup[]
+export type SheetSorts = SheetSort[]
 
 export type Sheet = {
 	id: string
@@ -12,8 +13,9 @@ export type Sheet = {
   visibleRows: VisibleRows
   columns: Columns
   visibleColumns: VisibleColumns
-  sorts: SheetSorts
   filters: SheetFilters
+  groups: SheetGroups
+  sorts: SheetSorts
 }
 
 export type SheetFromServer = {
@@ -21,6 +23,7 @@ export type SheetFromServer = {
   rows: Row[]
   columns: Column[]
   filters: SheetFilters
+  groups: SheetGroups
   sorts: SheetSorts
 }
 
@@ -71,3 +74,12 @@ export type SheetFilter = {
 }
 
 export type SheetFilterType = '=' | '>' | '>=' | '<' | '<='
+
+export type SheetGroup = {
+  id: string
+  sheetId?: string
+  columnId: string
+  order: SheetGroupOrder
+}
+
+export type SheetGroupOrder = 'ASC' | 'DESC'

@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------
 import React, { forwardRef, memo, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
+import Autosizer from 'react-virtualized-auto-sizer'
 import { areEqual, VariableSizeGrid as Grid } from 'react-window'
 import styled from 'styled-components'
 
@@ -14,10 +15,11 @@ import {
   loadSheet as loadSheetAction,
   updateSheetCell as updateSheetCellAction, SheetCellUpdates
 } from '@app/state/sheet/actions'
-import { Columns, SheetFilters, Rows, SheetFromServer, SheetSorts, VisibleColumns, VisibleRows } from '@app/state/sheet/types'
+import { Columns, SheetFilters, SheetGroups, Rows, SheetFromServer, SheetSorts, VisibleColumns, VisibleRows } from '@app/state/sheet/types'
 import { 
   selectSheetColumns, 
   selectSheetFilters,
+  selectSheetGroups,
   selectSheetRows,
   selectSheetSorts,
   selectSheetVisibleColumns,
@@ -27,13 +29,13 @@ import { selectActiveTabId } from '@app/state/tab/selectors'
 import { 
   selectUserColorSecondary,
   selectUserLayoutSheetActionsHeight,
-  selectUserLayoutSidebarWidth,
   selectUserLayoutTabsHeight
 } from '@app/state/user/selectors'
 
 import LoadingTimer from '@/components/LoadingTimer'
 import SheetActions from '@app/bundles/Sheet/SheetActions'
 import SheetCell from '@app/bundles/Sheet/SheetCell'
+import SheetGroupCell from '@app/bundles/Sheet/SheetGroupCell'
 import SheetHeader from '@app/bundles/Sheet/SheetHeader'
 
 //-----------------------------------------------------------------------------
@@ -43,13 +45,13 @@ const mapStateToProps = (state: AppState, props: SheetComponentProps) => ({
   activeTabId: selectActiveTabId(state),
   columns: selectSheetColumns(state, props.id),
   filters: selectSheetFilters(state, props.id),
+  groups: selectSheetGroups(state, props.id),
   rows: selectSheetRows(state, props.id),
   sorts: selectSheetSorts(state, props.id),
   visibleRows: selectSheetVisibleRows(state, props.id),
   visibleColumns: selectSheetVisibleColumns(state, props.id),
   userColorSecondary: selectUserColorSecondary(state),
   userLayoutSheetActionsHeight: selectUserLayoutSheetActionsHeight(state),
-  userLayoutSidebarWidth: selectUserLayoutSidebarWidth(state),
   userLayoutTabsHeight: selectUserLayoutTabsHeight(state)
 })
 
@@ -66,6 +68,7 @@ const SheetComponent = memo(({
   columns,
   fileId,
   filters,
+  groups,
   id,
   loadSheet,
   rows,
@@ -75,7 +78,6 @@ const SheetComponent = memo(({
   updateSheetCell,
   userColorSecondary,
   userLayoutSheetActionsHeight,
-  userLayoutSidebarWidth,
   userLayoutTabsHeight
 }: SheetComponentProps) => {
   
@@ -91,31 +93,17 @@ const SheetComponent = memo(({
       })
     }
   }, [ activeTabId ])
-  
-  const calculateGridWidth = () => window.innerWidth - (userLayoutSidebarWidth * window.innerWidth)
-  const calculateGridHeight = () => window.innerHeight - (userLayoutTabsHeight * window.innerHeight) - (userLayoutSheetActionsHeight * window.innerHeight)
-  const [ gridWidth, setGridWidth ] = useState(calculateGridWidth())
-  const [ gridHeight, setGridHeight ] = useState(calculateGridHeight())
-  const handleResize = () => {
-    setGridWidth(calculateGridWidth())
-    setGridHeight(calculateGridHeight())
-  }
-  useEffect(() => {
-    addEventListener('resize', () => handleResize())
-    return () => {
-      removeEventListener('resize', () => handleResize())
-    }
-  }, [])
 
   const GridWrapper = forwardRef(({ children, ...rest }, ref) => (
     <GridContainer
       //@ts-ignore ref={ref}
       ref={ref} {...rest}>
       <SheetHeaders>
-      {visibleColumns.map(columnId => (
+      {visibleColumns.map((columnId, index) => (
         <SheetHeader
           key={columnId}
-          column={columns[columnId]}/>))}
+          column={columns[columnId]}
+          isLast={index === visibleColumns.length - 1}/>))}
       </SheetHeaders>
       <GridItems>
         {children}
@@ -127,15 +115,24 @@ const SheetComponent = memo(({
     columnIndex, 
     rowIndex, 
     style 
-  }: CellProps) => (
-    <SheetCell
-      cell={rows[visibleRows[rowIndex]].cells[columnIndex]}
-      highlightColor={userColorSecondary}
-      sheetId={id}
-      updateSheetCell={updateSheetCell}
-      type={columns[visibleColumns[columnIndex]].type}
-      style={style}/>
-  )
+  }: CellProps) => {
+    const rowId = visibleRows[rowIndex]
+    if(rowId !== 'GROUP_HEADER') {
+      return (
+        <SheetCell
+          cell={rows[visibleRows[rowIndex]].cells[columnIndex]}
+          highlightColor={userColorSecondary}
+          sheetId={id}
+          updateSheetCell={updateSheetCell}
+          type={columns[visibleColumns[columnIndex]].type}
+          style={style}/>
+      )
+    }
+    return (
+      <SheetGroupCell
+        style={style}/>
+    )
+}
 
   return (
     <Container>
@@ -144,22 +141,27 @@ const SheetComponent = memo(({
           sheetId={id}
           columns={columns}
           filters={filters}
+          groups={groups}
           sheetActionsHeight={userLayoutSheetActionsHeight}
           sorts={sorts}/>
         {!hasLoaded
-          ?  isActiveFile ? <LoadingTimer fromId={id}/> : null
-          :  <Grid
-                innerElementType={GridWrapper}
-                width={gridWidth}
-                height={gridHeight}
-                columnWidth={columnIndex => columns[visibleColumns[columnIndex]].width}
-                columnCount={visibleColumns.length}
-                rowHeight={index => 24}
-                rowCount={visibleRows.length}
-                overscanColumnCount={visibleColumns.length}
-                overscanRowCount={5}>
-                {Cell}
-              </Grid>
+          ? isActiveFile ? <LoadingTimer fromId={id}/> : null
+          : <Autosizer>
+              {({ width, height }) => (
+                <Grid
+                  innerElementType={GridWrapper}
+                  width={width}
+                  height={height}
+                  columnWidth={columnIndex => columns[visibleColumns[columnIndex]].width}
+                  columnCount={visibleColumns.length}
+                  rowHeight={index => 24}
+                  rowCount={visibleRows.length}
+                  overscanColumnCount={visibleColumns.length}
+                  overscanRowCount={5}>
+                  {Cell}
+                </Grid>
+              )}
+            </Autosizer>
         }
         </SheetContainer>
     </Container>
@@ -174,6 +176,7 @@ interface SheetComponentProps {
   columns?: Columns
   fileId: string
   filters?: SheetFilters
+  groups?: SheetGroups
   id: string
   loadSheet?(sheet: SheetFromServer): Promise<void>
   rows?: Rows
@@ -183,7 +186,6 @@ interface SheetComponentProps {
   updateSheetCell?(sheetId: string, cellId: string, updates: SheetCellUpdates): void
   userColorSecondary?: string
   userLayoutSheetActionsHeight?: number
-  userLayoutSidebarWidth?: number
   userLayoutTabsHeight?: number
 }
 

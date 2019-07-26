@@ -15,7 +15,8 @@ const SheetHeader = ({
   column: {
     name,
     width
-  }
+  },
+  isLast
 }: SheetHeaderProps) => {
 
   const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
@@ -33,6 +34,7 @@ const SheetHeader = ({
     <Container
       containerWidth={width}
       isContextMenuVisible={isContextMenuVisible}
+      isLast={isLast}
       onContextMenu={(e: MouseEvent) => handleContextMenu(e)}>
       {name}
     {isContextMenuVisible && 
@@ -49,6 +51,7 @@ const SheetHeader = ({
 //-----------------------------------------------------------------------------
 interface SheetHeaderProps {
   column: Column
+  isLast: boolean
 }
 
 //-----------------------------------------------------------------------------
@@ -66,12 +69,14 @@ const Container = styled.div`
   text-align: left;
   background-color: rgb(250, 250, 250);
   box-shadow: inset 0 -1px 0px 0px rgba(180,180,180,1);
+  border-right: ${ ({ isLast }: ContainerProps ) => isLast ? '1px solid rgb(180, 180, 180)' : 'none'};
   font-size: 1.5vh;
   font-weight: bold;
 `
 interface ContainerProps {
   containerWidth: number
   isContextMenuVisible: boolean
+  isLast: boolean
 }
 
 //-----------------------------------------------------------------------------

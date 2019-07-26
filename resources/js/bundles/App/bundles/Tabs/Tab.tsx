@@ -8,13 +8,8 @@ import styled from 'styled-components'
 import { TAB_CLOSE } from '@app/assets/icons'
 
 import { AppState } from '@app/state'
-import { ThunkDispatch } from '@app/state/types'
 import { selectFile } from '@app/state/folder/selectors'
 import { File as TFile } from '@app/state/folder/types'
-import { 
-  closeTab as closeTabAction,
-  updateActiveTabId as updateActiveTabIdAction 
-} from '@app/state/tab/actions'
 
 import Icon from '@/components/Icon'
 
@@ -23,11 +18,6 @@ import Icon from '@/components/Icon'
 //-----------------------------------------------------------------------------
 const mapStateToProps = (state: AppState, props: TabProps) => ({
   file: selectFile(props.fileId, state)
-})
-
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-  closeTab: (fileId: string) => dispatch(closeTabAction(fileId)),
-  updateActiveTabId: (nextActiveTabId: string) => dispatch(updateActiveTabIdAction(nextActiveTabId))
 })
 
 //-----------------------------------------------------------------------------
@@ -80,7 +70,7 @@ interface TabProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   cursor: default;
-  height: 100%;
+  height: calc(100% - 1.5px);
   width: 12.5%;
   opacity: ${ ({ isActiveTab }: ContainerProps) => isActiveTab ? '1' : '0.75'};
   background-color: rgb(250, 250, 250);
@@ -132,6 +122,5 @@ const CloseTab = styled.div`
 // Export
 //-----------------------------------------------------------------------------
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(Tab)

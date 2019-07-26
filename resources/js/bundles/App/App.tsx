@@ -9,7 +9,6 @@ import { AppState } from '@app/state'
 import { selectUserColorPrimary } from '@app/state/user/selectors'
 
 import Settings from '@app/bundles/Settings/Settings'
-import Sidebar from '@app/bundles/Sidebar/Sidebar'
 import Tabs from '@app/bundles/Tabs/Tabs'
 
 //-----------------------------------------------------------------------------
@@ -27,7 +26,6 @@ const App = ({
 }: AppProps) => (
 	<Container
     appBackgroundColor={appBackgroundColor}>
-		<Sidebar />
 		<Settings />
 		<Tabs />
 	</Container>
