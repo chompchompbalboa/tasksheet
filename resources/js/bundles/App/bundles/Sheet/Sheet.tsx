@@ -14,7 +14,7 @@ import {
   loadSheet as loadSheetAction,
   updateSheetCell as updateSheetCellAction, SheetCellUpdates
 } from '@app/state/sheet/actions'
-import { Columns, Filters, Rows, SheetFromServer, Sorts, VisibleColumns, VisibleRows } from '@app/state/sheet/types'
+import { Columns, SheetFilters, Rows, SheetFromServer, SheetSorts, VisibleColumns, VisibleRows } from '@app/state/sheet/types'
 import { 
   selectSheetColumns, 
   selectSheetFilters,
@@ -173,11 +173,11 @@ interface SheetComponentProps {
   activeTabId?: string
   columns?: Columns
   fileId: string
-  filters?: Filters
+  filters?: SheetFilters
   id: string
   loadSheet?(sheet: SheetFromServer): Promise<void>
   rows?: Rows
-  sorts?: Sorts
+  sorts?: SheetSorts
   visibleColumns?: VisibleColumns
   visibleRows?: VisibleRows
   updateSheetCell?(sheetId: string, cellId: string, updates: SheetCellUpdates): void

@@ -4,8 +4,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { FilterUpdates } from '@app/state/sheet/actions'
-import { Filter, Filters } from '@app/state/sheet/types'
+import { SheetFilterUpdates } from '@app/state/sheet/actions'
+import { SheetFilter, SheetFilters } from '@app/state/sheet/types'
 import { SheetActionDropdownOption } from '@app/bundles/Sheet/SheetActionDropdown'
 
 //-----------------------------------------------------------------------------
@@ -18,7 +18,7 @@ const SheetActionFilterSelectedOption = ({
 }: SheetActionFilterSelectedOptionProps) => {
     const filter = filters.find(filter => filter.id === option.value)
     
-    const handleOptionClick = (filter: Filter) => {
+    const handleOptionClick = (filter: SheetFilter) => {
       console.log('filterClick')
     }
     
@@ -35,8 +35,8 @@ const SheetActionFilterSelectedOption = ({
 //-----------------------------------------------------------------------------
 interface SheetActionFilterSelectedOptionProps {
   option: SheetActionDropdownOption
-  filters: Filters
-  updateFilter(filterId: string, updates: FilterUpdates): void
+  filters: SheetFilters
+  updateFilter(filterId: string, updates: SheetFilterUpdates): void
 }
 
 //-----------------------------------------------------------------------------

@@ -54,8 +54,9 @@ Route::prefix('app')->group(function () {
     'sheets/breakdowns' => 'SheetBreakdownController',
     'sheets/cells' => 'SheetCellController',
     'sheets/columns' => 'SheetColumnController',
-    'sheets/breakdowns/formulas' => 'SheetBreakdownFormulaController',
+    'sheets/filters' => 'SheetFilterController',
     'sheets/rows' => 'SheetRowController',
+    'sheets/sorts' => 'SheetSortController',
     // User
     'user/active' => 'UserActiveController',
     'user/color' => 'UserColorController',

@@ -45,14 +45,17 @@ const Tab = ({
       <Content>
         {file && 
           <>
-            <Name
-              onClick={() => updateActiveTabId(file.id)}>
-              {file.name}
-            </Name>
+            <NameContainer>
+              <Name
+                onClick={() => updateActiveTabId(file.id)}>
+                {file.name}
+              </Name>
+            </NameContainer>
             <CloseTab
               onClick={() => closeTab(file.id)}>
               <Icon
-                icon={TAB_CLOSE}/>
+                icon={TAB_CLOSE}
+                size="1rem"/>
             </CloseTab>
           </>
         }
@@ -97,21 +100,28 @@ const Content = styled.div`
   padding-left: 0.5rem;
   padding-right: 0.25rem;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
 `
 
 const Name = styled.div`
-  width: 100%;
-  white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 0.85rem;
+`
+
+const NameContainer = styled.div`
+  overflow: hidden;
+  width: 90%;
 `
 
 const CloseTab = styled.div`
   cursor: pointer;
-  width: 1rem;
-  height: 1rem;
+  width: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: rgb(80, 80, 80);
   &:hover {
     color: rgb(200, 0, 0);

@@ -4,6 +4,7 @@
 import axios from '@/api/axios'
 
 import { FileUpdates, FolderUpdates } from '@app/state/folder/actions'
+import { SheetFilter, SheetSort } from '@app/state/sheet/types'
 import { SheetCellUpdates } from '@app/state/sheet/actions'
 import { UserActiveUpdates, UserColorUpdates, UserLayoutUpdates } from '@app/state/user/actions'
 
@@ -51,6 +52,30 @@ export const updateFolder = async (id: string, updates: FolderUpdates) => {
 //-----------------------------------------------------------------------------
 export const updateSheetCell = async (id: string, updates: SheetCellUpdates) => {
 	return axios.patch('/app/sheets/cells/' + id, updates).then(response => {
+		return response.data
+	})
+}
+
+export const createSheetFilter = async (filter: SheetFilter) => {
+	return axios.post('/app/sheets/filters', filter).then(response => {
+		return response.data
+	})
+}
+
+export const deleteSheetFilter = async (filterId: string) => {
+	return axios.delete('/app/sheets/filters/' + filterId).then(response => {
+		return response.data
+	})
+}
+
+export const createSheetSort = async (sort: SheetSort) => {
+	return axios.post('/app/sheets/sorts', sort).then(response => {
+		return response.data
+	})
+}
+
+export const deleteSheetSort = async (sortId: string) => {
+	return axios.delete('/app/sheets/sorts/' + sortId).then(response => {
 		return response.data
 	})
 }

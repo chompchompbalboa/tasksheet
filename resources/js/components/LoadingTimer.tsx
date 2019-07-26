@@ -14,7 +14,7 @@ const LoadingTimer = ({
 }: LoadingTimerProps) => {
   
   const [ time, setTime ] = useState(0)
-  console.log(fromId)
+  
   useEffect(() => {
     setTime(0)
   }, [ fromId ])

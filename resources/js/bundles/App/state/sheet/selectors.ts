@@ -2,7 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import { AppState } from '@app/state'
-import { Cell, Column, Columns, Filters, Row, Rows, Sorts, VisibleColumns, VisibleRows } from './types'
+import { Cell, Column, Columns, SheetFilters, Row, Rows, SheetSorts, VisibleColumns, VisibleRows } from './types'
 
 //-----------------------------------------------------------------------------
 // Select Sheet Cell
@@ -45,7 +45,7 @@ export const selectSheetColumn = (
 export const selectSheetFilters = (
   state: AppState, 
   sheetId: string
-): Filters => state.sheet[sheetId] && state.sheet[sheetId].filters
+): SheetFilters => state.sheet[sheetId] && state.sheet[sheetId].filters
 
 //-----------------------------------------------------------------------------
 // Select Sheet Rows
@@ -78,4 +78,4 @@ export const selectSheetRow = (
 export const selectSheetSorts = (
   state: AppState, 
   sheetId: string
-): Sorts => state.sheet[sheetId] && state.sheet[sheetId].sorts
+): SheetSorts => state.sheet[sheetId] && state.sheet[sheetId].sorts

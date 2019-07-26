@@ -6,8 +6,8 @@ import styled from 'styled-components'
 
 import { ARROW_UP, ARROW_DOWN } from '@app/assets/icons'
 
-import { SortUpdates } from '@app/state/sheet/actions'
-import { Sort, Sorts } from '@app/state/sheet/types'
+import { SheetSortUpdates } from '@app/state/sheet/actions'
+import { SheetSort, SheetSorts } from '@app/state/sheet/types'
 
 import Icon from '@/components/Icon'
 import { SheetActionDropdownOption } from '@app/bundles/Sheet/SheetActionDropdown'
@@ -23,7 +23,7 @@ const SheetActionSortSelectedOption = ({
     const sort = sorts.find(sort => sort.columnId === option.value)
     const [ sortOrder, setSortOrder ] = useState(sort ? sort.order : 'ASC')
     
-    const handleOptionClick = (sort: Sort) => {
+    const handleOptionClick = (sort: SheetSort) => {
       const nextSortOrder = sort.order === 'ASC' ? 'DESC' : 'ASC'
       setSortOrder(nextSortOrder)
       window.setTimeout(() => updateSort(sort.id, { order: nextSortOrder }), 50)
@@ -42,8 +42,8 @@ const SheetActionSortSelectedOption = ({
 //-----------------------------------------------------------------------------
 interface SheetActionSortSelectedOptionProps {
   option: SheetActionDropdownOption
-  sorts: Sorts
-  updateSort(sortId: string, updates: SortUpdates): void
+  sorts: SheetSorts
+  updateSort(sortId: string, updates: SheetSortUpdates): void
 }
 
 //-----------------------------------------------------------------------------

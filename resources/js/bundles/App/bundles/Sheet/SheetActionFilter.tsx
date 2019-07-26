@@ -9,12 +9,12 @@ import clone from '@/utils/clone'
 
 import { ThunkDispatch } from '@app/state/types'
 import { 
-  FilterUpdates,
+  SheetFilterUpdates,
   createFilter as createFilterAction,
   deleteFilter as deleteFilterAction,
   updateFilter as updateFilterAction 
 } from '@app/state/sheet/actions'
-import { Columns, Filter, Filters, FilterType } from '@app/state/sheet/types'
+import { Columns, SheetFilter, SheetFilters, SheetFilterType } from '@app/state/sheet/types'
 
 import SheetAction from '@app/bundles/Sheet/SheetAction'
 import SheetActionDropdown, { SheetActionDropdownOption } from '@app/bundles/Sheet/SheetActionDropdown'
@@ -24,9 +24,9 @@ import SheetActionFilterSelectedOption from '@app/bundles/Sheet/SheetActionFilte
 // Redux
 //-----------------------------------------------------------------------------
 const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionProps) => ({
-  createFilter: (sheetId: string, newFilter: Filter) => dispatch(createFilterAction(props.sheetId, newFilter)),
+  createFilter: (sheetId: string, newFilter: SheetFilter) => dispatch(createFilterAction(props.sheetId, newFilter)),
   deleteFilter: (filterId: string) => dispatch(deleteFilterAction(props.sheetId, filterId)),
-  updateFilter: (filterId: string, updates: FilterUpdates) => dispatch(updateFilterAction(props.sheetId, filterId, updates))
+  updateFilter: (filterId: string, updates: SheetFilterUpdates) => dispatch(updateFilterAction(props.sheetId, filterId, updates))
 })
 
 //-----------------------------------------------------------------------------
@@ -41,11 +41,11 @@ const SheetActionFilter = ({
   updateFilter
 }: SheetActionProps) => {
 
-  const selectedOptions = filters && filters.map((filter: Filter) => { return { label: columns[filter.columnId].name, value: filter.id }})
+  const selectedOptions = filters && filters.map((filter: SheetFilter) => { return { label: columns[filter.columnId].name, value: filter.id }})
 
   const columnIds = Object.keys(columns)
   const columnNames = columnIds.map(columnId => columns[columnId].name)
-  const filterTypes: FilterType[] = ['=', '>', '>=', '<', '<=']
+  const filterTypes: SheetFilterType[] = ['=', '>', '>=', '<', '<=']
 
   const isValidFilter = ([
     columnName,
@@ -55,7 +55,7 @@ const SheetActionFilter = ({
     return (
       columnName && filterType && filterValue &&
       columnNames.includes(columnName) && // First string is a column name
-      filterTypes.includes(filterType as FilterType) && // Second string is a FilterType
+      filterTypes.includes(filterType as SheetFilterType) && // Second string is a FilterType
       filterValue[filterValue.length - 1] === ';' // Third string ends with a semicolon
     )
   }
@@ -92,10 +92,10 @@ const SheetActionFilter = ({
 //-----------------------------------------------------------------------------
 interface SheetActionProps {
   columns: Columns
-  createFilter?(sheetId: string, newFilter: Filter): void
+  createFilter?(sheetId: string, newFilter: SheetFilter): void
   deleteFilter?(columnId: string): void
-  updateFilter?(filterId: string, updates: FilterUpdates): void
-  filters: Filters
+  updateFilter?(filterId: string, updates: SheetFilterUpdates): void
+  filters: SheetFilters
   sheetId: string
 }
 

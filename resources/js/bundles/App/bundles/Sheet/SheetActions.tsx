@@ -4,7 +4,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Columns, Filters, Sorts } from '@app/state/sheet/types'
+import { Columns, SheetFilters, SheetSorts } from '@app/state/sheet/types'
 
 import SheetActionFilter from '@app/bundles/Sheet/SheetActionFilter'
 import SheetActionSort from '@app/bundles/Sheet/SheetActionSort'
@@ -43,8 +43,8 @@ const SheetActions = ({
 //-----------------------------------------------------------------------------
 interface SheetActionsProps {
   columns: Columns
-  filters: Filters
-  sorts: Sorts
+  filters: SheetFilters
+  sorts: SheetSorts
   sheetId: string
   sheetActionsHeight: number
 }

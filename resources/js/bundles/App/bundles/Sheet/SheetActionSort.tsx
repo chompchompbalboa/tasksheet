@@ -5,11 +5,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { v4 as createUuid } from 'uuid'
 
-import { Columns, Sort, Sorts } from '@app/state/sheet/types'
+import { Columns, SheetSort, SheetSorts } from '@app/state/sheet/types'
 
 import { ThunkDispatch } from '@app/state/types'
 import { 
-  SortUpdates,
+  SheetSortUpdates,
   createSort as createSortAction,
   deleteSort as deleteSortAction,
   updateSort as updateSortAction 
@@ -23,9 +23,9 @@ import SheetActionSortSelectedOption from '@app/bundles/Sheet/SheetActionSortSel
 // Redux
 //-----------------------------------------------------------------------------
 const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionProps) => ({
-  createSort: (newSort: Sort) => dispatch(createSortAction(props.sheetId, newSort)),
+  createSort: (newSort: SheetSort) => dispatch(createSortAction(props.sheetId, newSort)),
   deleteSort: (columnId: string) => dispatch(deleteSortAction(props.sheetId, columnId)),
-  updateSort: (sortId: string, updates: SortUpdates) => dispatch(updateSortAction(props.sheetId, sortId, updates))
+  updateSort: (sortId: string, updates: SheetSortUpdates) => dispatch(updateSortAction(props.sheetId, sortId, updates))
 })
 
 //-----------------------------------------------------------------------------
@@ -40,7 +40,7 @@ const SheetActionSort = ({
 }: SheetActionProps) => {
 
   const options = columns && Object.keys(columns).map((columnId: string) => { return { label: columns[columnId].name, value: columnId }})
-  const selectedOptions = sorts && sorts.map((sort: Sort) => { return { label: columns[sort.columnId].name, value: sort.columnId }})
+  const selectedOptions = sorts && sorts.map((sort: SheetSort) => { return { label: columns[sort.columnId].name, value: sort.columnId }})
 
   return (
     <SheetAction>
@@ -60,10 +60,10 @@ const SheetActionSort = ({
 //-----------------------------------------------------------------------------
 interface SheetActionProps {
   columns: Columns
-  createSort?(newSort: Sort): void
+  createSort?(newSort: SheetSort): void
   deleteSort?(columnId: string): void
-  updateSort?(sortId: string, updates: SortUpdates): void
-  sorts: Sorts
+  updateSort?(sortId: string, updates: SheetSortUpdates): void
+  sorts: SheetSorts
   sheetId: string
 }
 

@@ -11,10 +11,29 @@ class Sheet extends Model
   /**
    * Define which attributes will be visible
    */
-  protected $visible = ['id', 'rows', 'columns'];
+  protected $visible = ['id', 'rows', 'columns', 'filters', 'sorts'];
   protected $fillable = ['id'];
-  protected $with = ['rows'];
+  protected $with = ['rows', 'filters', 'sorts'];
   protected $appends = ['columns'];
+  
+  /**
+   * Get all the columns that belong to this table
+   */
+  public function columns() {
+    return $this->hasMany('App\Models\SheetColumn', 'sheetId');
+  }
+  public function getColumnsAttribute() {
+    return SheetColumn::where('sheetId', '=', $this->id)
+    ->orderBy('position', 'ASC')
+    ->get();
+  }
+  
+  /**
+   * Get all the filters that belong to this table
+   */
+  public function filters() {
+    return $this->hasMany('App\Models\SheetFilter', 'sheetId');
+  }
   
   /**
    * Get all the rows that belong to this table
@@ -24,15 +43,9 @@ class Sheet extends Model
   }
   
   /**
-   * Get all the columns that belong to this table
+   * Get all the sorts that belong to this table
    */
-  public function columns() {
-    return $this->hasMany('App\Models\SheetColumn', 'sheetId');
-  }
-  
-  public function getColumnsAttribute() {
-    return SheetColumn::where('sheetId', '=', $this->id)
-    ->orderBy('position', 'ASC')
-    ->get();
+  public function sorts() {
+    return $this->hasMany('App\Models\SheetSort', 'sheetId');
   }
 }

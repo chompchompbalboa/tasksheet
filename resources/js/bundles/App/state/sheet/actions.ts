@@ -7,7 +7,7 @@ import clone from '@/utils/clone'
 import { mutation } from '@app/api'
 
 import { AppState } from '@app/state'
-import { Columns, Filter, Filters, Rows, Sheet, SheetFromServer, Sort, SortOrder, Sorts, VisibleRows, FilterType } from '@app/state/sheet/types'
+import { Columns, SheetFilter, SheetFilters, Rows, Sheet, SheetFromServer, SheetSort, SheetSortOrder, SheetSorts, VisibleRows, SheetFilterType } from '@app/state/sheet/types'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
 
 //-----------------------------------------------------------------------------
@@ -26,7 +26,7 @@ const resolveValue = (value: string) => {
   return isNaN(Number(filteredValue)) ? filteredValue : Number(filteredValue)
 }
 
-const resolveFilter = (cellValue: string, filterValue: string, type: FilterType) => {
+const resolveFilter = (cellValue: string, filterValue: string, type: SheetFilterType) => {
   switch (type) {
     case '=': {
       return resolveValue(cellValue) === resolveValue(filterValue)
@@ -46,7 +46,7 @@ const resolveFilter = (cellValue: string, filterValue: string, type: FilterType)
   }
 }
 
-const resolveVisibleRows = (rows: Rows, sorts?: Sorts, filters?: Filters) => {
+const resolveVisibleRows = (rows: Rows, sorts?: SheetSorts, filters?: SheetFilters) => {
 
   const rowIds: string[] = Object.keys(rows)
 
@@ -84,7 +84,7 @@ interface CreateFilter {
 }
 
 let createFilterUpdateVisibleRowsTimeout: number = null
-export const createFilter = (sheetId: string, newFilter: Filter): ThunkAction => {
+export const createFilter = (sheetId: string, newFilter: SheetFilter): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     // Update Filters
     const {
@@ -94,6 +94,8 @@ export const createFilter = (sheetId: string, newFilter: Filter): ThunkAction =>
     dispatch(updateSheetReducer(sheetId, {
       filters: nextFilters
     }))
+    // Save to Server
+    mutation.createSheetFilter({ sheetId: sheetId, ...newFilter})
     // Update Visible Rows
     clearTimeout(createFilterUpdateVisibleRowsTimeout)
     createFilterUpdateVisibleRowsTimeout = setTimeout(() => {
@@ -131,16 +133,17 @@ export const deleteFilter = (sheetId: string, filterId: string): ThunkAction => 
       filters: nextFilters,
       visibleRows: nextVisibleRows
     }))
+    mutation.deleteSheetFilter(filterId)
 	}
 }
 
 //-----------------------------------------------------------------------------
 // Update Filter
 //-----------------------------------------------------------------------------
-export interface FilterUpdates {
+export interface SheetFilterUpdates {
 }
 
-export const updateFilter = (sheetId: string, filterId: string, updates: FilterUpdates): ThunkAction => {
+export const updateFilter = (sheetId: string, filterId: string, updates: SheetFilterUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       rows,
@@ -167,7 +170,7 @@ interface CreateSort {
 	type: typeof CREATE_SORT
 }
 
-export const createSort = (sheetId: string, newSort: Sort): ThunkAction => {
+export const createSort = (sheetId: string, newSort: SheetSort): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       rows,
@@ -180,6 +183,7 @@ export const createSort = (sheetId: string, newSort: Sort): ThunkAction => {
       sorts: nextSorts,
       visibleRows: nextVisibleRows
     }))
+    mutation.createSheetSort({ sheetId: sheetId, ...newSort })
 	}
 }
 
@@ -198,23 +202,25 @@ export const deleteSort = (sheetId: string, columnId: string): ThunkAction => {
       sorts,
       filters
     } = getState().sheet[sheetId]
-    const nextSorts = sorts.filter(sort => sort.columnId !== columnId)
+    const sortToDelete = sorts.find(sort => sort.columnId === columnId)
+    const nextSorts = sorts.filter(sort => sort.id !== sortToDelete.id)
     const nextVisibleRows = resolveVisibleRows(rows, nextSorts, filters)
     dispatch(updateSheetReducer(sheetId, {
       sorts: nextSorts,
       visibleRows: nextVisibleRows
     }))
+    mutation.deleteSheetSort(sortToDelete.id)
 	}
 }
 
 //-----------------------------------------------------------------------------
 // Update Sort
 //-----------------------------------------------------------------------------
-export interface SortUpdates {
-  order?: SortOrder
+export interface SheetSortUpdates {
+  order?: SheetSortOrder
 }
 
-export const updateSort = (sheetId: string, sortId: string, updates: SortUpdates): ThunkAction => {
+export const updateSort = (sheetId: string, sortId: string, updates: SheetSortUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       rows,
@@ -256,9 +262,9 @@ export const loadSheet = (sheet: SheetFromServer): ThunkAction => {
         columns: normalizedColumns,
         visibleColumns: resolveVisibleColumns(normalizedColumns),
         rows: normalizedRows,
-        visibleRows: resolveVisibleRows(normalizedRows),
-        sorts: [],
-        filters: []
+        visibleRows: resolveVisibleRows(normalizedRows, sheet.sorts, sheet.filters),
+        sorts: sheet.sorts,
+        filters: sheet.filters
 			})
 		)
 	}
@@ -281,8 +287,8 @@ interface UpdateSheet {
 	updates: SheetUpdates
 }
 export interface SheetUpdates {
-  filters?: Filters
-  sorts?: Sorts
+  filters?: SheetFilters
+  sorts?: SheetSorts
   visibleRows?: VisibleRows
 }
 
