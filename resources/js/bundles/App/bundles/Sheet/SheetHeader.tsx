@@ -63,7 +63,7 @@ const Container = styled.div`
   text-overflow: hidden;
   z-index: ${ ({ isContextMenuVisible }: ContainerProps ) => isContextMenuVisible ? '100' : '50'};
   width: ${ ({ containerWidth }: ContainerProps ) => containerWidth + 'px'};
-  padding: 0.25rem;
+  padding: 0.28rem;
   text-align: left;
   background-color: rgb(250, 250, 250);
   box-shadow: inset 0 -1px 0px 0px rgba(180,180,180,1);

@@ -77,8 +77,7 @@ const Container = styled.div`
   background-color: rgb(250, 250, 250);
   border-left: none;
   border-bottom: none;
-  border-radius: 3px 3px 0 0;
-  box-shadow: -1px -5px 5px 0px rgba(0,0,0,0.5);
+  border-radius: 1px 1px 0 0;
 `
 interface ContainerProps {
   isActiveTab: boolean
@@ -96,7 +95,7 @@ const NameContainer = styled.div`
   overflow: hidden;
   height: 100%;
   width: 90%;
-  padding: 0.25rem;
+  padding: 0.275rem;
   padding-left: 0.5rem;
   display: flex;
   align-items: center;
@@ -107,7 +106,7 @@ const Name = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
 `
 
 const CloseTab = styled.div`

@@ -20,12 +20,12 @@ const LoadingTimer = ({
   }, [ fromId ])
   
   useInterval(() => {
-    setTime(time => time + 5)
-  }, 5)
+    setTime(time => time + 10)
+  }, 10)
   
   return (
     <Container>
-      <Time>{(time / 1000).toFixed(3)} seconds</Time>
+      <Time>{(time / 1000).toFixed(2)} seconds</Time>
     </Container>
   )
 }
@@ -42,11 +42,13 @@ interface LoadingTimerProps {
 const Container = styled.div`
   width: 100%;
   height: 100%;
+  margin-top: -5vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  opacity: 0.8;
 `
 
 const Time = styled.div``
