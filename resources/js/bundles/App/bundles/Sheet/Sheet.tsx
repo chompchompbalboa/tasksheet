@@ -150,7 +150,7 @@ const SheetComponent = memo(({
                   rowHeight={index => 24}
                   rowCount={visibleRows.length}
                   overscanColumnCount={visibleColumns.length}
-                  overscanRowCount={5}>
+                  overscanRowCount={3}>
                   {Cell}
                 </Grid>
               )}

@@ -88,7 +88,7 @@ const Content = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
 `
 
@@ -103,6 +103,7 @@ const NameContainer = styled.div`
 `
 
 const Name = styled.div`
+  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
