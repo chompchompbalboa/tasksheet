@@ -35,7 +35,6 @@ class SheetSortController extends Controller
      */
     public function store(Request $request)
     {
-      //dd($request->all());
       $sheetSort = SheetSort::create($request->all());
       return response()->json($sheetSort, 200);
     }
