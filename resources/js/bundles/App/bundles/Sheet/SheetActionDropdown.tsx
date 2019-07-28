@@ -142,13 +142,13 @@ const SheetActionDropdown = ({
               marginRight: '0.25rem',
               padding: '0.125rem 0',
               height: '100%',
+              minWidth: '4rem',
               border: 'none',
               backgroundColor: 'transparent',
               outline: 'none',
               fontFamily: 'inherit',
               fontSize: 'inherit',
-              fontWeight: 'inherit',
-            }}/>
+              fontWeight: 'inherit'}}/>
             <Dropdown
               ref={dropdown}
               isDropdownVisible={isDropdownVisible}>
@@ -202,7 +202,6 @@ interface ContainerProps {
 }
 
 const Wrapper = styled.div`
-  height: 100%;
   padding: 0.25rem;
   border: 0.5px solid rgb(180, 180, 180);
   display: flex;
@@ -211,7 +210,6 @@ const Wrapper = styled.div`
 `
 
 const SelectedOptions = styled.div`
-  height: 100%;
   display: flex;
 `
 

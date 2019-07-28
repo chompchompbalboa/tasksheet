@@ -1,39 +1,35 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { memo } from 'react'
-import { areEqual } from 'react-window'
+import React from 'react'
 import styled from 'styled-components'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetGroupCell = memo(({
-  style
-}: SheetGroupCellProps) => (
-    <Container style={style}/>
-), areEqual)
+const FoldersSidebar = ({
+}: FoldersSidebarProps) => {
+  return (
+    <Container>
+    </Container>
+  )
+}
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetGroupCellProps {
-  style: {}
+interface FoldersSidebarProps {
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  position: relative;
-  cursor: default;
-  padding: 0.15rem 0.25rem;
-  font-size: 0.9rem;
-  user-select: none;
-  background-color: rgb(170, 170, 170);
+  height: 100%;
+  width: 10rem;
+  background-color: rgb(240, 240, 240);
 `
-
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetGroupCell
+export default FoldersSidebar

@@ -38,4 +38,4 @@ export const selectFolders = (state: AppState): Folders => state.folder.folders
 //-----------------------------------------------------------------------------
 // Select Root Folders
 //-----------------------------------------------------------------------------
-export const selectRootFolders = (state: AppState): string[] => state.folder.rootFolders
+export const selectRootFolderIds = (state: AppState): string[] => state.folder.rootFolderIds

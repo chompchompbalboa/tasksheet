@@ -1,4 +1,4 @@
-export const CONTEXT_MENU_ARROW = 
+export const SUBITEM_ARROW = 
   'M366 698l196-196-196-196 60-60 256 256-256 256z'
 
 export const USER =

@@ -22,8 +22,11 @@ interface CloseTab {
 export const closeTab = (fileId: string): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
 		dispatch(closeTabReducer(fileId))
-		const tabState = getState().tab
-		dispatch(updateUserActive({ tabId: tabState.activeTabId, tabs: tabState.tabs }))
+    const {
+      activeTabId,
+      tabs
+    } = getState().tab
+		dispatch(updateUserActive({ tabId: activeTabId, tabs: tabs }))
 	}
 }
 

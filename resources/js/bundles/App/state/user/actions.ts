@@ -24,12 +24,10 @@ interface UpdateUserActive {
 	updates: UserActiveUpdates
 }
 
-let userActiveTimeout: number = null
 export const updateUserActive = (updates: UserActiveUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
-		window.clearTimeout(userActiveTimeout)
 		dispatch(updateUserActiveReducer(updates))
-		userActiveTimeout = window.setTimeout(() => mutation.updateUserActive(getState().user.active.id, updates), 5000)
+		mutation.updateUserActive(getState().user.active.id, updates)
 	}
 }
 

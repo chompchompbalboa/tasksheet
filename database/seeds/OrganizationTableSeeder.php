@@ -41,12 +41,15 @@ class OrganizationTableSeeder extends Seeder
      
             $sheets = [
               'Purchasing_250',
+              '2019_Pitching_Advanced',
+              '2019_Pitching_Standard'
             ];
 
             // Files
             factory(App\Models\File::class, count($sheets))->create()->each(function ($file, $fileKey) use($folder, $folderKey, $sheets) {
+              echo($sheets[$fileKey]);
               $file->folderId = $folder->id;
-              $file->name = 'File '.($folderKey + 1).'.'.($fileKey + 1);
+              $file->name = $sheets[$fileKey];
               $file->save();
 
               // File types

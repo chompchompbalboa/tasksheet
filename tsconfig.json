@@ -21,6 +21,7 @@
   ],
   "exclude": [
     "node_modules",
-    "./resources/js/components/__Boilerplate"
+    "./resources/js/components/__Boilerplate",
+    "./resources/js/bundles/App/bundles/Sidebar"
   ]
 }

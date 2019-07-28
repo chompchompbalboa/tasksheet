@@ -8,7 +8,6 @@ import {
 	FolderActions,
 	UPDATE_FOLDER,
 	UPDATE_FILE,
-	UPDATE_ACTIVE_FOLDER_ID,
 	UPDATE_ACTIVE_FOLDER_PATH,
 } from '@app/state/folder/actions'
 
@@ -23,28 +22,21 @@ export const initialFoldersState: FolderState = {
 	activeFolderPath: [],
 	folders: <Folders>normalizedFolders.entities.folder,
 	files: <Files>normalizedFolders.entities.file,
-	rootFolders: normalizedFolders.result,
+	rootFolderIds: normalizedFolders.result,
 }
 export type FolderState = {
 	activeFolderId: string
 	activeFolderPath: string[]
 	folders: { [key: string]: Folder }
 	files: { [key: string]: File }
-	rootFolders: string[]
+	rootFolderIds: string[]
 }
 
 //-----------------------------------------------------------------------------
 // Reducers
 //-----------------------------------------------------------------------------
-export const userReducer = (state = initialFoldersState, action: FolderActions): FolderState => {
+export const folderReducer = (state = initialFoldersState, action: FolderActions): FolderState => {
 	switch (action.type) {
-		case UPDATE_ACTIVE_FOLDER_ID: {
-			const { nextActiveFolderId } = action
-			return {
-				...state,
-				activeFolderId: nextActiveFolderId,
-			}
-		}
 
 		case UPDATE_ACTIVE_FOLDER_PATH: {
 			const { nextActiveFolderPath } = action
@@ -87,4 +79,4 @@ export const userReducer = (state = initialFoldersState, action: FolderActions):
 	}
 }
 
-export default userReducer
+export default folderReducer

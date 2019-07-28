@@ -43,7 +43,7 @@ const SheetActionFilter = ({
 
   const selectedOptions = filters && filters.map((filter: SheetFilter) => { return { label: columns[filter.columnId].name, value: filter.id }})
 
-  const columnIds = Object.keys(columns)
+  const columnIds = columns ? Object.keys(columns) : []
   const columnNames = columnIds.map(columnId => columns[columnId].name)
   const filterTypes: SheetFilterType[] = ['=', '>', '>=', '<', '<=']
 

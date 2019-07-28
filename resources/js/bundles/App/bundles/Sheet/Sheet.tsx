@@ -27,9 +27,7 @@ import {
 } from '@app/state/sheet/selectors'
 import { selectActiveTabId } from '@app/state/tab/selectors'
 import { 
-  selectUserColorSecondary,
-  selectUserLayoutSheetActionsHeight,
-  selectUserLayoutTabsHeight
+  selectUserColorSecondary
 } from '@app/state/user/selectors'
 
 import LoadingTimer from '@/components/LoadingTimer'
@@ -50,9 +48,7 @@ const mapStateToProps = (state: AppState, props: SheetComponentProps) => ({
   sorts: selectSheetSorts(state, props.id),
   visibleRows: selectSheetVisibleRows(state, props.id),
   visibleColumns: selectSheetVisibleColumns(state, props.id),
-  userColorSecondary: selectUserColorSecondary(state),
-  userLayoutSheetActionsHeight: selectUserLayoutSheetActionsHeight(state),
-  userLayoutTabsHeight: selectUserLayoutTabsHeight(state)
+  userColorSecondary: selectUserColorSecondary(state)
 })
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
@@ -76,9 +72,7 @@ const SheetComponent = memo(({
   visibleRows,
   visibleColumns,
   updateSheetCell,
-  userColorSecondary,
-  userLayoutSheetActionsHeight,
-  userLayoutTabsHeight
+  userColorSecondary
 }: SheetComponentProps) => {
   
   const isActiveFile = fileId === activeTabId
@@ -142,7 +136,6 @@ const SheetComponent = memo(({
           columns={columns}
           filters={filters}
           groups={groups}
-          sheetActionsHeight={userLayoutSheetActionsHeight}
           sorts={sorts}/>
         {!hasLoaded
           ? isActiveFile ? <LoadingTimer fromId={id}/> : null
@@ -185,8 +178,6 @@ interface SheetComponentProps {
   visibleRows?: VisibleRows
   updateSheetCell?(sheetId: string, cellId: string, updates: SheetCellUpdates): void
   userColorSecondary?: string
-  userLayoutSheetActionsHeight?: number
-  userLayoutTabsHeight?: number
 }
 
 interface CellProps {

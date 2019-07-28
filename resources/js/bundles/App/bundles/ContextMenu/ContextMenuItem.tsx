@@ -4,7 +4,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import { CONTEXT_MENU_ARROW } from '@app/assets/icons'
+import { SUBITEM_ARROW } from '@app/assets/icons'
 
 import Icon from '@/components/Icon'
 
@@ -26,7 +26,7 @@ const ContextMenuItem = ({
       onMouseLeave={() => setIsSubItemsVisible(false)}>
       <Logo>{logo && <Icon icon={logo}/>}</Logo>
       <Text>{text}</Text>
-      <Decorator>{children ? <Icon icon={CONTEXT_MENU_ARROW}/> : decorator && <Icon icon={decorator}/>}</Decorator>
+      <Decorator>{children ? <Icon icon={SUBITEM_ARROW}/> : decorator && <Icon icon={decorator}/>}</Decorator>
       {children && isSubItemsVisible &&
         <SubItems
           isSubItemsVisible={isSubItemsVisible}>

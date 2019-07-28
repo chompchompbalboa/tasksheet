@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { selectActiveFolderId, selectFolders, selectRootFolders } from '@app/state/folder/selectors'
+import { selectActiveFolderId, selectFolders, selectRootFolderIds } from '@app/state/folder/selectors'
 import { Folders } from '@app/state/folder/types'
 
 import SidebarFoldersHeader from '@app/bundles/Sidebar/SidebarFoldersHeader'
@@ -19,7 +19,7 @@ import SidebarFoldersFolder from '@app/bundles/Sidebar/SidebarFoldersFolder'
 const mapStateToProps = (state: AppState) => ({
   activeFolderId: selectActiveFolderId(state),
   folders: selectFolders(state),
-  rootFolders: selectRootFolders(state)
+  rootFolders: selectRootFolderIds(state)
 })
 
 //-----------------------------------------------------------------------------
@@ -31,8 +31,8 @@ export const SidebarFolders = ({
   rootFolders
 }: SidebarFolderProps) => {
   const activeFolder = folders[activeFolderId]
-  const folderIds: any = activeFolderId !== null ? activeFolder.folders : rootFolders
-  const fileIds: any = activeFolderId !== null ? activeFolder.files : []
+  const folderIds: string[] = activeFolderId !== null ? activeFolder.folders : rootFolders
+  const fileIds: string[] = activeFolderId !== null ? activeFolder.files : []
   return (
     <Container>
       <SidebarFoldersHeader

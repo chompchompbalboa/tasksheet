@@ -5,44 +5,12 @@ import { Dispatch } from 'redux'
 
 import { mutation } from '@app/api'
 import { AppState } from '@app/state'
+import { ThunkAction } from '@app/state/types'
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-export type FolderActions = UpdateActiveFolderId | UpdateActiveFolderPath | UpdateFolder | UpdateFile
-
-//-----------------------------------------------------------------------------
-// Update Active Folder Id
-//-----------------------------------------------------------------------------
-export const UPDATE_ACTIVE_FOLDER_ID = 'UPDATE_ACTIVE_FOLDER_ID'
-interface UpdateActiveFolderId {
-	type: typeof UPDATE_ACTIVE_FOLDER_ID
-	nextActiveFolderId: string
-}
-
-export const updateActiveFolderId = (nextActiveFolderId: string) => {
-	return async (dispatch: Dispatch, getState: () => AppState) => {
-		dispatch(updateActiveFolderIdReducer(nextActiveFolderId))
-		if (nextActiveFolderId === null) {
-			dispatch(updateActiveFolderPath([]))
-		} else {
-			const activeFolderPath = getState().folder.activeFolderPath
-			const nextActiveFolderIdIndex = activeFolderPath.indexOf(nextActiveFolderId)
-			const nextActiveFolderPath =
-				nextActiveFolderIdIndex > -1
-					? [...activeFolderPath.slice(0, nextActiveFolderIdIndex), nextActiveFolderId]
-					: [...activeFolderPath, nextActiveFolderId]
-			dispatch(updateActiveFolderPath(nextActiveFolderPath))
-		}
-	}
-}
-
-export const updateActiveFolderIdReducer = (nextActiveFolderId: string): FolderActions => {
-	return {
-		type: UPDATE_ACTIVE_FOLDER_ID,
-		nextActiveFolderId: nextActiveFolderId,
-	}
-}
+export type FolderActions = UpdateActiveFolderPath | UpdateFolder | UpdateFile
 
 //-----------------------------------------------------------------------------
 // Update Active Folder Path
@@ -53,7 +21,21 @@ interface UpdateActiveFolderPath {
 	nextActiveFolderPath: string[]
 }
 
-export const updateActiveFolderPath = (nextActiveFolderPath: string[]): FolderActions => {
+export const updateActiveFolderPath = (level: number, nextActiveFolderId: string): ThunkAction => {
+	return async (dispatch: Dispatch, getState: () => AppState) => {
+    const {
+      activeFolderPath
+    } = getState().folder
+    if(!activeFolderPath.includes(nextActiveFolderId)) {
+      console.log(level)
+      const nextActiveFolderPath = [ ...activeFolderPath.slice(0, level), nextActiveFolderId ]
+      console.log(nextActiveFolderPath)
+      dispatch(updateActiveFolderPathReducer(nextActiveFolderPath))
+    }
+  }
+}
+
+export const updateActiveFolderPathReducer = (nextActiveFolderPath: string[]): FolderActions => {
 	return {
 		type: UPDATE_ACTIVE_FOLDER_PATH,
 		nextActiveFolderPath: nextActiveFolderPath,

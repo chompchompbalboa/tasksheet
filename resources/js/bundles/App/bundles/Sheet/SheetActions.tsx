@@ -18,28 +18,22 @@ const SheetActions = ({
   columns,
   groups,
   filters,
-  sheetActionsHeight,
   sorts
 }: SheetActionsProps) => {
   return (
-    <Container
-      sheetActionsHeight={sheetActionsHeight}>
-      {columns && 
-        <>
-          <SheetActionFilter
-            sheetId={sheetId}
-            columns={columns}
-            filters={filters}/>
-          <SheetActionGroup
-            sheetId={sheetId}
-            columns={columns}
-            groups={groups}/>
-          <SheetActionSort
-            sheetId={sheetId}
-            columns={columns}
-            sorts={sorts}/>
-        </>
-      }
+    <Container>
+      <SheetActionFilter
+        sheetId={sheetId}
+        columns={columns}
+        filters={filters}/>
+      <SheetActionGroup
+        sheetId={sheetId}
+        columns={columns}
+        groups={groups}/>
+      <SheetActionSort
+        sheetId={sheetId}
+        columns={columns}
+        sorts={sorts}/>
     </Container>
   )
 }
@@ -53,7 +47,6 @@ interface SheetActionsProps {
   groups: SheetGroups
   sorts: SheetSorts
   sheetId: string
-  sheetActionsHeight: number
 }
 
 //-----------------------------------------------------------------------------
@@ -64,16 +57,12 @@ const Container = styled.div`
   width: 100%;
   position: sticky;
   top: 0;
-  height: ${ ({ sheetActionsHeight }: ContainerProps) => (sheetActionsHeight * 100) + 'vh'};
-  padding: 0 0.125rem;
+  padding: 0.25rem 0.125rem;
   display: flex;
   align-items: center;
   background-color: rgb(250, 250, 250);
   border-bottom: 1px solid rgb(180, 180, 180);
 `
-interface ContainerProps {
-  sheetActionsHeight: number
-}
 
 //-----------------------------------------------------------------------------
 // Export

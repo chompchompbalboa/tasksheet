@@ -12,7 +12,7 @@ import { TabActions, CLOSE_TAB, OPEN_FILE, OPEN_FILE_IN_NEW_TAB, UPDATE_ACTIVE_T
 //-----------------------------------------------------------------------------
 const initialActiveState = typeof initialData !== 'undefined' ? initialData.user.active : defaultInitialData.user.active
 export const initialTabState: TabState = {
-	activeTabId: initialActiveState.tabId,
+	activeTabId: initialActiveState.tabId === null ? 'FOLDERS' : initialActiveState.tabId,
 	tabs: initialActiveState.tabs === null ? [] : initialActiveState.tabs,
 }
 export type TabState = {

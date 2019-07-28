@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
@@ -11,12 +11,13 @@ import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
 import { 
   closeTab as closeTabAction,
+  openFileInNewTab as openFileInNewTabAction,
   updateActiveTabId as updateActiveTabIdAction 
 } from '@app/state/tab/actions'
 import { selectActiveTabId, selectTabs } from '@app/state/tab/selectors'
-import {  selectUserLayoutTabsHeight } from '@app/state/user/selectors'
 
 import File from '@app/bundles/File/File'
+import Folders from '@app/bundles/Folders/Folders'
 import Icon from '@/components/Icon'
 import Tab from '@app/bundles/Tabs/Tab'
 
@@ -25,12 +26,12 @@ import Tab from '@app/bundles/Tabs/Tab'
 //-----------------------------------------------------------------------------
 const mapStateToProps = (state: AppState) => ({
   activeTabId: selectActiveTabId(state),
-  tabs: selectTabs(state),
-  userLayoutTabsHeight: selectUserLayoutTabsHeight(state)
+  tabs: selectTabs(state)
 })
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   closeTab: (fileId: string) => dispatch(closeTabAction(fileId)),
+  openFileInNewTab: (nextActiveTabId: string) => dispatch(openFileInNewTabAction(nextActiveTabId)),
   updateActiveTabId: (nextActiveTabId: string) => dispatch(updateActiveTabIdAction(nextActiveTabId))
 })
 
@@ -40,46 +41,64 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
 const Tabs = ({ 
   activeTabId,
   closeTab,
+  openFileInNewTab,
   tabs,
-  updateActiveTabId,
-  userLayoutTabsHeight,
+  updateActiveTabId
 }: TabsProps) => {
+
+  const [ localActiveTabId, setLocalActiveTabId ] = useState(activeTabId)
+  const [ localTabs, setLocalTabs ] = useState(tabs)
+
+  useEffect(() => {
+    setLocalActiveTabId(activeTabId)
+  }, [ activeTabId ])
+
+  useEffect(() => {
+    setLocalTabs(tabs)
+  }, [ tabs ])
+
+  const handleFileOpen = (nextActiveTabId: string) => {
+    setLocalActiveTabId(nextActiveTabId)
+    tabs.includes(nextActiveTabId)
+      ? window.setTimeout(() => updateActiveTabId(nextActiveTabId), 10)
+      : nextActiveTabId !== 'FOLDERS' 
+        ? (
+            setLocalTabs([ ...localTabs, nextActiveTabId]),
+            setTimeout(() => openFileInNewTab(nextActiveTabId), 10)
+          )
+        : setLocalActiveTabId('FOLDERS')
+  }
+
   return (
     <Container>
-      <TabsContainer
-        tabsHeight={userLayoutTabsHeight}>
-        {tabs.length > 0 
-          ? tabs.map((fileId) => (
-            <Tab
-              key={fileId}
-              fileId={fileId}
-              isActiveTab={activeTabId === fileId}
-              closeTab={closeTab}
-              updateActiveTabId={updateActiveTabId}/>))
-          : <Tab
-              fileId={null}
-              isActiveTab />
-        }
+      <TabsContainer>
+        {localTabs.map((fileId) => (
+          <Tab
+            key={fileId}
+            fileId={fileId}
+            isActiveTab={localActiveTabId === fileId}
+            closeTab={closeTab}
+            handleTabClick={handleFileOpen}/>))}
         <FoldersTab
-          isActiveTab={activeTabId === 'FOLDERS'}
-          onClick={() => updateActiveTabId('FOLDERS')}>
+          isActiveTab={localActiveTabId === 'FOLDERS'}
+          onClick={() => handleFileOpen('FOLDERS')}>
           <Icon
-            icon={FOLDER}/>
+            icon={FOLDER}
+            size="1rem"/>
         </FoldersTab>
       </TabsContainer>
-      <FilesContainer
-        tabsHeight={userLayoutTabsHeight}>
-        {tabs.length > 0 
-          ? tabs.map((fileId) => (
-            <FileContainer
-              key={fileId}
-              isActiveTab={activeTabId === fileId}>
-              <File
-                fileId={fileId}/>
-            </FileContainer>))
-          : <File
-               fileId={null}/>
+      <FilesContainer>
+        {localTabs.map((fileId) => (
+          <FileContainer
+            key={fileId}
+            isActiveTab={localActiveTabId === fileId}>
+            <File
+              fileId={fileId}/>
+          </FileContainer>))
         }
+        <Folders
+          handleFileOpen={handleFileOpen}
+          isActiveTab={localActiveTabId === 'FOLDERS' || localTabs.length === 0}/>
       </FilesContainer>
     </Container>
   )
@@ -91,9 +110,9 @@ const Tabs = ({
 interface TabsProps {
   activeTabId: string
   closeTab?(fileId: string): void
+  openFileInNewTab?(nextActiveTabId: string): void
   tabs: string[]
   updateActiveTabId?(nextActiveTabId: string): void
-  userLayoutTabsHeight: number
 }
 
 //-----------------------------------------------------------------------------
@@ -104,7 +123,8 @@ const Container = styled.div`
   position: fixed;
   top: 0;
   left: 2px;
-  width: calc(100% - 2px);
+  width: 100%;
+  height: 100%;
 `
 
 const TabsContainer = styled.div`
@@ -112,19 +132,13 @@ const TabsContainer = styled.div`
   position: relative;
   width: 100%;
   display: flex;
-  height: ${ ({ tabsHeight }: TabsContainerProps) => (tabsHeight * 100) + 'vh'};
   align-items: flex-end;
 `
-interface TabsContainerProps {
-  tabsHeight: number
-}
 
 const FoldersTab = styled.div`
   cursor: default;
-  margin-left: 2px;
-  height: calc(100% - 1.5px);
-  padding: 0 0.5rem;
-  background-color: rgb(250, 250, 250);
+  padding: 0.2rem 0.4rem;
+  background-color: white;
   color: rgb(80, 80, 80);
   border-radius: 3px 3px 0 0;
   display: flex;
@@ -140,13 +154,10 @@ const FilesContainer = styled.div`
   z-index: 1;
   position: relative;
   width: 100%;
-  height: calc(100vh - ${ ({ tabsHeight }: FilesContainerProps) => (tabsHeight * 100) + 'vh'});
+  height: 100%;
   background-color: white;
   box-shadow: -1px 0px 10px 0px rgba(0,0,0,0.5);
 `
-interface FilesContainerProps {
-  tabsHeight: number
-}
 
 const FileContainer = styled.div`
   position: relative;

@@ -27,7 +27,7 @@ const Tab = ({
   closeTab,
   file,
   isActiveTab,
-  updateActiveTabId
+  handleTabClick
 }: TabProps) => {
   return (
     <Container
@@ -37,7 +37,7 @@ const Tab = ({
           <>
             <NameContainer>
               <Name
-                onClick={() => updateActiveTabId(file.id)}>
+                onClick={() => handleTabClick(file.id)}>
                 {file.name}
               </Name>
             </NameContainer>
@@ -62,7 +62,7 @@ interface TabProps {
   file?: TFile
   fileId: string
   isActiveTab: boolean
-  updateActiveTabId?(nextActiveTabId: string): void
+  handleTabClick?(nextActiveTabId: string): void
 }
 
 //-----------------------------------------------------------------------------
@@ -70,11 +70,11 @@ interface TabProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   cursor: default;
-  height: calc(100% - 1.5px);
   width: 12.5%;
+  margin-top: 1px;
+  margin-right: 1px;
   opacity: ${ ({ isActiveTab }: ContainerProps) => isActiveTab ? '1' : '0.75'};
   background-color: rgb(250, 250, 250);
-  border: 1px solid rgb(180, 180, 180);
   border-left: none;
   border-bottom: none;
   border-radius: 3px 3px 0 0;
@@ -87,10 +87,18 @@ interface ContainerProps {
 const Content = styled.div`
   width: 100%;
   height: 100%;
-  padding-left: 0.5rem;
-  padding-right: 0.25rem;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+`
+
+const NameContainer = styled.div`
+  overflow: hidden;
+  height: 100%;
+  width: 90%;
+  padding: 0.25rem;
+  padding-left: 0.5rem;
+  display: flex;
   align-items: center;
 `
 
@@ -101,13 +109,10 @@ const Name = styled.div`
   font-size: 0.85rem;
 `
 
-const NameContainer = styled.div`
-  overflow: hidden;
-  width: 90%;
-`
-
 const CloseTab = styled.div`
   cursor: pointer;
+  padding-right: 0.15rem;
+  height: 100%;
   width: 10%;
   display: flex;
   justify-content: center;

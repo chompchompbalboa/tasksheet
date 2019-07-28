@@ -9,8 +9,8 @@ export interface Files {
 export interface Folder {
 	id: string
 	name: string
-	folders: keyof Folders[]
-	files: keyof File[]
+	folders: string[]
+	files: string[]
 }
 
 export interface File {
