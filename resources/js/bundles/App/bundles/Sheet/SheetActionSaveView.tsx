@@ -15,8 +15,7 @@ import Icon from '@/components/Icon'
 //-----------------------------------------------------------------------------
 const SheetActionSaveView = ({
   sheetId,
-  openSaveMenu,
-  userColorPrimary
+  openSaveMenu
 }: SheetActionSaveViewProps) => {
 
   const handleClick = () => {
@@ -25,7 +24,6 @@ const SheetActionSaveView = ({
 
   return (
     <Container
-      containerBackgroundColor={userColorPrimary}
       onClick={() => handleClick()}>
       <Icon
         icon={SAVE}
@@ -39,8 +37,7 @@ const SheetActionSaveView = ({
 //-----------------------------------------------------------------------------
 interface SheetActionSaveViewProps {
   sheetId: string
-  openSaveMenu?(fileType: FileType, id: string): void
-  userColorPrimary: string
+  openSaveMenu(fileType: FileType, id: string): void
 }
 
 //-----------------------------------------------------------------------------
@@ -57,13 +54,10 @@ const Container = styled.div`
   padding: 0.3rem;
   transition: all 0.05s;
   &:hover {
-    background-color: ${ ({ containerBackgroundColor }: ContainerProps ) => containerBackgroundColor };
+    background-color: rgb(0, 120, 0);
     color: rgb(240, 240, 240);
   }
 `
-interface ContainerProps {
-  containerBackgroundColor: string
-}
 
 //-----------------------------------------------------------------------------
 // Export

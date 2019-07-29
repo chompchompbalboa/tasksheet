@@ -39,7 +39,8 @@ export const folderReducer = (state = initialFoldersState, action: FolderActions
 	switch (action.type) {
 
 		case UPDATE_ACTIVE_FOLDER_PATH: {
-			const { nextActiveFolderPath } = action
+      const { nextActiveFolderPath } = action
+      console.log(nextActiveFolderPath)
 			return {
 				...state,
 				activeFolderPath: nextActiveFolderPath,

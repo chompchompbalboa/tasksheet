@@ -43,28 +43,36 @@ const Folders = ({
   return (
     <Container
       isActiveTab={isActiveTab}>
-      <FoldersSidebar />
-      <FoldersFolder
-        activeFolderPath={activeFolderPath}
-        files={files}
-        folderId="ROOT"
-        folders={folders}
-        level={0}
-        rootFolderIds={rootFolderIds}
-        updateActiveFolderPath={updateActiveFolderPath}
-        handleFileOpen={handleFileOpen}/>
-      {activeFolderPath.length > 0 && 
-        activeFolderPath.map((folderId: string, index: number) => (
-          <FoldersFolder 
-            key={folderId}
+      <SidebarContainer>
+        <FoldersSidebar />
+      </SidebarContainer>
+      <ContentContainer>
+        <HeaderContainer>
+        </HeaderContainer>
+        <FoldersContainer>
+          <FoldersFolder
             activeFolderPath={activeFolderPath}
             files={files}
-            folderId={folderId}
+            folderId="ROOT"
             folders={folders}
-            level={index + 1}
+            level={0}
             rootFolderIds={rootFolderIds}
             updateActiveFolderPath={updateActiveFolderPath}
-            handleFileOpen={handleFileOpen}/>))}
+            handleFileOpen={handleFileOpen}/>
+          {activeFolderPath.length > 0 && 
+            activeFolderPath.map((folderId: string, index: number) => (
+              <FoldersFolder 
+                key={folderId}
+                activeFolderPath={activeFolderPath}
+                files={files}
+                folderId={folderId}
+                folders={folders}
+                level={index + 1}
+                rootFolderIds={rootFolderIds}
+                updateActiveFolderPath={updateActiveFolderPath}
+                handleFileOpen={handleFileOpen}/>))}
+        </FoldersContainer>
+      </ContentContainer>
     </Container>
   )
 }
@@ -89,10 +97,36 @@ const Container = styled.div`
   display: ${ ({ isActiveTab }: ContainerProps) => isActiveTab ? 'flex' : 'none' };
   width: 100%;
   height: 100%;
+  display: flex;
 `
 interface ContainerProps {
   isActiveTab: boolean
 }
+
+
+const SidebarContainer = styled.div`
+  width: 10rem;
+  height: 100%;
+`
+
+const ContentContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`
+
+const FoldersContainer = styled.div`
+  width: 100%;
+  height: calc(100% - 3rem);
+  display: flex;
+`
+
+const HeaderContainer = styled.div`
+  width: 100%;
+  height: 3rem;
+  background-color: rgb(225, 225, 225);
+`
 
 //-----------------------------------------------------------------------------
 // Export

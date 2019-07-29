@@ -4,10 +4,12 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import { FileType } from '@app/state/folder/types'
 import { Columns, SheetFilters, SheetGroups, SheetSorts } from '@app/state/sheet/types'
 
 import SheetActionFilter from '@app/bundles/Sheet/SheetActionFilter'
 import SheetActionGroup from '@app/bundles/Sheet/SheetActionGroup'
+import SheetActionSaveView from '@app/bundles/Sheet/SheetActionSaveView'
 import SheetActionSort from '@app/bundles/Sheet/SheetActionSort'
 
 //-----------------------------------------------------------------------------
@@ -18,6 +20,7 @@ const SheetActions = ({
   columns,
   groups,
   filters,
+  openSaveMenu,
   sorts
 }: SheetActionsProps) => {
   return (
@@ -34,6 +37,9 @@ const SheetActions = ({
         sheetId={sheetId}
         columns={columns}
         sorts={sorts}/>
+      <SheetActionSaveView
+        sheetId={sheetId}
+        openSaveMenu={openSaveMenu}/>
     </Container>
   )
 }
@@ -47,6 +53,7 @@ interface SheetActionsProps {
   groups: SheetGroups
   sorts: SheetSorts
   sheetId: string
+  openSaveMenu(fileType: FileType, id: string): void
 }
 
 //-----------------------------------------------------------------------------

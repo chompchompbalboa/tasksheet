@@ -26,7 +26,8 @@ const File = ({
 }: FileProps) => {
 
   const fileComponents = {
-    SHEET: Sheet
+    SHEET: Sheet,
+    SHEET_VIEW: Sheet
   }
   const FileComponent = file ? fileComponents[file.type] : null
 

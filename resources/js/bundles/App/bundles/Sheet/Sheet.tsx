@@ -136,6 +136,7 @@ const SheetComponent = memo(({
           columns={columns}
           filters={filters}
           groups={groups}
+          openSaveMenu={(fileType, id) => console.log(fileType, id)}
           sorts={sorts}/>
         {!hasLoaded
           ? isActiveFile ? <LoadingTimer fromId={id}/> : null

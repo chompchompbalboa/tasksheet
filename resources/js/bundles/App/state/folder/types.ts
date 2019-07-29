@@ -20,6 +20,4 @@ export interface File {
 	typeId: string
 }
 
-export enum FileType {
-	SHEET = 'SHEET',
-}
+export type FileType = 'SHEET' | 'SHEET_VIEW'

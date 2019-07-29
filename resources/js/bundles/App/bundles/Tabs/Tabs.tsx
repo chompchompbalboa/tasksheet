@@ -80,7 +80,7 @@ const Tabs = ({
             closeTab={closeTab}
             handleTabClick={handleFileOpen}/>))}
         <FoldersTab
-          isActiveTab={localActiveTabId === 'FOLDERS'}
+          isActiveTab={localActiveTabId === 'FOLDERS' || localTabs.length === 0}
           onClick={() => handleFileOpen('FOLDERS')}>
           <Icon
             icon={FOLDER}
