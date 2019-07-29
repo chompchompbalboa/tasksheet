@@ -5,7 +5,14 @@ import clone from '@/utils/clone'
 
 import defaultInitialData from '@app/state/initialData'
 
-import { TabActions, CLOSE_TAB, OPEN_FILE, OPEN_FILE_IN_NEW_TAB, UPDATE_ACTIVE_TAB_ID } from '@app/state/tab/actions'
+import { 
+  TabActions, 
+  CLOSE_TAB, 
+  OPEN_FILE, 
+  OPEN_FILE_IN_NEW_TAB, 
+  UPDATE_ACTIVE_TAB_ID,
+  UPDATE_TABS
+} from '@app/state/tab/actions'
 
 //-----------------------------------------------------------------------------
 // Initial
@@ -78,6 +85,14 @@ export const userReducer = (state = initialTabState, action: TabActions): TabSta
 			return {
 				...state,
 				activeTabId: nextActiveTabId,
+			}
+		}
+
+		case UPDATE_TABS: {
+			const { nextTabs } = action
+			return {
+				...state,
+				tabs: nextTabs,
 			}
 		}
 

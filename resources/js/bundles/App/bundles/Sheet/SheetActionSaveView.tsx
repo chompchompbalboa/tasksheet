@@ -2,24 +2,48 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { SAVE } from '@app/assets/icons' 
 
-import { FileType } from '@app/state/folder/types'
+import { ThunkDispatch } from '@app/state/types'
+import { 
+  updateIsSavingNewFile as updateIsSavingNewFileAction
+ } from '@app/state/folder/actions'
+ import { 
+   createSheetView as createSheetViewAction
+  } from '@app/state/sheet/actions'
+import { 
+  updateActiveTabId as updateActiveTabIdAction
+ } from '@app/state/tab/actions'
 
 import Icon from '@/components/Icon'
 
 //-----------------------------------------------------------------------------
+// Redux
+//-----------------------------------------------------------------------------
+const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+  createSheetView: (sheetId: string, newViewName: string) => dispatch(createSheetViewAction(sheetId, newViewName)),
+  updateIsSavingNewFile: (nextIsSavingNewFile: boolean, onFileSave: () => void) => dispatch(updateIsSavingNewFileAction(nextIsSavingNewFile, onFileSave)),
+  updateActiveTabId: (nextActiveTabId: string) => dispatch(updateActiveTabIdAction(nextActiveTabId))
+})
+//-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetActionSaveView = ({
+  createSheetView,
   sheetId,
-  openSaveMenu
+  updateIsSavingNewFile,
+  updateActiveTabId
 }: SheetActionSaveViewProps) => {
 
   const handleClick = () => {
-    openSaveMenu('SHEET_VIEW', sheetId)
+    updateActiveTabId('FOLDERS')
+    updateIsSavingNewFile(true, (newViewName: string) => {
+      createSheetView(sheetId, newViewName)
+      updateIsSavingNewFile(false, null)
+    })
   }
 
   return (
@@ -37,7 +61,9 @@ const SheetActionSaveView = ({
 //-----------------------------------------------------------------------------
 interface SheetActionSaveViewProps {
   sheetId: string
-  openSaveMenu(fileType: FileType, id: string): void
+  createSheetView(sheetId: string, newViewName: string): void
+  updateIsSavingNewFile(nextIsSavingNewFile: boolean, onFileSave: (...args: any) => void): void
+  updateActiveTabId(nextActiveTabId: string): void
 }
 
 //-----------------------------------------------------------------------------
@@ -62,4 +88,7 @@ const Container = styled.div`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetActionSaveView
+export default connect(
+  null,
+  mapDispatchToProps
+)(SheetActionSaveView)

@@ -14,6 +14,7 @@ import Icon from '@/components/Icon'
 // Component
 //-----------------------------------------------------------------------------
 const FoldersFolder = ({
+  activeFileId,
   activeFolderPath,
   files,
   folderId,
@@ -21,6 +22,7 @@ const FoldersFolder = ({
   handleFileOpen,
   level,
   rootFolderIds,
+  updateActiveFileId,
   updateActiveFolderPath
 }: FoldersFolderProps) => {
   const folder = folders[folderId]
@@ -49,7 +51,9 @@ const FoldersFolder = ({
         return (
           <File
             key={fileId}
-            onClick={() => handleFileOpen(fileItem.id)}>
+            isHighlighted={fileId === activeFileId}
+            onClick={() => updateActiveFileId(fileId)}
+            onDoubleClick={() => handleFileOpen(fileItem.id)}>
             <FolderItemIcon
               isFile>
               <Icon icon={FILE_SHEET} size="0.85rem"/>
@@ -68,6 +72,7 @@ const FoldersFolder = ({
 // Props
 //-----------------------------------------------------------------------------
 interface FoldersFolderProps {
+  activeFileId: string
   activeFolderPath: string[]
   files: Files
   folderId: string
@@ -75,6 +80,7 @@ interface FoldersFolderProps {
   handleFileOpen(nextActiveTabId: string): void
   level: number
   rootFolderIds: string[]
+  updateActiveFileId(nextActiveFileId: string): void
   updateActiveFolderPath(level: number, nextActiveFolderId: string): void
 }
 
@@ -93,18 +99,18 @@ const FolderItem = styled.div`
   padding: 0.125rem 0 0.125rem 0.25rem;
   display: flex;
   align-items: center;
+  background-color: ${ ({ isHighlighted }: FolderItemProps ) => isHighlighted ? 'rgb(220, 220, 220)' : 'transparent' };
   &:hover {
     background-color: rgb(220, 220, 220);
   }
 `
+interface FolderItemProps {
+  isHighlighted?: boolean
+}
 
 const Folder = styled(FolderItem)`
   justify-content: space-between;
-  background-color: ${ ({ isHighlighted }: FolderProps ) => isHighlighted ? 'rgb(220, 220, 220)' : 'transparent' };
 `
-interface FolderProps {
-  isHighlighted: boolean
-}
 
 const File = styled(FolderItem)`
   justify-content: flex-start;

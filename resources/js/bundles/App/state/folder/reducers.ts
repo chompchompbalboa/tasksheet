@@ -1,14 +1,19 @@
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
+import { mapKeys } from 'lodash'
+
 import defaultInitialData from '@app/state/initialData'
 import { File, Files, Folder, Folders } from '@app/state/folder/types'
 import normalizer from '@app/state/folder/normalizer'
 import {
 	FolderActions,
-	UPDATE_FOLDER,
-	UPDATE_FILE,
+	UPDATE_ACTIVE_FILE_ID,
 	UPDATE_ACTIVE_FOLDER_PATH,
+	UPDATE_FOLDER,
+  UPDATE_FILE,
+  UPDATE_FILE_ID,
+  UPDATE_IS_SAVING_NEW_FILE
 } from '@app/state/folder/actions'
 
 //-----------------------------------------------------------------------------
@@ -18,17 +23,21 @@ const normalizedFolders = normalizer(
 	typeof initialData !== 'undefined' ? initialData.folders : defaultInitialData.folders
 )
 export const initialFoldersState: FolderState = {
-	activeFolderId: null,
+  activeFileId: null,
 	activeFolderPath: [],
 	folders: <Folders>normalizedFolders.entities.folder,
-	files: <Files>normalizedFolders.entities.file,
+  files: <Files>normalizedFolders.entities.file,
+  isSavingNewFile: false,
+  onFileSave: null,
 	rootFolderIds: normalizedFolders.result,
 }
 export type FolderState = {
-	activeFolderId: string
+  activeFileId: string
 	activeFolderPath: string[]
 	folders: { [key: string]: Folder }
-	files: { [key: string]: File }
+  files: { [key: string]: File }
+  onFileSave(...args: any): void
+  isSavingNewFile: boolean
 	rootFolderIds: string[]
 }
 
@@ -38,9 +47,16 @@ export type FolderState = {
 export const folderReducer = (state = initialFoldersState, action: FolderActions): FolderState => {
 	switch (action.type) {
 
+		case UPDATE_ACTIVE_FILE_ID: {
+      const { nextActiveFileId } = action
+			return {
+				...state,
+				activeFileId: nextActiveFileId,
+			}
+		}
+
 		case UPDATE_ACTIVE_FOLDER_PATH: {
       const { nextActiveFolderPath } = action
-      console.log(nextActiveFolderPath)
 			return {
 				...state,
 				activeFolderPath: nextActiveFolderPath,
@@ -72,6 +88,34 @@ export const folderReducer = (state = initialFoldersState, action: FolderActions
 						...updates,
 					},
 				},
+			}
+		}
+
+		case UPDATE_FILE_ID: {
+      const { fileId, nextFileId } = action
+      const { files } = state
+      const nextFiles = mapKeys(files, (file: File, key: string) => {
+        if(key === fileId) return nextFileId
+        return key
+      })
+			return {
+				...state,
+        files: {
+          ...nextFiles,
+          [nextFileId]: {
+            ...nextFiles[nextFileId],
+            id: nextFileId
+          }
+        }
+			}
+		}
+
+		case UPDATE_IS_SAVING_NEW_FILE: {
+      const { nextIsSavingNewFile, onFileSave } = action
+			return {
+				...state,
+        isSavingNewFile: nextIsSavingNewFile,
+        onFileSave: onFileSave
 			}
 		}
 

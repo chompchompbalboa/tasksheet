@@ -33,22 +33,19 @@ const Tab = ({
     <Container
       isActiveTab={isActiveTab}>
       <Content>
-        {file && 
-          <>
-            <NameContainer>
-              <Name
-                onClick={() => handleTabClick(file.id)}>
-                {file.name}
-              </Name>
-            </NameContainer>
-            <CloseTab
-              onClick={() => closeTab(file.id)}>
-              <Icon
-                icon={TAB_CLOSE}
-                size="1rem"/>
-            </CloseTab>
-          </>
-        }
+        <NameContainer>
+          <Name
+            isVisible={typeof file !== 'undefined'}
+            onClick={() => handleTabClick(file.id)}>
+            {file ? file.name : 'Loading...'}
+          </Name>
+        </NameContainer>
+        <CloseTab
+          onClick={() => closeTab(file.id)}>
+          <Icon
+            icon={TAB_CLOSE}
+            size="1rem"/>
+        </CloseTab>
       </Content>
     </Container>
   )
@@ -107,7 +104,12 @@ const Name = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 0.78rem;
+  transition: opacity 0.25s;
+  opacity: ${ ({ isVisible }: NameProps) => isVisible ? '1' : '0'};
 `
+interface NameProps {
+  isVisible: boolean
+}
 
 const CloseTab = styled.div`
   cursor: pointer;

@@ -1,16 +1,35 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import { Dispatch } from 'redux'
+import clone from '@/utils/clone'
 
 import { mutation } from '@app/api'
 import { AppState } from '@app/state'
-import { ThunkAction } from '@app/state/types'
+import { ThunkAction, ThunkDispatch } from '@app/state/types'
+import { FileType } from '@app/state/folder/types'
+
+import { updateTabs } from '@app/state/tab/actions'
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-export type FolderActions = UpdateActiveFolderPath | UpdateFolder | UpdateFile
+export type FolderActions = UpdateActiveFileId | UpdateActiveFolderPath | UpdateFolder | UpdateFile | UpdateFileId | UpdateIsSavingNewFile
+
+//-----------------------------------------------------------------------------
+// Update Active File Id
+//-----------------------------------------------------------------------------
+export const UPDATE_ACTIVE_FILE_ID = 'UPDATE_ACTIVE_FILE_ID'
+interface UpdateActiveFileId {
+	type: typeof UPDATE_ACTIVE_FILE_ID
+	nextActiveFileId: string
+}
+
+export const updateActiveFileId = (nextActiveFileId: string): FolderActions => {
+	return {
+		type: UPDATE_ACTIVE_FILE_ID,
+		nextActiveFileId: nextActiveFileId,
+	}
+}
 
 //-----------------------------------------------------------------------------
 // Update Active Folder Path
@@ -22,7 +41,7 @@ interface UpdateActiveFolderPath {
 }
 
 export const updateActiveFolderPath = (level: number, nextActiveFolderId: string): ThunkAction => {
-	return async (dispatch: Dispatch, getState: () => AppState) => {
+	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       activeFolderPath
     } = getState().folder
@@ -41,11 +60,12 @@ export const updateActiveFolderPathReducer = (nextActiveFolderPath: string[]): F
 }
 
 //-----------------------------------------------------------------------------
-// Update Folder Color
+// Update File
 //-----------------------------------------------------------------------------
 export const UPDATE_FILE = 'UPDATE_FILE'
 export type FileUpdates = {
-	name?: string
+  name?: string
+  type?: FileType
 }
 interface UpdateFile {
 	type: typeof UPDATE_FILE
@@ -54,11 +74,11 @@ interface UpdateFile {
 }
 
 let updateFileTimeout: number = null
-export const updateFile = (id: string, updates: FileUpdates) => {
-	return async (dispatch: Dispatch, getState: () => AppState) => {
-		window.clearTimeout(updateFileTimeout)
+export const updateFile = (id: string, updates: FileUpdates, skipServerUpdate?: boolean) => {
+	return async (dispatch: ThunkDispatch) => {
+		if(!skipServerUpdate) { window.clearTimeout(updateFileTimeout) }
 		dispatch(updateFileReducer(id, updates))
-		updateFileTimeout = window.setTimeout(() => mutation.updateFile(getState().user.color.id, updates), 1500)
+		if(!skipServerUpdate) { updateFileTimeout = window.setTimeout(() => mutation.updateFile(id, updates), 1500) }
 	}
 }
 
@@ -67,6 +87,39 @@ export const updateFileReducer = (id: string, updates: FileUpdates): FolderActio
 		type: UPDATE_FILE,
 		id: id,
 		updates: updates,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update File
+//-----------------------------------------------------------------------------
+export const UPDATE_FILE_ID = 'UPDATE_FILE_ID'
+interface UpdateFileId {
+	type: typeof UPDATE_FILE_ID
+  fileId: string
+  nextFileId: string
+}
+
+export const updateFileId = (fileId: string, nextFileId: string) => {
+	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    dispatch(updateFileIdReducer(fileId, nextFileId))
+    const {
+      tabs
+    } = getState().tab
+    const tabIndex = tabs.indexOf(fileId)
+    if (tabIndex > -1) {
+      let nextTabs = clone(tabs)
+      nextTabs[tabIndex] = nextFileId
+      dispatch(updateTabs(nextTabs))
+    }
+	}
+}
+
+export const updateFileIdReducer = (fileId: string, nextFileId: string): FolderActions => {
+	return {
+		type: UPDATE_FILE_ID,
+		fileId,
+		nextFileId
 	}
 }
 
@@ -84,9 +137,9 @@ interface UpdateFolder {
 }
 
 export const updateFolder = (id: string, updates: FolderUpdates) => {
-	return async (dispatch: Dispatch, getState: () => AppState) => {
+	return async (dispatch: ThunkDispatch) => {
 		dispatch(updateFolderReducer(id, updates))
-		mutation.updateFolder(getState().user.layout.id, updates)
+		mutation.updateFolder(id, updates)
 	}
 }
 
@@ -95,5 +148,24 @@ export const updateFolderReducer = (id: string, updates: FolderUpdates): FolderA
 		type: UPDATE_FOLDER,
 		id: id,
 		updates: updates,
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+// Update Active File Id
+//-----------------------------------------------------------------------------
+export const UPDATE_IS_SAVING_NEW_FILE = 'UPDATE_IS_SAVING_NEW_FILE'
+interface UpdateIsSavingNewFile {
+	type: typeof UPDATE_IS_SAVING_NEW_FILE
+  nextIsSavingNewFile: boolean
+  onFileSave: () => void
+}
+
+export const updateIsSavingNewFile = (nextIsSavingNewFile: boolean, onFileSave: () => void): FolderActions => {
+	return {
+		type: UPDATE_IS_SAVING_NEW_FILE,
+    nextIsSavingNewFile,
+    onFileSave
 	}
 }

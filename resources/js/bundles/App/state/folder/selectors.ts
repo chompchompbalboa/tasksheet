@@ -6,9 +6,9 @@ import { AppState } from '@app/state'
 import { File, Files, Folder, Folders } from './types'
 
 //-----------------------------------------------------------------------------
-// Select Active Folder Id
+// Select Active File Id
 //-----------------------------------------------------------------------------
-export const selectActiveFolderId = (state: AppState): string => state.folder.activeFolderId
+export const selectActiveFileId = (state: AppState): string => state.folder.activeFileId
 
 //-----------------------------------------------------------------------------
 // Select Active Folder Path
@@ -34,6 +34,16 @@ export const selectFolder = (id: string, state: AppState): Folder => state.folde
 // Select Folders
 //-----------------------------------------------------------------------------
 export const selectFolders = (state: AppState): Folders => state.folder.folders
+
+//-----------------------------------------------------------------------------
+// Select Is Saving New File
+//-----------------------------------------------------------------------------
+export const selectIsSavingNewFile = (state: AppState): boolean => state.folder.isSavingNewFile
+
+//-----------------------------------------------------------------------------
+// Select On File Save
+//-----------------------------------------------------------------------------
+export const selectOnFileSave = (state: AppState): () => void => state.folder.onFileSave
 
 //-----------------------------------------------------------------------------
 // Select Root Folders

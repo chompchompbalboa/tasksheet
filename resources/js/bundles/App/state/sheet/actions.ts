@@ -2,6 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import { groupBy, orderBy } from 'lodash'
+import { v4 as createUuid } from 'uuid'
 
 import clone from '@/utils/clone'
 import { mutation } from '@app/api'
@@ -9,6 +10,8 @@ import { mutation } from '@app/api'
 import { AppState } from '@app/state'
 import { Columns, SheetFilter, SheetFilters, SheetGroup, SheetGroupOrder, SheetGroups, Rows, Sheet, SheetFromServer, SheetSort, SheetSortOrder, SheetSorts, VisibleRows, SheetFilterType } from '@app/state/sheet/types'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
+
+import { updateFile, updateFileId } from '@app/state/folder/actions'
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -449,5 +452,25 @@ export const updateSheetCellReducer = (sheetId: string, cellId: string, updates:
 		sheetId,
 		cellId,
 		updates,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Create Sheet View
+//-----------------------------------------------------------------------------
+export const createSheetView = (sheetId: string, viewName: string): ThunkAction => {
+	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    // Get file id for the sheet
+    const {
+      folder: {
+        files
+      }
+    } = getState()
+    const fileId = Object.keys(files).find(fileId => files[fileId].typeId === sheetId)
+    dispatch(updateFile(fileId, {
+      type: 'SHEET_VIEW',
+      name: viewName
+    }, true))
+    dispatch(updateFileId(fileId, createUuid()))
 	}
 }

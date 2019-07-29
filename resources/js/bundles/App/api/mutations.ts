@@ -33,7 +33,7 @@ export const updateUserLayout = async (id: string, updates: UserLayoutUpdates) =
 // File
 //-----------------------------------------------------------------------------
 export const updateFile = async (id: string, updates: FileUpdates) => {
-	return axios.patch('/app/file/' + id, updates).then(response => {
+	return axios.patch('/app/files/' + id, updates).then(response => {
 		return response.data
 	})
 }

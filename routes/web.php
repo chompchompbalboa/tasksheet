@@ -40,10 +40,11 @@ Route::prefix('app')->group(function () {
   */
   // Resource Controllers
   Route::resources([
-    /*
+    
     // Folders
     'folders' => 'FolderController',
     'files' => 'FileController',
+    /*
     // Calendars
     'calendars' => 'CalendarController',
     // Notes

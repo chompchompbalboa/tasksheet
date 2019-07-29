@@ -8,7 +8,7 @@ import { updateUserActive } from '@app/state/user/actions'
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-export type TabActions = CloseTab | OpenFile | OpenFileInNewTab | UpdateActiveTabId
+export type TabActions = CloseTab | OpenFile | OpenFileInNewTab | UpdateActiveTabId | UpdateTabs
 
 //-----------------------------------------------------------------------------
 // Close Tab
@@ -106,5 +106,21 @@ const updateActiveTabIdReducer = (nextActiveTabId: string): TabActions => {
 	return {
 		type: UPDATE_ACTIVE_TAB_ID,
 		nextActiveTabId: nextActiveTabId,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Active Tab
+//-----------------------------------------------------------------------------
+export const UPDATE_TABS = 'UPDATE_TABS'
+interface UpdateTabs {
+  type: typeof UPDATE_TABS
+  nextTabs: string[]
+}
+
+export const updateTabs = (nextTabs: string[]): TabActions => {
+	return {
+		type: UPDATE_TABS,
+		nextTabs: nextTabs,
 	}
 }

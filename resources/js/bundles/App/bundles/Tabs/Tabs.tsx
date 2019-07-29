@@ -78,7 +78,8 @@ const Tabs = ({
             fileId={fileId}
             isActiveTab={localActiveTabId === fileId}
             closeTab={closeTab}
-            handleTabClick={handleFileOpen}/>))}
+            handleTabClick={handleFileOpen}/>))
+        }
         <FoldersTab
           isActiveTab={localActiveTabId === 'FOLDERS' || localTabs.length === 0}
           onClick={() => handleFileOpen('FOLDERS')}>
