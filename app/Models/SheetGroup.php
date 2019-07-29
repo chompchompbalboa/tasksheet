@@ -10,6 +10,6 @@ class SheetGroup extends Model
 
   protected $table = 'sheetGroups';
 
-  protected $visible = ['id', 'columnId', 'order'];
-  protected $fillable = ['id', 'sheetId', 'viewId', 'columnId', 'order'];
+  protected $visible = ['id', 'sheetId', 'sheetViewId', 'columnId', 'order'];
+  protected $fillable = ['id', 'sheetId', 'sheetViewId', 'columnId', 'order'];
 }

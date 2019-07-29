@@ -4,8 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 use App\Models\Sheet;
+use App\Models\SheetView;
+use App\Models\SheetFilter;
+use App\Models\SheetGroup;
+use App\Models\SheetSort;
 
 class SheetViewController extends Controller
 {
@@ -18,7 +23,29 @@ class SheetViewController extends Controller
      */
     public function store(Request $request)
     {
-      dd($request);
+      // View
+      $newSheetViewId = $request->input('id');
+      $sheetId = $request->input('id');
+      $newSheetView = SheetView::create([ 'id' => $newSheetViewId ]);
+      // Sheet
+      $sheet = Sheet::find($request->input('sheetId'));
+      $newSheetView->sheets()->attach($sheet, [ 'id' => Str::uuid()->toString() ]);
+      // Filters
+      $newSheetViewFilters = $request->input('filters');
+      foreach($newSheetViewFilters as $sheetViewFilter) {
+        $newSheetView->filters()->create($sheetViewFilter);
+      }
+      // Groups
+      $newSheetViewGroups = $request->input('groups');
+      foreach($newSheetViewGroups as $sheetViewGroup) {
+        $newSheetView->groups()->create($sheetViewGroup);
+      }
+      // Sorts
+      $newSheetViewSorts = $request->input('sorts');
+      foreach($newSheetViewSorts as $sheetViewSort) {
+        $newSheetView->sorts()->create($sheetViewSort);
+      }
+      return response()->json($newSheetView, 200);
     }
 
     /**
@@ -29,6 +56,7 @@ class SheetViewController extends Controller
      */
     public static function show(SheetView $view)
     {
+      return response()->json($view, 200);
     }
 
     /**

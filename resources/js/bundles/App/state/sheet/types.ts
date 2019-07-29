@@ -83,3 +83,11 @@ export type SheetGroup = {
 }
 
 export type SheetGroupOrder = 'ASC' | 'DESC'
+
+export type SheetView = {
+  id: string
+  sheetId: string
+  filters: SheetFilters
+  groups: SheetGroups
+  sorts: SheetSorts
+}

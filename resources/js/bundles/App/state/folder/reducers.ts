@@ -1,8 +1,6 @@
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
-import { mapKeys } from 'lodash'
-
 import defaultInitialData from '@app/state/initialData'
 import { File, Files, Folder, Folders } from '@app/state/folder/types'
 import normalizer from '@app/state/folder/normalizer'
@@ -12,7 +10,8 @@ import {
 	UPDATE_ACTIVE_FOLDER_PATH,
 	UPDATE_FOLDER,
   UPDATE_FILE,
-  UPDATE_FILE_ID,
+  UPDATE_FILES,
+  UPDATE_FOLDERS,
   UPDATE_IS_SAVING_NEW_FILE
 } from '@app/state/folder/actions'
 
@@ -91,22 +90,19 @@ export const folderReducer = (state = initialFoldersState, action: FolderActions
 			}
 		}
 
-		case UPDATE_FILE_ID: {
-      const { fileId, nextFileId } = action
-      const { files } = state
-      const nextFiles = mapKeys(files, (file: File, key: string) => {
-        if(key === fileId) return nextFileId
-        return key
-      })
+		case UPDATE_FILES: {
+      const { nextFiles } = action
 			return {
 				...state,
-        files: {
-          ...nextFiles,
-          [nextFileId]: {
-            ...nextFiles[nextFileId],
-            id: nextFileId
-          }
-        }
+        files: nextFiles
+			}
+		}
+
+		case UPDATE_FOLDERS: {
+      const { nextFolders } = action
+			return {
+				...state,
+        folders: nextFolders
 			}
 		}
 

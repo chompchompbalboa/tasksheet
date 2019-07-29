@@ -35,7 +35,7 @@ class SheetFilterController extends Controller
      */
     public function store(Request $request)
     {
-      //dd($request->all());
+      dd($request->all());
       $sheetFilter = SheetFilter::create($request->all());
       return response()->json($sheetFilter, 200);
     }

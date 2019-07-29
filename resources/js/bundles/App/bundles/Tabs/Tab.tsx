@@ -26,9 +26,11 @@ const mapStateToProps = (state: AppState, props: TabProps) => ({
 const Tab = ({
   closeTab,
   file,
+  fileId,
   isActiveTab,
   handleTabClick
 }: TabProps) => {
+  
   return (
     <Container
       isActiveTab={isActiveTab}>
@@ -36,12 +38,12 @@ const Tab = ({
         <NameContainer>
           <Name
             isVisible={typeof file !== 'undefined'}
-            onClick={() => handleTabClick(file.id)}>
+            onClick={() => handleTabClick(fileId)}>
             {file ? file.name : 'Loading...'}
           </Name>
         </NameContainer>
         <CloseTab
-          onClick={() => closeTab(file.id)}>
+          onClick={() => closeTab(fileId)}>
           <Icon
             icon={TAB_CLOSE}
             size="1rem"/>

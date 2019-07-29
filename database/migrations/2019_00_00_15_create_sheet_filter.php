@@ -16,14 +16,14 @@ class CreateSheetFilter extends Migration
         Schema::create('sheetFilters', function (Blueprint $table) {
           $table->uuid('id')->primary();
           $table->uuid('sheetId')->nullable();
-          $table->uuid('viewId')->nullable();
+          $table->uuid('sheetViewId')->nullable();
           $table->uuid('columnId');
           $table->string('type');
           $table->string('value');
           $table->timestamps();
 
           $table->foreign('sheetId')->references('id')->on('sheets');
-          $table->foreign('viewId')->references('id')->on('sheetViews');
+          $table->foreign('sheetViewId')->references('id')->on('sheetViews');
           $table->foreign('columnId')->references('id')->on('sheetColumns');
         });
     }

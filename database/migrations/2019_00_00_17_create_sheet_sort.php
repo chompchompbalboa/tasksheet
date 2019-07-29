@@ -16,13 +16,13 @@ class CreateSheetSort extends Migration
         Schema::create('sheetSorts', function (Blueprint $table) {
           $table->uuid('id')->primary();
           $table->uuid('sheetId')->nullable();
-          $table->uuid('viewId')->nullable();
+          $table->uuid('sheetViewId')->nullable();
           $table->uuid('columnId');
           $table->string('order', 4);
           $table->timestamps();
 
           $table->foreign('sheetId')->references('id')->on('sheets');
-          $table->foreign('viewId')->references('id')->on('sheetViews');
+          $table->foreign('sheetViewId')->references('id')->on('sheetViews');
           $table->foreign('columnId')->references('id')->on('sheetColumns');
         });
     }

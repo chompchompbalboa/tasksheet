@@ -11,6 +11,7 @@ import { query } from '@app/api'
 
 import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
+import { FileType } from '@app/state/folder/types'
 import { 
   loadSheet as loadSheetAction,
   updateSheetCell as updateSheetCellAction, SheetCellUpdates
@@ -63,6 +64,7 @@ const SheetComponent = memo(({
   activeTabId,
   columns,
   fileId,
+  fileType,
   filters,
   groups,
   id,
@@ -80,7 +82,8 @@ const SheetComponent = memo(({
   const [ hasLoaded, setHasLoaded ] = useState(false)
   useEffect(() => {
     if(!hasLoaded && isActiveFile) {
-      query.getSheet(id).then(sheet => {
+      const getSheetQuery = fileType === 'SHEET' ? query.getSheet : query.getSheetView
+      getSheetQuery(id).then(sheet => {
         loadSheet(sheet).then(() => {
           setHasLoaded(true)
         })
@@ -168,6 +171,7 @@ interface SheetComponentProps {
   activeTabId?: string
   columns?: Columns
   fileId: string
+  fileType: FileType
   filters?: SheetFilters
   groups?: SheetGroups
   id: string

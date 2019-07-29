@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\File;
-use App\Models\Sheet;
 
 class FileController extends Controller
 {
@@ -27,6 +26,8 @@ class FileController extends Controller
      */
     public function store(Request $request)
     {
+      $file = File::create($request->all());
+      return response()->json($file, 200);
     }
 
     /**

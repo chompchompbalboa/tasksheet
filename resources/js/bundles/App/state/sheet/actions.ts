@@ -9,9 +9,11 @@ import { mutation } from '@app/api'
 
 import { AppState } from '@app/state'
 import { Columns, SheetFilter, SheetFilters, SheetGroup, SheetGroupOrder, SheetGroups, Rows, Sheet, SheetFromServer, SheetSort, SheetSortOrder, SheetSorts, VisibleRows, SheetFilterType } from '@app/state/sheet/types'
+import { FileType } from '@app/state/folder/types'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
 
-import { updateFile, updateFileId } from '@app/state/folder/actions'
+import { updateFiles, updateFolders } from '@app/state/folder/actions'
+import { updateTabs } from '@app/state/tab/actions'
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -460,17 +462,63 @@ export const updateSheetCellReducer = (sheetId: string, cellId: string, updates:
 //-----------------------------------------------------------------------------
 export const createSheetView = (sheetId: string, viewName: string): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
-    // Get file id for the sheet
     const {
-      folder: {
-        files
-      }
+      folder: { activeFolderPath, files, folders },
+      sheet,
+      tab: { tabs }
     } = getState()
+    const sourceSheet = sheet[sheetId]
     const fileId = Object.keys(files).find(fileId => files[fileId].typeId === sheetId)
-    dispatch(updateFile(fileId, {
-      type: 'SHEET_VIEW',
-      name: viewName
-    }, true))
-    dispatch(updateFileId(fileId, createUuid()))
+    const folderId = activeFolderPath[activeFolderPath.length - 1]
+    const newFileId = createUuid()
+    const newSheetViewId = createUuid()
+    const newSheetViewFilters = sourceSheet.filters.map(filter => ({ ...filter, id: createUuid(), sheetViewId: newSheetViewId, sheetId: null }))
+    const newSheetViewGroups = sourceSheet.groups.map(group => ({ ...group, id: createUuid(), sheetViewId: newSheetViewId, sheetId: null }))
+    const newSheetViewSorts = sourceSheet.sorts.map(sort => ({ ...sort, id: createUuid(), sheetViewId: newSheetViewId, sheetId: null }))
+    // Update sheets
+    dispatch(loadSheetReducer({
+      ...sourceSheet,
+      id: newSheetViewId,
+      filters: newSheetViewFilters,
+      groups: newSheetViewGroups,
+      sorts: newSheetViewSorts
+    }))
+    // Update folders and files
+    const newFile = {
+      ...files[fileId],
+      id: newFileId,
+      folderId: folderId,
+      type: 'SHEET_VIEW' as FileType, 
+      name: viewName,
+      typeId: newSheetViewId
+    }
+    dispatch(updateFiles({
+      ...files,
+      [newFileId]: newFile
+    }))
+    dispatch(updateFolders({
+      ...folders,
+      [folderId]: {
+        ...folders[folderId],
+        files: [ ...folders[folderId].files, newFileId ]
+      }
+    }))
+    // Update open tabs
+    const tabIndex = tabs.indexOf(fileId)
+    if (tabIndex > -1) {
+      let nextTabs = clone(tabs)
+      nextTabs[tabIndex] = newFileId
+      dispatch(updateTabs(nextTabs))
+    }
+    // Create the file on the server
+    mutation.createFile(newFile)
+    // Create the sheet view on the server
+    mutation.createSheetView({
+      id: newSheetViewId,
+      sheetId: sheetId,
+      filters: newSheetViewFilters,
+      groups: newSheetViewGroups,
+      sorts: newSheetViewSorts
+    })
 	}
 }

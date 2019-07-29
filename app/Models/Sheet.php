@@ -11,10 +11,14 @@ class Sheet extends Model
   /**
    * Define which attributes will be visible
    */
-  protected $visible = ['id', 'rows', 'columns', 'filters', 'groups', 'sorts'];
+  protected $visible = ['id', 'fileType', 'rows', 'columns', 'filters', 'groups', 'sorts'];
   protected $fillable = ['id'];
   protected $with = ['rows', 'filters', 'groups', 'sorts'];
-  protected $appends = ['columns'];
+  protected $appends = ['columns', 'fileType'];
+  
+  public function getFileTypeAttribute() {
+    return "SHEET";
+  }
   
   /**
    * Get all the columns that belong to this table
@@ -54,5 +58,12 @@ class Sheet extends Model
    */
   public function sorts() {
     return $this->hasMany('App\Models\SheetSort', 'sheetId');
+  }
+  
+  /**
+   * Get all the views this sheet belongs to
+   */
+  public function views() {
+    return $this->belongsToMany('App\Models\SheetView', 'sheetViewSheets', 'sheetId', 'sheetViewId');
   }
 }

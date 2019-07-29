@@ -15,6 +15,7 @@ export interface Folder {
 
 export interface File {
 	id: string
+  folderId: string
 	name: string
 	type: FileType
 	typeId: string

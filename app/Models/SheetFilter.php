@@ -10,6 +10,6 @@ class SheetFilter extends Model
 
   protected $table = 'sheetFilters';
 
-  protected $visible = ['id', 'columnId', 'type', 'value'];
-  protected $fillable = ['id', 'sheetId', 'columnId', 'type', 'value'];
+  protected $visible = ['id', 'sheetId', 'sheetViewId', 'columnId', 'type', 'value'];
+  protected $fillable = ['id', 'sheetId', 'sheetViewId', 'columnId', 'type', 'value'];
 }

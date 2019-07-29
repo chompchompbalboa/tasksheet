@@ -72,9 +72,12 @@ interface OpenFileInNewTab {
 
 export const openFileInNewTab = (fileId: string): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
-		dispatch(openFileInNewTabReducer(fileId))
-		const tab = getState().tab
-		dispatch(updateUserActive({ tabId: tab.activeTabId, tabs: tab.tabs }))
+		const files = getState().folder.files
+		if (Object.keys(files).includes(fileId)) { 
+      dispatch(openFileInNewTabReducer(fileId)) 
+      const tab = getState().tab
+      dispatch(updateUserActive({ tabId: tab.activeTabId, tabs: tab.tabs }))
+    }
 	}
 }
 

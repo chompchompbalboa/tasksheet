@@ -139,7 +139,7 @@ const TabsContainer = styled.div`
 const FoldersTab = styled.div`
   cursor: default;
   padding: 0.2rem 0.4rem;
-  background-color: white;
+  background-color: rgb(240,240,240);
   color: rgb(80, 80, 80);
   border-radius: 3px 3px 0 0;
   display: flex;

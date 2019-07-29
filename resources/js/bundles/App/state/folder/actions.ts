@@ -1,19 +1,20 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
+import { mapKeys } from 'lodash'
 import clone from '@/utils/clone'
 
 import { mutation } from '@app/api'
 import { AppState } from '@app/state'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
-import { FileType } from '@app/state/folder/types'
+import { File, Files, Folders, FileType } from '@app/state/folder/types'
 
 import { updateTabs } from '@app/state/tab/actions'
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-export type FolderActions = UpdateActiveFileId | UpdateActiveFolderPath | UpdateFolder | UpdateFile | UpdateFileId | UpdateIsSavingNewFile
+export type FolderActions = UpdateActiveFileId | UpdateActiveFolderPath | UpdateFolder | UpdateFolders | UpdateFile | UpdateFiles | UpdateIsSavingNewFile
 
 //-----------------------------------------------------------------------------
 // Update Active File Id
@@ -93,33 +94,61 @@ export const updateFileReducer = (id: string, updates: FileUpdates): FolderActio
 //-----------------------------------------------------------------------------
 // Update File
 //-----------------------------------------------------------------------------
-export const UPDATE_FILE_ID = 'UPDATE_FILE_ID'
-interface UpdateFileId {
-	type: typeof UPDATE_FILE_ID
-  fileId: string
-  nextFileId: string
-}
 
-export const updateFileId = (fileId: string, nextFileId: string) => {
+export const updateFileId = (fileId: string, nextFileId: string, skipFolderUpdate?: boolean) => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
-    dispatch(updateFileIdReducer(fileId, nextFileId))
     const {
-      tabs
-    } = getState().tab
+      folder: { folders, files },
+      tab: { tabs }
+    } = getState()
+    const file = files[fileId]
+    // Update the fileId
+    const nextFiles = mapKeys(files, (file: File, key: string) => {
+      if(key === fileId) return nextFileId
+      return key
+    })
+    dispatch(updateFiles({
+      ...nextFiles,
+      [nextFileId]: {
+        ...nextFiles[nextFileId],
+        id: nextFileId
+      }
+    }))
+    // Update the open tabs
     const tabIndex = tabs.indexOf(fileId)
     if (tabIndex > -1) {
       let nextTabs = clone(tabs)
       nextTabs[tabIndex] = nextFileId
       dispatch(updateTabs(nextTabs))
     }
+    // Update the folders
+    if(!skipFolderUpdate) {
+      const folderId = file.folderId
+      const nextFolderFiles = folders[folderId].files.map(folderFileId => folderFileId === folderFileId ? nextFileId : folderFileId)
+      dispatch(updateFolders({
+        ...folders,
+        [folderId]: {
+          ...folders[folderId],
+          files: nextFolderFiles
+        }
+      }))
+    }
 	}
 }
 
-export const updateFileIdReducer = (fileId: string, nextFileId: string): FolderActions => {
+//-----------------------------------------------------------------------------
+// Update File
+//-----------------------------------------------------------------------------
+export const UPDATE_FILES = 'UPDATE_FILES'
+interface UpdateFiles {
+	type: typeof UPDATE_FILES
+  nextFiles: Files
+}
+
+export const updateFiles = (nextFiles: Files): FolderActions => {
 	return {
-		type: UPDATE_FILE_ID,
-		fileId,
-		nextFileId
+		type: UPDATE_FILES,
+		nextFiles
 	}
 }
 
@@ -148,6 +177,22 @@ export const updateFolderReducer = (id: string, updates: FolderUpdates): FolderA
 		type: UPDATE_FOLDER,
 		id: id,
 		updates: updates,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Folders
+//-----------------------------------------------------------------------------
+export const UPDATE_FOLDERS = 'UPDATE_FOLDERS'
+interface UpdateFolders {
+	type: typeof UPDATE_FOLDERS
+  nextFolders: Folders
+}
+
+export const updateFolders = (nextFolders: Folders): FolderActions => {
+	return {
+		type: UPDATE_FOLDERS,
+		nextFolders
 	}
 }
 
