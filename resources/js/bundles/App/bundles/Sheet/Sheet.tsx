@@ -203,7 +203,7 @@ const SheetContainer = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: rgb(230, 230, 230);
+  height: calc(100% - 4.075rem);
 `
 
 const GridContainer = styled.div`
