@@ -51,7 +51,7 @@ const SheetActionSaveView = ({
       onClick={() => handleClick()}>
       <Icon
         icon={SAVE}
-        size="1.2rem"/>
+        size="1.1rem"/>
     </Container>
   )
 }
@@ -77,7 +77,7 @@ const Container = styled.div`
   background-color: rgb(210, 210, 210);
   color: rgb(80, 80, 80);
   border-radius: 3px;
-  padding: 0.3rem;
+  padding: 0.4rem;
   transition: all 0.05s;
   &:hover {
     background-color: rgb(0, 120, 0);

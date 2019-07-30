@@ -1,3 +1,5 @@
+import { FileType } from '@app/state/folder/types'
+
 export type Sheets = { [key: string]: Sheet }
 export type Columns = { [key: string]: Column }
 export type VisibleColumns = string[]
@@ -14,12 +16,14 @@ export type Sheet = {
   columns: Columns
   visibleColumns: VisibleColumns
   filters: SheetFilters
+  fileType: FileType
   groups: SheetGroups
   sorts: SheetSorts
 }
 
 export type SheetFromServer = {
   id: string
+  fileType: FileType
   rows: Row[]
   columns: Column[]
   filters: SheetFilters
@@ -59,6 +63,7 @@ export type Cell = {
 export type SheetSort = {
   id: string
   sheetId?: string
+  sheetViewId?: string
   columnId: string
   order: SheetSortOrder
 }
@@ -68,6 +73,7 @@ export type SheetSortOrder = 'ASC' | 'DESC'
 export type SheetFilter = {
   id: string
   sheetId?: string
+  sheetViewId?: string
   columnId: string
   type: SheetFilterType
   value: string
@@ -78,6 +84,7 @@ export type SheetFilterType = '=' | '>' | '>=' | '<' | '<='
 export type SheetGroup = {
   id: string
   sheetId?: string
+  sheetViewId?: string
   columnId: string
   order: SheetGroupOrder
 }

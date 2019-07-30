@@ -104,8 +104,13 @@ const SaveButton = styled.div`
   padding: 0.25rem 0.75rem;
   font-size: 0.75rem;
   border-radius: 3px;
-  background-color: rgb(0, 120, 0);
-  color: white;
+  background-color: rgb(210, 210, 210);
+  color: rgb(80, 80, 80);
+  transition: all 0.05s;
+  &:hover {
+    background-color: rgb(0, 120, 0);
+    color: rgb(240, 240, 240);
+  }
 `
 
 //-----------------------------------------------------------------------------

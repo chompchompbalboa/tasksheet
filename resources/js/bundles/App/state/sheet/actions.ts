@@ -117,6 +117,7 @@ export const createFilter = (sheetId: string, newFilter: SheetFilter): ThunkActi
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     // Update Filters
     const {
+      fileType,
       filters
     } = getState().sheet[sheetId]
     const nextFilters = [...filters, newFilter]
@@ -124,7 +125,12 @@ export const createFilter = (sheetId: string, newFilter: SheetFilter): ThunkActi
       filters: nextFilters
     }))
     // Save to Server
-    mutation.createSheetFilter({ sheetId: sheetId, ...newFilter})
+    const newFilterSheetId = fileType === 'SHEET' ? sheetId : null
+    const newFilterSheetViewId = fileType === 'SHEET_VIEW' ? sheetId : null
+    mutation.createSheetFilter({ 
+      ...newFilter,
+      sheetId: newFilterSheetId,
+      sheetViewId: newFilterSheetViewId })
     // Update Visible Rows
     clearTimeout(createFilterUpdateVisibleRowsTimeout)
     createFilterUpdateVisibleRowsTimeout = setTimeout(() => {
@@ -376,7 +382,8 @@ export const loadSheet = (sheet: SheetFromServer): ThunkAction => {
     sheet.columns.forEach(column => { normalizedColumns[column.id] = column })
 		dispatch(
 			loadSheetReducer({
-				id: sheet.id,
+        id: sheet.id,
+        fileType: sheet.fileType,
         columns: normalizedColumns,
         visibleColumns: resolveVisibleColumns(normalizedColumns),
         rows: normalizedRows,
@@ -504,12 +511,7 @@ export const createSheetView = (sheetId: string, viewName: string): ThunkAction 
       }
     }))
     // Update open tabs
-    const tabIndex = tabs.indexOf(fileId)
-    if (tabIndex > -1) {
-      let nextTabs = clone(tabs)
-      nextTabs[tabIndex] = newFileId
-      dispatch(updateTabs(nextTabs))
-    }
+    dispatch(updateTabs([ ...tabs, newFileId]))
     // Create the file on the server
     mutation.createFile(newFile)
     // Create the sheet view on the server

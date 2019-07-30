@@ -4,7 +4,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { FILE_SHEET, SUBITEM_ARROW } from '@app/assets/icons'
+import { FILE_SHEET, FILE_SHEET_VIEW, SUBITEM_ARROW } from '@app/assets/icons'
 
 import { Files, Folders } from '@app/state/folder/types'
 
@@ -56,7 +56,7 @@ const FoldersFolder = ({
             onDoubleClick={() => handleFileOpen(fileItem.id)}>
             <FolderItemIcon
               isFile>
-              <Icon icon={FILE_SHEET} size="0.85rem"/>
+              <Icon icon={fileItem.type === 'SHEET' ? FILE_SHEET : FILE_SHEET_VIEW} size="0.85rem"/>
             </FolderItemIcon>
             <FolderItemName>
               {fileItem.name}
