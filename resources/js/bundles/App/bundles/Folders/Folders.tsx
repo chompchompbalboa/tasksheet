@@ -132,7 +132,7 @@ interface ContainerProps {
 
 
 const SidebarContainer = styled.div`
-  width: 10rem;
+  width: 0;
   height: 100%;
 `
 

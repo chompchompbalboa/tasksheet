@@ -87,6 +87,7 @@ interface FoldersHeaderProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   height: 100%;
+  padding-left: 0.375rem;
   background-color: rgb(240, 240, 240);
   display: flex;
   align-items: center;

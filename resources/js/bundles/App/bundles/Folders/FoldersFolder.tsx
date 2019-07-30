@@ -4,10 +4,11 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { FILE_SHEET, FILE_SHEET_VIEW, SUBITEM_ARROW } from '@app/assets/icons'
+import { SUBITEM_ARROW } from '@app/assets/icons'
 
 import { Files, Folders } from '@app/state/folder/types'
 
+import FoldersFolderFile from '@app/bundles/Folders/FoldersFolderFile'
 import Icon from '@/components/Icon'
 
 //-----------------------------------------------------------------------------
@@ -25,6 +26,8 @@ const FoldersFolder = ({
   updateActiveFileId,
   updateActiveFolderPath
 }: FoldersFolderProps) => {
+
+
   const folder = folders[folderId]
   const folderIds: string[] = folderId !== "ROOT" ? folder.folders : rootFolderIds
   const fileIds: string[] = folderId !== "ROOT" ? folder.files : []
@@ -49,19 +52,12 @@ const FoldersFolder = ({
       {fileIds.map(fileId => {
         const fileItem = files[fileId]
         return (
-          <File
+          <FoldersFolderFile
             key={fileId}
-            isHighlighted={fileId === activeFileId}
-            onClick={() => updateActiveFileId(fileId)}
-            onDoubleClick={() => handleFileOpen(fileItem.id)}>
-            <FolderItemIcon
-              isFile>
-              <Icon icon={fileItem.type === 'SHEET' ? FILE_SHEET : FILE_SHEET_VIEW} size="0.85rem"/>
-            </FolderItemIcon>
-            <FolderItemName>
-              {fileItem.name}
-            </FolderItemName>
-          </File>
+            activeFileId={activeFileId}
+            handleFileOpen={handleFileOpen}
+            file={fileItem}
+            updateActiveFileId={updateActiveFileId}/>
         )
       })}
     </Container>
@@ -96,7 +92,7 @@ const Container = styled.div`
 const FolderItem = styled.div`
   cursor: default;
   width: 100%;
-  padding: 0.125rem 0 0.125rem 0.25rem;
+  padding: 0.125rem 0 0.125rem 0.325rem;
   display: flex;
   align-items: center;
   background-color: ${ ({ isHighlighted }: FolderItemProps ) => isHighlighted ? 'rgb(220, 220, 220)' : 'transparent' };
@@ -110,10 +106,6 @@ interface FolderItemProps {
 
 const Folder = styled(FolderItem)`
   justify-content: space-between;
-`
-
-const File = styled(FolderItem)`
-  justify-content: flex-start;
 `
 
 const FolderItemName = styled.div``
