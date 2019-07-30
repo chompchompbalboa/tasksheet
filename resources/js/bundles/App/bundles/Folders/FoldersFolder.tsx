@@ -33,33 +33,35 @@ const FoldersFolder = ({
   const fileIds: string[] = folderId !== "ROOT" ? folder.files : []
   return (
     <Container>
-      {folderIds.map(folderId => {
-        const folderItem = folders[folderId]
-        return (
-          <Folder
-            key={folderId}
-            isHighlighted={activeFolderPath.includes(folderItem.id)}
-            onClick={() => updateActiveFolderPath(level, folderItem.id)}>
-            <FolderItemName>
-              {folderItem.name}
-            </FolderItemName>
-            <FolderItemIcon>
-              <Icon icon={SUBITEM_ARROW} />
-            </FolderItemIcon>
-          </Folder>
-        )
-      })}
-      {fileIds.map(fileId => {
-        const fileItem = files[fileId]
-        return (
-          <FoldersFolderFile
-            key={fileId}
-            activeFileId={activeFileId}
-            handleFileOpen={handleFileOpen}
-            file={fileItem}
-            updateActiveFileId={updateActiveFileId}/>
-        )
-      })}
+      <ItemsContainer>
+        {folderIds.map(folderId => {
+          const folderItem = folders[folderId]
+          return (
+            <Folder
+              key={folderId}
+              isHighlighted={activeFolderPath.includes(folderItem.id)}
+              onClick={() => updateActiveFolderPath(level, folderItem.id)}>
+              <FolderItemName>
+                {folderItem.name}
+              </FolderItemName>
+              <FolderItemIcon>
+                <Icon icon={SUBITEM_ARROW} />
+              </FolderItemIcon>
+            </Folder>
+          )
+        })}
+        {fileIds.map(fileId => {
+          const fileItem = files[fileId]
+          return (
+            <FoldersFolderFile
+              key={fileId}
+              activeFileId={activeFileId}
+              handleFileOpen={handleFileOpen}
+              file={fileItem}
+              updateActiveFileId={updateActiveFileId}/>
+          )
+        })}
+      </ItemsContainer>
     </Container>
   )
 }
@@ -87,6 +89,12 @@ const Container = styled.div`
   height: 100%;
   width: 13rem;
   border-right: 1px solid rgb(220, 220, 220);
+  display: flex;
+  flex-direction: column;
+`
+
+const ItemsContainer = styled.div`
+  width: 100%;
 `
 
 const FolderItem = styled.div`

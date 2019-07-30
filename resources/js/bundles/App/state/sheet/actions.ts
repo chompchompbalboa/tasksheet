@@ -53,7 +53,7 @@ const resolveFilter = (cellValue: string, filterValue: string, type: SheetFilter
 }
 
 const resolveVisibleRows = (rows: Rows, filters?: SheetFilters, groups?: SheetGroups, sorts?: SheetSorts) => {
-
+  console.log('resolveVisibleRows')
   const rowIds: string[] = Object.keys(rows)
 
   // Filter

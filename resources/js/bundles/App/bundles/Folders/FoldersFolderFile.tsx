@@ -1,13 +1,14 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useRef } from 'react'
+import React, { MouseEvent, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { FILE_SHEET, FILE_SHEET_VIEW } from '@app/assets/icons'
 
 import { File } from '@app/state/folder/types'
 
+import FileContextMenu from '@app/bundles/ContextMenu/FileContextMenu'
 import Icon from '@/components/Icon'
 
 //-----------------------------------------------------------------------------
@@ -19,7 +20,7 @@ const FoldersFolderFile = ({
   handleFileOpen,
   updateActiveFileId,
 }: FoldersFolderFileProps) => {
-
+  
   const container = useRef(null)
   useEffect(() => {
     if(activeFileId === file.id) {
@@ -32,27 +33,45 @@ const FoldersFolderFile = ({
       removeEventListener('mouseup', checkForClickOutside)
     }
   }, [ activeFileId ])
-
   const checkForClickOutside = (e: Event) => {
     if(!container.current.contains(e.target)) {
       updateActiveFileId(null)
     }
   }
+  
+  const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
+  const [ contextMenuTop, setContextMenuTop ] = useState(null)
+  const [ contextMenuLeft, setContextMenuLeft ] = useState(null)
+  const handleContextMenu = (e: MouseEvent) => {
+    e.preventDefault()
+    setIsContextMenuVisible(true)
+    setContextMenuTop(e.clientY)
+    setContextMenuLeft(e.clientX)
+  }
 
   return (
-    <Container
-      ref={container}
-      isHighlighted={file.id === activeFileId}
-      onClick={() => updateActiveFileId(file.id)}
-      onDoubleClick={() => handleFileOpen(file.id)}>
-      <IconContainer
-        isFile>
-        <Icon icon={file.type === 'SHEET' ? FILE_SHEET : FILE_SHEET_VIEW} size="0.85rem"/>
-      </IconContainer>
-      <NameContainer>
-        {file.name}
-      </NameContainer>
-    </Container>
+    <>
+      <Container
+        ref={container}
+        isHighlighted={file.id === activeFileId}
+        onClick={() => updateActiveFileId(file.id)}
+        onContextMenu={e => handleContextMenu(e)}
+        onDoubleClick={() => handleFileOpen(file.id)}>
+        <IconContainer
+          isFile>
+          <Icon icon={file.type === 'SHEET' ? FILE_SHEET : FILE_SHEET_VIEW} size="0.85rem"/>
+        </IconContainer>
+        <NameContainer>
+          {file.name}
+        </NameContainer>
+      </Container>
+      {isContextMenuVisible && 
+        <FileContextMenu
+          closeContextMenu={() => setIsContextMenuVisible(false)}
+          contextMenuLeft={contextMenuLeft}
+          contextMenuTop={contextMenuTop}/>
+      }
+    </>
   )
 }
 
