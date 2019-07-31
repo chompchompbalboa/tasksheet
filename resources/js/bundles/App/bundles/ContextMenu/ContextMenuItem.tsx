@@ -15,6 +15,7 @@ const ContextMenuItem = ({
   children,
   decorator = null,
   logo = null,
+  onClick,
   text
 }: ContextMenuItemProps) => {
   
@@ -22,6 +23,7 @@ const ContextMenuItem = ({
 
   return (
     <Container
+      onClick={onClick}
       onMouseEnter={() => setIsSubItemsVisible(true)}
       onMouseLeave={() => setIsSubItemsVisible(false)}>
       <Logo>{logo && <Icon icon={logo}/>}</Logo>
@@ -43,6 +45,7 @@ interface ContextMenuItemProps {
   children?: any
   decorator?: string
   logo?: string
+  onClick?(...args: any): void
   text: string
 }
 
@@ -51,6 +54,7 @@ interface ContextMenuItemProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   cursor: default;
+  min-width: 10rem;
   width: 100%;
   padding: 0.625rem 0.625rem 0.625rem 1rem;
   display: flex;

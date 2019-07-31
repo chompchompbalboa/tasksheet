@@ -55,9 +55,9 @@ interface ContextMenuProps {
 const Container = styled.div`
   z-index: 10000;
   overflow: auto;
-  position: relative;
-  top: 3.5vh;
-  left: ${( { contextMenuLeft }: ContainerProps ) => contextMenuLeft * 0 + 'px'};
+  position: fixed;
+  top: ${( { contextMenuTop }: ContainerProps ) => contextMenuTop  + 'px'};
+  left: ${( { contextMenuLeft }: ContainerProps ) => contextMenuLeft + 'px'};
   background-color: white;
   border-radius: 3px;
   box-shadow: 3px 3px 10px 0px rgba(150,150,150,1);

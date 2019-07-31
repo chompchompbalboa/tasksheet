@@ -5,7 +5,8 @@ import defaultInitialData from '@app/state/initialData'
 import { File, Files, Folder, Folders } from '@app/state/folder/types'
 import normalizer from '@app/state/folder/normalizer'
 import {
-	FolderActions,
+  FolderActions,
+  CREATE_FOLDER,
 	UPDATE_ACTIVE_FILE_ID,
 	UPDATE_ACTIVE_FOLDER_PATH,
 	UPDATE_FOLDER,
@@ -45,6 +46,22 @@ export type FolderState = {
 //-----------------------------------------------------------------------------
 export const folderReducer = (state = initialFoldersState, action: FolderActions): FolderState => {
 	switch (action.type) {
+
+		case CREATE_FOLDER: {
+      const { folderId, newFolder, newFolderId } = action
+      console.log(folderId, newFolderId, newFolder)
+			return {
+				...state,
+				folders: {
+					...state.folders,
+					[folderId]: {
+						...state.folders[folderId],
+						folders: [ ...state.folders[folderId].folders, newFolderId],
+          },
+          [newFolderId]: newFolder
+				},
+			}
+		}
 
 		case UPDATE_ACTIVE_FILE_ID: {
       const { nextActiveFileId } = action

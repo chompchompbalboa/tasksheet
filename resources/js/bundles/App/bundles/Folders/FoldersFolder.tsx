@@ -4,12 +4,10 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { SUBITEM_ARROW } from '@app/assets/icons'
-
 import { Files, Folders } from '@app/state/folder/types'
 
 import FoldersFolderFile from '@app/bundles/Folders/FoldersFolderFile'
-import Icon from '@/components/Icon'
+import FoldersFolderFolder from '@app/bundles/Folders/FoldersFolderFolder'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -37,17 +35,12 @@ const FoldersFolder = ({
         {folderIds.map(folderId => {
           const folderItem = folders[folderId]
           return (
-            <Folder
+            <FoldersFolderFolder
               key={folderId}
-              isHighlighted={activeFolderPath.includes(folderItem.id)}
-              onClick={() => updateActiveFolderPath(level, folderItem.id)}>
-              <FolderItemName>
-                {folderItem.name}
-              </FolderItemName>
-              <FolderItemIcon>
-                <Icon icon={SUBITEM_ARROW} />
-              </FolderItemIcon>
-            </Folder>
+              activeFolderPath={activeFolderPath}
+              folder={folderItem}
+              level={level}
+              updateActiveFolderPath={updateActiveFolderPath}/>
           )
         })}
         {fileIds.map(fileId => {
@@ -96,38 +89,6 @@ const Container = styled.div`
 const ItemsContainer = styled.div`
   width: 100%;
 `
-
-const FolderItem = styled.div`
-  cursor: default;
-  width: 100%;
-  padding: 0.125rem 0 0.125rem 0.325rem;
-  display: flex;
-  align-items: center;
-  background-color: ${ ({ isHighlighted }: FolderItemProps ) => isHighlighted ? 'rgb(220, 220, 220)' : 'transparent' };
-  &:hover {
-    background-color: rgb(220, 220, 220);
-  }
-`
-interface FolderItemProps {
-  isHighlighted?: boolean
-}
-
-const Folder = styled(FolderItem)`
-  justify-content: space-between;
-`
-
-const FolderItemName = styled.div``
-
-const FolderItemIcon = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: ${ ({ isFile }: FolderItemIconProps) => isFile ? '0.25rem' : '0' };
-  color: rgb(50, 50, 50);
-`
-interface FolderItemIconProps {
-  isFile?: boolean
-}
 
 //-----------------------------------------------------------------------------
 // Export

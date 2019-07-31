@@ -105,7 +105,9 @@ const Container = styled.div`
   }
 `
 
-const NameContainer = styled.div``
+const NameContainer = styled.div`
+  padding: 0.05rem;
+`
 
 const IconContainer = styled.div`
   display: flex;

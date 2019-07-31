@@ -10,24 +10,36 @@ import ContextMenuItem from '@app/bundles/ContextMenu/ContextMenuItem'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const FileContextMenu = ({
+const FolderContextMenu = ({
+  createFolder,
+  folderId,
   closeContextMenu,
   contextMenuLeft,
   contextMenuTop,
-}: FileContextMenuProps) => {
+  setIsRenaming
+}: FolderContextMenuProps) => {
+
+  const closeOnClick = (thenCallThis: (...args: any) => void) => {
+    closeContextMenu()
+    thenCallThis()
+  }
 
   return (
     <ContextMenu
       closeContextMenu={closeContextMenu}
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}>
-      <ContextMenuItem text="Open" />
-      <ContextMenuDivider />
       <ContextMenuItem text="Cut" />
       <ContextMenuItem text="Copy" />
       <ContextMenuItem text="Paste" />
       <ContextMenuDivider />
-      <ContextMenuItem text="Rename" />
+      <ContextMenuItem 
+        text="New Folder"
+        onClick={() => closeOnClick(() => createFolder(folderId))}/>
+      <ContextMenuDivider />
+      <ContextMenuItem 
+        text="Rename"
+        onClick={() => closeOnClick(() => setIsRenaming(true))}/>
       <ContextMenuDivider />
       <ContextMenuItem text="Delete" />
     </ContextMenu>
@@ -37,13 +49,16 @@ const FileContextMenu = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface FileContextMenuProps {
+interface FolderContextMenuProps {
+  createFolder(folderId: string): void
+  folderId: string
   closeContextMenu(): void
   contextMenuLeft: number
   contextMenuTop: number
+  setIsRenaming(isRenaming: boolean): void
 }
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default FileContextMenu
+export default FolderContextMenu

@@ -7,7 +7,8 @@ export interface Files {
 }
 
 export interface Folder {
-	id: string
+  id: string
+  folderId?: string
 	name: string
 	folders: string[]
 	files: string[]

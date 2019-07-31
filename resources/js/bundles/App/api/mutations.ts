@@ -4,7 +4,7 @@
 import axios from '@/api/axios'
 
 import { FileUpdates, FolderUpdates } from '@app/state/folder/actions'
-import { File } from '@app/state/folder/types'
+import { File, Folder } from '@app/state/folder/types'
 import { SheetFilter, SheetGroup, SheetSort, SheetView } from '@app/state/sheet/types'
 import { SheetCellUpdates } from '@app/state/sheet/actions'
 import { UserActiveUpdates, UserColorUpdates, UserLayoutUpdates } from '@app/state/user/actions'
@@ -48,8 +48,14 @@ export const updateFile = async (id: string, updates: FileUpdates) => {
 //-----------------------------------------------------------------------------
 // Folder
 //-----------------------------------------------------------------------------
+export const createFolder = async (newFolder: Folder) => {
+	return axios.post('/app/folders', newFolder).then(response => {
+		return response.data
+	})
+}
+
 export const updateFolder = async (id: string, updates: FolderUpdates) => {
-	return axios.patch('/app/folder/' + id, updates).then(response => {
+	return axios.patch('/app/folders/' + id, updates).then(response => {
 		return response.data
 	})
 }

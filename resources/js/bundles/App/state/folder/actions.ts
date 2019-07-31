@@ -1,20 +1,34 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import { mapKeys } from 'lodash'
-import clone from '@/utils/clone'
+import { v4 as createUuid } from 'uuid'
 
 import { mutation } from '@app/api'
 import { AppState } from '@app/state'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
-import { File, Files, Folders, FileType } from '@app/state/folder/types'
-
-import { updateTabs } from '@app/state/tab/actions'
+import { Files, Folder, Folders, FileType } from '@app/state/folder/types'
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-export type FolderActions = UpdateActiveFileId | UpdateActiveFolderPath | UpdateFolder | UpdateFolders | UpdateFile | UpdateFiles | UpdateIsSavingNewFile
+export type FolderActions = 
+  UpdateActiveFileId | UpdateActiveFolderPath | 
+  CreateFolder | UpdateFolder | UpdateFolders | 
+  UpdateFile | UpdateFiles | 
+  UpdateIsSavingNewFile
+
+//-----------------------------------------------------------------------------
+// Defaults
+//-----------------------------------------------------------------------------
+const defaultFolder = (folderId: string): Folder => {
+  return {
+    id: createUuid(),
+    folderId: folderId,
+    name: null,
+    files: [],
+    folders: [],
+  }
+}
 
 //-----------------------------------------------------------------------------
 // Update Active File Id
@@ -61,6 +75,34 @@ export const updateActiveFolderPathReducer = (nextActiveFolderPath: string[]): F
 }
 
 //-----------------------------------------------------------------------------
+// Create File
+//-----------------------------------------------------------------------------
+export const CREATE_FOLDER = 'CREATE_FOLDER'
+interface CreateFolder {
+	type: typeof CREATE_FOLDER
+  folderId: string
+  newFolderId: string
+  newFolder: Folder
+}
+
+export const createFolder = (folderId: string) => {
+	return async (dispatch: ThunkDispatch) => {
+    const newFolder = defaultFolder(folderId)
+    dispatch(createFolderReducer(folderId, newFolder.id, newFolder))
+    mutation.createFolder(newFolder)
+	}
+}
+
+export const createFolderReducer = (folderId: string, newFolderId: string, newFolder: Folder): FolderActions => {
+	return {
+    type: CREATE_FOLDER,
+    folderId,
+    newFolderId,
+    newFolder
+	}
+}
+
+//-----------------------------------------------------------------------------
 // Update File
 //-----------------------------------------------------------------------------
 export const UPDATE_FILE = 'UPDATE_FILE'
@@ -88,51 +130,6 @@ export const updateFileReducer = (id: string, updates: FileUpdates): FolderActio
 		type: UPDATE_FILE,
 		id: id,
 		updates: updates,
-	}
-}
-
-//-----------------------------------------------------------------------------
-// Update File
-//-----------------------------------------------------------------------------
-
-export const updateFileId = (fileId: string, nextFileId: string, skipFolderUpdate?: boolean) => {
-	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
-    const {
-      folder: { folders, files },
-      tab: { tabs }
-    } = getState()
-    const file = files[fileId]
-    // Update the fileId
-    const nextFiles = mapKeys(files, (file: File, key: string) => {
-      if(key === fileId) return nextFileId
-      return key
-    })
-    dispatch(updateFiles({
-      ...nextFiles,
-      [nextFileId]: {
-        ...nextFiles[nextFileId],
-        id: nextFileId
-      }
-    }))
-    // Update the open tabs
-    const tabIndex = tabs.indexOf(fileId)
-    if (tabIndex > -1) {
-      let nextTabs = clone(tabs)
-      nextTabs[tabIndex] = nextFileId
-      dispatch(updateTabs(nextTabs))
-    }
-    // Update the folders
-    if(!skipFolderUpdate) {
-      const folderId = file.folderId
-      const nextFolderFiles = folders[folderId].files.map(folderFileId => folderFileId === folderFileId ? nextFileId : folderFileId)
-      dispatch(updateFolders({
-        ...folders,
-        [folderId]: {
-          ...folders[folderId],
-          files: nextFolderFiles
-        }
-      }))
-    }
 	}
 }
 
