@@ -24,6 +24,7 @@ interface UpdateUserActive {
 	updates: UserActiveUpdates
 }
 
+
 export const updateUserActive = (updates: UserActiveUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
 		dispatch(updateUserActiveReducer(updates))

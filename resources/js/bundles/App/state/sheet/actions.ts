@@ -8,7 +8,15 @@ import clone from '@/utils/clone'
 import { mutation } from '@app/api'
 
 import { AppState } from '@app/state'
-import { Columns, SheetFilter, SheetFilters, SheetGroup, SheetGroupOrder, SheetGroups, Rows, Sheet, SheetFromServer, SheetSort, SheetSortOrder, SheetSorts, VisibleRows, SheetFilterType } from '@app/state/sheet/types'
+import { 
+  Sheet, SheetFromServer, SheetUpdates,
+  SheetColumns, 
+  SheetRows, 
+  SheetCellUpdates,
+  SheetFilter, SheetFilters, SheetFilterType,
+  SheetGroup, SheetGroupUpdates, SheetGroups, 
+  SheetSort, SheetSortUpdates, SheetSorts, 
+} from '@app/state/sheet/types'
 import { FileType } from '@app/state/folder/types'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
 
@@ -52,7 +60,7 @@ const resolveFilter = (cellValue: string, filterValue: string, type: SheetFilter
   }
 }
 
-const resolveVisibleRows = (rows: Rows, filters?: SheetFilters, groups?: SheetGroups, sorts?: SheetSorts) => {
+const resolveVisibleRows = (rows: SheetRows, filters?: SheetFilters, groups?: SheetGroups, sorts?: SheetSorts) => {
   console.log('resolveVisibleRows')
   const rowIds: string[] = Object.keys(rows)
 
@@ -100,7 +108,7 @@ const resolveVisibleRows = (rows: Rows, filters?: SheetFilters, groups?: SheetGr
   }
 }
 
-const resolveVisibleColumns = (columns: Columns) => {
+const resolveVisibleColumns = (columns: SheetColumns) => {
   return orderBy(Object.keys(columns), (columnId: string) => columns[columnId].position)
 }
 
@@ -177,8 +185,7 @@ export const deleteFilter = (sheetId: string, filterId: string): ThunkAction => 
 //-----------------------------------------------------------------------------
 // Update Filter
 //-----------------------------------------------------------------------------
-export interface SheetFilterUpdates {
-}
+export interface SheetFilterUpdates {}
 
 export const updateFilter = (sheetId: string, filterId: string, updates: SheetFilterUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
@@ -257,10 +264,6 @@ export const deleteSheetGroup = (sheetId: string, columnId: string): ThunkAction
 //-----------------------------------------------------------------------------
 // Update Group
 //-----------------------------------------------------------------------------
-export interface SheetGroupUpdates {
-  order?: SheetGroupOrder
-}
-
 export const updateSheetGroup = (sheetId: string, groupId: string, updates: SheetGroupUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
@@ -339,10 +342,6 @@ export const deleteSort = (sheetId: string, columnId: string): ThunkAction => {
 //-----------------------------------------------------------------------------
 // Update Sort
 //-----------------------------------------------------------------------------
-export interface SheetSortUpdates {
-  order?: SheetSortOrder
-}
-
 export const updateSort = (sheetId: string, sortId: string, updates: SheetSortUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
@@ -376,8 +375,8 @@ interface LoadSheet {
 
 export const loadSheet = (sheet: SheetFromServer): ThunkAction => {
 	return async (dispatch: ThunkDispatch) => {
-    const normalizedRows: Rows = {}
-    const normalizedColumns: Columns = {}
+    const normalizedRows: SheetRows = {}
+    const normalizedColumns: SheetColumns = {}
     sheet.rows.forEach(row => { normalizedRows[row.id] = row })
     sheet.columns.forEach(column => { normalizedColumns[column.id] = column })
 		dispatch(
@@ -412,12 +411,6 @@ interface UpdateSheet {
 	sheetId: string
 	updates: SheetUpdates
 }
-export interface SheetUpdates {
-  groups?: SheetGroups
-  filters?: SheetFilters
-  sorts?: SheetSorts
-  visibleRows?: VisibleRows
-}
 
 export const updateSheet = (sheetId: string, updates: SheetUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch) => {
@@ -442,9 +435,6 @@ interface UpdateSheetCell {
 	sheetId: string
 	cellId: string
 	updates: SheetCellUpdates
-}
-export interface SheetCellUpdates {
-	value?: string
 }
 
 export const updateSheetCell = (sheetId: string, cellId: string, updates: SheetCellUpdates): ThunkAction => {

@@ -1,63 +1,72 @@
 import { FileType } from '@app/state/folder/types'
 
 export type Sheets = { [key: string]: Sheet }
-export type Columns = { [key: string]: Column }
-export type VisibleColumns = string[]
-export type Rows = { [key: string]: Row }
-export type VisibleRows = string[]
+export type SheetColumns = { [key: string]: SheetColumn }
+export type SheetVisibleColumns = string[]
+export type SheetRows = { [key: string]: SheetRow }
+export type SheetVisibleRows = string[]
 export type SheetFilters = SheetFilter[]
 export type SheetGroups = SheetGroup[]
 export type SheetSorts = SheetSort[]
 
 export type Sheet = {
 	id: string
-	rows: { [key: string]: Row }
-  visibleRows: VisibleRows
-  columns: Columns
-  visibleColumns: VisibleColumns
+	rows: { [key: string]: SheetRow }
+  visibleRows: SheetVisibleRows
+  columns: SheetColumns
+  visibleColumns: SheetVisibleColumns
   filters: SheetFilters
   fileType: FileType
   groups: SheetGroups
   sorts: SheetSorts
+}
+export type SheetUpdates = {
+  groups?: SheetGroups
+  filters?: SheetFilters
+  sorts?: SheetSorts
+  visibleRows?: SheetVisibleRows
 }
 
 export type SheetFromServer = {
   id: string
   fileType: FileType
-  rows: Row[]
-  columns: Column[]
+  rows: SheetRow[]
+  columns: SheetColumn[]
   filters: SheetFilters
   groups: SheetGroups
   sorts: SheetSorts
 }
 
-export type Column = {
+export type SheetColumn = {
 	id: string
 	sheetId: string
 	name: string
 	position: number
 	width: number
-	type: ColumnType
+	type: SheetColumnType
 }
 
-export type ColumnType = 
+export type SheetColumnType = 
 	'STRING'|
 	'DATETIME'|
 	'BOOLEAN'|
 	'NUMBER'
 
-export type Row = {
+export type SheetRow = {
 	id: string
 	sheetId: string
-	cells: Cell[]
+	cells: SheetCell[]
 }
 
-export type Cell = {
+export type SheetCell = {
 	id: string
 	sheetId: string
 	columnId: string
 	rowId: string
 	value: string
+}
+export interface SheetCellUpdates {
+	value?: string
 }
 
 export type SheetSort = {
@@ -67,7 +76,9 @@ export type SheetSort = {
   columnId: string
   order: SheetSortOrder
 }
-
+export type SheetSortUpdates = {
+  order?: SheetSortOrder
+}
 export type SheetSortOrder = 'ASC' | 'DESC'
 
 export type SheetFilter = {
@@ -87,6 +98,9 @@ export type SheetGroup = {
   sheetViewId?: string
   columnId: string
   order: SheetGroupOrder
+}
+export type SheetGroupUpdates = {
+  order?: SheetGroupOrder
 }
 
 export type SheetGroupOrder = 'ASC' | 'DESC'

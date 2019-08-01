@@ -3,10 +3,8 @@
 //-----------------------------------------------------------------------------
 import axios from '@/api/axios'
 
-import { FileUpdates, FolderUpdates } from '@app/state/folder/actions'
-import { File, Folder } from '@app/state/folder/types'
-import { SheetFilter, SheetGroup, SheetSort, SheetView } from '@app/state/sheet/types'
-import { SheetCellUpdates } from '@app/state/sheet/actions'
+import { File, FileUpdates, Folder, FolderUpdates } from '@app/state/folder/types'
+import { SheetCellUpdates, SheetFilter, SheetGroup, SheetSort, SheetView } from '@app/state/sheet/types'
 import { UserActiveUpdates, UserColorUpdates, UserLayoutUpdates } from '@app/state/user/actions'
 
 //-----------------------------------------------------------------------------

@@ -6,13 +6,18 @@ import { v4 as createUuid } from 'uuid'
 import { mutation } from '@app/api'
 import { AppState } from '@app/state'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
-import { Files, Folder, Folders, FileType } from '@app/state/folder/types'
+import { 
+  ClipboardUpdates, 
+  Files, FileUpdates, 
+  Folder, Folders, FolderUpdates
+} from '@app/state/folder/types'
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 export type FolderActions = 
   UpdateActiveFileId | UpdateActiveFolderPath | 
+  UpdateClipboard |
   CreateFolder | UpdateFolder | UpdateFolders | 
   UpdateFile | UpdateFiles | 
   UpdateIsSavingNewFile
@@ -75,6 +80,78 @@ export const updateActiveFolderPathReducer = (nextActiveFolderPath: string[]): F
 }
 
 //-----------------------------------------------------------------------------
+// Update Clipboard
+//-----------------------------------------------------------------------------
+export const UPDATE_CLIPBOARD = 'UPDATE_CLIPBOARD'
+interface UpdateClipboard {
+  type: typeof UPDATE_CLIPBOARD
+	updates: ClipboardUpdates
+}
+
+export const updateClipboard = (updates: ClipboardUpdates): FolderActions => {
+	return {
+		type: UPDATE_CLIPBOARD,
+		updates
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Paste From Clipboard
+//-----------------------------------------------------------------------------
+export const pasteFromClipboard = (nextFolderId: string) => {
+  return (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      clipboard: {
+        itemId,
+        cutOrCopy,
+        folderOrFile
+      },
+      files,
+      folders
+    } = getState().folder
+    const nextFolder = folders[nextFolderId]
+    // File
+    if(folderOrFile === 'FILE') {
+      const file = files[itemId]
+      const previousFolder = folders[file.folderId]
+      if(previousFolder.id !== nextFolder.id) {
+        // Cut
+        if(cutOrCopy === 'CUT') {
+          dispatch(updateFile(file.id, {
+            folderId: nextFolderId
+          }))
+          dispatch(updateFolder(nextFolderId, {
+            files: [ ...nextFolder.files, file.id ]
+          }, true))
+          dispatch(updateFolder(previousFolder.id, {
+            files: previousFolder.files.filter(fileId => fileId !== file.id) 
+          }, true))
+        }
+      }
+    }
+    // Folder
+    else if(folderOrFile === 'FOLDER') {
+      const folder = folders[itemId]
+      const previousFolder = folders[folder.folderId]
+      if(previousFolder.id !== nextFolder.id) {
+        // Cut
+        if(cutOrCopy === 'CUT') {
+          dispatch(updateFolder(folder.id, {
+            folderId: nextFolder.id
+          }))
+          dispatch(updateFolder(previousFolder.id, {
+            folders: previousFolder.folders.filter(folderId => folderId !== folder.id) 
+          }, true))
+          dispatch(updateFolder(nextFolder.id, {
+            folders: [ ...nextFolder.folders, folder.id ]
+          }, true))
+        }
+      }
+    }
+  }
+}
+
+//-----------------------------------------------------------------------------
 // Create File
 //-----------------------------------------------------------------------------
 export const CREATE_FOLDER = 'CREATE_FOLDER'
@@ -106,10 +183,6 @@ export const createFolderReducer = (folderId: string, newFolderId: string, newFo
 // Update File
 //-----------------------------------------------------------------------------
 export const UPDATE_FILE = 'UPDATE_FILE'
-export type FileUpdates = {
-  name?: string
-  type?: FileType
-}
 interface UpdateFile {
 	type: typeof UPDATE_FILE
 	id: string
@@ -153,19 +226,16 @@ export const updateFiles = (nextFiles: Files): FolderActions => {
 // Update Folder
 //-----------------------------------------------------------------------------
 export const UPDATE_FOLDER = 'UPDATE_FOLDER'
-export type FolderUpdates = {
-	name?: string
-}
 interface UpdateFolder {
 	type: typeof UPDATE_FOLDER
 	id: string
 	updates: FolderUpdates
 }
 
-export const updateFolder = (id: string, updates: FolderUpdates) => {
+export const updateFolder = (id: string, updates: FolderUpdates, skipServerUpdate?: boolean) => {
 	return async (dispatch: ThunkDispatch) => {
 		dispatch(updateFolderReducer(id, updates))
-		mutation.updateFolder(id, updates)
+		if(!skipServerUpdate) { mutation.updateFolder(id, updates) }
 	}
 }
 

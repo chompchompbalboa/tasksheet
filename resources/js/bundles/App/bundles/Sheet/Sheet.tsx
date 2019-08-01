@@ -14,9 +14,9 @@ import { ThunkDispatch } from '@app/state/types'
 import { FileType } from '@app/state/folder/types'
 import { 
   loadSheet as loadSheetAction,
-  updateSheetCell as updateSheetCellAction, SheetCellUpdates
+  updateSheetCell as updateSheetCellAction
 } from '@app/state/sheet/actions'
-import { Columns, SheetFilters, SheetGroups, Rows, SheetFromServer, SheetSorts, VisibleColumns, VisibleRows } from '@app/state/sheet/types'
+import { SheetColumns, SheetCellUpdates, SheetFilters, SheetGroups, SheetRows, SheetFromServer, SheetSorts, SheetVisibleColumns, SheetVisibleRows } from '@app/state/sheet/types'
 import { 
   selectSheetColumns, 
   selectSheetFilters,
@@ -169,17 +169,17 @@ const SheetComponent = memo(({
 //-----------------------------------------------------------------------------
 interface SheetComponentProps {
   activeTabId?: string
-  columns?: Columns
+  columns?: SheetColumns
   fileId: string
   fileType: FileType
   filters?: SheetFilters
   groups?: SheetGroups
   id: string
   loadSheet?(sheet: SheetFromServer): Promise<void>
-  rows?: Rows
+  rows?: SheetRows
   sorts?: SheetSorts
-  visibleColumns?: VisibleColumns
-  visibleRows?: VisibleRows
+  visibleColumns?: SheetVisibleColumns
+  visibleRows?: SheetVisibleRows
   updateSheetCell?(sheetId: string, cellId: string, updates: SheetCellUpdates): void
   userColorSecondary?: string
 }

@@ -5,11 +5,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { v4 as createUuid } from 'uuid'
 
-import { Columns, SheetGroup, SheetGroups } from '@app/state/sheet/types'
+import { SheetColumns, SheetGroup, SheetGroups } from '@app/state/sheet/types'
 
 import { ThunkDispatch } from '@app/state/types'
+import { SheetGroupUpdates } from '@app/state/sheet/types'
 import { 
-  SheetGroupUpdates,
   createSheetGroup as createSheetGroupAction,
   deleteSheetGroup as deleteSheetGroupAction,
   updateSheetGroup as updateSheetGroupAction 
@@ -59,7 +59,7 @@ const SheetActionGroup = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionGroupProps {
-  columns: Columns
+  columns: SheetColumns
   createSheetGroup?(newGroup: SheetGroup): void
   deleteSheetGroup?(columnId: string): void
   updateSheetGroup?(groupId: string, updates: SheetGroupUpdates): void

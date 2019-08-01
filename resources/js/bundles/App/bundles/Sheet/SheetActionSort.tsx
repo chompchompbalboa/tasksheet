@@ -5,11 +5,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { v4 as createUuid } from 'uuid'
 
-import { Columns, SheetSort, SheetSorts } from '@app/state/sheet/types'
+import { SheetColumns, SheetSort, SheetSorts } from '@app/state/sheet/types'
 
 import { ThunkDispatch } from '@app/state/types'
+import { SheetSortUpdates } from '@app/state/sheet/types'
 import { 
-  SheetSortUpdates,
   createSort as createSortAction,
   deleteSort as deleteSortAction,
   updateSort as updateSortAction 
@@ -59,7 +59,7 @@ const SheetActionSort = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionProps {
-  columns: Columns
+  columns: SheetColumns
   createSort?(newSort: SheetSort): void
   deleteSort?(columnId: string): void
   updateSort?(sortId: string, updates: SheetSortUpdates): void

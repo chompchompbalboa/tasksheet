@@ -4,7 +4,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Columns, SheetFilters, SheetGroups, SheetSorts } from '@app/state/sheet/types'
+import { SheetColumns, SheetFilters, SheetGroups, SheetSorts } from '@app/state/sheet/types'
 
 import SheetActionFilter from '@app/bundles/Sheet/SheetActionFilter'
 import SheetActionGroup from '@app/bundles/Sheet/SheetActionGroup'
@@ -45,7 +45,7 @@ const SheetActions = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionsProps {
-  columns: Columns
+  columns: SheetColumns
   filters: SheetFilters
   groups: SheetGroups
   sorts: SheetSorts

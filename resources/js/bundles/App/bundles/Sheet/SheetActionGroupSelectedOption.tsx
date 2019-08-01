@@ -6,8 +6,7 @@ import styled from 'styled-components'
 
 import { ARROW_UP, ARROW_DOWN } from '@app/assets/icons'
 
-import { SheetGroupUpdates } from '@app/state/sheet/actions'
-import { SheetGroup, SheetGroups } from '@app/state/sheet/types'
+import { SheetGroup, SheetGroups, SheetGroupUpdates } from '@app/state/sheet/types'
 
 import Icon from '@/components/Icon'
 import { SheetActionDropdownOption } from '@app/bundles/Sheet/SheetActionDropdown'

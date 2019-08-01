@@ -3,6 +3,8 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 
+import { ClipboardUpdates } from '@app/state/folder/types'
+
 import ContextMenu from '@app/bundles/ContextMenu/ContextMenu'
 import ContextMenuDivider from '@app/bundles/ContextMenu/ContextMenuDivider'
 import ContextMenuItem from '@app/bundles/ContextMenu/ContextMenuItem'
@@ -16,12 +18,14 @@ const FolderContextMenu = ({
   closeContextMenu,
   contextMenuLeft,
   contextMenuTop,
+  pasteFromClipboard,
+  updateClipboard,
   setIsRenaming
 }: FolderContextMenuProps) => {
 
-  const closeOnClick = (thenCallThis: (...args: any) => void) => {
+  const closeOnClick = (andCallThis: (...args: any) => void) => {
     closeContextMenu()
-    thenCallThis()
+    andCallThis()
   }
 
   return (
@@ -29,9 +33,13 @@ const FolderContextMenu = ({
       closeContextMenu={closeContextMenu}
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}>
-      <ContextMenuItem text="Cut" />
+      <ContextMenuItem 
+        text="Cut"
+        onClick={() => closeOnClick(() => updateClipboard({ itemId: folderId, folderOrFile: 'FOLDER', cutOrCopy: 'CUT' }))}/>
       <ContextMenuItem text="Copy" />
-      <ContextMenuItem text="Paste" />
+      <ContextMenuItem 
+        text="Paste"
+        onClick={() => closeOnClick(() => pasteFromClipboard(folderId))}/>
       <ContextMenuDivider />
       <ContextMenuItem 
         text="New Folder"
@@ -55,7 +63,9 @@ interface FolderContextMenuProps {
   closeContextMenu(): void
   contextMenuLeft: number
   contextMenuTop: number
+  pasteFromClipboard(folderId: string): void
   setIsRenaming(isRenaming: boolean): void
+  updateClipboard(updates: ClipboardUpdates): void
 }
 
 //-----------------------------------------------------------------------------

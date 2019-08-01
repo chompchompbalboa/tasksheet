@@ -14,7 +14,7 @@ import {
   deleteFilter as deleteFilterAction,
   updateFilter as updateFilterAction 
 } from '@app/state/sheet/actions'
-import { Columns, SheetFilter, SheetFilters, SheetFilterType } from '@app/state/sheet/types'
+import { SheetColumns, SheetFilter, SheetFilters, SheetFilterType } from '@app/state/sheet/types'
 
 import SheetAction from '@app/bundles/Sheet/SheetAction'
 import SheetActionDropdown, { SheetActionDropdownOption } from '@app/bundles/Sheet/SheetActionDropdown'
@@ -91,7 +91,7 @@ const SheetActionFilter = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionProps {
-  columns: Columns
+  columns: SheetColumns
   createFilter?(sheetId: string, newFilter: SheetFilter): void
   deleteFilter?(columnId: string): void
   updateFilter?(filterId: string, updates: SheetFilterUpdates): void

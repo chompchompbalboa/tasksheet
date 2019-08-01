@@ -13,6 +13,12 @@ export interface Folder {
 	folders: string[]
 	files: string[]
 }
+export type FolderUpdates = {
+  folderId?: string
+  name?: string
+  files?: string[]
+  folders?: string[]
+}
 
 export interface File {
 	id: string
@@ -21,5 +27,21 @@ export interface File {
 	type: FileType
 	typeId: string
 }
+export type FileUpdates = {
+  folderId?: string
+  name?: string
+  type?: FileType
+}
 
 export type FileType = 'SHEET' | 'SHEET_VIEW'
+
+export interface Clipboard {
+  itemId: string
+  cutOrCopy: 'CUT' | 'COPY'
+  folderOrFile: 'FOLDER' | 'FILE'
+}
+export type ClipboardUpdates = {
+  itemId?: string
+  cutOrCopy?: 'CUT' | 'COPY'
+  folderOrFile?: 'FOLDER' | 'FILE'
+}

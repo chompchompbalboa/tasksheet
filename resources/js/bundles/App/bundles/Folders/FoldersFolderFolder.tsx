@@ -8,10 +8,12 @@ import styled from 'styled-components'
 import { SUBITEM_ARROW } from '@app/assets/icons'
 
 import { ThunkDispatch } from '@app/state/types'
-import { Folder } from '@app/state/folder/types'
+import { ClipboardUpdates, Folder, FolderUpdates } from '@app/state/folder/types'
 import { 
   createFolder as createFolderAction,
-  updateFolder as updateFolderAction, FolderUpdates
+  pasteFromClipboard as pasteFromClipboardAction,
+  updateClipboard as updateClipboardAction,  
+  updateFolder as updateFolderAction,
 } from '@app/state/folder/actions' 
 
 import AutosizeInput from 'react-input-autosize'
@@ -23,6 +25,8 @@ import Icon from '@/components/Icon'
 //-----------------------------------------------------------------------------
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   createFolder: (folderId: string) => dispatch(createFolderAction(folderId)),
+  pasteFromClipboard: (folderId: string) => dispatch(pasteFromClipboardAction(folderId)),
+  updateClipboard: (updates: ClipboardUpdates) => dispatch(updateClipboardAction(updates)),
   updateFolder: (folderId: string, updates: FolderUpdates) => dispatch(updateFolderAction(folderId, updates))
 })
 
@@ -34,7 +38,9 @@ const FoldersFolderFolder = ({
   createFolder,
   folder,
   level,
+  pasteFromClipboard,
   updateActiveFolderPath,
+  updateClipboard,
   updateFolder
 }: FoldersFolderFolderProps) => {
   
@@ -116,7 +122,9 @@ const FoldersFolderFolder = ({
           contextMenuLeft={contextMenuLeft}
           contextMenuTop={contextMenuTop}
           createFolder={createFolder}
-          setIsRenaming={setIsRenaming}/>
+          pasteFromClipboard={pasteFromClipboard}
+          setIsRenaming={setIsRenaming}
+          updateClipboard={updateClipboard}/>
       }
     </>
   )
@@ -130,7 +138,9 @@ interface FoldersFolderFolderProps {
   createFolder?(folderId: string): void
   folder: Folder
   level: number
+  pasteFromClipboard(folderId: string): void
   updateActiveFolderPath(level: number, nextActiveFolderId: string): void
+  updateClipboard(updates: ClipboardUpdates): void
   updateFolder?(folderId: string, updates: FolderUpdates): void
 }
 
@@ -145,9 +155,9 @@ const Container = styled.div`
   padding: 0.125rem 0 0.125rem 0.325rem;
   display: flex;
   align-items: center;
-  background-color: ${ ({ isHighlighted }: ContainerProps ) => isHighlighted ? 'rgb(220, 220, 220)' : 'transparent' };
+  background-color: ${ ({ isHighlighted }: ContainerProps ) => isHighlighted ? 'rgb(235, 235, 235)' : 'transparent' };
   &:hover {
-    background-color: ${ ({ isRenaming }: ContainerProps ) => isRenaming ? 'transparent' : 'rgb(220, 220, 220)' };
+    background-color: ${ ({ isRenaming }: ContainerProps ) => isRenaming ? 'transparent' : 'rgb(235, 235, 235)' };
   }
 `
 interface ContainerProps {

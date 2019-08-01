@@ -5,8 +5,7 @@ import React, { memo, MouseEvent, useEffect, useRef, useState } from 'react'
 import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
-import { SheetCellUpdates } from '@app/state/sheet/actions'
-import { Cell, ColumnType } from '@app/state/sheet/types'
+import { SheetCell, SheetColumnType, SheetCellUpdates } from '@app/state/sheet/types'
 
 import SheetCellBoolean from '@app/bundles/Sheet/SheetCellBoolean'
 import SheetCellDatetime from '@app/bundles/Sheet/SheetCellDatetime'
@@ -88,11 +87,11 @@ const SheetCell = memo(({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetCellProps {
-  cell: Cell
+  cell: SheetCell
   highlightColor: string
   sheetId: string
   style: {}
-  type: ColumnType
+  type: SheetColumnType
   updateSheetCell(sheetId: string, cellId: string, updates: SheetCellUpdates): void
 }
 

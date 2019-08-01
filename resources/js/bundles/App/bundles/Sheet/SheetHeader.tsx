@@ -4,7 +4,7 @@
 import React, { MouseEvent, useState } from 'react'
 import styled from 'styled-components'
 
-import { Column } from '@app/state/sheet/types'
+import { SheetColumn } from '@app/state/sheet/types'
 
 import SheetHeaderContextMenu from '@app/bundles/ContextMenu/SheetHeaderContextMenu'
 
@@ -50,7 +50,7 @@ const SheetHeader = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetHeaderProps {
-  column: Column
+  column: SheetColumn
   isLast: boolean
 }
 

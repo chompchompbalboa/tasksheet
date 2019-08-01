@@ -6,8 +6,7 @@ import styled from 'styled-components'
 
 import { ARROW_UP, ARROW_DOWN } from '@app/assets/icons'
 
-import { SheetSortUpdates } from '@app/state/sheet/actions'
-import { SheetSort, SheetSorts } from '@app/state/sheet/types'
+import { SheetSort, SheetSorts, SheetSortUpdates } from '@app/state/sheet/types'
 
 import Icon from '@/components/Icon'
 import { SheetActionDropdownOption } from '@app/bundles/Sheet/SheetActionDropdown'
