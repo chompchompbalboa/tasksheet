@@ -4,7 +4,7 @@
 import axios from '@/api/axios'
 
 import { File, FileUpdates, Folder, FolderUpdates } from '@app/state/folder/types'
-import { SheetCellUpdates, SheetFilter, SheetGroup, SheetSort, SheetView } from '@app/state/sheet/types'
+import { SheetCellUpdates, SheetFilter, SheetGroup, SheetGroupUpdates, SheetSort, SheetSortUpdates, SheetView } from '@app/state/sheet/types'
 import { UserActiveUpdates, UserColorUpdates, UserLayoutUpdates } from '@app/state/user/actions'
 
 //-----------------------------------------------------------------------------
@@ -91,6 +91,12 @@ export const deleteSheetGroup = async (groupId: string) => {
 	})
 }
 
+export const updateSheetGroup = async (id: string, updates: SheetGroupUpdates) => {
+	return axios.patch('/app/sheets/groups/' + id, updates).then(response => {
+		return response.data
+	})
+}
+
 export const createSheetSort = async (sort: SheetSort) => {
 	return axios.post('/app/sheets/sorts', sort).then(response => {
 		return response.data
@@ -99,6 +105,12 @@ export const createSheetSort = async (sort: SheetSort) => {
 
 export const deleteSheetSort = async (sortId: string) => {
 	return axios.delete('/app/sheets/sorts/' + sortId).then(response => {
+		return response.data
+	})
+}
+
+export const updateSheetSort = async (id: string, updates: SheetSortUpdates) => {
+	return axios.patch('/app/sheets/sorts/' + id, updates).then(response => {
 		return response.data
 	})
 }

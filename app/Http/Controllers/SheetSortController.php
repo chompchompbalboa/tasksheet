@@ -70,7 +70,8 @@ class SheetSortController extends Controller
      */
     public function update(Request $request, SheetSort $sort)
     {
-        //
+      $sort->update($request->all());
+      return response()->json($sort, 200);
     }
 
     /**

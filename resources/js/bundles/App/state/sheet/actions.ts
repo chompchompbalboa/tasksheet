@@ -282,6 +282,7 @@ export const updateSheetGroup = (sheetId: string, groupId: string, updates: Shee
       groups: nextGroups,
       visibleRows: nextVisibleRows
     }))
+    mutation.updateSheetGroup(groupId, updates)
 	}
 }
 
@@ -360,6 +361,7 @@ export const updateSort = (sheetId: string, sortId: string, updates: SheetSortUp
       sorts: nextSorts,
       visibleRows: nextVisibleRows
     }))
+    mutation.updateSheetSort(sortId, updates)
 	}
 }
 
