@@ -5,7 +5,7 @@ import React, { memo, MouseEvent, useEffect, useRef, useState } from 'react'
 import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
-import { SheetCell, SheetColumnType, SheetCellUpdates } from '@app/state/sheet/types'
+import { SheetCell, SheetColumnType, SheetCellUpdates, SheetRow } from '@app/state/sheet/types'
 
 import SheetCellBoolean from '@app/bundles/Sheet/SheetCellBoolean'
 import SheetCellDatetime from '@app/bundles/Sheet/SheetCellDatetime'
@@ -18,6 +18,7 @@ import SheetCellString from '@app/bundles/Sheet/SheetCellString'
 const SheetCell = memo(({
   cell,
   highlightColor,
+  row,
   sheetId,
   style,
   type,
@@ -55,7 +56,7 @@ const SheetCell = memo(({
     if(cell && cellValue !== cell.value) {
       clearTimeout(updateSheetCellTimer)
       updateSheetCellTimer = setTimeout(() => {
-        updateSheetCell(sheetId, cell.id, { value: cellValue })
+        updateSheetCell(sheetId, row.id, cell.id, { value: cellValue })
       }, 1000);
     }
     return () => clearTimeout(updateSheetCellTimer);
@@ -89,10 +90,11 @@ const SheetCell = memo(({
 interface SheetCellProps {
   cell: SheetCell
   highlightColor: string
+  row: SheetRow
   sheetId: string
   style: {}
   type: SheetColumnType
-  updateSheetCell(sheetId: string, cellId: string, updates: SheetCellUpdates): void
+  updateSheetCell(sheetId: string, rowId: string, cellId: string, updates: SheetCellUpdates): void
 }
 
 //-----------------------------------------------------------------------------

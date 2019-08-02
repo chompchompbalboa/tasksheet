@@ -36,8 +36,8 @@ class SheetRowController extends Controller
      */
     public function store(Request $request)
     {
-      $sheetRow = SheetRow::create($request->input('newRow'));
-      foreach($request->input('newCells') as $newCell) {
+      $sheetRow = SheetRow::create($request->all());
+      foreach($request->input('cells') as $newCell) {
         SheetCell::create($newCell);
       }
       return response()->json($sheetRow, 200);

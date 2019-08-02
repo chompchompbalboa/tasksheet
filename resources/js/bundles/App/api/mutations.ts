@@ -4,7 +4,7 @@
 import axios from '@/api/axios'
 
 import { File, FileUpdates, Folder, FolderUpdates } from '@app/state/folder/types'
-import { SheetCellUpdates, SheetFilter, SheetGroup, SheetGroupUpdates, SheetSort, SheetSortUpdates, SheetView } from '@app/state/sheet/types'
+import { SheetCellUpdates, SheetFilter, SheetGroup, SheetGroupUpdates, SheetRow, SheetSort, SheetSortUpdates, SheetView } from '@app/state/sheet/types'
 import { UserActiveUpdates, UserColorUpdates, UserLayoutUpdates } from '@app/state/user/actions'
 
 //-----------------------------------------------------------------------------
@@ -93,6 +93,12 @@ export const deleteSheetGroup = async (groupId: string) => {
 
 export const updateSheetGroup = async (id: string, updates: SheetGroupUpdates) => {
 	return axios.patch('/app/sheets/groups/' + id, updates).then(response => {
+		return response.data
+	})
+}
+
+export const createSheetRow = async (row: SheetRow) => {
+	return axios.post('/app/sheets/rows', row).then(response => {
 		return response.data
 	})
 }

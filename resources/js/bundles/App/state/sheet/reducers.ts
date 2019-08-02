@@ -19,8 +19,17 @@ export const userReducer = (state: Sheets = {}, action: SheetActions): Sheets =>
 		}
 
 		case UPDATE_SHEET_CELL: {
-			//const { sheetId, cellId, updates } = action
-			return state
+			const { sheetId, rowId, cellId, updates } = action
+			return {
+        ...state,
+        [sheetId]: { ...state[sheetId],
+          rows: { ...state[sheetId].rows,
+            [rowId]: { ...state[sheetId].rows[rowId],
+              cells: state[sheetId].rows[rowId].cells.map(cell => cell.id !== cellId ? cell : { ...cell, ...updates })
+            }
+          }
+        }
+      }
 		}
 
 		case UPDATE_SHEET: {

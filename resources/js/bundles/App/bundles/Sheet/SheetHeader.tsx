@@ -1,47 +1,30 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { MouseEvent, useState } from 'react'
+import React, { MouseEvent } from 'react'
 import styled from 'styled-components'
 
 import { SheetColumn } from '@app/state/sheet/types'
-
-import SheetHeaderContextMenu from '@app/bundles/ContextMenu/SheetHeaderContextMenu'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetHeader = ({
   column: {
+    id,
     name,
     width
   },
+  handleContextMenu,
   isLast
 }: SheetHeaderProps) => {
-
-  const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
-  const [ contextMenuTop, setContextMenuTop ] = useState(null)
-  const [ contextMenuLeft, setContextMenuLeft ] = useState(null)
-
-  const handleContextMenu = (e: MouseEvent) => {
-    e.preventDefault()
-    setContextMenuTop(e.clientY)
-    setContextMenuLeft(e.clientX)
-    setIsContextMenuVisible(true)
-  }
 
   return (
     <Container
       containerWidth={width}
-      isContextMenuVisible={isContextMenuVisible}
       isLast={isLast}
-      onContextMenu={(e: MouseEvent) => handleContextMenu(e)}>
+      onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'COLUMN', id)}>
       {name}
-    {isContextMenuVisible && 
-      <SheetHeaderContextMenu
-        contextMenuTop={contextMenuTop}
-        contextMenuLeft={contextMenuLeft}
-        closeContextMenu={() => setIsContextMenuVisible(false)}/>}
     </Container>
   )
 }
@@ -51,6 +34,7 @@ const SheetHeader = ({
 //-----------------------------------------------------------------------------
 interface SheetHeaderProps {
   column: SheetColumn
+  handleContextMenu(e: MouseEvent, type: string, id: string): void
   isLast: boolean
 }
 
@@ -58,10 +42,10 @@ interface SheetHeaderProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  cursor: default;
   display: inline-block;
   overflow: hidden;
   text-overflow: hidden;
-  z-index: ${ ({ isContextMenuVisible }: ContainerProps ) => isContextMenuVisible ? '100' : '50'};
   width: ${ ({ containerWidth }: ContainerProps ) => containerWidth + 'px'};
   padding: 0.28rem;
   text-align: left;
@@ -73,7 +57,6 @@ const Container = styled.div`
 `
 interface ContainerProps {
   containerWidth: number
-  isContextMenuVisible: boolean
   isLast: boolean
 }
 

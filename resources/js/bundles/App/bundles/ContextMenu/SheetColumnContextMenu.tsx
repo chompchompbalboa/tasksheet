@@ -11,6 +11,7 @@ import ContextMenuItem from '@app/bundles/ContextMenu/ContextMenuItem'
 // Component
 //-----------------------------------------------------------------------------
 const SheetColumnContextMenu = ({
+  columnId,
   closeContextMenu,
   contextMenuLeft,
   contextMenuTop,
@@ -21,18 +22,6 @@ const SheetColumnContextMenu = ({
       closeContextMenu={closeContextMenu}
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}>
-      <ContextMenuItem text="Split" />
-      <ContextMenuItem text="Split Unique Values" />
-      <ContextMenuItem text="Quick Split">
-        <ContextMenuItem text="Equals"/>
-        <ContextMenuItem text="Greater Than"/>
-        <ContextMenuItem text="Less Than"/>
-        <ContextMenuItem text="Between"/>
-      </ContextMenuItem>
-      <ContextMenuDivider />
-      <ContextMenuItem text="Sort A to Z" />
-      <ContextMenuItem text="Sort Z to A" />
-      <ContextMenuDivider />
       <ContextMenuItem text="Type">
         <ContextMenuItem text="String"/>
         <ContextMenuItem text="Number"/>
@@ -54,6 +43,7 @@ const SheetColumnContextMenu = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetColumnContextMenuProps {
+  columnId: string
   closeContextMenu(): void
   contextMenuLeft: number
   contextMenuTop: number

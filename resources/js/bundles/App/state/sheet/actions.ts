@@ -57,7 +57,7 @@ const defaultCell = (sheetId: string, rowId: string, columnId: string): SheetCel
 // Resolvers
 //-----------------------------------------------------------------------------
 const resolveValue = (value: string) => {
-  const filteredValue = value.replace('%', '')
+  const filteredValue = value !== null ? value.replace('%', '') : ""
   return isNaN(Number(filteredValue)) ? filteredValue : Number(filteredValue)
 }
 
@@ -456,22 +456,24 @@ export const UPDATE_SHEET_CELL = 'UPDATE_SHEET_CELL'
 interface UpdateSheetCell {
 	type: typeof UPDATE_SHEET_CELL
 	sheetId: string
+  rowId: string
 	cellId: string
 	updates: SheetCellUpdates
 }
 
-export const updateSheetCell = (sheetId: string, cellId: string, updates: SheetCellUpdates): ThunkAction => {
+export const updateSheetCell = (sheetId: string, rowId: string, cellId: string, updates: SheetCellUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch) => {
 		mutation.updateSheetCell(cellId, updates).then(() => {
-			dispatch(updateSheetCellReducer(sheetId, cellId, updates))
+			dispatch(updateSheetCellReducer(sheetId, rowId, cellId, updates))
 		})
 	}
 }
 
-export const updateSheetCellReducer = (sheetId: string, cellId: string, updates: SheetCellUpdates): SheetActions => {
+export const updateSheetCellReducer = (sheetId: string, rowId: string, cellId: string, updates: SheetCellUpdates): SheetActions => {
 	return {
 		type: UPDATE_SHEET_CELL,
 		sheetId,
+    rowId,
 		cellId,
 		updates,
 	}
@@ -562,5 +564,6 @@ export const createSheetRow = (sheetId: string): ThunkAction => {
       rows: nextRows,
       visibleRows: nextVisibleRows
     }))
+    mutation.createSheetRow(newRow)
 	}
 }

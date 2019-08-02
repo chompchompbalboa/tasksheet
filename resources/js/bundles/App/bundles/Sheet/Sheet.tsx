@@ -1,10 +1,9 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { forwardRef, memo, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
-import Autosizer from 'react-virtualized-auto-sizer'
-import { areEqual, VariableSizeGrid as Grid } from 'react-window'
+import React, { memo, MouseEvent, useCallback, useEffect, useState } from 'react'
+import { areEqual } from 'react-window'
+import { batch, connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { query } from '@app/api'
@@ -34,9 +33,8 @@ import {
 
 import LoadingTimer from '@/components/LoadingTimer'
 import SheetActions from '@app/bundles/Sheet/SheetActions'
-import SheetCell from '@app/bundles/Sheet/SheetCell'
-import SheetGroupCell from '@app/bundles/Sheet/SheetGroupCell'
-import SheetHeader from '@app/bundles/Sheet/SheetHeader'
+import SheetContextMenus from '@app/bundles/Sheet/SheetContextMenus'
+import SheetGrid from '@app/bundles/Sheet/SheetGrid'
 
 //-----------------------------------------------------------------------------
 // Redux
@@ -56,7 +54,7 @@ const mapStateToProps = (state: AppState, props: SheetComponentProps) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   createSheetRow: (sheetId: string) => dispatch(createSheetRowAction(sheetId)),
   loadSheet: (sheet: SheetFromServer) => dispatch(loadSheetAction(sheet)),
-  updateSheetCell: (sheetId: string, cellId: string, updates: SheetCellUpdates) => dispatch(updateSheetCellAction(sheetId, cellId, updates))
+  updateSheetCell: (sheetId: string, rowId: string, cellId: string, updates: SheetCellUpdates) => dispatch(updateSheetCellAction(sheetId, rowId, cellId, updates))
 })
 
 //-----------------------------------------------------------------------------
@@ -95,7 +93,7 @@ const SheetComponent = memo(({
   }, [ activeTabId ])
 
   useEffect(() => {
-    if(hasLoaded) { 
+    if(hasLoaded && isActiveFile) { 
       addEventListener('keypress', listenForPlusSignPress)
     }
     else { 
@@ -104,7 +102,7 @@ const SheetComponent = memo(({
     return () => {
       removeEventListener('keypress', listenForPlusSignPress)
     }
-  }, [ hasLoaded ])
+  }, [ hasLoaded, isActiveFile ])
 
   const listenForPlusSignPress = (e: KeyboardEvent) => {
     if(e.key === "+") {
@@ -112,49 +110,41 @@ const SheetComponent = memo(({
     }
   }
 
-  const GridWrapper = forwardRef(({ children, ...rest }, ref) => (
-    <GridContainer
-      //@ts-ignore ref={ref}
-      ref={ref} {...rest}>
-      <SheetHeaders>
-      {visibleColumns.map((columnId, index) => (
-        <SheetHeader
-          key={columnId}
-          column={columns[columnId]}
-          isLast={index === visibleColumns.length - 1}/>))}
-      </SheetHeaders>
-      <GridItems>
-        {children}
-      </GridItems>
-    </GridContainer> 
-  ))
-
-  const Cell = ({ 
-    columnIndex, 
-    rowIndex, 
-    style 
-  }: CellProps) => {
-    const rowId = visibleRows[rowIndex]
-    if(rowId !== 'GROUP_HEADER') {
-      return (
-        <SheetCell
-          cell={rows[visibleRows[rowIndex]].cells[columnIndex]}
-          highlightColor={userColorSecondary}
-          sheetId={id}
-          updateSheetCell={updateSheetCell}
-          type={columns[visibleColumns[columnIndex]].type}
-          style={style}/>
-      )
-    }
-    return (
-      <SheetGroupCell
-        style={style}/>
-    )
-}
+  const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
+  const [ contextMenuType, setContextMenuType ] = useState(null)
+  const [ contextMenuId, setContextMenuId ] = useState(null)
+  const [ contextMenuTop, setContextMenuTop ] = useState(null)
+  const [ contextMenuLeft, setContextMenuLeft ] = useState(null)
+  const handleContextMenu = useCallback((e: MouseEvent, type: string, id: string) => {
+    e.preventDefault()
+    batch(() => {
+      setIsContextMenuVisible(true)
+      setContextMenuType(type)
+      setContextMenuId(id)
+      setContextMenuTop(e.clientY)
+      setContextMenuLeft(e.clientX)
+    })
+  }, [])
+  const closeContextMenu = () => {
+    batch(() => {
+      setIsContextMenuVisible(false)
+      setContextMenuType(null)
+      setContextMenuId(null)
+      setContextMenuTop(null)
+      setContextMenuLeft(null)
+    })
+  }
 
   return (
     <Container>
       <SheetContainer>
+        <SheetContextMenus
+          isContextMenuVisible={isContextMenuVisible}
+          contextMenuType={contextMenuType}
+          contextMenuId={contextMenuId}
+          contextMenuTop={contextMenuTop}
+          contextMenuLeft={contextMenuLeft}
+          closeContextMenu={closeContextMenu}/>
         <SheetActions
           sheetId={id}
           columns={columns}
@@ -163,22 +153,15 @@ const SheetComponent = memo(({
           sorts={sorts}/>
         {!hasLoaded
           ? isActiveFile ? <LoadingTimer fromId={id}/> : null
-          : <Autosizer>
-              {({ width, height }) => (
-                <Grid
-                  innerElementType={GridWrapper}
-                  width={width}
-                  height={height}
-                  columnWidth={columnIndex => columns[visibleColumns[columnIndex]].width}
-                  columnCount={visibleColumns.length}
-                  rowHeight={index => 24}
-                  rowCount={visibleRows.length}
-                  overscanColumnCount={visibleColumns.length}
-                  overscanRowCount={3}>
-                  {Cell}
-                </Grid>
-              )}
-            </Autosizer>
+          : <SheetGrid
+              columns={columns}
+              handleContextMenu={handleContextMenu}
+              highlightColor={userColorSecondary}
+              rows={rows}
+              sheetId={id}
+              updateSheetCell={updateSheetCell}
+              visibleColumns={visibleColumns}
+              visibleRows={visibleRows}/>
         }
         </SheetContainer>
     </Container>
@@ -202,14 +185,8 @@ interface SheetComponentProps {
   sorts?: SheetSorts
   visibleColumns?: SheetVisibleColumns
   visibleRows?: SheetVisibleRows
-  updateSheetCell?(sheetId: string, cellId: string, updates: SheetCellUpdates): void
+  updateSheetCell?(sheetId: string, rowId: string, cellId: string, updates: SheetCellUpdates): void
   userColorSecondary?: string
-}
-
-interface CellProps {
-  columnIndex: number
-  rowIndex: number
-  style: {}
 }
 
 //-----------------------------------------------------------------------------
@@ -226,26 +203,6 @@ const SheetContainer = styled.div`
   width: 100%;
   height: 100%;
   height: calc(100% - 4.075rem);
-`
-
-const GridContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  background-color: white;
-`
-
-const SheetHeaders = styled.div`
-  z-index: 1000;
-  position: sticky;
-  top: 0;
-  left: 0;
-  height: 3.5vh;
-`
-
-const GridItems = styled.div`
-  width: 100%;
-  height: 100%;
-  position: relative;
 `
 
 //-----------------------------------------------------------------------------
