@@ -12,10 +12,10 @@ import {
   Sheet, SheetFromServer, SheetUpdates,
   SheetColumns, 
   SheetRows, 
-  SheetCellUpdates,
+  SheetCell, SheetCellUpdates,
   SheetFilter, SheetFilters, SheetFilterType,
   SheetGroup, SheetGroupUpdates, SheetGroups, 
-  SheetSort, SheetSortUpdates, SheetSorts, 
+  SheetSort, SheetSortUpdates, SheetSorts, SheetRow, 
 } from '@app/state/sheet/types'
 import { FileType } from '@app/state/folder/types'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
@@ -29,9 +29,30 @@ import { updateTabs } from '@app/state/tab/actions'
 export type SheetActions = 
   CreateFilter | DeleteFilter |
   CreateSheetGroup | DeleteSheetGroup |
+  CreateSheetRow | 
   CreateSort | DeleteSort | 
   LoadSheet | UpdateSheet | UpdateSheetCell
 
+//-----------------------------------------------------------------------------
+// Defaults
+//-----------------------------------------------------------------------------
+const defaultRow = (sheetId: string, rowId: string, columns: SheetColumns): SheetRow => {
+  return {
+    id: rowId,
+    sheetId: sheetId,
+    cells: Object.keys(columns).map(columnId => defaultCell(sheetId, rowId, columnId))
+  }
+}
+
+const defaultCell = (sheetId: string, rowId: string, columnId: string): SheetCell => {
+  return {
+    id: createUuid(),
+    sheetId: sheetId, 
+    columnId: columnId,
+    rowId: rowId,
+    value: ""
+  }
+}
 //-----------------------------------------------------------------------------
 // Resolvers
 //-----------------------------------------------------------------------------
@@ -514,5 +535,32 @@ export const createSheetView = (sheetId: string, viewName: string): ThunkAction 
       groups: newSheetViewGroups,
       sorts: newSheetViewSorts
     })
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+// Create Sheet Row
+//-----------------------------------------------------------------------------
+export const CREATE_SHEET_ROW = 'CREATE_SHEET_ROW'
+interface CreateSheetRow {
+	type: typeof CREATE_SHEET_ROW
+}
+
+export const createSheetRow = (sheetId: string): ThunkAction => {
+	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      columns,
+      rows,
+      visibleRows
+    } = getState().sheet[sheetId]
+    const newRow = defaultRow(sheetId, createUuid(), columns)
+    console.log(newRow)
+    const nextRows = { ...rows, [newRow.id]: newRow }
+    const nextVisibleRows = [ newRow.id, ...visibleRows]
+    dispatch(updateSheetReducer(sheetId, {
+      rows: nextRows,
+      visibleRows: nextVisibleRows
+    }))
 	}
 }

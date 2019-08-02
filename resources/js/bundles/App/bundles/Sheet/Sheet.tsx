@@ -13,6 +13,7 @@ import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
 import { FileType } from '@app/state/folder/types'
 import { 
+  createSheetRow as createSheetRowAction,
   loadSheet as loadSheetAction,
   updateSheetCell as updateSheetCellAction
 } from '@app/state/sheet/actions'
@@ -53,6 +54,7 @@ const mapStateToProps = (state: AppState, props: SheetComponentProps) => ({
 })
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+  createSheetRow: (sheetId: string) => dispatch(createSheetRowAction(sheetId)),
   loadSheet: (sheet: SheetFromServer) => dispatch(loadSheetAction(sheet)),
   updateSheetCell: (sheetId: string, cellId: string, updates: SheetCellUpdates) => dispatch(updateSheetCellAction(sheetId, cellId, updates))
 })
@@ -63,6 +65,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
 const SheetComponent = memo(({
   activeTabId,
   columns,
+  createSheetRow,
   fileId,
   fileType,
   filters,
@@ -90,6 +93,24 @@ const SheetComponent = memo(({
       })
     }
   }, [ activeTabId ])
+
+  useEffect(() => {
+    if(hasLoaded) { 
+      addEventListener('keypress', listenForPlusSignPress)
+    }
+    else { 
+      removeEventListener('keypress', listenForPlusSignPress) 
+    }
+    return () => {
+      removeEventListener('keypress', listenForPlusSignPress)
+    }
+  }, [ hasLoaded ])
+
+  const listenForPlusSignPress = (e: KeyboardEvent) => {
+    if(e.key === "+") {
+      createSheetRow(id)
+    }
+  }
 
   const GridWrapper = forwardRef(({ children, ...rest }, ref) => (
     <GridContainer
@@ -170,6 +191,7 @@ const SheetComponent = memo(({
 interface SheetComponentProps {
   activeTabId?: string
   columns?: SheetColumns
+  createSheetRow?(sheetId: string): void
   fileId: string
   fileType: FileType
   filters?: SheetFilters

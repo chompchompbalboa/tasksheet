@@ -24,6 +24,7 @@ export type SheetUpdates = {
   groups?: SheetGroups
   filters?: SheetFilters
   sorts?: SheetSorts
+  rows?: SheetRows
   visibleRows?: SheetVisibleRows
 }
 
