@@ -36,7 +36,6 @@ const File = ({
       {file 
         ? <FileComponent 
             fileId={file.id}
-            fileType={file.type}
             id={file.typeId}/>
         : 'Please select a sheet to get started'}
     </Container>

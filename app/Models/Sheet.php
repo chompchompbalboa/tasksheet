@@ -11,10 +11,10 @@ class Sheet extends Model
   /**
    * Define which attributes will be visible
    */
-  protected $visible = ['id', 'fileType', 'rows', 'columns', 'filters', 'groups', 'sorts'];
-  protected $fillable = ['id'];
-  protected $with = ['rows', 'filters', 'groups', 'sorts'];
-  protected $appends = ['columns', 'fileType'];
+  protected $visible = ['id', 'sourceSheetId', 'fileType', 'rows', 'columns', 'filters', 'groups', 'sorts'];
+  protected $fillable = ['id', 'sourceSheetId'];
+  protected $with = ['filters', 'groups', 'sorts'];
+  protected $appends = ['columns', 'rows', 'fileType'];
   
   public function getFileTypeAttribute() {
     return "SHEET";
@@ -23,11 +23,9 @@ class Sheet extends Model
   /**
    * Get all the columns that belong to this table
    */
-  public function columns() {
-    return $this->hasMany('App\Models\SheetColumn', 'sheetId');
-  }
   public function getColumnsAttribute() {
-    return SheetColumn::where('sheetId', '=', $this->id)
+    $sheetId = is_null($this->sourceSheetId) ? $this->id : $this->sourceSheetId;
+    return SheetColumn::where('sheetId', '=', $sheetId)
     ->orderBy('position', 'ASC')
     ->get();
   }
@@ -49,8 +47,10 @@ class Sheet extends Model
   /**
    * Get all the rows that belong to this table
    */
-  public function rows() {
-    return $this->hasMany('App\Models\SheetRow', 'sheetId');
+  public function getRowsAttribute() {
+    $sheetId = is_null($this->sourceSheetId) ? $this->id : $this->sourceSheetId;
+    return SheetRow::where('sheetId', '=', $sheetId)
+    ->get();
   }
   
   /**

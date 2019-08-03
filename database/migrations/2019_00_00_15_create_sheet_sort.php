@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSheetView extends Migration
+class CreateSheetSort extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,15 @@ class CreateSheetView extends Migration
      */
     public function up()
     {
-        Schema::create('sheetViews', function (Blueprint $table) {
+        Schema::create('sheetSorts', function (Blueprint $table) {
           $table->uuid('id')->primary();
+          $table->uuid('sheetId')->nullable();
+          $table->uuid('columnId');
+          $table->string('order', 4);
           $table->timestamps();
+
+          $table->foreign('sheetId')->references('id')->on('sheets');
+          $table->foreign('columnId')->references('id')->on('sheetColumns');
         });
     }
 
@@ -26,6 +32,6 @@ class CreateSheetView extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sheetViews');
+        Schema::dropIfExists('sheetSorts');
     }
 }

@@ -10,7 +10,8 @@ export type SheetGroups = SheetGroup[]
 export type SheetSorts = SheetSort[]
 
 export type Sheet = {
-	id: string
+  id: string
+  sourceSheetId: string
 	rows: { [key: string]: SheetRow }
   visibleRows: SheetVisibleRows
   columns: SheetColumns
@@ -30,6 +31,7 @@ export type SheetUpdates = {
 
 export type SheetFromServer = {
   id: string
+  sourceSheetId: string
   fileType: FileType
   rows: SheetRow[]
   columns: SheetColumn[]
@@ -108,7 +110,7 @@ export type SheetGroupOrder = 'ASC' | 'DESC'
 
 export type SheetView = {
   id: string
-  sheetId: string
+  sourceSheetId: string
   filters: SheetFilters
   groups: SheetGroups
   sorts: SheetSorts

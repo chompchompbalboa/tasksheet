@@ -87,3 +87,11 @@ export const selectSheetSorts = (
   state: AppState, 
   sheetId: string
 ): SheetSorts => state.sheet[sheetId] && state.sheet[sheetId].sorts
+
+//-----------------------------------------------------------------------------
+// Select Sheet Source Sheet Id
+//-----------------------------------------------------------------------------
+export const selectSheetSourceSheetId = (
+  state: AppState, 
+  sheetId: string
+): string => state.sheet[sheetId] && state.sheet[sheetId].sourceSheetId

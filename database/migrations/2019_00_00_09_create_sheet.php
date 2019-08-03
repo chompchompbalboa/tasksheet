@@ -15,8 +15,13 @@ class CreateSheet extends Migration
     {
         Schema::create('sheets', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('sourceSheetId')->nullable();
             $table->timestamps();
         });
+
+        Schema::table('sheets', function (Blueprint $table) {
+          $table->foreign('sourceSheetId')->references('id')->on('sheets');
+      });
     }
 
     /**

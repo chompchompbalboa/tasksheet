@@ -10,7 +10,6 @@ import { query } from '@app/api'
 
 import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
-import { FileType } from '@app/state/folder/types'
 import { 
   createSheetRow as createSheetRowAction,
   loadSheet as loadSheetAction,
@@ -23,6 +22,7 @@ import {
   selectSheetGroups,
   selectSheetRows,
   selectSheetSorts,
+  selectSheetSourceSheetId,
   selectSheetVisibleColumns,
   selectSheetVisibleRows
 } from '@app/state/sheet/selectors'
@@ -46,13 +46,14 @@ const mapStateToProps = (state: AppState, props: SheetComponentProps) => ({
   groups: selectSheetGroups(state, props.id),
   rows: selectSheetRows(state, props.id),
   sorts: selectSheetSorts(state, props.id),
+  sourceSheetId: selectSheetSourceSheetId(state, props.id),
   visibleRows: selectSheetVisibleRows(state, props.id),
   visibleColumns: selectSheetVisibleColumns(state, props.id),
   userColorSecondary: selectUserColorSecondary(state)
 })
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-  createSheetRow: (sheetId: string) => dispatch(createSheetRowAction(sheetId)),
+  createSheetRow: (sheetId: string, sourceSheetId: string) => dispatch(createSheetRowAction(sheetId, sourceSheetId)),
   loadSheet: (sheet: SheetFromServer) => dispatch(loadSheetAction(sheet)),
   updateSheetCell: (sheetId: string, rowId: string, cellId: string, updates: SheetCellUpdates) => dispatch(updateSheetCellAction(sheetId, rowId, cellId, updates))
 })
@@ -65,13 +66,13 @@ const SheetComponent = memo(({
   columns,
   createSheetRow,
   fileId,
-  fileType,
   filters,
   groups,
   id,
   loadSheet,
   rows,
   sorts,
+  sourceSheetId,
   visibleRows,
   visibleColumns,
   updateSheetCell,
@@ -83,8 +84,7 @@ const SheetComponent = memo(({
   const [ hasLoaded, setHasLoaded ] = useState(false)
   useEffect(() => {
     if(!hasLoaded && isActiveFile) {
-      const getSheetQuery = fileType === 'SHEET' ? query.getSheet : query.getSheetView
-      getSheetQuery(id).then(sheet => {
+      query.getSheet(id).then(sheet => {
         loadSheet(sheet).then(() => {
           setHasLoaded(true)
         })
@@ -106,7 +106,7 @@ const SheetComponent = memo(({
 
   const listenForPlusSignPress = (e: KeyboardEvent) => {
     if(e.key === "+") {
-      createSheetRow(id)
+      createSheetRow(id, sourceSheetId)
     }
   }
 
@@ -174,15 +174,15 @@ const SheetComponent = memo(({
 interface SheetComponentProps {
   activeTabId?: string
   columns?: SheetColumns
-  createSheetRow?(sheetId: string): void
+  createSheetRow?(sheetId: string, sourceSheetId: string): void
   fileId: string
-  fileType: FileType
   filters?: SheetFilters
   groups?: SheetGroups
   id: string
   loadSheet?(sheet: SheetFromServer): Promise<void>
   rows?: SheetRows
   sorts?: SheetSorts
+  sourceSheetId?: string
   visibleColumns?: SheetVisibleColumns
   visibleRows?: SheetVisibleRows
   updateSheetCell?(sheetId: string, rowId: string, cellId: string, updates: SheetCellUpdates): void
