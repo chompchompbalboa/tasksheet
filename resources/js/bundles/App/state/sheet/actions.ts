@@ -461,7 +461,7 @@ interface UpdateSheetCell {
 
 export const updateSheetCell = (sheetId: string, rowId: string, cellId: string, updates: SheetCellUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch) => {
-    //dispatch(updateSheetCellReducer(sheetId, rowId, cellId, updates))
+    dispatch(updateSheetCellReducer(sheetId, rowId, cellId, updates))
 		mutation.updateSheetCell(cellId, updates)
 	}
 }

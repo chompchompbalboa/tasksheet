@@ -10,6 +10,7 @@ import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellNumber = ({
+  cellId,
   updateCellValue,
   value
 }: SheetCellNumberProps) => {
@@ -17,13 +18,14 @@ const SheetCellNumber = ({
   const input = useRef(null)
   
   const focusCell = () => {
-    input.current.select()
+    input.current.focus()
   }
   
   const safeValue = value === null ? "" : value
 
   return (
     <SheetCellContainer
+      cellId={cellId}
       focusCell={focusCell}
       value={safeValue}>
       <StyledInput
@@ -39,6 +41,7 @@ const SheetCellNumber = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetCellNumberProps {
+  cellId: string
   updateCellValue(nextCellValue: string): void
   value: string
 }

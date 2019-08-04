@@ -8,13 +8,14 @@ import styled from 'styled-components'
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellContainer = ({
+  cellId,
   children,
   focusCell,
   value
 }: SheetCellContainerProps) => {
 
   const container = useRef(null)
-  const [ isEditing, setIsEditing ] = useState(false)
+  const [ isEditing, setIsEditing ] = useState(localStorage.getItem('sheetCellIsEditing') === cellId)
   
   useEffect(() => {
     if(isEditing) {
@@ -32,12 +33,14 @@ const SheetCellContainer = ({
   const closeOnClickOutside = (e: Event) => {
     if(!container.current.contains(e.target)) {
       setIsEditing(false)
+      localStorage.setItem('sheetCellIsEditing', null)
     }
   }
 
   const handleDoubleClick = (e: any) => {
     e.preventDefault()
     setIsEditing(true)
+    localStorage.setItem('sheetCellIsEditing', cellId)
   }
   
   return (
@@ -56,6 +59,7 @@ const SheetCellContainer = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetCellContainerProps {
+  cellId: string
   children?: any
   focusCell?(): void
   value: string

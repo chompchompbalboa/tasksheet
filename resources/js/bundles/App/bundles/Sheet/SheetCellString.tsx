@@ -11,6 +11,7 @@ import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellString = ({
+  cellId,
   updateCellValue,
   value
 }: SheetCellStringProps) => {
@@ -18,13 +19,14 @@ const SheetCellString = ({
   const textarea = useRef(null)
   
   const focusCell = () => {
-    textarea.current.select()
+    textarea.current.focus()
   }
   
   const safeValue = value === null ? "" : value
 
   return (
     <SheetCellContainer
+      cellId={cellId}
       focusCell={focusCell}
       value={safeValue}>
       <StyledTextarea
@@ -40,6 +42,7 @@ const SheetCellString = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetCellStringProps {
+  cellId: string
   updateCellValue(nextCellValue: string): void
   value: string
 }

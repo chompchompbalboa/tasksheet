@@ -31,13 +31,13 @@ const SheetCell = memo(({
   
   useEffect(() => {
     if(isHighlighted) {
-      window.addEventListener('mousedown', removeHighlightOnClickOutisde)
+      window.addEventListener('mousedown', removeHighlightOnClickOutside)
     }
     else {
-      window.removeEventListener('mousedown', removeHighlightOnClickOutisde)
+      window.removeEventListener('mousedown', removeHighlightOnClickOutside)
     }
     return () => {
-      window.removeEventListener('mousedown', removeHighlightOnClickOutisde)
+      window.removeEventListener('mousedown', removeHighlightOnClickOutside)
     }
   }, [ isHighlighted ])
 
@@ -46,9 +46,10 @@ const SheetCell = memo(({
     localStorage.setItem(sheetId, cell.id)
   }
 
-  const removeHighlightOnClickOutisde = (e: Event) => {
+  const removeHighlightOnClickOutside = (e: Event) => {
     if(!cellContainer.current.contains(e.target)) {
       setIsHighlighted(false)
+      localStorage.setItem(sheetId, null)
     }
   }
 
@@ -58,7 +59,7 @@ const SheetCell = memo(({
       clearTimeout(updateSheetCellTimer)
       updateSheetCellTimer = setTimeout(() => {
         updateSheetCell(sheetId, row.id, cell.id, { value: cellValue })
-      }, 1000);
+      }, 1500);
     }
     return () => clearTimeout(updateSheetCellTimer);
   }, [ cellValue ])
@@ -79,6 +80,7 @@ const SheetCell = memo(({
       onClick={handleClick}
       style={style}>
       <SheetCellType
+        cellId={cell.id}
         updateCellValue={setCellValue}
         value={cellValue}/>
     </Container>

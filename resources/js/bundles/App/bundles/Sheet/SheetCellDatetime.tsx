@@ -13,6 +13,7 @@ import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellDatetime = ({
+  cellId,
   updateCellValue,
   value
 }: SheetCellDatetimeProps) => {  
@@ -25,6 +26,7 @@ const SheetCellDatetime = ({
 
   return (
     <StyledSheetCellContainer
+      cellId={cellId}
       focusCell={() => {}}
       value={safeValue}>
       <DatePicker
@@ -41,6 +43,7 @@ const SheetCellDatetime = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetCellDatetimeProps {
+  cellId: string
   updateCellValue(nextCellValue: string): void
   value: string
 }
