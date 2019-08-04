@@ -17,9 +17,11 @@ class SheetRow extends Model
   protected $appends = ['cells'];
   
   public function getCellsAttribute() {
-    return SheetCell::where('rowId', '=', $this->id)
+    $cells =  SheetCell::where('rowId', '=', $this->id)
     ->join('sheetColumns', 'sheetCells.columnId', '=', 'sheetColumns.id')
     ->orderBy('sheetColumns.position', 'ASC')
+    ->select('sheetCells.id', 'columnId', 'value')
     ->get();
+    return $cells;
   }
 }

@@ -48,6 +48,12 @@ export type SheetColumn = {
 	width: number
 	type: SheetColumnType
 }
+export type SheetColumnUpdates = {
+  name?: string
+  position?: number
+  width?: number
+  type?: SheetColumnType
+}
 
 export type SheetColumnType = 
 	'STRING'|

@@ -71,7 +71,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   white-space: nowrap;
-  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 //-----------------------------------------------------------------------------

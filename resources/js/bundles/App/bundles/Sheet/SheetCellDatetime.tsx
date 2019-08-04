@@ -17,23 +17,23 @@ const SheetCellDatetime = ({
   value
 }: SheetCellDatetimeProps) => {  
   
-  const safeValue = value === null ? "" : moment(value).format('MM/DD/YYYY')
+  const safeValue = [null, ""].includes(value) ? "" : moment(value).format('MM/DD/YYYY')
 
   const formatNextCellValue = (date: any) => {
     return date !== null ? moment(date).format('YYYY-MM-DD HH:mm:ss') : null
   }
 
   return (
-    <SheetCellContainer
+    <StyledSheetCellContainer
       focusCell={() => {}}
       value={safeValue}>
       <DatePicker
         autoComplete="new-password"
         autoFocus
         customInput={<StyledInput/>}
-        selected={value !== null ? moment(value).toDate() : null}
+        selected={![null, ""].includes(value) ? moment(value).toDate() : null}
         onChange={(date: any) => updateCellValue(formatNextCellValue(date))}/>
-    </SheetCellContainer>
+    </StyledSheetCellContainer>
   )
 }
 
@@ -48,6 +48,10 @@ interface SheetCellDatetimeProps {
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
+const StyledSheetCellContainer = styled(SheetCellContainer)`
+  overflow: visible;
+`
+
 const StyledInput = styled.input`
   background-color: transparent;
   outline: none;

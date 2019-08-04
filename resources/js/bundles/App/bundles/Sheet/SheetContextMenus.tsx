@@ -4,27 +4,33 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import { SheetColumnUpdates } from '@app/state/sheet/types'
+
 import SheetColumnContextMenu from '@app/bundles/ContextMenu/SheetColumnContextMenu'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetContextMenus = ({
+  sheetId,
   isContextMenuVisible,
   contextMenuType,
   contextMenuId,
   contextMenuTop,
   contextMenuLeft,
-  closeContextMenu
+  closeContextMenu,
+  updateSheetColumn
 }: SheetContextMenusProps) => {
   return (
   <Container>
     {isContextMenuVisible && contextMenuType === 'COLUMN' &&
       <SheetColumnContextMenu
+        sheetId={sheetId}
         columnId={contextMenuId}
         contextMenuTop={contextMenuTop}
         contextMenuLeft={contextMenuLeft}
-        closeContextMenu={() => closeContextMenu()}/>}
+        closeContextMenu={() => closeContextMenu()}
+        updateSheetColumn={updateSheetColumn}/>}
   </Container>
   )
 }
@@ -33,12 +39,14 @@ const SheetContextMenus = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetContextMenusProps {
+  sheetId: string
   isContextMenuVisible: boolean
   contextMenuType: string
   contextMenuId: string
   contextMenuTop: number
   contextMenuLeft: number
   closeContextMenu(): void
+  updateSheetColumn(sheetId: string, columnId: string, updates: SheetColumnUpdates): void
 }
 
 //-----------------------------------------------------------------------------

@@ -46,6 +46,7 @@ const Container = styled.div`
   display: inline-block;
   overflow: hidden;
   text-overflow: hidden;
+  user-select: none;
   width: ${ ({ containerWidth }: ContainerProps ) => containerWidth + 'px'};
   padding: 0.28rem;
   text-align: left;

@@ -4,7 +4,7 @@
 import axios from '@/api/axios'
 
 import { File, FileUpdates, Folder, FolderUpdates } from '@app/state/folder/types'
-import { SheetCellUpdates, SheetFilter, SheetGroup, SheetGroupUpdates, SheetRow, SheetSort, SheetSortUpdates, SheetView } from '@app/state/sheet/types'
+import { SheetColumnUpdates, SheetCellUpdates, SheetFilter, SheetGroup, SheetGroupUpdates, SheetRow, SheetSort, SheetSortUpdates, SheetView } from '@app/state/sheet/types'
 import { UserActiveUpdates, UserColorUpdates, UserLayoutUpdates } from '@app/state/user/actions'
 
 //-----------------------------------------------------------------------------
@@ -63,6 +63,12 @@ export const updateFolder = async (id: string, updates: FolderUpdates) => {
 //-----------------------------------------------------------------------------
 export const updateSheetCell = async (id: string, updates: SheetCellUpdates) => {
 	return axios.patch('/app/sheets/cells/' + id, updates).then(response => {
+		return response.data
+	})
+}
+
+export const updateSheetColumn = async (id: string, updates: SheetColumnUpdates) => {
+	return axios.patch('/app/sheets/columns/' + id, updates).then(response => {
 		return response.data
 	})
 }

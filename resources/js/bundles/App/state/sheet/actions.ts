@@ -10,7 +10,7 @@ import { mutation } from '@app/api'
 import { AppState } from '@app/state'
 import { 
   Sheet, SheetFromServer, SheetUpdates,
-  SheetColumns, 
+  SheetColumns, SheetColumnUpdates,
   SheetRows, 
   SheetCell, SheetCellUpdates,
   SheetFilter, SheetFilters, SheetFilterType,
@@ -27,6 +27,7 @@ import { updateTabs } from '@app/state/tab/actions'
 // Exports
 //-----------------------------------------------------------------------------
 export type SheetActions = 
+  UpdateSheetColumn |
   CreateFilter | DeleteFilter |
   CreateSheetGroup | DeleteSheetGroup |
   CreateSheetRow | 
@@ -460,9 +461,8 @@ interface UpdateSheetCell {
 
 export const updateSheetCell = (sheetId: string, rowId: string, cellId: string, updates: SheetCellUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch) => {
-		mutation.updateSheetCell(cellId, updates).then(() => {
-			dispatch(updateSheetCellReducer(sheetId, rowId, cellId, updates))
-		})
+    //dispatch(updateSheetCellReducer(sheetId, rowId, cellId, updates))
+		mutation.updateSheetCell(cellId, updates)
 	}
 }
 
@@ -472,6 +472,33 @@ export const updateSheetCellReducer = (sheetId: string, rowId: string, cellId: s
 		sheetId,
     rowId,
 		cellId,
+		updates,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Sheet Cell
+//-----------------------------------------------------------------------------
+export const UPDATE_SHEET_COLUMN = 'UPDATE_SHEET_COLUMN'
+interface UpdateSheetColumn {
+	type: typeof UPDATE_SHEET_COLUMN
+	sheetId: string
+  columnId: string
+	updates: SheetColumnUpdates
+}
+
+export const updateSheetColumn = (sheetId: string, columnId: string, updates: SheetColumnUpdates): ThunkAction => {
+	return async (dispatch: ThunkDispatch) => {
+    dispatch(updateSheetColumnReducer(sheetId, columnId, updates))
+		mutation.updateSheetColumn(columnId, updates)
+	}
+}
+
+export const updateSheetColumnReducer = (sheetId: string, columnId: string, updates: SheetColumnUpdates): SheetActions => {
+	return {
+		type: UPDATE_SHEET_COLUMN,
+		sheetId,
+    columnId,
 		updates,
 	}
 }

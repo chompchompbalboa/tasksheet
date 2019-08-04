@@ -25,8 +25,6 @@ const SheetGrid = memo(({
   visibleColumns,
   visibleRows,
 }: SheetGridProps) => {
-  
-  console.log('ok')
 
   const GridWrapper = forwardRef(({ children, ...rest }, ref) => (
     <GridContainer

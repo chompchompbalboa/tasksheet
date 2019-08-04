@@ -13,9 +13,10 @@ import { ThunkDispatch } from '@app/state/types'
 import { 
   createSheetRow as createSheetRowAction,
   loadSheet as loadSheetAction,
-  updateSheetCell as updateSheetCellAction
+  updateSheetCell as updateSheetCellAction,
+  updateSheetColumn as updateSheetColumnAction
 } from '@app/state/sheet/actions'
-import { SheetColumns, SheetCellUpdates, SheetFilters, SheetGroups, SheetRows, SheetFromServer, SheetSorts, SheetVisibleColumns, SheetVisibleRows } from '@app/state/sheet/types'
+import { SheetColumns, SheetColumnUpdates, SheetCellUpdates, SheetFilters, SheetGroups, SheetRows, SheetFromServer, SheetSorts, SheetVisibleColumns, SheetVisibleRows } from '@app/state/sheet/types'
 import { 
   selectSheetColumns, 
   selectSheetFilters,
@@ -55,7 +56,8 @@ const mapStateToProps = (state: AppState, props: SheetComponentProps) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   createSheetRow: (sheetId: string, sourceSheetId: string) => dispatch(createSheetRowAction(sheetId, sourceSheetId)),
   loadSheet: (sheet: SheetFromServer) => dispatch(loadSheetAction(sheet)),
-  updateSheetCell: (sheetId: string, rowId: string, cellId: string, updates: SheetCellUpdates) => dispatch(updateSheetCellAction(sheetId, rowId, cellId, updates))
+  updateSheetCell: (sheetId: string, rowId: string, cellId: string, updates: SheetCellUpdates) => dispatch(updateSheetCellAction(sheetId, rowId, cellId, updates)),
+  updateSheetColumn: (sheetId: string, columnId: string, updates: SheetColumnUpdates) => dispatch(updateSheetColumnAction(sheetId, columnId, updates))
 })
 
 //-----------------------------------------------------------------------------
@@ -76,10 +78,12 @@ const SheetComponent = memo(({
   visibleRows,
   visibleColumns,
   updateSheetCell,
+  updateSheetColumn,
   userColorSecondary
 }: SheetComponentProps) => {
   
   const isActiveFile = fileId === activeTabId
+  const memoizedUpdateSheetCell = useCallback((sheetId, rowId, cellId, updates) => updateSheetCell(sheetId, rowId, cellId, updates), [])
 
   const [ hasLoaded, setHasLoaded ] = useState(false)
   useEffect(() => {
@@ -139,12 +143,14 @@ const SheetComponent = memo(({
     <Container>
       <SheetContainer>
         <SheetContextMenus
+          sheetId={id}
           isContextMenuVisible={isContextMenuVisible}
           contextMenuType={contextMenuType}
           contextMenuId={contextMenuId}
           contextMenuTop={contextMenuTop}
           contextMenuLeft={contextMenuLeft}
-          closeContextMenu={closeContextMenu}/>
+          closeContextMenu={closeContextMenu}
+          updateSheetColumn={updateSheetColumn}/>
         <SheetActions
           sheetId={id}
           columns={columns}
@@ -159,7 +165,7 @@ const SheetComponent = memo(({
               highlightColor={userColorSecondary}
               rows={rows}
               sheetId={id}
-              updateSheetCell={updateSheetCell}
+              updateSheetCell={memoizedUpdateSheetCell}
               visibleColumns={visibleColumns}
               visibleRows={visibleRows}/>
         }
@@ -186,6 +192,7 @@ interface SheetComponentProps {
   visibleColumns?: SheetVisibleColumns
   visibleRows?: SheetVisibleRows
   updateSheetCell?(sheetId: string, rowId: string, cellId: string, updates: SheetCellUpdates): void
+  updateSheetColumn?(sheetId: string, columnId: string, updates: SheetColumnUpdates): void
   userColorSecondary?: string
 }
 
