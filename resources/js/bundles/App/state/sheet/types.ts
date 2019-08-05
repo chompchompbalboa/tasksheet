@@ -1,32 +1,30 @@
 import { FileType } from '@app/state/folder/types'
 
-export type Sheets = { [key: string]: Sheet }
-export type SheetColumns = { [key: string]: SheetColumn }
-export type SheetVisibleColumns = string[]
-export type SheetRows = { [key: string]: SheetRow }
-export type SheetVisibleRows = string[]
-export type SheetFilters = SheetFilter[]
-export type SheetGroups = SheetGroup[]
-export type SheetSorts = SheetSort[]
+export type Sheets = { [sheetId: string]: Sheet }
+export type SheetColumns = { [columnId: string]: SheetColumn }
+export type SheetRows = { [rowId: string]: SheetRow }
+export type SheetCells = { [cellId: string]: SheetCell }
+export type SheetFilters = { [filterId: string]: SheetFilter }
+export type SheetGroups = { [groupId: string]: SheetGroup }
+export type SheetSorts = { [sortId: string]: SheetSort }
 
 export type Sheet = {
   id: string
-  sourceSheetId: string
-	rows: { [key: string]: SheetRow }
-  visibleRows: SheetVisibleRows
-  columns: SheetColumns
-  visibleColumns: SheetVisibleColumns
-  filters: SheetFilters
+  sourceSheetId: Sheet['id']
   fileType: FileType
-  groups: SheetGroups
-  sorts: SheetSorts
+	rows: [SheetRow['id']]
+  visibleRows: [SheetRow['id']]
+  columns: [SheetColumn['id']]
+  visibleColumns: [SheetColumn['id']]
+  filters: [SheetFilter['id']]
+  groups: [SheetGroup['id']]
+  sorts: [SheetSort['id']]
 }
 export type SheetUpdates = {
-  groups?: SheetGroups
-  filters?: SheetFilters
-  sorts?: SheetSorts
-  rows?: SheetRows
-  visibleRows?: SheetVisibleRows
+  rows?: [SheetRow['id']]
+  visibleRows?: [SheetRow['id']]
+  columns?: [SheetColumn['id']]
+  visibleColumns?: [SheetColumn['id']]
 }
 
 export type SheetFromServer = {

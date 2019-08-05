@@ -1,45 +1,58 @@
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
-import { Sheets } from '@app/state/sheet/types'
+import { Sheets, SheetCells, SheetColumns, SheetFilters, SheetGroups, SheetRows, SheetSorts } from '@app/state/sheet/types'
 import { SheetActions, LOAD_SHEET, UPDATE_SHEET, UPDATE_SHEET_CELL, UPDATE_SHEET_COLUMN } from '@app/state/sheet/actions'
+
+//-----------------------------------------------------------------------------
+// Types
+//-----------------------------------------------------------------------------
+interface SheetState {
+  sheets: Sheets
+  cells: SheetCells
+  columns: SheetColumns
+  filters: SheetFilters
+  groups: SheetGroups
+  rows: SheetRows
+  sorts: SheetSorts
+}
 
 //-----------------------------------------------------------------------------
 // Reducers
 //-----------------------------------------------------------------------------
-export const userReducer = (state: Sheets = {}, action: SheetActions): Sheets => {
+export const userReducer = (state: SheetState, action: SheetActions): SheetState => {
 	switch (action.type) {
     
 		case LOAD_SHEET: {
-			const { sheet } = action
+			const { cells, columns, filters, groups, rows, sheet, sorts } = action
 			return {
-				...state,
-				[sheet.id]: sheet,
+        ...state,
+        sheets: { ...state.sheets, [sheet.id]: sheet },
+        cells: { ...state.cells, ...cells },
+        columns: { ...state.columns, ...columns },
+        filters: { ...state.filters, ...filters },
+        groups: { ...state.groups, ...groups },
+        rows: { ...state.rows, ...rows },
+        sorts: { ...state.sorts, ...sorts }
 			}
 		}
 
 		case UPDATE_SHEET_CELL: {
-			const { sheetId, rowId, cellId, updates } = action
+			const { cellId, updates } = action
 			return {
         ...state,
-        [sheetId]: { ...state[sheetId],
-          rows: { ...state[sheetId].rows,
-            [rowId]: { ...state[sheetId].rows[rowId],
-              cells: state[sheetId].rows[rowId].cells.map(cell => cell.id !== cellId ? cell : { ...cell, ...updates })
-            }
-          }
+        cells: { ...state.cells,
+          [cellId]: { ...state.cells[cellId], ...updates }
         }
       }
 		}
 
 		case UPDATE_SHEET_COLUMN: {
-			const { sheetId, columnId, updates } = action
+			const { columnId, updates } = action
 			return {
         ...state,
-        [sheetId]: { ...state[sheetId],
-          columns: { ...state[sheetId].columns,
-            [columnId]: { ...state[sheetId].columns[columnId], ...updates}
-          }
+        columns: { ...state.columns,
+          [columnId]: { ...state.columns[columnId], ...updates}
         }
       }
 		}
@@ -48,8 +61,8 @@ export const userReducer = (state: Sheets = {}, action: SheetActions): Sheets =>
       const { sheetId, updates } = action
       return {
         ...state,
-        [sheetId]: {
-          ...state[sheetId], ...updates
+        sheets: {...state.sheets, 
+          [sheetId]: { ...state.sheets[sheetId], ...updates}
         }
       }
 		}
