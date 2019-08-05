@@ -12,6 +12,7 @@ import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 //-----------------------------------------------------------------------------
 const SheetCellString = ({
   cellId,
+  clearTimeoutBatchedSheetCellUpdates,
   updateCellValue,
   value
 }: SheetCellStringProps) => {
@@ -27,6 +28,7 @@ const SheetCellString = ({
   return (
     <SheetCellContainer
       cellId={cellId}
+      clearTimeoutBatchedSheetCellUpdates={clearTimeoutBatchedSheetCellUpdates}
       focusCell={focusCell}
       value={safeValue}>
       <StyledTextarea
@@ -43,6 +45,7 @@ const SheetCellString = ({
 //-----------------------------------------------------------------------------
 interface SheetCellStringProps {
   cellId: string
+  clearTimeoutBatchedSheetCellUpdates(): void
   updateCellValue(nextCellValue: string): void
   value: string
 }

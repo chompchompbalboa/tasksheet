@@ -16,6 +16,7 @@ import SheetHeader from '@app/bundles/Sheet/SheetHeader'
 // Component
 //-----------------------------------------------------------------------------
 const SheetGrid = memo(({
+  clearTimeoutBatchedSheetCellUpdates,
   columns,
   handleContextMenu,
   highlightColor,
@@ -54,6 +55,7 @@ const SheetGrid = memo(({
       return (
         <SheetCell
           cell={rows[visibleRows[rowIndex]].cells[columnIndex]}
+          clearTimeoutBatchedSheetCellUpdates={clearTimeoutBatchedSheetCellUpdates}
           highlightColor={highlightColor}
           row={rows[visibleRows[rowIndex]]}
           sheetId={sheetId}
@@ -92,6 +94,7 @@ const SheetGrid = memo(({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetGridProps {
+  clearTimeoutBatchedSheetCellUpdates(): void
   columns: SheetColumns
   handleContextMenu(e: MouseEvent, type: string, id: string): void
   highlightColor: string

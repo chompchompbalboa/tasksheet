@@ -17,6 +17,7 @@ import SheetCellString from '@app/bundles/Sheet/SheetCellString'
 //-----------------------------------------------------------------------------
 const SheetCell = memo(({
   cell,
+  clearTimeoutBatchedSheetCellUpdates,
   highlightColor,
   row,
   sheetId,
@@ -59,7 +60,7 @@ const SheetCell = memo(({
       clearTimeout(updateSheetCellTimer)
       updateSheetCellTimer = setTimeout(() => {
         updateSheetCell(sheetId, row.id, cell.id, { value: cellValue })
-      }, 1500);
+      }, 2500);
     }
     return () => clearTimeout(updateSheetCellTimer);
   }, [ cellValue ])
@@ -81,6 +82,7 @@ const SheetCell = memo(({
       style={style}>
       <SheetCellType
         cellId={cell.id}
+        clearTimeoutBatchedSheetCellUpdates={clearTimeoutBatchedSheetCellUpdates}
         updateCellValue={setCellValue}
         value={cellValue}/>
     </Container>
@@ -92,6 +94,7 @@ const SheetCell = memo(({
 //-----------------------------------------------------------------------------
 interface SheetCellProps {
   cell: SheetCell
+  clearTimeoutBatchedSheetCellUpdates(): void
   highlightColor: string
   row: SheetRow
   sheetId: string

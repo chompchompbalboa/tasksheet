@@ -10,9 +10,9 @@ import clone from '@/utils/clone'
 import { ThunkDispatch } from '@app/state/types'
 import { 
   SheetFilterUpdates,
-  createFilter as createFilterAction,
-  deleteFilter as deleteFilterAction,
-  updateFilter as updateFilterAction 
+  createSheetFilter as createSheetFilterAction,
+  deleteSheetFilter as deleteSheetFilterAction,
+  updateSheetFilter as updateSheetFilterAction 
 } from '@app/state/sheet/actions'
 import { SheetColumns, SheetFilter, SheetFilters, SheetFilterType } from '@app/state/sheet/types'
 
@@ -24,9 +24,9 @@ import SheetActionFilterSelectedOption from '@app/bundles/Sheet/SheetActionFilte
 // Redux
 //-----------------------------------------------------------------------------
 const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionProps) => ({
-  createFilter: (sheetId: string, newFilter: SheetFilter) => dispatch(createFilterAction(props.sheetId, newFilter)),
-  deleteFilter: (filterId: string) => dispatch(deleteFilterAction(props.sheetId, filterId)),
-  updateFilter: (filterId: string, updates: SheetFilterUpdates) => dispatch(updateFilterAction(props.sheetId, filterId, updates))
+  createSheetFilter: (sheetId: string, newFilter: SheetFilter) => dispatch(createSheetFilterAction(props.sheetId, newFilter)),
+  deleteSheetFilter: (filterId: string) => dispatch(deleteSheetFilterAction(props.sheetId, filterId)),
+  updateSheetFilter: (filterId: string, updates: SheetFilterUpdates) => dispatch(updateSheetFilterAction(props.sheetId, filterId, updates))
 })
 
 //-----------------------------------------------------------------------------
@@ -34,11 +34,11 @@ const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionProps) =>
 //-----------------------------------------------------------------------------
 const SheetActionFilter = ({
   columns,
-  createFilter,
-  deleteFilter,
+  createSheetFilter,
+  deleteSheetFilter,
   filters,
   sheetId,
-  updateFilter
+  updateSheetFilter
 }: SheetActionProps) => {
 
   const selectedOptions = filters && filters.map((filter: SheetFilter) => { return { label: columns[filter.columnId].name, value: filter.id }})
@@ -64,7 +64,7 @@ const SheetActionFilter = ({
     const splitNextValue = nextValue.split(" ")
     const [ columnName, filterType, ...filterValue ] = splitNextValue
     if(isValidFilter([ columnName, filterType, clone(filterValue).join(" ") ])) {
-      createFilter(sheetId, {
+      createSheetFilter(sheetId, {
         id: createUuid(), 
         columnId: columnIds[columnNames.findIndex(_columnName => _columnName === columnName)], 
         value: clone(filterValue).join(" ").slice(0, -1), 
@@ -77,12 +77,12 @@ const SheetActionFilter = ({
     <SheetAction>
       <SheetActionDropdown
         onInputChange={(nextValue: string) => handleInputChange(nextValue)}
-        onOptionDelete={(optionToDelete: SheetActionDropdownOption) => deleteFilter(optionToDelete.value)}
+        onOptionDelete={(optionToDelete: SheetActionDropdownOption) => deleteSheetFilter(optionToDelete.value)}
         onOptionSelect={null}
         options={null}
         placeholder={"Filter By..."}
         selectedOptions={selectedOptions}
-        selectedOptionComponent={({ option }: { option: SheetActionDropdownOption }) => <SheetActionFilterSelectedOption option={option} filters={filters} updateFilter={updateFilter} />}/>
+        selectedOptionComponent={({ option }: { option: SheetActionDropdownOption }) => <SheetActionFilterSelectedOption option={option} filters={filters} />}/>
     </SheetAction>
   )
 }
@@ -92,9 +92,9 @@ const SheetActionFilter = ({
 //-----------------------------------------------------------------------------
 interface SheetActionProps {
   columns: SheetColumns
-  createFilter?(sheetId: string, newFilter: SheetFilter): void
-  deleteFilter?(columnId: string): void
-  updateFilter?(filterId: string, updates: SheetFilterUpdates): void
+  createSheetFilter?(sheetId: string, newFilter: SheetFilter): void
+  deleteSheetFilter?(columnId: string): void
+  updateSheetFilter?(filterId: string, updates: SheetFilterUpdates): void
   filters: SheetFilters
   sheetId: string
 }

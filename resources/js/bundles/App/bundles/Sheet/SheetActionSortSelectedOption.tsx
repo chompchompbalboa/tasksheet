@@ -17,7 +17,7 @@ import { SheetActionDropdownOption } from '@app/bundles/Sheet/SheetActionDropdow
 const SheetActionSortSelectedOption = ({ 
   option,
   sorts,
-  updateSort
+  updateSheetSort
 }: SheetActionSortSelectedOptionProps) => {
     const sort = sorts.find(sort => sort.columnId === option.value)
     const [ sortOrder, setSortOrder ] = useState(sort ? sort.order : 'ASC')
@@ -25,7 +25,7 @@ const SheetActionSortSelectedOption = ({
     const handleOptionClick = (sort: SheetSort) => {
       const nextSortOrder = sort.order === 'ASC' ? 'DESC' : 'ASC'
       setSortOrder(nextSortOrder)
-      window.setTimeout(() => updateSort(sort.id, { order: nextSortOrder }), 50)
+      window.setTimeout(() => updateSheetSort(sort.id, { order: nextSortOrder }), 50)
     }
     
     return (
@@ -42,7 +42,7 @@ const SheetActionSortSelectedOption = ({
 interface SheetActionSortSelectedOptionProps {
   option: SheetActionDropdownOption
   sorts: SheetSorts
-  updateSort(sortId: string, updates: SheetSortUpdates): void
+  updateSheetSort(sortId: string, updates: SheetSortUpdates): void
 }
 
 //-----------------------------------------------------------------------------

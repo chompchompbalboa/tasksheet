@@ -10,6 +10,7 @@ import styled from 'styled-components'
 const SheetCellContainer = ({
   cellId,
   children,
+  clearTimeoutBatchedSheetCellUpdates,
   focusCell,
   value
 }: SheetCellContainerProps) => {
@@ -40,6 +41,7 @@ const SheetCellContainer = ({
   const handleDoubleClick = (e: any) => {
     e.preventDefault()
     setIsEditing(true)
+    clearTimeoutBatchedSheetCellUpdates()
     localStorage.setItem('sheetCellIsEditing', cellId)
   }
   
@@ -61,6 +63,7 @@ const SheetCellContainer = ({
 interface SheetCellContainerProps {
   cellId: string
   children?: any
+  clearTimeoutBatchedSheetCellUpdates(): void
   focusCell?(): void
   value: string
 }

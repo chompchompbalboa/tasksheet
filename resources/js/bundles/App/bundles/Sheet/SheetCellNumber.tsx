@@ -11,6 +11,7 @@ import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 //-----------------------------------------------------------------------------
 const SheetCellNumber = ({
   cellId,
+  clearTimeoutBatchedSheetCellUpdates,
   updateCellValue,
   value
 }: SheetCellNumberProps) => {
@@ -26,6 +27,7 @@ const SheetCellNumber = ({
   return (
     <SheetCellContainer
       cellId={cellId}
+      clearTimeoutBatchedSheetCellUpdates={clearTimeoutBatchedSheetCellUpdates}
       focusCell={focusCell}
       value={safeValue}>
       <StyledInput
@@ -42,6 +44,7 @@ const SheetCellNumber = ({
 //-----------------------------------------------------------------------------
 interface SheetCellNumberProps {
   cellId: string
+  clearTimeoutBatchedSheetCellUpdates(): void
   updateCellValue(nextCellValue: string): void
   value: string
 }

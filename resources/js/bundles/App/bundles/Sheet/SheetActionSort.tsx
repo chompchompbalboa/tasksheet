@@ -10,9 +10,9 @@ import { SheetColumns, SheetSort, SheetSorts } from '@app/state/sheet/types'
 import { ThunkDispatch } from '@app/state/types'
 import { SheetSortUpdates } from '@app/state/sheet/types'
 import { 
-  createSort as createSortAction,
-  deleteSort as deleteSortAction,
-  updateSort as updateSortAction 
+  createSheetSort as createSheetSortAction,
+  deleteSheetSort as deleteSheetSortAction,
+  updateSheetSort as updateSheetSortAction 
 } from '@app/state/sheet/actions'
 
 import SheetAction from '@app/bundles/Sheet/SheetAction'
@@ -23,9 +23,9 @@ import SheetActionSortSelectedOption from '@app/bundles/Sheet/SheetActionSortSel
 // Redux
 //-----------------------------------------------------------------------------
 const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionProps) => ({
-  createSort: (newSort: SheetSort) => dispatch(createSortAction(props.sheetId, newSort)),
-  deleteSort: (columnId: string) => dispatch(deleteSortAction(props.sheetId, columnId)),
-  updateSort: (sortId: string, updates: SheetSortUpdates) => dispatch(updateSortAction(props.sheetId, sortId, updates))
+  createSheetSort: (newSort: SheetSort) => dispatch(createSheetSortAction(props.sheetId, newSort)),
+  deleteSheetSort: (columnId: string) => dispatch(deleteSheetSortAction(props.sheetId, columnId)),
+  updateSheetSort: (sortId: string, updates: SheetSortUpdates) => dispatch(updateSheetSortAction(props.sheetId, sortId, updates))
 })
 
 //-----------------------------------------------------------------------------
@@ -33,10 +33,10 @@ const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionProps) =>
 //-----------------------------------------------------------------------------
 const SheetActionSort = ({
   columns,
-  createSort,
-  deleteSort,
+  createSheetSort,
+  deleteSheetSort,
   sorts,
-  updateSort
+  updateSheetSort
 }: SheetActionProps) => {
 
   const options = columns && Object.keys(columns).map((columnId: string) => { return { label: columns[columnId].name, value: columnId }})
@@ -45,12 +45,12 @@ const SheetActionSort = ({
   return (
     <SheetAction>
       <SheetActionDropdown
-        onOptionDelete={(optionToDelete: SheetActionDropdownOption) => deleteSort(optionToDelete.value)}
-        onOptionSelect={(selectedOption: SheetActionDropdownOption) => createSort({ id: createUuid(), columnId: selectedOption.value, order: 'ASC' })}
+        onOptionDelete={(optionToDelete: SheetActionDropdownOption) => deleteSheetSort(optionToDelete.value)}
+        onOptionSelect={(selectedOption: SheetActionDropdownOption) => createSheetSort({ id: createUuid(), columnId: selectedOption.value, order: 'ASC' })}
         options={options}
         placeholder={"Sort By..."}
         selectedOptions={selectedOptions}
-        selectedOptionComponent={({ option }: { option: SheetActionDropdownOption }) => <SheetActionSortSelectedOption option={option} sorts={sorts} updateSort={updateSort} />}/>
+        selectedOptionComponent={({ option }: { option: SheetActionDropdownOption }) => <SheetActionSortSelectedOption option={option} sorts={sorts} updateSheetSort={updateSheetSort} />}/>
     </SheetAction>
   )
 }
@@ -60,9 +60,9 @@ const SheetActionSort = ({
 //-----------------------------------------------------------------------------
 interface SheetActionProps {
   columns: SheetColumns
-  createSort?(newSort: SheetSort): void
-  deleteSort?(columnId: string): void
-  updateSort?(sortId: string, updates: SheetSortUpdates): void
+  createSheetSort?(newSort: SheetSort): void
+  deleteSheetSort?(columnId: string): void
+  updateSheetSort?(sortId: string, updates: SheetSortUpdates): void
   sorts: SheetSorts
   sheetId: string
 }

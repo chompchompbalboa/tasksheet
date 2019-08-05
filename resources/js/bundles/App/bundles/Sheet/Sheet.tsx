@@ -11,6 +11,7 @@ import { query } from '@app/api'
 import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
 import { 
+  clearTimeoutBatchedSheetCellUpdates,
   createSheetRow as createSheetRowAction,
   loadSheet as loadSheetAction,
   updateSheetCell as updateSheetCellAction,
@@ -84,6 +85,7 @@ const SheetComponent = memo(({
   
   const isActiveFile = fileId === activeTabId
   const memoizedUpdateSheetCell = useCallback((sheetId, rowId, cellId, updates) => updateSheetCell(sheetId, rowId, cellId, updates), [])
+  const memoizedClearBatchedSheetCellUpdatesTimeout = useCallback(() => clearTimeoutBatchedSheetCellUpdates(), [])
 
   const [ hasLoaded, setHasLoaded ] = useState(false)
   useEffect(() => {
@@ -160,6 +162,7 @@ const SheetComponent = memo(({
         {!hasLoaded
           ? isActiveFile ? <LoadingTimer fromId={id}/> : null
           : <SheetGrid
+              clearTimeoutBatchedSheetCellUpdates={memoizedClearBatchedSheetCellUpdatesTimeout}
               columns={columns}
               handleContextMenu={handleContextMenu}
               highlightColor={userColorSecondary}

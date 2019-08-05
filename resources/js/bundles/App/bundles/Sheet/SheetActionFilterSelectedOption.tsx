@@ -4,7 +4,6 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { SheetFilterUpdates } from '@app/state/sheet/actions'
 import { SheetFilter, SheetFilters } from '@app/state/sheet/types'
 import { SheetActionDropdownOption } from '@app/bundles/Sheet/SheetActionDropdown'
 
@@ -13,8 +12,7 @@ import { SheetActionDropdownOption } from '@app/bundles/Sheet/SheetActionDropdow
 //-----------------------------------------------------------------------------
 const SheetActionFilterSelectedOption = ({ 
   option,
-  filters,
-  updateFilter
+  filters
 }: SheetActionFilterSelectedOptionProps) => {
     const filter = filters.find(filter => filter.id === option.value)
     
@@ -36,7 +34,6 @@ const SheetActionFilterSelectedOption = ({
 interface SheetActionFilterSelectedOptionProps {
   option: SheetActionDropdownOption
   filters: SheetFilters
-  updateFilter(filterId: string, updates: SheetFilterUpdates): void
 }
 
 //-----------------------------------------------------------------------------
