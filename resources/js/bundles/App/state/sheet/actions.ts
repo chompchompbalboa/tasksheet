@@ -379,18 +379,21 @@ export const loadSheet = (sheetFromServer: SheetFromServer): ThunkAction => {
     const sheetFilters: SheetFilter['id'][] = []
     sheetFromServer.filters.forEach((filter: SheetFilter) => { 
       normalizedFilters[filter.id] = filter 
+      sheetFilters.push(filter.id)
     })
     // Groups
     const normalizedGroups: SheetGroups = {}
     const sheetGroups: SheetGroup['id'][] = []
     sheetFromServer.groups.forEach(group => { 
       normalizedGroups[group.id] = group 
+      sheetGroups.push(group.id)
     })
     // Sorts
     const normalizedSorts: SheetSorts = {}
     const sheetSorts: SheetSort['id'][] = []
     sheetFromServer.sorts.forEach(sort => { 
       normalizedSorts[sort.id] = sort 
+      sheetSorts.push(sort.id)
     })
     // New Sheet
     const newSheet: Sheet = {
