@@ -19,7 +19,8 @@ const SheetActionGroupSelectedOption = ({
   groups,
   updateSheetGroup
 }: SheetActionGroupSelectedOptionProps) => {
-    const group = groups.find(group => group.columnId === option.value)
+  
+    const group = groups[option.value]
     const [ groupOrder, setGroupOrder ] = useState(group ? group.order : 'ASC')
     
     const handleOptionClick = (group: SheetGroup) => {

@@ -14,7 +14,8 @@ const SheetActionFilterSelectedOption = ({
   option,
   filters
 }: SheetActionFilterSelectedOptionProps) => {
-    const filter = filters.find(filter => filter.id === option.value)
+  
+    const filter = filters[option.value]
     
     const handleOptionClick = (filter: SheetFilter) => {
       console.log('filterClick')

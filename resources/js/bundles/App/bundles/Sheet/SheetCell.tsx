@@ -2,10 +2,13 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { memo, MouseEvent, useEffect, useRef, useState } from 'react'
+import { connect } from 'react-redux'
 import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
+import { AppState } from '@app/state'
 import { SheetCell, SheetColumnType, SheetCellUpdates, SheetRow } from '@app/state/sheet/types'
+import { selectCell } from '@app/state/sheet/selectors'
 
 import SheetCellBoolean from '@app/bundles/Sheet/SheetCellBoolean'
 import SheetCellDatetime from '@app/bundles/Sheet/SheetCellDatetime'
@@ -13,11 +16,17 @@ import SheetCellNumber from '@app/bundles/Sheet/SheetCellNumber'
 import SheetCellString from '@app/bundles/Sheet/SheetCellString'
 
 //-----------------------------------------------------------------------------
+// Redux
+//-----------------------------------------------------------------------------
+const mapStateToProps = (state: AppState, props: SheetCellProps) => ({
+  cell: selectCell(state, props.cellId)
+})
+
+//-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetCell = memo(({
   cell,
-  clearTimeoutBatchedSheetCellUpdates,
   highlightColor,
   row,
   sheetId,
@@ -59,8 +68,8 @@ const SheetCell = memo(({
     if(cell && cellValue !== cell.value) {
       clearTimeout(updateSheetCellTimer)
       updateSheetCellTimer = setTimeout(() => {
-        updateSheetCell(sheetId, row.id, cell.id, { value: cellValue })
-      }, 2500);
+        updateSheetCell(cell.id, { value: cellValue })
+      }, 1000);
     }
     return () => clearTimeout(updateSheetCellTimer);
   }, [ cellValue ])
@@ -82,7 +91,6 @@ const SheetCell = memo(({
       style={style}>
       <SheetCellType
         cellId={cell.id}
-        clearTimeoutBatchedSheetCellUpdates={clearTimeoutBatchedSheetCellUpdates}
         updateCellValue={setCellValue}
         value={cellValue}/>
     </Container>
@@ -93,14 +101,14 @@ const SheetCell = memo(({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetCellProps {
-  cell: SheetCell
-  clearTimeoutBatchedSheetCellUpdates(): void
+  cellId: SheetCell['id']
+  cell?: SheetCell
   highlightColor: string
   row: SheetRow
   sheetId: string
   style: {}
   type: SheetColumnType
-  updateSheetCell(sheetId: string, rowId: string, cellId: string, updates: SheetCellUpdates): void
+  updateSheetCell(cellId: string, updates: SheetCellUpdates): void
 }
 
 //-----------------------------------------------------------------------------
@@ -128,4 +136,6 @@ interface ContainerProps {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetCell
+export default connect(
+  mapStateToProps
+)(SheetCell)

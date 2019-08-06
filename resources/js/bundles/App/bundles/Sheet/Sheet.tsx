@@ -11,18 +11,20 @@ import { query } from '@app/api'
 import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
 import { 
-  clearTimeoutBatchedSheetCellUpdates,
   createSheetRow as createSheetRowAction,
   loadSheet as loadSheetAction,
   updateSheetCell as updateSheetCellAction,
   updateSheetColumn as updateSheetColumnAction
 } from '@app/state/sheet/actions'
-import { SheetColumns, SheetColumnUpdates, SheetCellUpdates, SheetFilters, SheetGroups, SheetRows, SheetFromServer, SheetSorts, SheetVisibleColumns, SheetVisibleRows } from '@app/state/sheet/types'
+import { SheetColumn, SheetColumns, SheetColumnUpdates, SheetCellUpdates, SheetFilter, SheetFilters, SheetGroup, SheetGroups, SheetRow, SheetRows, SheetFromServer, SheetSort, SheetSorts } from '@app/state/sheet/types'
 import { 
-  selectSheetColumns, 
+  selectColumns, 
+  selectFilters,
+  selectGroups,
+  selectRows,
+  selectSorts,
   selectSheetFilters,
   selectSheetGroups,
-  selectSheetRows,
   selectSheetSorts,
   selectSheetSourceSheetId,
   selectSheetVisibleColumns,
@@ -43,22 +45,25 @@ import SheetGrid from '@app/bundles/Sheet/SheetGrid'
 //-----------------------------------------------------------------------------
 const mapStateToProps = (state: AppState, props: SheetComponentProps) => ({
   activeTabId: selectActiveTabId(state),
-  columns: selectSheetColumns(state, props.id),
-  filters: selectSheetFilters(state, props.id),
-  groups: selectSheetGroups(state, props.id),
-  rows: selectSheetRows(state, props.id),
-  sorts: selectSheetSorts(state, props.id),
+  columns: selectColumns(state),
+  filters: selectFilters(state),
+  groups: selectGroups(state),
+  rows: selectRows(state),
+  sorts: selectSorts(state),
+  sheetFilters: selectSheetFilters(state, props.id),
+  sheetGroups: selectSheetGroups(state, props.id),
+  sheetSorts: selectSheetSorts(state, props. id),
+  sheetVisibleRows: selectSheetVisibleRows(state, props.id),
+  sheetVisibleColumns: selectSheetVisibleColumns(state, props.id),
   sourceSheetId: selectSheetSourceSheetId(state, props.id),
-  visibleRows: selectSheetVisibleRows(state, props.id),
-  visibleColumns: selectSheetVisibleColumns(state, props.id),
   userColorSecondary: selectUserColorSecondary(state)
 })
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   createSheetRow: (sheetId: string, sourceSheetId: string) => dispatch(createSheetRowAction(sheetId, sourceSheetId)),
   loadSheet: (sheet: SheetFromServer) => dispatch(loadSheetAction(sheet)),
-  updateSheetCell: (sheetId: string, rowId: string, cellId: string, updates: SheetCellUpdates) => dispatch(updateSheetCellAction(sheetId, rowId, cellId, updates)),
-  updateSheetColumn: (sheetId: string, columnId: string, updates: SheetColumnUpdates) => dispatch(updateSheetColumnAction(sheetId, columnId, updates))
+  updateSheetCell: (cellId: string, updates: SheetCellUpdates) => dispatch(updateSheetCellAction(cellId, updates)),
+  updateSheetColumn: (columnId: string, updates: SheetColumnUpdates) => dispatch(updateSheetColumnAction(columnId, updates))
 })
 
 //-----------------------------------------------------------------------------
@@ -74,18 +79,20 @@ const SheetComponent = memo(({
   id,
   loadSheet,
   rows,
+  sheetFilters,
+  sheetGroups,
+  sheetSorts,
+  sheetVisibleRows,
+  sheetVisibleColumns,
   sorts,
   sourceSheetId,
-  visibleRows,
-  visibleColumns,
   updateSheetCell,
   updateSheetColumn,
   userColorSecondary
 }: SheetComponentProps) => {
   
   const isActiveFile = fileId === activeTabId
-  const memoizedUpdateSheetCell = useCallback((sheetId, rowId, cellId, updates) => updateSheetCell(sheetId, rowId, cellId, updates), [])
-  const memoizedClearBatchedSheetCellUpdatesTimeout = useCallback(() => clearTimeoutBatchedSheetCellUpdates(), [])
+  const memoizedUpdateSheetCell = useCallback((cellId, updates) => updateSheetCell(cellId, updates), [])
 
   const [ hasLoaded, setHasLoaded ] = useState(false)
   useEffect(() => {
@@ -145,7 +152,6 @@ const SheetComponent = memo(({
     <Container>
       <SheetContainer>
         <SheetContextMenus
-          sheetId={id}
           isContextMenuVisible={isContextMenuVisible}
           contextMenuType={contextMenuType}
           contextMenuId={contextMenuId}
@@ -158,19 +164,22 @@ const SheetComponent = memo(({
           columns={columns}
           filters={filters}
           groups={groups}
+          sheetFilters={sheetFilters}
+          sheetGroups={sheetGroups}
+          sheetSorts={sheetSorts}
+          sheetVisibleColumns={sheetVisibleColumns}
           sorts={sorts}/>
         {!hasLoaded
           ? isActiveFile ? <LoadingTimer fromId={id}/> : null
           : <SheetGrid
-              clearTimeoutBatchedSheetCellUpdates={memoizedClearBatchedSheetCellUpdatesTimeout}
               columns={columns}
               handleContextMenu={handleContextMenu}
               highlightColor={userColorSecondary}
               rows={rows}
               sheetId={id}
               updateSheetCell={memoizedUpdateSheetCell}
-              visibleColumns={visibleColumns}
-              visibleRows={visibleRows}/>
+              sheetVisibleColumns={sheetVisibleColumns}
+              sheetVisibleRows={sheetVisibleRows}/>
         }
         </SheetContainer>
     </Container>
@@ -190,12 +199,15 @@ interface SheetComponentProps {
   id: string
   loadSheet?(sheet: SheetFromServer): Promise<void>
   rows?: SheetRows
+  sheetFilters?: SheetFilter['id'][]
+  sheetGroups?: SheetGroup['id'][]
+  sheetSorts?: SheetSort['id'][]
+  sheetVisibleColumns?: SheetColumn['id'][]
+  sheetVisibleRows?: SheetRow['id'][]
   sorts?: SheetSorts
   sourceSheetId?: string
-  visibleColumns?: SheetVisibleColumns
-  visibleRows?: SheetVisibleRows
-  updateSheetCell?(sheetId: string, rowId: string, cellId: string, updates: SheetCellUpdates): void
-  updateSheetColumn?(sheetId: string, columnId: string, updates: SheetColumnUpdates): void
+  updateSheetCell?(cellId: string, updates: SheetCellUpdates): void
+  updateSheetColumn?(columnId: string, updates: SheetColumnUpdates): void
   userColorSecondary?: string
 }
 

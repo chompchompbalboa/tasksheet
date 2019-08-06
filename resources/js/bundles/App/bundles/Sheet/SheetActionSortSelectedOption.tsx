@@ -19,7 +19,7 @@ const SheetActionSortSelectedOption = ({
   sorts,
   updateSheetSort
 }: SheetActionSortSelectedOptionProps) => {
-    const sort = sorts.find(sort => sort.columnId === option.value)
+    const sort = sorts[option.value]
     const [ sortOrder, setSortOrder ] = useState(sort ? sort.order : 'ASC')
     
     const handleOptionClick = (sort: SheetSort) => {

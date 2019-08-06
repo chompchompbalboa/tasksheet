@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { SheetColumns, SheetVisibleColumns } from '@app/state/sheet/types'
+import { SheetColumn, SheetColumns } from '@app/state/sheet/types'
 
 import SheetCreateRowInput from '@app/bundles/Sheet/SheetCreateRowInput'
 
@@ -77,7 +77,7 @@ const SheetCreateRow = ({
 //-----------------------------------------------------------------------------
 interface SheetCreateRowProps {
   columns: SheetColumns
-  visibleColumns: SheetVisibleColumns
+  visibleColumns: SheetColumn['id'][]
 }
 
 //-----------------------------------------------------------------------------

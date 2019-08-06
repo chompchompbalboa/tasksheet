@@ -13,7 +13,6 @@ import ContextMenuItem from '@app/bundles/ContextMenu/ContextMenuItem'
 // Component
 //-----------------------------------------------------------------------------
 const SheetColumnContextMenu = ({
-  sheetId,
   columnId,
   closeContextMenu,
   contextMenuLeft,
@@ -37,10 +36,10 @@ const SheetColumnContextMenu = ({
       <ContextMenuDivider />
       <ContextMenuItem text="Rename"/>
       <ContextMenuItem text="Type">
-        <ContextMenuItem text="String" onClick={() => closeOnClick(() => updateSheetColumn(sheetId, columnId, { type: 'STRING'}))}/>
-        <ContextMenuItem text="Number" onClick={() => closeOnClick(() => updateSheetColumn(sheetId, columnId, { type: 'NUMBER'}))}/>
-        <ContextMenuItem text="Checkbox" onClick={() => closeOnClick(() => updateSheetColumn(sheetId, columnId, { type: 'BOOLEAN'}))}/>
-        <ContextMenuItem text="Date" onClick={() => closeOnClick(() => updateSheetColumn(sheetId, columnId, { type: 'DATETIME'}))}/>
+        <ContextMenuItem text="String" onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'STRING'}))}/>
+        <ContextMenuItem text="Number" onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'NUMBER'}))}/>
+        <ContextMenuItem text="Checkbox" onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'BOOLEAN'}))}/>
+        <ContextMenuItem text="Date" onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DATETIME'}))}/>
       </ContextMenuItem>
       <ContextMenuDivider />
       <ContextMenuItem text="Delete">
@@ -53,12 +52,11 @@ const SheetColumnContextMenu = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetColumnContextMenuProps {
-  sheetId: string
   columnId: string
   closeContextMenu(): void
   contextMenuLeft: number
   contextMenuTop: number
-  updateSheetColumn(sheetId: string, columnId: string, updates: SheetColumnUpdates): void
+  updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
 }
 
 //-----------------------------------------------------------------------------

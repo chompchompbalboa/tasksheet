@@ -14,7 +14,6 @@ import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 //-----------------------------------------------------------------------------
 const SheetCellDatetime = ({
   cellId,
-  clearTimeoutBatchedSheetCellUpdates,
   updateCellValue,
   value
 }: SheetCellDatetimeProps) => {  
@@ -28,7 +27,6 @@ const SheetCellDatetime = ({
   return (
     <StyledSheetCellContainer
       cellId={cellId}
-      clearTimeoutBatchedSheetCellUpdates={clearTimeoutBatchedSheetCellUpdates}
       focusCell={() => {}}
       value={safeValue}>
       <DatePicker
@@ -46,7 +44,6 @@ const SheetCellDatetime = ({
 //-----------------------------------------------------------------------------
 interface SheetCellDatetimeProps {
   cellId: string
-  clearTimeoutBatchedSheetCellUpdates(): void
   updateCellValue(nextCellValue: string): void
   value: string
 }

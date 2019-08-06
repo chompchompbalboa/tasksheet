@@ -3,12 +3,12 @@
 //-----------------------------------------------------------------------------
 import { v4 as createUuid } from 'uuid'
 
-import { SheetCell, SheetColumns, SheetRow } from '@app/state/sheet/types'
+import { SheetCell, SheetColumn, SheetRow } from '@app/state/sheet/types'
 
 //-----------------------------------------------------------------------------
 // Default Row
 //-----------------------------------------------------------------------------
-export const defaultRow = (sheetId: string, rowId: string, columns: SheetColumns): SheetRow => {
+export const defaultRow = (sheetId: string, rowId: string, columns: SheetColumn['id'][]): SheetRow => {
   return {
     id: rowId,
     sheetId: sheetId,

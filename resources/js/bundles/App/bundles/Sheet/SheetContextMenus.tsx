@@ -12,7 +12,6 @@ import SheetColumnContextMenu from '@app/bundles/ContextMenu/SheetColumnContextM
 // Component
 //-----------------------------------------------------------------------------
 const SheetContextMenus = ({
-  sheetId,
   isContextMenuVisible,
   contextMenuType,
   contextMenuId,
@@ -25,7 +24,6 @@ const SheetContextMenus = ({
   <Container>
     {isContextMenuVisible && contextMenuType === 'COLUMN' &&
       <SheetColumnContextMenu
-        sheetId={sheetId}
         columnId={contextMenuId}
         contextMenuTop={contextMenuTop}
         contextMenuLeft={contextMenuLeft}
@@ -39,14 +37,13 @@ const SheetContextMenus = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetContextMenusProps {
-  sheetId: string
   isContextMenuVisible: boolean
   contextMenuType: string
   contextMenuId: string
   contextMenuTop: number
   contextMenuLeft: number
   closeContextMenu(): void
-  updateSheetColumn(sheetId: string, columnId: string, updates: SheetColumnUpdates): void
+  updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
 }
 
 //-----------------------------------------------------------------------------

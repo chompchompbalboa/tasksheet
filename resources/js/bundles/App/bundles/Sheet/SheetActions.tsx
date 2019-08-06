@@ -4,7 +4,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { SheetColumns, SheetFilters, SheetGroups, SheetSorts } from '@app/state/sheet/types'
+import { SheetColumn, SheetColumns, SheetFilter, SheetFilters, SheetGroup, SheetGroups, SheetSort, SheetSorts } from '@app/state/sheet/types'
 
 import SheetActionFilter from '@app/bundles/Sheet/SheetActionFilter'
 import SheetActionGroup from '@app/bundles/Sheet/SheetActionGroup'
@@ -19,6 +19,10 @@ const SheetActions = ({
   columns,
   groups,
   filters,
+  sheetFilters,
+  sheetGroups,
+  sheetSorts,
+  sheetVisibleColumns,
   sorts
 }: SheetActionsProps) => {
   return (
@@ -26,15 +30,21 @@ const SheetActions = ({
       <SheetActionFilter
         sheetId={sheetId}
         columns={columns}
-        filters={filters}/>
+        filters={filters}
+        sheetFilters={sheetFilters}
+        sheetVisibleColumns={sheetVisibleColumns}/>
       <SheetActionGroup
         sheetId={sheetId}
         columns={columns}
-        groups={groups}/>
+        groups={groups}
+        sheetGroups={sheetGroups}
+        sheetVisibleColumns={sheetVisibleColumns}/>
       <SheetActionSort
         sheetId={sheetId}
         columns={columns}
-        sorts={sorts}/>
+        sorts={sorts}
+        sheetSorts={sheetSorts}
+        sheetVisibleColumns={sheetVisibleColumns}/>
       <SheetActionSaveView
         sheetId={sheetId}/>
     </Container>
@@ -50,6 +60,10 @@ interface SheetActionsProps {
   groups: SheetGroups
   sorts: SheetSorts
   sheetId: string
+  sheetFilters?: SheetFilter['id'][]
+  sheetGroups?: SheetGroup['id'][]
+  sheetSorts?: SheetSort['id'][]
+  sheetVisibleColumns: SheetColumn['id'][]
 }
 
 //-----------------------------------------------------------------------------

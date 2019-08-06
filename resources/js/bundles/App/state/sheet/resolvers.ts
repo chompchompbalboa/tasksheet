@@ -5,6 +5,7 @@ import { groupBy, orderBy } from 'lodash'
 
 import { 
   Sheet,
+  SheetCells,
   SheetColumns,
   SheetRows,
   SheetFilters, SheetFilterType,
@@ -46,7 +47,7 @@ export const resolveValue = (value: string) => {
 //-----------------------------------------------------------------------------
 // Resolve Visible Rows
 //-----------------------------------------------------------------------------
-export const resolveVisibleRows = (sheet: Sheet, rows: SheetRows, filters: SheetFilters, groups: SheetGroups, sorts: SheetSorts) => {
+export const resolveVisibleRows = (sheet: Sheet, rows: SheetRows, cells: SheetCells, filters: SheetFilters, groups: SheetGroups, sorts: SheetSorts) => {
   const rowIds: string[] = sheet.rows
   const filterIds: string[] = sheet.filters
   const groupIds: string[] = sheet.groups
@@ -58,8 +59,8 @@ export const resolveVisibleRows = (sheet: Sheet, rows: SheetRows, filters: Sheet
     let passesFilter = true
     filterIds.forEach(filterId => {
       const filter = filters[filterId]
-      const cellValue = row.cells.find(cell => cell.columnId === filter.columnId).value
-      if(!resolveFilter(cellValue, filter.value, filter.type)) { passesFilter = false }
+      const cell = cells[row.cells.find(cellId => cells[cellId].columnId === filter.columnId)]
+      if(!resolveFilter(cell.value, filter.value, filter.type)) { passesFilter = false }
     })
     return passesFilter ? row.id : undefined
   }).filter(Boolean)
@@ -68,8 +69,8 @@ export const resolveVisibleRows = (sheet: Sheet, rows: SheetRows, filters: Sheet
   const sortBy = sortIds && sortIds.map(sortId => {
     const sort = sorts[sortId]
     return (rowId: string) => {
-      const value = rows[rowId].cells.find(cell => cell.columnId === sort.columnId).value
-      return resolveValue(value)
+      const cell = cells[rows[rowId].cells.find(cellId => cells[cellId].columnId === sort.columnId)]
+      return resolveValue(cell.value)
     }
   })
   const sortOrder = sortIds && sortIds.map(sortId => sorts[sortId].order === 'ASC' ? 'asc' : 'desc')
@@ -82,7 +83,7 @@ export const resolveVisibleRows = (sheet: Sheet, rows: SheetRows, filters: Sheet
   else {
     const groupedRowIds = groupBy(filteredSortedRowIds, (rowId: string) => {
       const getValue = (group: SheetGroup) => {
-        const cell = rows[rowId] && rows[rowId].cells.find(cell => cell.columnId === group.columnId)
+        const cell = rows[rowId] && cells[rows[rowId].cells.find(cellId => cells[cellId].columnId === group.columnId)]
         return cell && cell.value
       }
       return groupIds.map(groupId => getValue(groups[groupId])).reduce((combined: string, current: string) => combined + current.toLowerCase() + '-')

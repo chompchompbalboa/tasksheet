@@ -12,30 +12,38 @@ export type Sheet = {
   id: string
   sourceSheetId: Sheet['id']
   fileType: FileType
-	rows: [SheetRow['id']]
-  visibleRows: [SheetRow['id']]
-  columns: [SheetColumn['id']]
-  visibleColumns: [SheetColumn['id']]
-  filters: [SheetFilter['id']]
-  groups: [SheetGroup['id']]
-  sorts: [SheetSort['id']]
+	rows: SheetRow['id'][]
+  visibleRows: SheetRow['id'][]
+  columns: SheetColumn['id'][]
+  visibleColumns: SheetColumn['id'][]
+  filters: SheetFilter['id'][]
+  groups: SheetGroup['id'][]
+  sorts: SheetSort['id'][]
 }
 export type SheetUpdates = {
-  rows?: [SheetRow['id']]
-  visibleRows?: [SheetRow['id']]
-  columns?: [SheetColumn['id']]
-  visibleColumns?: [SheetColumn['id']]
+  rows?: SheetRow['id'][]
+  visibleRows?: SheetRow['id'][]
+  columns?: SheetColumn['id'][]
+  visibleColumns?: SheetColumn['id'][]
+  filters?: SheetFilter['id'][]
+  groups?: SheetGroup['id'][]
+  sorts?: SheetSort['id'][]
 }
 
 export type SheetFromServer = {
   id: string
   sourceSheetId: string
   fileType: FileType
-  rows: SheetRow[]
   columns: SheetColumn[]
-  filters: SheetFilters
-  groups: SheetGroups
-  sorts: SheetSorts
+  filters: SheetFilter[]
+  groups: SheetGroup[]
+  rows: SheetFromServerRow[]
+  sorts: SheetSort[]
+}
+export type SheetFromServerRow = {
+	id: string
+	sheetId: string
+	cells: SheetCell[]
 }
 
 export type SheetColumn = {
@@ -62,7 +70,10 @@ export type SheetColumnType =
 export type SheetRow = {
 	id: string
 	sheetId: string
-	cells: SheetCell[]
+	cells: SheetCell['id'][]
+}
+export type SheetRowUpdates = {
+  cells?: SheetCell['id'][]
 }
 
 export type SheetCell = {

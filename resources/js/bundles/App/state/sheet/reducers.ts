@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// Initial
+// Imports
 //-----------------------------------------------------------------------------
 import { Sheets, SheetCells, SheetColumns, SheetFilters, SheetGroups, SheetRows, SheetSorts } from '@app/state/sheet/types'
 import { 
@@ -27,9 +27,22 @@ interface SheetState {
 }
 
 //-----------------------------------------------------------------------------
+// Default State
+//-----------------------------------------------------------------------------
+const defaultSheetState: SheetState = {
+  sheets: null,
+  cells: null,
+  columns: null,
+  filters: null,
+  groups: null,
+  rows: null,
+  sorts: null
+}
+
+//-----------------------------------------------------------------------------
 // Reducers
 //-----------------------------------------------------------------------------
-export const userReducer = (state: SheetState, action: SheetActions): SheetState => {
+export const userReducer = (state: SheetState = defaultSheetState, action: SheetActions): SheetState => {
 	switch (action.type) {
     
 		case LOAD_SHEET: {
@@ -87,10 +100,10 @@ export const userReducer = (state: SheetState, action: SheetActions): SheetState
 		}
 
 		case UPDATE_SHEET_FILTERS: {
-			const { nextFilters } = action
+			const { nextSheetFilters } = action
 			return {
         ...state,
-        filters: nextFilters
+        filters: nextSheetFilters
       }
 		}
 
@@ -105,10 +118,10 @@ export const userReducer = (state: SheetState, action: SheetActions): SheetState
 		}
 
 		case UPDATE_SHEET_GROUPS: {
-			const { nextGroups } = action
+			const { nextSheetGroups } = action
 			return {
         ...state,
-        groups: nextGroups
+        groups: nextSheetGroups
       }
 		}
 
@@ -123,10 +136,10 @@ export const userReducer = (state: SheetState, action: SheetActions): SheetState
 		}
 
 		case UPDATE_SHEET_ROWS: {
-			const { nextRows } = action
+			const { nextSheetRows } = action
 			return {
         ...state,
-        rows: nextRows
+        rows: nextSheetRows
       }
 		}
 
@@ -141,10 +154,10 @@ export const userReducer = (state: SheetState, action: SheetActions): SheetState
 		}
 
 		case UPDATE_SHEET_SORTS: {
-			const { nextSorts } = action
+			const { nextSheetSorts } = action
 			return {
         ...state,
-        sorts: nextSorts
+        sorts: nextSheetSorts
       }
 		}
 

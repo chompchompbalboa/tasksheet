@@ -5,7 +5,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { v4 as createUuid } from 'uuid'
 
-import { SheetColumns, SheetGroup, SheetGroups } from '@app/state/sheet/types'
+import { SheetColumn, SheetColumns, SheetGroup, SheetGroups } from '@app/state/sheet/types'
 
 import { ThunkDispatch } from '@app/state/types'
 import { SheetGroupUpdates } from '@app/state/sheet/types'
@@ -25,28 +25,37 @@ import SheetActionGroupSelectedOption from '@app/bundles/Sheet/SheetActionGroupS
 const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionGroupProps) => ({
   createSheetGroup: (newGroup: SheetGroup) => dispatch(createSheetGroupAction(props.sheetId, newGroup)),
   deleteSheetGroup: (columnId: string) => dispatch(deleteSheetGroupAction(props.sheetId, columnId)),
-  updateSheetGroup: (groupId: string, updates: SheetGroupUpdates) => dispatch(updateSheetGroupAction(props.sheetId, groupId, updates))
+  updateSheetGroup: (groupId: string, updates: SheetGroupUpdates) => dispatch(updateSheetGroupAction(groupId, updates))
 })
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetActionGroup = ({
+  sheetId,
   columns,
   createSheetGroup,
   deleteSheetGroup,
   groups,
+  sheetGroups,
+  sheetVisibleColumns,
   updateSheetGroup
 }: SheetActionGroupProps) => {
 
-  const options = columns && Object.keys(columns).map((columnId: string) => { return { label: columns[columnId].name, value: columnId }})
-  const selectedOptions = groups && groups.map((group: SheetGroup) => { return { label: columns[group.columnId].name, value: group.columnId }})
+  const options = sheetVisibleColumns && sheetVisibleColumns.map((columnId: string) => { 
+    return { label: columns[columnId].name, value: columnId }
+  })
+
+  const selectedOptions = sheetGroups && sheetGroups.map((groupId: SheetGroup['id']) => { 
+    const group = groups[groupId]
+    return { label: columns[group.columnId].name, value: group.columnId }
+  })
 
   return (
     <SheetAction>
       <SheetActionDropdown
         onOptionDelete={(optionToDelete: SheetActionDropdownOption) => deleteSheetGroup(optionToDelete.value)}
-        onOptionSelect={(selectedOption: SheetActionDropdownOption) => createSheetGroup({ id: createUuid(), columnId: selectedOption.value, order: 'ASC' })}
+        onOptionSelect={(selectedOption: SheetActionDropdownOption) => createSheetGroup({ id: createUuid(), sheetId: sheetId, columnId: selectedOption.value, order: 'ASC' })}
         options={options}
         placeholder={"Group By..."}
         selectedOptions={selectedOptions}
@@ -64,6 +73,8 @@ interface SheetActionGroupProps {
   deleteSheetGroup?(columnId: string): void
   updateSheetGroup?(groupId: string, updates: SheetGroupUpdates): void
   groups: SheetGroups
+  sheetGroups: SheetGroup['id'][]
+  sheetVisibleColumns: SheetColumn['id'][]
   sheetId: string
 }
 
