@@ -12,7 +12,7 @@ export const defaultRow = (sheetId: string, rowId: string, columns: SheetColumns
   return {
     id: rowId,
     sheetId: sheetId,
-    cells: Object.keys(columns).map(columnId => defaultCell(sheetId, rowId, columnId))
+    cells: Object.keys(columns).map(columnId => defaultCell(sheetId, rowId, columnId).id)
   }
 }
 

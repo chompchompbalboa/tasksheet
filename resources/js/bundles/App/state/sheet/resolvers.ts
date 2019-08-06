@@ -4,6 +4,7 @@
 import { groupBy, orderBy } from 'lodash'
 
 import { 
+  Sheet,
   SheetColumns,
   SheetRows,
   SheetFilters, SheetFilterType,
@@ -45,32 +46,37 @@ export const resolveValue = (value: string) => {
 //-----------------------------------------------------------------------------
 // Resolve Visible Rows
 //-----------------------------------------------------------------------------
-export const resolveVisibleRows = (rows: SheetRows, filters?: SheetFilters, groups?: SheetGroups, sorts?: SheetSorts) => {
-  const rowIds: string[] = Object.keys(rows)
+export const resolveVisibleRows = (sheet: Sheet, rows: SheetRows, filters: SheetFilters, groups: SheetGroups, sorts: SheetSorts) => {
+  const rowIds: string[] = sheet.rows
+  const filterIds: string[] = sheet.filters
+  const groupIds: string[] = sheet.groups
+  const sortIds: string[] = sheet.sorts
 
   // Filter
   const filteredRowIds: string[] = !filters ? rowIds : rowIds.map(rowId => {
     const row = rows[rowId]
     let passesFilter = true
-    filters.forEach(filter => {
+    filterIds.forEach(filterId => {
+      const filter = filters[filterId]
       const cellValue = row.cells.find(cell => cell.columnId === filter.columnId).value
       if(!resolveFilter(cellValue, filter.value, filter.type)) { passesFilter = false }
     })
-    return passesFilter ? rowId : undefined
+    return passesFilter ? row.id : undefined
   }).filter(Boolean)
 
   // Sort
-  const sortBy = sorts && sorts.map(sort => {
+  const sortBy = sortIds && sortIds.map(sortId => {
+    const sort = sorts[sortId]
     return (rowId: string) => {
       const value = rows[rowId].cells.find(cell => cell.columnId === sort.columnId).value
       return resolveValue(value)
     }
   })
-  const sortOrder = sorts && sorts.map(sort => sort.order === 'ASC' ? 'asc' : 'desc')
+  const sortOrder = sortIds && sortIds.map(sortId => sorts[sortId].order === 'ASC' ? 'asc' : 'desc')
   const filteredSortedRowIds = orderBy(filteredRowIds, sortBy, sortOrder)
   
   // Group
-  if(groups.length === 0) {
+  if(groupIds.length === 0) {
     return filteredSortedRowIds
   }
   else {
@@ -79,10 +85,10 @@ export const resolveVisibleRows = (rows: SheetRows, filters?: SheetFilters, grou
         const cell = rows[rowId] && rows[rowId].cells.find(cell => cell.columnId === group.columnId)
         return cell && cell.value
       }
-      return groups.map(group => getValue(group)).reduce((combined: string, current: string) => combined + current.toLowerCase() + '-')
+      return groupIds.map(groupId => getValue(groups[groupId])).reduce((combined: string, current: string) => combined + current.toLowerCase() + '-')
     })
     const filteredSortedGroupedRowIds: string[] = []
-    const orderedGroups = groups[0].order === 'ASC' ? Object.keys(groupedRowIds).sort() : Object.keys(groupedRowIds).sort().reverse()
+    const orderedGroups = 'ASC' === 'ASC' ? Object.keys(groupedRowIds).sort() : Object.keys(groupedRowIds).sort().reverse()
     orderedGroups.forEach(groupName => {
       const group = groupedRowIds[groupName]
       filteredSortedGroupedRowIds.push('GROUP_HEADER')

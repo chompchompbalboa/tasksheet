@@ -78,8 +78,7 @@ export interface SheetCellUpdates {
 
 export type SheetSort = {
   id: string
-  sheetId?: string
-  sheetViewId?: string
+  sheetId: string
   columnId: string
   order: SheetSortOrder
 }
@@ -90,19 +89,17 @@ export type SheetSortOrder = 'ASC' | 'DESC'
 
 export type SheetFilter = {
   id: string
-  sheetId?: string
-  sheetViewId?: string
+  sheetId: string
   columnId: string
   type: SheetFilterType
   value: string
 }
-
+export type SheetFilterUpdates = {}
 export type SheetFilterType = '=' | '>' | '>=' | '<' | '<='
 
 export type SheetGroup = {
   id: string
-  sheetId?: string
-  sheetViewId?: string
+  sheetId: string
   columnId: string
   order: SheetGroupOrder
 }

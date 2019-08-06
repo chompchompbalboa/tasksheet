@@ -14,7 +14,7 @@ import {
   SheetRows, 
   SheetCellUpdates,
   SheetFilter,
-  SheetGroup, SheetGroupUpdates, 
+  SheetGroup, SheetGroupUpdates,
   SheetSort, SheetSortUpdates
 } from '@app/state/sheet/types'
 import { FileType } from '@app/state/folder/types'
@@ -31,101 +31,89 @@ import { defaultRow } from '@app/state/sheet/defaults'
 // Exports
 //-----------------------------------------------------------------------------
 export type SheetActions = 
+  LoadSheet | UpdateSheet | 
+  UpdateSheetCell |
   UpdateSheetColumn |
-  CreateSheetFilter | DeleteSheetFilter |
-  CreateSheetGroup | DeleteSheetGroup |
-  CreateSheetRow | 
-  CreateSheetSort | DeleteSheetSort | 
-  LoadSheet | UpdateSheet | UpdateSheetCell
+  DeleteSheetFilter | UpdateSheetFilter | UpdateSheetFilters |
+  DeleteSheetGroup | UpdateSheetGroup | UpdateSheetGroups |
+  UpdateSheetRows | 
+  DeleteSheetSort | UpdateSheetSort | UpdateSheetSorts 
 
 //-----------------------------------------------------------------------------
 // Create Sheet Filter
 //-----------------------------------------------------------------------------
-export const CREATE_SHEET_FILTER = 'CREATE_SHEET_FILTER'
-interface CreateSheetFilter {
-  type: typeof CREATE_SHEET_FILTER
-}
-
-let createSheetFilterUpdateVisibleRowsTimeout: number = null
 export const createSheetFilter = (sheetId: string, newFilter: SheetFilter): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
-    // Update Filters
     const {
-      filters
-    } = getState().sheet[sheetId]
-    const nextFilters = [...filters, newFilter]
-    dispatch(updateSheetReducer(sheetId, {
-      filters: nextFilters
-    }))
-    // Save to Server
-    mutation.createSheetFilter({ 
-      ...newFilter,
-      sheetId: sheetId })
-    // Update Visible Rows
-    clearTimeout(createSheetFilterUpdateVisibleRowsTimeout)
-    createSheetFilterUpdateVisibleRowsTimeout = setTimeout(() => {
-      const {
-        filters,
-        groups,
-        rows,
-        sorts
-      } = getState().sheet[sheetId]
-      const nextVisibleRows = resolveVisibleRows(rows, filters, groups, sorts)
+      sheets,
+      filters,
+      groups,
+      rows,
+      sorts
+    } = getState().sheet
+    const sheet = sheets[sheetId]
+    const nextFilters = { ...filters, [newFilter.id]: newFilter }
+    const nextSheetFilters = [ ...sheet.filters, newFilter.id ]
+    const nextSheetVisibleRows = resolveVisibleRows({ sheet, filters: nextSheetFilters }, rows, nextFilters, groups, sorts)
+    batch(() => {
+      dispatch(updateSheetFilters({ ...filters, [newFilter.id]: newFilter }))
       dispatch(updateSheetReducer(sheetId, {
-        visibleRows: nextVisibleRows
+        filters: nextSheetFilters,
+        visibleRows: nextSheetVisibleRows
       }))
-    }, 50)
+    })
+    mutation.createSheetFilter(newFilter)
   }
 }
 
 //-----------------------------------------------------------------------------
 // Create Sheet Group
 //-----------------------------------------------------------------------------
-export const CREATE_SHEET_GROUP = 'CREATE_SHEET_GROUP'
-interface CreateSheetGroup {
-	type: typeof CREATE_SHEET_GROUP
-}
-
-export const createSheetGroup = (sheetId: string, newSheetGroup: SheetGroup): ThunkAction => {
+export const createSheetGroup = (sheetId: string, newGroup: SheetGroup): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
+      sheets,
       filters,
       groups,
       rows,
       sorts,
-    } = getState().sheet[sheetId]
-    const nextGroups = [...groups, newSheetGroup]
-    const nextVisibleRows = resolveVisibleRows(rows, filters, nextGroups, sorts)
-    dispatch(updateSheetReducer(sheetId, {
-      groups: nextGroups,
-      visibleRows: nextVisibleRows
-    }))
-    mutation.createSheetGroup({ sheetId: sheetId, ...newSheetGroup })
+    } = getState().sheet
+    const sheet = sheets[sheetId]
+    const nextGroups = { ...groups, [newGroup.id]: newGroup }
+    const nextSheetGroups = [ ...sheet.groups, newGroup.id ]
+    const nextSheetVisible = resolveVisibleRows({ ...sheet, groups: nextSheetGroups }, rows, filters, nextGroups, sorts)
+    batch(() => {
+      dispatch(updateSheetGroups({ ...groups, [newGroup.id]: newGroup }))
+      dispatch(updateSheetReducer(sheetId, {
+        groups: nextSheetGroups,
+        visibleRows: nextSheetVisible
+      }))
+    })
+    mutation.createSheetGroup(newGroup)
 	}
 }
-
 //-----------------------------------------------------------------------------
 // Create Sheet Row
 //-----------------------------------------------------------------------------
-export const CREATE_SHEET_ROW = 'CREATE_SHEET_ROW'
-interface CreateSheetRow {
-	type: typeof CREATE_SHEET_ROW
-}
-
 export const createSheetRow = (sheetId: string, sourceSheetId: string): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
+      sheets,
       columns,
       rows,
-      visibleRows
-    } = getState().sheet[sheetId]
-    const newRow = defaultRow(sourceSheetId !== null ? sourceSheetId : sheetId, createUuid(), columns)
+    } = getState().sheet
+    const sheet = sheets[sheetId]
+    const newRow = defaultRow(sourceSheetId !== null ? sourceSheetId : sheetId, createUuid(), sheet.columns)
     const nextRows = { ...rows, [newRow.id]: newRow }
-    const nextVisibleRows = [ newRow.id, ...visibleRows]
-    dispatch(updateSheetReducer(sheetId, {
-      rows: nextRows,
-      visibleRows: nextVisibleRows
-    }))
+    const nextSheetRows = [ ...sheet.rows, newRow.id ]
+    const nextSheetVisibleRows = [ newRow.id, ...sheet.visibleRows ]
+    batch(() => {
+      dispatch(updateSheetRows({ ...rows, [newRow.id]: newRow }))
+      dispatch(updateSheetReducer(sheetId, {
+        rows: nextSheetRows,
+        visibleRows: nextSheetVisibleRows
+      }))
+    })
     mutation.createSheetRow(newRow)
 	}
 }
@@ -133,26 +121,27 @@ export const createSheetRow = (sheetId: string, sourceSheetId: string): ThunkAct
 //-----------------------------------------------------------------------------
 // Create Sheet Sort
 //-----------------------------------------------------------------------------
-export const CREATE_SHEET_SORT = 'CREATE_SHEET_SORT'
-interface CreateSheetSort {
-	type: typeof CREATE_SHEET_SORT
-}
-
 export const createSheetSort = (sheetId: string, newSort: SheetSort): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
+      sheets,
       filters,
       groups,
       rows,
       sorts,
-    } = getState().sheet[sheetId]
-    const nextSorts = [...sorts, newSort]
-    const nextVisibleRows = resolveVisibleRows(rows, filters, groups, nextSorts)
-    dispatch(updateSheetReducer(sheetId, {
-      sorts: nextSorts,
-      visibleRows: nextVisibleRows
-    }))
-    mutation.createSheetSort({ sheetId: sheetId, ...newSort })
+    } = getState().sheet
+    const sheet = sheets[sheetId]
+    const nextSorts = { ...sorts, [newSort.id]: newSort }
+    const nextSheetSorts = [ ...sheet.sorts, newSort.id ]
+    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, sorts: nextSheetSorts }, rows, filters, groups, nextSorts)
+    batch(() => {
+      dispatch(updateSheetSorts({ ...sorts, [newSort.id]: newSort }))
+      dispatch(updateSheetReducer(sheetId, {
+        sorts: nextSheetSorts,
+        visibleRows: nextSheetVisibleRows
+      }))
+    })
+    mutation.createSheetSort(newSort)
 	}
 }
 
@@ -164,26 +153,50 @@ export const createSheetView = (sheetId: string, viewName: string): ThunkAction 
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       folder: { activeFolderPath, files, folders },
-      sheet,
+      sheet: { sheets, filters, groups, sorts },
       tab: { tabs }
     } = getState()
-    const sourceSheet = sheet[sheetId]
+    const sourceSheet = sheet.sheets[sheetId]
     const fileId = Object.keys(files).find(fileId => files[fileId].typeId === sheetId)
     const folderId = activeFolderPath[activeFolderPath.length - 1]
     const newFileId = createUuid()
     const newSheetViewId = createUuid()
-    const newSheetViewFilters = sourceSheet.filters.map(filter => ({ ...filter, id: createUuid(), sheetId: newSheetViewId }))
-    const newSheetViewGroups = sourceSheet.groups.map(group => ({ ...group, id: createUuid(), sheetId: newSheetViewId }))
-    const newSheetViewSorts = sourceSheet.sorts.map(sort => ({ ...sort, id: createUuid(), sheetId: newSheetViewId }))
-    // Update sheets
-    dispatch(loadSheetReducer({
-      ...sourceSheet,
-      id: newSheetViewId,
-      sourceSheetId: sourceSheet.id,
+    // Filters
+    const newSheetViewFilters = {}
+    sourceSheet.filters.forEach(filterId => {
+      const newFilterId = createUuid()
+      newSheetViewFilters[newFilterId] = { ...filters[filterId], id: newFilterId, sheetId: newSheetViewId })
+    })
+    // Groups
+    const newSheetViewGroups = {}
+    sourceSheet.groups.forEach(groupId => {
+      const newGroupId = createUuid()
+      newSheetViewGroups[newGroupId] = { ...groups[groupId], id: newGroupId, sheetId: newSheetViewId })
+    })
+    // Sorts
+    const newSheetViewSorts = {}
+    sourceSheet.sorts.forEach(sortId => {
+      const newSortId = createUuid()
+      newSheetViewSorts[newSortId] = { ...sorts[sortId], id: newSortId, sheetId: newSheetViewId })
+    })
+  // Update sheets
+    dispatch(loadSheetReducer(
+      sheet: {
+        id: newSheetViewId,
+        sourceSheetId: sourceSheet.id,
+        fileType: sourceSheet.fileType,
+        columns: clone(sourceSheet.columns),
+        visibleColumns: clone(sourceSheet.visibleColumns),
+        rows: clone(sourceSheet.rows),
+        visibleRows: clone(sourceSheet.visibleRows),
+      },
+      cells: null,
+      columns: null,
       filters: newSheetViewFilters,
       groups: newSheetViewGroups,
-      sorts: newSheetViewSorts
-    }))
+      rows: null,
+      sorts: newSheetViewSorts,
+    ))
     // Update folders and files
     const newFile = {
       ...files[fileId],
@@ -230,17 +243,23 @@ interface DeleteSheetFilter {
 export const deleteSheetFilter = (sheetId: string, filterId: string): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
+      sheets,
       filters,
       groups,
       rows,
       sorts
-    } = getState().sheet[sheetId]
-    const nextFilters = filters.filter(filter => filter.id !== filterId)
-    const nextVisibleRows = resolveVisibleRows(rows, nextFilters, groups, sorts)
-    dispatch(updateSheetReducer(sheetId, {
-      filters: nextFilters,
-      visibleRows: nextVisibleRows
-    }))
+    } = getState().sheet
+    const sheet = sheets[sheet.id]
+    const { [filterId], ...nextFilters } = filters
+    const nextSheetFilters = sheet.filters.filter(filter => filter.id !== filterId)
+    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, filters: nextSheetFilters}, rows, nextFilters, groups, sorts)
+    batch(() => {
+      dispatch(updateSheetFilters(nextFilters))
+      dispatch(updateSheetReducer(sheetId, {
+        filters: nextSheetFilters,
+        visibleRows: nextSheetVisibleRows
+      }))
+    })
     mutation.deleteSheetFilter(filterId)
 	}
 }
@@ -256,19 +275,24 @@ interface DeleteSheetGroup {
 export const deleteSheetGroup = (sheetId: string, columnId: string): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
+      sheets,
       filters,
       groups,
       rows,
-      sorts,
-    } = getState().sheet[sheetId]
-    const groupToDelete = groups.find(group => group.columnId === columnId)
-    const nextGroups = groups.filter(group => group.id !== groupToDelete.id)
-    const nextVisibleRows = resolveVisibleRows(rows, filters, nextGroups, sorts)
-    dispatch(updateSheetReducer(sheetId, {
-      groups: nextGroups,
-      visibleRows: nextVisibleRows
-    }))
-    mutation.deleteSheetGroup(groupToDelete.id)
+      sorts
+    } = getState().sheet
+    const sheet = sheets[sheet.id]
+    const { [groupId], ...nextGroups } = groups
+    const nextSheetGroups = sheet.groups.group(group => group.id !== groupId)
+    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, groups: nextSheetGroups}, rows, filters, nextGroups, sorts)
+    batch(() => {
+      dispatch(updateSheetGroups(nextGroups))
+      dispatch(updateSheetReducer(sheetId, {
+        groups: nextSheetGroups,
+        visibleRows: nextSheetVisibleRows
+      }))
+    })
+    mutation.deleteSheetGroup(groupId)
 	}
 }
 
@@ -287,15 +311,19 @@ export const deleteSheetSort = (sheetId: string, columnId: string): ThunkAction 
       groups,
       rows,
       sorts,
-    } = getState().sheet[sheetId]
-    const sortToDelete = sorts.find(sort => sort.columnId === columnId)
-    const nextSorts = sorts.filter(sort => sort.id !== sortToDelete.id)
-    const nextVisibleRows = resolveVisibleRows(rows, filters, groups, nextSorts)
-    dispatch(updateSheetReducer(sheetId, {
-      sorts: nextSorts,
-      visibleRows: nextVisibleRows
-    }))
-    mutation.deleteSheetSort(sortToDelete.id)
+    } = getState().sheet
+    const sheet = sheets[sheet.id]
+    const { [sortId], ...nextSorts } = sorts
+    const nextSheetSorts = sheet.sorts.sort(sort => sort.id !== sortId)
+    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, sorts: nextSheetSorts}, rows, filters, groups, nextSorts)
+    batch(() => {
+      dispatch(updateSheetSorts(nextSorts))
+      dispatch(updateSheetReducer(sheetId, {
+        sorts: nextSheetSorts,
+        visibleRows: nextSheetVisibleRows
+      }))
+    })
+    mutation.deleteSheetSort(sortId)
 	}
 }
 
@@ -310,31 +338,59 @@ interface LoadSheet {
 
 export const loadSheet = (sheet: SheetFromServer): ThunkAction => {
 	return async (dispatch: ThunkDispatch) => {
+    // Rows and cells
     const normalizedRows: SheetRows = {}
+    const normalizedCells: SheetCells = {}
+    sheet.rows.forEach(row => { 
+      normalizedRows[row.id] = row 
+      row.cells.forEach(cell => {
+        normalizedCells[cell.id] = cell
+      })
+    })
+    // Columns
     const normalizedColumns: SheetColumns = {}
-    sheet.rows.forEach(row => { normalizedRows[row.id] = row })
     sheet.columns.forEach(column => { normalizedColumns[column.id] = column })
+    // Filters
+    const normalizedFilters: SheetFilters = {}
+    sheet.filters.forEach(filter => { normalizedFilters[filter.id] = filter })
+    // Groups
+    const normalizedGroups: SheetGroups = {}
+    sheet.groups.forEach(group => { normalizedGroups[group.id] = group })
+    // Sorts
+    const normalizedSorts: SheetSorts = {}
+    sheet.sorts.forEach(sort => { normalizedSorts[sort.id] = sort })
 		dispatch(
-			loadSheetReducer({
-        id: sheet.id,
-        sourceSheetId: sheet.sourceSheetId,
-        fileType: sheet.fileType,
+			loadSheetReducer(
+        sheet: {
+          id: sheet.id,
+          sourceSheetId: sheet.sourceSheetId,
+          fileType: sheet.fileType,
+          columns: sheet.columns.map(column => column.id),
+          visibleColumns: resolveVisibleColumns(normalizedColumns),
+          rows: sheet.rows.map(row => row.id),
+          visibleRows: resolveVisibleRows(normalizedRows, sheet.filters, sheet.groups, sheet.sorts),
+        },
+        cells: normalizedCells,
         columns: normalizedColumns,
-        visibleColumns: resolveVisibleColumns(normalizedColumns),
-        rows: normalizedRows,
-        visibleRows: resolveVisibleRows(normalizedRows, sheet.filters, sheet.groups, sheet.sorts),
+        filters: normalizedFilters,
         groups: sheet.groups,
+        rows: normalizedRows,
         sorts: sheet.sorts,
-        filters: sheet.filters
-			})
+			)
 		)
 	}
 }
 
-export const loadSheetReducer = (sheet: Sheet): SheetActions => {
+export const loadSheetReducer = (sheet: Sheet, cells: SheetCells, columns: SheetColumns, filters: SheetFilters, groups: SheetGroups, rows: SheetRows, sorts: SheetSorts): SheetActions => {
 	return {
 		type: LOAD_SHEET,
 		sheet,
+    cells,
+    columns,
+    filters,
+    groups,
+    rows,
+    sorts,
 	}
 }
 
@@ -368,45 +424,23 @@ export const updateSheetReducer = (sheetId: string, updates: SheetUpdates): Shee
 export const UPDATE_SHEET_CELL = 'UPDATE_SHEET_CELL'
 interface UpdateSheetCell {
 	type: typeof UPDATE_SHEET_CELL
-	sheetId: string
-  rowId: string
 	cellId: string
 	updates: SheetCellUpdates
 }
 
-export const updateSheetCell = (sheetId: string, rowId: string, cellId: string, updates: SheetCellUpdates): ThunkAction => {
+export const updateSheetCell = (cellId: string, updates: SheetCellUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch) => {
-    batchSheetCellUpdate(() => dispatch(updateSheetCellReducer(sheetId, rowId, cellId, updates)))
+    dispatch(updateSheetCellReducer(cellId, updates))
 		mutation.updateSheetCell(cellId, updates)
 	}
 }
 
-export const updateSheetCellReducer = (sheetId: string, rowId: string, cellId: string, updates: SheetCellUpdates): SheetActions => {
+export const updateSheetCellReducer = (cellId: string, updates: SheetCellUpdates): SheetActions => {
 	return {
 		type: UPDATE_SHEET_CELL,
-		sheetId,
-    rowId,
 		cellId,
 		updates,
 	}
-}
-
-let batchedSheetCellUpdatesTimeout: number = null
-let batchedSheetCellUpdates: Array<() => SheetActions> = []
-const batchSheetCellUpdate = (sheetCellUpdate: () => SheetActions) => {
-  clearTimeout(batchedSheetCellUpdatesTimeout)
-  batchedSheetCellUpdates.push(sheetCellUpdate)
-  batchedSheetCellUpdatesTimeout = setTimeout(() => runBatchedSheetCellUpdates(), 500)
-}
-const runBatchedSheetCellUpdates = () => {
-  console.log('runBatchedUpdates')
-  batch(() => {
-    batchedSheetCellUpdates.forEach(sheetCellUpdate => sheetCellUpdate())
-  })
-}
-export const clearTimeoutBatchedSheetCellUpdates = () => {
-  console.log('clearTimeout')
-  clearTimeout(batchedSheetCellUpdatesTimeout)
 }
 
 //-----------------------------------------------------------------------------
@@ -415,22 +449,20 @@ export const clearTimeoutBatchedSheetCellUpdates = () => {
 export const UPDATE_SHEET_COLUMN = 'UPDATE_SHEET_COLUMN'
 interface UpdateSheetColumn {
 	type: typeof UPDATE_SHEET_COLUMN
-	sheetId: string
   columnId: string
 	updates: SheetColumnUpdates
 }
 
-export const updateSheetColumn = (sheetId: string, columnId: string, updates: SheetColumnUpdates): ThunkAction => {
+export const updateSheetColumn = (columnId: string, updates: SheetColumnUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch) => {
-    dispatch(updateSheetColumnReducer(sheetId, columnId, updates))
+    dispatch(updateSheetColumnReducer(columnId, updates))
 		mutation.updateSheetColumn(columnId, updates)
 	}
 }
 
-export const updateSheetColumnReducer = (sheetId: string, columnId: string, updates: SheetColumnUpdates): SheetActions => {
+export const updateSheetColumnReducer = (columnId: string, updates: SheetColumnUpdates): SheetActions => {
 	return {
 		type: UPDATE_SHEET_COLUMN,
-		sheetId,
     columnId,
 		updates,
 	}
@@ -439,75 +471,163 @@ export const updateSheetColumnReducer = (sheetId: string, columnId: string, upda
 //-----------------------------------------------------------------------------
 // Update Sheet Filter
 //-----------------------------------------------------------------------------
-export interface SheetFilterUpdates {}
+export const UPDATE_SHEET_FILTER = 'UPDATE_SHEET_FILTER'
+interface UpdateSheetFilter {
+	type: typeof UPDATE_SHEET_FILTER
+  filterId: string
+	updates: SheetFilterUpdates
+}
 
-export const updateSheetFilter = (sheetId: string, filterId: string, updates: SheetFilterUpdates): ThunkAction => {
-	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
-    const {
-      filters,
-      groups,
-      rows,
-      sorts,
-    } = getState().sheet[sheetId]
-    const filterIndex = filters.findIndex(filter => filter.id === filterId)
-    const nextFilters = clone(filters)
-    if(filterIndex > -1) {
-      nextFilters[filterIndex] = { ...nextFilters[filterIndex], ...updates }
-    }
-    const nextVisibleRows = resolveVisibleRows(rows, nextFilters, groups, sorts)
-    dispatch(updateSheetReducer(sheetId, {
-      filters: nextFilters,
-      visibleRows: nextVisibleRows
-    }))
+export const updateSheetFilter = (filterId: string, updates: SheetFilterUpdates): ThunkAction => {
+	return async (dispatch: ThunkDispatch) => {
+    dispatch(updateSheetFilterReducer(filterId, updates))
+		mutation.updateSheetFilter(filterId, updates)
+	}
+}
+
+export const updateSheetFilterReducer = (filterId: string, updates: SheetFilterUpdates): SheetActions => {
+	return {
+		type: UPDATE_SHEET_FILTER,
+    filterId,
+		updates,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Sheet Filters
+//-----------------------------------------------------------------------------
+export const UPDATE_SHEET_FILTERS = 'UPDATE_SHEET_FILTERS'
+interface UpdateSheetFilters {
+  type: typeof UPDATE_SHEET_FILTERS,
+  nextFilters: SheetFilters
+}
+
+export const updateSheetFilters = (nextFilters: SheetFilters): SheetActions => {
+	return {
+		type: UPDATE_SHEET_FILTERS,
+    nextSheetFilters,
 	}
 }
 
 //-----------------------------------------------------------------------------
 // Update Sheet Group
 //-----------------------------------------------------------------------------
-export const updateSheetGroup = (sheetId: string, groupId: string, updates: SheetGroupUpdates): ThunkAction => {
-	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
-    const {
-      filters,
-      groups,
-      rows,
-      sorts,
-    } = getState().sheet[sheetId]
-    const groupIndex = groups.findIndex(group => group.id === groupId)
-    const nextGroups = clone(groups)
-    if(groupIndex > -1) {
-      nextGroups[groupIndex] = { ...nextGroups[groupIndex], ...updates }
-    }
-    const nextVisibleRows = resolveVisibleRows(rows, filters, nextGroups, sorts)
-    dispatch(updateSheetReducer(sheetId, {
-      groups: nextGroups,
-      visibleRows: nextVisibleRows
-    }))
-    mutation.updateSheetGroup(groupId, updates)
+export const UPDATE_SHEET_GROUP = 'UPDATE_SHEET_GROUP'
+interface UpdateSheetGroup {
+	type: typeof UPDATE_SHEET_GROUP
+  groupId: string
+	updates: SheetGroupUpdates
+}
+
+export const updateSheetGroup = (groupId: string, updates: SheetGroupUpdates): ThunkAction => {
+	return async (dispatch: ThunkDispatch) => {
+    dispatch(updateSheetGroupReducer(groupId, updates))
+		mutation.updateSheetGroup(groupId, updates)
+	}
+}
+
+export const updateSheetGroupReducer = (groupId: string, updates: SheetGroupUpdates): SheetActions => {
+	return {
+		type: UPDATE_SHEET_GROUP,
+    groupId,
+		updates,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Sheet Groups
+//-----------------------------------------------------------------------------
+export const UPDATE_SHEET_GROUPS = 'UPDATE_SHEET_GROUPS'
+interface UpdateSheetGroups {
+  type: typeof UPDATE_SHEET_GROUPS,
+  nextGroups: SheetGroups
+}
+
+export const updateSheetGroups = (nextGroups: SheetGroups): SheetActions => {
+	return {
+		type: UPDATE_SHEET_GROUPS,
+    nextSheetGroups,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Sheet Row
+//-----------------------------------------------------------------------------
+export const UPDATE_SHEET_ROW = 'UPDATE_SHEET_ROW'
+interface UpdateSheetRow {
+	type: typeof UPDATE_SHEET_ROW
+  rowId: string
+	updates: SheetRowUpdates
+}
+
+export const updateSheetRow = (rowId: string, updates: SheetRowUpdates): ThunkAction => {
+	return async (dispatch: ThunkDispatch) => {
+    dispatch(updateSheetRowReducer(rowId, updates))
+		mutation.updateSheetRow(rowId, updates)
+	}
+}
+
+export const updateSheetRowReducer = (rowId: string, updates: SheetRowUpdates): SheetActions => {
+	return {
+		type: UPDATE_SHEET_ROW,
+    rowId,
+		updates,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Sheet Rows
+//-----------------------------------------------------------------------------
+export const UPDATE_SHEET_ROWS = 'UPDATE_SHEET_ROWS'
+interface UpdateSheetRows {
+  type: typeof UPDATE_SHEET_ROWS,
+  nextRows: SheetRows
+}
+
+export const updateSheetRows = (nextRows: SheetRows): SheetActions => {
+	return {
+		type: UPDATE_SHEET_ROWS,
+    nextSheetRows,
 	}
 }
 
 //-----------------------------------------------------------------------------
 // Update Sheet Sort
 //-----------------------------------------------------------------------------
-export const updateSheetSort = (sheetId: string, sortId: string, updates: SheetSortUpdates): ThunkAction => {
-	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
-    const {
-      filters,
-      groups,
-      rows,
-      sorts,
-    } = getState().sheet[sheetId]
-    const sortIndex = sorts.findIndex(sort => sort.id === sortId)
-    const nextSorts = clone(sorts)
-    if(sortIndex > -1) {
-      nextSorts[sortIndex] = { ...nextSorts[sortIndex], ...updates }
-    }
-    const nextVisibleRows = resolveVisibleRows(rows, filters, groups, nextSorts)
-    dispatch(updateSheetReducer(sheetId, {
-      sorts: nextSorts,
-      visibleRows: nextVisibleRows
-    }))
-    mutation.updateSheetSort(sortId, updates)
+export const UPDATE_SHEET_SORT = 'UPDATE_SHEET_SORT'
+interface UpdateSheetSort {
+	type: typeof UPDATE_SHEET_SORT
+  sortId: string
+	updates: SheetSortUpdates
+}
+
+export const updateSheetSort = (sortId: string, updates: SheetSortUpdates): ThunkAction => {
+	return async (dispatch: ThunkDispatch) => {
+    dispatch(updateSheetSortReducer(sortId, updates))
+		mutation.updateSheetSort(sortId, updates)
+	}
+}
+
+export const updateSheetSortReducer = (sortId: string, updates: SheetSortUpdates): SheetActions => {
+	return {
+		type: UPDATE_SHEET_SORT,
+    sortId,
+		updates,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Sheet Sorts
+//-----------------------------------------------------------------------------
+export const UPDATE_SHEET_SORTS = 'UPDATE_SHEET_SORTS'
+interface UpdateSheetSorts {
+  type: typeof UPDATE_SHEET_SORTS,
+  nextSorts: SheetSorts
+}
+
+export const updateSheetSorts = (nextSorts: SheetSorts): SheetActions => {
+	return {
+		type: UPDATE_SHEET_SORTS,
+    nextSheetSorts,
 	}
 }
