@@ -75,6 +75,11 @@ export type SheetRow = {
 export type SheetRowUpdates = {
   cells?: SheetCell['id'][]
 }
+export type SheetRowToServer = {
+  id: string
+  sheetId: string
+  cells: SheetCell[]
+}
 
 export type SheetCell = {
 	id: string

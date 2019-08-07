@@ -7,7 +7,7 @@ import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { SheetCell, SheetColumnType, SheetCellUpdates, SheetRow } from '@app/state/sheet/types'
+import { SheetCell, SheetColumnType, SheetCellUpdates } from '@app/state/sheet/types'
 import { selectCell } from '@app/state/sheet/selectors'
 
 import SheetCellBoolean from '@app/bundles/Sheet/SheetCellBoolean'
@@ -28,7 +28,6 @@ const mapStateToProps = (state: AppState, props: SheetCellProps) => ({
 const SheetCell = memo(({
   cell,
   highlightColor,
-  row,
   sheetId,
   style,
   type,
@@ -110,7 +109,6 @@ interface SheetCellProps {
   cellId: SheetCell['id']
   cell?: SheetCell
   highlightColor: string
-  row: SheetRow
   sheetId: string
   style: {}
   type: SheetColumnType

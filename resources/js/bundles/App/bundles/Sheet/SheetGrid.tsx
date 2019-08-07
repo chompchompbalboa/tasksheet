@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { forwardRef, memo, MouseEvent, useRef } from 'react'
+import React, { forwardRef, memo, MouseEvent, useEffect, useRef } from 'react'
 import { areEqual, VariableSizeGrid as Grid } from 'react-window'
 import styled from 'styled-components'
 
@@ -32,6 +32,10 @@ const SheetGrid = memo(({
 }: SheetGridProps) => {
 
   const grid = useRef()
+  useEffect(() => {
+    // @ts-ignore
+    if(grid && grid.current) { grid.current.resetAfterColumnIndex(0) }
+  }, [ columns ])
 
   const rerenderAfterUpdateSheetColumn = (columnId: string, updates: SheetColumnUpdates) => {
     updateSheetColumn(columnId, updates)
@@ -65,7 +69,6 @@ const SheetGrid = memo(({
         <SheetCell
           cellId={rows[sheetVisibleRows[rowIndex]].cells[columnIndex]}
           highlightColor={highlightColor}
-          row={rows[sheetVisibleRows[rowIndex]]}
           sheetId={sheetId}
           style={style}
           type={columns[sheetVisibleColumns[columnIndex]].type}

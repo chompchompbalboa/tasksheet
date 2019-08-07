@@ -5,7 +5,7 @@ import { Sheets, SheetCells, SheetColumns, SheetFilters, SheetGroups, SheetRows,
 import { 
   SheetActions, 
   LOAD_SHEET, UPDATE_SHEET, 
-  UPDATE_SHEET_CELL, 
+  UPDATE_SHEET_CELL, UPDATE_SHEET_CELLS,
   UPDATE_SHEET_COLUMN,
   UPDATE_SHEET_FILTER, UPDATE_SHEET_FILTERS,
   UPDATE_SHEET_GROUP, UPDATE_SHEET_GROUPS,
@@ -76,6 +76,14 @@ export const userReducer = (state: SheetState = defaultSheetState, action: Sheet
         cells: { ...state.cells,
           [cellId]: { ...state.cells[cellId], ...updates }
         }
+      }
+		}
+
+		case UPDATE_SHEET_CELLS: {
+			const { nextSheetCells } = action
+			return {
+        ...state,
+        cells: nextSheetCells
       }
 		}
 

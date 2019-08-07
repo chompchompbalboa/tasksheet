@@ -25,15 +25,15 @@ import { updateTabs } from '@app/state/tab/actions'
 
 import { resolveVisibleRows } from '@app/state/sheet/resolvers'
 
-import { defaultRow } from '@app/state/sheet/defaults'
+import { defaultCell, defaultRow } from '@app/state/sheet/defaults'
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 export type SheetActions = 
   LoadSheet | UpdateSheet | 
-  UpdateSheetCell |
-  UpdateSheetColumn |
+  UpdateSheetCell | UpdateSheetCells | 
+  UpdateSheetColumn | UpdateSheetColumns | 
   DeleteSheetFilter | UpdateSheetFilter | UpdateSheetFilters |
   DeleteSheetGroup | UpdateSheetGroup | UpdateSheetGroups |
   UpdateSheetRow | UpdateSheetRows | 
@@ -101,21 +101,30 @@ export const createSheetRow = (sheetId: string, sourceSheetId: string): ThunkAct
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       sheets,
+      cells,
       rows,
     } = getState().sheet
     const sheet = sheets[sheetId]
     const newRow = defaultRow(sourceSheetId !== null ? sourceSheetId : sheetId, createUuid(), sheet.columns)
+    const nextCells = { ...cells }
+    newRow.cells.forEach((cellId: string, index: number) => {
+      nextCells[cellId] = defaultCell(sheetId, newRow.id, sheet.columns[index], cellId)
+    })
     const nextRows = { ...rows, [newRow.id]: newRow }
     const nextSheetRows = [ ...sheet.rows, newRow.id ]
     const nextSheetVisibleRows = [ newRow.id, ...sheet.visibleRows ]
     batch(() => {
       dispatch(updateSheetRows(nextRows))
+      dispatch(updateSheetCells(nextCells))
       dispatch(updateSheetReducer(sheetId, {
         rows: nextSheetRows,
         visibleRows: nextSheetVisibleRows
       }))
     })
-    mutation.createSheetRow(newRow)
+    mutation.createSheetRow({
+      ...newRow,
+      cells: newRow.cells.map(nextCellId => nextCells[nextCellId])
+    })
 	}
 }
 
@@ -489,6 +498,22 @@ export const updateSheetCellReducer = (cellId: string, updates: SheetCellUpdates
 }
 
 //-----------------------------------------------------------------------------
+// Update Sheet Cells
+//-----------------------------------------------------------------------------
+export const UPDATE_SHEET_CELLS = 'UPDATE_SHEET_CELLS'
+interface UpdateSheetCells {
+  type: typeof UPDATE_SHEET_CELLS,
+  nextSheetCells: SheetCells
+}
+
+export const updateSheetCells = (nextSheetCells: SheetCells): SheetActions => {
+	return {
+		type: UPDATE_SHEET_CELLS,
+    nextSheetCells,
+	}
+}
+
+//-----------------------------------------------------------------------------
 // Update Sheet Column
 //-----------------------------------------------------------------------------
 export const UPDATE_SHEET_COLUMN = 'UPDATE_SHEET_COLUMN'
@@ -510,6 +535,22 @@ export const updateSheetColumnReducer = (columnId: string, updates: SheetColumnU
 		type: UPDATE_SHEET_COLUMN,
     columnId,
 		updates,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Sheet Columns
+//-----------------------------------------------------------------------------
+export const UPDATE_SHEET_COLUMNS = 'UPDATE_SHEET_COLUMNS'
+interface UpdateSheetColumns {
+  type: typeof UPDATE_SHEET_COLUMNS,
+  nextSheetColumns: SheetColumns
+}
+
+export const updateSheetColumns = (nextSheetColumns: SheetColumns): SheetActions => {
+	return {
+		type: UPDATE_SHEET_COLUMNS,
+    nextSheetColumns,
 	}
 }
 

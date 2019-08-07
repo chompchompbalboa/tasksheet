@@ -12,16 +12,16 @@ export const defaultRow = (sheetId: string, rowId: string, columns: SheetColumn[
   return {
     id: rowId,
     sheetId: sheetId,
-    cells: Object.keys(columns).map(columnId => defaultCell(sheetId, rowId, columnId).id)
+    cells: Object.keys(columns).map(() => createUuid())
   }
 }
 
 //-----------------------------------------------------------------------------
 // Default Cell
 //-----------------------------------------------------------------------------
-export const defaultCell = (sheetId: string, rowId: string, columnId: string): SheetCell => {
+export const defaultCell = (sheetId: string, rowId: string, columnId: string, cellId: string): SheetCell => {
   return {
-    id: createUuid(),
+    id: cellId,
     sheetId: sheetId, 
     columnId: columnId,
     rowId: rowId,
