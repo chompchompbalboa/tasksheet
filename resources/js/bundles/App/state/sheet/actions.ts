@@ -565,9 +565,24 @@ interface UpdateSheetGroup {
 }
 
 export const updateSheetGroup = (groupId: string, updates: SheetGroupUpdates): ThunkAction => {
-	return async (dispatch: ThunkDispatch) => {
+	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     dispatch(updateSheetGroupReducer(groupId, updates))
 		mutation.updateSheetGroup(groupId, updates)
+    setTimeout(() => {
+      const {
+        sheets,
+        cells,
+        filters,
+        groups,
+        rows,
+        sorts,
+      } = getState().sheet
+      const sheetId = groups[groupId].sheetId
+      const sheet = sheets[sheetId]
+      dispatch(updateSheet(sheetId, {
+        visibleRows: resolveVisibleRows(sheet, rows, cells, filters, groups, sorts)
+      }))
+    }, 25)
 	}
 }
 
@@ -647,9 +662,24 @@ interface UpdateSheetSort {
 }
 
 export const updateSheetSort = (sortId: string, updates: SheetSortUpdates): ThunkAction => {
-	return async (dispatch: ThunkDispatch) => {
+	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     dispatch(updateSheetSortReducer(sortId, updates))
 		mutation.updateSheetSort(sortId, updates)
+    setTimeout(() => {
+      const {
+        sheets,
+        cells,
+        filters,
+        groups,
+        rows,
+        sorts,
+      } = getState().sheet
+      const sheetId = sorts[sortId].sheetId
+      const sheet = sheets[sheetId]
+      dispatch(updateSheet(sheetId, {
+        visibleRows: resolveVisibleRows(sheet, rows, cells, filters, groups, sorts)
+      }))
+    }, 25)
 	}
 }
 

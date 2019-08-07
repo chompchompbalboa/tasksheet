@@ -20,13 +20,16 @@ const SheetCellContainer = ({
   useEffect(() => {
     if(isEditing) {
       focusCell()
-      window.addEventListener('click', closeOnClickOutside)
+      window.addEventListener('mousedown', closeOnClickOutside)
+      window.addEventListener('keypress', closeOnKeypressEnter)
     }
     else {
-      window.removeEventListener('click', closeOnClickOutside)
+      window.removeEventListener('mousedown', closeOnClickOutside)
+      window.removeEventListener('keypress', closeOnKeypressEnter)
     }
     return () => {
-      window.removeEventListener('click', closeOnClickOutside)
+      window.removeEventListener('mousedown', closeOnClickOutside)
+      window.removeEventListener('keypress', closeOnKeypressEnter)
     }
   }, [ isEditing ])
 
@@ -37,7 +40,14 @@ const SheetCellContainer = ({
     }
   }
 
-  const handleDoubleClick = (e: any) => {
+  const closeOnKeypressEnter = (e: KeyboardEvent) => {
+    if(e.key === "Enter") {
+      setIsEditing(false)
+      localStorage.setItem('sheetCellIsEditing', null)
+    }
+  }
+
+  const openOnDoubleClick = (e: any) => {
     e.preventDefault()
     setIsEditing(true)
     localStorage.setItem('sheetCellIsEditing', cellId)
@@ -46,7 +56,7 @@ const SheetCellContainer = ({
   return (
     <Container
       ref={container}
-      onDoubleClick={(e) => handleDoubleClick(e)}>
+      onDoubleClick={(e) => openOnDoubleClick(e)}>
         {isEditing 
           ? children
           : value === null ? " " : value}

@@ -64,6 +64,12 @@ const SheetCell = memo(({
   }
 
   useEffect(() => {
+    if(cellValue !== cell.value && !isHighlighted) {
+      setCellValue(cell.value)
+    }
+  }, [ cell ])
+
+  useEffect(() => {
     let updateSheetCellTimer: number = null
     if(cell && cellValue !== cell.value) {
       clearTimeout(updateSheetCellTimer)

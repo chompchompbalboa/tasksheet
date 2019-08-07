@@ -6,6 +6,8 @@ import styled from 'styled-components'
 
 import { SheetColumn } from '@app/state/sheet/types'
 
+import ResizeContainer from '@app/components/ResizeContainer'
+
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
@@ -24,7 +26,11 @@ const SheetHeader = ({
       containerWidth={width}
       isLast={isLast}
       onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'COLUMN', id)}>
-      {name}
+      <NameContainer>
+        {name}
+      </NameContainer>
+      <ResizeContainer
+        onResize={(value: number) => console.log(value)}/>
     </Container>
   )
 }
@@ -60,6 +66,10 @@ interface ContainerProps {
   containerWidth: number
   isLast: boolean
 }
+
+const NameContainer = styled.div`
+  width: calc(100% - 3px);
+`
 
 //-----------------------------------------------------------------------------
 // Export

@@ -48,7 +48,7 @@ const SheetActionGroup = ({
 
   const selectedOptions = sheetGroups && sheetGroups.map((groupId: SheetGroup['id']) => { 
     const group = groups[groupId]
-    return { label: columns[group.columnId].name, value: group.columnId }
+    return { label: columns[group.columnId].name, value: group.id }
   })
 
   return (

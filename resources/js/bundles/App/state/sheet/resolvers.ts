@@ -89,7 +89,7 @@ export const resolveVisibleRows = (sheet: Sheet, rows: SheetRows, cells: SheetCe
       return groupIds.map(groupId => getValue(groups[groupId])).reduce((combined: string, current: string) => combined + current.toLowerCase() + '-')
     })
     const filteredSortedGroupedRowIds: string[] = []
-    const orderedGroups = 'ASC' === 'ASC' ? Object.keys(groupedRowIds).sort() : Object.keys(groupedRowIds).sort().reverse()
+    const orderedGroups = groups[groupIds[0]].order === 'ASC' ? Object.keys(groupedRowIds).sort() : Object.keys(groupedRowIds).sort().reverse()
     orderedGroups.forEach(groupName => {
       const group = groupedRowIds[groupName]
       filteredSortedGroupedRowIds.push('GROUP_HEADER')

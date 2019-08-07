@@ -16,7 +16,7 @@ import {
 //-----------------------------------------------------------------------------
 // Types
 //-----------------------------------------------------------------------------
-interface SheetState {
+export interface SheetState {
   sheets: Sheets
   cells: SheetCells
   columns: SheetColumns

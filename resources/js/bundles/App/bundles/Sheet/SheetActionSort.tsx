@@ -47,7 +47,7 @@ const SheetActionSort = ({
   })
   const selectedOptions = sheetSorts && sheetSorts.map((sortId: SheetSort['id']) => { 
     const sort = sorts[sortId]
-    return { label: columns[sort.columnId].name, value: sort.columnId }
+    return { label: columns[sort.columnId].name, value: sortId }
   })
 
   return (
