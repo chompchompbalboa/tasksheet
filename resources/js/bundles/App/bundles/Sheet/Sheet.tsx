@@ -93,6 +93,7 @@ const SheetComponent = memo(({
   
   const isActiveFile = fileId === activeTabId
   const memoizedUpdateSheetCell = useCallback((cellId, updates) => updateSheetCell(cellId, updates), [])
+  const memoizedUpdateSheetColumn = useCallback((columnId, updates) => updateSheetColumn(columnId, updates), [])
 
   const [ hasLoaded, setHasLoaded ] = useState(false)
   useEffect(() => {
@@ -158,7 +159,7 @@ const SheetComponent = memo(({
           contextMenuTop={contextMenuTop}
           contextMenuLeft={contextMenuLeft}
           closeContextMenu={closeContextMenu}
-          updateSheetColumn={updateSheetColumn}/>
+          updateSheetColumn={memoizedUpdateSheetColumn}/>
         <SheetActions
           sheetId={id}
           columns={columns}
@@ -179,7 +180,8 @@ const SheetComponent = memo(({
               sheetId={id}
               updateSheetCell={memoizedUpdateSheetCell}
               sheetVisibleColumns={sheetVisibleColumns}
-              sheetVisibleRows={sheetVisibleRows}/>
+              sheetVisibleRows={sheetVisibleRows}
+              updateSheetColumn={memoizedUpdateSheetColumn}/>
         }
         </SheetContainer>
     </Container>

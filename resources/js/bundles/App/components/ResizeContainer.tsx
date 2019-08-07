@@ -8,9 +8,10 @@ import styled from 'styled-components'
 // Component
 //-----------------------------------------------------------------------------
 export const ResizeContainer = ({ 
-  containerBackgroundColor = 'red',
-  containerWidth = '3px',
-  onResize = null
+  containerBackgroundColor = 'rgb(180, 180, 180)',
+  containerWidth = '2px',
+  onResizeStart = null,
+  onResizeEnd = null
 }: ResizeContainerProps) => {
 
   const [ currentClientX, setCurrentClientX ] = useState(0)
@@ -30,6 +31,7 @@ export const ResizeContainer = ({
   
   const handleMouseDown = (e: MouseEvent) => {
     e.preventDefault()
+    onResizeStart()
     setIsResizing(true)
     setStartClientX(e.clientX)
     setCurrentClientX(e.clientX)
@@ -46,11 +48,11 @@ export const ResizeContainer = ({
     document.body.style.cursor = null
     window.removeEventListener('mousemove', handleMouseMove)
     window.removeEventListener('mouseup', handleMouseUp)
-    // @ts-ignore mouse-move
-    onResize(e.clientX - startClientX)
     setCurrentClientX(null)
     setIsResizing(false)
     setStartClientX(null)
+    // @ts-ignore mouse-move
+    onResizeEnd(e.clientX - startClientX)
   }
 
   return (
@@ -70,7 +72,8 @@ export const ResizeContainer = ({
 export type ResizeContainerProps = {
   containerBackgroundColor?: string
   containerWidth?: string
-  onResize(widthChange: number): void
+  onResizeStart?(): void
+  onResizeEnd(widthChange: number): void
 }
 
 //-----------------------------------------------------------------------------

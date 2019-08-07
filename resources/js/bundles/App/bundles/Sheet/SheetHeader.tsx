@@ -18,19 +18,24 @@ const SheetHeader = ({
     width
   },
   handleContextMenu,
-  isLast
+  isLast,
+  isResizing,
+  onResizeStart,
+  onResizeEnd
 }: SheetHeaderProps) => {
 
   return (
     <Container
       containerWidth={width}
       isLast={isLast}
+      isResizing={isResizing}
       onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'COLUMN', id)}>
       <NameContainer>
         {name}
       </NameContainer>
       <ResizeContainer
-        onResize={(value: number) => console.log(value)}/>
+        onResizeStart={onResizeStart}
+        onResizeEnd={onResizeEnd}/>
     </Container>
   )
 }
@@ -42,19 +47,20 @@ interface SheetHeaderProps {
   column: SheetColumn
   handleContextMenu(e: MouseEvent, type: string, id: string): void
   isLast: boolean
+  isResizing: boolean
+  onResizeStart(): void
+  onResizeEnd(widthChange: number): void
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  cursor: default;
-  display: inline-block;
-  overflow: hidden;
-  text-overflow: hidden;
+  cursor: ${ ({ isResizing }: ContainerProps) => isResizing ? 'col-resize' : 'default' };
+  display: inline-flex;
   user-select: none;
   width: ${ ({ containerWidth }: ContainerProps ) => containerWidth + 'px'};
-  padding: 0.28rem;
+  height: 100%;
   text-align: left;
   background-color: rgb(250, 250, 250);
   box-shadow: inset 0 -1px 0px 0px rgba(180,180,180,1);
@@ -65,10 +71,15 @@ const Container = styled.div`
 interface ContainerProps {
   containerWidth: number
   isLast: boolean
+  isResizing: boolean
 }
 
 const NameContainer = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0.28rem 0 0.28rem 0.14rem;
   width: calc(100% - 3px);
+  white-space: nowrap;
 `
 
 //-----------------------------------------------------------------------------

@@ -14,7 +14,8 @@ afterEach(cleanup)
 const props: ResizeContainerProps = {
   containerBackgroundColor: 'red',
   containerWidth: '5px',
-  onResize: jest.fn()
+  onResizeEnd: jest.fn(),
+  onResizeStart: jest.fn()
 }
 
 //-----------------------------------------------------------------------------
@@ -47,11 +48,11 @@ test("Moves the resize container when the mouse moves", async () => {
   expect(resizeContainer).toHaveStyleRule('left', '15px')
 })
 
-test("Calls onResize the the mouse is released", async () => {
+test("Calls onResizeStart the the mouse is released", async () => {
   const { getByTestId } = render(<ResizeContainer {...props} />)
   const resizeContainer = getByTestId('resizeContainer')
   fireEvent.mouseDown(resizeContainer, { clientX: 0 })
   fireEvent.mouseMove(resizeContainer, { clientX: 10 })
   fireEvent.mouseUp(resizeContainer, { clientX: 10 })
-  expect(props.onResize).toHaveBeenCalledWith(10)
+  expect(props.onResizeStart).toHaveBeenCalledWith(10)
 })

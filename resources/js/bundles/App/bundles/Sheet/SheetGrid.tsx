@@ -1,16 +1,20 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { forwardRef, memo, MouseEvent } from 'react'
+import React, { forwardRef, memo, MouseEvent, useRef } from 'react'
 import { areEqual, VariableSizeGrid as Grid } from 'react-window'
 import styled from 'styled-components'
 
-import { SheetColumn, SheetColumns, SheetCellUpdates, SheetRow, SheetRows } from '@app/state/sheet/types'
+import { 
+  SheetColumn, SheetColumns, SheetColumnUpdates,
+  SheetCellUpdates, 
+  SheetRow, SheetRows 
+} from '@app/state/sheet/types'
 
 import Autosizer from 'react-virtualized-auto-sizer'
 import SheetCell from '@app/bundles/Sheet/SheetCell'
 import SheetGroupCell from '@app/bundles/Sheet/SheetGroupCell'
-import SheetHeader from '@app/bundles/Sheet/SheetHeader'
+import SheetHeaders from '@app/bundles/Sheet/SheetHeaders'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -22,22 +26,28 @@ const SheetGrid = memo(({
   rows,
   sheetId,
   updateSheetCell,
+  updateSheetColumn,
   sheetVisibleColumns,
   sheetVisibleRows,
 }: SheetGridProps) => {
+
+  const grid = useRef()
+
+  const rerenderAfterUpdateSheetColumn = (columnId: string, updates: SheetColumnUpdates) => {
+    updateSheetColumn(columnId, updates)
+    // @ts-ignore
+    grid.current.resetAfterColumnIndex(0)
+  }
 
   const GridWrapper = forwardRef(({ children, ...rest }, ref) => (
     <GridContainer
       //@ts-ignore ref={ref}
       ref={ref} {...rest}>
-      <SheetHeaders>
-      {sheetVisibleColumns.map((columnId: string, index: number) => (
-        <SheetHeader
-          key={columnId}
-          column={columns[columnId]}
-          handleContextMenu={handleContextMenu}
-          isLast={index === sheetVisibleColumns.length - 1}/>))}
-      </SheetHeaders>
+      <SheetHeaders
+        columns={columns}
+        handleContextMenu={handleContextMenu}
+        sheetVisibleColumns={sheetVisibleColumns}
+        updateSheetColumn={(columnId: string, updates: SheetColumnUpdates) => rerenderAfterUpdateSheetColumn(columnId, updates)}/>
       <GridItems>
         {children}
       </GridItems>
@@ -72,6 +82,7 @@ const SheetGrid = memo(({
     <Autosizer>
       {({ width, height }) => (
         <Grid
+          ref={grid}
           innerElementType={GridWrapper}
           width={width}
           height={height}
@@ -98,6 +109,7 @@ interface SheetGridProps {
   rows: SheetRows
   sheetId: string
   updateSheetCell(cellId: string, updates: SheetCellUpdates): void
+  updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
   sheetVisibleColumns: SheetColumn['id'][]
   sheetVisibleRows: SheetRow['id'][]
 }
@@ -115,14 +127,6 @@ const GridContainer = styled.div`
   width: 100%;
   height: 100%;
   background-color: white;
-`
-
-const SheetHeaders = styled.div`
-  z-index: 1000;
-  position: sticky;
-  top: 0;
-  left: 0;
-  height: 3.5vh;
 `
 
 const GridItems = styled.div`
