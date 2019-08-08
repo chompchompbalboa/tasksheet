@@ -59,7 +59,7 @@ export const resolveVisibleRows = (sheet: Sheet, rows: SheetRows, cells: SheetCe
     let passesFilter = true
     filterIds.forEach(filterId => {
       const filter = filters[filterId]
-      const cell = cells[row.cells.find(cellId => cells[cellId].columnId === filter.columnId)]
+      const cell = cells[row.cells[filter.columnId]]
       if(!resolveFilter(cell.value, filter.value, filter.type)) { passesFilter = false }
     })
     return passesFilter ? row.id : undefined
@@ -69,7 +69,7 @@ export const resolveVisibleRows = (sheet: Sheet, rows: SheetRows, cells: SheetCe
   const sortBy = sortIds && sortIds.map(sortId => {
     const sort = sorts[sortId]
     return (rowId: string) => {
-      const cell = cells[rows[rowId].cells.find(cellId => cells[cellId].columnId === sort.columnId)]
+      const cell = cells[rows[rowId].cells[sort.columnId]]
       return resolveValue(cell.value)
     }
   })
@@ -83,7 +83,7 @@ export const resolveVisibleRows = (sheet: Sheet, rows: SheetRows, cells: SheetCe
   else {
     const groupedRowIds = groupBy(filteredSortedRowIds, (rowId: string) => {
       const getValue = (group: SheetGroup) => {
-        const cell = rows[rowId] && cells[rows[rowId].cells.find(cellId => cells[cellId].columnId === group.columnId)]
+        const cell = rows[rowId] && cells[rows[rowId].cells[group.columnId]]
         return cell && cell.value
       }
       return groupIds.map(groupId => getValue(groups[groupId])).reduce((combined: string, current: string) => combined + current.toLowerCase() + '-')

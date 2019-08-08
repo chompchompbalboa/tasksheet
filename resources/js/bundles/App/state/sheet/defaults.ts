@@ -9,10 +9,12 @@ import { SheetCell, SheetColumn, SheetRow } from '@app/state/sheet/types'
 // Default Row
 //-----------------------------------------------------------------------------
 export const defaultRow = (sheetId: string, rowId: string, columns: SheetColumn['id'][]): SheetRow => {
+  const newCells: { [columnId: string ]: SheetCell['id'] } = {}
+  columns.forEach(columnId => { newCells[columnId] = createUuid() })
   return {
     id: rowId,
     sheetId: sheetId,
-    cells: Object.keys(columns).map(() => createUuid())
+    cells: newCells
   }
 }
 

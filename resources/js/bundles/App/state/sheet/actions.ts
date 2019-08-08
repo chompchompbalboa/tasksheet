@@ -107,7 +107,8 @@ export const createSheetRow = (sheetId: string, sourceSheetId: string): ThunkAct
     const sheet = sheets[sheetId]
     const newRow = defaultRow(sourceSheetId !== null ? sourceSheetId : sheetId, createUuid(), sheet.columns)
     const nextCells = { ...cells }
-    newRow.cells.forEach((cellId: string, index: number) => {
+    Object.keys(newRow.cells).forEach((columnId: string, index: number) => {
+      const cellId = newRow.cells[columnId]
       nextCells[cellId] = defaultCell(sheetId, newRow.id, sheet.columns[index], cellId)
     })
     const nextRows = { ...rows, [newRow.id]: newRow }
@@ -123,7 +124,7 @@ export const createSheetRow = (sheetId: string, sourceSheetId: string): ThunkAct
     })
     mutation.createSheetRow({
       ...newRow,
-      cells: newRow.cells.map(nextCellId => nextCells[nextCellId])
+      cells: Object.keys(newRow.cells).map(nextCellId => nextCells[nextCellId])
     })
 	}
 }
@@ -369,10 +370,10 @@ export const loadSheet = (sheetFromServer: SheetFromServer): ThunkAction => {
     const normalizedRows: SheetRows = {}
     const normalizedCells: SheetCells = {}
     sheetFromServer.rows.forEach(row => { 
-      let rowCells: SheetCell['id'][] = []
+      let rowCells: { [columnId: string]: SheetCell['id'] }  = {}
       row.cells.forEach(cell => {
         normalizedCells[cell.id] = cell
-        rowCells.push(cell.id)
+        rowCells[cell.columnId] = cell.id
       })
       normalizedRows[row.id] = { id: row.id, sheetId: sheetFromServer.id, cells: rowCells}
     })

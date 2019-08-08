@@ -71,10 +71,10 @@ export type SheetColumnType =
 export type SheetRow = {
 	id: string
 	sheetId: string
-	cells: SheetCell['id'][]
+	cells: { [columnId: string]: SheetCell['id'] }
 }
 export type SheetRowUpdates = {
-  cells?: SheetCell['id'][]
+  cells?: { [columnId: string]: SheetCell['id'] }
 }
 export type SheetRowToServer = {
   id: string

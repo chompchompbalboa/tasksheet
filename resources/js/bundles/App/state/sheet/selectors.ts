@@ -22,20 +22,6 @@ export const selectCell = (
 ): SheetCell => state.sheet.cells[cellId]
 
 //-----------------------------------------------------------------------------
-// Select Cell By Column and Row Id
-//-----------------------------------------------------------------------------
-export const selectCellByColumnAndRowId = (
-  state: AppState,
-  columnId: SheetColumn['id'],
-  rowId: SheetRow['id']
-): SheetCell => {
-  const cells = state.sheet.cells
-  const rowCellIds = state.sheet.rows[rowId].cells
-  const cellId = rowCellIds.find(cellId => cells[cellId].columnId === columnId) 
-  return cells[cellId]
-}
-
-//-----------------------------------------------------------------------------
 // Select Cells
 //-----------------------------------------------------------------------------
 export const selectCells = (

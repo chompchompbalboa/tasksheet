@@ -73,8 +73,7 @@ const SheetGrid = memo(({
     if(rowId !== 'GROUP_HEADER') {
       return (
         <SheetCell
-          columnId={sheetVisibleColumns[columnIndex]}
-          rowId={rowId}
+          cellId={rows[rowId].cells[sheetVisibleColumns[columnIndex]]}
           highlightColor={highlightColor}
           sheetId={sheetId}
           style={style}
