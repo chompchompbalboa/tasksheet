@@ -33,14 +33,20 @@ const SheetGrid = memo(({
 
   const grid = useRef()
   useEffect(() => {
+    if(grid && grid.current) { 
     // @ts-ignore
-    if(grid && grid.current) { grid.current.resetAfterColumnIndex(0) }
-  }, [ columns ])
+      grid.current.resetAfterColumnIndex(0)
+    // @ts-ignore
+      grid.current.resetAfterRowIndex(0)
+    }
+  }, [ columns, sheetVisibleColumns ])
 
   const rerenderAfterUpdateSheetColumn = (columnId: string, updates: SheetColumnUpdates) => {
     updateSheetColumn(columnId, updates)
     // @ts-ignore
-    grid.current.resetAfterColumnIndex(0)
+      grid.current.resetAfterColumnIndex(0)
+    // @ts-ignore
+      grid.current.resetAfterRowIndex(0)
   }
 
   const GridWrapper = forwardRef(({ children, ...rest }, ref) => (
@@ -67,7 +73,8 @@ const SheetGrid = memo(({
     if(rowId !== 'GROUP_HEADER') {
       return (
         <SheetCell
-          cellId={rows[sheetVisibleRows[rowIndex]].cells[columnIndex]}
+          columnId={sheetVisibleColumns[columnIndex]}
+          rowId={rowId}
           highlightColor={highlightColor}
           sheetId={sheetId}
           style={style}

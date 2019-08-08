@@ -13,16 +13,26 @@ import { ThunkDispatch } from '@app/state/types'
 import { 
   createSheetRow as createSheetRowAction,
   loadSheet as loadSheetAction,
+  updateSheet as updateSheetAction,
   updateSheetCell as updateSheetCellAction,
   updateSheetColumn as updateSheetColumnAction
 } from '@app/state/sheet/actions'
-import { SheetColumn, SheetColumns, SheetColumnUpdates, SheetCellUpdates, SheetFilter, SheetFilters, SheetGroup, SheetGroups, SheetRow, SheetRows, SheetFromServer, SheetSort, SheetSorts } from '@app/state/sheet/types'
+import { 
+  Sheet, SheetFromServer, SheetUpdates,
+  SheetColumn, SheetColumns, SheetColumnUpdates, 
+  SheetCellUpdates, 
+  SheetFilter, SheetFilters, 
+  SheetGroup, SheetGroups, 
+  SheetRow, SheetRows, 
+  SheetSort, SheetSorts 
+} from '@app/state/sheet/types'
 import { 
   selectColumns, 
   selectFilters,
   selectGroups,
   selectRows,
   selectSorts,
+  selectSheetColumns,
   selectSheetFilters,
   selectSheetGroups,
   selectSheetSorts,
@@ -50,6 +60,7 @@ const mapStateToProps = (state: AppState, props: SheetComponentProps) => ({
   groups: selectGroups(state),
   rows: selectRows(state),
   sorts: selectSorts(state),
+  sheetColumns: selectSheetColumns(state, props.id),
   sheetFilters: selectSheetFilters(state, props.id),
   sheetGroups: selectSheetGroups(state, props.id),
   sheetSorts: selectSheetSorts(state, props. id),
@@ -62,6 +73,7 @@ const mapStateToProps = (state: AppState, props: SheetComponentProps) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   createSheetRow: (sheetId: string, sourceSheetId: string) => dispatch(createSheetRowAction(sheetId, sourceSheetId)),
   loadSheet: (sheet: SheetFromServer) => dispatch(loadSheetAction(sheet)),
+  updateSheet: (sheetId: string, updates: SheetUpdates) => dispatch(updateSheetAction(sheetId, updates)),
   updateSheetCell: (cellId: string, updates: SheetCellUpdates) => dispatch(updateSheetCellAction(cellId, updates)),
   updateSheetColumn: (columnId: string, updates: SheetColumnUpdates) => dispatch(updateSheetColumnAction(columnId, updates))
 })
@@ -79,6 +91,7 @@ const SheetComponent = memo(({
   id,
   loadSheet,
   rows,
+  sheetColumns,
   sheetFilters,
   sheetGroups,
   sheetSorts,
@@ -86,12 +99,14 @@ const SheetComponent = memo(({
   sheetVisibleColumns,
   sorts,
   sourceSheetId,
+  updateSheet,
   updateSheetCell,
   updateSheetColumn,
   userColorSecondary
 }: SheetComponentProps) => {
   
   const isActiveFile = fileId === activeTabId
+  const memoizedUpdateSheet = useCallback((sheetId, updates) => updateSheet(sheetId, updates), [])
   const memoizedUpdateSheetCell = useCallback((cellId, updates) => updateSheetCell(cellId, updates), [])
   const memoizedUpdateSheetColumn = useCallback((columnId, updates) => updateSheetColumn(columnId, updates), [])
 
@@ -153,12 +168,16 @@ const SheetComponent = memo(({
     <Container>
       <SheetContainer>
         <SheetContextMenus
+          sheetId={id}
           isContextMenuVisible={isContextMenuVisible}
+          columns={columns}
           contextMenuType={contextMenuType}
           contextMenuId={contextMenuId}
           contextMenuTop={contextMenuTop}
           contextMenuLeft={contextMenuLeft}
           closeContextMenu={closeContextMenu}
+          sheetVisibleColumns={sheetVisibleColumns}
+          updateSheet={memoizedUpdateSheet}
           updateSheetColumn={memoizedUpdateSheetColumn}/>
         <SheetActions
           sheetId={id}
@@ -198,9 +217,10 @@ interface SheetComponentProps {
   fileId: string
   filters?: SheetFilters
   groups?: SheetGroups
-  id: string
+  id: Sheet['id']
   loadSheet?(sheet: SheetFromServer): Promise<void>
   rows?: SheetRows
+  sheetColumns?: SheetColumn['id'][]
   sheetFilters?: SheetFilter['id'][]
   sheetGroups?: SheetGroup['id'][]
   sheetSorts?: SheetSort['id'][]
@@ -208,6 +228,7 @@ interface SheetComponentProps {
   sheetVisibleRows?: SheetRow['id'][]
   sorts?: SheetSorts
   sourceSheetId?: string
+  updateSheet?(sheetId: string, updates: SheetUpdates): void
   updateSheetCell?(cellId: string, updates: SheetCellUpdates): void
   updateSheetColumn?(columnId: string, updates: SheetColumnUpdates): void
   userColorSecondary?: string

@@ -56,7 +56,7 @@ class SheetController extends Controller
     public function update(Request $request, Sheet $sheet)
     {
       $sheet->update($request->all());
-      return response()->json($sheet, 200);
+      return response()->json(null, 200);
     }
 
     /**

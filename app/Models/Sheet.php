@@ -11,10 +11,13 @@ class Sheet extends Model
   /**
    * Define which attributes will be visible
    */
-  protected $visible = ['id', 'sourceSheetId', 'fileType', 'rows', 'columns', 'filters', 'groups', 'sorts'];
-  protected $fillable = ['id', 'sourceSheetId'];
+  protected $visible = ['id', 'sourceSheetId', 'fileType', 'rows', 'columns', 'filters', 'groups', 'sorts', 'visibleColumns'];
+  protected $fillable = ['id', 'sourceSheetId', 'visibleColumns'];
   protected $with = ['filters', 'groups', 'sorts'];
   protected $appends = ['columns', 'rows', 'fileType'];
+  protected $casts = [
+    'visibleColumns' => 'array'
+  ];
   
   public function getFileTypeAttribute() {
     return "SHEET";

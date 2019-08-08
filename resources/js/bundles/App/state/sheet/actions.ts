@@ -414,10 +414,10 @@ export const loadSheet = (sheetFromServer: SheetFromServer): ThunkAction => {
       groups: sheetGroups, 
       rows: sheetFromServer.rows.map(row => row.id),
       sorts: sheetSorts,
-      visibleColumns: sheetColumns,
+      visibleColumns: sheetFromServer.visibleColumns !== null ? sheetFromServer.visibleColumns : sheetColumns,
       visibleRows: null,
     }
-
+    
 		dispatch(
 			loadSheetReducer(
         {
@@ -459,8 +459,10 @@ interface UpdateSheet {
 }
 
 export const updateSheet = (sheetId: string, updates: SheetUpdates): ThunkAction => {
+  console.log('updateSheet')
 	return async (dispatch: ThunkDispatch) => {
     dispatch(updateSheetReducer(sheetId, updates))
+    mutation.updateSheet(sheetId, updates)
 	}
 }
 

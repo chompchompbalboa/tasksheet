@@ -35,6 +35,7 @@ export type SheetFromServer = {
   sourceSheetId: string
   fileType: FileType
   columns: SheetColumn[]
+  visibleColumns: SheetColumn['id'][]
   filters: SheetFilter[]
   groups: SheetGroup[]
   rows: SheetFromServerRow[]

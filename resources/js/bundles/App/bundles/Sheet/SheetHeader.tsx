@@ -80,6 +80,8 @@ const NameContainer = styled.div`
   padding: 0.28rem 0 0.28rem 0.14rem;
   width: calc(100% - 3px);
   white-space: nowrap;
+  display: flex;
+  align-items: center;
 `
 
 //-----------------------------------------------------------------------------
