@@ -1,1 +1,4 @@
-export type HistoryStep = (...args: any) => void
+export type HistoryStep = {
+  actions: (...args: any) => void,
+  undoActions: (...args: any) => void
+}

@@ -11,12 +11,14 @@ import {
 // Initial State
 //-----------------------------------------------------------------------------
 export const initialHistoryState: HistoryState = {
-  undo: [],
-  redo: []
+  previousAction: null,
+  currentStep: null,
+  steps: []
 }
 export type HistoryState = {
-  undo: HistoryStep[]
-	redo: HistoryStep[]
+  previousAction: 'UNDO' | 'REDO',
+  currentStep: number,
+  steps: HistoryStep[]
 }
 
 //-----------------------------------------------------------------------------

@@ -73,7 +73,7 @@ const SheetCell = memo(({
     if(cell && cellValue !== cell.value) {
       clearTimeout(updateSheetCellTimer)
       updateSheetCellTimer = setTimeout(() => {
-        updateSheetCell(cell.id, { value: cellValue })
+        updateSheetCell(cell.id, { value: cellValue }, { value: cell.value })
       }, 1000);
     }
     return () => clearTimeout(updateSheetCellTimer);
@@ -112,7 +112,7 @@ interface SheetCellProps {
   sheetId: string
   style: {}
   type: SheetColumnType
-  updateSheetCell(cellId: string, updates: SheetCellUpdates): void
+  updateSheetCell(cellId: string, updates: SheetCellUpdates, undoUpdates: SheetCellUpdates): void
 }
 
 //-----------------------------------------------------------------------------

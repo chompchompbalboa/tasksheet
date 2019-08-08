@@ -6,20 +6,25 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { ThunkDispatch } from '@app/state/types'
-import { historyUndo as historyUndoAction } from '@app/state/history/actions'
+import { 
+  historyUndo as historyUndoAction,
+  historyRedo as historyRedoAction
+} from '@app/state/history/actions'
 
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-  historyUndo: () => dispatch(historyUndoAction())
+  historyUndo: () => dispatch(historyUndoAction()),
+  historyRedo: () => dispatch(historyRedoAction())
 })
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const Settings = ({
-  historyUndo
+  historyUndo,
+  historyRedo
 }: SettingsProps) => {
 
   useEffect(() => {
@@ -32,7 +37,8 @@ const Settings = ({
     const historyTriggers = new Set([ "y", "z"])
     if(historyTriggers.has(e.key) && (e.ctrlKey || e.metaKey)) {
       e.preventDefault()
-      if(e.key === "z") { historyUndo()}
+      if(e.key === "z") { historyUndo() }
+      if(e.key === "y") { historyRedo() }
     }
   }
 
@@ -46,6 +52,7 @@ const Settings = ({
 //-----------------------------------------------------------------------------
 interface SettingsProps {
   historyUndo?(): void
+  historyRedo?(): void
 }
 //-----------------------------------------------------------------------------
 // Styled Components

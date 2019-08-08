@@ -1,8 +1,6 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import { batch } from 'react-redux'
-
 import { HistoryStep } from '@app/state/history/types'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
 import { AppState } from '@app/state'
@@ -18,10 +16,13 @@ export type HistoryActions = UpdateHistory
 export const createHistoryStep = (newHistoryStep: HistoryStep): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
-      undo
+      currentStep,
+      steps
     } = getState().history
+    const nextSteps = currentStep !== (steps.length - 1) ? steps.slice(0, currentStep + 1) : steps
     dispatch(updateHistory({
-      undo: [ newHistoryStep, ...undo ]
+      currentStep: currentStep === null ? 0 : currentStep + 1,
+      steps: [ ...nextSteps, newHistoryStep ]
     }))
   }
 }
@@ -30,12 +31,37 @@ export const createHistoryStep = (newHistoryStep: HistoryStep): ThunkAction => {
 // History Undo
 //-----------------------------------------------------------------------------
 export const historyUndo = (): ThunkAction => {
-  return async (_, getState: () => AppState) => {
-    console.log('historyUndo')
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
-      undo
+      currentStep,
+      steps
     } = getState().history
-    undo.length > 0 && batch(() => undo[0]())
+    if(steps && steps[currentStep]) {
+      steps[currentStep].undoActions()
+      dispatch(updateHistory({
+        previousAction: 'UNDO',
+        currentStep: currentStep === -1 ? -1 : currentStep - 1
+      }))
+    }
+  }
+}
+
+//-----------------------------------------------------------------------------
+// History Redo
+//-----------------------------------------------------------------------------
+export const historyRedo = (): ThunkAction => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      currentStep,
+      steps
+    } = getState().history
+    if(steps && steps[currentStep + 1]) {
+      steps[currentStep + 1].actions()
+      dispatch(updateHistory({
+        previousAction: 'REDO',
+        currentStep: currentStep === (steps.length - 1) ? currentStep : currentStep + 1
+      }))
+    }
   }
 }
 
@@ -48,8 +74,9 @@ interface UpdateHistory {
   updates: HistoryUpdates
 }
 interface HistoryUpdates {
-  undo?: HistoryStep[]
-  redo?: HistoryStep[]
+  previousAction?: 'UNDO' | 'REDO'
+  currentStep?: number
+  steps?: HistoryStep[]
 }
 
 export const updateHistory = (updates: HistoryUpdates): HistoryActions => {

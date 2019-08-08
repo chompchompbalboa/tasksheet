@@ -117,7 +117,7 @@ interface SheetGridProps {
   highlightColor: string
   rows: SheetRows
   sheetId: string
-  updateSheetCell(cellId: string, updates: SheetCellUpdates): void
+  updateSheetCell(cellId: string, updates: SheetCellUpdates, undoUpdates: SheetCellUpdates): void
   updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
   sheetVisibleColumns: SheetColumn['id'][]
   sheetVisibleRows: SheetRow['id'][]

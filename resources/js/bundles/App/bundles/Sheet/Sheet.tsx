@@ -74,7 +74,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   createSheetRow: (sheetId: string, sourceSheetId: string) => dispatch(createSheetRowAction(sheetId, sourceSheetId)),
   loadSheet: (sheet: SheetFromServer) => dispatch(loadSheetAction(sheet)),
   updateSheet: (sheetId: string, updates: SheetUpdates) => dispatch(updateSheetAction(sheetId, updates)),
-  updateSheetCell: (cellId: string, updates: SheetCellUpdates) => dispatch(updateSheetCellAction(cellId, updates)),
+  updateSheetCell: (cellId: string, updates: SheetCellUpdates, undoUpdates: SheetCellUpdates) => dispatch(updateSheetCellAction(cellId, updates, undoUpdates)),
   updateSheetColumn: (columnId: string, updates: SheetColumnUpdates) => dispatch(updateSheetColumnAction(columnId, updates))
 })
 
@@ -107,7 +107,7 @@ const SheetComponent = memo(({
   
   const isActiveFile = fileId === activeTabId
   const memoizedUpdateSheet = useCallback((sheetId, updates) => updateSheet(sheetId, updates), [])
-  const memoizedUpdateSheetCell = useCallback((cellId, updates) => updateSheetCell(cellId, updates), [])
+  const memoizedUpdateSheetCell = useCallback((cellId, updates, undoUpdates) => updateSheetCell(cellId, updates, undoUpdates), [])
   const memoizedUpdateSheetColumn = useCallback((columnId, updates) => updateSheetColumn(columnId, updates), [])
 
   const [ hasLoaded, setHasLoaded ] = useState(false)
@@ -229,7 +229,7 @@ interface SheetComponentProps {
   sorts?: SheetSorts
   sourceSheetId?: string
   updateSheet?(sheetId: string, updates: SheetUpdates): void
-  updateSheetCell?(cellId: string, updates: SheetCellUpdates): void
+  updateSheetCell?(cellId: string, updates: SheetCellUpdates, undoUpdates: SheetCellUpdates): void
   updateSheetColumn?(columnId: string, updates: SheetColumnUpdates): void
   userColorSecondary?: string
 }

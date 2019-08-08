@@ -21,6 +21,7 @@ import { FileType } from '@app/state/folder/types'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
 
 import { updateFiles, updateFolders } from '@app/state/folder/actions'
+import { createHistoryStep } from '@app/state/history/actions'
 import { updateTabs } from '@app/state/tab/actions'
 
 import { resolveVisibleRows } from '@app/state/sheet/resolvers'
@@ -485,10 +486,18 @@ interface UpdateSheetCell {
 	updates: SheetCellUpdates
 }
 
-export const updateSheetCell = (cellId: string, updates: SheetCellUpdates): ThunkAction => {
+export const updateSheetCell = (cellId: string, updates: SheetCellUpdates, undoUpdates: SheetCellUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch) => {
-    dispatch(updateSheetCellReducer(cellId, updates))
-		mutation.updateSheetCell(cellId, updates)
+    const actions = () => {
+      dispatch(updateSheetCellReducer(cellId, updates))
+      mutation.updateSheetCell(cellId, updates)
+    }
+    const undoActions = () => {
+      dispatch(updateSheetCellReducer(cellId, undoUpdates))
+      mutation.updateSheetCell(cellId, undoUpdates)
+    }
+    dispatch(createHistoryStep({actions, undoActions}))
+    actions()
 	}
 }
 
