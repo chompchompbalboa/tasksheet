@@ -1,57 +1,60 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { AppState } from '@app/state'
-import { selectUserColorPrimary } from '@app/state/user/selectors'
-
-import History from '@app/bundles/History/History'
-import Settings from '@app/bundles/Settings/Settings'
-import Tabs from '@app/bundles/Tabs/Tabs'
+import { ThunkDispatch } from '@app/state/types'
+import { historyUndo as historyUndoAction } from '@app/state/history/actions'
 
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
-  appBackgroundColor: selectUserColorPrimary(state)
+const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+  historyUndo: () => dispatch(historyUndoAction())
 })
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const App = ({
-  appBackgroundColor
-}: AppProps) => (
-	<Container
-    appBackgroundColor={appBackgroundColor}>
-    <History />
-		<Settings />
-		<Tabs />
-	</Container>
-)
+const Settings = ({
+  historyUndo
+}: SettingsProps) => {
+
+  useEffect(() => {
+    addEventListener('keydown', listenForHistoryTriggers)
+    addEventListener('keydown', listenForHistoryTriggers)
+    return () => removeEventListener('keydown', listenForHistoryTriggers)
+  }, [])
+
+  const listenForHistoryTriggers = (e: KeyboardEvent) => {
+    const historyTriggers = new Set([ "y", "z"])
+    if(historyTriggers.has(e.key) && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault()
+      if(e.key === "z") { historyUndo()}
+    }
+  }
+
+  return (
+    <Container />
+  )
+}
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-type AppProps = {
-  appBackgroundColor: string
+interface SettingsProps {
+  historyUndo?(): void
 }
-
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-	width: 100vw;
-  min-height: 100vh;
-  background-color: ${ ({ appBackgroundColor }: ContainerProps) => appBackgroundColor };
+  display: none;
 `
-interface ContainerProps {
-  appBackgroundColor: string
-}
 
 export default connect(
-  mapStateToProps
-)(App)
+  null,
+  mapDispatchToProps
+)(Settings)
