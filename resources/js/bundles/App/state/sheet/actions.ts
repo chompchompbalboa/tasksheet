@@ -43,6 +43,22 @@ export type SheetActions =
   DeleteSheetSort | UpdateSheetSort | UpdateSheetSorts 
 
 //-----------------------------------------------------------------------------
+// Create Sheet Column
+//-----------------------------------------------------------------------------
+export const createSheetColumn = (sheetId: Sheet['id'], columnId: SheetColumn['id'], beforeOrAfter: 'BEFORE' | 'AFTER'): ThunkAction => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      sheets,
+      cells,
+      columns
+    } = getState().sheet
+    console.log(sheetId, columnId, beforeOrAfter)
+    console.log(sheets, cells, columns)
+  }
+}
+
+
+//-----------------------------------------------------------------------------
 // Create Sheet Filter
 //-----------------------------------------------------------------------------
 export const createSheetFilter = (sheetId: string, newFilter: SheetFilter): ThunkAction => {

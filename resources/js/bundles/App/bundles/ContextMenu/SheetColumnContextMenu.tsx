@@ -2,9 +2,11 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import arrayMove from 'array-move'
 
 import { Sheet, SheetActiveUpdates, SheetUpdates, SheetColumn, SheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
+import { createSheetColumn as createSheetColumnAction } from '@app/state/sheet/actions'
 
 import ContextMenu from '@app/bundles/ContextMenu/ContextMenu'
 import ContextMenuDivider from '@app/bundles/ContextMenu/ContextMenuDivider'
@@ -25,6 +27,9 @@ const SheetColumnContextMenu = ({
   updateSheetActive,
   updateSheetColumn
 }: SheetColumnContextMenuProps) => {
+  
+  const dispatch = useDispatch()
+  const createSheetColumn = (columnid: SheetColumn['id'], beforeOrAfter: 'BEFORE' | 'AFTER') => dispatch(createSheetColumnAction(sheetId, columnId, beforeOrAfter))
 
   const closeOnClick = (thenCallThis: (...args: any) => void) => {
     closeContextMenu()
@@ -45,8 +50,8 @@ const SheetColumnContextMenu = ({
       closeContextMenu={closeContextMenu}
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}>
-      <ContextMenuItem text="Insert Column Before" />
-      <ContextMenuItem text="Insert Column After" />
+      <ContextMenuItem text="Insert Column Before" onClick={() => closeOnClick(() => createSheetColumn(columnId, 'BEFORE'))}/>
+      <ContextMenuItem text="Insert Column After" onClick={() => closeOnClick(() => createSheetColumn(columnId, 'AFTER'))}/>
       <ContextMenuItem text="Move Before">
         {sheetVisibleColumns.map(sheetColumnId => (
           <ContextMenuItem 
