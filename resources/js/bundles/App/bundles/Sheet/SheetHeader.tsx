@@ -46,7 +46,7 @@ const SheetHeader = ({
     if(columnName !== null) {
       setIsRenaming(false)
       updateSheetActive({ columnRenamingId: null })
-      updateSheetColumn(id, { name: columnName })
+      setTimeout(() => updateSheetColumn(id, { name: columnName }), 25)
     }
   }
   
