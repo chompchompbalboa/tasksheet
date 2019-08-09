@@ -4,7 +4,7 @@
 import React from 'react'
 import arrayMove from 'array-move'
 
-import { Sheet, SheetUpdates, SheetColumn, SheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
+import { Sheet, SheetActiveUpdates, SheetUpdates, SheetColumn, SheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
 
 import ContextMenu from '@app/bundles/ContextMenu/ContextMenu'
 import ContextMenuDivider from '@app/bundles/ContextMenu/ContextMenuDivider'
@@ -22,6 +22,7 @@ const SheetColumnContextMenu = ({
   contextMenuTop,
   sheetVisibleColumns,
   updateSheet,
+  updateSheetActive,
   updateSheetColumn
 }: SheetColumnContextMenuProps) => {
 
@@ -55,12 +56,12 @@ const SheetColumnContextMenu = ({
         ))}
       </ContextMenuItem>
       <ContextMenuDivider />
-      <ContextMenuItem text="Rename"/>
+      <ContextMenuItem text="Rename" onClick={() => closeOnClick(() => updateSheetActive({ columnRenamingId: columnId }))}/>
       <ContextMenuItem text="Type">
-        <ContextMenuItem text="String" onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'STRING'}))}/>
-        <ContextMenuItem text="Number" onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'NUMBER'}))}/>
-        <ContextMenuItem text="Checkbox" onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'BOOLEAN'}))}/>
-        <ContextMenuItem text="Date" onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DATETIME'}))}/>
+        <ContextMenuItem text="String" onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'STRING' }))}/>
+        <ContextMenuItem text="Number" onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'NUMBER' }))}/>
+        <ContextMenuItem text="Checkbox" onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'BOOLEAN' }))}/>
+        <ContextMenuItem text="Date" onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DATETIME' }))}/>
       </ContextMenuItem>
       <ContextMenuDivider />
       <ContextMenuItem text="Delete">
@@ -81,6 +82,7 @@ interface SheetColumnContextMenuProps {
   contextMenuTop: number
   sheetVisibleColumns: SheetColumn['id'][]
   updateSheet(sheetId: string, updates: SheetUpdates): void
+  updateSheetActive(updates: SheetActiveUpdates): void
   updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
 }
 

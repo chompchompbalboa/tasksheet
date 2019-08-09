@@ -8,6 +8,13 @@ export type SheetFilters = { [filterId: string]: SheetFilter }
 export type SheetGroups = { [groupId: string]: SheetGroup }
 export type SheetSorts = { [sortId: string]: SheetSort }
 
+export type SheetActive = {
+  columnRenamingId: SheetColumn['id']
+}
+export type SheetActiveUpdates = {
+  columnRenamingId?: SheetColumn['id']
+}
+
 export type Sheet = {
   id: string
   sourceSheetId: Sheet['id']

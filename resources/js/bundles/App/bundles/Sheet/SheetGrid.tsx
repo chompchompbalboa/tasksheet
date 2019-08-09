@@ -6,6 +6,7 @@ import { areEqual, VariableSizeGrid as Grid } from 'react-window'
 import styled from 'styled-components'
 
 import { 
+  SheetActiveUpdates, 
   SheetColumn, SheetColumns, SheetColumnUpdates,
   SheetCellUpdates, 
   SheetRow, SheetRows 
@@ -25,6 +26,7 @@ const SheetGrid = memo(({
   highlightColor,
   rows,
   sheetId,
+  updateSheetActive,
   updateSheetCell,
   updateSheetColumn,
   sheetVisibleColumns,
@@ -57,6 +59,7 @@ const SheetGrid = memo(({
         columns={columns}
         handleContextMenu={handleContextMenu}
         sheetVisibleColumns={sheetVisibleColumns}
+        updateSheetActive={updateSheetActive}
         updateSheetColumn={(columnId: string, updates: SheetColumnUpdates) => rerenderAfterUpdateSheetColumn(columnId, updates)}/>
       <GridItems>
         {children}
@@ -117,6 +120,7 @@ interface SheetGridProps {
   highlightColor: string
   rows: SheetRows
   sheetId: string
+  updateSheetActive(updates: SheetActiveUpdates): void
   updateSheetCell(cellId: string, updates: SheetCellUpdates, undoUpdates: SheetCellUpdates): void
   updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
   sheetVisibleColumns: SheetColumn['id'][]

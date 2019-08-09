@@ -4,7 +4,7 @@
 import React, { MouseEvent, useState } from 'react'
 import styled from 'styled-components'
 
-import { SheetColumn, SheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
+import { SheetActiveUpdates, SheetColumn, SheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
 
 import SheetHeader from '@app/bundles/Sheet/SheetHeader'
 
@@ -15,6 +15,7 @@ const SheetHeaders = ({
   columns,
   handleContextMenu,
   sheetVisibleColumns,
+  updateSheetActive,
   updateSheetColumn
 }: SheetHeadersProps) => {
 
@@ -34,7 +35,9 @@ const SheetHeaders = ({
           isLast={index === sheetVisibleColumns.length - 1}
           isResizing={isResizing}
           onResizeStart={() => setIsResizing(true)}
-          onResizeEnd={(columnWidthChange: number) => handleResizeEnd(columnId, columnWidthChange)}/>))}
+          onResizeEnd={(columnWidthChange: number) => handleResizeEnd(columnId, columnWidthChange)}
+          updateSheetActive={updateSheetActive}
+          updateSheetColumn={updateSheetColumn}/>))}
     </Container>
   )
 }
@@ -46,6 +49,7 @@ interface SheetHeadersProps {
   columns: SheetColumns
   handleContextMenu(e: MouseEvent, type: string, id: string): void
   sheetVisibleColumns: SheetColumn['id'][]
+  updateSheetActive(updates: SheetActiveUpdates): void
   updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
 }
 

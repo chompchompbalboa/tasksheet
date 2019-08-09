@@ -4,7 +4,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Sheet, SheetUpdates, SheetColumn, SheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
+import { Sheet, SheetActiveUpdates, SheetUpdates, SheetColumn, SheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
 
 import SheetColumnContextMenu from '@app/bundles/ContextMenu/SheetColumnContextMenu'
 
@@ -22,6 +22,7 @@ const SheetContextMenus = ({
   closeContextMenu,
   sheetVisibleColumns,
   updateSheet,
+  updateSheetActive,
   updateSheetColumn
 }: SheetContextMenusProps) => {
   return (
@@ -36,6 +37,7 @@ const SheetContextMenus = ({
         closeContextMenu={() => closeContextMenu()}
         sheetVisibleColumns={sheetVisibleColumns}
         updateSheet={updateSheet}
+        updateSheetActive={updateSheetActive}
         updateSheetColumn={updateSheetColumn}/>}
   </Container>
   )
@@ -55,6 +57,7 @@ interface SheetContextMenusProps {
   closeContextMenu(): void
   sheetVisibleColumns: SheetColumn['id'][]
   updateSheet(sheetId: string, updates: SheetUpdates): void
+  updateSheetActive(updates: SheetActiveUpdates): void
   updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
 }
 

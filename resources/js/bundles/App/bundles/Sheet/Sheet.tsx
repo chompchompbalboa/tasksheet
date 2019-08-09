@@ -14,11 +14,13 @@ import {
   createSheetRow as createSheetRowAction,
   loadSheet as loadSheetAction,
   updateSheet as updateSheetAction,
+  updateSheetActive as updateSheetActiveAction,
   updateSheetCell as updateSheetCellAction,
   updateSheetColumn as updateSheetColumnAction
 } from '@app/state/sheet/actions'
 import { 
   Sheet, SheetFromServer, SheetUpdates,
+  SheetActiveUpdates,
   SheetColumn, SheetColumns, SheetColumnUpdates, 
   SheetCellUpdates, 
   SheetFilter, SheetFilters, 
@@ -26,7 +28,7 @@ import {
   SheetRow, SheetRows, 
   SheetSort, SheetSorts 
 } from '@app/state/sheet/types'
-import { 
+import {  
   selectColumns, 
   selectFilters,
   selectGroups,
@@ -74,6 +76,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   createSheetRow: (sheetId: string, sourceSheetId: string) => dispatch(createSheetRowAction(sheetId, sourceSheetId)),
   loadSheet: (sheet: SheetFromServer) => dispatch(loadSheetAction(sheet)),
   updateSheet: (sheetId: string, updates: SheetUpdates) => dispatch(updateSheetAction(sheetId, updates)),
+  updateSheetActive: (updates: SheetActiveUpdates) => dispatch(updateSheetActiveAction(updates)),
   updateSheetCell: (cellId: string, updates: SheetCellUpdates, undoUpdates: SheetCellUpdates) => dispatch(updateSheetCellAction(cellId, updates, undoUpdates)),
   updateSheetColumn: (columnId: string, updates: SheetColumnUpdates) => dispatch(updateSheetColumnAction(columnId, updates))
 })
@@ -100,6 +103,7 @@ const SheetComponent = memo(({
   sorts,
   sourceSheetId,
   updateSheet,
+  updateSheetActive,
   updateSheetCell,
   updateSheetColumn,
   userColorSecondary
@@ -107,6 +111,7 @@ const SheetComponent = memo(({
   
   const isActiveFile = fileId === activeTabId
   const memoizedUpdateSheet = useCallback((sheetId, updates) => updateSheet(sheetId, updates), [])
+  const memoizedUpdateSheetActive = useCallback((updates) => updateSheetActive(updates), [])
   const memoizedUpdateSheetCell = useCallback((cellId, updates, undoUpdates) => updateSheetCell(cellId, updates, undoUpdates), [])
   const memoizedUpdateSheetColumn = useCallback((columnId, updates) => updateSheetColumn(columnId, updates), [])
 
@@ -178,6 +183,7 @@ const SheetComponent = memo(({
           closeContextMenu={closeContextMenu}
           sheetVisibleColumns={sheetVisibleColumns}
           updateSheet={memoizedUpdateSheet}
+          updateSheetActive={memoizedUpdateSheetActive}
           updateSheetColumn={memoizedUpdateSheetColumn}/>
         <SheetActions
           sheetId={id}
@@ -200,6 +206,7 @@ const SheetComponent = memo(({
               updateSheetCell={memoizedUpdateSheetCell}
               sheetVisibleColumns={sheetVisibleColumns}
               sheetVisibleRows={sheetVisibleRows}
+              updateSheetActive={memoizedUpdateSheetActive}
               updateSheetColumn={memoizedUpdateSheetColumn}/>
         }
         </SheetContainer>
@@ -229,6 +236,7 @@ interface SheetComponentProps {
   sorts?: SheetSorts
   sourceSheetId?: string
   updateSheet?(sheetId: string, updates: SheetUpdates): void
+  updateSheetActive?(updates: SheetActiveUpdates): void
   updateSheetCell?(cellId: string, updates: SheetCellUpdates, undoUpdates: SheetCellUpdates): void
   updateSheetColumn?(columnId: string, updates: SheetColumnUpdates): void
   userColorSecondary?: string

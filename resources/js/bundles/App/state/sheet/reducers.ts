@@ -1,10 +1,11 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import { Sheets, SheetCells, SheetColumns, SheetFilters, SheetGroups, SheetRows, SheetSorts } from '@app/state/sheet/types'
+import { Sheets, SheetActive, SheetCells, SheetColumns, SheetFilters, SheetGroups, SheetRows, SheetSorts } from '@app/state/sheet/types'
 import { 
   SheetActions, 
   LOAD_SHEET, UPDATE_SHEET, 
+  UPDATE_SHEET_ACTIVE,
   UPDATE_SHEET_CELL, UPDATE_SHEET_CELLS,
   UPDATE_SHEET_COLUMN,
   UPDATE_SHEET_FILTER, UPDATE_SHEET_FILTERS,
@@ -17,6 +18,7 @@ import {
 // Types
 //-----------------------------------------------------------------------------
 export interface SheetState {
+  active: SheetActive
   sheets: Sheets
   cells: SheetCells
   columns: SheetColumns
@@ -30,6 +32,9 @@ export interface SheetState {
 // Default State
 //-----------------------------------------------------------------------------
 const defaultSheetState: SheetState = {
+  active: {
+    columnRenamingId: null
+  },
   sheets: null,
   cells: null,
   columns: null,
@@ -66,6 +71,14 @@ export const userReducer = (state: SheetState = defaultSheetState, action: Sheet
         sheets: {...state.sheets, 
           [sheetId]: { ...state.sheets[sheetId], ...updates}
         }
+      }
+		}
+
+		case UPDATE_SHEET_ACTIVE: {
+			const { updates } = action
+			return {
+        ...state,
+        active: { ...state.active, ...updates }
       }
 		}
 

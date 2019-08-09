@@ -1,17 +1,31 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { MouseEvent } from 'react'
+import React, { MouseEvent, useEffect, useState } from 'react'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { SheetColumn } from '@app/state/sheet/types'
+import { AppState } from '@app/state'
+import { SheetActive, SheetActiveUpdates, SheetColumn, SheetColumnUpdates } from '@app/state/sheet/types'
+import { selectActive } from '@app/state/sheet/selectors'
 
+import AutosizeInput from 'react-input-autosize'
 import ResizeContainer from '@app/components/ResizeContainer'
+
+//-----------------------------------------------------------------------------
+// Redux
+//-----------------------------------------------------------------------------
+const mapStateToProps = (state: AppState) => ({
+  active: selectActive(state)
+})
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetHeader = ({
+  active: {
+    columnRenamingId
+  },
   column: {
     id,
     name,
@@ -21,8 +35,24 @@ const SheetHeader = ({
   isLast,
   isResizing,
   onResizeStart,
-  onResizeEnd
+  onResizeEnd,
+  updateSheetActive,
+  updateSheetColumn
 }: SheetHeaderProps) => {
+
+  const [ isRenaming, setIsRenaming ] = useState(false)
+  const [ columnName, setColumnName ] = useState(name)
+  const handleAutosizeInputBlur = () => {
+    if(columnName !== null) {
+      setIsRenaming(false)
+      updateSheetActive({ columnRenamingId: null })
+      updateSheetColumn(id, { name: columnName })
+    }
+  }
+  
+  useEffect(() => {
+    if(columnRenamingId === id) { setIsRenaming(true) }
+  }, [ columnRenamingId ])
 
   return (
     <Container
@@ -30,9 +60,30 @@ const SheetHeader = ({
       isLast={isLast}
       isResizing={isResizing}
       onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'COLUMN', id)}>
-      <NameContainer>
-        {name}
-      </NameContainer>
+      {!isRenaming
+        ? <NameContainer>
+            {columnName}
+          </NameContainer>
+        : <AutosizeInput
+            autoFocus
+            placeholder="Name..."
+            onChange={e => setColumnName(e.target.value)}
+            onBlur={() => handleAutosizeInputBlur()}
+            value={columnName === null ? "" : columnName}
+            inputStyle={{
+              margin: '0',
+              paddingLeft: '0.14rem',
+              width: '100%',
+              height: '100%',
+              border: 'none',
+              borderRadius: '5px',
+              backgroundColor: 'transparent',
+              color: 'black',
+              outline: 'none',
+              fontFamily: 'inherit',
+              fontSize: 'inherit',
+              fontWeight: 'inherit'}}/>
+      }
       <ResizeContainer
         onResizeStart={onResizeStart}
         onResizeEnd={onResizeEnd}/>
@@ -44,12 +95,15 @@ const SheetHeader = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetHeaderProps {
+  active?: SheetActive
   column: SheetColumn
   handleContextMenu(e: MouseEvent, type: string, id: string): void
   isLast: boolean
   isResizing: boolean
   onResizeStart(): void
   onResizeEnd(widthChange: number): void
+  updateSheetActive(updates: SheetActiveUpdates): void
+  updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
 }
 
 //-----------------------------------------------------------------------------
@@ -87,4 +141,6 @@ const NameContainer = styled.div`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetHeader
+export default connect(
+  mapStateToProps
+)(SheetHeader)

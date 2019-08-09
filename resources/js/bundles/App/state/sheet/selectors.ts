@@ -5,6 +5,7 @@ import { AppState } from '@app/state'
 import { FileType } from '@app/state/folder/types'
 import { 
   Sheet,
+  SheetActive,
   SheetCell, SheetCells,
   SheetColumn, SheetColumns, 
   SheetRow, SheetRows, 
@@ -12,6 +13,13 @@ import {
   SheetGroup, SheetGroups, 
   SheetSort, SheetSorts
 } from '@app/state/sheet/types'
+
+//-----------------------------------------------------------------------------
+// Select Active
+//-----------------------------------------------------------------------------
+export const selectActive = (
+  state: AppState
+): SheetActive => state.sheet.active
 
 //-----------------------------------------------------------------------------
 // Select Cell

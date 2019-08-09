@@ -10,6 +10,7 @@ import { mutation } from '@app/api'
 import { AppState } from '@app/state'
 import { 
   Sheet, SheetFromServer, SheetUpdates,
+  SheetActiveUpdates, 
   SheetCell, SheetCells, SheetCellUpdates,
   SheetColumn, SheetColumns, SheetColumnUpdates,
   SheetRows, SheetRowUpdates, 
@@ -33,6 +34,7 @@ import { defaultCell, defaultRow } from '@app/state/sheet/defaults'
 //-----------------------------------------------------------------------------
 export type SheetActions = 
   LoadSheet | UpdateSheet | 
+  UpdateSheetActive |
   UpdateSheetCell | UpdateSheetCells | 
   UpdateSheetColumn | UpdateSheetColumns | 
   DeleteSheetFilter | UpdateSheetFilter | UpdateSheetFilters |
@@ -461,7 +463,6 @@ interface UpdateSheet {
 }
 
 export const updateSheet = (sheetId: string, updates: SheetUpdates): ThunkAction => {
-  console.log('updateSheet')
 	return async (dispatch: ThunkDispatch) => {
     dispatch(updateSheetReducer(sheetId, updates))
     mutation.updateSheet(sheetId, updates)
@@ -473,6 +474,22 @@ export const updateSheetReducer = (sheetId: string, updates: SheetUpdates): Shee
 		type: UPDATE_SHEET,
 		sheetId,
 		updates,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Sheet Active
+//-----------------------------------------------------------------------------
+export const UPDATE_SHEET_ACTIVE = 'UPDATE_SHEET_ACTIVE'
+interface UpdateSheetActive {
+  type: typeof UPDATE_SHEET_ACTIVE,
+  updates: SheetActiveUpdates
+}
+
+export const updateSheetActive = (updates: SheetActiveUpdates): SheetActions => {
+	return {
+		type: UPDATE_SHEET_ACTIVE,
+    updates,
 	}
 }
 
