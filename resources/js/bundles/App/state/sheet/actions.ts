@@ -127,7 +127,7 @@ export const createSheetRow = (sheetId: string, sourceSheetId: string): ThunkAct
     })
     mutation.createSheetRow({
       ...newRow,
-      cells: Object.keys(newRow.cells).map(nextCellId => nextCells[nextCellId])
+      cells: Object.keys(newRow.cells).map(columnId => nextCells[newRow.cells[columnId]])
     })
 	}
 }
