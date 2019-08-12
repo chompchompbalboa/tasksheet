@@ -19,7 +19,7 @@ class SheetRow extends Model
   public function getCellsAttribute() {
     $cells =  SheetCell::where('rowId', '=', $this->id)
     ->join('sheetColumns', 'sheetCells.columnId', '=', 'sheetColumns.id')
-    ->orderBy('sheetColumns.position', 'ASC')
+    ->orderBy('sheetColumns.created_at', 'ASC')
     ->select('sheetCells.id', 'columnId', 'value')
     ->get();
     return $cells;

@@ -12,26 +12,6 @@ use App\Models\SheetRow;
 class SheetColumnController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -39,11 +19,9 @@ class SheetColumnController extends Controller
      */
     public function store(Request $request)
     {
-      $sheetColumn = SheetColumn::create($request->input('newColumn'));
-      foreach($request->input('newCells') as $newCell) {
-        SheetCell::create($newCell);
-      }
-      return response()->json($sheetColumn, 200);
+      SheetColumn::create($request->input('newColumn'));
+      SheetCell::insert($request->input('newCells'));
+      return response()->json(null, 200);
     }
 
     /**

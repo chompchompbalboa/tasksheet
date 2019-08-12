@@ -25,7 +25,8 @@ class SheetViewController extends Controller
       // View
       $newSheetViewId = $request->input('id');
       $sourceSheetId = $request->input('sourceSheetId');
-      $newSheetView = Sheet::create([ 'id' => $newSheetViewId, 'sourceSheetId' => $sourceSheetId ]);
+      $visibleColumns = $request->input('visibleColumns');
+      $newSheetView = Sheet::create([ 'id' => $newSheetViewId, 'sourceSheetId' => $sourceSheetId, 'visibleColumns' => $visibleColumns ]);
       // Filters
       $newSheetViewFilters = $request->input('filters');
       foreach($newSheetViewFilters as $sheetViewFilter) {

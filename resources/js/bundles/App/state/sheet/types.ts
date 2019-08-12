@@ -66,7 +66,14 @@ export type SheetColumnUpdates = {
   width?: number
   type?: SheetColumnType
 }
-
+export type SheetColumnToServer = {
+  id: string
+  sheetId: string
+  name: string
+  width: number
+  type: SheetColumnType
+  cells: SheetCell[]
+}
 export type SheetColumnType = 
 	'STRING'|
 	'DATETIME'|
@@ -134,6 +141,7 @@ export type SheetGroupOrder = 'ASC' | 'DESC'
 export type SheetView = {
   id: string
   sourceSheetId: string
+  visibleColumns: SheetColumn['id'][]
   filters: SheetFilters
   groups: SheetGroups
   sorts: SheetSorts

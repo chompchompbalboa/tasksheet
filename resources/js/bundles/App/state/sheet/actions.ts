@@ -68,10 +68,12 @@ export const createSheetColumn = (sheetId: Sheet['id'], columnId: SheetColumn['i
     // For each row, add a cell 
     let nextSheetCells: SheetCells = clone(cells)
     let nextSheetRows: SheetRows = clone(rows)
+    let newCells: SheetCell[] = []
     sheet.rows.forEach(rowId => {
       const newCell = defaultCell(sheetId, rowId, newColumn.id, createUuid())
       nextSheetCells[newCell.id] = newCell
       nextSheetRows[rowId].cells = { ...nextSheetRows[rowId].cells, [newCell.columnId]: newCell.id }
+      newCells.push(newCell)
     })
     // Make the updates
     batch(() => {
@@ -85,6 +87,8 @@ export const createSheetColumn = (sheetId: Sheet['id'], columnId: SheetColumn['i
       dispatch(updateSheetCells(nextSheetCells))
       dispatch(updateSheetRows(nextSheetRows))
     })
+    // Save to server
+    mutation.createSheetColumn(newColumn, newCells)
   }
 }
 
@@ -293,6 +297,7 @@ export const createSheetView = (sheetId: string, viewName: string): ThunkAction 
     mutation.createSheetView({
       id: newSheetViewId,
       sourceSheetId: sourceSheet.id,
+      visibleColumns: sourceSheet.visibleColumns,
       filters: newFilters,
       groups: newGroups,
       sorts: newSorts
@@ -512,7 +517,7 @@ interface UpdateSheet {
 export const updateSheet = (sheetId: string, updates: SheetUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch) => {
     dispatch(updateSheetReducer(sheetId, updates))
-    //mutation.updateSheet(sheetId, updates)
+    mutation.updateSheet(sheetId, updates)
 	}
 }
 

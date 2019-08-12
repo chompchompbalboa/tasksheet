@@ -42,7 +42,7 @@ class OrganizationTableSeeder extends Seeder
             $sheets = [
               //'Purchasing_15',
               'Purchasing_250',
-              '2019_Pitching_Advanced',
+              //'2019_Pitching_Advanced',
               //'2019_Pitching_Standard'
             ];
 

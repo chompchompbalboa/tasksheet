@@ -6,8 +6,8 @@ import axios from '@/api/axios'
 import { File, FileUpdates, Folder, FolderUpdates } from '@app/state/folder/types'
 import { 
   SheetUpdates,
-  SheetCellUpdates,
-  SheetColumnUpdates, 
+  SheetCell, SheetCellUpdates,
+  SheetColumn, SheetColumnUpdates,
   SheetFilter, 
   SheetGroup, SheetGroupUpdates, 
   SheetRowToServer, 
@@ -77,6 +77,15 @@ export const updateSheet = async (id: string, updates: SheetUpdates) => {
 
 export const updateSheetCell = async (id: string, updates: SheetCellUpdates) => {
 	return axios.patch('/app/sheets/cells/' + id, updates).then(response => {
+		return response.data
+	})
+}
+
+export const createSheetColumn = async (newColumn: SheetColumn, newCells: SheetCell[]) => {
+	return axios.post('/app/sheets/columns', {
+    newColumn: newColumn,
+    newCells: newCells
+  }).then(response => {
 		return response.data
 	})
 }
