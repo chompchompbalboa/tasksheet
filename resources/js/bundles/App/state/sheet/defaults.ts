@@ -30,3 +30,27 @@ export const defaultCell = (sheetId: string, rowId: string, columnId: string, ce
     value: ""
   }
 }
+
+//-----------------------------------------------------------------------------
+// Default Cell
+//-----------------------------------------------------------------------------
+export const defaultColumn = (sheetId: string, newColumnIndex?: number): SheetColumn => {
+
+  const alphabetString = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+  const columnName = [
+    newColumnIndex < 26 ? alphabetString.split('')[newColumnIndex] : 'A',
+    newColumnIndex >= 26 ? alphabetString.split('')[newColumnIndex % 26] : '',
+    newColumnIndex >= 52 ? alphabetString.split('')[newColumnIndex % 52] : '',
+    newColumnIndex >= 78 ? alphabetString.split('')[newColumnIndex % 78] : '',
+    newColumnIndex >= 104 ? alphabetString.split('')[newColumnIndex % 104] : ''
+  ].join('')
+
+  return {
+    id: createUuid(),
+    sheetId: sheetId, 
+    name: columnName,
+    type: 'STRING',
+    width: 100
+  }
+}

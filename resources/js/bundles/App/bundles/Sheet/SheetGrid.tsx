@@ -88,7 +88,7 @@ const SheetGrid = memo(({
       <SheetGroupCell
         style={style}/>
     )
-}
+  }
   
   return (
     <Autosizer>

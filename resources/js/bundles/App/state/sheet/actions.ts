@@ -27,7 +27,7 @@ import { updateTabs } from '@app/state/tab/actions'
 
 import { resolveVisibleRows } from '@app/state/sheet/resolvers'
 
-import { defaultCell, defaultRow } from '@app/state/sheet/defaults'
+import { defaultCell, defaultColumn, defaultRow } from '@app/state/sheet/defaults'
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -50,10 +50,41 @@ export const createSheetColumn = (sheetId: Sheet['id'], columnId: SheetColumn['i
     const {
       sheets,
       cells,
-      columns
+      columns,
+      rows
     } = getState().sheet
-    console.log(sheetId, columnId, beforeOrAfter)
-    console.log(sheets, cells, columns)
+    const sheet = sheets[sheetId]
+    const sheetVisibleColumns = sheet.visibleColumns.length === 0 ? clone(sheet.columns) : clone(sheet.visibleColumns)
+    const columnVisibleColumnsIndex = sheetVisibleColumns.findIndex((visibleColumnId: SheetColumn['id']) => visibleColumnId === columnId)
+    const newColumnVisibleColumnsIndex = beforeOrAfter === 'BEFORE' ? columnVisibleColumnsIndex : columnVisibleColumnsIndex + 1
+    // Create sheet column
+    const newColumn = defaultColumn(sheetId, newColumnVisibleColumnsIndex) 
+    // Update the sheet's visible columns
+    const nextSheetVisibleColumns = [
+      ...sheetVisibleColumns.slice(0, newColumnVisibleColumnsIndex),
+      newColumn.id,
+      ...sheetVisibleColumns.slice(newColumnVisibleColumnsIndex)
+    ]
+    // For each row, add a cell 
+    let nextSheetCells: SheetCells = clone(cells)
+    let nextSheetRows: SheetRows = clone(rows)
+    sheet.rows.forEach(rowId => {
+      const newCell = defaultCell(sheetId, rowId, newColumn.id, createUuid())
+      nextSheetCells[newCell.id] = newCell
+      nextSheetRows[rowId].cells = { ...nextSheetRows[rowId].cells, [newCell.columnId]: newCell.id }
+    })
+    // Make the updates
+    batch(() => {
+      dispatch(updateSheetColumns({
+        ...columns,
+        [newColumn.id]: newColumn
+      }))
+      dispatch(updateSheet(sheetId, {
+        visibleColumns: nextSheetVisibleColumns
+      }))
+      dispatch(updateSheetCells(nextSheetCells))
+      dispatch(updateSheetRows(nextSheetRows))
+    })
   }
 }
 
@@ -481,7 +512,7 @@ interface UpdateSheet {
 export const updateSheet = (sheetId: string, updates: SheetUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch) => {
     dispatch(updateSheetReducer(sheetId, updates))
-    mutation.updateSheet(sheetId, updates)
+    //mutation.updateSheet(sheetId, updates)
 	}
 }
 

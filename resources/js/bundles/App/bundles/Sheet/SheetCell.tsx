@@ -36,7 +36,7 @@ const SheetCell = memo(({
   
   const cellContainer = useRef(null)
   const [ cellValue, setCellValue ] = useState(cell ? cell.value : null)
-  const [ isHighlighted, setIsHighlighted ] = useState(localStorage.getItem(sheetId) === cell.id)
+  const [ isHighlighted, setIsHighlighted ] = useState(cell ? localStorage.getItem(sheetId) === cell.id : false)
   
   useEffect(() => {
     if(isHighlighted) {

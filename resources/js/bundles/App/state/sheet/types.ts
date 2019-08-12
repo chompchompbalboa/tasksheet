@@ -58,13 +58,11 @@ export type SheetColumn = {
 	id: string
 	sheetId: string
 	name: string
-	position: number
 	width: number
 	type: SheetColumnType
 }
 export type SheetColumnUpdates = {
   name?: string
-  position?: number
   width?: number
   type?: SheetColumnType
 }

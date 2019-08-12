@@ -173,7 +173,14 @@ export const selectSheetSorts = (
 export const selectSheetVisibleColumns = (
   state: AppState, 
   sheetId: string
-): SheetColumn['id'][] => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].visibleColumns
+): SheetColumn['id'][] => {
+  if(state.sheet.sheets && state.sheet.sheets[sheetId]) {
+    const columns = state.sheet.sheets[sheetId].columns
+    const visibleColumns = state.sheet.sheets[sheetId].visibleColumns
+    return visibleColumns.length === 0 ? columns : visibleColumns
+  }
+  return null
+}
 
 //-----------------------------------------------------------------------------
 // Select Sheet Visible Rows

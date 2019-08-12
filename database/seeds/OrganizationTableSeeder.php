@@ -41,7 +41,7 @@ class OrganizationTableSeeder extends Seeder
      
             $sheets = [
               //'Purchasing_15',
-              //'Purchasing_250',
+              'Purchasing_250',
               '2019_Pitching_Advanced',
               //'2019_Pitching_Standard'
             ];
@@ -80,7 +80,6 @@ class OrganizationTableSeeder extends Seeder
                     $columns = factory(App\Models\SheetColumn::class, $columnCount)->create();
                     $columns->each(function($column, $key) use ($sheet, $source, $sourceColumnNames) {
                       $column->sheetId = $sheet->id;
-                      $column->position = $key;
                       $column->name = $sourceColumnNames[$key];
                       $column->type = 'NUMBER';
                       $column->save();

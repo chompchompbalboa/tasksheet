@@ -6,7 +6,6 @@ import { groupBy, orderBy } from 'lodash'
 import { 
   Sheet,
   SheetCells,
-  SheetColumns,
   SheetRows,
   SheetFilters, SheetFilterType,
   SheetGroup, SheetGroups, 
@@ -97,11 +96,4 @@ export const resolveVisibleRows = (sheet: Sheet, rows: SheetRows, cells: SheetCe
     })
     return filteredSortedGroupedRowIds
   }
-}
-
-//-----------------------------------------------------------------------------
-// Resolve Visible Columns
-//-----------------------------------------------------------------------------
-export const resolveVisibleColumns = (columns: SheetColumns) => {
-  return orderBy(Object.keys(columns), (columnId: string) => columns[columnId].position)
 }

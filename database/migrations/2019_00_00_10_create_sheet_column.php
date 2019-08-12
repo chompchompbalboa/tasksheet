@@ -18,7 +18,6 @@ class CreateSheetColumn extends Migration
             $table->uuid('sheetId')->nullable();
             $table->string('name')->nullable();
             $table->string('type');
-            $table->unsignedInteger('position');
             $table->float('width');
             $table->timestamps();
 

@@ -29,7 +29,7 @@ class Sheet extends Model
   public function getColumnsAttribute() {
     $sheetId = is_null($this->sourceSheetId) ? $this->id : $this->sourceSheetId;
     return SheetColumn::where('sheetId', '=', $sheetId)
-    ->orderBy('position', 'ASC')
+    ->orderBy('created_at', 'ASC')
     ->get();
   }
   
