@@ -12,6 +12,7 @@ import { ThunkDispatch } from '@app/state/types'
 import { selectModalCreateSheetFolderId } from '@app/state/modal/selectors'
 
 import Icon from '@/components/Icon'
+import Modal from '@app/bundles/Modal/Modal'
 
 //-----------------------------------------------------------------------------
 // Redux
@@ -30,7 +31,7 @@ const SheetModalCreateSheet = ({
   folderId
 }: SheetModalCreateSheetProps) => {
   return (
-    <>
+    <Modal>
       <CreateSheetButton>
         <Icon icon={FILE_SHEET} size="2rem" />
         <CreateSheetButtonText>Brand New</CreateSheetButtonText>
@@ -39,7 +40,7 @@ const SheetModalCreateSheet = ({
         <Icon icon={UPLOAD} size="2rem" />
         <CreateSheetButtonText>From File</CreateSheetButtonText>
       </CreateSheetButton>
-    </>
+    </Modal>
   )
 }
 

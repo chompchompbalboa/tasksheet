@@ -1,12 +1,14 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
+import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
 import { ModalUpdates } from '@app/state/modal/types'
+import { selectModalCreateSheetFolderId } from '@app/state/modal/selectors'
 import { 
   updateModal as updateModalAction,
 } from '@app/state/modal/actions' 
@@ -14,6 +16,10 @@ import {
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
+const mapStateToProps = (state: AppState) => ({
+  folderId: selectModalCreateSheetFolderId(state)
+})
+
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   updateModal: (updates: ModalUpdates) => dispatch(updateModalAction(updates))
 })
@@ -21,64 +27,44 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Modals = ({
-  children,
+const SheetModalCreateSheetFromUpload = ({
   updateModal
-}: ModalsProps) => {
-
-  const modal = useRef(null)
+}: SheetModalCreateSheetFromUploadProps) => {
+  
+  const input = useRef(null)
 
   useEffect(() => {
-    addEventListener('mousedown', closeModalOnClickOutside)
-    return () => { removeEventListener('mousedown', closeModalOnClickOutside) }
+    input.current.click()
+    addEventListener('focus', handleFileDialogClose)
   }, [])
 
-  const closeModalOnClickOutside = (e: Event) => {
-    if(!modal.current.contains(e.target)) {
-      updateModal({ activeModal: null })
-    }
+  const handleFileDialogClose = (e: Event) => {
+    removeEventListener('focus', handleFileDialogClose)
+    updateModal({ activeModal: null, createSheetFolderId: null })
   }
-  
+
   return (
-    <Container>
-      <Modal
-        ref={modal}>
-        {children}
-      </Modal>
-    </Container>
+    <StyledInput
+      ref={input}
+      type="file"/>
   )
 }
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface ModalsProps {
-  children?: any
+interface SheetModalCreateSheetFromUploadProps {
   updateModal?(updates: ModalUpdates): void
 }
+
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div`
-  z-index: 10000;
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.25);
-`
-
-const Modal = styled.div`
-  background-color: white;
-  padding: 3rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+const StyledInput = styled.input`
+  display: none;
 `
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
-)(Modals)
+)(SheetModalCreateSheetFromUpload)
