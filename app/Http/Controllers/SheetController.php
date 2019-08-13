@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 use App\Models\SheetCell;
 use App\Models\SheetColumn;
 use App\Models\SheetRow;
 use App\Models\Sheet;
+
+use App\Utils\Csv;
 
 class SheetController extends Controller
 {
@@ -21,7 +24,29 @@ class SheetController extends Controller
      */
     public function store(Request $request)
     {
-      return Sheet::create($request->all());
+      // Create the sheet
+      $newSheetId = $request->input('newSheetId');
+      $newSheet = new Sheet;
+      $newSheet->save();
+      // Build the array we'll use to insert the columns, rows, and cells
+      $rowsFromCsv = Csv::toArray($request->file('fileToUpload')->path());
+      $rowsFromCsvCount = count($rowsFromCsv);
+      // Create the columns
+      $columns = [];
+      foreach($rowsFromCsv[0] as $columnName => $value) {
+        array_push($columns, [
+          'id' => Str::uuid()->toString(),
+          'sheetId' => $newSheet->id,
+          'name' => $columnName,
+          'type' => 'STRING',
+          'width' => 100
+        ]);
+      }
+      $newSheetColumns = SheetColumn::insert($columns);
+      // Create the rows and cells
+      $newSheetRows = [];
+      $newSheetCells = [];      
+      return response()->json(null, 200);
     }
 
     /**

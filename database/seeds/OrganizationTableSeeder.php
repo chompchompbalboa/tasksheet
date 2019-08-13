@@ -40,8 +40,8 @@ class OrganizationTableSeeder extends Seeder
             $folder->save();
      
             $sheets = [
-              //'Purchasing_15',
-              'Purchasing_250',
+              'Purchasing_15',
+              //'Purchasing_250',
               //'2019_Pitching_Advanced',
               //'2019_Pitching_Standard'
             ];
@@ -81,7 +81,7 @@ class OrganizationTableSeeder extends Seeder
                     $columns->each(function($column, $key) use ($sheet, $source, $sourceColumnNames) {
                       $column->sheetId = $sheet->id;
                       $column->name = $sourceColumnNames[$key];
-                      $column->type = 'NUMBER';
+                      $column->type = 'STRING';
                       $column->save();
                     });
 

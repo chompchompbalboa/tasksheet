@@ -3,9 +3,9 @@
 //-----------------------------------------------------------------------------
 import axios from '@/api/axios'
 
-import { File, FileUpdates, Folder, FolderUpdates } from '@app/state/folder/types'
+import { File as TFile, FileUpdates, Folder, FolderUpdates } from '@app/state/folder/types'
 import { 
-  SheetUpdates,
+  Sheet, SheetUpdates,
   SheetCell, SheetCellUpdates,
   SheetColumn, SheetColumnUpdates,
   SheetFilter, 
@@ -39,7 +39,7 @@ export const updateUserLayout = async (id: string, updates: UserLayoutUpdates) =
 //-----------------------------------------------------------------------------
 // File
 //-----------------------------------------------------------------------------
-export const createFile = async (newFile: File) => {
+export const createFile = async (newFile: TFile) => {
 	return axios.post('/app/files', newFile).then(response => {
 		return response.data
 	})
@@ -69,6 +69,15 @@ export const updateFolder = async (id: string, updates: FolderUpdates) => {
 //-----------------------------------------------------------------------------
 // Sheet
 //-----------------------------------------------------------------------------
+export const createSheetFromUpload = async (newSheetId: Sheet['id'], fileToUpload: File) => {
+  const formData = new FormData()
+  formData.append('newSheetId', newSheetId)
+  formData.append('fileToUpload', fileToUpload)
+	return axios.post('/app/sheets', formData).then(response => {
+		return response.data
+	})
+}
+
 export const updateSheet = async (id: string, updates: SheetUpdates) => {
 	return axios.patch('/app/sheets/' + id, updates).then(response => {
 		return response.data

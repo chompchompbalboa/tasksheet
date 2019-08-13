@@ -43,6 +43,15 @@ export type SheetActions =
   DeleteSheetSort | UpdateSheetSort | UpdateSheetSorts 
 
 //-----------------------------------------------------------------------------
+// Create Sheet From Upload
+//-----------------------------------------------------------------------------
+export const createSheetFromUpload = (fileToUpload: File): ThunkAction => {
+  return async () => {
+    mutation.createSheetFromUpload(createUuid(), fileToUpload)
+  }
+}
+
+//-----------------------------------------------------------------------------
 // Create Sheet Column
 //-----------------------------------------------------------------------------
 export const createSheetColumn = (sheetId: Sheet['id'], columnId: SheetColumn['id'], beforeOrAfter: 'BEFORE' | 'AFTER'): ThunkAction => {

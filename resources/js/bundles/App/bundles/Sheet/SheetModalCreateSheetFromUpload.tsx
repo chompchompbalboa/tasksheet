@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useRef, useEffect } from 'react'
+import React, { ChangeEvent, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
@@ -12,6 +12,9 @@ import { selectModalCreateSheetFolderId } from '@app/state/modal/selectors'
 import { 
   updateModal as updateModalAction,
 } from '@app/state/modal/actions' 
+import { 
+  createSheetFromUpload as createSheetFromUploadAction,
+} from '@app/state/sheet/actions' 
 
 //-----------------------------------------------------------------------------
 // Redux
@@ -21,6 +24,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+  createSheetFromUpload: (fileToUpload: File) => dispatch(createSheetFromUploadAction(fileToUpload)),
   updateModal: (updates: ModalUpdates) => dispatch(updateModalAction(updates))
 })
 
@@ -28,6 +32,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
 // Component
 //-----------------------------------------------------------------------------
 const SheetModalCreateSheetFromUpload = ({
+  createSheetFromUpload,
   updateModal
 }: SheetModalCreateSheetFromUploadProps) => {
   
@@ -38,15 +43,25 @@ const SheetModalCreateSheetFromUpload = ({
     addEventListener('focus', handleFileDialogClose)
   }, [])
 
+  // This fires when a file is selected or the user hits cancel
   const handleFileDialogClose = (e: Event) => {
     removeEventListener('focus', handleFileDialogClose)
-    updateModal({ activeModal: null, createSheetFolderId: null })
+    setTimeout(() => updateModal({ activeModal: null, createSheetFolderId: null }), 500)
+  }
+  
+  // This only fires when a file is selected
+  const handleFileDialogSelect = (e: ChangeEvent<HTMLInputElement>) => {
+    const fileToUpload = e.target.files[0]
+    createSheetFromUpload(fileToUpload)
   }
 
   return (
     <StyledInput
       ref={input}
-      type="file"/>
+      name="upload"
+      type="file"
+      accept=".csv,.xls,.xlsx"
+      onChange={e => handleFileDialogSelect(e)}/>
   )
 }
 
@@ -54,6 +69,7 @@ const SheetModalCreateSheetFromUpload = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetModalCreateSheetFromUploadProps {
+  createSheetFromUpload?(fileToUpload: File): void
   updateModal?(updates: ModalUpdates): void
 }
 
