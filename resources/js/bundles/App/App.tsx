@@ -9,6 +9,7 @@ import { AppState } from '@app/state'
 import { selectUserColorPrimary } from '@app/state/user/selectors'
 
 import History from '@app/bundles/History/History'
+import Modals from '@app/bundles/Modal/Modals'
 import Settings from '@app/bundles/Settings/Settings'
 import Tabs from '@app/bundles/Tabs/Tabs'
 
@@ -28,6 +29,7 @@ const App = ({
 	<Container
     appBackgroundColor={appBackgroundColor}>
     <History />
+    <Modals />
 		<Settings />
 		<Tabs />
 	</Container>

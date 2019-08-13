@@ -4,6 +4,7 @@
 import React from 'react'
 
 import { ClipboardUpdates } from '@app/state/folder/types'
+import { ModalUpdates } from '@app/state/modal/types'
 
 import ContextMenu from '@app/bundles/ContextMenu/ContextMenu'
 import ContextMenuDivider from '@app/bundles/ContextMenu/ContextMenuDivider'
@@ -19,13 +20,14 @@ const FolderContextMenu = ({
   contextMenuLeft,
   contextMenuTop,
   pasteFromClipboard,
+  updateModal,
   updateClipboard,
   setIsRenaming
 }: FolderContextMenuProps) => {
 
-  const closeOnClick = (andCallThis: (...args: any) => void) => {
+  const closeOnClick = (thenCallThis: (...args: any) => void) => {
     closeContextMenu()
-    andCallThis()
+    thenCallThis()
   }
 
   return (
@@ -37,10 +39,16 @@ const FolderContextMenu = ({
         text="Cut"
         onClick={() => closeOnClick(() => updateClipboard({ itemId: folderId, folderOrFile: 'FOLDER', cutOrCopy: 'CUT' }))}/>
       <ContextMenuItem text="Copy" />
-      <ContextMenuItem 
+      <ContextMenuItem
         text="Paste"
         onClick={() => closeOnClick(() => pasteFromClipboard(folderId))}/>
       <ContextMenuDivider />
+      <ContextMenuItem 
+        text="New Sheet"
+        onClick={() => closeOnClick(() => updateModal({ activeModal: 'CREATE_SHEET', createSheetFolderId: folderId }))}/>
+      <ContextMenuItem 
+        text="New Sheet From Upload"
+        onClick={() => closeOnClick(() => updateModal({ activeModal: 'CREATE_SHEET', createSheetFolderId: folderId }))}/>
       <ContextMenuItem 
         text="New Folder"
         onClick={() => closeOnClick(() => createFolder(folderId))}/>
@@ -65,6 +73,7 @@ interface FolderContextMenuProps {
   contextMenuTop: number
   pasteFromClipboard(folderId: string): void
   setIsRenaming(isRenaming: boolean): void
+  updateModal(updates: ModalUpdates): void
   updateClipboard(updates: ClipboardUpdates): void
 }
 

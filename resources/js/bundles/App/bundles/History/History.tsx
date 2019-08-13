@@ -22,10 +22,10 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Settings = ({
+const History = ({
   historyUndo,
   historyRedo
-}: SettingsProps) => {
+}: HistoryProps) => {
 
   useEffect(() => {
     addEventListener('keydown', listenForHistoryTriggers)
@@ -50,7 +50,7 @@ const Settings = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SettingsProps {
+interface HistoryProps {
   historyUndo?(): void
   historyRedo?(): void
 }
@@ -64,4 +64,4 @@ const Container = styled.div`
 export default connect(
   null,
   mapDispatchToProps
-)(Settings)
+)(History)
