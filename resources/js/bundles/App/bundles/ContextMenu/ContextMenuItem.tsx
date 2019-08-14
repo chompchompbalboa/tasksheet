@@ -54,9 +54,9 @@ interface ContextMenuItemProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   cursor: default;
-  min-width: 10rem;
+  min-width: 8rem;
   width: 100%;
-  padding: 0.625rem 0.625rem 0.625rem 1rem;
+  padding: 0.5rem 0.5rem 0.5rem 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -68,7 +68,11 @@ const Container = styled.div`
 `
 
 const Logo = styled.div`
-  width: 1.25rem;
+  margin: 0 0.5rem;
+  width: 1.125rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 const Text = styled.div`

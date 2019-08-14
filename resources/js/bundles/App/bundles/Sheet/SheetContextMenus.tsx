@@ -19,6 +19,7 @@ const SheetContextMenus = ({
   contextMenuId,
   contextMenuTop,
   contextMenuLeft,
+  contextMenuRight,
   closeContextMenu,
   sheetVisibleColumns,
   updateSheet,
@@ -34,6 +35,7 @@ const SheetContextMenus = ({
         columns={columns}
         contextMenuTop={contextMenuTop}
         contextMenuLeft={contextMenuLeft}
+        contextMenuRight={contextMenuRight}
         closeContextMenu={() => closeContextMenu()}
         sheetVisibleColumns={sheetVisibleColumns}
         updateSheet={updateSheet}
@@ -54,6 +56,7 @@ interface SheetContextMenusProps {
   contextMenuId: string
   contextMenuTop: number
   contextMenuLeft: number
+  contextMenuRight: number
   closeContextMenu(): void
   sheetVisibleColumns: SheetColumn['id'][]
   updateSheet(sheetId: string, updates: SheetUpdates): void

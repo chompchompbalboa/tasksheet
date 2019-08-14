@@ -14,7 +14,7 @@ class OrganizationTableSeeder extends Seeder
     public function run()
     {
       // User
-      $userFolder = factory(App\Models\Folder::class)->create([ 'name' => 'Rocky' ]);
+      $userFolder = factory(App\Models\Folder::class)->create([ 'name' => 'Personal' ]);
       $users = factory(App\Models\User::class)->create([ 
         'id' => '75e3c4f9-b261-3343-a320-8ee9fb0c931e', 
         'folderId' => $userFolder->id 
@@ -26,7 +26,7 @@ class OrganizationTableSeeder extends Seeder
         $user->layout()->save(factory(App\Models\UserLayout::class)->make());
 
         // Organization
-        $organizationFolder = factory(App\Models\Folder::class)->create([ 'name' => 'Dillon Works' ]);
+        $organizationFolder = factory(App\Models\Folder::class)->create([ 'name' => 'Company' ]);
         $organization = factory(App\Models\Organization::class)->create([
           'folderId' => $organizationFolder->id
         ])->each(function($organization) use($organizationFolder, $user) {

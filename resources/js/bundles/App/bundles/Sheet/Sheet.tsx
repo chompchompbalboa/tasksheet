@@ -149,14 +149,17 @@ const SheetComponent = memo(({
   const [ contextMenuId, setContextMenuId ] = useState(null)
   const [ contextMenuTop, setContextMenuTop ] = useState(null)
   const [ contextMenuLeft, setContextMenuLeft ] = useState(null)
+  const [ contextMenuRight, setContextMenuRight ] = useState(null)
   const handleContextMenu = useCallback((e: MouseEvent, type: string, id: string) => {
     e.preventDefault()
+    const windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
     batch(() => {
       setIsContextMenuVisible(true)
       setContextMenuType(type)
       setContextMenuId(id)
       setContextMenuTop(e.clientY)
-      setContextMenuLeft(e.clientX)
+      setContextMenuLeft(e.clientX > (windowWidth * 0.75) ? null : e.clientX)
+      setContextMenuRight(e.clientX > (windowWidth * 0.75) ? windowWidth - e.clientX : null)
     })
   }, [])
   const closeContextMenu = () => {
@@ -166,6 +169,7 @@ const SheetComponent = memo(({
       setContextMenuId(null)
       setContextMenuTop(null)
       setContextMenuLeft(null)
+      setContextMenuRight(null)
     })
   }
 
@@ -180,6 +184,7 @@ const SheetComponent = memo(({
           contextMenuId={contextMenuId}
           contextMenuTop={contextMenuTop}
           contextMenuLeft={contextMenuLeft}
+          contextMenuRight={contextMenuRight}
           closeContextMenu={closeContextMenu}
           sheetVisibleColumns={sheetVisibleColumns}
           updateSheet={memoizedUpdateSheet}
