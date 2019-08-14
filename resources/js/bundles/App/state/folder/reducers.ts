@@ -6,6 +6,7 @@ import { Clipboard, File, Files, Folder, Folders } from '@app/state/folder/types
 import normalizer from '@app/state/folder/normalizer'
 import {
   FolderActions,
+  CREATE_FILE,
   CREATE_FOLDER,
 	UPDATE_ACTIVE_FILE_ID,
   UPDATE_ACTIVE_FOLDER_PATH,
@@ -49,6 +50,24 @@ export type FolderState = {
 //-----------------------------------------------------------------------------
 export const folderReducer = (state = initialFoldersState, action: FolderActions): FolderState => {
 	switch (action.type) {
+
+    case CREATE_FILE: {
+      const { folderId, newFile } = action
+      return {
+        ...state,
+        files: {
+          ...state.files,
+          [newFile.id]: newFile
+        },
+        folders: {
+          ...state.folders,
+          [folderId]: {
+            ...state.folders[folderId],
+            files: [ ...state.folders[folderId].files, newFile.id ]
+          }
+        }
+      }
+    }
 
 		case CREATE_FOLDER: {
       const { folderId, newFolder, newFolderId } = action

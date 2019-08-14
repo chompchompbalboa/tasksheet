@@ -18,10 +18,10 @@ import {
   SheetGroup, SheetGroups, SheetGroupUpdates,
   SheetSort, SheetSorts, SheetSortUpdates
 } from '@app/state/sheet/types'
-import { FileType } from '@app/state/folder/types'
+import { FileType, File as TFile, Folder } from '@app/state/folder/types'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
 
-import { updateFiles, updateFolders } from '@app/state/folder/actions'
+import { createFile, updateFiles, updateFolders } from '@app/state/folder/actions'
 import { createHistoryStep } from '@app/state/history/actions'
 import { updateTabs } from '@app/state/tab/actions'
 
@@ -45,9 +45,18 @@ export type SheetActions =
 //-----------------------------------------------------------------------------
 // Create Sheet From Upload
 //-----------------------------------------------------------------------------
-export const createSheetFromUpload = (fileToUpload: File): ThunkAction => {
-  return async () => {
-    mutation.createSheetFromUpload(createUuid(), fileToUpload)
+export const createSheetFromUpload = (folderId: Folder['id'], fileToUpload: File): ThunkAction => {
+  return async (dispatch: ThunkDispatch) => {
+    const newSheetId = createUuid()
+    const newFile: TFile = {
+      id: createUuid(),
+      folderId: folderId,
+      name: fileToUpload.name.split('.')[0],
+      type: 'SHEET',
+      typeId: newSheetId
+    }
+    dispatch(createFile(folderId, newFile))
+    mutation.createSheetFromUpload(newSheetId, fileToUpload)
   }
 }
 

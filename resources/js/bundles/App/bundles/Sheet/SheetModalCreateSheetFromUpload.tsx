@@ -15,6 +15,7 @@ import {
 import { 
   createSheetFromUpload as createSheetFromUploadAction,
 } from '@app/state/sheet/actions' 
+import { Folder } from '@app/state/folder/types'
 
 //-----------------------------------------------------------------------------
 // Redux
@@ -24,7 +25,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-  createSheetFromUpload: (fileToUpload: File) => dispatch(createSheetFromUploadAction(fileToUpload)),
+  createSheetFromUpload: (folderId: Folder['id'], fileToUpload: File) => dispatch(createSheetFromUploadAction(folderId, fileToUpload)),
   updateModal: (updates: ModalUpdates) => dispatch(updateModalAction(updates))
 })
 
@@ -32,6 +33,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
 // Component
 //-----------------------------------------------------------------------------
 const SheetModalCreateSheetFromUpload = ({
+  folderId,
   createSheetFromUpload,
   updateModal
 }: SheetModalCreateSheetFromUploadProps) => {
@@ -52,7 +54,7 @@ const SheetModalCreateSheetFromUpload = ({
   // This only fires when a file is selected
   const handleFileDialogSelect = (e: ChangeEvent<HTMLInputElement>) => {
     const fileToUpload = e.target.files[0]
-    createSheetFromUpload(fileToUpload)
+    createSheetFromUpload(folderId, fileToUpload)
   }
 
   return (
@@ -69,7 +71,8 @@ const SheetModalCreateSheetFromUpload = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetModalCreateSheetFromUploadProps {
-  createSheetFromUpload?(fileToUpload: File): void
+  createSheetFromUpload?(folderId: Folder['id'], fileToUpload: File): void
+  folderId: Folder['id']
   updateModal?(updates: ModalUpdates): void
 }
 

@@ -26,16 +26,18 @@ class SheetController extends Controller
     {
       // Create the sheet
       $newSheetId = $request->input('newSheetId');
-      $newSheet = new Sheet;
-      $newSheet->save();
+      $newSheet = Sheet::create([ 'id' => $newSheetId ]);
       // Build the array we'll use to insert the columns, rows, and cells
       $rowsFromCsv = Csv::toArray($request->file('fileToUpload')->path());
       $rowsFromCsvCount = count($rowsFromCsv);
       // Create the columns
       $columns = [];
+      $visibleColumns = [];
       foreach($rowsFromCsv[0] as $columnName => $value) {
+        $newColumnId = Str::uuid()->toString();
+        array_push($visibleColumns, $newColumnId);
         array_push($columns, [
-          'id' => Str::uuid()->toString(),
+          'id' => $newColumnId,
           'sheetId' => $newSheet->id,
           'name' => $columnName,
           'type' => 'STRING',
@@ -43,9 +45,29 @@ class SheetController extends Controller
         ]);
       }
       $newSheetColumns = SheetColumn::insert($columns);
+      $newSheet->visibleColumns = $visibleColumns;
+      $newSheet->save();
       // Create the rows and cells
       $newSheetRows = [];
-      $newSheetCells = [];      
+      $newSheetCells = [];
+      foreach($rowsFromCsv as $rowFromCsv) {
+        $newRowId = Str::uuid()->toString();
+        array_push($newSheetRows, [ 
+          'id' => $newRowId,
+          'sheetId' => $newSheet->id 
+        ]);
+        foreach($columns as $column) {
+          array_push($newSheetCells, [
+            'id' => Str::uuid()->toString(),
+            'sheetId' => $newSheet->id,
+            'columnId' => $column['id'],
+            'rowId' => $newRowId,
+            'value' => $rowFromCsv[$column['name']]
+          ]);
+        }
+      }
+      SheetRow::insert($newSheetRows);
+      SheetCell::insert($newSheetCells);   
       return response()->json(null, 200);
     }
 

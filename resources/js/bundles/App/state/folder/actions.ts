@@ -8,7 +8,7 @@ import { AppState } from '@app/state'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
 import { 
   ClipboardUpdates, 
-  Files, FileUpdates, 
+  File, Files, FileUpdates, 
   Folder, Folders, FolderUpdates
 } from '@app/state/folder/types'
 
@@ -19,7 +19,7 @@ export type FolderActions =
   UpdateActiveFileId | UpdateActiveFolderPath | 
   UpdateClipboard |
   CreateFolder | UpdateFolder | UpdateFolders | 
-  UpdateFile | UpdateFiles | 
+  CreateFile | UpdateFile | UpdateFiles | 
   UpdateIsSavingNewFile
 
 //-----------------------------------------------------------------------------
@@ -153,6 +153,32 @@ export const pasteFromClipboard = (nextFolderId: string) => {
 
 //-----------------------------------------------------------------------------
 // Create File
+//-----------------------------------------------------------------------------
+export const CREATE_FILE = 'CREATE_FILE'
+interface CreateFile {
+	type: typeof CREATE_FILE
+  folderId: string
+  newFile: File
+}
+
+export const createFile = (folderId: string, newFile: File) => {
+	return async (dispatch: ThunkDispatch) => {
+    dispatch(createFileReducer(folderId, newFile))
+    mutation.createFile(newFile)
+	}
+}
+
+export const createFileReducer = (folderId: string, newFile: File): FolderActions => {
+	return {
+    type: CREATE_FILE,
+    folderId,
+    newFile
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+// Create Folder
 //-----------------------------------------------------------------------------
 export const CREATE_FOLDER = 'CREATE_FOLDER'
 interface CreateFolder {
