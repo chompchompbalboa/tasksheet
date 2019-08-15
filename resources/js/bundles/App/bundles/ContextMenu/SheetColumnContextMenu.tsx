@@ -8,7 +8,10 @@ import arrayMove from 'array-move'
 import { CHECKMARK } from '@app/assets/icons'
 
 import { Sheet, SheetActiveUpdates, SheetUpdates, SheetColumn, SheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
-import { createSheetColumn as createSheetColumnAction } from '@app/state/sheet/actions'
+import { 
+  createSheetColumn as createSheetColumnAction,
+  deleteSheetColumn as deleteSheetColumnAction
+} from '@app/state/sheet/actions'
 
 import ContextMenu from '@app/bundles/ContextMenu/ContextMenu'
 import ContextMenuDivider from '@app/bundles/ContextMenu/ContextMenuDivider'
@@ -33,6 +36,7 @@ const SheetColumnContextMenu = ({
   
   const dispatch = useDispatch()
   const createSheetColumn = (columnid: SheetColumn['id'], beforeOrAfter: 'BEFORE' | 'AFTER') => dispatch(createSheetColumnAction(sheetId, columnId, beforeOrAfter))
+  const deleteSheetColumn = (columnid: SheetColumn['id']) => dispatch(deleteSheetColumnAction(sheetId, columnId))
   
   const column = columns[columnId]
 
@@ -87,7 +91,9 @@ const SheetColumnContextMenu = ({
           onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DATETIME' }))}/>
       </ContextMenuItem>
       <ContextMenuDivider />
-      <ContextMenuItem text="Delete">
+      <ContextMenuItem 
+        text="Delete"
+        onClick={() => closeOnClick(() => deleteSheetColumn(columnId))}>
       </ContextMenuItem>
     </ContextMenu>
   )
@@ -98,7 +104,7 @@ const SheetColumnContextMenu = ({
 //-----------------------------------------------------------------------------
 interface SheetColumnContextMenuProps {
   sheetId: Sheet['id']
-  columnId: string
+  columnId: SheetColumn['id']
   columns: SheetColumns
   closeContextMenu(): void
   contextMenuLeft: number
@@ -107,7 +113,7 @@ interface SheetColumnContextMenuProps {
   sheetVisibleColumns: SheetColumn['id'][]
   updateSheet(sheetId: string, updates: SheetUpdates): void
   updateSheetActive(updates: SheetActiveUpdates): void
-  updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
+  updateSheetColumn(columnId: SheetColumn['id'], updates: SheetColumnUpdates): void
 }
 
 //-----------------------------------------------------------------------------

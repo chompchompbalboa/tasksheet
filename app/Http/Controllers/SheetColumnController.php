@@ -68,11 +68,11 @@ class SheetColumnController extends Controller
     public function destroy(SheetColumn $column)
     {
       // Delete all of the cells
-      SheetCell::where('sheet_column_id', $column->id)->delete();
+      SheetCell::where('columnId', $column->id)->delete();
       // If deleting the sheet's only column, delete any rows as well
-      $columnCount = Sheet::where('id', $column->sheetId)->first()->columns()->count();
+      $columnCount = SheetColumn::where('sheetId', $column->sheetId)->count();
       if($columnCount === 1) {
-        SheetRow::where('sheet_id', $column->sheetId)->delete();
+        SheetRow::where('sheetId', $column->sheetId)->delete();
       }
       return SheetColumn::destroy($column->id);
     }

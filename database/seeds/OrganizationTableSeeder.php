@@ -43,7 +43,7 @@ class OrganizationTableSeeder extends Seeder
               //'Purchasing_15',
               //'Purchasing_250',
               //'2019_Pitching_Advanced',
-              '2019.08.15 - Pitching - Advanced',
+              //'2019-08-15 - Pitching - Advanced',
               //'2019_Pitching_Standard'
             ];
 
@@ -78,13 +78,17 @@ class OrganizationTableSeeder extends Seeder
 
                     // Columns
                     $columnCount = count($source[0]);
+                    $visibleColumns = [];
                     $columns = factory(App\Models\SheetColumn::class, $columnCount)->create();
-                    $columns->each(function($column, $key) use ($sheet, $source, $sourceColumnNames) {
+                    $columns->each(function($column, $key) use ($sheet, $source, $sourceColumnNames, $visibleColumns) {
                       $column->sheetId = $sheet->id;
                       $column->name = $sourceColumnNames[$key];
                       $column->type = 'STRING';
                       $column->save();
+                      array_push($visibleColumns, $column->id);
                     });
+                    $sheet->visibleColumns = $visibleColumns;
+                    $sheet->save();
 
                     // Rows
                     $rows = factory(App\Models\SheetRow::class, $sourceCount)->create();

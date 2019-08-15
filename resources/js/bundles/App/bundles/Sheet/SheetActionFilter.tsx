@@ -51,7 +51,6 @@ const SheetActionFilter = ({
 
   const columnNames = sheetVisibleColumns && sheetVisibleColumns.map(columnId => columns[columnId].name)
   const filterTypes: SheetFilterType[] = ['=', '>', '>=', '<', '<=']
-
   const isValidFilter = ([
     columnName,
     filterType,

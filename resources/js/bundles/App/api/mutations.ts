@@ -99,6 +99,12 @@ export const createSheetColumn = async (newColumn: SheetColumn, newCells: SheetC
 	})
 }
 
+export const deleteSheetColumn = async (columnId: string) => {
+	return axios.delete('/app/sheets/columns/' + columnId).then(response => {
+		return response.data
+	})
+}
+
 export const updateSheetColumn = async (id: string, updates: SheetColumnUpdates) => {
 	return axios.patch('/app/sheets/columns/' + id, updates).then(response => {
 		return response.data

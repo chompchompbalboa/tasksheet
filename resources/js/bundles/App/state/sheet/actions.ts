@@ -324,6 +324,38 @@ export const createSheetView = (sheetId: string, viewName: string): ThunkAction 
 }
 
 //-----------------------------------------------------------------------------
+// Delete Sheet Column
+//-----------------------------------------------------------------------------
+export const deleteSheetColumn = (sheetId: string, columnId: string): ThunkAction => {
+	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      sheets,
+      cells,
+      columns,
+    } = getState().sheet
+    const sheet = sheets[sheetId]
+    const { [columnId]: deletedColumn, ...nextColumns } = columns
+    const nextCells: SheetCells = {}
+    Object.keys(cells).forEach(cellId => {
+      const cell = cells[cellId]
+      if(cell.columnId !== columnId) { nextCells[cellId] = cell}
+    })
+    const nextSheetColumns = sheet.columns.filter(sheetColumnId => sheetColumnId !== columnId)
+    const nextSheetVisibleColumns = sheet.visibleColumns.filter(sheetColumnId => sheetColumnId !== columnId)
+    batch(() => {
+      dispatch(updateSheetCells(nextCells))
+      dispatch(updateSheetColumns(nextColumns))
+      dispatch(updateSheetReducer(sheetId, {
+        columns: nextSheetColumns,
+        visibleColumns: nextSheetVisibleColumns
+      }))
+    })
+    mutation.deleteSheetColumn(columnId)
+    mutation.updateSheet(sheetId, { visibleColumns: nextSheetVisibleColumns })
+	}
+}
+
+//-----------------------------------------------------------------------------
 // Delete Sheet Filter
 //-----------------------------------------------------------------------------
 export const DELETE_SHEET_FILTER = 'DELETE_SHEET_FILTER'
