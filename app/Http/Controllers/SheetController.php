@@ -66,8 +66,12 @@ class SheetController extends Controller
           ]);
         }
       }
-      SheetRow::insert($newSheetRows);
-      SheetCell::insert($newSheetCells);   
+      foreach (array_chunk($newSheetRows, 2500) as $chunk) {
+        SheetRow::insert($chunk);
+      }
+      foreach (array_chunk($newSheetCells, 2500) as $chunk) {
+        SheetCell::insert($chunk);
+      }  
       return response()->json(null, 200);
     }
 

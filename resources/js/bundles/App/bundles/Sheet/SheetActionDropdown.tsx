@@ -32,37 +32,30 @@ const SheetActionDropdown = ({
   selectedOptionComponent
 }: SheetActionDropdownProps) => {
 
+  const container = useRef(null)
+  const dropdown = useRef(null)
+  
   const [ autosizeInputValue, setAutosizeInputValue ] = useState("")
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
   const [ visibleOptions, setVisibleOptions ] = useState(options)
+  const [ highlightedOptionIndex, setHighlightedOptionIndex ] = useState(null)
   const [ visibleSelectedOptions, setVisibleSelectedOptions ] = useState(selectedOptions || [])
-
-  const container = useRef(null)
-  const dropdown = useRef(null)
 
   useEffect(() => {
     if(isDropdownVisible) {
       !visibleOptions && setVisibleOptions(options)
       window.addEventListener('mousedown', closeContextMenuOnClickOutside)
-    } else {
-      window.removeEventListener('mousedown', closeContextMenuOnClickOutside)
-    }
-    return () => {
-      window.removeEventListener('mousedown', closeContextMenuOnClickOutside)
-    }
-  }, [ isDropdownVisible ])
-
-  useEffect(() => {
-    if(visibleOptions && visibleOptions.length === 1) {
-      window.addEventListener('keypress', selectOptionOnKeydownEnter)
-    }
+      window.addEventListener('keydown', handleKeydownWhileDropdownIsVisible)
+    } 
     else {
-      window.removeEventListener('keypress', selectOptionOnKeydownEnter)
+      window.removeEventListener('mousedown', closeContextMenuOnClickOutside)
+      window.removeEventListener('keydown', handleKeydownWhileDropdownIsVisible)
     }
     return () => {
-      window.removeEventListener('keypress', selectOptionOnKeydownEnter)
+      window.removeEventListener('mousedown', closeContextMenuOnClickOutside)
+      window.removeEventListener('keydown', handleKeydownWhileDropdownIsVisible)
     }
-  }, [ visibleOptions ])
+  }, [ highlightedOptionIndex, isDropdownVisible, visibleOptions ])
 
   useEffect(() => {
     setVisibleOptions(options)
@@ -76,18 +69,21 @@ const SheetActionDropdown = ({
   const closeContextMenuOnClickOutside = (e: Event) => {
     if(!dropdown.current.contains(e.target) && !container.current.contains(e.target)) {
       setIsDropdownVisible(false)
+      setHighlightedOptionIndex(null)
     }
   }
 
   const handleAutosizeInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const nextAutosizeInputValue = e.target.value
+    const nextVisibleOptions = options && options.filter(option => {
+      const searchString = nextAutosizeInputValue.toLowerCase().replace(/ /g, "")
+      return option.label.toLowerCase().replace(/ /g, "").includes(searchString)
+    })
     onInputChange && onInputChange(nextAutosizeInputValue)
     setIsDropdownVisible(true)
     setAutosizeInputValue(nextAutosizeInputValue)
-    setVisibleOptions(options && options.filter(option => {
-      const searchString = nextAutosizeInputValue.toLowerCase().replace(/ /g, "")
-      return option.label.toLowerCase().replace(/ /g, "").includes(searchString)
-    }))
+    setVisibleOptions(nextVisibleOptions)
+    nextVisibleOptions && nextVisibleOptions.length === 1 && setHighlightedOptionIndex(0)
   }
 
   const handleAutosizeInputFocus = (e: FocusEvent<HTMLInputElement>) => {
@@ -103,15 +99,24 @@ const SheetActionDropdown = ({
   
   const handleOptionSelect = (option: SheetActionDropdownOption) => {
     setIsDropdownVisible(false)
+    setHighlightedOptionIndex(null)
     setVisibleSelectedOptions([...visibleSelectedOptions, option])
     setAutosizeInputValue("")
     setVisibleOptions(options)
     setTimeout(() => onOptionSelect(option), 50)
   }
 
-  const selectOptionOnKeydownEnter = (e: KeyboardEvent) => {
+  const handleKeydownWhileDropdownIsVisible = (e: KeyboardEvent) => {
     if(e.key === "Enter") {
-      handleOptionSelect(visibleOptions[0])
+      if(visibleOptions && highlightedOptionIndex) {
+        handleOptionSelect(visibleOptions[highlightedOptionIndex])
+      }
+    }
+    if(e.key === "ArrowUp") {
+      setHighlightedOptionIndex(highlightedOptionIndex === null ? null : Math.max(highlightedOptionIndex - 1, 0))
+    }
+    if(e.key === "ArrowDown") {
+      setHighlightedOptionIndex(highlightedOptionIndex === null ? 0 : Math.min(highlightedOptionIndex + 1, visibleOptions.length - 1))
     }
   }
   
@@ -152,9 +157,11 @@ const SheetActionDropdown = ({
             <Dropdown
               ref={dropdown}
               isDropdownVisible={isDropdownVisible}>
-              {visibleOptions && visibleOptions.map(option => (
+              {visibleOptions && visibleOptions.map((option, index) => (
                 <DropdownOption
                   key={option.value}
+                  isHighlighted={highlightedOptionIndex === index}
+                  onMouseEnter={() => setHighlightedOptionIndex(index)}
                   onClick={() => handleOptionSelect(option)}>
                   {option.label}
                 </DropdownOption>
@@ -236,10 +243,11 @@ const DropdownOption = styled.div`
   cursor: default;
   width: 100%;
   padding: 0.15rem 0.25rem;
-  &:hover {
-    background-color: rgb(240, 240, 240);
-  }
+  background-color: ${ ({ isHighlighted }: DropdownOptionProps ) => isHighlighted ? 'rgb(240, 240, 240)' : 'transparent'};
 `
+interface DropdownOptionProps {
+  isHighlighted: boolean
+}
 
 //-----------------------------------------------------------------------------
 // Export

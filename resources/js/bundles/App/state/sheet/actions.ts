@@ -51,7 +51,7 @@ export const createSheetFromUpload = (folderId: Folder['id'], fileToUpload: File
     const newFile: TFile = {
       id: createUuid(),
       folderId: folderId,
-      name: fileToUpload.name.split('.')[0],
+      name: fileToUpload.name.split('.').slice(0, -1).join(''), // fileToUpload name without the extension
       type: 'SHEET',
       typeId: newSheetId
     }
