@@ -41,12 +41,9 @@ class SheetController extends Controller
           'sheetId' => $newSheet->id,
           'name' => $columnName,
           'type' => 'STRING',
-          'width' => 100
+          'width' => 50
         ]);
       }
-      $newSheetColumns = SheetColumn::insert($columns);
-      $newSheet->visibleColumns = $visibleColumns;
-      $newSheet->save();
       // Create the rows and cells
       $newSheetRows = [];
       $newSheetCells = [];
@@ -56,16 +53,25 @@ class SheetController extends Controller
           'id' => $newRowId,
           'sheetId' => $newSheet->id 
         ]);
-        foreach($columns as $column) {
+        foreach($columns as $index => $column) {
+          $cellValue = $rowFromCsv[$column['name']];
+          $cellValueLength = strlen($cellValue);
+          $columnWidth = $columns[$index]['width'];
+          $nextColumnWidth = min(300, max($cellValueLength * 8, $columnWidth));
+          $columns[$index]['width'] = $nextColumnWidth;
           array_push($newSheetCells, [
             'id' => Str::uuid()->toString(),
             'sheetId' => $newSheet->id,
             'columnId' => $column['id'],
             'rowId' => $newRowId,
-            'value' => $rowFromCsv[$column['name']]
+            'value' => $cellValue
           ]);
         }
       }
+      // Insert into db
+      $newSheetColumns = SheetColumn::insert($columns);
+      $newSheet->visibleColumns = $visibleColumns;
+      $newSheet->save();
       foreach (array_chunk($newSheetRows, 2500) as $chunk) {
         SheetRow::insert($chunk);
       }

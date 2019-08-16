@@ -332,26 +332,40 @@ export const deleteSheetColumn = (sheetId: string, columnId: string): ThunkActio
       sheets,
       cells,
       columns,
+      rows,
     } = getState().sheet
     const sheet = sheets[sheetId]
+    // Columns
     const { [columnId]: deletedColumn, ...nextColumns } = columns
+    // Rows
+    const nextRows: SheetRows = clone(rows)
+    sheet.rows.forEach(rowId => {
+      const { [columnId]: deletedCell, ...nextCells } = nextRows[rowId].cells
+      nextRows[rowId].cells = nextCells
+    })
+    // Cells
     const nextCells: SheetCells = {}
     Object.keys(cells).forEach(cellId => {
       const cell = cells[cellId]
-      if(cell.columnId !== columnId) { nextCells[cellId] = cell}
+      if(cell.columnId !== columnId) { nextCells[cellId] = cell }
     })
+    // Sheet Columns
     const nextSheetColumns = sheet.columns.filter(sheetColumnId => sheetColumnId !== columnId)
     const nextSheetVisibleColumns = sheet.visibleColumns.filter(sheetColumnId => sheetColumnId !== columnId)
-    batch(() => {
-      dispatch(updateSheetCells(nextCells))
-      dispatch(updateSheetColumns(nextColumns))
-      dispatch(updateSheetReducer(sheetId, {
-        columns: nextSheetColumns,
-        visibleColumns: nextSheetVisibleColumns
-      }))
-    })
-    mutation.deleteSheetColumn(columnId)
-    mutation.updateSheet(sheetId, { visibleColumns: nextSheetVisibleColumns })
+    const actions = () => {
+      batch(() => {
+        dispatch(updateSheetCells(nextCells))
+        dispatch(updateSheetColumns(nextColumns))
+        dispatch(updateSheetRows(nextRows))
+        dispatch(updateSheetReducer(sheetId, {
+          columns: nextSheetColumns,
+          visibleColumns: nextSheetVisibleColumns
+        }))
+      })
+      mutation.deleteSheetColumn(columnId)
+      mutation.updateSheet(sheetId, { visibleColumns: nextSheetVisibleColumns })
+    }
+    actions()
 	}
 }
 

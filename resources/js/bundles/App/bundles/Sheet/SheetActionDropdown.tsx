@@ -136,7 +136,7 @@ const SheetActionDropdown = ({
   }
   
   const SelectedOption = selectedOptionComponent
-  console.log(isDropdownVisible)
+
   return (
     <Container
       ref={container}

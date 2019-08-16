@@ -102,7 +102,7 @@ const SheetActionFilter = ({
       })
     }
   }
-  console.log(inputValue)
+
   return (
     <SheetAction>
       <SheetActionDropdown
