@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { v4 as createUuid } from 'uuid'
 
@@ -41,6 +41,23 @@ const SheetActionFilter = ({
   sheetId
 }: SheetActionProps) => {
 
+  const [ inputValue, setInputValue ] = useState("")
+  const [ isColumnNameValid, setIsColumnNameValid ] = useState(false)
+
+  const filterTypes: SheetFilterType[] = ['=', '>', '>=', '<', '<=']
+  const columnNames = sheetVisibleColumns && sheetVisibleColumns.map(columnId => columns[columnId].name)
+
+  let optionsColumnOnly: SheetActionDropdownOption[] = []
+  let optionsColumnWithFilterType: SheetActionDropdownOption[] = []
+  sheetVisibleColumns && sheetVisibleColumns.forEach((columnId: string, index: number) => {
+    const columnOnlyValue = columns[columnId].name
+    optionsColumnOnly.push({ label: columnOnlyValue, value: columnOnlyValue + '-' + index })
+    filterTypes.forEach(filterType => {
+      const columnWithFilterTypeValue = columnOnlyValue + ' ' + filterType
+      optionsColumnWithFilterType.push({ label: columnWithFilterTypeValue, value: columnWithFilterTypeValue })
+    })
+  })
+
   const selectedOptions = sheetFilters && sheetFilters.map((filterId: SheetFilter['id']) => { 
     const filter = filters[filterId]
     return { 
@@ -49,25 +66,33 @@ const SheetActionFilter = ({
     }
   })
 
-  const columnNames = sheetVisibleColumns && sheetVisibleColumns.map(columnId => columns[columnId].name)
-  const filterTypes: SheetFilterType[] = ['=', '>', '>=', '<', '<=']
   const isValidFilter = ([
     columnName,
     filterType,
     filterValue
   ]: string[]) => {
-    return (
-      columnName && filterType && filterValue &&
-      columnNames.includes(columnName) && // First string is a column name
-      filterTypes.includes(filterType as SheetFilterType) && // Second string is a FilterType
-      filterValue[filterValue.length - 1] === ';' // Third string ends with a semicolon
-    )
+    if (columnName && filterType && filterValue) {
+      return (
+        columnNames.includes(columnName) && // First string is a column name
+        filterTypes.includes(filterType as SheetFilterType) && // Second string is a FilterType
+        filterValue[filterValue.length - 1] === ';' // Third string ends with a semicolon
+      )
+    }
+    return false
   }
 
   const handleInputChange = (nextValue: string) => {
-    const splitNextValue = nextValue.split(" ")
-    const [ columnName, filterType, ...filterValue ] = splitNextValue
+    setInputValue(nextValue)
+    const [ columnName, filterType, ...filterValue ] = nextValue.split(" ")
+    if(columnNames.includes(columnName)) { 
+      setIsColumnNameValid(true) 
+    }
+    else {
+      setIsColumnNameValid(false)
+    }
     if(isValidFilter([ columnName, filterType, clone(filterValue).join(" ") ])) {
+      setInputValue("")
+      setIsColumnNameValid(false)
       createSheetFilter(sheetId, {
         id: createUuid(), 
         sheetId: sheetId,
@@ -77,17 +102,18 @@ const SheetActionFilter = ({
       })
     }
   }
-  
+  console.log(inputValue)
   return (
     <SheetAction>
       <SheetActionDropdown
         onInputChange={(nextValue: string) => handleInputChange(nextValue)}
         onOptionDelete={(optionToDelete: SheetActionDropdownOption) => deleteSheetFilter(optionToDelete.value)}
-        onOptionSelect={null}
-        options={null}
+        onOptionSelect={() => console.log('onOptionSelect')}
+        options={isColumnNameValid ? optionsColumnWithFilterType : optionsColumnOnly}
         placeholder={"Filter By..."}
         selectedOptions={selectedOptions}
-        selectedOptionComponent={({ option }: { option: SheetActionDropdownOption }) => <SheetActionFilterSelectedOption option={option} filters={filters} />}/>
+        selectedOptionComponent={({ option }: { option: SheetActionDropdownOption }) => <SheetActionFilterSelectedOption option={option} filters={filters} />}
+        value={inputValue}/>
     </SheetAction>
   )
 }

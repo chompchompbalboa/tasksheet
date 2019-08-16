@@ -29,15 +29,23 @@ const SheetActionDropdown = ({
   placeholder,
   selectedOptions,
   userColorPrimary,
-  selectedOptionComponent
+  selectedOptionComponent,
+  value = ""
 }: SheetActionDropdownProps) => {
 
   const container = useRef(null)
   const dropdown = useRef(null)
+
+  const getVisibleOptions = (value: string) => {
+    return options && options.filter(option => {
+      const searchString = value.toLowerCase().replace(/ /g, "")
+      return option.label.toLowerCase().replace(/ /g, "").includes(searchString)
+    })
+  }
   
-  const [ autosizeInputValue, setAutosizeInputValue ] = useState("")
+  const [ autosizeInputValue, setAutosizeInputValue ] = useState(value)
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
-  const [ visibleOptions, setVisibleOptions ] = useState(options)
+  const [ visibleOptions, setVisibleOptions ] = useState(getVisibleOptions(value))
   const [ highlightedOptionIndex, setHighlightedOptionIndex ] = useState(null)
   const [ visibleSelectedOptions, setVisibleSelectedOptions ] = useState(selectedOptions || [])
 
@@ -58,13 +66,19 @@ const SheetActionDropdown = ({
   }, [ highlightedOptionIndex, isDropdownVisible, visibleOptions ])
 
   useEffect(() => {
-    setVisibleOptions(options)
+    setVisibleOptions(getVisibleOptions(value))
+    value === '' && setIsDropdownVisible(false)
   }, [ options ])
 
   useEffect(() => {
     setVisibleSelectedOptions(selectedOptions)
     setAutosizeInputValue("")
   }, [ selectedOptions ])
+
+  useEffect(() => {
+    setAutosizeInputValue(value)
+    setVisibleOptions(getVisibleOptions(value))
+  }, [ value ])
 
   const closeContextMenuOnClickOutside = (e: Event) => {
     if(!dropdown.current.contains(e.target) && !container.current.contains(e.target)) {
@@ -75,10 +89,7 @@ const SheetActionDropdown = ({
 
   const handleAutosizeInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const nextAutosizeInputValue = e.target.value
-    const nextVisibleOptions = options && options.filter(option => {
-      const searchString = nextAutosizeInputValue.toLowerCase().replace(/ /g, "")
-      return option.label.toLowerCase().replace(/ /g, "").includes(searchString)
-    })
+    const nextVisibleOptions = getVisibleOptions(nextAutosizeInputValue)
     onInputChange && onInputChange(nextAutosizeInputValue)
     setIsDropdownVisible(true)
     setAutosizeInputValue(nextAutosizeInputValue)
@@ -108,8 +119,8 @@ const SheetActionDropdown = ({
 
   const handleKeydownWhileDropdownIsVisible = (e: KeyboardEvent) => {
     if(e.key === "Enter") {
-      if(visibleOptions && highlightedOptionIndex) {
-        handleOptionSelect(visibleOptions[highlightedOptionIndex])
+      if(visibleOptions) {
+        handleOptionSelect(visibleOptions[highlightedOptionIndex || 0])
       }
     }
     if(e.key === "ArrowUp") {
@@ -118,10 +129,14 @@ const SheetActionDropdown = ({
     if(e.key === "ArrowDown") {
       setHighlightedOptionIndex(highlightedOptionIndex === null ? 0 : Math.min(highlightedOptionIndex + 1, visibleOptions.length - 1))
     }
+    if(e.key === ";") {
+      setIsDropdownVisible(false)
+      setHighlightedOptionIndex(null)
+    }
   }
   
   const SelectedOption = selectedOptionComponent
-  
+  console.log(isDropdownVisible)
   return (
     <Container
       ref={container}
@@ -185,6 +200,7 @@ interface SheetActionDropdownProps {
   selectedOptions: SheetActionDropdownOptions
   userColorPrimary: string
   selectedOptionComponent: any
+  value?: string
 }
 
 export interface SheetActionDropdownOption {
