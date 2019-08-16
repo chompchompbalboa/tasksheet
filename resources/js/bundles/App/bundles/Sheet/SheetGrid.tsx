@@ -101,7 +101,7 @@ const SheetGrid = memo(({
           height={height}
           columnWidth={columnIndex => sheetVisibleColumns[columnIndex] === 'COLUMN_BREAK' ? 10 : columns[sheetVisibleColumns[columnIndex]].width}
           columnCount={sheetVisibleColumns.length}
-          rowHeight={rowIndex => sheetVisibleRows[rowIndex] === 'ROW_BREAK' ? 10 : 24}
+          rowHeight={rowIndex => 24}
           rowCount={sheetVisibleRows.length}
           overscanColumnCount={sheetVisibleColumns.length}
           overscanRowCount={3}>
