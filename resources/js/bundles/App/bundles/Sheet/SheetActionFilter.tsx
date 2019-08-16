@@ -100,7 +100,7 @@ const SheetActionFilter = ({
       createSheetFilter(sheetId, {
         id: createUuid(), 
         sheetId: sheetId,
-        columnId: sheetVisibleColumns[columnNames.findIndex(_columnName => _columnName === columnName)], 
+        columnId: sheetVisibleColumns.find(columnId => columns[columnId].name === columnName), 
         value: clone(filterValue).join(" ").slice(0, -1), 
         type: filterTypes.find(_filterType => _filterType === filterType)
       })
