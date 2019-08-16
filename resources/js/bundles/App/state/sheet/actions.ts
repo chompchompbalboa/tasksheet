@@ -63,7 +63,7 @@ export const createSheetFromUpload = (folderId: Folder['id'], fileToUpload: File
 //-----------------------------------------------------------------------------
 // Create Sheet Column
 //-----------------------------------------------------------------------------
-export const createSheetColumn = (sheetId: Sheet['id'], columnId: SheetColumn['id'], beforeOrAfter: 'BEFORE' | 'AFTER'): ThunkAction => {
+export const createSheetColumn = (sheetId: Sheet['id'], newColumnVisibleColumnsIndex: number): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       sheets,
@@ -73,10 +73,8 @@ export const createSheetColumn = (sheetId: Sheet['id'], columnId: SheetColumn['i
     } = getState().sheet
     const sheet = sheets[sheetId]
     const sheetVisibleColumns = sheet.visibleColumns.length === 0 ? clone(sheet.columns) : clone(sheet.visibleColumns)
-    const columnVisibleColumnsIndex = sheetVisibleColumns.findIndex((visibleColumnId: SheetColumn['id']) => visibleColumnId === columnId)
-    const newColumnVisibleColumnsIndex = beforeOrAfter === 'BEFORE' ? columnVisibleColumnsIndex : columnVisibleColumnsIndex + 1
     // Create sheet column
-    const newColumn = defaultColumn(sheetId, newColumnVisibleColumnsIndex) 
+    const newColumn = defaultColumn(sheetId, newColumnVisibleColumnsIndex)
     // Update the sheet's visible columns
     const nextSheetVisibleColumns = [
       ...sheetVisibleColumns.slice(0, newColumnVisibleColumnsIndex),
@@ -107,6 +105,32 @@ export const createSheetColumn = (sheetId: Sheet['id'], columnId: SheetColumn['i
     })
     // Save to server
     mutation.createSheetColumn(newColumn, newCells)
+  }
+}
+
+//-----------------------------------------------------------------------------
+// Create Sheet Column Break
+//-----------------------------------------------------------------------------
+export const createSheetColumnBreak = (sheetId: Sheet['id'], newColumnVisibleColumnsIndex: number): ThunkAction => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      sheets,
+    } = getState().sheet
+    const sheet = sheets[sheetId]
+    const sheetVisibleColumns = sheet.visibleColumns.length === 0 ? clone(sheet.columns) : clone(sheet.visibleColumns)
+    // Update the sheet's visible columns
+    const nextSheetVisibleColumns = [
+      ...sheetVisibleColumns.slice(0, newColumnVisibleColumnsIndex),
+      'COLUMN_BREAK',
+      ...sheetVisibleColumns.slice(newColumnVisibleColumnsIndex)
+    ]
+    // Make the updates
+    const sheetUpdates = { visibleColumns: nextSheetVisibleColumns }
+    batch(() => {
+      dispatch(updateSheet(sheetId, sheetUpdates))
+    })
+    // Save to server
+    mutation.updateSheet(sheetId, sheetUpdates)
   }
 }
 
@@ -363,6 +387,29 @@ export const deleteSheetColumn = (sheetId: string, columnId: string): ThunkActio
         }))
       })
       mutation.deleteSheetColumn(columnId)
+      mutation.updateSheet(sheetId, { visibleColumns: nextSheetVisibleColumns })
+    }
+    actions()
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Delete Sheet Column Break
+//-----------------------------------------------------------------------------
+export const deleteSheetColumnBreak = (sheetId: string, columnBreakIndex: number): ThunkAction => {
+	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      sheets
+    } = getState().sheet
+    const sheet = sheets[sheetId]
+    // Sheet Columns
+    const nextSheetVisibleColumns = sheet.visibleColumns.filter((_, index) => index !== columnBreakIndex)
+    const actions = () => {
+      batch(() => {
+        dispatch(updateSheetReducer(sheetId, {
+          visibleColumns: nextSheetVisibleColumns
+        }))
+      })
       mutation.updateSheet(sheetId, { visibleColumns: nextSheetVisibleColumns })
     }
     actions()

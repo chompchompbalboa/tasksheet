@@ -16,6 +16,7 @@ const SheetContextMenus = ({
   isContextMenuVisible,
   columns,
   contextMenuType,
+  contextMenuIndex,
   contextMenuId,
   contextMenuTop,
   contextMenuLeft,
@@ -31,6 +32,7 @@ const SheetContextMenus = ({
     {isContextMenuVisible && contextMenuType === 'COLUMN' &&
       <SheetColumnContextMenu
         sheetId={sheetId}
+        columnIndex={contextMenuIndex}
         columnId={contextMenuId}
         columns={columns}
         contextMenuTop={contextMenuTop}
@@ -54,6 +56,7 @@ interface SheetContextMenusProps {
   columns: SheetColumns
   contextMenuType: string
   contextMenuId: string
+  contextMenuIndex?: number
   contextMenuTop: number
   contextMenuLeft: number
   contextMenuRight: number

@@ -14,7 +14,7 @@ import {
 
 import Autosizer from 'react-virtualized-auto-sizer'
 import SheetCell from '@app/bundles/Sheet/SheetCell'
-import SheetGroupCell from '@app/bundles/Sheet/SheetGroupCell'
+import SheetBreakCell from '@app/bundles/Sheet/SheetBreakCell'
 import SheetHeaders from '@app/bundles/Sheet/SheetHeaders'
 
 //-----------------------------------------------------------------------------
@@ -72,20 +72,21 @@ const SheetGrid = memo(({
     rowIndex, 
     style 
   }: CellProps) => {
+    const columnId = sheetVisibleColumns[columnIndex]
     const rowId = sheetVisibleRows[rowIndex]
-    if(rowId !== 'GROUP_HEADER') {
+    if(columnId !== 'COLUMN_BREAK' && rowId !== 'ROW_BREAK') {
       return (
         <SheetCell
-          cellId={rows[rowId].cells[sheetVisibleColumns[columnIndex]]}
+          cellId={rows[rowId].cells[columnId]}
           highlightColor={highlightColor}
           sheetId={sheetId}
           style={style}
-          type={columns[sheetVisibleColumns[columnIndex]].type}
+          type={columns[columnId].type}
           updateSheetCell={updateSheetCell}/>
       )
     }
     return (
-      <SheetGroupCell
+      <SheetBreakCell
         style={style}/>
     )
   }
@@ -98,7 +99,7 @@ const SheetGrid = memo(({
           innerElementType={GridWrapper}
           width={width}
           height={height}
-          columnWidth={columnIndex => columns[sheetVisibleColumns[columnIndex]].width}
+          columnWidth={columnIndex => sheetVisibleColumns[columnIndex] === 'COLUMN_BREAK' ? 10 : columns[sheetVisibleColumns[columnIndex]].width}
           columnCount={sheetVisibleColumns.length}
           rowHeight={index => 24}
           rowCount={sheetVisibleRows.length}

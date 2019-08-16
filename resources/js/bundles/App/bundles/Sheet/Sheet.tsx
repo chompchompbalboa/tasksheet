@@ -147,16 +147,18 @@ const SheetComponent = memo(({
   const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
   const [ contextMenuType, setContextMenuType ] = useState(null)
   const [ contextMenuId, setContextMenuId ] = useState(null)
+  const [ contextMenuIndex, setContextMenuIndex ] = useState(null)
   const [ contextMenuTop, setContextMenuTop ] = useState(null)
   const [ contextMenuLeft, setContextMenuLeft ] = useState(null)
   const [ contextMenuRight, setContextMenuRight ] = useState(null)
-  const handleContextMenu = useCallback((e: MouseEvent, type: string, id: string) => {
+  const handleContextMenu = useCallback((e: MouseEvent, type: string, id: string, index?: number) => {
     e.preventDefault()
     const windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
     batch(() => {
       setIsContextMenuVisible(true)
       setContextMenuType(type)
       setContextMenuId(id)
+      setContextMenuIndex(index)
       setContextMenuTop(e.clientY)
       setContextMenuLeft(e.clientX > (windowWidth * 0.75) ? null : e.clientX)
       setContextMenuRight(e.clientX > (windowWidth * 0.75) ? windowWidth - e.clientX : null)
@@ -167,6 +169,7 @@ const SheetComponent = memo(({
       setIsContextMenuVisible(false)
       setContextMenuType(null)
       setContextMenuId(null)
+      setContextMenuIndex(null)
       setContextMenuTop(null)
       setContextMenuLeft(null)
       setContextMenuRight(null)
@@ -181,6 +184,7 @@ const SheetComponent = memo(({
           isContextMenuVisible={isContextMenuVisible}
           columns={columns}
           contextMenuType={contextMenuType}
+          contextMenuIndex={contextMenuIndex}
           contextMenuId={contextMenuId}
           contextMenuTop={contextMenuTop}
           contextMenuLeft={contextMenuLeft}

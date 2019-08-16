@@ -24,13 +24,22 @@ const SheetHeaders = ({
     const column = columns[columnId]
     updateSheetColumn(columnId, { width: column.width + columnWidthChange })
   }
+  
+  const columnBreakHeader: SheetColumn = {
+    id: 'COLUMN_BREAK',
+    sheetId: '',
+    name: 'Break',
+    width: 10,
+    type: 'STRING'
+  }
 
   return (
     <Container>
       {sheetVisibleColumns.map((columnId: string, index: number) => (
         <SheetHeader
           key={columnId}
-          column={columns[columnId]}
+          column={columnId !== 'COLUMN_BREAK' ? columns[columnId] : columnBreakHeader}
+          visibleColumnsIndex={index}
           handleContextMenu={handleContextMenu}
           isLast={index === sheetVisibleColumns.length - 1}
           isResizing={isResizing}
@@ -47,7 +56,7 @@ const SheetHeaders = ({
 //-----------------------------------------------------------------------------
 interface SheetHeadersProps {
   columns: SheetColumns
-  handleContextMenu(e: MouseEvent, type: string, id: string): void
+  handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void
   sheetVisibleColumns: SheetColumn['id'][]
   updateSheetActive(updates: SheetActiveUpdates): void
   updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void

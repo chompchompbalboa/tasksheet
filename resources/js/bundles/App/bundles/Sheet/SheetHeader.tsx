@@ -37,8 +37,11 @@ const SheetHeader = ({
   onResizeStart,
   onResizeEnd,
   updateSheetActive,
-  updateSheetColumn
+  updateSheetColumn,
+  visibleColumnsIndex
 }: SheetHeaderProps) => {
+  
+  const isColumnBreak = id === 'COLUMN_BREAK'
 
   const [ isRenaming, setIsRenaming ] = useState(false)
   const [ columnName, setColumnName ] = useState(name)
@@ -59,9 +62,10 @@ const SheetHeader = ({
       containerWidth={width}
       isLast={isLast}
       isResizing={isResizing}
-      onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'COLUMN', id)}>
+      onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'COLUMN', id, visibleColumnsIndex)}>
       {!isRenaming
-        ? <NameContainer>
+        ? <NameContainer
+            isColumnBreak={isColumnBreak}>
             {columnName}
           </NameContainer>
         : <AutosizeInput
@@ -84,9 +88,11 @@ const SheetHeader = ({
               fontSize: 'inherit',
               fontWeight: 'inherit'}}/>
       }
-      <ResizeContainer
-        onResizeStart={onResizeStart}
-        onResizeEnd={onResizeEnd}/>
+      {!isColumnBreak && 
+        <ResizeContainer
+          onResizeStart={onResizeStart}
+          onResizeEnd={onResizeEnd}/>
+      }
     </Container>
   )
 }
@@ -97,13 +103,14 @@ const SheetHeader = ({
 interface SheetHeaderProps {
   active?: SheetActive
   column: SheetColumn
-  handleContextMenu(e: MouseEvent, type: string, id: string): void
+  handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void
   isLast: boolean
   isResizing: boolean
   onResizeStart(): void
   onResizeEnd(widthChange: number): void
   updateSheetActive(updates: SheetActiveUpdates): void
   updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
+  visibleColumnsIndex: number
 }
 
 //-----------------------------------------------------------------------------
@@ -136,7 +143,11 @@ const NameContainer = styled.div`
   white-space: nowrap;
   display: flex;
   align-items: center;
+  color: ${({ isColumnBreak }: NameContainerProps ) => isColumnBreak ? 'transparent' : 'inherit'};
 `
+interface NameContainerProps {
+  isColumnBreak: boolean
+}
 
 //-----------------------------------------------------------------------------
 // Export

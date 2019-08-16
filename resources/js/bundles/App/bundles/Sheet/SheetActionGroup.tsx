@@ -42,9 +42,11 @@ const SheetActionGroup = ({
   updateSheetGroup
 }: SheetActionGroupProps) => {
 
-  const options = sheetVisibleColumns && sheetVisibleColumns.map((columnId: string) => { 
-    return { label: columns[columnId].name, value: columnId }
-  })
+  const options = sheetVisibleColumns && sheetVisibleColumns.map((columnId: string) => {
+    if(columns && columns[columnId]) {
+      return { label: columns[columnId].name, value: columnId }
+    }
+  }).filter(Boolean)
 
   const selectedOptions = sheetGroups && sheetGroups.map((groupId: SheetGroup['id']) => { 
     const group = groups[groupId]

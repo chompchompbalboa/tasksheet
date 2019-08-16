@@ -91,7 +91,7 @@ export const resolveVisibleRows = (sheet: Sheet, rows: SheetRows, cells: SheetCe
     const orderedGroups = groups[groupIds[0]].order === 'ASC' ? Object.keys(groupedRowIds).sort() : Object.keys(groupedRowIds).sort().reverse()
     orderedGroups.forEach(groupName => {
       const group = groupedRowIds[groupName]
-      filteredSortedGroupedRowIds.push('GROUP_HEADER')
+      filteredSortedGroupedRowIds.push('ROW_BREAK')
       filteredSortedGroupedRowIds.push(...group)
     })
     return filteredSortedGroupedRowIds

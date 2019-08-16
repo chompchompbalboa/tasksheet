@@ -45,12 +45,16 @@ const SheetActionFilter = ({
   const [ isColumnNameValid, setIsColumnNameValid ] = useState(false)
 
   const filterTypes: SheetFilterType[] = ['=', '>', '>=', '<', '<=']
-  const columnNames = sheetVisibleColumns && sheetVisibleColumns.map(columnId => columns[columnId].name)
+  const columnNames = sheetVisibleColumns && sheetVisibleColumns.map(columnId => {
+    if(columns && columns[columnId]) {
+      return columns[columnId].name
+    }
+  }).filter(Boolean)
 
   let optionsColumnOnly: SheetActionDropdownOption[] = []
   let optionsColumnWithFilterType: SheetActionDropdownOption[] = []
-  sheetVisibleColumns && sheetVisibleColumns.forEach((columnId: string, index: number) => {
-    const columnOnlyValue = columns[columnId].name
+  columnNames && columnNames.forEach((columnName: string, index: number) => {
+    const columnOnlyValue = columnName
     optionsColumnOnly.push({ label: columnOnlyValue, value: columnOnlyValue + '-' + index })
     filterTypes.forEach(filterType => {
       const columnWithFilterTypeValue = columnOnlyValue + ' ' + filterType

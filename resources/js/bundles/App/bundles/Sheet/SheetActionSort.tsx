@@ -42,9 +42,12 @@ const SheetActionSort = ({
   updateSheetSort
 }: SheetActionProps) => {
 
-  const options = sheetVisibleColumns &&  sheetVisibleColumns.map((columnId: string) => { 
-    return { label: columns[columnId].name, value: columnId }
-  })
+  const options = sheetVisibleColumns && sheetVisibleColumns.map((columnId: string) => {
+    if(columns && columns[columnId]) {
+      return { label: columns[columnId].name, value: columnId }
+    }
+  }).filter(Boolean)
+  
   const selectedOptions = sheetSorts && sheetSorts.map((sortId: SheetSort['id']) => { 
     const sort = sorts[sortId]
     return { label: columns[sort.columnId].name, value: sortId }
