@@ -19,15 +19,15 @@ Route::prefix('app')->group(function () {
   // Initial load
   Route::get('/', function () {
     $user = Auth::loginUsingId('75e3c4f9-b261-3343-a320-8ee9fb0c931e', true);
-    $organization = $user->organization;
+    //$organization = $user->organization;
 
     $userFolders = $user->folder()->get();
-    $organizationFolders = $organization->folder()->get();
-    $folders = $organizationFolders->merge($userFolders)->values()->all();
+    //$organizationFolders = $organization->folder()->get();
+    //$folders = $organizationFolders->merge($userFolders)->values()->all();
     
     return view('app')->with([
       'user' => $user,
-      'folders' => $folders
+      'folders' => $userFolders
     ]);
   });
 

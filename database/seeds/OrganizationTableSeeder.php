@@ -17,7 +17,7 @@ class OrganizationTableSeeder extends Seeder
       $userFolder = factory(App\Models\Folder::class)->create([ 'name' => 'Personal' ]);
       $users = factory(App\Models\User::class)->create([ 
         'id' => '75e3c4f9-b261-3343-a320-8ee9fb0c931e', 
-        'folderId' => $userFolder->id 
+        'folderId' => $userFolder->id
       ])->each(function($user) {
 
         // User Active + Color + Layout
@@ -30,7 +30,7 @@ class OrganizationTableSeeder extends Seeder
         $organization = factory(App\Models\Organization::class)->create([
           'folderId' => $organizationFolder->id
         ])->each(function($organization) use($organizationFolder, $user) {
-          $user->organizationId = $organization->id;
+          //$user->organizationId = $organization->id;
           $user->save();
 
           // Organization Folders
