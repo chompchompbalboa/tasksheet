@@ -119,7 +119,7 @@ const SheetActionDropdown = ({
 
   const handleKeydownWhileDropdownIsVisible = (e: KeyboardEvent) => {
     if(e.key === "Enter") {
-      if(visibleOptions) {
+      if(visibleOptions && visibleOptions[highlightedOptionIndex || 0]) {
         handleOptionSelect(visibleOptions[highlightedOptionIndex || 0])
       }
     }
