@@ -1,5 +1,5 @@
 {
-    "name": "projectmanager-web",
+    "name": "tracksheet",
     "private": true,
     "scripts": {
         "dev": "npm run development",

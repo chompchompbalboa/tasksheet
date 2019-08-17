@@ -1,10 +1,12 @@
 {
-    "name": "laravel/laravel",
+    "name": "Tracksheet",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "The spreadsheet that makes keeping track of things easy",
     "keywords": [
-        "framework",
-        "laravel"
+        "tracksheet",
+        "spreadsheet",
+        "track",
+        "tracking"
     ],
     "license": "MIT",
     "require": {

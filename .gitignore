@@ -11,7 +11,6 @@ npm-debug.log
 yarn-error.log
 /.vagrant
 phpunit.xml
-simplesheet.code-workspace
 composer.lock
 package-lock.json
 **/.DS_STORE
@@ -21,3 +20,4 @@ public/mix-manifest.json
 .htaccess
 public/js/app.js
 public/js/site.js
+tracksheet.code-workspace
