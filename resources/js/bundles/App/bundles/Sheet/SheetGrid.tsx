@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { forwardRef, memo, MouseEvent, useEffect, useRef } from 'react'
+import React, { forwardRef, memo, MouseEvent, useLayoutEffect, useRef } from 'react'
 import { areEqual, VariableSizeGrid as Grid } from 'react-window'
 import styled from 'styled-components'
 
@@ -34,7 +34,7 @@ const SheetGrid = memo(({
 }: SheetGridProps) => {
 
   const grid = useRef()
-  useEffect(() => {
+  useLayoutEffect(() => {
     if(grid && grid.current) { 
     // @ts-ignore
       grid.current.resetAfterColumnIndex(0)

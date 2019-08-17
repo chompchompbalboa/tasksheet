@@ -37,7 +37,7 @@ const SheetHeaders = ({
     <Container>
       {sheetVisibleColumns.map((columnId: string, index: number) => (
         <SheetHeader
-          key={columnId}
+          key={index}
           column={columnId !== 'COLUMN_BREAK' ? columns[columnId] : columnBreakHeader}
           visibleColumnsIndex={index}
           handleContextMenu={handleContextMenu}
