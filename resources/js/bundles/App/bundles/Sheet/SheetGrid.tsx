@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { forwardRef, memo, MouseEvent, useLayoutEffect, useRef } from 'react'
+import React, { forwardRef, memo, MouseEvent, useCallback, useLayoutEffect, useRef } from 'react'
 import { areEqual, VariableSizeGrid as Grid } from 'react-window'
 import styled from 'styled-components'
 
@@ -60,7 +60,7 @@ const SheetGrid = memo(({
         handleContextMenu={handleContextMenu}
         sheetVisibleColumns={sheetVisibleColumns}
         updateSheetActive={updateSheetActive}
-        updateSheetColumn={(columnId: string, updates: SheetColumnUpdates) => rerenderAfterUpdateSheetColumn(columnId, updates)}/>
+        updateSheetColumn={useCallback((columnId: string, updates: SheetColumnUpdates) => rerenderAfterUpdateSheetColumn(columnId, updates), [])}/>
       <GridItems>
         {children}
       </GridItems>

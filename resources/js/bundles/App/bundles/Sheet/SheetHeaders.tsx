@@ -32,6 +32,9 @@ const SheetHeaders = ({
     width: 10,
     type: 'STRING'
   }
+  const isNextColumnAColumnBreak = (index: number) => {
+    return sheetVisibleColumns[index + 1] && sheetVisibleColumns[index + 1] === 'COLUMN_BREAK'
+  } 
 
   return (
     <Container>
@@ -42,6 +45,7 @@ const SheetHeaders = ({
           visibleColumnsIndex={index}
           handleContextMenu={handleContextMenu}
           isLast={index === sheetVisibleColumns.length - 1}
+          isNextColumnAColumnBreak={isNextColumnAColumnBreak(index)}
           isResizing={isResizing}
           onResizeStart={() => setIsResizing(true)}
           onResizeEnd={(columnWidthChange: number) => handleResizeEnd(columnId, columnWidthChange)}

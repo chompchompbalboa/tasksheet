@@ -33,6 +33,7 @@ const SheetHeader = ({
   },
   handleContextMenu,
   isLast,
+  isNextColumnAColumnBreak,
   isResizing,
   onResizeStart,
   onResizeEnd,
@@ -60,7 +61,9 @@ const SheetHeader = ({
   return (
     <Container
       containerWidth={width}
+      isColumnBreak={isColumnBreak}
       isLast={isLast}
+      isNextColumnAColumnBreak={isNextColumnAColumnBreak}
       isResizing={isResizing}
       onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'COLUMN', id, visibleColumnsIndex)}>
       {!isRenaming
@@ -105,6 +108,7 @@ interface SheetHeaderProps {
   column: SheetColumn
   handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void
   isLast: boolean
+  isNextColumnAColumnBreak: boolean
   isResizing: boolean
   onResizeStart(): void
   onResizeEnd(widthChange: number): void
@@ -123,15 +127,24 @@ const Container = styled.div`
   width: ${ ({ containerWidth }: ContainerProps ) => containerWidth + 'px'};
   height: 100%;
   text-align: left;
-  background-color: rgb(250, 250, 250);
+  background-color: ${({ isColumnBreak }: ContainerProps ) => isColumnBreak ? 'rgb(190, 190, 190)' : 'rgb(250, 250, 250)'};
+  box-shadow: ${({ isNextColumnAColumnBreak }: ContainerProps ) => isNextColumnAColumnBreak ? 'inset 0 -1px 0px 0px rgba(190,190,190,1)' : 'inset 0 -1px 0px 0px rgba(180,180,180,1)'};
   box-shadow: inset 0 -1px 0px 0px rgba(180,180,180,1);
-  border-right: ${ ({ isLast }: ContainerProps ) => isLast ? '1px solid rgb(180, 180, 180)' : 'none'};
+  border-right: ${ ({ isNextColumnAColumnBreak, isLast }: ContainerProps ) => 
+    isNextColumnAColumnBreak 
+      ? '0.5px solid rgb(190, 190, 190)'
+      : isLast 
+        ? '1px solid rgb(180, 180, 180)' 
+        : 'none'
+  };
   font-size: 0.875rem;
   font-weight: bold;
 `
 interface ContainerProps {
   containerWidth: number
+  isColumnBreak: boolean
   isLast: boolean
+  isNextColumnAColumnBreak: boolean
   isResizing: boolean
 }
 
