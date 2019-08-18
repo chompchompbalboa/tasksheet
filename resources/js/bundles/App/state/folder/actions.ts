@@ -65,10 +65,8 @@ export const updateActiveFolderPath = (level: number, nextActiveFolderId: string
     const {
       activeFolderPath
     } = getState().folder
-    if(!activeFolderPath.includes(nextActiveFolderId)) {
-      const nextActiveFolderPath = [ ...activeFolderPath.slice(0, level), nextActiveFolderId ]
-      dispatch(updateActiveFolderPathReducer(nextActiveFolderPath))
-    }
+    const nextActiveFolderPath = [ ...activeFolderPath.slice(0, level), nextActiveFolderId ]
+    dispatch(updateActiveFolderPathReducer(nextActiveFolderPath))
   }
 }
 

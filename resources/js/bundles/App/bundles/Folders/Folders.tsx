@@ -132,21 +132,26 @@ interface ContainerProps {
 
 
 const SidebarContainer = styled.div`
-  width: 0;
+  z-index: 0;
+  width: 10rem;
   height: 100%;
 `
 
 const ContentContainer = styled.div`
-  width: 100%;
+  z-index: 1000;
+  width: calc(100% - 10rem);
   height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: white;
 `
 
 const FoldersContainer = styled.div`
   width: 100%;
   height: calc(100% - 3rem);
   display: flex;
+  border-top: 1px solid rgb(220, 220, 220);
+  border-left: 1px solid rgb(220, 220, 220);
 `
 
 const HeaderContainer = styled.div`

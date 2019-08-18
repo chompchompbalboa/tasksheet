@@ -45,7 +45,11 @@ export type SheetActions =
 //-----------------------------------------------------------------------------
 // Create Sheet From Upload
 //-----------------------------------------------------------------------------
-export const createSheetFromUpload = (folderId: Folder['id'], fileToUpload: File): ThunkAction => {
+
+//-----------------------------------------------------------------------------
+// Create Sheet From Csv
+//-----------------------------------------------------------------------------
+export const createSheetFromCsv = (folderId: Folder['id'], fileToUpload: File): ThunkAction => {
   return async (dispatch: ThunkDispatch) => {
     const newSheetId = createUuid()
     const newFile: TFile = {

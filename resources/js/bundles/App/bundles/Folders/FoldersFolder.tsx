@@ -84,6 +84,7 @@ const Container = styled.div`
   border-right: 1px solid rgb(220, 220, 220);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 `
 
 const ItemsContainer = styled.div`

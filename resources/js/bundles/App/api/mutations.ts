@@ -73,7 +73,7 @@ export const createSheetFromUpload = async (newSheetId: Sheet['id'], fileToUploa
   const formData = new FormData()
   formData.append('newSheetId', newSheetId)
   formData.append('fileToUpload', fileToUpload)
-	return axios.post('/app/sheets', formData).then(response => {
+	return axios.post('/app/sheets/upload/csv', formData).then(response => {
 		return response.data
 	})
 }

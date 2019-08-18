@@ -22,7 +22,7 @@ class SheetController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function createFromCsv(Request $request)
     {
       // Create the sheet
       $newSheetId = $request->input('newSheetId');

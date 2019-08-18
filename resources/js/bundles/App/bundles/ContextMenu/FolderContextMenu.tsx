@@ -47,8 +47,8 @@ const FolderContextMenu = ({
         text="New Sheet"
         onClick={() => closeOnClick(() => updateModal({ activeModal: 'CREATE_SHEET', createSheetFolderId: folderId }))}/>
       <ContextMenuItem 
-        text="New Sheet From Upload"
-        onClick={() => closeOnClick(() => updateModal({ activeModal: 'CREATE_SHEET_FROM_UPLOAD', createSheetFolderId: folderId }))}/>
+        text="New Sheet From CSV"
+        onClick={() => closeOnClick(() => updateModal({ activeModal: 'CREATE_SHEET_FROM_CSV', createSheetFolderId: folderId }))}/>
       <ContextMenuItem 
         text="New Folder"
         onClick={() => closeOnClick(() => createFolder(folderId))}/>

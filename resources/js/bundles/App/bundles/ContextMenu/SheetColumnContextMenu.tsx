@@ -51,10 +51,9 @@ const SheetColumnContextMenu = ({
     setTimeout(() => thenCallThis(), 10)
   }
   
-  const handleColumnMoveClick = (moveFromColumnId: SheetColumn['id'], moveToColumnId: SheetColumn['id']) => {
-    const moveFromColumnIndex = sheetVisibleColumns.findIndex(sheetVisibleColumnId => sheetVisibleColumnId === moveFromColumnId)
-    const moveToColumnIndex = sheetVisibleColumns.findIndex(sheetVisibleColumnId => sheetVisibleColumnId === moveToColumnId)
-    const nextVisibleColumns = arrayMove(sheetVisibleColumns, moveFromColumnIndex, moveToColumnIndex)
+  const handleColumnMoveClick = (moveFromColumnId: SheetColumn['id'], moveToIndex: number) => {
+    const moveFromIndex = sheetVisibleColumns.findIndex(sheetVisibleColumnId => sheetVisibleColumnId === moveFromColumnId)
+    const nextVisibleColumns = arrayMove(sheetVisibleColumns, moveFromIndex, (moveToIndex > moveFromIndex ? moveToIndex - 1 : moveToIndex))
     closeOnClick(() => {
       updateSheet(sheetId, { visibleColumns: nextVisibleColumns })
     })
@@ -71,11 +70,11 @@ const SheetColumnContextMenu = ({
         <>
           <ContextMenuItem text="Insert Column Break" onClick={() => closeOnClick(() => createSheetColumnBreak())}/>
           <ContextMenuItem text="Move Before">
-            {sheetVisibleColumns.map(sheetColumnId => (
+            {sheetVisibleColumns.map((sheetColumnId, index) => (
               <ContextMenuItem 
-                key={sheetColumnId}
+                key={sheetColumnId === 'COLUMN_BREAK' ? sheetColumnId + index : sheetColumnId}
                 text={sheetColumnId === 'COLUMN_BREAK' ? 'Column Break' : columns[sheetColumnId].name} 
-                onClick={() => handleColumnMoveClick(columnId, sheetColumnId)}/>
+                onClick={() => handleColumnMoveClick(columnId, index)}/>
             ))}
           </ContextMenuItem>
           <ContextMenuDivider />

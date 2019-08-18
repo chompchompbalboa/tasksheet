@@ -100,7 +100,7 @@ const FoldersFolderFile = ({
         onDoubleClick={() => handleFileOpen(file.id)}>
         <IconContainer
           isFile>
-          <Icon icon={file.type === 'SHEET' ? FILE_SHEET : FILE_SHEET_VIEW} size="0.85rem"/>
+          <Icon icon={file.type === 'SHEET' ? FILE_SHEET : FILE_SHEET_VIEW} size="0.8rem"/>
         </IconContainer>
         {!isRenaming
           ? <NameContainer>
@@ -168,6 +168,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   background-color: ${ ({ isHighlighted }: ContainerProps ) => isHighlighted ? 'rgb(235, 235, 235)' : 'transparent' };
+  color: rgb(20, 20, 20);
   &:hover {
     background-color: rgb(235, 235, 235);
   }
@@ -175,14 +176,17 @@ const Container = styled.div`
 
 const NameContainer = styled.div`
   padding: 0.05rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const IconContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: ${ ({ isFile }: IconProps) => isFile ? '0.25rem' : '0' };
-  color: rgb(50, 50, 50);
+  margin-right: ${ ({ isFile }: IconProps) => isFile ? '0.4rem' : '0' };
+  margin-left: ${ ({ isFile }: IconProps) => isFile ? '0.2rem' : '0' };
 `
 interface IconProps {
   isFile?: boolean

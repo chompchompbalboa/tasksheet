@@ -9,7 +9,7 @@ import { Modal as TModal, ModalUpdates } from '@app/state/modal/types'
 import { selectActiveModal } from '@app/state/modal/selectors'
 
 import SheetModalCreateSheet from '@app/bundles/Sheet/SheetModalCreateSheet'
-import SheetModalCreateSheetFromUpload from '@app/bundles/Sheet/SheetModalCreateSheetFromUpload'
+import SheetModalCreateSheetFromCsv from '@app/bundles/Sheet/SheetModalCreateSheetFromCsv'
 
 //-----------------------------------------------------------------------------
 // Redux
@@ -27,7 +27,7 @@ const Modals = ({
   
   const modals = {
     CREATE_SHEET: SheetModalCreateSheet,
-    CREATE_SHEET_FROM_UPLOAD: SheetModalCreateSheetFromUpload
+    CREATE_SHEET_FROM_CSV: SheetModalCreateSheetFromCsv
   }
   
   const ActiveModal = modals[activeModal]

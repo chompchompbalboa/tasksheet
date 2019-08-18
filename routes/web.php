@@ -31,6 +31,9 @@ Route::prefix('app')->group(function () {
     ]);
   });
 
+  // Uploads
+  Route::post('/sheets/upload/csv', 'SheetController@createFromCsv');
+
   /*
   // Copy
   Route::post('/calendars/copy', 'CalendarController@copyFromRequest');

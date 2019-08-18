@@ -118,7 +118,7 @@ const FoldersFolderFolder = ({
                 fontWeight: 'inherit'}}/>
         }
         <IconContainer>
-          <Icon icon={SUBITEM_ARROW} size="0.85rem"/>
+          <Icon icon={SUBITEM_ARROW} size="0.8rem"/>
         </IconContainer>
       </Container>
       {isContextMenuVisible && 
@@ -164,6 +164,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   background-color: ${ ({ isHighlighted }: ContainerProps ) => isHighlighted ? 'rgb(235, 235, 235)' : 'transparent' };
+  color: rgb(20, 20, 20);
   &:hover {
     background-color: ${ ({ isRenaming }: ContainerProps ) => isRenaming ? 'transparent' : 'rgb(235, 235, 235)' };
   }
@@ -175,6 +176,9 @@ interface ContainerProps {
 
 const NameContainer = styled.div`
   padding: 0.05rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const IconContainer = styled.div`
@@ -182,7 +186,6 @@ const IconContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin-right: ${ ({ isFile }: IconProps) => isFile ? '0.25rem' : '0' };
-  color: rgb(50, 50, 50);
 `
 interface IconProps {
   isFile?: boolean

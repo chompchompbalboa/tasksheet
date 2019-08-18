@@ -13,7 +13,7 @@ import {
   updateModal as updateModalAction,
 } from '@app/state/modal/actions' 
 import { 
-  createSheetFromUpload as createSheetFromUploadAction,
+  createSheetFromCsv as createSheetFromCsvAction,
 } from '@app/state/sheet/actions' 
 import { Folder } from '@app/state/folder/types'
 
@@ -25,18 +25,18 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-  createSheetFromUpload: (folderId: Folder['id'], fileToUpload: File) => dispatch(createSheetFromUploadAction(folderId, fileToUpload)),
+  createSheetFromCsv: (folderId: Folder['id'], fileToCsv: File) => dispatch(createSheetFromCsvAction(folderId, fileToCsv)),
   updateModal: (updates: ModalUpdates) => dispatch(updateModalAction(updates))
 })
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetModalCreateSheetFromUpload = ({
+const SheetModalCreateSheetFromCsv = ({
   folderId,
-  createSheetFromUpload,
+  createSheetFromCsv,
   updateModal
-}: SheetModalCreateSheetFromUploadProps) => {
+}: SheetModalCreateSheetFromCsvProps) => {
   
   const input = useRef(null)
 
@@ -53,14 +53,14 @@ const SheetModalCreateSheetFromUpload = ({
   
   // This only fires when a file is selected
   const handleFileDialogSelect = (e: ChangeEvent<HTMLInputElement>) => {
-    const fileToUpload = e.target.files[0]
-    createSheetFromUpload(folderId, fileToUpload)
+    const fileToCsv = e.target.files[0]
+    createSheetFromCsv(folderId, fileToCsv)
   }
 
   return (
     <StyledInput
       ref={input}
-      name="upload"
+      name="Csv"
       type="file"
       accept=".csv,.xls,.xlsx"
       onChange={e => handleFileDialogSelect(e)}/>
@@ -70,8 +70,8 @@ const SheetModalCreateSheetFromUpload = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetModalCreateSheetFromUploadProps {
-  createSheetFromUpload?(folderId: Folder['id'], fileToUpload: File): void
+interface SheetModalCreateSheetFromCsvProps {
+  createSheetFromCsv?(folderId: Folder['id'], fileToCsv: File): void
   folderId: Folder['id']
   updateModal?(updates: ModalUpdates): void
 }
@@ -86,4 +86,4 @@ const StyledInput = styled.input`
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SheetModalCreateSheetFromUpload)
+)(SheetModalCreateSheetFromCsv)
