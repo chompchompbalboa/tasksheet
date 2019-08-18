@@ -15,6 +15,7 @@ import ContextMenuItem from '@app/bundles/ContextMenu/ContextMenuItem'
 //-----------------------------------------------------------------------------
 const FolderContextMenu = ({
   createFolder,
+  createSheet,
   folderId,
   closeContextMenu,
   contextMenuLeft,
@@ -45,7 +46,7 @@ const FolderContextMenu = ({
       <ContextMenuDivider />
       <ContextMenuItem 
         text="New Sheet"
-        onClick={() => closeOnClick(() => updateModal({ activeModal: 'CREATE_SHEET', createSheetFolderId: folderId }))}/>
+        onClick={() => closeOnClick(() => createSheet(folderId))}/>
       <ContextMenuItem 
         text="New Sheet From CSV"
         onClick={() => closeOnClick(() => updateModal({ activeModal: 'CREATE_SHEET_FROM_CSV', createSheetFolderId: folderId }))}/>
@@ -67,6 +68,7 @@ const FolderContextMenu = ({
 //-----------------------------------------------------------------------------
 interface FolderContextMenuProps {
   createFolder(folderId: string): void
+  createSheet(folderId: string): void
   folderId: string
   closeContextMenu(): void
   contextMenuLeft: number

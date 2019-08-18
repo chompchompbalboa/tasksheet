@@ -16,9 +16,8 @@ import {
   updateFolder as updateFolderAction,
 } from '@app/state/folder/actions' 
 import { ModalUpdates } from '@app/state/modal/types'
-import { 
-  updateModal as updateModalAction,
-} from '@app/state/modal/actions' 
+import { updateModal as updateModalAction } from '@app/state/modal/actions'
+import { createSheet as createSheetAction } from '@app/state/sheet/actions' 
 
 import AutosizeInput from 'react-input-autosize'
 import FolderContextMenu from '@app/bundles/ContextMenu/FolderContextMenu'
@@ -29,6 +28,7 @@ import Icon from '@/components/Icon'
 //-----------------------------------------------------------------------------
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   createFolder: (folderId: string) => dispatch(createFolderAction(folderId)),
+  createSheet: (folderId: string) => dispatch(createSheetAction(folderId)),
   pasteFromClipboard: (folderId: string) => dispatch(pasteFromClipboardAction(folderId)),
   updateModal: (updates: ModalUpdates) => dispatch(updateModalAction(updates)),
   updateClipboard: (updates: ClipboardUpdates) => dispatch(updateClipboardAction(updates)),
@@ -41,6 +41,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
 const FoldersFolderFolder = ({
   activeFolderPath,
   createFolder,
+  createSheet,
   folder,
   level,
   pasteFromClipboard,
@@ -128,6 +129,7 @@ const FoldersFolderFolder = ({
           contextMenuLeft={contextMenuLeft}
           contextMenuTop={contextMenuTop}
           createFolder={createFolder}
+          createSheet={createSheet}
           pasteFromClipboard={pasteFromClipboard}
           setIsRenaming={setIsRenaming}
           updateModal={updateModal}
@@ -143,6 +145,7 @@ const FoldersFolderFolder = ({
 interface FoldersFolderFolderProps {
   activeFolderPath: string[]
   createFolder?(folderId: string): void
+  createSheet?(folderId: string): void
   folder: Folder
   level: number
   pasteFromClipboard(folderId: string): void
