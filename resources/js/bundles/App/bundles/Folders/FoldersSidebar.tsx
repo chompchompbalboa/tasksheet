@@ -8,11 +8,11 @@ import styled from 'styled-components'
 import { PLUS_SIGN } from '@app/assets/icons'
 
 import { AppState } from '@app/state'
+import { Folder } from '@app/state/folder/types'
+import { createSheet as createSheetAction } from '@app/state/sheet/actions'
 import { selectActiveFolderPath, selectRootFolderIds } from '@app/state/folder/selectors'
 import { ModalUpdates } from '@app/state/modal/types'
-import {
-  updateModal as updateModalAction
-} from '@app/state/modal/actions'
+import { updateModal as updateModalAction } from '@app/state/modal/actions'
 
 import Icon from '@/components/Icon'
 
@@ -22,9 +22,12 @@ import Icon from '@/components/Icon'
 const FoldersSidebar = ({
 }: FoldersSidebarProps) => {
 
-  const dispatch = useDispatch()
+  // State
   const activeFolderPath = useSelector((state: AppState) => selectActiveFolderPath(state))
   const rootFolderIds = useSelector((state: AppState) => selectRootFolderIds(state))
+  // Dispatch
+  const dispatch = useDispatch()
+  const createSheet = useCallback((folderId: Folder['id']) => dispatch(createSheetAction(folderId)), [])
   const updateModal = useCallback((updates: ModalUpdates) => dispatch(updateModalAction(updates)), [])
 
   const activeFolderId = activeFolderPath.length > 0 ? activeFolderPath[activeFolderPath.length - 1] : rootFolderIds[0]
@@ -32,7 +35,8 @@ const FoldersSidebar = ({
   return (
     <Container>
       <ActionsContainer>
-        <Action>
+        <Action
+          onClick={() => createSheet(activeFolderId)}>
           <ActionIcon><Icon icon={PLUS_SIGN} size="0.85rem"/></ActionIcon>
           <ActionText>New Sheet</ActionText>
         </Action>

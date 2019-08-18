@@ -16,6 +16,58 @@ use App\Utils\Csv;
 class SheetController extends Controller
 {
 
+  /**
+   * Store a newly created resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   */
+  public function store(Request $request)
+  {
+    // Create the sheet
+    $newSheetId = $request->input('newSheetId');
+    $newSheet = Sheet::create([ 'id' => $newSheetId ]);
+    // Create the columns
+    $newColumns = [];
+    $visibleColumns = [];
+    foreach(explode(',', 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z') as $columnName) {
+      $newColumnId = Str::uuid()->toString();
+      array_push($visibleColumns, $newColumnId);
+      array_push($newColumns, [
+        'id' => $newColumnId,
+        'sheetId' => $newSheet->id,
+        'name' => $columnName,
+        'type' => 'STRING',
+        'width' => 100
+      ]);
+    }
+    // Create the rows and cells
+    $newRows = [];
+    $newCells = [];
+    for($rowNumber = 0; $rowNumber <= 50; $rowNumber++) {
+      $newRowId = Str::uuid()->toString();
+      array_push($newRows, [ 
+        'id' => $newRowId,
+        'sheetId' => $newSheet->id 
+      ]);
+      foreach($newColumns as $index => $column) {
+        array_push($newCells, [
+          'id' => Str::uuid()->toString(),
+          'sheetId' => $newSheet->id,
+          'columnId' => $column['id'],
+          'rowId' => $newRowId,
+          'value' => null
+        ]);
+      }
+    }
+    SheetColumn::insert($newColumns);
+    SheetRow::insert($newRows);
+    SheetCell::insert($newCells);
+    $newSheet->visibleColumns = $visibleColumns;
+    $newSheet->save();
+    return response()->json(null, 200);
+  }
+
     /**
      * Store a newly created resource in storage.
      *

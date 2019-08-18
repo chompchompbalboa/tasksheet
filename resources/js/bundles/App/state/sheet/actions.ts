@@ -43,8 +43,22 @@ export type SheetActions =
   DeleteSheetSort | UpdateSheetSort | UpdateSheetSorts 
 
 //-----------------------------------------------------------------------------
-// Create Sheet From Upload
+// Create Sheet
 //-----------------------------------------------------------------------------
+export const createSheet = (folderId: Folder['id']): ThunkAction => {
+  return async (dispatch: ThunkDispatch) => {
+    const newSheetId = createUuid()
+    const newFile: TFile = {
+      id: createUuid(),
+      folderId: folderId,
+      name: null,
+      type: 'SHEET',
+      typeId: newSheetId
+    }
+    dispatch(createFile(folderId, newFile))
+    mutation.createSheet(newSheetId)
+  }
+}
 
 //-----------------------------------------------------------------------------
 // Create Sheet From Csv
@@ -60,7 +74,7 @@ export const createSheetFromCsv = (folderId: Folder['id'], fileToUpload: File): 
       typeId: newSheetId
     }
     dispatch(createFile(folderId, newFile))
-    mutation.createSheetFromUpload(newSheetId, fileToUpload)
+    mutation.createSheetFromCsv(newSheetId, fileToUpload)
   }
 }
 

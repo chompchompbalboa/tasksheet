@@ -69,7 +69,15 @@ export const updateFolder = async (id: string, updates: FolderUpdates) => {
 //-----------------------------------------------------------------------------
 // Sheet
 //-----------------------------------------------------------------------------
-export const createSheetFromUpload = async (newSheetId: Sheet['id'], fileToUpload: File) => {
+export const createSheet = async (newSheetId: Sheet['id']) => {
+	return axios.post('/app/sheets', {
+    newSheetId: newSheetId,
+  }).then(response => {
+		return response.data
+	})
+}
+
+export const createSheetFromCsv = async (newSheetId: Sheet['id'], fileToUpload: File) => {
   const formData = new FormData()
   formData.append('newSheetId', newSheetId)
   formData.append('fileToUpload', fileToUpload)
