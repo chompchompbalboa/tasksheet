@@ -95,15 +95,17 @@ const FoldersFolderFile = ({
       <Container
         ref={container}
         isHighlighted={file.id === activeFileId}
+        isPreventedFromSelecting={file.isPreventedFromSelecting}
         onClick={() => updateActiveFileId(file.id)}
         onContextMenu={e => handleContextMenu(e)}
-        onDoubleClick={() => handleFileOpen(file.id)}>
+        onDoubleClick={() => { if(!file.isPreventedFromSelecting) { handleFileOpen(file.id) }}}>
         <IconContainer
           isFile>
           <Icon icon={file.type === 'SHEET' ? FILE_SHEET : FILE_SHEET_VIEW} size="0.8rem"/>
         </IconContainer>
         {!isRenaming
-          ? <NameContainer>
+          ? <NameContainer
+              isPreventedFromSelecting={file.isPreventedFromSelecting}>
               {file.name}
             </NameContainer>
           : <AutosizeInput
@@ -158,11 +160,12 @@ interface FoldersFolderFileProps {
 //-----------------------------------------------------------------------------
 interface ContainerProps {
   isHighlighted?: boolean
+  isPreventedFromSelecting: boolean
 }
 
 const Container = styled.div`
   justify-content: flex-start;
-  cursor: default;
+  cursor: ${ ({ isPreventedFromSelecting }: ContainerProps ) => isPreventedFromSelecting ? 'not-allowed' : 'default' };
   width: 100%;
   padding: 0.125rem 0 0.125rem 0.325rem;
   display: flex;
@@ -179,7 +182,11 @@ const NameContainer = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: ${ ({ isPreventedFromSelecting }: NameContainerProps ) => isPreventedFromSelecting ? 'rgb(150, 150, 150)' : null};
 `
+interface NameContainerProps {
+  isPreventedFromSelecting: boolean
+}
 
 const IconContainer = styled.div`
   display: flex;

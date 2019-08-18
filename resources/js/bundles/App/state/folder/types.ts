@@ -25,12 +25,14 @@ export interface File {
   folderId: string
 	name: string
 	type: FileType
-	typeId: string
+  typeId: string
+  isPreventedFromSelecting?: boolean
 }
 export type FileUpdates = {
   folderId?: string
   name?: string
   type?: FileType
+  isPreventedFromSelecting?: boolean
 }
 
 export type FileType = 'SHEET' | 'SHEET_VIEW'

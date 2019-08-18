@@ -21,7 +21,7 @@ import {
 import { FileType, File as TFile, Folder } from '@app/state/folder/types'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
 
-import { createFile, updateFiles, updateFolders } from '@app/state/folder/actions'
+import { createFile, updateFile, updateFiles, updateFolders } from '@app/state/folder/actions'
 import { createHistoryStep } from '@app/state/history/actions'
 import { updateTabs } from '@app/state/tab/actions'
 
@@ -53,10 +53,13 @@ export const createSheet = (folderId: Folder['id']): ThunkAction => {
       folderId: folderId,
       name: null,
       type: 'SHEET',
-      typeId: newSheetId
+      typeId: newSheetId,
+      isPreventedFromSelecting: true
     }
     dispatch(createFile(folderId, newFile))
-    mutation.createSheet(newSheetId)
+    mutation.createSheet(newSheetId).then(() => {
+      dispatch(updateFile(newFile.id, { isPreventedFromSelecting: false }, true))
+    })
   }
 }
 
@@ -71,10 +74,13 @@ export const createSheetFromCsv = (folderId: Folder['id'], fileToUpload: File): 
       folderId: folderId,
       name: fileToUpload.name.split('.').slice(0, -1).join(''), // fileToUpload name without the extension
       type: 'SHEET',
-      typeId: newSheetId
+      typeId: newSheetId,
+      isPreventedFromSelecting: true
     }
     dispatch(createFile(folderId, newFile))
-    mutation.createSheetFromCsv(newSheetId, fileToUpload)
+    mutation.createSheetFromCsv(newSheetId, fileToUpload).then(() => {
+      dispatch(updateFile(newFile.id, { isPreventedFromSelecting: false }, true))
+    })
   }
 }
 
