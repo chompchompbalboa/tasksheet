@@ -30,7 +30,7 @@ class SheetController extends Controller
     // Create the columns
     $newColumns = [];
     $visibleColumns = [];
-    foreach(explode(',', 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z') as $columnName) {
+    foreach(explode(',', 'A,B,C,D,E,F,G,H') as $columnName) {
       $newColumnId = Str::uuid()->toString();
       array_push($visibleColumns, $newColumnId);
       array_push($newColumns, [
@@ -44,7 +44,7 @@ class SheetController extends Controller
     // Create the rows and cells
     $newRows = [];
     $newCells = [];
-    for($rowNumber = 0; $rowNumber <= 50; $rowNumber++) {
+    for($rowNumber = 0; $rowNumber <= 5; $rowNumber++) {
       $newRowId = Str::uuid()->toString();
       array_push($newRows, [ 
         'id' => $newRowId,

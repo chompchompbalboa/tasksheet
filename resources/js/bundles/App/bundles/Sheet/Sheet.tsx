@@ -110,6 +110,7 @@ const SheetComponent = memo(({
 }: SheetComponentProps) => {
   
   const isActiveFile = fileId === activeTabId
+  const memoizedCreateSheetRow = useCallback((id, sourceSheetId) => createSheetRow(id, sourceSheetId), [])
   const memoizedUpdateSheet = useCallback((sheetId, updates) => updateSheet(sheetId, updates), [])
   const memoizedUpdateSheetActive = useCallback((updates) => updateSheetActive(updates), [])
   const memoizedUpdateSheetCell = useCallback((cellId, updates, undoUpdates) => updateSheetCell(cellId, updates, undoUpdates), [])
@@ -125,24 +126,6 @@ const SheetComponent = memo(({
       })
     }
   }, [ activeTabId ])
-
-  useEffect(() => {
-    if(hasLoaded && isActiveFile) { 
-      addEventListener('keypress', listenForPlusSignPress)
-    }
-    else { 
-      removeEventListener('keypress', listenForPlusSignPress) 
-    }
-    return () => {
-      removeEventListener('keypress', listenForPlusSignPress)
-    }
-  }, [ hasLoaded, isActiveFile ])
-
-  const listenForPlusSignPress = (e: KeyboardEvent) => {
-    if(e.key === "+") {
-      createSheetRow(id, sourceSheetId)
-    }
-  }
 
   const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
   const [ contextMenuType, setContextMenuType ] = useState(null)
@@ -196,7 +179,9 @@ const SheetComponent = memo(({
           updateSheetColumn={memoizedUpdateSheetColumn}/>
         <SheetActions
           sheetId={id}
+          sourceSheetId={sourceSheetId}
           columns={columns}
+          createSheetRow={memoizedCreateSheetRow}
           filters={filters}
           groups={groups}
           sheetFilters={sheetFilters}

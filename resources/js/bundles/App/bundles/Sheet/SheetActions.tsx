@@ -4,8 +4,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { SheetColumn, SheetColumns, SheetFilter, SheetFilters, SheetGroup, SheetGroups, SheetSort, SheetSorts } from '@app/state/sheet/types'
+import { Sheet, SheetColumn, SheetColumns, SheetFilter, SheetFilters, SheetGroup, SheetGroups, SheetSort, SheetSorts } from '@app/state/sheet/types'
 
+import SheetActionCreateRows from '@app/bundles/Sheet/SheetActionCreateRows'
 import SheetActionFilter from '@app/bundles/Sheet/SheetActionFilter'
 import SheetActionGroup from '@app/bundles/Sheet/SheetActionGroup'
 import SheetActionSaveView from '@app/bundles/Sheet/SheetActionSaveView'
@@ -17,13 +18,15 @@ import SheetActionSort from '@app/bundles/Sheet/SheetActionSort'
 const SheetActions = ({
   sheetId,
   columns,
+  createSheetRow,
   groups,
   filters,
   sheetFilters,
   sheetGroups,
   sheetSorts,
   sheetVisibleColumns,
-  sorts
+  sorts,
+  sourceSheetId,
 }: SheetActionsProps) => {
   return (
     <Container>
@@ -47,6 +50,12 @@ const SheetActions = ({
         sheetVisibleColumns={sheetVisibleColumns}/>
       <SheetActionSaveView
         sheetId={sheetId}/>
+      <Divider />
+      <SheetActionCreateRows
+        createSheetRow={createSheetRow}
+        sheetId={sheetId}
+        sourceSheetId={sourceSheetId}/>
+      <Divider />
     </Container>
   )
 }
@@ -56,10 +65,12 @@ const SheetActions = ({
 //-----------------------------------------------------------------------------
 interface SheetActionsProps {
   columns: SheetColumns
+  createSheetRow(sheetId: Sheet['id'], sourceSheetId: Sheet['id']): void
   filters: SheetFilters
   groups: SheetGroups
   sorts: SheetSorts
-  sheetId: string
+  sheetId: Sheet['id']
+  sourceSheetId: Sheet['id']
   sheetFilters?: SheetFilter['id'][]
   sheetGroups?: SheetGroup['id'][]
   sheetSorts?: SheetSort['id'][]
@@ -79,6 +90,13 @@ const Container = styled.div`
   align-items: center;
   background-color: rgb(250, 250, 250);
   border-bottom: 1px solid rgb(180, 180, 180);
+`
+
+const Divider = styled.div`
+  margin: 0 0.6rem;
+  height: 1.5rem;
+  width: 1px;
+  background-color: rgb(180, 180, 180)
 `
 
 //-----------------------------------------------------------------------------
