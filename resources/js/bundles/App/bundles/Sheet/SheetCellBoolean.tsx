@@ -20,7 +20,7 @@ const SheetCellBoolean = ({
   return (
     <StyledInput 
        type="checkbox"
-       checked={![null, '0'].includes(value)}
+       checked={value && ['1', 'TRUE', 'true'].includes(value)}
        onChange={(e) => handleChange(e.target.checked)}/>
   )
 }
