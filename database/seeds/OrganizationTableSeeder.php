@@ -14,7 +14,7 @@ class OrganizationTableSeeder extends Seeder
     public function run()
     {
       // User
-      $userFolder = factory(App\Models\Folder::class)->create([ 'name' => 'Personal' ]);
+      $userFolder = factory(App\Models\Folder::class)->create([ 'name' => 'Demos' ]);
       $users = factory(App\Models\User::class)->create([ 
         'id' => '75e3c4f9-b261-3343-a320-8ee9fb0c931e', 
         'folderId' => $userFolder->id

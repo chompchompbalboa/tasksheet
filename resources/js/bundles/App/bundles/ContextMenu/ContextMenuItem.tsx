@@ -95,6 +95,8 @@ const SubItems = styled.div`
   background-color: white;
   border-radius: 3px;
   box-shadow: 3px 3px 10px 0px rgba(150,150,150,1);
+  max-height: 50vh;
+  overflow-y: scroll;
 `
 interface SubItemProps {
   isSubItemsVisible: boolean
