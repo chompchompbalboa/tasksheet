@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import { Sheet, SheetActiveUpdates, SheetUpdates, SheetColumn, SheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
 
 import SheetColumnContextMenu from '@app/bundles/ContextMenu/SheetColumnContextMenu'
+import SheetRowContextMenu from '@app/bundles/ContextMenu/SheetRowContextMenu'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -43,6 +44,13 @@ const SheetContextMenus = ({
         updateSheet={updateSheet}
         updateSheetActive={updateSheetActive}
         updateSheetColumn={updateSheetColumn}/>}
+    {isContextMenuVisible && contextMenuType === 'ROW' &&
+      <SheetRowContextMenu
+        sheetId={sheetId}
+        rowId={contextMenuId}
+        contextMenuTop={contextMenuTop}
+        contextMenuLeft={contextMenuLeft}
+        closeContextMenu={() => closeContextMenu()}/>}
   </Container>
   )
 }

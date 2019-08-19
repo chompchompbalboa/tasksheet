@@ -50,12 +50,14 @@ const SheetHeader = ({
     if(columnName !== null) {
       setIsRenaming(false)
       updateSheetActive({ columnRenamingId: null })
-      setTimeout(() => updateSheetColumn(id, { name: columnName }), 50)
+      setTimeout(() => updateSheetColumn(id, { name: columnName }), 250)
     }
   }
   
   useEffect(() => {
-    if(columnRenamingId === id) { setIsRenaming(true) }
+    if(columnRenamingId === id) { 
+      setIsRenaming(true)
+    }
   }, [ columnRenamingId ])
 
   return (
@@ -76,6 +78,7 @@ const SheetHeader = ({
             placeholder="Name..."
             onChange={e => setColumnName(e.target.value)}
             onBlur={() => handleAutosizeInputBlur()}
+            onSubmit={() => handleAutosizeInputBlur()}
             value={columnName === null ? "" : columnName}
             inputStyle={{
               margin: '0',

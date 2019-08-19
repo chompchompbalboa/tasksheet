@@ -40,6 +40,7 @@ const SheetHeaders = ({
   return (
     <Container>
       <SheetRowLeader
+        rowId={'SHEET_HEADER'}
         isRowBreak={false}
         style={{ width: '30px' }}/>
       {sheetVisibleColumns.map((columnId: string, index: number) => (

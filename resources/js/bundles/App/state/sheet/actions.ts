@@ -16,7 +16,8 @@ import {
   SheetRows, SheetRowUpdates, 
   SheetFilter, SheetFilters, SheetFilterUpdates,
   SheetGroup, SheetGroups, SheetGroupUpdates,
-  SheetSort, SheetSorts, SheetSortUpdates
+  SheetSort, SheetSorts, SheetSortUpdates,
+  SheetRow
 } from '@app/state/sheet/types'
 import { FileType, File as TFile, Folder } from '@app/state/folder/types'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
@@ -536,6 +537,30 @@ export const deleteSheetSort = (sheetId: string, sortId: string): ThunkAction =>
       }))
     })
     mutation.deleteSheetSort(sortId)
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Delete Sheet Row
+//-----------------------------------------------------------------------------
+export const deleteSheetRow = (sheetId: string, rowId: SheetRow['id']): ThunkAction => {
+	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      sheets
+    } = getState().sheet
+    const sheet = sheets[sheetId]
+    const nextSheetRows = sheet.rows.filter(sheetRowId => sheetRowId !== rowId)
+    const nextSheetVisibleRows = sheet.visibleRows.filter(visibleRowId => visibleRowId !== rowId)
+    const actions = () => {
+      batch(() => {
+        dispatch(updateSheetReducer(sheetId, {
+          rows: nextSheetRows,
+          visibleRows: nextSheetVisibleRows
+        }))
+      })
+      mutation.deleteSheetRow(rowId)
+    }
+    actions()
 	}
 }
 

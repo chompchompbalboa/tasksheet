@@ -155,6 +155,12 @@ export const createSheetRow = async (row: SheetRowToServer) => {
 	})
 }
 
+export const deleteSheetRow = async (rowId: string) => {
+	return axios.delete('/app/sheets/rows/' + rowId).then(response => {
+		return response.data
+	})
+}
+
 export const createSheetSort = async (sort: SheetSort) => {
 	return axios.post('/app/sheets/sorts', sort).then(response => {
 		return response.data

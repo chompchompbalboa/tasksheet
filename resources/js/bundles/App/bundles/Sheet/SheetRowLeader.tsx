@@ -1,19 +1,24 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { memo } from 'react'
+import React, { memo, MouseEvent } from 'react'
 import { areEqual } from 'react-window'
 import styled from 'styled-components'
+
+import { SheetRow } from '@app/state/sheet/types'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetRowLeader = memo(({
+  rowId,
+  handleContextMenu,
   isRowBreak,
   style,
   text = null
 }: SheetRowLeaderProps) => (
     <Container 
+      onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'ROW', rowId)}
       isRowBreak={isRowBreak}
       style={style}>
       <TextContainer
@@ -27,6 +32,8 @@ const SheetRowLeader = memo(({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetRowLeaderProps {
+  rowId: SheetRow['id']
+  handleContextMenu?(e: MouseEvent, type: string, id: string, index?: number): void
   isRowBreak: boolean
   style: {},
   text?: string

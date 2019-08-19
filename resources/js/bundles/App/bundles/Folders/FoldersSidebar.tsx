@@ -43,7 +43,7 @@ const FoldersSidebar = ({
         <Action
           onClick={() => updateModal({ activeModal: 'CREATE_SHEET_FROM_CSV', createSheetFolderId: activeFolderId })}>
           <ActionIcon><Icon icon={PLUS_SIGN} size="0.85rem"/></ActionIcon>
-          <ActionText>New Sheet From CSV</ActionText>
+          <ActionText>Upload CSV</ActionText>
         </Action>
       </ActionsContainer>
     </Container>

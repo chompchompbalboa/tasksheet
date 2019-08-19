@@ -85,6 +85,7 @@ class SheetRowController extends Controller
      */
     public function destroy(SheetRow $row)
     {
+      SheetCell::where('rowId', $row->id)->delete();
       $row->delete();
       return response()->json(null, 204);
     }
