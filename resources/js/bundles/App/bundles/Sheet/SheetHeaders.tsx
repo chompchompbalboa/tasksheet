@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import { SheetActiveUpdates, SheetColumn, SheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
 
 import SheetHeader from '@app/bundles/Sheet/SheetHeader'
+import SheetRowLeader from '@app/bundles/Sheet/SheetRowLeader'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -38,6 +39,9 @@ const SheetHeaders = ({
 
   return (
     <Container>
+      <SheetRowLeader
+        isRowBreak={false}
+        style={{ width: '30px' }}/>
       {sheetVisibleColumns.map((columnId: string, index: number) => (
         <SheetHeader
           key={index}
