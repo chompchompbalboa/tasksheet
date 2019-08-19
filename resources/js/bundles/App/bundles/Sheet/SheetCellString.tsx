@@ -19,7 +19,9 @@ const SheetCellString = ({
   const textarea = useRef(null)
   
   const focusCell = () => {
+    const textareaLength = textarea && textarea.current && textarea.current.value && textarea.current.value.length || 0
     textarea.current.focus()
+    textarea.current.setSelectionRange(textareaLength,textareaLength)
   }
   
   const safeValue = value === null ? "" : value
