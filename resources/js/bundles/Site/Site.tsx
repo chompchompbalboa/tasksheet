@@ -18,6 +18,7 @@ const Site = () => {
       <Content>
         <Name>tracksheet</Name>
         <Motto>The spreadsheet built for keeping track of anything and everything</Motto>
+        <Divider />
         <LoginRegisterContainer>
           <StyledInput
             placeholder="Name"
@@ -32,7 +33,6 @@ const Site = () => {
           </SubmitButton>
         </LoginRegisterContainer>
         <CurrentStatus>
-          We're still building tracksheet. Enter in your details and we'll be in touch soon.<br/>
           Already registered? <LoginLink>Click here to login.</LoginLink>
         </CurrentStatus>
       </Content>
@@ -79,7 +79,6 @@ const Name = styled.div`
 
 const Motto = styled.div`
   font-size: 1.25rem;
-  margin-bottom: 2rem;
 `
 
 const CurrentStatus = styled.div`
@@ -98,7 +97,14 @@ const LoginRegisterContainer = styled.div`
 	display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+`
+
+const Divider = styled.div`
+  margin: 2rem 0;
+  width: 10rem;
+  height: 1px;
+  background-color: white;
 `
 
 const StyledInput = styled.input`
@@ -107,6 +113,7 @@ const StyledInput = styled.input`
   border: none;
   border-radius: 4px;
   outline: none;
+  font-size: 0.9rem;
 `
 
 const SubmitButton = styled.div`
@@ -115,9 +122,10 @@ const SubmitButton = styled.div`
   padding: 0.25rem 1rem;
   border: 1px solid white;
   border-radius: 4px;
+  font-size: 0.9rem;
   &:hover {
     background-color: white;
-    color: #088E72;
+    color: black;
   }
 `
 
