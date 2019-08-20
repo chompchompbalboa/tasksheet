@@ -30,6 +30,11 @@ const SheetActions = ({
 }: SheetActionsProps) => {
   return (
     <Container>
+      <SheetActionCreateRows
+        createSheetRow={createSheetRow}
+        sheetId={sheetId}
+        sourceSheetId={sourceSheetId}/>
+      <Divider />
       <SheetActionFilter
         sheetId={sheetId}
         columns={columns}
@@ -50,11 +55,6 @@ const SheetActions = ({
         sheetVisibleColumns={sheetVisibleColumns}/>
       <SheetActionSaveView
         sheetId={sheetId}/>
-      <Divider />
-      <SheetActionCreateRows
-        createSheetRow={createSheetRow}
-        sheetId={sheetId}
-        sourceSheetId={sourceSheetId}/>
       <Divider />
     </Container>
   )
@@ -86,6 +86,7 @@ const Container = styled.div`
   position: sticky;
   top: 0;
   padding: 0.25rem 0.125rem;
+  padding-left: 0.5rem;
   display: flex;
   align-items: center;
   background-color: rgb(250, 250, 250);
@@ -93,7 +94,7 @@ const Container = styled.div`
 `
 
 const Divider = styled.div`
-  margin: 0 0.6rem;
+  margin: 0 0.75rem;
   height: 1.5rem;
   width: 1px;
   background-color: rgb(180, 180, 180)
