@@ -13,23 +13,22 @@ use App\Models\View;
 //-----------------------------------------------------------------------------
 // App
 //-----------------------------------------------------------------------------
-Route::prefix('app')->group(function () {
+Route::prefix('app')->middleware(['auth'])->group(function () {
   
-
   // Initial load
   Route::get('/', function () {
-    $user = Auth::loginUsingId('75e3c4f9-b261-3343-a320-8ee9fb0c931e', true);
+    //$user = Auth::loginUsingId('75e3c4f9-b261-3343-a320-8ee9fb0c931e', true);
+    $user = Auth::user();
     //$organization = $user->organization;
 
-    $userFolders = $user->folder()->get();
+    //$userFolders = $user->folder()->get();
     //$organizationFolders = $organization->folder()->get();
     //$folders = $organizationFolders->merge($userFolders)->values()->all();
-    
     return view('app')->with([
       'user' => $user,
       'folders' => $userFolders
     ]);
-  });
+  })->name('app');
 
   // Uploads
   Route::post('/sheets/upload/csv', 'SheetController@createFromCsv');
@@ -74,7 +73,7 @@ Route::prefix('app')->group(function () {
 //-----------------------------------------------------------------------------
 Route::get('/', function () {
   return view('site');
-});
+})->name('site');
 
 //-----------------------------------------------------------------------------
 // Authentication

@@ -1,16 +1,43 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useState } from 'react'
+import React, { FormEvent, useState } from 'react'
 import styled from 'styled-components'
+
+//import { query } from '@site/api'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const Site = () => {
   
+  const [ isLoginOrRegister, setIsLoginOrRegister ] = useState('REGISTER')
+  
+  const [ accessCodeInputValue, setAccessCodeInputValue ] = useState('')
   const [ emailInputValue, setEmailInputValue ] = useState('')
   const [ nameInputValue, setNameInputValue ] = useState('')
+  const [ passwordInputValue, setPasswordInputValue ] = useState('')
+  
+  const [ loginStatus, setLoginStatus ] = useState('READY')
+  const handleLoginAttempt = (e: FormEvent) => {
+    e.preventDefault()
+    setLoginStatus('LOGGING_IN')
+  }
+  
+  const [ registerStatus, setRegisterStatus ] = useState('READY')
+  const handleRegisterAttempt = (e: FormEvent) => {
+    e.preventDefault()
+    setRegisterStatus('REGISTERING')
+  }
+  
+  const handleFormVisibilityChange = (nextForm: 'LOGIN' | 'REGISTER') => {
+    if (nextForm === 'LOGIN') {
+      setIsLoginOrRegister('LOGIN')
+    }
+    if (nextForm === 'REGISTER') {
+      setIsLoginOrRegister('REGISTER')
+    }
+  }
   
   return (
     <Container>
@@ -20,20 +47,49 @@ const Site = () => {
         <Motto>The spreadsheet built for keeping track of anything and everything</Motto>
         <Divider />
         <LoginRegisterContainer>
-          <StyledInput
-            placeholder="Name"
-            value={nameInputValue}
-            onChange={e => setNameInputValue(e.target.value)}/>
-          <StyledInput
-            placeholder="Email"
-            value={emailInputValue}
-            onChange={e => setEmailInputValue(e.target.value)}/>
-          <SubmitButton>
-            Sign up for early access
-          </SubmitButton>
+          {isLoginOrRegister === 'REGISTER' && registerStatus !== 'REGISTERED' &&
+            <form onSubmit={e => handleRegisterAttempt(e)}>
+              <StyledInput
+                placeholder="Name"
+                value={nameInputValue}
+                onChange={e => setNameInputValue(e.target.value)}/>
+              <StyledInput
+                placeholder="Email"
+                value={emailInputValue}
+                onChange={e => setEmailInputValue(e.target.value)}/>
+              <StyledInput
+                placeholder="Access Code"
+                value={accessCodeInputValue}
+                onChange={e => setAccessCodeInputValue(e.target.value)}/>
+              <SubmitButton
+                isSubmitting={registerStatus === 'REGISTERING'}>
+                {registerStatus === 'READY' ? 'Sign up for early access' : 'Signing Up...'}
+              </SubmitButton>
+            </form>
+          }
+          {isLoginOrRegister === 'LOGIN' && registerStatus !== 'REGISTERED' &&
+            <form onSubmit={e => handleLoginAttempt(e)}>
+              <StyledInput
+                placeholder="Email"
+                value={emailInputValue}
+                onChange={e => setEmailInputValue(e.target.value)}/>
+              <StyledInput
+                type="password"
+                placeholder="Password"
+                value={passwordInputValue}
+                onChange={e => setPasswordInputValue(e.target.value)}/>
+              <SubmitButton
+                isSubmitting={loginStatus === 'LOGGING_IN'}>
+                {loginStatus === 'READY' ? 'Login' : 'Logging In...'}
+              </SubmitButton>
+            </form>
+          }
         </LoginRegisterContainer>
         <CurrentStatus>
-          Already registered? <LoginLink>Click here to login.</LoginLink>
+          {isLoginOrRegister === 'REGISTER' &&
+            <LoginLink onClick={() => handleFormVisibilityChange('LOGIN')}>Already registered? Click here to login.</LoginLink>}
+          {isLoginOrRegister === 'LOGIN' &&
+            <LoginLink onClick={() => handleFormVisibilityChange('REGISTER')}>Go back to registration</LoginLink>}
         </CurrentStatus>
       </Content>
     </Container>
@@ -116,17 +172,23 @@ const StyledInput = styled.input`
   font-size: 0.9rem;
 `
 
-const SubmitButton = styled.div`
+const SubmitButton = styled.button`
   margin-left: 0.375rem;
   cursor: pointer;
   padding: 0.25rem 1rem;
   border: 1px solid white;
   border-radius: 4px;
   font-size: 0.9rem;
+  background-color: ${ ({ isSubmitting }: SubmitButtonProps ) => isSubmitting ? 'white' : '#088E72'};
+  color: ${ ({ isSubmitting }: SubmitButtonProps ) => isSubmitting ? 'black' : 'white'};
+  outline: none;
   &:hover {
     background-color: white;
     color: black;
   }
 `
+interface SubmitButtonProps {
+  isSubmitting: boolean
+}
 
 export default Site
