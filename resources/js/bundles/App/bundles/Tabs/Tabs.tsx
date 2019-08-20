@@ -141,7 +141,7 @@ const FoldersTab = styled.div`
   padding: 0.2rem 0.4rem;
   background-color: rgb(240,240,240);
   color: rgb(80, 80, 80);
-  border-radius: 3px 3px 0 0;
+  border-radius: 6px 6px 0 0;
   display: flex;
   justify-content: center;
   align-items: center;

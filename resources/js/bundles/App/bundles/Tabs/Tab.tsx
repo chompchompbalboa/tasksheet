@@ -76,7 +76,7 @@ const Container = styled.div`
   background-color: rgb(250, 250, 250);
   border-left: none;
   border-bottom: none;
-  border-radius: 1px 1px 0 0;
+  border-radius: 6px 6px 0 0;
 `
 interface ContainerProps {
   isActiveTab: boolean
@@ -115,13 +115,13 @@ interface NameProps {
 
 const CloseTab = styled.div`
   cursor: pointer;
-  padding-right: 0.15rem;
+  padding-right: 0.2rem;
   height: 100%;
   width: 10%;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: rgb(80, 80, 80);
+  color: rgb(100, 100, 100);
   &:hover {
     color: rgb(200, 0, 0);
   }
