@@ -1,2 +1,0 @@
-export const SETTINGS_BACKGROUND_COLOR = 'rgb(250, 250, 250)'
-export const SETTINGS_BACKGROUND_COLOR_HOVER = 'rgb(200, 200, 200)'

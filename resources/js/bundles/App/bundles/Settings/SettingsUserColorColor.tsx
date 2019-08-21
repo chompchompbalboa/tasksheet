@@ -4,8 +4,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { SETTINGS_BACKGROUND_COLOR_HOVER } from '@app/assets/colors'
-
 import { ChromePicker } from 'react-color'
 import SettingsTileItem from './SettingsTileItem'
 
@@ -81,7 +79,7 @@ const Description = styled.div`
   padding: 0.25rem;
   border-radius: 2px;
   &:hover {
-    background-color: ${ SETTINGS_BACKGROUND_COLOR_HOVER };
+    background-color: rgb(200, 200, 200);
   }
 `
 

@@ -4,8 +4,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { SETTINGS_BACKGROUND_COLOR } from '@app/assets/colors'
-import { SETTINGS } from '@app/assets/icons'
+import { CLOSE, SETTINGS } from '@app/assets/icons'
 
 import Icon from '@/components/Icon'
 import SettingsUserColor from './SettingsUserColor'
@@ -43,7 +42,7 @@ const Settings = () => {
         isVisible={isVisible}
         onClick={() => setIsVisible(!isVisible)}>
         <Icon
-          icon={SETTINGS} 
+          icon={isVisible ? CLOSE : SETTINGS} 
           size="1rem" />
       </SettingsLink>
       <SettingsContainer
@@ -64,7 +63,7 @@ const SettingsLink = styled.div`
   z-index: 3;
   position: fixed;
   top: 0;
-  right: 0.25rem;
+  right: 0.375rem;
   height: 1.75rem;
   cursor: pointer;
   display: flex;
@@ -81,7 +80,7 @@ type SettingsLinkProps = {
 const SettingsContainer = styled.div`
   z-index: 2;
   position: fixed;
-  background-color: ${ SETTINGS_BACKGROUND_COLOR };
+  background-color: rgb(250, 250, 250);
   opacity: ${ ({ isVisible }: SettingsContainerProps) => isVisible ? '1' : '0'};
   top: 0;
   left: ${ ({ isVisible }: SettingsContainerProps) => isVisible ? '75vw' : '100vw'};
