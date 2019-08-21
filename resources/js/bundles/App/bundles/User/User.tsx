@@ -4,17 +4,18 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { SETTINGS } from '@app/assets/icons'
+import { USER } from '@app/assets/icons'
 
 import Icon from '@/components/Icon'
-import SettingsUserColor from './SettingsUserColor'
+import UserLogout from '@app/bundles/User/UserLogout'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Settings = () => {
+const User = ({
+}: SheetProps) => {
 
-  const settingsContainer = useRef(null)
+  const container = useRef(null)
   const [ isVisible, setIsVisible ] = useState(false)
 
   useEffect(() => {
@@ -30,74 +31,73 @@ const Settings = () => {
   }, [ isVisible ])
 
   const handleClick = (e: Event) => {
-    if(!settingsContainer.current.contains(e.target)) {
+    if(!container.current.contains(e.target)) {
       setIsVisible(false)
     }
   }
 
   return (
     <>
-      <SettingsLink
-        data-testid="settingsLink"
+      <UserLink
         isVisible={isVisible}
         onClick={() => setIsVisible(!isVisible)}>
         <Icon
-          icon={SETTINGS} 
-          size="1rem" />
-      </SettingsLink>
-      <SettingsContainer
-        data-testid="settingsContainer"
-        ref={settingsContainer}
+          icon={USER}
+          size="1rem"/>
+      </UserLink>
+      <UserContainer
+        ref={container}
         isVisible={isVisible}>
-        <SettingsHeader>Settings</SettingsHeader>
-        <SettingsUserColor />
-      </SettingsContainer>
+        <UserLogout />
+      </UserContainer>
     </>
   )
 }
 
 //-----------------------------------------------------------------------------
+// Props
+//-----------------------------------------------------------------------------
+interface SheetProps {
+}
+
+//-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const SettingsLink = styled.div`
+const UserLink = styled.div`
   z-index: 3;
   position: fixed;
   top: 0;
-  right: 0.375rem;
+  right: 1.75rem;
   height: 1.75rem;
   cursor: pointer;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  color: ${ ({ isVisible }: SettingsLinkProps) => isVisible ? 'rgb(255, 255, 255)' : 'rgb(225, 225, 225)'};
+  color: ${ ({ isVisible }: UserLinkProps) => isVisible ? 'rgb(255, 255, 255)' : 'rgb(225, 225, 225)'};
   &:hover {
     color: white;
   }
 `
-type SettingsLinkProps = {
+type UserLinkProps = {
   isVisible: boolean
 }
 
-const SettingsContainer = styled.div`
+const UserContainer = styled.div`
   z-index: 3;
-  display: ${ ({ isVisible }: SettingsContainerProps) => isVisible ? 'flex' : 'none'};
+  display: ${ ({ isVisible }: UserContainerProps) => isVisible ? 'flex' : 'none'};
   flex-direction: column;
   position: fixed;
   top: 1.75rem;
-  right: 0.375rem;
-  padding: 0.75rem;
+  right: 1.75rem;
   background-color: white;
-  padding: 1rem;
-  min-width: 16rem;
+  min-width: 10rem;
   box-shadow: -1px 0px 10px 0px rgba(0,0,0,0.5);
 `
-type SettingsContainerProps = {
+type UserContainerProps = {
   isVisible: boolean
 }
 
-const SettingsHeader = styled.h2`
-  margin-left: 0.25rem;
-  margin-bottom: 1rem;
-`
-
-export default Settings
+//-----------------------------------------------------------------------------
+// Export
+//-----------------------------------------------------------------------------
+export default User

@@ -3,16 +3,18 @@
 //-----------------------------------------------------------------------------
 import React, { FormEvent, useState } from 'react'
 import styled from 'styled-components'
+import { isEmail } from 'validator'
 
-//import { query } from '@site/api'
+import { action } from '@app/api'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const Site = () => {
   
-  const [ isLoginOrRegister, setIsLoginOrRegister ] = useState('REGISTER')
+  const [ isLoginOrRegister, setIsLoginOrRegister ] = useState('LOGIN')
   
+  const [ activeInput, setActiveInput ] = useState(null)
   const [ accessCodeInputValue, setAccessCodeInputValue ] = useState('')
   const [ emailInputValue, setEmailInputValue ] = useState('')
   const [ nameInputValue, setNameInputValue ] = useState('')
@@ -21,7 +23,19 @@ const Site = () => {
   const [ loginStatus, setLoginStatus ] = useState('READY')
   const handleLoginAttempt = (e: FormEvent) => {
     e.preventDefault()
-    setLoginStatus('LOGGING_IN')
+    if(isEmail(emailInputValue)) {
+      setLoginStatus('LOGGING_IN')
+      action.userLogin(emailInputValue, passwordInputValue).then(
+        success => {
+          if(success) {
+            window.location = window.location.href + 'app' as any
+          }
+        },
+        err => {
+          console.log(err)
+        }
+      )
+    }
   }
   
   const [ registerStatus, setRegisterStatus ] = useState('READY')
@@ -52,15 +66,22 @@ const Site = () => {
               <StyledInput
                 placeholder="Name"
                 value={nameInputValue}
-                onChange={e => setNameInputValue(e.target.value)}/>
+                onChange={e => setNameInputValue(e.target.value)}
+                onFocus={() => setActiveInput('REGISTER_NAME')}
+                onBlur={() => setActiveInput(null)}
+                isInputValueValid={true}/>
               <StyledInput
                 placeholder="Email"
                 value={emailInputValue}
-                onChange={e => setEmailInputValue(e.target.value)}/>
+                onChange={e => setEmailInputValue(e.target.value)}
+                onFocus={() => setActiveInput('REGISTER_EMAIL')}
+                onBlur={() => setActiveInput(null)}
+                isInputValueValid={activeInput === 'REGISTER_EMAIL' || emailInputValue === '' || isEmail(emailInputValue)}/>
               <StyledInput
                 placeholder="Access Code"
                 value={accessCodeInputValue}
-                onChange={e => setAccessCodeInputValue(e.target.value)}/>
+                onChange={e => setAccessCodeInputValue(e.target.value)}
+                isInputValueValid={true}/>
               <SubmitButton
                 isSubmitting={registerStatus === 'REGISTERING'}>
                 {registerStatus === 'READY' ? 'Sign up for early access' : 'Signing Up...'}
@@ -72,12 +93,16 @@ const Site = () => {
               <StyledInput
                 placeholder="Email"
                 value={emailInputValue}
-                onChange={e => setEmailInputValue(e.target.value)}/>
+                onChange={e => setEmailInputValue(e.target.value)}
+                onFocus={() => setActiveInput('LOGIN_EMAIL')}
+                onBlur={() => setActiveInput(null)}
+                isInputValueValid={activeInput === 'LOGIN_EMAIL' || emailInputValue === '' || isEmail(emailInputValue)}/>
               <StyledInput
                 type="password"
                 placeholder="Password"
                 value={passwordInputValue}
-                onChange={e => setPasswordInputValue(e.target.value)}/>
+                onChange={e => setPasswordInputValue(e.target.value)}
+                isInputValueValid={true}/>
               <SubmitButton
                 isSubmitting={loginStatus === 'LOGGING_IN'}>
                 {loginStatus === 'READY' ? 'Login' : 'Logging In...'}
@@ -87,9 +112,9 @@ const Site = () => {
         </LoginRegisterContainer>
         <CurrentStatus>
           {isLoginOrRegister === 'REGISTER' &&
-            <LoginLink onClick={() => handleFormVisibilityChange('LOGIN')}>Already registered? Click here to login.</LoginLink>}
+            <LoginLink onClick={() => handleFormVisibilityChange('LOGIN')}>Already registered? Click here to login →</LoginLink>}
           {isLoginOrRegister === 'LOGIN' &&
-            <LoginLink onClick={() => handleFormVisibilityChange('REGISTER')}>Go back to registration</LoginLink>}
+            <LoginLink onClick={() => handleFormVisibilityChange('REGISTER')}>← Go back to registration</LoginLink>}
         </CurrentStatus>
       </Content>
     </Container>
@@ -167,10 +192,14 @@ const StyledInput = styled.input`
   margin: 0 0.375rem;
   padding: 0.5rem 0.25rem;
   border: none;
+  border: ${ ({ isInputValueValid }: StyledInputProps ) => isInputValueValid ? '2px solid transparent' : '2px solid red'};
   border-radius: 4px;
   outline: none;
   font-size: 0.9rem;
 `
+interface StyledInputProps {
+  isInputValueValid: boolean
+}
 
 const SubmitButton = styled.button`
   margin-left: 0.375rem;

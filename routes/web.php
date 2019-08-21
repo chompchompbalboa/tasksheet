@@ -13,15 +13,17 @@ use App\Models\View;
 //-----------------------------------------------------------------------------
 // App
 //-----------------------------------------------------------------------------
-Route::prefix('app')->middleware(['auth'])->group(function () {
-  
+Route::group([
+  'prefix' => 'app',
+  'middleware' => [ 'auth' ]
+], function () {
   // Initial load
   Route::get('/', function () {
     //$user = Auth::loginUsingId('75e3c4f9-b261-3343-a320-8ee9fb0c931e', true);
     $user = Auth::user();
     //$organization = $user->organization;
 
-    //$userFolders = $user->folder()->get();
+    $userFolders = $user->folder()->get();
     //$organizationFolders = $organization->folder()->get();
     //$folders = $organizationFolders->merge($userFolders)->values()->all();
     return view('app')->with([
@@ -71,9 +73,14 @@ Route::prefix('app')->middleware(['auth'])->group(function () {
 //-----------------------------------------------------------------------------
 // Site
 //-----------------------------------------------------------------------------
-Route::get('/', function () {
-  return view('site');
-})->name('site');
+Route::group([
+  'middleware' => [ 'guest' ]
+], function () {
+  Route::get('/', function () {
+    return view('site');
+  })->name('site');
+
+});
 
 //-----------------------------------------------------------------------------
 // Authentication
