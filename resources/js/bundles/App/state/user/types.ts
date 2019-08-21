@@ -7,7 +7,6 @@ export interface User {
 	email: string
 	active: UserActive
 	color: UserColor
-	layout: UserLayout
 }
 
 export interface UserActive {
@@ -20,11 +19,4 @@ export interface UserColor {
 	id: string
 	primary: string
 	secondary: string
-}
-
-export interface UserLayout {
-	id: string
-  sheetActionsHeight: number
-	sidebarWidth: number
-  tabsHeight: number
 }

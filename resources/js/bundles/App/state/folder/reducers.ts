@@ -26,7 +26,7 @@ const normalizedFolders = normalizer(
 )
 export const initialFoldersState: FolderState = {
   activeFileId: null,
-  activeFolderPath: [],
+  activeFolderPath: [initialData.folders[0].id],
   clipboard: { itemId: null, cutOrCopy: null, folderOrFile: null },
 	folders: <Folders>normalizedFolders.entities.folder,
   files: <Files>normalizedFolders.entities.file,

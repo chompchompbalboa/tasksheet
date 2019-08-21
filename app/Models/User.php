@@ -12,9 +12,9 @@ class User extends Authenticatable
     use Notifiable;
     use Traits\UsesUuid;
   
-    protected $fillable = ['name', 'email', 'password'];
-    protected $visible = ['id', 'name', 'email', 'active', 'color', 'layout'];
-    protected $with = ['active', 'color', 'layout'];
+    protected $fillable = ['name', 'email', 'password', 'folderId'];
+    protected $visible = ['id', 'name', 'email', 'active', 'color'];
+    protected $with = ['active', 'color'];
   
     public function active() {
       return $this->hasOne('App\Models\UserActive', 'userId');
@@ -26,10 +26,6 @@ class User extends Authenticatable
     
     public function folder() {
       return $this->belongsTo('App\Models\Folder', 'folderId');
-    }
-  
-    public function layout() {
-      return $this->hasOne('App\Models\UserLayout', 'userId');
     }
   
     public function organization() {

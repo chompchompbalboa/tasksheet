@@ -17,7 +17,6 @@ const Site = () => {
   const [ activeInput, setActiveInput ] = useState(null)
   const [ accessCodeInputValue, setAccessCodeInputValue ] = useState('')
   const [ emailInputValue, setEmailInputValue ] = useState('')
-  const [ nameInputValue, setNameInputValue ] = useState('')
   const [ passwordInputValue, setPasswordInputValue ] = useState('')
   
   const [ loginStatus, setLoginStatus ] = useState('READY')
@@ -25,23 +24,39 @@ const Site = () => {
     e.preventDefault()
     if(isEmail(emailInputValue)) {
       setLoginStatus('LOGGING_IN')
-      action.userLogin(emailInputValue, passwordInputValue).then(
-        success => {
-          if(success) {
-            window.location = window.location.href + 'app' as any
-          }
-        },
-        err => {
-          console.log(err)
-        }
-      )
+      try {
+        action.userLogin(emailInputValue, passwordInputValue).then(
+          success => {
+            if(success) { window.location = window.location.href + 'app' as any }
+            else { setLoginStatus('ERROR') }
+          },
+          err => { setLoginStatus('ERROR') }
+        )
+      }
+      catch(e) {
+        setLoginStatus('ERROR')
+      }
     }
   }
   
   const [ registerStatus, setRegisterStatus ] = useState('READY')
   const handleRegisterAttempt = (e: FormEvent) => {
     e.preventDefault()
-    setRegisterStatus('REGISTERING')
+    if(isEmail(emailInputValue)) {
+      setRegisterStatus('REGISTERING')
+      try {
+        action.userRegister(emailInputValue, passwordInputValue, accessCodeInputValue).then(
+          success => {
+            if(success) { window.location = window.location.href + 'app' as any }
+            else { setRegisterStatus('ERROR') }
+          },
+          err => { setRegisterStatus('ERROR') }
+        )
+      }
+      catch(e) {
+        setRegisterStatus('ERROR')
+      }
+    }
   }
   
   const handleFormVisibilityChange = (nextForm: 'LOGIN' | 'REGISTER') => {
@@ -64,13 +79,6 @@ const Site = () => {
           {isLoginOrRegister === 'REGISTER' && registerStatus !== 'REGISTERED' &&
             <form onSubmit={e => handleRegisterAttempt(e)}>
               <StyledInput
-                placeholder="Name"
-                value={nameInputValue}
-                onChange={e => setNameInputValue(e.target.value)}
-                onFocus={() => setActiveInput('REGISTER_NAME')}
-                onBlur={() => setActiveInput(null)}
-                isInputValueValid={true}/>
-              <StyledInput
                 placeholder="Email"
                 value={emailInputValue}
                 onChange={e => setEmailInputValue(e.target.value)}
@@ -78,13 +86,19 @@ const Site = () => {
                 onBlur={() => setActiveInput(null)}
                 isInputValueValid={activeInput === 'REGISTER_EMAIL' || emailInputValue === '' || isEmail(emailInputValue)}/>
               <StyledInput
+                type="password"
+                placeholder="Password"
+                value={passwordInputValue}
+                onChange={e => setPasswordInputValue(e.target.value)}
+                isInputValueValid={true}/>
+              <StyledInput
                 placeholder="Access Code"
                 value={accessCodeInputValue}
                 onChange={e => setAccessCodeInputValue(e.target.value)}
                 isInputValueValid={true}/>
               <SubmitButton
                 isSubmitting={registerStatus === 'REGISTERING'}>
-                {registerStatus === 'READY' ? 'Sign up for early access' : 'Signing Up...'}
+                {!['REGISTERING'].includes(registerStatus) ? 'Sign Up' : 'Signing Up...'}
               </SubmitButton>
             </form>
           }
@@ -105,16 +119,24 @@ const Site = () => {
                 isInputValueValid={true}/>
               <SubmitButton
                 isSubmitting={loginStatus === 'LOGGING_IN'}>
-                {loginStatus === 'READY' ? 'Login' : 'Logging In...'}
+                {!['LOGGING_IN'].includes(loginStatus) ? 'Login' : 'Logging In...'}
               </SubmitButton>
             </form>
           }
         </LoginRegisterContainer>
         <CurrentStatus>
           {isLoginOrRegister === 'REGISTER' &&
-            <LoginLink onClick={() => handleFormVisibilityChange('LOGIN')}>Already registered? Click here to login →</LoginLink>}
+            <LoginLink onClick={() => handleFormVisibilityChange('LOGIN')}>
+              {registerStatus !== 'ERROR' 
+                ? 'Already registered? Click here to login'
+                : 'There was a problem registering, please try again or click here to login instead'}
+            </LoginLink>}
           {isLoginOrRegister === 'LOGIN' &&
-            <LoginLink onClick={() => handleFormVisibilityChange('REGISTER')}>← Go back to registration</LoginLink>}
+            <LoginLink onClick={() => handleFormVisibilityChange('REGISTER')}>
+              {loginStatus !== 'ERROR' 
+                ? 'Have an access code? Click here to sign up'
+                : 'There was a problem logging in, please try again or click here to register instead'}
+          </LoginLink>}
         </CurrentStatus>
       </Content>
     </Container>

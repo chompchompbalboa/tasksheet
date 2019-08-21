@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 import defaultInitialData from '@app/state/initialData'
 import { User } from '@app/state/user/types'
-import { UserActions, UPDATE_USER_ACTIVE, UPDATE_USER_COLOR, UPDATE_USER_LAYOUT } from '@app/state/user/actions'
+import { UserActions, UPDATE_USER_ACTIVE, UPDATE_USER_COLOR } from '@app/state/user/actions'
 
 //-----------------------------------------------------------------------------
 // Initial
@@ -23,11 +23,6 @@ export const userReducer = (state = initialUserState, action: UserActions): User
 		case UPDATE_USER_COLOR: {
 			const { updates } = action
 			return { ...state, color: { ...state.color, ...updates } }
-		}
-
-		case UPDATE_USER_LAYOUT: {
-			const { updates } = action
-			return { ...state, layout: { ...state.layout, ...updates } }
 		}
 
 		default:

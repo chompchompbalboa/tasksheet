@@ -1,5 +1,5 @@
 import { File, Folder } from '@app/state/folder/types'
-import { User, UserActive, UserColor, UserLayout } from '@app/state/user/types'
+import { User, UserActive, UserColor } from '@app/state/user/types'
 
 const initalData: InitialData = {
 	user: <User>{
@@ -14,13 +14,7 @@ const initalData: InitialData = {
 		color: <UserColor>{
 			primary: '',
 			secondary: '',
-		},
-		layout: <UserLayout>{
-			id: 'uuid',
-      sheetActionsHeight: 0.05,
-			sidebarWidth: 0.25,
-      tabsHeight: 0.03,
-		},
+		}
 	},
 	folders: [
 		{

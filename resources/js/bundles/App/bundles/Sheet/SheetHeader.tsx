@@ -45,7 +45,7 @@ const SheetHeader = ({
   const isColumnBreak = id === 'COLUMN_BREAK'
 
   const [ isRenaming, setIsRenaming ] = useState(false)
-  const [ columnName, setColumnName ] = useState(name)
+  const [ columnName, setColumnName ] = useState(name && name.length > 0 ? name : '?')
   const handleAutosizeInputBlur = () => {
     if(columnName !== null) {
       setIsRenaming(false)

@@ -13,7 +13,7 @@ import {
   SheetRowToServer, 
   SheetSort, SheetSortUpdates, 
   SheetView } from '@app/state/sheet/types'
-import { UserActiveUpdates, UserColorUpdates, UserLayoutUpdates } from '@app/state/user/actions'
+import { UserActiveUpdates, UserColorUpdates} from '@app/state/user/actions'
 
 //-----------------------------------------------------------------------------
 // User
@@ -26,12 +26,6 @@ export const updateUserActive = async (id: string, updates: UserActiveUpdates) =
 
 export const updateUserColor = async (id: string, updates: UserColorUpdates) => {
 	return axios.patch('/app/user/color/' + id, updates).then(response => {
-		return response.data
-	})
-}
-
-export const updateUserLayout = async (id: string, updates: UserLayoutUpdates) => {
-	return axios.patch('/app/user/layout/' + id, updates).then(response => {
 		return response.data
 	})
 }

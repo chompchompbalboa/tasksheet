@@ -8,8 +8,7 @@ import thunkMiddleware from 'redux-thunk'
 
 import { AppState, appReducer } from '@app/state'
 import {
-  updateUserColor, UserColorUpdates,
-  updateUserLayout, UserLayoutUpdates
+  updateUserColor, UserColorUpdates
 } from '../actions'
 
 //-----------------------------------------------------------------------------
@@ -20,25 +19,6 @@ const mockStore = createStore(appReducer, applyMiddleware(thunkMiddleware))
 
 afterEach(() => {
   axiosMock.restore()
-})
-
-//-----------------------------------------------------------------------------
-// Update User Layout
-//-----------------------------------------------------------------------------
-describe('Update User Layout', () => {
-
-  const store = mockStore
-  const updates: UserLayoutUpdates = { sidebarWidth: 0.13 }
-  
-  axiosMock.onPatch('/app/user/layout/uuid').reply(200)
-  
-  it('Should update sidebarWidth', () => {
-    // @ts-ignore thunk-action
-    return store.dispatch(updateUserLayout(updates)).then(() => {
-      const state: AppState = store.getState()
-      expect(state.user.layout.sidebarWidth).toEqual(0.13)
-    })
-  })
 })
 
 //-----------------------------------------------------------------------------

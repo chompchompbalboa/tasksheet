@@ -9,7 +9,7 @@ import { mutation } from '@app/api'
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-export type UserActions = UpdateUserActive | UpdateUserColor | UpdateUserLayout
+export type UserActions = UpdateUserActive | UpdateUserColor
 
 //-----------------------------------------------------------------------------
 // Update User Active
@@ -65,32 +65,6 @@ export const updateUserColor = (updates: UserColorUpdates): ThunkAction => {
 export const updateUserColorReducer = (updates: UserColorUpdates): UserActions => {
 	return {
 		type: UPDATE_USER_COLOR,
-		updates: updates,
-	}
-}
-
-//-----------------------------------------------------------------------------
-// Update User Layout
-//-----------------------------------------------------------------------------
-export const UPDATE_USER_LAYOUT = 'UPDATE_USER_LAYOUT'
-export type UserLayoutUpdates = {
-	sidebarWidth?: number
-}
-interface UpdateUserLayout {
-	type: typeof UPDATE_USER_LAYOUT
-	updates: UserLayoutUpdates
-}
-
-export const updateUserLayout = (updates: UserLayoutUpdates): ThunkAction => {
-	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
-		dispatch(updateUserLayoutReducer(updates))
-		mutation.updateUserLayout(getState().user.layout.id, updates)
-	}
-}
-
-export const updateUserLayoutReducer = (updates: UserLayoutUpdates): UserActions => {
-	return {
-		type: UPDATE_USER_LAYOUT,
 		updates: updates,
 	}
 }

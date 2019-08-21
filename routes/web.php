@@ -85,4 +85,8 @@ Route::group([
 //-----------------------------------------------------------------------------
 // Authentication
 //-----------------------------------------------------------------------------
-Auth::routes();
+Route::namespace('Auth')->group(function () {
+  Route::post('/user/login', 'LoginController@login');
+  Route::post('/user/logout', 'LoginController@logout');
+  Route::post('/user/register', 'RegisterController@register');
+});
