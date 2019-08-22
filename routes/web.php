@@ -34,6 +34,9 @@ Route::group([
 
   // Uploads
   Route::post('/sheets/upload/csv', 'SheetController@createFromCsv');
+  
+  // Restore soft deletes
+  Route::post('/files/restore/{file}', 'FileController@restore');
 
   /*
   // Copy

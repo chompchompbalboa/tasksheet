@@ -13,6 +13,7 @@ import ContextMenuItem from '@app/bundles/ContextMenu/ContextMenuItem'
 // Component
 //-----------------------------------------------------------------------------
 const FileContextMenu = ({
+  deleteFile,
   fileId,
   closeContextMenu,
   contextMenuLeft,
@@ -42,7 +43,9 @@ const FileContextMenu = ({
         text="Rename"
         onClick={() => closeOnClick(() => setIsRenaming(true))}/>
       <ContextMenuDivider />
-      <ContextMenuItem text="Delete" />
+      <ContextMenuItem 
+        text="Delete"
+        onClick={() => closeOnClick(() => deleteFile(fileId))}/>
     </ContextMenu>
   )
 }
@@ -55,6 +58,7 @@ interface FileContextMenuProps {
   closeContextMenu(): void
   contextMenuLeft: number
   contextMenuTop: number
+  deleteFile(fileId: string): void
   setIsRenaming(isRenaming: boolean): void
   updateClipboard(updates: ClipboardUpdates): void
 }

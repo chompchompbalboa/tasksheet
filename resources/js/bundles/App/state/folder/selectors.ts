@@ -18,7 +18,7 @@ export const selectActiveFolderPath = (state: AppState): string[] => state.folde
 //-----------------------------------------------------------------------------
 // Select File
 //-----------------------------------------------------------------------------
-export const selectFile = (id: string, state: AppState): File => state.folder.files[id]
+export const selectFile = (id: string, state: AppState): File => state.folder.files && state.folder.files[id]
 
 //-----------------------------------------------------------------------------
 // Select Files
@@ -28,7 +28,7 @@ export const selectFiles = (state: AppState): Files => state.folder.files
 //-----------------------------------------------------------------------------
 // Select Folder
 //-----------------------------------------------------------------------------
-export const selectFolder = (id: string, state: AppState): Folder => state.folder.folders[id]
+export const selectFolder = (id: string, state: AppState): Folder => state.folder.folders && state.folder.folders[id]
 
 //-----------------------------------------------------------------------------
 // Select Folders

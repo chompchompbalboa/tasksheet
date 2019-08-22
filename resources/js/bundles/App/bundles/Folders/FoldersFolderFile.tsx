@@ -10,6 +10,7 @@ import { FILE_SHEET, FILE_SHEET_VIEW } from '@app/assets/icons'
 import { ThunkDispatch } from '@app/state/types'
 import { ClipboardUpdates, File, FileUpdates } from '@app/state/folder/types'
 import { 
+  deleteFile as deleteFileAction,
   updateClipboard as updateClipboardAction, 
   updateFile as updateFileAction,
 } from '@app/state/folder/actions'
@@ -22,6 +23,7 @@ import Icon from '@/components/Icon'
 // Redux
 //-----------------------------------------------------------------------------
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+  deleteFile: (fileId: string) => dispatch(deleteFileAction(fileId)),
   updateClipboard: (updates: ClipboardUpdates) => dispatch(updateClipboardAction(updates)),
   updateFile: (fileId: string, updates: FileUpdates) => dispatch(updateFileAction(fileId, updates))
 })
@@ -31,6 +33,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
 //-----------------------------------------------------------------------------
 const FoldersFolderFile = ({
   activeFileId,
+  deleteFile,
   file,
   handleFileOpen,
   updateActiveFileId,
@@ -136,6 +139,7 @@ const FoldersFolderFile = ({
           closeContextMenu={() => setIsContextMenuVisible(false)}
           contextMenuLeft={contextMenuLeft}
           contextMenuTop={contextMenuTop}
+          deleteFile={deleteFile}
           updateClipboard={updateClipboard}
           setIsRenaming={setIsRenaming}/>
       }
@@ -148,6 +152,7 @@ const FoldersFolderFile = ({
 //-----------------------------------------------------------------------------
 interface FoldersFolderFileProps {
   activeFileId: string
+  deleteFile(fileId: string): void
   file: File
   handleFileOpen(nextActiveTabId: string): void
   updateActiveFileId(nextActiveFileId: string): void

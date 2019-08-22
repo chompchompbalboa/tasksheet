@@ -39,6 +39,18 @@ export const createFile = async (newFile: TFile) => {
 	})
 }
 
+export const deleteFile = async (fileId: string) => {
+	return axios.delete('/app/files/' + fileId).then(response => {
+		return response.data
+	})
+}
+
+export const restoreFile = async (fileId: string) => {
+	return axios.post('/app/files/restore/' + fileId).then(response => {
+		return response.data
+	})
+}
+
 export const updateFile = async (id: string, updates: FileUpdates) => {
 	return axios.patch('/app/files/' + id, updates).then(response => {
 		return response.data

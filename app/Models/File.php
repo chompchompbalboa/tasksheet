@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class File extends Model
 {
   use Traits\UsesUuid;
+  use SoftDeletes;
   public $incrementing = false;
 
   protected $visible = ['id', 'name', 'folderId', 'type', 'typeId'];

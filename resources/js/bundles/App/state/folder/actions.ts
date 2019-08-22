@@ -2,7 +2,9 @@
 // Imports
 //-----------------------------------------------------------------------------
 import { v4 as createUuid } from 'uuid'
+import { batch } from 'react-redux'
 
+import clone from '@/utils/clone'
 import { mutation } from '@app/api'
 import { AppState } from '@app/state'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
@@ -11,6 +13,8 @@ import {
   File, Files, FileUpdates, 
   Folder, Folders, FolderUpdates
 } from '@app/state/folder/types'
+import { createHistoryStep } from '@app/state/history/actions'
+import { closeTab } from '@app/state/tab/actions'
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -200,6 +204,44 @@ export const createFolderReducer = (folderId: string, newFolderId: string, newFo
     folderId,
     newFolderId,
     newFolder
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Delete File
+//-----------------------------------------------------------------------------
+export const deleteFile = (fileId: string) => {
+	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      folder: {
+        files,
+        folders
+      },
+      tab: {
+        tabs
+      }
+    } = getState()
+    const file = files[fileId]
+    if(file) {
+      const folder = folders[file.folderId]
+      const folderFiles = clone(folder.files)
+      const nextFolderFiles = folder.files.filter(folderFileId => folderFileId !== fileId)
+      const actions = () => {
+        batch(() => {
+          if(tabs.includes(fileId)) {
+            dispatch(closeTab(fileId))
+          }
+          dispatch(updateFolder(folder.id, { files: nextFolderFiles }, true))
+        })
+        mutation.deleteFile(fileId)
+      }
+      const undoActions = () => {
+        dispatch(updateFolder(folder.id, { files: folderFiles }, true))
+        mutation.restoreFile(fileId)
+      }
+      dispatch(createHistoryStep({actions, undoActions}))
+      actions()
+    }
 	}
 }
 
