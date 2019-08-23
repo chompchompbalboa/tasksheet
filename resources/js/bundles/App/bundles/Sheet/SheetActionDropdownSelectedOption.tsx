@@ -2,11 +2,22 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
+
+import { AppState } from '@app/state'
+import { selectUserColorPrimary } from '@app/state/user/selectors'
 
 import { CLOSE } from '@app/assets/icons'
 
 import Icon from '@/components/Icon'
+
+//-----------------------------------------------------------------------------
+// Redux
+//-----------------------------------------------------------------------------
+const mapStateToProps = (state: AppState) => ({
+  userColorPrimary: selectUserColorPrimary(state)
+})
 
 //-----------------------------------------------------------------------------
 // Component
@@ -14,10 +25,10 @@ import Icon from '@/components/Icon'
 const SheetActionDropdownSelectedOption = ({
   children,
   onOptionDelete,
-  optionBackgroundColor
+  userColorPrimary
 }: SheetActionDropdownSelectedOptionProps) => (
   <Container
-    optionBackgroundColor={optionBackgroundColor}>
+    optionBackgroundColor={userColorPrimary}>
     <Option>
       {children}
     </Option>
@@ -36,7 +47,7 @@ const SheetActionDropdownSelectedOption = ({
 interface SheetActionDropdownSelectedOptionProps {
   children?: any
   onOptionDelete?(...args: any[]): void
-  optionBackgroundColor: string
+  userColorPrimary?: string
 }
 
 //-----------------------------------------------------------------------------
@@ -45,7 +56,7 @@ interface SheetActionDropdownSelectedOptionProps {
 const Container = styled.div`
   padding: 0.125rem 0.25rem;
   margin-right: 0.25rem;
-  background-color: ${ ({ optionBackgroundColor }: ContainerProps ) => optionBackgroundColor};
+  background-color: ${ ({ optionBackgroundColor }: ContainerProps ) => optionBackgroundColor };
   color: white;
   border-radius: 7px;
   font-size: 0.75rem;
@@ -76,4 +87,7 @@ const Delete = styled.div`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetActionDropdownSelectedOption
+export default connect(
+  mapStateToProps
+)(SheetActionDropdownSelectedOption)
+

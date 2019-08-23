@@ -4,44 +4,44 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { SheetFilter, SheetFilters } from '@app/state/sheet/types'
-import { SheetActionDropdownOption } from '@app/bundles/Sheet/SheetActionDropdown'
+import { Sheet, SheetColumns, SheetFilter } from '@app/state/sheet/types'
+
+import SheetActionDropdownSelectedOption from '@app/bundles/Sheet/SheetActionDropdownSelectedOption'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetActionFilterSelectedOption = ({ 
-  option,
-  filters
-}: SheetActionFilterSelectedOptionProps) => {
-  
-    const filter = filters[option.value]
-    
-    const handleOptionClick = (filter: SheetFilter) => {
-      console.log('filterClick')
-    }
+const SheetActionFilterExistingFilter = ({
+  columns,
+  deleteSheetFilter,
+  filter,
+  sheetId
+}: SheetActionFilterExistingFilterProps) => {
     
     return (
-      <Container
-        onClick={() => handleOptionClick(filter)}>
-        {option.label} {filter.type} {filter.value}
-      </Container>
+      <SheetActionDropdownSelectedOption
+        onOptionDelete={() => deleteSheetFilter(sheetId, filter.id)}>
+        <Container>
+          {columns[filter.columnId].name} {filter.type} {filter.value}
+        </Container>
+      </SheetActionDropdownSelectedOption>
     )
   }
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetActionFilterSelectedOptionProps {
-  option: SheetActionDropdownOption
-  filters: SheetFilters
+interface SheetActionFilterExistingFilterProps {
+  columns: SheetColumns
+  deleteSheetFilter?(sheetId: Sheet['id'], filterId: SheetFilter['id']): void
+  filter: SheetFilter
+  sheetId: Sheet['id']
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  cursor: pointer;
   display: flex;
   align-items: center;
 `
@@ -49,4 +49,4 @@ const Container = styled.div`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetActionFilterSelectedOption
+export default SheetActionFilterExistingFilter

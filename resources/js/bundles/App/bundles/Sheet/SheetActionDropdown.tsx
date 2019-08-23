@@ -2,21 +2,10 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { ChangeEvent, FocusEvent, useEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
 import styled from 'styled-components'
-
-import { AppState } from '@app/state'
-import { selectUserColorPrimary } from '@app/state/user/selectors'
 
 import AutosizeInput from 'react-input-autosize'
 import SheetActionDropdownSelectedOption from '@app/bundles/Sheet/SheetActionDropdownSelectedOption'
-
-//-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
-  userColorPrimary: selectUserColorPrimary(state)
-})
 
 //-----------------------------------------------------------------------------
 // Component
@@ -28,7 +17,6 @@ const SheetActionDropdown = ({
   options,
   placeholder,
   selectedOptions,
-  userColorPrimary,
   selectedOptionComponent,
   value = ""
 }: SheetActionDropdownProps) => {
@@ -52,15 +40,15 @@ const SheetActionDropdown = ({
   useEffect(() => {
     if(isDropdownVisible) {
       !visibleOptions && setVisibleOptions(options)
-      window.addEventListener('mousedown', closeContextMenuOnClickOutside)
+      window.addEventListener('mousedown', closeDropdownOnClickOutside)
       window.addEventListener('keydown', handleKeydownWhileDropdownIsVisible)
     } 
     else {
-      window.removeEventListener('mousedown', closeContextMenuOnClickOutside)
+      window.removeEventListener('mousedown', closeDropdownOnClickOutside)
       window.removeEventListener('keydown', handleKeydownWhileDropdownIsVisible)
     }
     return () => {
-      window.removeEventListener('mousedown', closeContextMenuOnClickOutside)
+      window.removeEventListener('mousedown', closeDropdownOnClickOutside)
       window.removeEventListener('keydown', handleKeydownWhileDropdownIsVisible)
     }
   }, [ highlightedOptionIndex, isDropdownVisible, visibleOptions ])
@@ -80,7 +68,7 @@ const SheetActionDropdown = ({
     setVisibleOptions(getVisibleOptions(value))
   }, [ value ])
 
-  const closeContextMenuOnClickOutside = (e: Event) => {
+  const closeDropdownOnClickOutside = (e: Event) => {
     if(!dropdown.current.contains(e.target) && !container.current.contains(e.target)) {
       setIsDropdownVisible(false)
       setHighlightedOptionIndex(null)
@@ -146,8 +134,7 @@ const SheetActionDropdown = ({
           {visibleSelectedOptions && visibleSelectedOptions.map(option => (
             <SheetActionDropdownSelectedOption
               key={option.value}
-              onOptionDelete={() => handleOptionDelete(option)}
-              optionBackgroundColor={userColorPrimary}>
+              onOptionDelete={() => handleOptionDelete(option)}>
               <SelectedOption option={option}/>
             </SheetActionDropdownSelectedOption>
           ))}
@@ -198,7 +185,6 @@ interface SheetActionDropdownProps {
   options: SheetActionDropdownOptions
   placeholder: string
   selectedOptions: SheetActionDropdownOptions
-  userColorPrimary: string
   selectedOptionComponent: any
   value?: string
 }
@@ -268,6 +254,4 @@ interface DropdownOptionProps {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  mapStateToProps
-)(SheetActionDropdown)
+export default SheetActionDropdown
