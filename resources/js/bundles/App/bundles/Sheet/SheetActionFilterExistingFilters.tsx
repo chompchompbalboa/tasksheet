@@ -20,7 +20,7 @@ const SheetActionFilterExistingFilter = ({
     
     return (
       <SheetActionDropdownSelectedOption
-        onOptionDelete={() => deleteSheetFilter(sheetId, filter.id)}>
+        onOptionDelete={() => deleteSheetFilter(filter.id)}>
         <Container>
           {columns[filter.columnId].name} {filter.type} {filter.value}
         </Container>
@@ -33,7 +33,7 @@ const SheetActionFilterExistingFilter = ({
 //-----------------------------------------------------------------------------
 interface SheetActionFilterExistingFilterProps {
   columns: SheetColumns
-  deleteSheetFilter?(sheetId: Sheet['id'], filterId: SheetFilter['id']): void
+  deleteSheetFilter(filterId: SheetFilter['id']): void
   filter: SheetFilter
   sheetId: Sheet['id']
 }

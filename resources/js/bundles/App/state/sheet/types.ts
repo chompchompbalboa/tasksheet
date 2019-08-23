@@ -124,7 +124,7 @@ export type SheetFilter = {
   value: string
 }
 export type SheetFilterUpdates = {}
-export type SheetFilterType = '=' | '>' | '>=' | '<' | '<='
+export type SheetFilterType = '=' | '!=' | '>' | '>=' | '<' | '<='
 
 export type SheetGroup = {
   id: string

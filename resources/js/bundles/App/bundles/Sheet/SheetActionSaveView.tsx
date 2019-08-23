@@ -5,7 +5,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { SAVE } from '@app/assets/icons' 
+import { FILE_SHEET_VIEW } from '@app/assets/icons' 
 
 import { ThunkDispatch } from '@app/state/types'
 import { 
@@ -50,7 +50,7 @@ const SheetActionSaveView = ({
     <Container
       onClick={() => handleClick()}>
       <Icon
-        icon={SAVE}
+        icon={FILE_SHEET_VIEW}
         size="1.1rem"/>
     </Container>
   )

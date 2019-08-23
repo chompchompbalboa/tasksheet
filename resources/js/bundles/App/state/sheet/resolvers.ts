@@ -16,21 +16,27 @@ import {
 // Resolve Filter
 //-----------------------------------------------------------------------------
 export const resolveFilter = (cellValue: string, filterValue: string, type: SheetFilterType) => {
+  
+  const filterValues = filterValue.split('||').map(untrimmedFilterValue => untrimmedFilterValue.trim())
+  
   switch (type) {
     case '=': {
-      return resolveValue(cellValue) === resolveValue(filterValue)
+      return filterValues.some(currentFilterValue => resolveValue(cellValue) == resolveValue(currentFilterValue))
+    }
+    case '!=': {
+      return filterValues.every(currentFilterValue => resolveValue(cellValue) != resolveValue(currentFilterValue))
     }
     case '>': {
-      return resolveValue(cellValue) > resolveValue(filterValue)
+      return filterValues.some(currentFilterValue => resolveValue(cellValue) > resolveValue(currentFilterValue))
     }
     case '>=': {
-      return resolveValue(cellValue) >= resolveValue(filterValue)
+      return filterValues.some(currentFilterValue => resolveValue(cellValue) >= resolveValue(currentFilterValue))
     }
     case '<': {
-      return resolveValue(cellValue) < resolveValue(filterValue)
+      return filterValues.some(currentFilterValue => resolveValue(cellValue) < resolveValue(currentFilterValue))
     }
     case '<=': {
-      return resolveValue(cellValue) <= resolveValue(filterValue)
+      return filterValues.some(currentFilterValue => resolveValue(cellValue) <= resolveValue(currentFilterValue))
     }
   }
 }
@@ -39,8 +45,9 @@ export const resolveFilter = (cellValue: string, filterValue: string, type: Shee
 // Resolve Value
 //-----------------------------------------------------------------------------
 export const resolveValue = (value: string) => {
-  const filteredValue = value !== null ? value.replace('%', '') : ""
-  return isNaN(Number(filteredValue)) ? filteredValue : Number(filteredValue)
+  //const filteredValue = value !== null ? value.replace('%', '') : ""
+  //return isNaN(Number(filteredValue)) ? filteredValue : Number(filteredValue)
+  return value
 }
 
 //-----------------------------------------------------------------------------
@@ -55,13 +62,11 @@ export const resolveVisibleRows = (sheet: Sheet, rows: SheetRows, cells: SheetCe
   // Filter
   const filteredRowIds: string[] = !filters ? rowIds : rowIds.map(rowId => {
     const row = rows[rowId]
-    let passesFilter = true
-    filterIds.forEach(filterId => {
+    return filterIds.every(filterId => {
       const filter = filters[filterId]
       const cell = cells[row.cells[filter.columnId]]
-      if(!resolveFilter(cell.value, filter.value, filter.type)) { passesFilter = false }
-    })
-    return passesFilter ? row.id : undefined
+      return resolveFilter(cell.value, filter.value, filter.type)
+    }) ? row.id : undefined
   }).filter(Boolean)
 
   // Sort

@@ -128,6 +128,7 @@ const Container = styled.div`
   box-shadow: ${ ({ highlightColor, isHighlighted }: ContainerProps ) => isHighlighted ? 'inset 0px 0px 0px 2px ' + highlightColor : 'none' };
   user-select: none;
   background-color: ${ ({ isHighlighted }: ContainerProps ) => isHighlighted ? 'rgb(245, 245, 245)' : 'white' };
+  overflow: hidden;
   &:hover {
     background-color: rgb(245, 245, 245);
   }
