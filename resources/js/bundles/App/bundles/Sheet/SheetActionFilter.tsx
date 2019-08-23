@@ -5,8 +5,9 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
+import clone from '@/utils/clone'
 import { ThunkDispatch } from '@app/state/types'
-import { Sheet, SheetColumn, SheetColumns, SheetFilter, SheetFilters } from '@app/state/sheet/types'
+import { Sheet, SheetColumn, SheetColumns, SheetFilter, SheetFilters, SheetFilterType } from '@app/state/sheet/types'
 import { 
   //createSheetFilter as createSheetFilterAction,
   deleteSheetFilter as deleteSheetFilterAction,
@@ -35,9 +36,18 @@ const SheetActionFilter = ({
   deleteSheetFilter,
   filters,
   sheetFilters,
-  sheetId
+  sheetId,
+  sheetVisibleColumns
 }: SheetActionFilterProps) => {
-  
+
+  // Filter Types  
+  const filterTypes: SheetFilterType[] = ['=', '>', '>=', '<', '<=']
+  // Column Names
+  const columnNames = sheetVisibleColumns && sheetVisibleColumns.map(columnId => {
+    if(columns && columns[columnId]) {
+      return columns[columnId].name
+    }
+  }).filter(Boolean)
   // Refs
   const container = useRef(null)
   const dropdown = useRef(null)
@@ -47,7 +57,9 @@ const SheetActionFilter = ({
   // Validate filters
   //const [ isColumnNameValid, setIsColumnNameValid ] = useState(false)
   //const [ isFilterTypeValid, setIsFilterTypeValid ] = useState(false)
-  //const [ isValueValid, setIsValueValid ] = useState(false)
+  const [ valueStartIndex, setValueStartIndex ] = useState(null)
+  const [ isFilterValid, setIsFilterValid ] = useState(false)
+  console.log(valueStartIndex)
   // Add event listeners when the dropdown is visible
   useEffect(() => {
     if(isDropdownVisible) {
@@ -70,13 +82,39 @@ const SheetActionFilter = ({
     }
   }
 
-  const handleKeydownWhileDropdownIsVisible = (e: KeyboardEvent) => {
-    console.log(e.key)
+  const handleKeydownWhileDropdownIsVisible = (e: KeyboardEvent) => {}
+  
+  const handleAutosizeInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const nextValue = e.target.value
+    const validColumnName = validateColumnName(nextValue)
+    const validFilterType = validateFilterType(nextValue)
+    const nextValueStartIndex = getValueStartIndex(nextValue)
+    //setIsColumnNameValid(validColumnName)
+    //setIsFilterTypeValid(validFilterType)
+    setValueStartIndex(nextValueStartIndex)
+    setIsFilterValid(validColumnName && validFilterType && nextValueStartIndex < nextValue.trim().length)
+    setAutosizeInputValue(e.target.value)
   }
   
-  const handleAutosizeInputChange = (e: ChangeEvent<HTMLInputElement>) => setAutosizeInputValue(e.target.value)
-  
   const handleAutosizeInputFocus = () => setIsDropdownVisible(true)
+
+  const validateColumnName = (nextValue: string) => {
+    return columnNames.some(columnName => nextValue.split(' ').join('').includes(columnName.split(' ').join('')))
+  }
+
+  const validateFilterType = (nextValue: string) => {
+    return filterTypes.some(filterType => nextValue.includes(filterType))
+  }
+
+  const getValueStartIndex = (nextValue: string) => {
+    const reverseNextValue = clone(nextValue).split('').reverse().join('')
+    const reverseValueStartArray = ['>', '=', '<'].map(filterTypeCharacter => {
+      const index = reverseNextValue.indexOf(filterTypeCharacter)
+      return index > -1 ? index : null
+    }).filter(value => value !== null)
+    const reverseValueStartIndex = reverseValueStartArray.length === 0 ? null : Math.min(...reverseValueStartArray)
+    return reverseValueStartIndex !== null ? nextValue.length - reverseValueStartIndex : null
+  }
 
   return (
     <SheetAction>
@@ -114,7 +152,7 @@ const SheetActionFilter = ({
               <Dropdown
                 ref={dropdown}
                 isDropdownVisible={isDropdownVisible}>
-                Dropdown
+                {isFilterValid + ''}
               </Dropdown>
           </InputContainer>
         </Wrapper>
