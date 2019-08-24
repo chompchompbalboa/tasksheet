@@ -33,7 +33,7 @@ const SheetActionGroupSelectedOption = ({
     
     return (
       <Container
-        isLocked={group.isLocked}
+        isLocked={group && group.isLocked}
         onClick={() => handleOptionClick(group)}>
         <Icon icon={groupOrder === 'ASC' ? ARROW_UP : ARROW_DOWN} size="0.8rem"/>{option.label}
       </Container>
