@@ -25,7 +25,7 @@ import SheetActionGroupSelectedOption from '@app/bundles/Sheet/SheetActionGroupS
 const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionGroupProps) => ({
   createSheetGroup: (newGroup: SheetGroup) => dispatch(createSheetGroupAction(props.sheetId, newGroup)),
   deleteSheetGroup: (columnId: string) => dispatch(deleteSheetGroupAction(props.sheetId, columnId)),
-  updateSheetGroup: (groupId: string, updates: SheetGroupUpdates) => dispatch(updateSheetGroupAction(groupId, updates))
+  updateSheetGroup: (groupId: string, updates: SheetGroupUpdates, skipVisibleRowsUpdate?: boolean) => dispatch(updateSheetGroupAction(groupId, updates, skipVisibleRowsUpdate))
 })
 
 //-----------------------------------------------------------------------------
@@ -58,7 +58,7 @@ const SheetActionGroup = ({
       <SheetActionDropdown
         onOptionDelete={(optionToDelete: SheetActionDropdownOption) => deleteSheetGroup(optionToDelete.value)}
         onOptionSelect={(selectedOption: SheetActionDropdownOption) => createSheetGroup({ id: createUuid(), sheetId: sheetId, columnId: selectedOption.value, order: 'ASC', isLocked: false })}
-        onOptionUpdate={(groupId, updates) => updateSheetGroup(groupId, updates)}
+        onOptionUpdate={(groupId, updates) => updateSheetGroup(groupId, updates, true)}
         options={options}
         placeholder={"Group By..."}
         selectedOptions={selectedOptions}
@@ -74,7 +74,7 @@ interface SheetActionGroupProps {
   columns: SheetColumns
   createSheetGroup?(newGroup: SheetGroup): void
   deleteSheetGroup?(columnId: string): void
-  updateSheetGroup?(groupId: string, updates: SheetGroupUpdates): void
+  updateSheetGroup?(groupId: string, updates: SheetGroupUpdates, skipVisibleRowsUpdate?: boolean): void
   groups: SheetGroups
   sheetGroups: SheetGroup['id'][]
   sheetVisibleColumns: SheetColumn['id'][]

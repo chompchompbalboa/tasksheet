@@ -25,7 +25,7 @@ import SheetActionSortSelectedOption from '@app/bundles/Sheet/SheetActionSortSel
 const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionProps) => ({
   createSheetSort: (newSort: SheetSort) => dispatch(createSheetSortAction(props.sheetId, newSort)),
   deleteSheetSort: (columnId: string) => dispatch(deleteSheetSortAction(props.sheetId, columnId)),
-  updateSheetSort: (sortId: string, updates: SheetSortUpdates) => dispatch(updateSheetSortAction(sortId, updates))
+  updateSheetSort: (sortId: string, updates: SheetSortUpdates, skipVisibleRowsUpdate?: boolean) => dispatch(updateSheetSortAction(sortId, updates, skipVisibleRowsUpdate))
 })
 
 //-----------------------------------------------------------------------------
@@ -58,7 +58,7 @@ const SheetActionSort = ({
       <SheetActionDropdown
         onOptionDelete={(optionToDelete: SheetActionDropdownOption) => deleteSheetSort(optionToDelete.value)}
         onOptionSelect={(selectedOption: SheetActionDropdownOption) => createSheetSort({ id: createUuid(), sheetId: sheetId, columnId: selectedOption.value, order: 'ASC', isLocked: false })}
-        onOptionUpdate={(sortId, updates) => updateSheetSort(sortId, updates)}
+        onOptionUpdate={(sortId, updates) => updateSheetSort(sortId, updates, true)}
         options={options}
         placeholder={"Sort By..."}
         selectedOptions={selectedOptions}
@@ -74,7 +74,7 @@ interface SheetActionProps {
   columns: SheetColumns
   createSheetSort?(newSort: SheetSort): void
   deleteSheetSort?(columnId: string): void
-  updateSheetSort?(sortId: string, updates: SheetSortUpdates): void
+  updateSheetSort?(sortId: string, updates: SheetSortUpdates, skipVisibleRowsUpdate?: boolean): void
   sorts: SheetSorts
   sheetSorts: SheetSort['id'][]
   sheetVisibleColumns: SheetColumn['id'][]

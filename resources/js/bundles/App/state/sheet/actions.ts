@@ -846,25 +846,27 @@ interface UpdateSheetGroup {
 	updates: SheetGroupUpdates
 }
 
-export const updateSheetGroup = (groupId: string, updates: SheetGroupUpdates): ThunkAction => {
+export const updateSheetGroup = (groupId: string, updates: SheetGroupUpdates, skipVisibleRowsUpdate?: boolean): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     dispatch(updateSheetGroupReducer(groupId, updates))
-    setTimeout(() => {
-      const {
-        sheets,
-        cells,
-        filters,
-        groups,
-        rows,
-        sorts,
-      } = getState().sheet
-      const sheetId = groups[groupId].sheetId
-      const sheet = sheets[sheetId]
-      mutation.updateSheetGroup(groupId, updates)
-      dispatch(updateSheet(sheetId, {
-        visibleRows: resolveVisibleRows(sheet, rows, cells, filters, groups, sorts)
-      }))
-    }, 25)
+    mutation.updateSheetGroup(groupId, updates)
+    if(!skipVisibleRowsUpdate) {
+      setTimeout(() => {
+        const {
+          sheets,
+          cells,
+          filters,
+          groups,
+          rows,
+          sorts,
+        } = getState().sheet
+        const sheetId = groups[groupId].sheetId
+        const sheet = sheets[sheetId]
+        dispatch(updateSheet(sheetId, {
+          visibleRows: resolveVisibleRows(sheet, rows, cells, filters, groups, sorts)
+        }))
+      }, 10)
+    }
 	}
 }
 
@@ -943,25 +945,27 @@ interface UpdateSheetSort {
 	updates: SheetSortUpdates
 }
 
-export const updateSheetSort = (sortId: string, updates: SheetSortUpdates): ThunkAction => {
+export const updateSheetSort = (sortId: string, updates: SheetSortUpdates, skipVisibleRowsUpdate?: boolean): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     dispatch(updateSheetSortReducer(sortId, updates))
-    setTimeout(() => {
-      const {
-        sheets,
-        cells,
-        filters,
-        groups,
-        rows,
-        sorts,
-      } = getState().sheet
-      const sheetId = sorts[sortId].sheetId
-      const sheet = sheets[sheetId]
-      mutation.updateSheetSort(sortId, updates)
-      dispatch(updateSheet(sheetId, {
-        visibleRows: resolveVisibleRows(sheet, rows, cells, filters, groups, sorts)
-      }))
-    }, 25)
+    mutation.updateSheetSort(sortId, updates)
+    if(!skipVisibleRowsUpdate) {
+      setTimeout(() => {
+        const {
+          sheets,
+          cells,
+          filters,
+          groups,
+          rows,
+          sorts,
+        } = getState().sheet
+        const sheetId = sorts[sortId].sheetId
+        const sheet = sheets[sheetId]
+        dispatch(updateSheet(sheetId, {
+          visibleRows: resolveVisibleRows(sheet, rows, cells, filters, groups, sorts)
+        }))
+      }, 10)
+    }
 	}
 }
 
