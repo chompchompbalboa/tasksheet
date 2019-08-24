@@ -24,13 +24,16 @@ const SheetActionGroupSelectedOption = ({
     const [ groupOrder, setGroupOrder ] = useState(group ? group.order : 'ASC')
     
     const handleOptionClick = (group: SheetGroup) => {
-      const nextGroupOrder = group.order === 'ASC' ? 'DESC' : 'ASC'
-      setGroupOrder(nextGroupOrder)
-      window.setTimeout(() => updateSheetGroup(group.id, { order: nextGroupOrder }), 50)
+      if(!group.isLocked) {
+        const nextGroupOrder = group.order === 'ASC' ? 'DESC' : 'ASC'
+        setGroupOrder(nextGroupOrder)
+        window.setTimeout(() => updateSheetGroup(group.id, { order: nextGroupOrder }), 50)
+      }
     }
     
     return (
       <Container
+        isLocked={group.isLocked}
         onClick={() => handleOptionClick(group)}>
         <Icon icon={groupOrder === 'ASC' ? ARROW_UP : ARROW_DOWN} size="0.8rem"/>{option.label}
       </Container>
@@ -50,10 +53,13 @@ interface SheetActionGroupSelectedOptionProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  cursor: pointer;
+  cursor: ${ ({ isLocked }: ContainerProps ) => isLocked ? 'not-allowed' : 'pointer' };
   display: flex;
   align-items: center;
 `
+interface ContainerProps {
+  isLocked: boolean
+}
 
 //-----------------------------------------------------------------------------
 // Export

@@ -19,6 +19,7 @@ class CreateSheetFilter extends Migration
           $table->uuid('columnId');
           $table->string('type');
           $table->string('value');
+          $table->boolean('isLocked');
           $table->timestamps();
 
           $table->foreign('sheetId')->references('id')->on('sheets');

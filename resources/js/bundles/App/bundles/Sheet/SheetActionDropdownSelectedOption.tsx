@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import { AppState } from '@app/state'
 import { selectUserColorPrimary } from '@app/state/user/selectors'
 
-import { CLOSE } from '@app/assets/icons'
+import { CLOSE, LOCK_CLOSED } from '@app/assets/icons'
 
 import Icon from '@/components/Icon'
 
@@ -24,18 +24,23 @@ const mapStateToProps = (state: AppState) => ({
 //-----------------------------------------------------------------------------
 const SheetActionDropdownSelectedOption = ({
   children,
+  isLocked,
   onOptionDelete,
+  onOptionUpdate,
   userColorPrimary
 }: SheetActionDropdownSelectedOptionProps) => (
   <Container
+    isLocked={isLocked}
+    onDoubleClick={isLocked ? () => onOptionUpdate({ isLocked: !isLocked }) : () => null}
     optionBackgroundColor={userColorPrimary}>
     <Option>
       {children}
     </Option>
     <Delete
-      onClick={() => onOptionDelete()}>
-      <Icon 
-        icon={CLOSE} 
+      isLocked={isLocked}
+      onClick={isLocked ? () => null : () => onOptionDelete()}>
+      <Icon
+        icon={isLocked ? LOCK_CLOSED : CLOSE}
         size="0.75rem"/>
     </Delete>
   </Container>
@@ -46,7 +51,9 @@ const SheetActionDropdownSelectedOption = ({
 //-----------------------------------------------------------------------------
 interface SheetActionDropdownSelectedOptionProps {
   children?: any
+  isLocked: boolean
   onOptionDelete?(...args: any[]): void
+  onOptionUpdate?(...args: any[]): void
   userColorPrimary?: string
 }
 
@@ -54,6 +61,7 @@ interface SheetActionDropdownSelectedOptionProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  cursor: ${ ({ isLocked }: ContainerProps ) => isLocked ? 'not-allowed' : 'default' };
   padding: 0.125rem 0.25rem;
   margin-right: 0.25rem;
   background-color: ${ ({ optionBackgroundColor }: ContainerProps ) => optionBackgroundColor };
@@ -64,6 +72,7 @@ const Container = styled.div`
   align-items: center;
 `
 interface ContainerProps {
+  isLocked: boolean
   optionBackgroundColor: string
 }
 
@@ -74,15 +83,19 @@ const Option = styled.div`
 
 const Delete = styled.div`
   padding: 0.125rem;
-  cursor: pointer;
+  margin-left: 0.125rem;
+  cursor: ${ ({ isLocked }: DeleteProps ) => isLocked ? 'not-allowed' : 'pointer' };
   display: flex;
   justify-content: center;
   align-items: center;
   opacity: 0.5;
   &:hover {
-    opacity: 1;
+    opacity: ${ ({ isLocked }: DeleteProps ) => isLocked ? '0.5' : '1' };
   }
 `
+interface DeleteProps {
+  isLocked: boolean
+}
 
 //-----------------------------------------------------------------------------
 // Export

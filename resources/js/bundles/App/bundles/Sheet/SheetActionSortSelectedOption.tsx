@@ -23,13 +23,16 @@ const SheetActionSortSelectedOption = ({
     const [ sortOrder, setSortOrder ] = useState(sort ? sort.order : 'ASC')
     
     const handleOptionClick = (sort: SheetSort) => {
-      const nextSortOrder = sort.order === 'ASC' ? 'DESC' : 'ASC'
-      setSortOrder(nextSortOrder)
-      window.setTimeout(() => updateSheetSort(sort.id, { order: nextSortOrder }), 50)
+      if(!sort.isLocked) {
+        const nextSortOrder = sort.order === 'ASC' ? 'DESC' : 'ASC'
+        setSortOrder(nextSortOrder)
+        window.setTimeout(() => updateSheetSort(sort.id, { order: nextSortOrder }), 50)
+      }
     }
     
     return (
       <Container
+        isLocked={sort.isLocked}
         onClick={() => handleOptionClick(sort)}>
         <Icon icon={sortOrder === 'ASC' ? ARROW_UP : ARROW_DOWN} size="0.8rem"/>{option.label}
       </Container>
@@ -49,10 +52,13 @@ interface SheetActionSortSelectedOptionProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  cursor: pointer;
+  cursor: ${ ({ isLocked }: ContainerProps ) => isLocked ? 'not-allowed' : 'pointer' };
   display: flex;
   align-items: center;
 `
+interface ContainerProps {
+  isLocked: boolean
+}
 
 //-----------------------------------------------------------------------------
 // Export

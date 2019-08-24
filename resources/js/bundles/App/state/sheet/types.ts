@@ -110,6 +110,7 @@ export type SheetSort = {
   sheetId: string
   columnId: string
   order: SheetSortOrder
+  isLocked: boolean
 }
 export type SheetSortUpdates = {
   order?: SheetSortOrder
@@ -122,6 +123,7 @@ export type SheetFilter = {
   columnId: string
   type: SheetFilterType
   value: string
+  isLocked: boolean
 }
 export type SheetFilterUpdates = {}
 export type SheetFilterType = '=' | '!=' | '>' | '>=' | '<' | '<='
@@ -131,6 +133,7 @@ export type SheetGroup = {
   sheetId: string
   columnId: string
   order: SheetGroupOrder
+  isLocked: boolean
 }
 export type SheetGroupUpdates = {
   order?: SheetGroupOrder

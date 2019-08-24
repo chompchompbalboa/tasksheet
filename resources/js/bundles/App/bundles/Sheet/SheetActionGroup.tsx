@@ -50,14 +50,15 @@ const SheetActionGroup = ({
 
   const selectedOptions = sheetGroups && sheetGroups.map((groupId: SheetGroup['id']) => { 
     const group = groups[groupId]
-    return { label: columns[group.columnId].name, value: group.id }
+    return { label: columns[group.columnId].name, value: group.id, isLocked: group.isLocked }
   })
 
   return (
     <SheetAction>
       <SheetActionDropdown
         onOptionDelete={(optionToDelete: SheetActionDropdownOption) => deleteSheetGroup(optionToDelete.value)}
-        onOptionSelect={(selectedOption: SheetActionDropdownOption) => createSheetGroup({ id: createUuid(), sheetId: sheetId, columnId: selectedOption.value, order: 'ASC' })}
+        onOptionSelect={(selectedOption: SheetActionDropdownOption) => createSheetGroup({ id: createUuid(), sheetId: sheetId, columnId: selectedOption.value, order: 'ASC', isLocked: false })}
+        onOptionUpdate={(groupId, updates) => updateSheetGroup(groupId, updates)}
         options={options}
         placeholder={"Group By..."}
         selectedOptions={selectedOptions}

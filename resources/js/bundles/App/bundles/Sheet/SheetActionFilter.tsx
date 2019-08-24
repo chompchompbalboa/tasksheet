@@ -8,11 +8,11 @@ import { v4 as createUuid } from 'uuid'
 
 import clone from '@/utils/clone'
 import { ThunkDispatch } from '@app/state/types'
-import { Sheet, SheetColumn, SheetColumns, SheetFilter, SheetFilters, SheetFilterType } from '@app/state/sheet/types'
+import { Sheet, SheetColumn, SheetColumns, SheetFilter, SheetFilters, SheetFilterType, SheetFilterUpdates } from '@app/state/sheet/types'
 import { 
   createSheetFilter as createSheetFilterAction,
   deleteSheetFilter as deleteSheetFilterAction,
-  //updateSheetFilter as updateSheetFilterAction 
+  updateSheetFilter as updateSheetFilterAction 
 } from '@app/state/sheet/actions'
 
 import AutosizeInput from 'react-input-autosize'
@@ -26,7 +26,7 @@ import SheetActionFilterExistingFilters from '@app/bundles/Sheet/SheetActionFilt
 const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionFilterProps) => ({
   createSheetFilter: (sheetId: string, newFilter: SheetFilter) => dispatch(createSheetFilterAction(sheetId, newFilter)),
   deleteSheetFilter: (sheetId: string, filterId: string) => dispatch(deleteSheetFilterAction(sheetId, filterId)),
-  //updateSheetFilter: (filterId: string, updates: SheetFilterUpdates) => dispatch(updateSheetFilterAction(filterId, updates))
+  updateSheetFilter: (filterId: string, updates: SheetFilterUpdates) => dispatch(updateSheetFilterAction(filterId, updates))
 })
 
 //-----------------------------------------------------------------------------
@@ -39,7 +39,8 @@ const SheetActionFilter = ({
   filters,
   sheetFilters,
   sheetId,
-  sheetVisibleColumns
+  sheetVisibleColumns,
+  updateSheetFilter
 }: SheetActionFilterProps) => {
 
   // Filter Types  
@@ -105,7 +106,8 @@ const SheetActionFilter = ({
           sheetId: sheetId,
           columnId: filterColumnId, 
           value: filterValue, 
-          type: filterFilterType
+          type: filterFilterType,
+          isLocked: false
         }
         setLocalFilters({ ...localFilters, [newSheetFilter.id]: newSheetFilter })
         setLocalSheetFilters([ ...localSheetFilters, newSheetFilter.id ])
@@ -182,6 +184,7 @@ const SheetActionFilter = ({
                 key={filterId}
                 columns={columns}
                 deleteSheetFilter={handleDeleteSheetFilter}
+                updateSheetFilter={updateSheetFilter}
                 filter={localFilters[filterId]}
                 sheetId={sheetId}/>
             ))}
@@ -240,6 +243,7 @@ interface SheetActionFilterProps {
   sheetId: string
   sheetFilters: SheetFilter['id'][]
   sheetVisibleColumns: SheetColumn['id'][]
+  updateSheetFilter?(filterId: SheetFilter['id'], updates: SheetFilterUpdates): void
 }
 
 //-----------------------------------------------------------------------------

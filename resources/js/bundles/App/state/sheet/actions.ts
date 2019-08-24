@@ -299,21 +299,21 @@ export const createSheetView = (sheetId: string, viewName: string): ThunkAction 
     const newSheetViewFilters: SheetFilter['id'][] = []
     sourceSheet.filters.forEach(filterId => {
       const newFilterId = createUuid()
-      newFilters[newFilterId] = { ...filters[filterId], id: newFilterId, sheetId: newSheetViewId }
+      newFilters[newFilterId] = { ...filters[filterId], id: newFilterId, sheetId: newSheetViewId, isLocked: true }
     })
     // Groups
     const newGroups: SheetGroups = {}
     const newSheetViewGroups: SheetGroup['id'][] = []
     sourceSheet.groups.forEach(groupId => {
       const newGroupId = createUuid()
-      newGroups[newGroupId] = { ...groups[groupId], id: newGroupId, sheetId: newSheetViewId }
+      newGroups[newGroupId] = { ...groups[groupId], id: newGroupId, sheetId: newSheetViewId, isLocked: true }
     })
     // Sorts
     const newSorts: SheetSorts = {}
     const newSheetViewSorts: SheetSort['id'][] = []
     sourceSheet.sorts.forEach(sortId => {
       const newSortId = createUuid()
-      newSorts[newSortId] = { ...sorts[sortId], id: newSortId, sheetId: newSheetViewId }
+      newSorts[newSortId] = { ...sorts[sortId], id: newSortId, sheetId: newSheetViewId, isLocked: true }
     })
   // Update sheets
     dispatch(loadSheetReducer(
@@ -849,7 +849,6 @@ interface UpdateSheetGroup {
 export const updateSheetGroup = (groupId: string, updates: SheetGroupUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     dispatch(updateSheetGroupReducer(groupId, updates))
-		mutation.updateSheetGroup(groupId, updates)
     setTimeout(() => {
       const {
         sheets,
@@ -861,6 +860,7 @@ export const updateSheetGroup = (groupId: string, updates: SheetGroupUpdates): T
       } = getState().sheet
       const sheetId = groups[groupId].sheetId
       const sheet = sheets[sheetId]
+      mutation.updateSheetGroup(groupId, updates)
       dispatch(updateSheet(sheetId, {
         visibleRows: resolveVisibleRows(sheet, rows, cells, filters, groups, sorts)
       }))
@@ -946,7 +946,6 @@ interface UpdateSheetSort {
 export const updateSheetSort = (sortId: string, updates: SheetSortUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     dispatch(updateSheetSortReducer(sortId, updates))
-		mutation.updateSheetSort(sortId, updates)
     setTimeout(() => {
       const {
         sheets,
@@ -958,6 +957,7 @@ export const updateSheetSort = (sortId: string, updates: SheetSortUpdates): Thun
       } = getState().sheet
       const sheetId = sorts[sortId].sheetId
       const sheet = sheets[sheetId]
+      mutation.updateSheetSort(sortId, updates)
       dispatch(updateSheet(sheetId, {
         visibleRows: resolveVisibleRows(sheet, rows, cells, filters, groups, sorts)
       }))

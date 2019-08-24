@@ -4,7 +4,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Sheet, SheetColumns, SheetFilter } from '@app/state/sheet/types'
+import { Sheet, SheetColumns, SheetFilter, SheetFilterUpdates } from '@app/state/sheet/types'
 
 import SheetActionDropdownSelectedOption from '@app/bundles/Sheet/SheetActionDropdownSelectedOption'
 
@@ -15,11 +15,13 @@ const SheetActionFilterExistingFilter = ({
   columns,
   deleteSheetFilter,
   filter,
-  sheetId
+  updateSheetFilter
 }: SheetActionFilterExistingFilterProps) => {
     
     return (
       <SheetActionDropdownSelectedOption
+        isLocked={filter.isLocked}
+        onOptionUpdate={(updates) => updateSheetFilter(filter.id, updates)}
         onOptionDelete={() => deleteSheetFilter(filter.id)}>
         <Container>
           {columns[filter.columnId].name} {filter.type} {filter.value}
@@ -34,6 +36,7 @@ const SheetActionFilterExistingFilter = ({
 interface SheetActionFilterExistingFilterProps {
   columns: SheetColumns
   deleteSheetFilter(filterId: SheetFilter['id']): void
+  updateSheetFilter(filterId: SheetFilter['id'], updates: SheetFilterUpdates): void
   filter: SheetFilter
   sheetId: Sheet['id']
 }

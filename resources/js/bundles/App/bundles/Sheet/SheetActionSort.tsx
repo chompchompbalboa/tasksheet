@@ -50,14 +50,15 @@ const SheetActionSort = ({
   
   const selectedOptions = sheetSorts && sheetSorts.map((sortId: SheetSort['id']) => { 
     const sort = sorts[sortId]
-    return { label: columns[sort.columnId].name, value: sortId }
+    return { label: columns[sort.columnId].name, value: sortId, isLocked: sort.isLocked }
   })
 
   return (
     <SheetAction>
       <SheetActionDropdown
         onOptionDelete={(optionToDelete: SheetActionDropdownOption) => deleteSheetSort(optionToDelete.value)}
-        onOptionSelect={(selectedOption: SheetActionDropdownOption) => createSheetSort({ id: createUuid(), sheetId: sheetId, columnId: selectedOption.value, order: 'ASC' })}
+        onOptionSelect={(selectedOption: SheetActionDropdownOption) => createSheetSort({ id: createUuid(), sheetId: sheetId, columnId: selectedOption.value, order: 'ASC', isLocked: false })}
+        onOptionUpdate={(sortId, updates) => updateSheetSort(sortId, updates)}
         options={options}
         placeholder={"Sort By..."}
         selectedOptions={selectedOptions}

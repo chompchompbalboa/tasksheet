@@ -14,6 +14,7 @@ const SheetActionDropdown = ({
   onInputChange,
   onOptionSelect,
   onOptionDelete,
+  onOptionUpdate,
   options,
   placeholder,
   selectedOptions,
@@ -99,7 +100,7 @@ const SheetActionDropdown = ({
   const handleOptionSelect = (option: SheetActionDropdownOption) => {
     setIsDropdownVisible(false)
     setHighlightedOptionIndex(null)
-    setVisibleSelectedOptions([...visibleSelectedOptions, option])
+    setVisibleSelectedOptions([...visibleSelectedOptions, { ...option, isLocked: false }])
     setAutosizeInputValue("")
     setVisibleOptions(options)
     setTimeout(() => onOptionSelect(option), 50)
@@ -134,7 +135,9 @@ const SheetActionDropdown = ({
           {visibleSelectedOptions && visibleSelectedOptions.map(option => (
             <SheetActionDropdownSelectedOption
               key={option.value}
-              onOptionDelete={() => handleOptionDelete(option)}>
+              isLocked={option.isLocked}
+              onOptionDelete={() => handleOptionDelete(option)}
+              onOptionUpdate={updates => onOptionUpdate(option.value, updates)}>
               <SelectedOption option={option}/>
             </SheetActionDropdownSelectedOption>
           ))}
@@ -182,9 +185,10 @@ interface SheetActionDropdownProps {
   onInputChange?(nextValue: string): void
   onOptionDelete(optionToDelete: SheetActionDropdownOption): void
   onOptionSelect(selectedOption: SheetActionDropdownOption): void
+  onOptionUpdate(optionId: string, updates: any): void
   options: SheetActionDropdownOptions
   placeholder: string
-  selectedOptions: SheetActionDropdownOptions
+  selectedOptions: SheetActionDropdownSelectedOptions
   selectedOptionComponent: any
   value?: string
 }
@@ -193,8 +197,14 @@ export interface SheetActionDropdownOption {
   label: string
   value: string
 }
-
 export type SheetActionDropdownOptions = SheetActionDropdownOption[]
+
+export interface SheetActionDropdownSelectedOption {
+  label: string
+  value: string
+  isLocked: boolean
+}
+export type SheetActionDropdownSelectedOptions = SheetActionDropdownSelectedOption[]
 
 //-----------------------------------------------------------------------------
 // Styled Components
