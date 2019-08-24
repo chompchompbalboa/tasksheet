@@ -17,7 +17,7 @@ import {
 //-----------------------------------------------------------------------------
 export const resolveFilter = (cellValue: string, filterValue: string, type: SheetFilterType) => {
   
-  const filterValues = filterValue.split('||').map(untrimmedFilterValue => untrimmedFilterValue.trim())
+  const filterValues = filterValue.split('|').map(untrimmedFilterValue => untrimmedFilterValue.trim())
   
   switch (type) {
     case '=': {
@@ -45,9 +45,8 @@ export const resolveFilter = (cellValue: string, filterValue: string, type: Shee
 // Resolve Value
 //-----------------------------------------------------------------------------
 export const resolveValue = (value: string) => {
-  //const filteredValue = value !== null ? value.replace('%', '') : ""
-  //return isNaN(Number(filteredValue)) ? filteredValue : Number(filteredValue)
-  return value
+  const filteredValue = value !== null ? value.replace('%', '') : ""
+  return isNaN(Number(filteredValue)) ? filteredValue : Number(filteredValue)
 }
 
 //-----------------------------------------------------------------------------
