@@ -5,8 +5,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { FILE_SHEET_VIEW } from '@app/assets/icons' 
+import { SAVE_SHEET_VIEW } from '@app/assets/icons' 
 
+import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
 import { 
   updateIsSavingNewFile as updateIsSavingNewFileAction
@@ -17,12 +18,17 @@ import {
 import { 
   updateActiveTabId as updateActiveTabIdAction
  } from '@app/state/tab/actions'
+ import { selectUserColorPrimary } from '@app/state/user/selectors'
 
 import Icon from '@/components/Icon'
 
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
+const mapStateToProps = (state: AppState) => ({
+  userColorPrimary: selectUserColorPrimary(state)
+})
+
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   createSheetView: (sheetId: string, newViewName: string) => dispatch(createSheetViewAction(sheetId, newViewName)),
   updateIsSavingNewFile: (nextIsSavingNewFile: boolean, onFileSave: () => void) => dispatch(updateIsSavingNewFileAction(nextIsSavingNewFile, onFileSave)),
@@ -35,7 +41,8 @@ const SheetActionSaveView = ({
   createSheetView,
   sheetId,
   updateIsSavingNewFile,
-  updateActiveTabId
+  updateActiveTabId,
+  userColorPrimary,
 }: SheetActionSaveViewProps) => {
 
   const handleClick = () => {
@@ -48,9 +55,10 @@ const SheetActionSaveView = ({
 
   return (
     <Container
+      containerBackgroundColor={userColorPrimary}
       onClick={() => handleClick()}>
       <Icon
-        icon={FILE_SHEET_VIEW}
+        icon={SAVE_SHEET_VIEW}
         size="1.1rem"/>
     </Container>
   )
@@ -64,6 +72,7 @@ interface SheetActionSaveViewProps {
   createSheetView(sheetId: string, newViewName: string): void
   updateIsSavingNewFile(nextIsSavingNewFile: boolean, onFileSave: (...args: any) => void): void
   updateActiveTabId(nextActiveTabId: string): void
+  userColorPrimary: string
 }
 
 //-----------------------------------------------------------------------------
@@ -80,15 +89,18 @@ const Container = styled.div`
   padding: 0.4rem;
   transition: all 0.05s;
   &:hover {
-    background-color: rgb(0, 120, 0);
+    background-color: ${ ({ containerBackgroundColor }: ContainerProps) => containerBackgroundColor};
     color: rgb(240, 240, 240);
   }
 `
+interface ContainerProps {
+  containerBackgroundColor: string
+}
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(SheetActionSaveView)

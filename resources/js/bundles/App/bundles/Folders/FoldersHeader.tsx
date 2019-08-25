@@ -2,8 +2,10 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { AppState } from '@app/state'
 import { Files, Folders } from '@app/state/folder/types'
 
 import AutosizeInput from 'react-input-autosize'
@@ -21,6 +23,8 @@ const FoldersHeader = ({
 }: FoldersHeaderProps) => {
 
   const activeItem = activeFileId !== null ? files[activeFileId] : folders[activeFolderPath[activeFolderPath.length - 1]]
+
+  const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
 
   const styledInput = useRef(null)
   const [ name, setName ] = useState(activeItem ? activeItem.name : 'Home')
@@ -62,6 +66,7 @@ const FoldersHeader = ({
           fontWeight: 'inherit'}}/>
       {isSavingNewFile && 
         <SaveButton
+          saveButtonBackgroundColor={userColorPrimary}
           onClick={() => handleSaveButtonClick()}>
           Save
         </SaveButton>
@@ -109,10 +114,13 @@ const SaveButton = styled.div`
   color: rgb(80, 80, 80);
   transition: all 0.05s;
   &:hover {
-    background-color: rgb(0, 120, 0);
+    background-color: ${ ({ saveButtonBackgroundColor }: SaveButtonProps ) => saveButtonBackgroundColor };
     color: rgb(240, 240, 240);
   }
 `
+interface SaveButtonProps {
+  saveButtonBackgroundColor: string
+}
 
 //-----------------------------------------------------------------------------
 // Export

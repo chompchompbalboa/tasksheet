@@ -47,6 +47,7 @@ interface UserLogoutProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   cursor: pointer;
+  border-radius: 5px;
   width: 100%;
   padding: 0.75rem 0.5rem;
   &:hover {

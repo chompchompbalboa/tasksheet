@@ -158,7 +158,6 @@ interface FoldersFolderFolderProps {
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-
 const Container = styled.div`
   justify-content: space-between;
   cursor: default;

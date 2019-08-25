@@ -244,8 +244,8 @@ const Dropdown = styled.div`
   min-width: 7.5rem;
   background-color: white;
   border-radius: 5px;
-  background-color: rgb(253, 253, 253);
-  box-shadow: 3px 3px 10px 0px rgba(150,150,150,1);
+  background-color: rgb(250, 250, 250);
+  box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.5);
 `
 interface DropdownProps {
   isDropdownVisible: boolean

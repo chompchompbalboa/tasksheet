@@ -89,9 +89,10 @@ const UserContainer = styled.div`
   position: fixed;
   top: 1.75rem;
   right: 1.75rem;
-  background-color: white;
+  background-color: rgb(250, 250, 250);
   min-width: 10rem;
   box-shadow: -1px 0px 10px 0px rgba(0,0,0,0.5);
+  border-radius: 5px;
 `
 type UserContainerProps = {
   isVisible: boolean

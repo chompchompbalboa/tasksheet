@@ -104,7 +104,7 @@ const FoldersFolderFile = ({
         onDoubleClick={() => { if(!file.isPreventedFromSelecting) { handleFileOpen(file.id) }}}>
         <IconContainer
           isFile>
-          <Icon icon={file.type === 'SHEET' ? FILE_SHEET : FILE_SHEET_VIEW} size="0.8rem"/>
+          <Icon icon={file.type === 'SHEET' ? FILE_SHEET : FILE_SHEET_VIEW} size={file.type === 'SHEET' ? '0.8rem' : '0.95rem'}/>
         </IconContainer>
         {!isRenaming
           ? <NameContainer
