@@ -44,7 +44,7 @@ const SheetActionFilter = ({
 }: SheetActionFilterProps) => {
 
   // Filter Types  
-  const filterTypes: SheetFilterType[] = ['!=', '>=', '<=', '=', '>', '<'] // The multcharacter items need to be before the single character items in this array for the validator to work correctly
+  const filterTypes: SheetFilterType[] = ['!=', '>=', '<=', '=', '>', '<'] // The multicharacter items need to be before the single character items in this array for the validator to work correctly
   // Column Names
   const columnNames = sheetVisibleColumns && sheetVisibleColumns.map(columnId => {
     if(columns && columns[columnId]) {
@@ -81,13 +81,13 @@ const SheetActionFilter = ({
     isFilterValid ? addEventListener('keypress', handleKeypressWhileFilterIsValid) : removeEventListener('keypress', handleKeypressWhileFilterIsValid)
     return () => removeEventListener('keypress', handleKeypressWhileFilterIsValid)
   }, [ autosizeInputValue, isFilterValid ])
-
+  // Close the dropdown on click outside
   const closeDropdownOnClickOutside = (e: Event) => {
     if(!dropdown.current.contains(e.target) && !container.current.contains(e.target)) {
       setIsDropdownVisible(false)
     }
   }
-
+  // Create a filter when the input value is a valid filter and the user presses enter
   const handleKeypressWhileFilterIsValid = (e: KeyboardEvent) => {
     if(e.key === 'Enter') {
       if(isFilterValid) {
@@ -134,11 +134,32 @@ const SheetActionFilter = ({
   const handleAutosizeInputFocus = () => setIsDropdownVisible(true)
 
   const validateColumnName = (nextAutosizeInputValue: string) => {
+    // Combine the next input value into a single unspaced string
     const valueToTest = nextAutosizeInputValue.split(' ').join('')
-    const columnIndex = columnNames.findIndex(columnName => columnName && valueToTest.includes(columnName.split(' ').join('')))
-    const columnId = columnIndex > -1 ? sheetVisibleColumns[columnIndex] : null
+    // Find all of the column names that are included in the next input value
+    const columnIndices = columnNames.reduce((returnArray, columnName, index) => columnName && valueToTest.includes(columnName.split(' ').join('')) ? returnArray.concat(index) : returnArray, [])
+    // Most of the time, this will only return a single column name. However,
+    // when one column name is included in another column name (e.g. IP & WHIP
+    // both contain 'IP') we need to figure out which one is the exact match.
+    // We do this by comparing the first and last letters of the qualifying
+    // column names to the input value and returning 
+    const columnIndicesIndex = 
+      columnIndices.length === 0
+        ? -1
+        : columnIndices.length === 1
+          ? 0
+          : columnIndices.findIndex(currentColumnIndex => {
+              const columnNameArray = columnNames[currentColumnIndex].split(' ')
+              const lastWordIndex = columnNameArray.length - 1
+              const nextAutosizeInputValueArray = nextAutosizeInputValue.split(' ')
+              const isFirstLetterSame = columnNameArray[0].charAt(0) === nextAutosizeInputValueArray[0].charAt(0)
+              const isLastLetterSame = columnNameArray[lastWordIndex].slice(-1) === nextAutosizeInputValueArray[lastWordIndex].slice(-1)
+              return isFirstLetterSame && isLastLetterSame
+            })
+    const isColumnNameValidated = columnIndicesIndex > -1
+    const columnId = isColumnNameValidated ? sheetVisibleColumns[columnIndices[columnIndicesIndex]] : null
     return {
-      isColumnNameValidated: columnIndex > -1,
+      isColumnNameValidated: isColumnNameValidated,
       columnId: columnId
     }
   }
