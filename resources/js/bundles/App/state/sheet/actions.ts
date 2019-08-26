@@ -957,16 +957,17 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
     } = getState().sheet
     const cell = cells[cellId]
     const isCellAlreadySelected = cell.selectionType !== null
-    if(!isShiftClicked && !isCellAlreadySelected) {
-
-          // Update next highlighted cell
-          dispatch(updateSheetCellReducer(cellId, { selectionType: 'CELL' }))
-          dispatch(updateSheetCellReducer(selections.cellId, { selectionType: null }))
+    const isRangeAlreadySelected = selections.rangeCellIds !== null
+    if(!isShiftClicked) {
+      if(!isCellAlreadySelected || isRangeAlreadySelected) {
+        batch(() => {
           // Remove highlight from previously highlighted cells
-          const isRangeSelected = selections.rangeEndColumnId !== null
-          if(isRangeSelected) {
+          dispatch(updateSheetCellReducer(selections.cellId, { selectionType: null }))
+          if(isRangeAlreadySelected) {
             selections.rangeCellIds.forEach(rangeCellId => dispatch(updateSheetCellReducer(rangeCellId, { selectionType: null })))
           }
+          // Update next highlighted cell
+          dispatch(updateSheetCellReducer(cellId, { selectionType: 'CELL' }))
           // Update active selections
           dispatch(updateSheetSelectionReducer({ 
             cellId: cellId, 
@@ -975,17 +976,18 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
             rangeEndColumnId: null, 
             rangeEndRowId: null,
             rangeCellIds: null
-          }))
-
+          })) 
+        })
+      }
     }
     else if(isShiftClicked && !isCellAlreadySelected) {
-      const startColumnIndex = visibleColumns.indexOf(selections.rangeStartColumnId)
-      const startRowIndex = visibleRows.indexOf(selections.rangeStartRowId)
-      const nextEndColumnId = cell.columnId
-      const nextEndRowId = cell.rowId
-      const nextEndColumnIndex = visibleColumns.indexOf(nextEndColumnId)
-      const nextEndRowIndex = visibleRows.indexOf(nextEndRowId)
-
+      batch(() => {
+        const startColumnIndex = visibleColumns.indexOf(selections.rangeStartColumnId)
+        const startRowIndex = visibleRows.indexOf(selections.rangeStartRowId)
+        const nextEndColumnId = cell.columnId
+        const nextEndRowId = cell.rowId
+        const nextEndColumnIndex = visibleColumns.indexOf(nextEndColumnId)
+        const nextEndRowIndex = visibleRows.indexOf(nextEndRowId)
         let nextRangeCellIds = []
         for(let columnIndex = startColumnIndex; columnIndex <= nextEndColumnIndex; columnIndex++) {
           const columnId = visibleColumns[columnIndex]
@@ -1005,7 +1007,7 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
           rangeEndRowId: nextEndRowId,
           rangeCellIds: nextRangeCellIds
         }))
-
+      })
     }
   }
 }
