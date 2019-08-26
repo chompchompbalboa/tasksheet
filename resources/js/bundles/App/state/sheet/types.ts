@@ -10,11 +10,19 @@ export type SheetSorts = { [sortId: string]: SheetSort }
 
 export type SheetActive = {
   columnRenamingId: SheetColumn['id']
-  selections: { [cellId: string]: SheetCellSelectionType }
+  selections: SheetActiveSelections
 }
 export type SheetActiveUpdates = {
   columnRenamingId?: SheetColumn['id']
-  selections?: { [cellId: string]: SheetCellSelectionType }
+  selections?: SheetActiveSelections
+}
+export type SheetActiveSelections = {
+  cellId: SheetCell['id']
+  rangeStartColumnId: SheetColumn['id']
+  rangeStartRowId: SheetRow['id']
+  rangeEndColumnId: SheetColumn['id']
+  rangeEndRowId: SheetRow['id']
+  rangeCellIds: SheetCell['id'][]
 }
 
 export type Sheet = {

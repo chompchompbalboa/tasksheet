@@ -80,7 +80,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   updateSheetActive: (updates: SheetActiveUpdates) => dispatch(updateSheetActiveAction(updates)),
   updateSheetCell: (cellId: string, updates: SheetCellUpdates, undoUpdates?: SheetCellUpdates, skipServerUpdate?: boolean) => dispatch(updateSheetCellAction(cellId, updates, undoUpdates, skipServerUpdate)),
   updateSheetColumn: (columnId: string, updates: SheetColumnUpdates) => dispatch(updateSheetColumnAction(columnId, updates)),
-  updateSheetSelection: (cellId: string, isShiftPressed: boolean) => dispatch(updateSheetSelectionAction(cellId, isShiftPressed))
+  updateSheetSelection: (sheetId: string, cellId: string, isShiftPressed: boolean) => dispatch(updateSheetSelectionAction(sheetId, cellId, isShiftPressed))
 })
 
 //-----------------------------------------------------------------------------
@@ -118,7 +118,7 @@ const SheetComponent = memo(({
   const memoizedUpdateSheetActive = useCallback((updates) => updateSheetActive(updates), [])
   const memoizedUpdateSheetCell = useCallback((cellId, updates, undoUpdates, skipServerUpdate) => updateSheetCell(cellId, updates, undoUpdates, skipServerUpdate), [])
   const memoizedUpdateSheetColumn = useCallback((columnId, updates) => updateSheetColumn(columnId, updates), [])
-  const memoizedUpdateSheetSelection = useCallback((cellId, isShiftPressed) => updateSheetSelection(cellId, isShiftPressed), [])
+  const memoizedUpdateSheetSelection = useCallback((cellId, isShiftPressed) => updateSheetSelection(id, cellId, isShiftPressed), [])
 
   const [ hasLoaded, setHasLoaded ] = useState(false)
   useEffect(() => {
@@ -238,7 +238,7 @@ interface SheetComponentProps {
   updateSheetActive?(updates: SheetActiveUpdates): void
   updateSheetCell?(cellId: string, updates: SheetCellUpdates, undoUpdates?: SheetCellUpdates, skipServerUpdate?: boolean): void
   updateSheetColumn?(columnId: string, updates: SheetColumnUpdates): void
-  updateSheetSelection?(cellId: string, isShiftPressed: boolean): void
+  updateSheetSelection?(sheetId: string, cellId: string, isShiftPressed: boolean): void
   userColorSecondary?: string
 }
 

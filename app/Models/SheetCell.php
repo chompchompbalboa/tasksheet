@@ -13,7 +13,7 @@ class SheetCell extends Model
   /**
    * Define which attributes will be visible
    */
-  protected $visible = ['id', 'columnId', 'value'];
+  protected $visible = ['id', 'columnId', 'rowId', 'value'];
   protected $fillable = ['id', 'sheetId', 'columnId', 'rowId', 'value'];
   
   public function column() {

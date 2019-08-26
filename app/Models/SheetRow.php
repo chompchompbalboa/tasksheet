@@ -20,7 +20,7 @@ class SheetRow extends Model
     $cells =  SheetCell::where('rowId', '=', $this->id)
     ->join('sheetColumns', 'sheetCells.columnId', '=', 'sheetColumns.id')
     ->orderBy('sheetColumns.created_at', 'ASC')
-    ->select('sheetCells.id', 'columnId', 'value')
+    ->select('sheetCells.id', 'columnId', 'rowId', 'value')
     ->get();
     return $cells;
   }

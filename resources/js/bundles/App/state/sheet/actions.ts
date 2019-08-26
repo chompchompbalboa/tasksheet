@@ -10,8 +10,8 @@ import { mutation } from '@app/api'
 import { AppState } from '@app/state'
 import { 
   Sheet, SheetFromServer, SheetUpdates,
-  SheetActiveUpdates, 
-  SheetCell, SheetCells, SheetCellSelectionType, SheetCellUpdates,
+  SheetActiveSelections, SheetActiveUpdates, 
+  SheetCell, SheetCells, SheetCellUpdates,
   SheetColumn, SheetColumns, SheetColumnUpdates,
   SheetRows, SheetRowUpdates, 
   SheetFilter, SheetFilters, SheetFilterUpdates,
@@ -942,28 +942,75 @@ export const updateSheetRows = (nextSheetRows: SheetRows): SheetActions => {
 export const UPDATE_SHEET_SELECTION = 'UPDATE_SHEET_SELECTION'
 interface UpdateSheetSelection {
   type: typeof UPDATE_SHEET_SELECTION,
-  nextSheetSelection: { [cellId: string]: SheetCellSelectionType }
+  nextSheetSelection: SheetActiveSelections
 }
 
-export const updateSheetSelection = (cellId: string, isShiftClicked: boolean): ThunkAction => {
+export const updateSheetSelection = (sheetId: string, cellId: string, isShiftClicked: boolean): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
-      active: { selections }
-    } = getState().sheet
-    if(!isShiftClicked) {
-      const isCellAlreadySelected = selections[cellId] !== undefined
-      if(!isCellAlreadySelected) {
-        batch(() => {
-          dispatch(updateSheetCellReducer(cellId, { selectionType: 'CELL' }))
-          Object.keys(selections).forEach(cellId => dispatch(updateSheetCellReducer(cellId, { selectionType: null })))
-        })
-        dispatch(updateSheetSelectionReducer({ [cellId]: 'CELL' }))
+      active: { selections },
+      cells,
+      rows,
+      sheets: {
+        [sheetId]: { visibleRows, visibleColumns }
       }
+    } = getState().sheet
+    const cell = cells[cellId]
+    const isCellAlreadySelected = cell.selectionType !== null
+    if(!isShiftClicked && !isCellAlreadySelected) {
+
+          // Update next highlighted cell
+          dispatch(updateSheetCellReducer(cellId, { selectionType: 'CELL' }))
+          dispatch(updateSheetCellReducer(selections.cellId, { selectionType: null }))
+          // Remove highlight from previously highlighted cells
+          const isRangeSelected = selections.rangeEndColumnId !== null
+          if(isRangeSelected) {
+            selections.rangeCellIds.forEach(rangeCellId => dispatch(updateSheetCellReducer(rangeCellId, { selectionType: null })))
+          }
+          // Update active selections
+          dispatch(updateSheetSelectionReducer({ 
+            cellId: cellId, 
+            rangeStartColumnId: cell.columnId, 
+            rangeStartRowId: cell.rowId, 
+            rangeEndColumnId: null, 
+            rangeEndRowId: null,
+            rangeCellIds: null
+          }))
+
+    }
+    else if(isShiftClicked && !isCellAlreadySelected) {
+      const startColumnIndex = visibleColumns.indexOf(selections.rangeStartColumnId)
+      const startRowIndex = visibleRows.indexOf(selections.rangeStartRowId)
+      const nextEndColumnId = cell.columnId
+      const nextEndRowId = cell.rowId
+      const nextEndColumnIndex = visibleColumns.indexOf(nextEndColumnId)
+      const nextEndRowIndex = visibleRows.indexOf(nextEndRowId)
+
+        let nextRangeCellIds = []
+        for(let columnIndex = startColumnIndex; columnIndex <= nextEndColumnIndex; columnIndex++) {
+          const columnId = visibleColumns[columnIndex]
+          for(let rowIndex = startRowIndex; rowIndex <= nextEndRowIndex; rowIndex++) {
+            const rowId = visibleRows[rowIndex]
+            if(rowId !== 'ROW_BREAK') {
+              const row = rows[rowId]
+              const currentCellId = row.cells[columnId]
+              dispatch(updateSheetCellReducer(currentCellId, { selectionType: 'CELL' }))
+              nextRangeCellIds.push(currentCellId)
+            }
+          }
+        }
+        dispatch(updateSheetSelectionReducer({
+          ...selections,
+          rangeEndColumnId: nextEndColumnId, 
+          rangeEndRowId: nextEndRowId,
+          rangeCellIds: nextRangeCellIds
+        }))
+
     }
   }
 }
 
-export const updateSheetSelectionReducer = (nextSheetSelection: { [cellId: string]: SheetCellSelectionType }): SheetActions => {
+export const updateSheetSelectionReducer = (nextSheetSelection: SheetActiveSelections): SheetActions => {
 	return {
 		type: UPDATE_SHEET_SELECTION,
     nextSheetSelection,

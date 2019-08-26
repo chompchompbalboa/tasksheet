@@ -35,7 +35,14 @@ export interface SheetState {
 const defaultSheetState: SheetState = {
   active: {
     columnRenamingId: null,
-    selections: {}
+    selections: {
+      cellId: null,
+      rangeStartColumnId: null,
+      rangeStartRowId: null,
+      rangeEndColumnId: null,
+      rangeEndRowId: null,
+      rangeCellIds: null
+    }
   },
   sheets: null,
   cells: null,
