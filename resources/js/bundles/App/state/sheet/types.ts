@@ -10,9 +10,11 @@ export type SheetSorts = { [sortId: string]: SheetSort }
 
 export type SheetActive = {
   columnRenamingId: SheetColumn['id']
+  selections: { [cellId: string]: SheetCellSelectionType }
 }
 export type SheetActiveUpdates = {
   columnRenamingId?: SheetColumn['id']
+  selections?: { [cellId: string]: SheetCellSelectionType }
 }
 
 export type Sheet = {
@@ -100,10 +102,16 @@ export type SheetCell = {
 	columnId: string
 	rowId: string
 	value: string
+  selectionType: SheetCellSelectionType
 }
 export interface SheetCellUpdates {
+  selectionType?: SheetCellSelectionType
 	value?: string
 }
+export type SheetCellSelectionType = 
+  'CELL' | 
+  'ROW_FIRST' | 'ROW_MIDDLE' | 'ROW_LAST' |
+  'COLUMN_FIRST' | 'COLUMN_MIDDLE' | 'COLUMN_LAST'
 
 export type SheetSort = {
   id: string

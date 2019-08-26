@@ -32,66 +32,51 @@ const SheetCell = memo(({
   style,
   type,
   updateSheetCell,
+  updateSheetSelection
 }: SheetCellProps) => {
-  
+  // Refs
   const cellContainer = useRef(null)
+  // Cell Value
   const [ cellValue, setCellValue ] = useState(cell ? cell.value : null)
-  const [ isHighlighted, setIsHighlighted ] = useState(cell ? localStorage.getItem(sheetId) === cell.id : false)
-  
   useEffect(() => {
-    if(isHighlighted) {
-      window.addEventListener('mousedown', removeHighlightOnClickOutside)
-    }
-    else {
-      window.removeEventListener('mousedown', removeHighlightOnClickOutside)
-    }
-    return () => {
-      window.removeEventListener('mousedown', removeHighlightOnClickOutside)
-    }
-  }, [ isHighlighted ])
-
-  const handleClick = (e: MouseEvent) => {
-    setIsHighlighted(true)
-    localStorage.setItem(sheetId, cell.id)
-  }
-
-  const removeHighlightOnClickOutside = (e: Event) => {
-    if(!cellContainer.current.contains(e.target)) {
-      setIsHighlighted(false)
-      localStorage.setItem(sheetId, null)
-    }
-  }
-
-  useEffect(() => {
-    if(cellValue !== cell.value && !isHighlighted) {
+    if(cellValue !== cell.value) {
       setCellValue(cell.value)
     }
   }, [ cell ])
-
   useEffect(() => {
     let updateSheetCellTimer: number = null
     if(cell && cellValue !== cell.value) {
       clearTimeout(updateSheetCellTimer)
       updateSheetCellTimer = setTimeout(() => {
         updateSheetCell(cell.id, { value: cellValue }, { value: cell.value })
-      }, 1000);
+      }, 1000)
     }
     return () => clearTimeout(updateSheetCellTimer);
   }, [ cellValue ])
-  
+  // Cell type
   const sheetCellTypes = {
     STRING: SheetCellString,
     NUMBER: SheetCellNumber,
     BOOLEAN: SheetCellBoolean,
     DATETIME: SheetCellDatetime,
   }
-  
   const SheetCellType = sheetCellTypes[type]
+  // Selections
+  const handleClick = (e: MouseEvent) => {
+    updateSheetSelection(cell.id, e.shiftKey)
+  }
+  const getContainerBoxShadow = () => {
+    if(cell && cell.selectionType !== null) {
+      return 'inset 0px 0px 0px 2px ' + highlightColor
+    }
+    return 'none'
+  }
+  
   return (
     <Container
       ref={cellContainer}
-      highlightColor={highlightColor}
-      isHighlighted={isHighlighted}
+      containerBoxShadow={getContainerBoxShadow()}
+      isSelected={cell && cell.selectionType !== null}
       onClick={handleClick}
       style={style}>
       <SheetCellType
@@ -112,7 +97,8 @@ interface SheetCellProps {
   sheetId: string
   style: {}
   type: SheetColumnType
-  updateSheetCell(cellId: string, updates: SheetCellUpdates, undoUpdates: SheetCellUpdates): void
+  updateSheetCell(cellId: string, updates: SheetCellUpdates, undoUpdates?: SheetCellUpdates, skipServerUpdate?: boolean): void
+  updateSheetSelection(cellId: string, isShiftPressed: boolean): void
 }
 
 //-----------------------------------------------------------------------------
@@ -125,17 +111,17 @@ const Container = styled.div`
   font-size: 0.9rem;
   border-right: 0.5px solid rgb(180, 180, 180);
   border-bottom: 0.5px solid rgb(180, 180, 180);
-  box-shadow: ${ ({ highlightColor, isHighlighted }: ContainerProps ) => isHighlighted ? 'inset 0px 0px 0px 2px ' + highlightColor : 'none' };
+  box-shadow: ${ ({ containerBoxShadow }: ContainerProps ) => containerBoxShadow };
   user-select: none;
-  background-color: ${ ({ isHighlighted }: ContainerProps ) => isHighlighted ? 'rgb(245, 245, 245)' : 'white' };
+  background-color: ${ ({ isSelected }: ContainerProps ) => isSelected ? 'rgb(245, 245, 245)' : 'white' };
   overflow: hidden;
   &:hover {
     background-color: rgb(245, 245, 245);
   }
 `
 interface ContainerProps {
-  highlightColor: string
-  isHighlighted: boolean
+  containerBoxShadow: string
+  isSelected: boolean
 }
 
 //-----------------------------------------------------------------------------

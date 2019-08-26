@@ -11,7 +11,7 @@ import { AppState } from '@app/state'
 import { 
   Sheet, SheetFromServer, SheetUpdates,
   SheetActiveUpdates, 
-  SheetCell, SheetCells, SheetCellUpdates,
+  SheetCell, SheetCells, SheetCellSelectionType, SheetCellUpdates,
   SheetColumn, SheetColumns, SheetColumnUpdates,
   SheetRows, SheetRowUpdates, 
   SheetFilter, SheetFilters, SheetFilterUpdates,
@@ -41,6 +41,7 @@ export type SheetActions =
   DeleteSheetFilter | UpdateSheetFilter | UpdateSheetFilters |
   DeleteSheetGroup | UpdateSheetGroup | UpdateSheetGroups |
   UpdateSheetRow | UpdateSheetRows | 
+  UpdateSheetSelection | 
   DeleteSheetSort | UpdateSheetSort | UpdateSheetSorts 
 
 //-----------------------------------------------------------------------------
@@ -587,7 +588,7 @@ export const loadSheet = (sheetFromServer: SheetFromServer): ThunkAction => {
     sheetFromServer.rows.forEach(row => { 
       let rowCells: { [columnId: string]: SheetCell['id'] }  = {}
       row.cells.forEach(cell => {
-        normalizedCells[cell.id] = cell
+        normalizedCells[cell.id] = { ...cell, selectionType: null }
         rowCells[cell.columnId] = cell.id
       })
       normalizedRows[row.id] = { id: row.id, sheetId: sheetFromServer.id, cells: rowCells}
@@ -715,17 +716,17 @@ interface UpdateSheetCell {
 	updates: SheetCellUpdates
 }
 
-export const updateSheetCell = (cellId: string, updates: SheetCellUpdates, undoUpdates: SheetCellUpdates): ThunkAction => {
+export const updateSheetCell = (cellId: string, updates: SheetCellUpdates, undoUpdates: SheetCellUpdates = null, skipServerUpdate: boolean = false): ThunkAction => {
 	return async (dispatch: ThunkDispatch) => {
     const actions = () => {
       dispatch(updateSheetCellReducer(cellId, updates))
-      mutation.updateSheetCell(cellId, updates)
+      !skipServerUpdate && mutation.updateSheetCell(cellId, updates)
     }
     const undoActions = () => {
       dispatch(updateSheetCellReducer(cellId, undoUpdates))
-      mutation.updateSheetCell(cellId, undoUpdates)
+      !skipServerUpdate && mutation.updateSheetCell(cellId, undoUpdates)
     }
-    dispatch(createHistoryStep({actions, undoActions}))
+    undoUpdates !== null && dispatch(createHistoryStep({actions, undoActions}))
     actions()
 	}
 }
@@ -932,6 +933,40 @@ export const updateSheetRows = (nextSheetRows: SheetRows): SheetActions => {
 	return {
 		type: UPDATE_SHEET_ROWS,
     nextSheetRows,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Sheet Selection
+//-----------------------------------------------------------------------------
+export const UPDATE_SHEET_SELECTION = 'UPDATE_SHEET_SELECTION'
+interface UpdateSheetSelection {
+  type: typeof UPDATE_SHEET_SELECTION,
+  nextSheetSelection: { [cellId: string]: SheetCellSelectionType }
+}
+
+export const updateSheetSelection = (cellId: string, isShiftClicked: boolean): ThunkAction => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      active: { selections }
+    } = getState().sheet
+    if(!isShiftClicked) {
+      const isCellAlreadySelected = selections[cellId] !== undefined
+      if(!isCellAlreadySelected) {
+        batch(() => {
+          dispatch(updateSheetCellReducer(cellId, { selectionType: 'CELL' }))
+          Object.keys(selections).forEach(cellId => dispatch(updateSheetCellReducer(cellId, { selectionType: null })))
+        })
+        dispatch(updateSheetSelectionReducer({ [cellId]: 'CELL' }))
+      }
+    }
+  }
+}
+
+export const updateSheetSelectionReducer = (nextSheetSelection: { [cellId: string]: SheetCellSelectionType }): SheetActions => {
+	return {
+		type: UPDATE_SHEET_SELECTION,
+    nextSheetSelection,
 	}
 }
 

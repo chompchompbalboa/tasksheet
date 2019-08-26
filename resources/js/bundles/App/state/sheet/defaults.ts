@@ -27,7 +27,8 @@ export const defaultCell = (sheetId: string, rowId: string, columnId: string, ce
     sheetId: sheetId, 
     columnId: columnId,
     rowId: rowId,
-    value: ""
+    value: "",
+    selectionType: null
   }
 }
 

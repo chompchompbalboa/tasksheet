@@ -11,6 +11,7 @@ import {
   UPDATE_SHEET_FILTER, UPDATE_SHEET_FILTERS,
   UPDATE_SHEET_GROUP, UPDATE_SHEET_GROUPS,
   UPDATE_SHEET_ROW, UPDATE_SHEET_ROWS,
+  UPDATE_SHEET_SELECTION,
   UPDATE_SHEET_SORT, UPDATE_SHEET_SORTS,
 } from '@app/state/sheet/actions'
 
@@ -33,7 +34,8 @@ export interface SheetState {
 //-----------------------------------------------------------------------------
 const defaultSheetState: SheetState = {
   active: {
-    columnRenamingId: null
+    columnRenamingId: null,
+    selections: {}
   },
   sheets: null,
   cells: null,
@@ -169,6 +171,17 @@ export const userReducer = (state: SheetState = defaultSheetState, action: Sheet
 			return {
         ...state,
         rows: nextSheetRows
+      }
+		}
+      
+		case UPDATE_SHEET_SELECTION: {
+      const { nextSheetSelection } = action
+      return {
+        ...state,
+        active: {
+          ...state.active,
+          selections: nextSheetSelection
+        }
       }
 		}
 
