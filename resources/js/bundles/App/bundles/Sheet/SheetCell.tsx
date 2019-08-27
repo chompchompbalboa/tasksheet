@@ -76,7 +76,7 @@ const SheetCell = memo(({
       <Container
         ref={cellContainer}
         containerBoxShadow={getContainerBoxShadow()}
-        isCellSelected={cell.isCellSelected}
+        isCellSelected={cell.isCellSelected || cell.isRangeStart || cell.isRangeEnd}
         isRangeSelected={cell.isRangeStart || cell.isRangeEnd}
         onClick={handleClick}
         style={style}>
@@ -129,7 +129,7 @@ const Container = styled.div`
   background-color: ${ ({ isCellSelected }: ContainerProps ) => isCellSelected ? 'rgb(245, 245, 245)' : 'white' };
   overflow: ${ ({ isRangeSelected }: ContainerProps ) => isRangeSelected ? 'visible' : 'hidden' };
   &:hover {
-    background-color: ${ ({ isRangeSelected }: ContainerProps ) => isRangeSelected ? 'white' : 'rgb(245, 245, 245)' };
+    background-color: rgb(245, 245, 245);
   }
 `
 interface ContainerProps {
