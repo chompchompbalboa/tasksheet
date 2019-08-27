@@ -39,8 +39,10 @@ const defaultSheetState: SheetState = {
       cellId: null,
       rangeStartColumnId: null,
       rangeStartRowId: null,
+      rangeStartCellId: null,
       rangeEndColumnId: null,
       rangeEndRowId: null,
+      rangeEndCellId: null,
       rangeCellIds: null
     }
   },

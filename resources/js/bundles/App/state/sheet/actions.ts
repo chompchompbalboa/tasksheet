@@ -588,7 +588,14 @@ export const loadSheet = (sheetFromServer: SheetFromServer): ThunkAction => {
     sheetFromServer.rows.forEach(row => { 
       let rowCells: { [columnId: string]: SheetCell['id'] }  = {}
       row.cells.forEach(cell => {
-        normalizedCells[cell.id] = { ...cell, selectionType: null }
+        normalizedCells[cell.id] = { 
+          ...cell, 
+          isCellSelected: false,
+          isRangeStart: false,
+          isRangeEnd: false,
+          rangeWidth: null,
+          rangeHeight: null,
+        }
         rowCells[cell.columnId] = cell.id
       })
       normalizedRows[row.id] = { id: row.id, sheetId: sheetFromServer.id, cells: rowCells}
@@ -950,37 +957,48 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
     const {
       active: { selections },
       cells,
+      columns,
       rows,
       sheets: {
         [sheetId]: { visibleRows, visibleColumns }
       }
     } = getState().sheet
     const cell = cells[cellId]
-    const isCellAlreadySelected = cell.selectionType !== null
-    const isRangeAlreadySelected = selections.rangeCellIds !== null
     if(!isShiftClicked) {
-      if(!isCellAlreadySelected || isRangeAlreadySelected) {
+      if(!cell.isCellSelected || cell.isRangeStart) {
         batch(() => {
           // Remove highlight from previously highlighted cells
-          dispatch(updateSheetCellReducer(selections.cellId, { selectionType: null }))
-          if(isRangeAlreadySelected) {
-            selections.rangeCellIds.forEach(rangeCellId => dispatch(updateSheetCellReducer(rangeCellId, { selectionType: null })))
-          }
+          dispatch(updateSheetCellReducer(selections.rangeStartCellId, { 
+            isCellSelected: false,
+            isRangeStart: false,
+            isRangeEnd: false,
+            rangeHeight: null,
+            rangeWidth: null
+          }))
+          dispatch(updateSheetCellReducer(selections.rangeEndCellId, { 
+            isCellSelected: false,
+            isRangeStart: false,
+            isRangeEnd: false,
+            rangeHeight: null,
+            rangeWidth: null
+          }))
           // Update next highlighted cell
-          dispatch(updateSheetCellReducer(cellId, { selectionType: 'CELL' }))
+          dispatch(updateSheetCellReducer(cellId, { isCellSelected: true }))
           // Update active selections
           dispatch(updateSheetSelectionReducer({ 
             cellId: cellId, 
             rangeStartColumnId: cell.columnId, 
             rangeStartRowId: cell.rowId, 
+            rangeStartCellId: cell.id,
             rangeEndColumnId: null, 
             rangeEndRowId: null,
+            rangeEndCellId: null,
             rangeCellIds: null
           })) 
         })
       }
     }
-    else if(isShiftClicked && !isCellAlreadySelected) {
+    else if(isShiftClicked) {
       batch(() => {
         const startColumnIndex = visibleColumns.indexOf(selections.rangeStartColumnId)
         const startRowIndex = visibleRows.indexOf(selections.rangeStartRowId)
@@ -989,22 +1007,42 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
         const nextEndColumnIndex = visibleColumns.indexOf(nextEndColumnId)
         const nextEndRowIndex = visibleRows.indexOf(nextEndRowId)
         let nextRangeCellIds = []
+        let nextRangeHeight = 0
+        let nextRangeWidth = 0
+        // Calculate range width
         for(let columnIndex = startColumnIndex; columnIndex <= nextEndColumnIndex; columnIndex++) {
           const columnId = visibleColumns[columnIndex]
+          const column = columns[columnId]
+          nextRangeWidth = columnId === 'COLUMN_BREAK' ? nextRangeWidth + 10 : nextRangeWidth + column.width // Column or column break width
+          // Add cells to the next range
           for(let rowIndex = startRowIndex; rowIndex <= nextEndRowIndex; rowIndex++) {
             const rowId = visibleRows[rowIndex]
             if(rowId !== 'ROW_BREAK') {
               const row = rows[rowId]
               const currentCellId = row.cells[columnId]
-              dispatch(updateSheetCellReducer(currentCellId, { selectionType: 'CELL' }))
               nextRangeCellIds.push(currentCellId)
             }
           }
         }
+        // Calculate range height
+        for(let rowIndex = startRowIndex; rowIndex <= nextEndRowIndex; rowIndex++) {
+          nextRangeHeight = nextRangeHeight + 24
+        }
+        dispatch(updateSheetCellReducer(selections.cellId, { 
+          isRangeStart: true,
+          rangeWidth: nextRangeWidth,
+          rangeHeight: nextRangeHeight
+        }))
+        dispatch(updateSheetCellReducer(cellId, { 
+          isRangeEnd: true,
+          rangeWidth: nextRangeWidth,
+          rangeHeight: nextRangeHeight
+        }))
         dispatch(updateSheetSelectionReducer({
           ...selections,
           rangeEndColumnId: nextEndColumnId, 
           rangeEndRowId: nextEndRowId,
+          rangeEndCellId: cellId,
           rangeCellIds: nextRangeCellIds
         }))
       })

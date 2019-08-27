@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { forwardRef, memo, MouseEvent, useCallback, useLayoutEffect, useRef } from 'react'
+import React, { ReactText, forwardRef, memo, MouseEvent, useCallback, useLayoutEffect, useRef } from 'react'
 import { areEqual, VariableSizeGrid as Grid } from 'react-window'
 import styled from 'styled-components'
 
@@ -72,7 +72,7 @@ const SheetGrid = memo(({
   const Cell = ({ 
     columnIndex, 
     rowIndex, 
-    style 
+    style
   }: CellProps) => {
     const columnId = sheetVisibleColumns[columnIndex - 1]
     const rowId = sheetVisibleRows[rowIndex]
@@ -144,7 +144,9 @@ interface SheetGridProps {
 interface CellProps {
   columnIndex: number
   rowIndex: number
-  style: {}
+  style: {
+    width?: ReactText
+  }
 }
 
 //-----------------------------------------------------------------------------

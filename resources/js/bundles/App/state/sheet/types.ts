@@ -20,8 +20,10 @@ export type SheetActiveSelections = {
   cellId: SheetCell['id']
   rangeStartColumnId: SheetColumn['id']
   rangeStartRowId: SheetRow['id']
+  rangeStartCellId: SheetCell['id']
   rangeEndColumnId: SheetColumn['id']
   rangeEndRowId: SheetRow['id']
+  rangeEndCellId: SheetCell['id']
   rangeCellIds: SheetCell['id'][]
 }
 
@@ -110,11 +112,19 @@ export type SheetCell = {
 	columnId: string
 	rowId: string
 	value: string
-  selectionType: SheetCellSelectionType
+  isCellSelected: boolean
+  isRangeStart: boolean
+  isRangeEnd: boolean
+  rangeHeight: number
+  rangeWidth: number
 }
 export interface SheetCellUpdates {
-  selectionType?: SheetCellSelectionType
-	value?: string
+  value?: string
+  isCellSelected?: boolean
+  isRangeStart?: boolean
+  isRangeEnd?: boolean
+  rangeHeight?: number
+  rangeWidth?: number
 }
 export type SheetCellSelectionType = 
   'CELL' | 

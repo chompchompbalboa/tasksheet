@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { memo, MouseEvent, useEffect, useRef, useState } from 'react'
+import React, { ReactText, memo, MouseEvent, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { areEqual } from 'react-window'
 import styled from 'styled-components'
@@ -66,24 +66,34 @@ const SheetCell = memo(({
     updateSheetSelection(cell.id, e.shiftKey)
   }
   const getContainerBoxShadow = () => {
-    if(cell && cell.selectionType !== null) {
+    if(cell && cell.isCellSelected) {
       return 'inset 0px 0px 0px 2px ' + highlightColor
     }
     return 'none'
   }
-  
   return (
-    <Container
-      ref={cellContainer}
-      containerBoxShadow={getContainerBoxShadow()}
-      isSelected={cell && cell.selectionType !== null}
-      onClick={handleClick}
-      style={style}>
-      <SheetCellType
-        cellId={cell.id}
-        updateCellValue={setCellValue}
-        value={cellValue}/>
-    </Container>
+    <>
+      <Container
+        ref={cellContainer}
+        containerBoxShadow={getContainerBoxShadow()}
+        isCellSelected={cell.isCellSelected}
+        isRangeSelected={cell.isRangeStart || cell.isRangeEnd}
+        onClick={handleClick}
+        style={style}>
+        <RangeSelection
+          cellHeight={24}
+          cellWidth={style.width as number}
+          highlightColor={highlightColor}
+          isRangeStart={cell.isRangeStart}
+          isRangeEnd={cell.isRangeEnd}
+          rangeWidth={cell.rangeWidth}
+          rangeHeight={cell.rangeHeight}/>
+        <SheetCellType
+          cellId={cell.id}
+          updateCellValue={setCellValue}
+          value={cellValue}/>
+      </Container>
+    </>
   )
 }, areEqual)
 
@@ -95,7 +105,9 @@ interface SheetCellProps {
   cell?: SheetCell
   highlightColor: string
   sheetId: string
-  style: {}
+  style: {
+    width?: ReactText
+  }
   type: SheetColumnType
   updateSheetCell(cellId: string, updates: SheetCellUpdates, undoUpdates?: SheetCellUpdates, skipServerUpdate?: boolean): void
   updateSheetSelection(cellId: string, isShiftPressed: boolean): void
@@ -105,6 +117,7 @@ interface SheetCellProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  z-index: ${ ({ isRangeSelected }: ContainerProps ) => isRangeSelected ? '10' : '5' };
   position: relative;
   cursor: default;
   padding: 0.15rem 0.25rem;
@@ -113,17 +126,37 @@ const Container = styled.div`
   border-bottom: 0.5px solid rgb(180, 180, 180);
   box-shadow: ${ ({ containerBoxShadow }: ContainerProps ) => containerBoxShadow };
   user-select: none;
-  background-color: ${ ({ isSelected }: ContainerProps ) => isSelected ? 'rgb(245, 245, 245)' : 'white' };
-  overflow: hidden;
+  background-color: ${ ({ isCellSelected }: ContainerProps ) => isCellSelected ? 'rgb(245, 245, 245)' : 'white' };
+  overflow: ${ ({ isRangeSelected }: ContainerProps ) => isRangeSelected ? 'visible' : 'hidden' };
   &:hover {
-    background-color: rgb(245, 245, 245);
+    background-color: ${ ({ isRangeSelected }: ContainerProps ) => isRangeSelected ? 'white' : 'rgb(245, 245, 245)' };
   }
 `
 interface ContainerProps {
   containerBoxShadow: string
-  isSelected: boolean
+  isCellSelected: boolean
+  isRangeSelected: boolean
 }
 
+const RangeSelection = styled.div`
+  display: ${ ({ isRangeStart, isRangeEnd }: RangeSelectionProps ) => isRangeStart || isRangeEnd ? 'block' : 'none' };
+  position: absolute;
+  top: ${ ({ cellHeight, isRangeStart, rangeHeight }: RangeSelectionProps ) => isRangeStart ? 0 : -(rangeHeight - cellHeight) + 'px' };
+  left: ${ ({ cellWidth, isRangeStart, rangeWidth }: RangeSelectionProps ) => isRangeStart ? 0 : -(rangeWidth - cellWidth) + 'px' };
+  width: ${ ({ rangeWidth }: RangeSelectionProps ) => rangeWidth + 'px' };
+  height: ${ ({ rangeHeight }: RangeSelectionProps ) => rangeHeight + 'px' };
+  background-color: ${ ({ highlightColor }: RangeSelectionProps ) => highlightColor };
+  opacity: ${ ({ isRangeEnd }: RangeSelectionProps ) => isRangeEnd ? '0.15' : '0.075' };
+`
+interface RangeSelectionProps {
+  cellWidth: number
+  cellHeight: number
+  highlightColor: string
+  isRangeStart: boolean
+  isRangeEnd: boolean
+  rangeWidth: number
+  rangeHeight: number
+}
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------

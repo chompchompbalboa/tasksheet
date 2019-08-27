@@ -28,7 +28,11 @@ export const defaultCell = (sheetId: string, rowId: string, columnId: string, ce
     columnId: columnId,
     rowId: rowId,
     value: "",
-    selectionType: null
+    isCellSelected: false,
+    isRangeStart: false,
+    isRangeEnd: false,
+    rangeWidth: null,
+    rangeHeight: null
   }
 }
 
