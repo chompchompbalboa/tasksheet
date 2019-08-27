@@ -964,24 +964,20 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
       }
     } = getState().sheet
     const cell = cells[cellId]
+    const nextStateForCellsRemovingHighlight: SheetCellUpdates = { 
+      isCellSelected: false,
+      isRangeStart: false,
+      isRangeEnd: false,
+      rangeHeight: null,
+      rangeWidth: null
+    }
     if(!isShiftClicked) {
       if(!cell.isCellSelected || cell.isRangeStart) {
         batch(() => {
           // Remove highlight from previously highlighted cells
-          dispatch(updateSheetCellReducer(selections.rangeStartCellId, { 
-            isCellSelected: false,
-            isRangeStart: false,
-            isRangeEnd: false,
-            rangeHeight: null,
-            rangeWidth: null
-          }))
-          dispatch(updateSheetCellReducer(selections.rangeEndCellId, { 
-            isCellSelected: false,
-            isRangeStart: false,
-            isRangeEnd: false,
-            rangeHeight: null,
-            rangeWidth: null
-          }))
+          dispatch(updateSheetCellReducer(selections.rangeStartCellId, nextStateForCellsRemovingHighlight))
+          dispatch(updateSheetCellReducer(selections.rangeEndCellId, nextStateForCellsRemovingHighlight))
+          dispatch(updateSheetCellReducer(selections.cellId, nextStateForCellsRemovingHighlight))
           // Update next highlighted cell
           dispatch(updateSheetCellReducer(cellId, { isCellSelected: true }))
           // Update active selections
@@ -1000,22 +996,32 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
     }
     else if(isShiftClicked) {
       batch(() => {
-        const startColumnIndex = visibleColumns.indexOf(selections.rangeStartColumnId)
-        const startRowIndex = visibleRows.indexOf(selections.rangeStartRowId)
-        const nextEndColumnId = cell.columnId
-        const nextEndRowId = cell.rowId
-        const nextEndColumnIndex = visibleColumns.indexOf(nextEndColumnId)
-        const nextEndRowIndex = visibleRows.indexOf(nextEndRowId)
+        const rangeStartColumnIndex = visibleColumns.indexOf(selections.rangeStartColumnId) > -1 ? visibleColumns.indexOf(selections.rangeStartColumnId) : null
+        const rangeStartRowIndex = visibleRows.indexOf(selections.rangeStartRowId) > -1 ? visibleRows.indexOf(selections.rangeStartRowId) : null
+        const rangeEndColumnIndex = visibleColumns.indexOf(selections.rangeEndColumnId) > -1 ? visibleColumns.indexOf(selections.rangeEndColumnId) : null
+        const rangeEndRowIndex = visibleRows.indexOf(selections.rangeEndRowId) > -1 ? visibleRows.indexOf(selections.rangeEndRowId) : null
+        const cellColumnIndex = visibleColumns.indexOf(cell.columnId) > -1 ? visibleColumns.indexOf(cell.columnId) : null
+        const cellRowIndex = visibleRows.indexOf(cell.rowId) > -1 ? visibleRows.indexOf(cell.rowId) : null
+        const nextRangeStartColumnIndex = Math.min(...[rangeStartColumnIndex, rangeEndColumnIndex, cellColumnIndex].filter(Boolean))
+        const nextRangeStartRowIndex = Math.min(...[rangeStartRowIndex, rangeEndRowIndex, cellRowIndex].filter(Boolean))
+        const nextRangeEndColumnIndex = Math.max(...[rangeStartColumnIndex, rangeEndColumnIndex, cellColumnIndex].filter(Boolean))
+        const nextRangeEndRowIndex = Math.max(...[rangeStartRowIndex, rangeEndRowIndex, cellRowIndex].filter(Boolean))
+        const nextRangeStartColumnId = visibleColumns[nextRangeStartColumnIndex]
+        const nextRangeStartRowId = visibleRows[nextRangeStartRowIndex]
+        const nextRangeStartCellId = rows[nextRangeStartRowId].cells[nextRangeStartColumnId]
+        const nextRangeEndColumnId = visibleColumns[nextRangeEndColumnIndex]
+        const nextRangeEndRowId = visibleRows[nextRangeEndRowIndex]
+        const nextRangeEndCellId = rows[nextRangeEndRowId].cells[nextRangeEndColumnId]
         let nextRangeCellIds = []
         let nextRangeHeight = 0
         let nextRangeWidth = 0
         // Calculate range width
-        for(let columnIndex = startColumnIndex; columnIndex <= nextEndColumnIndex; columnIndex++) {
+        for(let columnIndex = nextRangeStartColumnIndex; columnIndex <= nextRangeEndColumnIndex; columnIndex++) {
           const columnId = visibleColumns[columnIndex]
           const column = columns[columnId]
           nextRangeWidth = columnId === 'COLUMN_BREAK' ? nextRangeWidth + 10 : nextRangeWidth + column.width // Column or column break width
           // Add cells to the next range
-          for(let rowIndex = startRowIndex; rowIndex <= nextEndRowIndex; rowIndex++) {
+          for(let rowIndex = nextRangeStartRowIndex; rowIndex <= nextRangeEndRowIndex; rowIndex++) {
             const rowId = visibleRows[rowIndex]
             if(rowId !== 'ROW_BREAK') {
               const row = rows[rowId]
@@ -1025,24 +1031,31 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
           }
         }
         // Calculate range height
-        for(let rowIndex = startRowIndex; rowIndex <= nextEndRowIndex; rowIndex++) {
+        for(let rowIndex = nextRangeStartRowIndex; rowIndex <= nextRangeEndRowIndex; rowIndex++) {
           nextRangeHeight = nextRangeHeight + 24
         }
-        dispatch(updateSheetCellReducer(selections.cellId, { 
+        // Update previous range start and end
+        dispatch(updateSheetCellReducer(selections.rangeStartCellId, nextStateForCellsRemovingHighlight))
+        dispatch(updateSheetCellReducer(selections.rangeEndCellId, nextStateForCellsRemovingHighlight))
+        // Update next range start and end
+        dispatch(updateSheetCellReducer(nextRangeStartCellId, { 
           isRangeStart: true,
           rangeWidth: nextRangeWidth,
           rangeHeight: nextRangeHeight
         }))
-        dispatch(updateSheetCellReducer(cellId, { 
+        dispatch(updateSheetCellReducer(nextRangeEndCellId, { 
           isRangeEnd: true,
           rangeWidth: nextRangeWidth,
           rangeHeight: nextRangeHeight
         }))
         dispatch(updateSheetSelectionReducer({
           ...selections,
-          rangeEndColumnId: nextEndColumnId, 
-          rangeEndRowId: nextEndRowId,
-          rangeEndCellId: cellId,
+          rangeStartColumnId: nextRangeStartColumnId,
+          rangeStartRowId: nextRangeStartRowId,
+          rangeStartCellId: nextRangeStartCellId,
+          rangeEndColumnId: nextRangeEndColumnId, 
+          rangeEndRowId: nextRangeEndRowId,
+          rangeEndCellId: nextRangeEndCellId,
           rangeCellIds: nextRangeCellIds
         }))
       })
