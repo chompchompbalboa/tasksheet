@@ -31,6 +31,7 @@ const SheetGrid = memo(({
   updateSheetCell,
   updateSheetColumn,
   updateSheetSelection,
+  updateSheetSelectionOnCellMountOrUnmount,
   sheetVisibleColumns,
   sheetVisibleRows,
 }: SheetGridProps) => {
@@ -85,7 +86,8 @@ const SheetGrid = memo(({
           style={style}
           type={columns[columnId].type}
           updateSheetCell={updateSheetCell}
-          updateSheetSelection={updateSheetSelection}/>
+          updateSheetSelection={updateSheetSelection}
+          updateSheetSelectionOnCellMountOrUnmount={updateSheetSelectionOnCellMountOrUnmount}/>
       )
     }
     if(columnIndex === 0) {
@@ -137,6 +139,7 @@ interface SheetGridProps {
   updateSheetCell(cellId: string, updates: SheetCellUpdates, undoUpdates?: SheetCellUpdates, skipServerUpdate?: boolean): void
   updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
   updateSheetSelection(cellId: string, isShiftPressed: boolean): void
+  updateSheetSelectionOnCellMountOrUnmount(cellId: string, mountOrUnmount: 'MOUNT' | 'UNMOUNT'): void
   sheetVisibleColumns: SheetColumn['id'][]
   sheetVisibleRows: SheetRow['id'][]
 }

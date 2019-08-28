@@ -18,6 +18,8 @@ export type SheetActiveUpdates = {
 }
 export type SheetActiveSelections = {
   cellId: SheetCell['id']
+  isRangeStartCellRendered: boolean
+  isRangeEndCellRendered: boolean
   rangeStartColumnId: SheetColumn['id']
   rangeStartRowId: SheetRow['id']
   rangeStartCellId: SheetCell['id']
@@ -115,6 +117,7 @@ export type SheetCell = {
   isCellSelected: boolean
   isRangeStart: boolean
   isRangeEnd: boolean
+  isRangeRenderedFromOtherEnd: boolean
   rangeHeight: number
   rangeWidth: number
 }
@@ -123,13 +126,10 @@ export interface SheetCellUpdates {
   isCellSelected?: boolean
   isRangeStart?: boolean
   isRangeEnd?: boolean
+  isRangeRenderedFromOtherEnd?: boolean
   rangeHeight?: number
   rangeWidth?: number
 }
-export type SheetCellSelectionType = 
-  'CELL' | 
-  'ROW_FIRST' | 'ROW_MIDDLE' | 'ROW_LAST' |
-  'COLUMN_FIRST' | 'COLUMN_MIDDLE' | 'COLUMN_LAST'
 
 export type SheetSort = {
   id: string

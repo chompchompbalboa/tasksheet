@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { ReactText, memo, MouseEvent, useEffect, useRef, useState } from 'react'
+import React, { ReactText, memo, MouseEvent, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { areEqual } from 'react-window'
 import styled from 'styled-components'
@@ -32,7 +32,8 @@ const SheetCell = memo(({
   style,
   type,
   updateSheetCell,
-  updateSheetSelection
+  updateSheetSelection,
+  updateSheetSelectionOnCellMountOrUnmount
 }: SheetCellProps) => {
   // Refs
   const cellContainer = useRef(null)
@@ -42,7 +43,7 @@ const SheetCell = memo(({
     if(cellValue !== cell.value) {
       setCellValue(cell.value)
     }
-  }, [ cell ])
+  }, [ cell.value ])
   useEffect(() => {
     let updateSheetCellTimer: number = null
     if(cell && cellValue !== cell.value) {
@@ -66,18 +67,23 @@ const SheetCell = memo(({
     updateSheetSelection(cell.id, e.shiftKey)
   }
   const getContainerBoxShadow = () => {
-    if(cell && cell.isCellSelected) {
-      return 'inset 0px 0px 0px 2px ' + highlightColor
-    }
+    if(cell && (cell.isCellSelected || cell.isRangeStart)) { return 'inset 0px 0px 0px 2px ' + highlightColor }
     return 'none'
   }
+  useLayoutEffect(() => {
+    if(cell.isRangeStart || cell.isRangeEnd) { updateSheetSelectionOnCellMountOrUnmount(cell.id, 'MOUNT') }
+  }, [])
+  useLayoutEffect(() => {
+    return () => { if(cell.isRangeStart || cell.isRangeEnd) { updateSheetSelectionOnCellMountOrUnmount(cell.id, 'UNMOUNT') }}
+  }, [ cell.isRangeStart, cell.isRangeEnd ])
+  
   return (
     <>
       <Container
         ref={cellContainer}
         containerBoxShadow={getContainerBoxShadow()}
-        isCellSelected={cell.isCellSelected || cell.isRangeStart || cell.isRangeEnd}
-        isRangeSelected={cell.isRangeStart || cell.isRangeEnd}
+        isCellSelected={cell.isCellSelected || cell.isRangeStart}
+        isRangeSelected={(cell.isRangeStart || cell.isRangeEnd) && !cell.isRangeRenderedFromOtherEnd}
         onClick={handleClick}
         style={style}>
         <RangeSelection
@@ -86,6 +92,7 @@ const SheetCell = memo(({
           highlightColor={highlightColor}
           isRangeStart={cell.isRangeStart}
           isRangeEnd={cell.isRangeEnd}
+          isRangeRenderedFromOtherEnd={cell.isRangeRenderedFromOtherEnd}
           rangeWidth={cell.rangeWidth}
           rangeHeight={cell.rangeHeight}/>
         <SheetCellType
@@ -111,6 +118,7 @@ interface SheetCellProps {
   type: SheetColumnType
   updateSheetCell(cellId: string, updates: SheetCellUpdates, undoUpdates?: SheetCellUpdates, skipServerUpdate?: boolean): void
   updateSheetSelection(cellId: string, isShiftPressed: boolean): void
+  updateSheetSelectionOnCellMountOrUnmount(cellId: string, mountOrUnmount: 'MOUNT' | 'UNMOUNT'): void
 }
 
 //-----------------------------------------------------------------------------
@@ -126,10 +134,10 @@ const Container = styled.div`
   border-bottom: 0.5px solid rgb(180, 180, 180);
   box-shadow: ${ ({ containerBoxShadow }: ContainerProps ) => containerBoxShadow };
   user-select: none;
-  background-color: ${ ({ isCellSelected }: ContainerProps ) => isCellSelected ? 'rgb(245, 245, 245)' : 'white' };
+  background-color: ${ ({ isCellSelected, isRangeSelected }: ContainerProps ) => isCellSelected && !isRangeSelected ? 'rgb(245, 245, 245)' : 'white' };
   overflow: ${ ({ isRangeSelected }: ContainerProps ) => isRangeSelected ? 'visible' : 'hidden' };
   &:hover {
-    background-color: rgb(245, 245, 245);
+    background-color: ${ ({ isRangeSelected }: ContainerProps ) => !isRangeSelected ? 'rgb(245, 245, 245)' : 'white' };
   }
 `
 interface ContainerProps {
@@ -139,14 +147,14 @@ interface ContainerProps {
 }
 
 const RangeSelection = styled.div`
-  display: ${ ({ isRangeStart, isRangeEnd }: RangeSelectionProps ) => isRangeStart || isRangeEnd ? 'block' : 'none' };
+  display: ${ ({ isRangeStart, isRangeEnd, isRangeRenderedFromOtherEnd }: RangeSelectionProps ) => ((isRangeStart || isRangeEnd) && !isRangeRenderedFromOtherEnd) ? 'block' : 'none' };
   position: absolute;
   top: ${ ({ cellHeight, isRangeStart, rangeHeight }: RangeSelectionProps ) => isRangeStart ? 0 : -(rangeHeight - cellHeight) + 'px' };
   left: ${ ({ cellWidth, isRangeStart, rangeWidth }: RangeSelectionProps ) => isRangeStart ? 0 : -(rangeWidth - cellWidth) + 'px' };
   width: ${ ({ rangeWidth }: RangeSelectionProps ) => rangeWidth + 'px' };
   height: ${ ({ rangeHeight }: RangeSelectionProps ) => rangeHeight + 'px' };
   background-color: ${ ({ highlightColor }: RangeSelectionProps ) => highlightColor };
-  opacity: ${ ({ isRangeEnd }: RangeSelectionProps ) => isRangeEnd ? '0.15' : '0.075' };
+  opacity: 0.15;
 `
 interface RangeSelectionProps {
   cellWidth: number
@@ -154,6 +162,7 @@ interface RangeSelectionProps {
   highlightColor: string
   isRangeStart: boolean
   isRangeEnd: boolean
+  isRangeRenderedFromOtherEnd: boolean
   rangeWidth: number
   rangeHeight: number
 }

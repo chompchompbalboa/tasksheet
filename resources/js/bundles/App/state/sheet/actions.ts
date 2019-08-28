@@ -593,6 +593,7 @@ export const loadSheet = (sheetFromServer: SheetFromServer): ThunkAction => {
           isCellSelected: false,
           isRangeStart: false,
           isRangeEnd: false,
+          isRangeRenderedFromOtherEnd: false,
           rangeWidth: null,
           rangeHeight: null,
         }
@@ -981,8 +982,10 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
           // Update next highlighted cell
           dispatch(updateSheetCellReducer(cellId, { isCellSelected: true }))
           // Update active selections
-          dispatch(updateSheetSelectionReducer({ 
-            cellId: cellId, 
+          dispatch(updateSheetSelectionReducer({
+            cellId: cellId,
+            isRangeStartCellRendered: true,
+            isRangeEndCellRendered: false,
             rangeStartColumnId: cell.columnId, 
             rangeStartRowId: cell.rowId, 
             rangeStartCellId: cell.id,
@@ -1002,10 +1005,10 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
         const rangeEndRowIndex = visibleRows.indexOf(selections.rangeEndRowId) > -1 ? visibleRows.indexOf(selections.rangeEndRowId) : null
         const cellColumnIndex = visibleColumns.indexOf(cell.columnId) > -1 ? visibleColumns.indexOf(cell.columnId) : null
         const cellRowIndex = visibleRows.indexOf(cell.rowId) > -1 ? visibleRows.indexOf(cell.rowId) : null
-        const nextRangeStartColumnIndex = Math.min(...[rangeStartColumnIndex, rangeEndColumnIndex, cellColumnIndex].filter(Boolean))
-        const nextRangeStartRowIndex = Math.min(...[rangeStartRowIndex, rangeEndRowIndex, cellRowIndex].filter(Boolean))
-        const nextRangeEndColumnIndex = Math.max(...[rangeStartColumnIndex, rangeEndColumnIndex, cellColumnIndex].filter(Boolean))
-        const nextRangeEndRowIndex = Math.max(...[rangeStartRowIndex, rangeEndRowIndex, cellRowIndex].filter(Boolean))
+        const nextRangeStartColumnIndex = Math.min(...[rangeStartColumnIndex, rangeEndColumnIndex, cellColumnIndex].filter(index => index !== null))
+        const nextRangeStartRowIndex = Math.min(...[rangeStartRowIndex, rangeEndRowIndex, cellRowIndex].filter(index => index !== null))
+        const nextRangeEndColumnIndex = Math.max(...[rangeStartColumnIndex, rangeEndColumnIndex, cellColumnIndex].filter(index => index !== null))
+        const nextRangeEndRowIndex = Math.max(...[rangeStartRowIndex, rangeEndRowIndex, cellRowIndex].filter(index => index !== null))
         const nextRangeStartColumnId = visibleColumns[nextRangeStartColumnIndex]
         const nextRangeStartRowId = visibleRows[nextRangeStartRowIndex]
         const nextRangeStartCellId = rows[nextRangeStartRowId].cells[nextRangeStartColumnId]
@@ -1040,16 +1043,20 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
         // Update next range start and end
         dispatch(updateSheetCellReducer(nextRangeStartCellId, { 
           isRangeStart: true,
+          isRangeRenderedFromOtherEnd: true,
           rangeWidth: nextRangeWidth,
           rangeHeight: nextRangeHeight
         }))
         dispatch(updateSheetCellReducer(nextRangeEndCellId, { 
           isRangeEnd: true,
+          isRangeRenderedFromOtherEnd: false,
           rangeWidth: nextRangeWidth,
           rangeHeight: nextRangeHeight
         }))
         dispatch(updateSheetSelectionReducer({
           ...selections,
+          isRangeStartCellRendered: true,
+          isRangeEndCellRendered: true,
           rangeStartColumnId: nextRangeStartColumnId,
           rangeStartRowId: nextRangeStartRowId,
           rangeStartCellId: nextRangeStartCellId,
@@ -1058,6 +1065,49 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
           rangeEndCellId: nextRangeEndCellId,
           rangeCellIds: nextRangeCellIds
         }))
+      })
+    }
+  }
+}
+
+export const updateSheetSelectionOnCellMountOrUnmount = (cellId: SheetCell['id'], mountOrUnmount: 'MOUNT' | 'UNMOUNT'): ThunkAction => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      active: { selections },
+      cells
+    } = getState().sheet
+    const isCellRangeStartOrEnd = cellId === selections.rangeStartCellId ? 'START' : (cellId === selections.rangeEndCellId ? 'END' : null)
+    if(isCellRangeStartOrEnd) {
+      const rangeStartCell = cells[selections.rangeStartCellId]
+      const rangeEndCell = cells[selections.rangeEndCellId]
+      const nextRangeRenderedFrom = 
+            (isCellRangeStartOrEnd === 'END' && mountOrUnmount === 'UNMOUNT' && selections.isRangeStartCellRendered) ||
+            (isCellRangeStartOrEnd === 'START' && mountOrUnmount === 'MOUNT' && !selections.isRangeEndCellRendered)
+              ? 'START'
+              : 'END'
+      const rangeStartCellUpdates = {
+        isRangeRenderedFromOtherEnd: nextRangeRenderedFrom === 'END'
+      }
+      const rangeEndCellUpdates = {
+        isRangeRenderedFromOtherEnd: nextRangeRenderedFrom === 'START'
+      }
+      batch(() => {
+        if(isCellRangeStartOrEnd === 'START') {
+          const isRangeStartCellRendered = mountOrUnmount === 'MOUNT'
+          dispatch(updateSheetSelectionReducer({
+            ...selections,
+            isRangeStartCellRendered: isRangeStartCellRendered
+          }))
+        }
+        if(isCellRangeStartOrEnd === 'END') {
+          const isRangeEndCellRendered = mountOrUnmount === 'MOUNT'
+          dispatch(updateSheetSelectionReducer({
+            ...selections,
+            isRangeEndCellRendered: isRangeEndCellRendered
+          }))
+        }
+        dispatch(updateSheetCellReducer(rangeStartCell.id, rangeStartCellUpdates))
+        dispatch(updateSheetCellReducer(rangeEndCell.id, rangeEndCellUpdates))
       })
     }
   }

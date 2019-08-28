@@ -37,6 +37,8 @@ const defaultSheetState: SheetState = {
     columnRenamingId: null,
     selections: {
       cellId: null,
+      isRangeStartCellRendered: false,
+      isRangeEndCellRendered: false,
       rangeStartColumnId: null,
       rangeStartRowId: null,
       rangeStartCellId: null,
