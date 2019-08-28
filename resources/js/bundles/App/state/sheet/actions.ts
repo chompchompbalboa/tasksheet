@@ -975,20 +975,22 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
     if(!isShiftClicked) {
       if(!cell.isCellSelected || cell.isRangeStart) {
         batch(() => {
+          const nextSelectionCellId = cellId === selections.rangeEndCellId ? selections.rangeStartCellId : cellId
+          const nextSelectionCell = cells[nextSelectionCellId]
           // Remove highlight from previously highlighted cells
           dispatch(updateSheetCellReducer(selections.rangeStartCellId, nextStateForCellsRemovingHighlight))
           dispatch(updateSheetCellReducer(selections.rangeEndCellId, nextStateForCellsRemovingHighlight))
           dispatch(updateSheetCellReducer(selections.cellId, nextStateForCellsRemovingHighlight))
           // Update next highlighted cell
-          dispatch(updateSheetCellReducer(cellId, { isCellSelected: true }))
+          dispatch(updateSheetCellReducer(nextSelectionCell.id, { isCellSelected: true }))
           // Update active selections
           dispatch(updateSheetSelectionReducer({
-            cellId: cellId,
+            cellId: nextSelectionCellId,
             isRangeStartCellRendered: true,
             isRangeEndCellRendered: false,
-            rangeStartColumnId: cell.columnId, 
-            rangeStartRowId: cell.rowId, 
-            rangeStartCellId: cell.id,
+            rangeStartColumnId: nextSelectionCell.columnId, 
+            rangeStartRowId: nextSelectionCell.rowId, 
+            rangeStartCellId: nextSelectionCell.id,
             rangeEndColumnId: null, 
             rangeEndRowId: null,
             rangeEndCellId: null,
