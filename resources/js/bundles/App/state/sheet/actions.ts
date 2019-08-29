@@ -1109,12 +1109,14 @@ export const updateSheetSelectionOnCellMountOrUnmount = (cellId: SheetCell['id']
           dispatch(updateSheetSelectionReducer({
             ...selections,
             isRangeStartCellRendered: nextIsRangeStartCellRendered,
+            isRangeEndCellRendered: nextIsRangeEndCellRendered,
             shouldRangeHelperRender: nextShouldRangeHelperRender
           }))
         }
         if(isCellRangeStartOrEnd === 'END') {
           dispatch(updateSheetSelectionReducer({
             ...selections,
+            isRangeStartCellRendered: nextIsRangeStartCellRendered,
             isRangeEndCellRendered: nextIsRangeEndCellRendered,
             shouldRangeHelperRender: nextShouldRangeHelperRender
           }))
@@ -1127,6 +1129,7 @@ export const updateSheetSelectionOnCellMountOrUnmount = (cellId: SheetCell['id']
 }
 
 export const clearSheetSelection = (): ThunkAction => {
+  console.log(clearSheetSelection)
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       active: { 
@@ -1209,6 +1212,7 @@ export const updateSheetSelectedCell = (sheetId: Sheet['id'], cellId: SheetCell[
 }
 
 export const updateSheetSelectionReducer = (nextSheetSelection: SheetActiveSelections): SheetActions => {
+  console.log(nextSheetSelection.isRangeStartCellRendered)
 	return {
 		type: UPDATE_SHEET_SELECTION,
     nextSheetSelection,
