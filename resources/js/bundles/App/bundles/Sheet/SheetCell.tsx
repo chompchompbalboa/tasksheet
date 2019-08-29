@@ -28,10 +28,10 @@ const mapStateToProps = (state: AppState, props: SheetCellProps) => ({
 const SheetCell = memo(({
   cell,
   highlightColor,
-  sheetId,
   style,
   type,
   updateSheetCell,
+  updateSheetSelectedCell,
   updateSheetSelection,
   updateSheetSelectionOnCellMountOrUnmount
 }: SheetCellProps) => {
@@ -97,7 +97,9 @@ const SheetCell = memo(({
           rangeHeight={cell.rangeHeight}/>
         <SheetCellType
           cellId={cell.id}
+          isCellSelected={cell.isCellSelected || cell.isRangeStart}
           updateCellValue={setCellValue}
+          updateSheetSelectedCell={updateSheetSelectedCell}
           value={cellValue}/>
       </Container>
     </>
@@ -117,6 +119,7 @@ interface SheetCellProps {
   }
   type: SheetColumnType
   updateSheetCell(cellId: string, updates: SheetCellUpdates, undoUpdates?: SheetCellUpdates, skipServerUpdate?: boolean): void
+  updateSheetSelectedCell(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   updateSheetSelection(cellId: string, isShiftPressed: boolean): void
   updateSheetSelectionOnCellMountOrUnmount(cellId: string, mountOrUnmount: 'MOUNT' | 'UNMOUNT'): void
 }

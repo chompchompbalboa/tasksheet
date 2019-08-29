@@ -13,9 +13,9 @@ import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellDatetime = ({
-  cellId,
   updateCellValue,
-  value
+  value,
+  ...passThroughProps
 }: SheetCellDatetimeProps) => {  
   
   const safeValue = [null, ""].includes(value) ? "" : moment(value).format('MM/DD/YYYY')
@@ -26,9 +26,10 @@ const SheetCellDatetime = ({
 
   return (
     <StyledSheetCellContainer
-      cellId={cellId}
-      focusCell={() => {}}
-      value={safeValue}>
+      focusCell={() => null}
+      updateCellValue={updateCellValue}
+      value={safeValue}
+      {...passThroughProps}>
       <DatePicker
         autoComplete="new-password"
         autoFocus
@@ -44,7 +45,9 @@ const SheetCellDatetime = ({
 //-----------------------------------------------------------------------------
 interface SheetCellDatetimeProps {
   cellId: string
+  isCellSelected: boolean
   updateCellValue(nextCellValue: string): void
+  updateSheetSelectedCell(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   value: string
 }
 

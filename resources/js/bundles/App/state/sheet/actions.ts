@@ -956,6 +956,15 @@ interface UpdateSheetSelection {
   nextSheetSelection: SheetActiveSelections
 }
 
+const removeSelectionCellState: SheetCellUpdates = {
+  isCellSelected: false,
+  isRangeStart: false,
+  isRangeEnd: false,
+  isRangeRenderedFromOtherEnd: false,
+  rangeHeight: null,
+  rangeWidth: null
+}
+
 export const updateSheetSelection = (sheetId: string, cellId: string, isShiftClicked: boolean): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
@@ -968,22 +977,15 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
       }
     } = getState().sheet
     const cell = cells[cellId]
-    const nextStateForCellsRemovingHighlight: SheetCellUpdates = {
-      isCellSelected: false,
-      isRangeStart: false,
-      isRangeEnd: false,
-      rangeHeight: null,
-      rangeWidth: null
-    }
     if(!isShiftClicked) {
       if(!cell.isCellSelected || cell.isRangeStart) {
         batch(() => {
           const nextSelectionCellId = cellId === selections.rangeEndCellId ? selections.rangeStartCellId : cellId
           const nextSelectionCell = cells[nextSelectionCellId]
           // Remove highlight from previously highlighted cells
-          dispatch(updateSheetCellReducer(selections.rangeStartCellId, nextStateForCellsRemovingHighlight))
-          dispatch(updateSheetCellReducer(selections.rangeEndCellId, nextStateForCellsRemovingHighlight))
-          dispatch(updateSheetCellReducer(selections.cellId, nextStateForCellsRemovingHighlight))
+          dispatch(updateSheetCellReducer(selections.rangeStartCellId, removeSelectionCellState))
+          dispatch(updateSheetCellReducer(selections.rangeEndCellId, removeSelectionCellState))
+          dispatch(updateSheetCellReducer(selections.cellId, removeSelectionCellState))
           // Update next highlighted cell
           dispatch(updateSheetCellReducer(nextSelectionCell.id, { isCellSelected: true }))
           // Update active selections
@@ -1040,8 +1042,8 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
           nextRangeHeight = nextRangeHeight + 24
         }
         // Update previous range start and end
-        dispatch(updateSheetCellReducer(selections.rangeStartCellId, nextStateForCellsRemovingHighlight))
-        dispatch(updateSheetCellReducer(selections.rangeEndCellId, nextStateForCellsRemovingHighlight))
+        dispatch(updateSheetCellReducer(selections.rangeStartCellId, removeSelectionCellState))
+        dispatch(updateSheetCellReducer(selections.rangeEndCellId, removeSelectionCellState))
         // Update next range start and end
         dispatch(updateSheetCellReducer(nextRangeStartCellId, { 
           isRangeStart: true,
@@ -1134,12 +1136,6 @@ export const clearSheetSelection = (): ThunkAction => {
           rangeEndCellId
       }}
     } = getState().sheet
-    const removeSelectionCellState: SheetCellUpdates = {
-      isCellSelected: false,
-      isRangeStart: false,
-      isRangeEnd: false,
-      isRangeRenderedFromOtherEnd: false
-    }
     batch(() => {
       // Reset selection state
       dispatch(updateSheetSelectionReducer(defaultSheetState.active.selections))
@@ -1147,6 +1143,54 @@ export const clearSheetSelection = (): ThunkAction => {
       cellId !== null && dispatch(updateSheetCellReducer(cellId, removeSelectionCellState))
       rangeStartCellId !== null && dispatch(updateSheetCellReducer(rangeStartCellId, removeSelectionCellState))
       rangeEndCellId !== null && dispatch(updateSheetCellReducer(rangeEndCellId, removeSelectionCellState))
+    })
+  }
+}
+
+export const updateSheetSelectedCell = (sheetId: Sheet['id'], cellId: SheetCell['id'], moveDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): ThunkAction => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      active: { selections },
+      cells,
+      rows,
+      sheets: { [sheetId]: {
+        visibleColumns,
+        visibleRows
+      }}
+    } = getState().sheet
+    const cell = cells[cellId]
+    const selectedCellColumnIndex = visibleColumns.indexOf(cell.columnId)
+    const selectedCellRowIndex = visibleRows.indexOf(cell.rowId)
+    const nextSelectedCellColumnIndex = 
+      !['RIGHT', 'LEFT'].includes(moveDirection) 
+        ? selectedCellColumnIndex 
+        : (moveDirection === 'RIGHT' ? selectedCellColumnIndex + 1 : selectedCellColumnIndex - 1)
+    const nextSelectedCellRowIndex = 
+      !['UP', 'DOWN'].includes(moveDirection) 
+        ? selectedCellRowIndex 
+        : (moveDirection === 'UP' ? selectedCellRowIndex - 1 : selectedCellRowIndex + 1)
+    const nextSelectedCellRow = rows[visibleRows[nextSelectedCellRowIndex]]
+    const nextSelectedCellColumnId = visibleColumns[nextSelectedCellColumnIndex]
+    const nextSelectedCell = cells[nextSelectedCellRow.cells[nextSelectedCellColumnId]]
+    batch(() => {
+      // Reset selection state
+      dispatch(updateSheetSelectionReducer({
+        ...defaultSheetState.active.selections,
+        cellId: nextSelectedCell.id,
+        isRangeStartCellRendered: true,
+        isRangeEndCellRendered: false,
+        rangeStartColumnId: nextSelectedCell.columnId, 
+        rangeStartRowId: nextSelectedCell.rowId, 
+        rangeStartCellId: nextSelectedCell.id
+      }))
+      // Clear the selected cell, the range start cell and the range end cell
+      selections.cellId !== null && dispatch(updateSheetCellReducer(selections.cellId, removeSelectionCellState))
+      selections.rangeStartCellId !== null && dispatch(updateSheetCellReducer(selections.rangeStartCellId, removeSelectionCellState))
+      selections.rangeEndCellId !== null && dispatch(updateSheetCellReducer(selections.rangeEndCellId, removeSelectionCellState))
+      // Update the next selected cell
+      dispatch(updateSheetCellReducer(nextSelectedCell.id, {
+        isCellSelected: true
+      }))
     })
   }
 }
