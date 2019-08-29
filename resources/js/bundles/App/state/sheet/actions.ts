@@ -1002,45 +1002,45 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
       }
     }
     else if(isShiftClicked) {
-      batch(() => {
-        const rangeStartColumnIndex = visibleColumns.indexOf(selections.rangeStartColumnId) > -1 ? visibleColumns.indexOf(selections.rangeStartColumnId) : null
-        const rangeStartRowIndex = visibleRows.indexOf(selections.rangeStartRowId) > -1 ? visibleRows.indexOf(selections.rangeStartRowId) : null
-        const rangeEndColumnIndex = visibleColumns.indexOf(selections.rangeEndColumnId) > -1 ? visibleColumns.indexOf(selections.rangeEndColumnId) : null
-        const rangeEndRowIndex = visibleRows.indexOf(selections.rangeEndRowId) > -1 ? visibleRows.indexOf(selections.rangeEndRowId) : null
-        const cellColumnIndex = visibleColumns.indexOf(cell.columnId) > -1 ? visibleColumns.indexOf(cell.columnId) : null
-        const cellRowIndex = visibleRows.indexOf(cell.rowId) > -1 ? visibleRows.indexOf(cell.rowId) : null
-        const nextRangeStartColumnIndex = Math.min(...[rangeStartColumnIndex, rangeEndColumnIndex, cellColumnIndex].filter(index => index !== null))
-        const nextRangeStartRowIndex = Math.min(...[rangeStartRowIndex, rangeEndRowIndex, cellRowIndex].filter(index => index !== null))
-        const nextRangeEndColumnIndex = Math.max(...[rangeStartColumnIndex, rangeEndColumnIndex, cellColumnIndex].filter(index => index !== null))
-        const nextRangeEndRowIndex = Math.max(...[rangeStartRowIndex, rangeEndRowIndex, cellRowIndex].filter(index => index !== null))
-        const nextRangeStartColumnId = visibleColumns[nextRangeStartColumnIndex]
-        const nextRangeStartRowId = visibleRows[nextRangeStartRowIndex]
-        const nextRangeStartCellId = rows[nextRangeStartRowId].cells[nextRangeStartColumnId]
-        const nextRangeEndColumnId = visibleColumns[nextRangeEndColumnIndex]
-        const nextRangeEndRowId = visibleRows[nextRangeEndRowIndex]
-        const nextRangeEndCellId = rows[nextRangeEndRowId].cells[nextRangeEndColumnId]
-        let nextRangeCellIds = []
-        let nextRangeHeight = 0
-        let nextRangeWidth = 0
-        // Calculate range width
-        for(let columnIndex = nextRangeStartColumnIndex; columnIndex <= nextRangeEndColumnIndex; columnIndex++) {
-          const columnId = visibleColumns[columnIndex]
-          const column = columns[columnId]
-          nextRangeWidth = columnId === 'COLUMN_BREAK' ? nextRangeWidth + 10 : nextRangeWidth + column.width // Column or column break width
-          // Add cells to the next range
-          for(let rowIndex = nextRangeStartRowIndex; rowIndex <= nextRangeEndRowIndex; rowIndex++) {
-            const rowId = visibleRows[rowIndex]
-            if(rowId !== 'ROW_BREAK') {
-              const row = rows[rowId]
-              const currentCellId = row.cells[columnId]
-              nextRangeCellIds.push(currentCellId)
-            }
+      const rangeStartColumnIndex = visibleColumns.indexOf(selections.rangeStartColumnId) > -1 ? visibleColumns.indexOf(selections.rangeStartColumnId) : null
+      const rangeStartRowIndex = visibleRows.indexOf(selections.rangeStartRowId) > -1 ? visibleRows.indexOf(selections.rangeStartRowId) : null
+      const rangeEndColumnIndex = visibleColumns.indexOf(selections.rangeEndColumnId) > -1 ? visibleColumns.indexOf(selections.rangeEndColumnId) : null
+      const rangeEndRowIndex = visibleRows.indexOf(selections.rangeEndRowId) > -1 ? visibleRows.indexOf(selections.rangeEndRowId) : null
+      const cellColumnIndex = visibleColumns.indexOf(cell.columnId) > -1 ? visibleColumns.indexOf(cell.columnId) : null
+      const cellRowIndex = visibleRows.indexOf(cell.rowId) > -1 ? visibleRows.indexOf(cell.rowId) : null
+      const nextRangeStartColumnIndex = Math.min(...[rangeStartColumnIndex, rangeEndColumnIndex, cellColumnIndex].filter(index => index !== null))
+      const nextRangeStartRowIndex = Math.min(...[rangeStartRowIndex, rangeEndRowIndex, cellRowIndex].filter(index => index !== null))
+      const nextRangeEndColumnIndex = Math.max(...[rangeStartColumnIndex, rangeEndColumnIndex, cellColumnIndex].filter(index => index !== null))
+      const nextRangeEndRowIndex = Math.max(...[rangeStartRowIndex, rangeEndRowIndex, cellRowIndex].filter(index => index !== null))
+      const nextRangeStartColumnId = visibleColumns[nextRangeStartColumnIndex]
+      const nextRangeStartRowId = visibleRows[nextRangeStartRowIndex]
+      const nextRangeStartCellId = rows[nextRangeStartRowId].cells[nextRangeStartColumnId]
+      const nextRangeEndColumnId = visibleColumns[nextRangeEndColumnIndex]
+      const nextRangeEndRowId = visibleRows[nextRangeEndRowIndex]
+      const nextRangeEndCellId = rows[nextRangeEndRowId].cells[nextRangeEndColumnId]
+      let nextRangeCellIds: string[] = []
+      let nextRangeHeight = 0
+      let nextRangeWidth = 0
+      // Calculate range width
+      for(let columnIndex = nextRangeStartColumnIndex; columnIndex <= nextRangeEndColumnIndex; columnIndex++) {
+        const columnId = visibleColumns[columnIndex]
+        const column = columns[columnId]
+        nextRangeWidth = columnId === 'COLUMN_BREAK' ? nextRangeWidth + 10 : nextRangeWidth + column.width // Column or column break width
+        // Add cells to the next range
+        for(let rowIndex = nextRangeStartRowIndex; rowIndex <= nextRangeEndRowIndex; rowIndex++) {
+          const rowId = visibleRows[rowIndex]
+          if(rowId !== 'ROW_BREAK') {
+            const row = rows[rowId]
+            const currentCellId = row.cells[columnId]
+            nextRangeCellIds.push(currentCellId)
           }
         }
-        // Calculate range height
-        for(let rowIndex = nextRangeStartRowIndex; rowIndex <= nextRangeEndRowIndex; rowIndex++) {
-          nextRangeHeight = nextRangeHeight + 24
-        }
+      }
+      // Calculate range height
+      for(let rowIndex = nextRangeStartRowIndex; rowIndex <= nextRangeEndRowIndex; rowIndex++) {
+        nextRangeHeight = nextRangeHeight + 24
+      }
+      batch(() => {
         // Update previous range start and end
         dispatch(updateSheetCellReducer(selections.rangeStartCellId, removeSelectionCellState))
         dispatch(updateSheetCellReducer(selections.rangeEndCellId, removeSelectionCellState))
@@ -1129,7 +1129,6 @@ export const updateSheetSelectionOnCellMountOrUnmount = (cellId: SheetCell['id']
 }
 
 export const clearSheetSelection = (): ThunkAction => {
-  console.log(clearSheetSelection)
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       active: { 
@@ -1212,7 +1211,6 @@ export const updateSheetSelectedCell = (sheetId: Sheet['id'], cellId: SheetCell[
 }
 
 export const updateSheetSelectionReducer = (nextSheetSelection: SheetActiveSelections): SheetActions => {
-  console.log(nextSheetSelection.isRangeStartCellRendered)
 	return {
 		type: UPDATE_SHEET_SELECTION,
     nextSheetSelection,

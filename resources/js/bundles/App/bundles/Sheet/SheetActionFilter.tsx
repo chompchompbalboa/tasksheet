@@ -12,7 +12,7 @@ import { Sheet, SheetColumn, SheetColumns, SheetFilter, SheetFilters, SheetFilte
 import { 
   createSheetFilter as createSheetFilterAction,
   deleteSheetFilter as deleteSheetFilterAction,
-  updateSheetFilter as updateSheetFilterAction 
+  updateSheetFilter as updateSheetFilterAction
 } from '@app/state/sheet/actions'
 
 import AutosizeInput from 'react-input-autosize'
@@ -131,7 +131,9 @@ const SheetActionFilter = ({
     setAutosizeInputValue(e.target.value)
   }
   
-  const handleAutosizeInputFocus = () => setIsDropdownVisible(true)
+  const handleAutosizeInputFocus = () => {
+    setIsDropdownVisible(true)
+  }
 
   const validateColumnName = (nextAutosizeInputValue: string) => {
     // Combine the next input value into a single unspaced string

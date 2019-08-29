@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { batch } from 'react-redux'
 import styled from 'styled-components'
 
@@ -21,14 +21,35 @@ const SheetCreateRows = ({
   sourceSheetId
 }: SheetCreateRowsProps) => {
 
+  const [ isEditingInputValue, setIsEditingInputValue ] = useState(false)
   const [ inputValue, setInputValue ] = useState(1)
+  
+  useEffect(() => {
+    if(isEditingInputValue) { window.addEventListener('keydown', createRowsOnKeydownEnter) }
+    else { window.addEventListener('keydown', createRowsOnKeydownEnter) }
+    return () => window.addEventListener('keydown', createRowsOnKeydownEnter)
+  }, [ inputValue ])
 
-  const handleAddRowButtonClick = () => {
+  const createRows = () => {
     batch(() => {
       for(let i = 1; i <= inputValue; i++) {
         createSheetRow(sheetId, sourceSheetId)
       }
     })
+  }
+  
+  const handleAutosizeInputBlur = () => {
+    setIsEditingInputValue(false)
+  }
+  
+  const handleAutosizeInputFocus = () => {
+    setIsEditingInputValue(true)
+  }
+  
+  const createRowsOnKeydownEnter = (e: KeyboardEvent) => {
+    if(e.key === 'Enter') {
+      createRows()
+    }
   }
 
   return (
@@ -36,7 +57,9 @@ const SheetCreateRows = ({
       Add
       <AutosizeInput
         value={inputValue === 0 ? '' : inputValue}
+        onBlur={() => handleAutosizeInputBlur()}
         onChange={e => setInputValue(Math.min(Number(e.target.value), 25))}
+        onFocus={() => handleAutosizeInputFocus()}
         inputStyle={{
           margin: '0 0.25rem',
           padding: '0.125rem 0.125rem 0.125rem 0.25rem',
@@ -52,7 +75,7 @@ const SheetCreateRows = ({
           fontWeight: 'inherit'}}/>
       row{inputValue > 1 ? 's' : ''}
       <AddRowButton
-        onClick={() => handleAddRowButtonClick()}>
+        onClick={() => createRows()}>
         <Icon
           icon={PLUS_SIGN}/>
       </AddRowButton>

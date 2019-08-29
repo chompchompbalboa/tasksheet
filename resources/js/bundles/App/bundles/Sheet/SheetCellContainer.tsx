@@ -1,8 +1,13 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
+
+import {
+  clearSheetSelection as clearSheetSelectionAction
+} from '@app/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -16,6 +21,9 @@ const SheetCellContainer = ({
   updateSheetSelectedCell,
   value
 }: SheetCellContainerProps) => {
+  
+  const dispatch = useDispatch()
+  const clearSheetSelection = useCallback(() => dispatch(clearSheetSelectionAction()), [])
 
   const container = useRef(null)
   const [ isCellEditing, setIsCellEditing ] = useState(localStorage.getItem('sheetCellIsEditing') === cellId)
@@ -23,12 +31,15 @@ const SheetCellContainer = ({
   useEffect(() => {
     if(isCellSelected && !isCellEditing) {
       window.addEventListener('keydown', handleKeydownWhileCellIsSelected)
+      window.addEventListener('mousedown', closeOnClickOutside)
     }
     else {
       window.removeEventListener('keydown', handleKeydownWhileCellIsSelected)
+      window.removeEventListener('mousedown', closeOnClickOutside)
     }
     return () => {
       window.removeEventListener('keydown', handleKeydownWhileCellIsSelected)
+      window.removeEventListener('mousedown', closeOnClickOutside)
     }
   }, [ isCellSelected, isCellEditing ])
   
@@ -48,9 +59,10 @@ const SheetCellContainer = ({
     }
   }, [ isCellEditing ])
 
-  const closeOnClickOutside = (e: Event) => {
+  const closeOnClickOutside = (e: MouseEvent) => {
     if(!container.current.contains(e.target)) {
       setIsCellEditing(false)
+      !e.shiftKey && clearSheetSelection()
       localStorage.setItem('sheetCellIsEditing', null)
     }
   }
@@ -88,6 +100,9 @@ const SheetCellContainer = ({
     }
     if(e.key === 'ArrowUp') {
       updateSheetSelectedCell(cellId, 'UP')
+    }
+    if(e.key === 'Delete' || e.key === 'Backspace') {
+      updateCellValue('')
     }
   }
   

@@ -71,10 +71,10 @@ const SheetCell = memo(({
     return 'none'
   }
   useLayoutEffect(() => {
-    if(cell.isRangeStart || cell.isRangeEnd || cell.isCellSelected) { console.log('mount');updateSheetSelectionOnCellMountOrUnmount(cell.id, 'MOUNT') }
+    if(cell.isRangeStart || cell.isRangeEnd || cell.isCellSelected) { updateSheetSelectionOnCellMountOrUnmount(cell.id, 'MOUNT') }
   }, [])
   useLayoutEffect(() => {
-    return () => { if(cell.isRangeStart || cell.isRangeEnd || cell.isCellSelected) { console.log('unmount');updateSheetSelectionOnCellMountOrUnmount(cell.id, 'UNMOUNT') }}
+    return () => { if(cell.isRangeStart || cell.isRangeEnd || cell.isCellSelected) { updateSheetSelectionOnCellMountOrUnmount(cell.id, 'UNMOUNT') }}
   }, [ (cell.isCellSelected || cell.isRangeStart), cell.isRangeEnd ])
   
   return (
