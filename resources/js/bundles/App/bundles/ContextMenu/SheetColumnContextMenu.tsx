@@ -96,6 +96,26 @@ const SheetColumnContextMenu = ({
               text="Date" 
               logo={ columnType === 'DATETIME' ? CHECKMARK : null}
               onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DATETIME' }))}/>
+            <ContextMenuItem 
+              text="Dropdown">
+              <ContextMenuItem
+                text="Dropdown 1"
+                logo={ columnType === 'DROPDOWN' ? CHECKMARK : null}
+                onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DROPDOWN' }))}/>
+              <ContextMenuItem
+                text="Dropdown 2"
+                logo={ columnType === 'DROPDOWN' ? CHECKMARK : null}
+                onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DROPDOWN' }))}/>
+              <ContextMenuItem
+                text="Dropdown 3"
+                logo={ columnType === 'DROPDOWN' ? CHECKMARK : null}
+                onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DROPDOWN' }))}/>
+              <ContextMenuDivider />
+              <ContextMenuItem
+                text="Manage Dropdowns"
+                logo={ columnType === 'DROPDOWN' ? CHECKMARK : null}
+                onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DROPDOWN' }))}/>
+            </ContextMenuItem>
           </ContextMenuItem>
           <ContextMenuDivider />
         </>

@@ -95,7 +95,8 @@ export type SheetColumnType =
 	'STRING'|
 	'DATETIME'|
 	'BOOLEAN'|
-	'NUMBER'
+	'NUMBER' | 
+  'DROPDOWN'
 
 export type SheetRow = {
 	id: string

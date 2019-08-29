@@ -12,6 +12,7 @@ import { selectCell } from '@app/state/sheet/selectors'
 
 import SheetCellBoolean from '@app/bundles/Sheet/SheetCellBoolean'
 import SheetCellDatetime from '@app/bundles/Sheet/SheetCellDatetime'
+import SheetCellDropdown from '@app/bundles/Sheet/SheetCellDropdown'
 import SheetCellNumber from '@app/bundles/Sheet/SheetCellNumber'
 import SheetCellString from '@app/bundles/Sheet/SheetCellString'
 
@@ -60,6 +61,7 @@ const SheetCell = memo(({
     NUMBER: SheetCellNumber,
     BOOLEAN: SheetCellBoolean,
     DATETIME: SheetCellDatetime,
+    DROPDOWN: SheetCellDropdown
   }
   const SheetCellType = sheetCellTypes[type]
   // Selections

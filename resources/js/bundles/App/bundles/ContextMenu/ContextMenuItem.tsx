@@ -32,7 +32,9 @@ const ContextMenuItem = ({
       {children && isSubItemsVisible &&
         <SubItems
           isSubItemsVisible={isSubItemsVisible}>
-          {children}
+          <SubItemsScrollContainer>
+            {children}
+          </SubItemsScrollContainer>
         </SubItems>}
     </Container>
   )
@@ -86,6 +88,10 @@ const Decorator = styled.div`
   justify-content: flex-end;
 `
 
+const SubItemsScrollContainer = styled.div`
+  
+`
+
 const SubItems = styled.div`
   display: ${ ({ isSubItemsVisible }: SubItemProps ) => isSubItemsVisible ? 'block' : 'none'};
   align-self: flex-start;
@@ -97,6 +103,7 @@ const SubItems = styled.div`
   box-shadow: 3px 3px 10px 0px rgba(150,150,150,1);
   max-height: 50vh;
 	overflow-y: scroll;
+  overflow-x: visible;
 	scrollbar-width: none;
 	-ms-overflow-style: none;
 	&::-webkit-scrollbar {
