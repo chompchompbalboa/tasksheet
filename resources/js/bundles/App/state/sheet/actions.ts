@@ -19,6 +19,7 @@ import {
   SheetSort, SheetSorts, SheetSortUpdates,
   SheetRow
 } from '@app/state/sheet/types'
+import { defaultSheetState } from '@app/state/sheet/reducers'
 import { FileType, File as TFile, Folder } from '@app/state/folder/types'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
 
@@ -816,6 +817,7 @@ interface UpdateSheetFilter {
 
 export const updateSheetFilter = (filterId: string, updates: SheetFilterUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch) => {
+    dispatch(clearSheetSelection())
     dispatch(updateSheetFilterReducer(filterId, updates))
 		//mutation.updateSheetFilter(filterId, updates)
 	}
@@ -871,6 +873,7 @@ export const updateSheetGroup = (groupId: string, updates: SheetGroupUpdates, sk
         } = getState().sheet
         const sheetId = groups[groupId].sheetId
         const sheet = sheets[sheetId]
+        dispatch(clearSheetSelection())
         dispatch(updateSheet(sheetId, {
           visibleRows: resolveVisibleRows(sheet, rows, cells, filters, groups, sorts)
         }))
@@ -985,19 +988,13 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
           dispatch(updateSheetCellReducer(nextSelectionCell.id, { isCellSelected: true }))
           // Update active selections
           dispatch(updateSheetSelectionReducer({
+            ...defaultSheetState.active.selections,
             cellId: nextSelectionCellId,
             isRangeStartCellRendered: true,
             isRangeEndCellRendered: false,
             rangeStartColumnId: nextSelectionCell.columnId, 
             rangeStartRowId: nextSelectionCell.rowId, 
-            rangeStartCellId: nextSelectionCell.id,
-            rangeEndColumnId: null, 
-            rangeEndRowId: null,
-            rangeEndCellId: null,
-            rangeCellIds: null,
-            rangeWidth: null,
-            rangeHeight: null,
-            shouldRangeHelperRender: false
+            rangeStartCellId: nextSelectionCell.id
           })) 
         })
       }
@@ -1127,6 +1124,33 @@ export const updateSheetSelectionOnCellMountOrUnmount = (cellId: SheetCell['id']
   }
 }
 
+export const clearSheetSelection = (): ThunkAction => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      active: { 
+        selections: {
+          cellId,
+          rangeStartCellId,
+          rangeEndCellId
+      }}
+    } = getState().sheet
+    const removeSelectionCellState: SheetCellUpdates = {
+      isCellSelected: false,
+      isRangeStart: false,
+      isRangeEnd: false,
+      isRangeRenderedFromOtherEnd: false
+    }
+    batch(() => {
+      // Reset selection state
+      dispatch(updateSheetSelectionReducer(defaultSheetState.active.selections))
+      // Clear the selected cell, the range start cell and the range end cell
+      cellId !== null && dispatch(updateSheetCellReducer(cellId, removeSelectionCellState))
+      rangeStartCellId !== null && dispatch(updateSheetCellReducer(rangeStartCellId, removeSelectionCellState))
+      rangeEndCellId !== null && dispatch(updateSheetCellReducer(rangeEndCellId, removeSelectionCellState))
+    })
+  }
+}
+
 export const updateSheetSelectionReducer = (nextSheetSelection: SheetActiveSelections): SheetActions => {
 	return {
 		type: UPDATE_SHEET_SELECTION,
@@ -1160,6 +1184,7 @@ export const updateSheetSort = (sortId: string, updates: SheetSortUpdates, skipV
         } = getState().sheet
         const sheetId = sorts[sortId].sheetId
         const sheet = sheets[sheetId]
+        dispatch(clearSheetSelection())
         dispatch(updateSheet(sheetId, {
           visibleRows: resolveVisibleRows(sheet, rows, cells, filters, groups, sorts)
         }))

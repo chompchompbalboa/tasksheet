@@ -34,7 +34,7 @@ export interface SheetState {
 //-----------------------------------------------------------------------------
 // Default State
 //-----------------------------------------------------------------------------
-const defaultSheetState: SheetState = {
+export const defaultSheetState: SheetState = {
   active: {
     columnRenamingId: null,
     selections: {
