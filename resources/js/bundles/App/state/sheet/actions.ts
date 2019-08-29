@@ -1161,37 +1161,50 @@ export const updateSheetSelectedCell = (sheetId: Sheet['id'], cellId: SheetCell[
     const cell = cells[cellId]
     const selectedCellColumnIndex = visibleColumns.indexOf(cell.columnId)
     const selectedCellRowIndex = visibleRows.indexOf(cell.rowId)
-    const nextSelectedCellColumnIndex = 
+    let nextSelectedCellColumnIndex = Math.min(visibleColumns.length - 1, Math.max(0,
       !['RIGHT', 'LEFT'].includes(moveDirection) 
         ? selectedCellColumnIndex 
         : (moveDirection === 'RIGHT' ? selectedCellColumnIndex + 1 : selectedCellColumnIndex - 1)
-    const nextSelectedCellRowIndex = 
+    ))
+    let nextSelectedCellRowIndex = Math.min(visibleRows.length - 1, Math.max(0,
       !['UP', 'DOWN'].includes(moveDirection) 
         ? selectedCellRowIndex 
         : (moveDirection === 'UP' ? selectedCellRowIndex - 1 : selectedCellRowIndex + 1)
-    const nextSelectedCellRow = rows[visibleRows[nextSelectedCellRowIndex]]
-    const nextSelectedCellColumnId = visibleColumns[nextSelectedCellColumnIndex]
-    const nextSelectedCell = cells[nextSelectedCellRow.cells[nextSelectedCellColumnId]]
-    batch(() => {
-      // Reset selection state
-      dispatch(updateSheetSelectionReducer({
-        ...defaultSheetState.active.selections,
-        cellId: nextSelectedCell.id,
-        isRangeStartCellRendered: true,
-        isRangeEndCellRendered: false,
-        rangeStartColumnId: nextSelectedCell.columnId, 
-        rangeStartRowId: nextSelectedCell.rowId, 
-        rangeStartCellId: nextSelectedCell.id
-      }))
-      // Clear the selected cell, the range start cell and the range end cell
-      selections.cellId !== null && dispatch(updateSheetCellReducer(selections.cellId, removeSelectionCellState))
-      selections.rangeStartCellId !== null && dispatch(updateSheetCellReducer(selections.rangeStartCellId, removeSelectionCellState))
-      selections.rangeEndCellId !== null && dispatch(updateSheetCellReducer(selections.rangeEndCellId, removeSelectionCellState))
-      // Update the next selected cell
-      dispatch(updateSheetCellReducer(nextSelectedCell.id, {
-        isCellSelected: true
-      }))
-    })
+    ))
+    let nextSelectedCellRowId = visibleRows[nextSelectedCellRowIndex]
+    while(nextSelectedCellRowId === 'ROW_BREAK') {
+      nextSelectedCellRowIndex = Math.min(visibleRows.length, Math.max(0, (moveDirection === 'UP' ? nextSelectedCellRowIndex - 1 : nextSelectedCellRowIndex + 1)))
+      nextSelectedCellRowId = visibleRows[nextSelectedCellRowIndex]
+    }
+    let nextSelectedCellColumnId = visibleColumns[nextSelectedCellColumnIndex]
+    while(nextSelectedCellColumnId === 'COLUMN_BREAK') {
+      nextSelectedCellColumnIndex = Math.min(visibleColumns.length - 1, Math.max(0, (moveDirection === 'RIGHT' ? nextSelectedCellColumnIndex + 1 : nextSelectedCellColumnIndex - 1)))
+      nextSelectedCellColumnId = visibleColumns[nextSelectedCellColumnIndex]
+    }
+    const nextSelectedCellRow = rows[nextSelectedCellRowId]
+    const nextSelectedCell = nextSelectedCellRow ? cells[nextSelectedCellRow.cells[nextSelectedCellColumnId]] : null
+    if(nextSelectedCell !== null) {
+      batch(() => {
+        // Reset selection state
+        dispatch(updateSheetSelectionReducer({
+          ...defaultSheetState.active.selections,
+          cellId: nextSelectedCell.id,
+          isRangeStartCellRendered: true,
+          isRangeEndCellRendered: false,
+          rangeStartColumnId: nextSelectedCell.columnId, 
+          rangeStartRowId: nextSelectedCell.rowId, 
+          rangeStartCellId: nextSelectedCell.id
+        }))
+        // Clear the selected cell, the range start cell and the range end cell
+        selections.cellId !== null && dispatch(updateSheetCellReducer(selections.cellId, removeSelectionCellState))
+        selections.rangeStartCellId !== null && dispatch(updateSheetCellReducer(selections.rangeStartCellId, removeSelectionCellState))
+        selections.rangeEndCellId !== null && dispatch(updateSheetCellReducer(selections.rangeEndCellId, removeSelectionCellState))
+        // Update the next selected cell
+        dispatch(updateSheetCellReducer(nextSelectedCell.id, {
+          isCellSelected: true
+        }))
+      })
+    }
   }
 }
 
