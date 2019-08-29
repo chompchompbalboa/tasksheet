@@ -71,11 +71,11 @@ const SheetCell = memo(({
     return 'none'
   }
   useLayoutEffect(() => {
-    if(cell.isRangeStart || cell.isRangeEnd) { updateSheetSelectionOnCellMountOrUnmount(cell.id, 'MOUNT') }
+    if(cell.isRangeStart || cell.isRangeEnd || cell.isCellSelected) { updateSheetSelectionOnCellMountOrUnmount(cell.id, 'MOUNT') }
   }, [])
   useLayoutEffect(() => {
-    return () => { if(cell.isRangeStart || cell.isRangeEnd) { updateSheetSelectionOnCellMountOrUnmount(cell.id, 'UNMOUNT') }}
-  }, [ cell.isRangeStart, cell.isRangeEnd ])
+    return () => { if(cell.isRangeStart || cell.isRangeEnd || cell.isCellSelected) { updateSheetSelectionOnCellMountOrUnmount(cell.id, 'UNMOUNT') }}
+  }, [ cell.isCellSelected, cell.isRangeStart, cell.isRangeEnd ])
   
   return (
     <>
@@ -147,6 +147,7 @@ interface ContainerProps {
 }
 
 const RangeSelection = styled.div`
+  pointer-events: none;
   display: ${ ({ isRangeStart, isRangeEnd, isRangeRenderedFromOtherEnd }: RangeSelectionProps ) => ((isRangeStart || isRangeEnd) && !isRangeRenderedFromOtherEnd) ? 'block' : 'none' };
   position: absolute;
   top: ${ ({ cellHeight, isRangeStart, rangeHeight }: RangeSelectionProps ) => isRangeStart ? 0 : -(rangeHeight - cellHeight) + 'px' };

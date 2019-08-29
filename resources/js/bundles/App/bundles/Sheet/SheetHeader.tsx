@@ -124,6 +124,8 @@ interface SheetHeaderProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  z-index: 10;
+  position: relative;
   cursor: ${ ({ isResizing }: ContainerProps) => isResizing ? 'col-resize' : 'default' };
   display: inline-flex;
   user-select: none;
@@ -153,7 +155,7 @@ interface ContainerProps {
 const NameContainer = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 0.28rem 0 0.28rem 0.14rem;
+  padding: 0.25rem 0 0.25rem 0.125rem;
   width: calc(100% - 3px);
   white-space: nowrap;
   display: flex;

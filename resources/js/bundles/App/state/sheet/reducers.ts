@@ -13,6 +13,7 @@ import {
   UPDATE_SHEET_ROW, UPDATE_SHEET_ROWS,
   UPDATE_SHEET_SELECTION,
   UPDATE_SHEET_SORT, UPDATE_SHEET_SORTS,
+  UPDATE_SHEET_VERTICAL_SCROLL_DIRECTION
 } from '@app/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
@@ -27,6 +28,7 @@ export interface SheetState {
   groups: SheetGroups
   rows: SheetRows
   sorts: SheetSorts
+  verticalScrollDirection: 'forward' | 'backward'
 }
 
 //-----------------------------------------------------------------------------
@@ -45,7 +47,9 @@ const defaultSheetState: SheetState = {
       rangeEndColumnId: null,
       rangeEndRowId: null,
       rangeEndCellId: null,
-      rangeCellIds: null
+      rangeCellIds: null,
+      rangeWidth: null,
+      rangeHeight: null
     }
   },
   sheets: null,
@@ -54,7 +58,8 @@ const defaultSheetState: SheetState = {
   filters: null,
   groups: null,
   rows: null,
-  sorts: null
+  sorts: null,
+  verticalScrollDirection: 'forward'
 }
 
 //-----------------------------------------------------------------------------
@@ -211,6 +216,14 @@ export const userReducer = (state: SheetState = defaultSheetState, action: Sheet
 			return {
         ...state,
         sorts: nextSheetSorts
+      }
+		}
+
+		case UPDATE_SHEET_VERTICAL_SCROLL_DIRECTION: {
+			const { nextVerticalScrollDirection } = action
+			return {
+        ...state,
+        verticalScrollDirection: nextVerticalScrollDirection
       }
 		}
 

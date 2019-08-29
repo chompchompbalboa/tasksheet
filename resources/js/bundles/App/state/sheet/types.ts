@@ -18,6 +18,7 @@ export type SheetActiveUpdates = {
 }
 export type SheetActiveSelections = {
   cellId: SheetCell['id']
+  shouldRangeHelperRender: boolean
   isRangeStartCellRendered: boolean
   isRangeEndCellRendered: boolean
   rangeStartColumnId: SheetColumn['id']
@@ -27,6 +28,8 @@ export type SheetActiveSelections = {
   rangeEndRowId: SheetRow['id']
   rangeEndCellId: SheetCell['id']
   rangeCellIds: SheetCell['id'][]
+  rangeWidth: number
+  rangeHeight: number
 }
 
 export type Sheet = {

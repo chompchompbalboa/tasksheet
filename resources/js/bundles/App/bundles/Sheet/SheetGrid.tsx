@@ -53,6 +53,14 @@ const SheetGrid = memo(({
     // @ts-ignore
       grid.current.resetAfterRowIndex(0)
   }
+  
+  const handleGridScroll = ({ verticalScrollDirection}: IHandleGridScroll) => {
+    console.log(verticalScrollDirection)
+  }
+  
+  interface IHandleGridScroll {
+    verticalScrollDirection: 'forward' | 'backward'
+  }
 
   const GridWrapper = forwardRef(({ children, ...rest }, ref) => (
     <GridContainer
@@ -117,6 +125,7 @@ const SheetGrid = memo(({
           columnCount={sheetVisibleColumns.length + 1}
           rowHeight={rowIndex => 24}
           rowCount={sheetVisibleRows.length}
+          onScroll={handleGridScroll}
           overscanColumnCount={sheetVisibleColumns.length}
           overscanRowCount={3}>
           {Cell}

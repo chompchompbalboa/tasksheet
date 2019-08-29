@@ -42,7 +42,8 @@ export type SheetActions =
   DeleteSheetGroup | UpdateSheetGroup | UpdateSheetGroups |
   UpdateSheetRow | UpdateSheetRows | 
   UpdateSheetSelection | 
-  DeleteSheetSort | UpdateSheetSort | UpdateSheetSorts 
+  DeleteSheetSort | UpdateSheetSort | UpdateSheetSorts |
+  UpdateSheetVerticalScrollDirection
 
 //-----------------------------------------------------------------------------
 // Create Sheet
@@ -595,7 +596,6 @@ export const loadSheet = (sheetFromServer: SheetFromServer): ThunkAction => {
           isRangeEnd: false,
           isRangeRenderedFromOtherEnd: false,
           rangeWidth: null,
-          rangeHeight: null,
         }
         rowCells[cell.columnId] = cell.id
       })
@@ -965,7 +965,7 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
       }
     } = getState().sheet
     const cell = cells[cellId]
-    const nextStateForCellsRemovingHighlight: SheetCellUpdates = { 
+    const nextStateForCellsRemovingHighlight: SheetCellUpdates = {
       isCellSelected: false,
       isRangeStart: false,
       isRangeEnd: false,
@@ -994,7 +994,9 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
             rangeEndColumnId: null, 
             rangeEndRowId: null,
             rangeEndCellId: null,
-            rangeCellIds: null
+            rangeCellIds: null,
+            rangeWidth: null,
+            rangeHeight: null,
           })) 
         })
       }
@@ -1057,7 +1059,6 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
         }))
         dispatch(updateSheetSelectionReducer({
           ...selections,
-          isRangeStartCellRendered: true,
           isRangeEndCellRendered: true,
           rangeStartColumnId: nextRangeStartColumnId,
           rangeStartRowId: nextRangeStartRowId,
@@ -1065,7 +1066,9 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
           rangeEndColumnId: nextRangeEndColumnId, 
           rangeEndRowId: nextRangeEndRowId,
           rangeEndCellId: nextRangeEndCellId,
-          rangeCellIds: nextRangeCellIds
+          rangeCellIds: nextRangeCellIds,
+          rangeWidth: nextRangeWidth,
+          rangeHeight: nextRangeHeight
         }))
       })
     }
@@ -1078,7 +1081,7 @@ export const updateSheetSelectionOnCellMountOrUnmount = (cellId: SheetCell['id']
       active: { selections },
       cells
     } = getState().sheet
-    const isCellRangeStartOrEnd = cellId === selections.rangeStartCellId ? 'START' : (cellId === selections.rangeEndCellId ? 'END' : null)
+    const isCellRangeStartOrEnd = [selections.rangeStartCellId, selections.cellId].includes(cellId) ? 'START' : (cellId === selections.rangeEndCellId ? 'END' : null)
     if(isCellRangeStartOrEnd) {
       const rangeStartCell = cells[selections.rangeStartCellId]
       const rangeEndCell = cells[selections.rangeEndCellId]
@@ -1177,5 +1180,21 @@ export const updateSheetSorts = (nextSheetSorts: SheetSorts): SheetActions => {
 	return {
 		type: UPDATE_SHEET_SORTS,
     nextSheetSorts,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Sheet Sorts
+//-----------------------------------------------------------------------------
+export const UPDATE_SHEET_VERTICAL_SCROLL_DIRECTION = 'UPDATE_SHEET_VERTICAL_SCROLL_DIRECTION'
+interface UpdateSheetVerticalScrollDirection {
+  type: typeof UPDATE_SHEET_VERTICAL_SCROLL_DIRECTION,
+  nextVerticalScrollDirection: 'forward' | 'backward'
+}
+
+export const updateSheetVerticalScrollDirection = (nextVerticalScrollDirection: 'forward' | 'backward'): SheetActions => {
+	return {
+		type: UPDATE_SHEET_VERTICAL_SCROLL_DIRECTION,
+    nextVerticalScrollDirection,
 	}
 }
