@@ -997,6 +997,7 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
             rangeCellIds: null,
             rangeWidth: null,
             rangeHeight: null,
+            shouldRangeHelperRender: false
           })) 
         })
       }
@@ -1079,7 +1080,8 @@ export const updateSheetSelectionOnCellMountOrUnmount = (cellId: SheetCell['id']
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       active: { selections },
-      cells
+      cells,
+      verticalScrollDirection
     } = getState().sheet
     const isCellRangeStartOrEnd = [selections.rangeStartCellId, selections.cellId].includes(cellId) ? 'START' : (cellId === selections.rangeEndCellId ? 'END' : null)
     if(isCellRangeStartOrEnd) {
@@ -1090,6 +1092,13 @@ export const updateSheetSelectionOnCellMountOrUnmount = (cellId: SheetCell['id']
             (isCellRangeStartOrEnd === 'START' && mountOrUnmount === 'MOUNT' && !selections.isRangeEndCellRendered)
               ? 'START'
               : 'END'
+      const nextIsRangeEndCellRendered = isCellRangeStartOrEnd === 'END' ? mountOrUnmount === 'MOUNT' : selections.isRangeEndCellRendered
+      const nextIsRangeStartCellRendered = isCellRangeStartOrEnd === 'START' ? mountOrUnmount === 'MOUNT' : selections.isRangeStartCellRendered
+      const nextShouldRangeHelperRender = 
+        selections.rangeHeight !== null && !nextIsRangeStartCellRendered && !nextIsRangeEndCellRendered && (
+          isCellRangeStartOrEnd === 'END' && mountOrUnmount === 'UNMOUNT' && verticalScrollDirection === 'backward' ||
+          isCellRangeStartOrEnd === 'START' && mountOrUnmount === 'UNMOUNT' && verticalScrollDirection === 'forward'
+        )
       const rangeStartCellUpdates = {
         isRangeRenderedFromOtherEnd: nextRangeRenderedFrom === 'END'
       }
@@ -1098,17 +1107,17 @@ export const updateSheetSelectionOnCellMountOrUnmount = (cellId: SheetCell['id']
       }
       batch(() => {
         if(isCellRangeStartOrEnd === 'START') {
-          const isRangeStartCellRendered = mountOrUnmount === 'MOUNT'
           dispatch(updateSheetSelectionReducer({
             ...selections,
-            isRangeStartCellRendered: isRangeStartCellRendered
+            isRangeStartCellRendered: nextIsRangeStartCellRendered,
+            shouldRangeHelperRender: nextShouldRangeHelperRender
           }))
         }
         if(isCellRangeStartOrEnd === 'END') {
-          const isRangeEndCellRendered = mountOrUnmount === 'MOUNT'
           dispatch(updateSheetSelectionReducer({
             ...selections,
-            isRangeEndCellRendered: isRangeEndCellRendered
+            isRangeEndCellRendered: nextIsRangeEndCellRendered,
+            shouldRangeHelperRender: nextShouldRangeHelperRender
           }))
         }
         dispatch(updateSheetCellReducer(rangeStartCell.id, rangeStartCellUpdates))

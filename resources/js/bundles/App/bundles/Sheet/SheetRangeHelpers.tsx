@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { memo, useLayoutEffect, useState } from 'react'
+import React, { memo } from 'react'
 import { useSelector } from 'react-redux'
 import { areEqual } from 'react-window'
 import styled from 'styled-components'
@@ -16,32 +16,10 @@ const SheetRangeHelpers = memo(({
   columns,
   sheetVisibleColumns
 }: SheetRangeHelpersProps) => {
-  
-  const isRangeStartCellRendered = useSelector((state: AppState) => state.sheet.active.selections.isRangeStartCellRendered)
-  const isRangeEndCellRendered = useSelector((state: AppState) => state.sheet.active.selections.isRangeEndCellRendered)
-  const rangeEndCellId = useSelector((state: AppState) => state.sheet.active.selections.rangeEndCellId)
-  const rangeStartCellId = useSelector((state: AppState) => state.sheet.active.selections.rangeStartCellId)
+
   const rangeStartColumnId = useSelector((state: AppState) => state.sheet.active.selections.rangeStartColumnId)
   const rangeWidth = useSelector((state: AppState) => state.sheet.active.selections.rangeWidth)
-  
-  const [ isRangeHelperRendered, setIsRangeHelperRendered ] = useState(!isRangeStartCellRendered && !isRangeEndCellRendered && rangeStartCellId !== null && rangeEndCellId !== null)
-  
-  const [ previousIsRangeStartCellRendered, setPreviousIsRangeStartCellRendered ] = useState([ false ])
-  const [ previousIsRangeEndCellRendered, setPreviousIsRangeEndCellRendered ] = useState([ false ])
-  
-  useLayoutEffect(() => {
-    const nextPreviousIsRangeStartCellRendered = [ isRangeStartCellRendered, ...previousIsRangeStartCellRendered ].slice(0, 2)
-    const nextPreviousIsRangeEndCellRendered = [ isRangeEndCellRendered, ...previousIsRangeEndCellRendered].slice(0, 2)
-    setPreviousIsRangeStartCellRendered(nextPreviousIsRangeStartCellRendered)
-    setPreviousIsRangeEndCellRendered(nextPreviousIsRangeEndCellRendered)
-    const isWindowBetweenRangeStartCellAndRangeEndCell = 
-          previousIsRangeStartCellRendered[0] === true && previousIsRangeStartCellRendered[1] === false && previousIsRangeEndCellRendered[0] === false && previousIsRangeEndCellRendered[1] === true
-    console.log('Start:', nextPreviousIsRangeStartCellRendered,previousIsRangeStartCellRendered)
-    console.log('End:', nextPreviousIsRangeEndCellRendered, previousIsRangeEndCellRendered)
-    console.log('Window:', isWindowBetweenRangeStartCellAndRangeEndCell)
-    const nextIsRangeHelperRendered = !isRangeStartCellRendered && !isRangeEndCellRendered && rangeStartCellId && rangeEndCellId && isWindowBetweenRangeStartCellAndRangeEndCell
-    setIsRangeHelperRendered(nextIsRangeHelperRendered)
-  }, [ isRangeStartCellRendered, isRangeEndCellRendered, rangeStartCellId, rangeEndCellId ])
+  const shouldRangeHelperRender = useSelector((state: AppState) => state.sheet.active.selections.shouldRangeHelperRender)
   
   return (
     <Container>
@@ -51,7 +29,7 @@ const SheetRangeHelpers = memo(({
           columnWidth={columnId === 'COLUMN_BREAK' ? 10 : columns[columnId].width}>
           <SheetRange
             rangeWidth={rangeWidth}
-            isVisible={isRangeHelperRendered && columnId === rangeStartColumnId}/>
+            isVisible={shouldRangeHelperRender && columnId === rangeStartColumnId}/>
         </SheetRangeColumn>
       ))}
     </Container>

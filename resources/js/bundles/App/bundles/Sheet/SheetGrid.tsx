@@ -32,6 +32,7 @@ const SheetGrid = memo(({
   updateSheetColumn,
   updateSheetSelection,
   updateSheetSelectionOnCellMountOrUnmount,
+  updateSheetVerticalScrollDirection,
   sheetVisibleColumns,
   sheetVisibleRows,
 }: SheetGridProps) => {
@@ -55,7 +56,7 @@ const SheetGrid = memo(({
   }
   
   const handleGridScroll = ({ verticalScrollDirection}: IHandleGridScroll) => {
-    console.log(verticalScrollDirection)
+    updateSheetVerticalScrollDirection(verticalScrollDirection)
   }
   
   interface IHandleGridScroll {
@@ -149,6 +150,7 @@ interface SheetGridProps {
   updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
   updateSheetSelection(cellId: string, isShiftPressed: boolean): void
   updateSheetSelectionOnCellMountOrUnmount(cellId: string, mountOrUnmount: 'MOUNT' | 'UNMOUNT'): void
+  updateSheetVerticalScrollDirection(nextScrollDirection: 'forward' | 'backward'): void
   sheetVisibleColumns: SheetColumn['id'][]
   sheetVisibleRows: SheetRow['id'][]
 }

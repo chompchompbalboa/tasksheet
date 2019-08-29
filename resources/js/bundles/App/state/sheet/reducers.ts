@@ -49,7 +49,8 @@ const defaultSheetState: SheetState = {
       rangeEndCellId: null,
       rangeCellIds: null,
       rangeWidth: null,
-      rangeHeight: null
+      rangeHeight: null,
+      shouldRangeHelperRender: false
     }
   },
   sheets: null,
