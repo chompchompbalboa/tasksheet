@@ -52,7 +52,7 @@ const Folders = ({
   updateActiveFileId,
   updateActiveFolderPath
 }: FoldersProps) => {
-  
+
   return (
     <Container
       isActiveTab={isActiveTab}>
@@ -133,13 +133,12 @@ interface ContainerProps {
 
 const SidebarContainer = styled.div`
   z-index: 0;
-  width: 10rem;
   height: 100%;
 `
 
 const ContentContainer = styled.div`
   z-index: 1000;
-  width: calc(100% - 10rem);
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -148,7 +147,7 @@ const ContentContainer = styled.div`
 
 const FoldersContainer = styled.div`
   width: 100%;
-  height: calc(100% - 3rem);
+  height: calc(100% - 2.5rem);
   display: flex;
   border-top: 1px solid rgb(220, 220, 220);
   border-left: 1px solid rgb(220, 220, 220);
@@ -156,7 +155,7 @@ const FoldersContainer = styled.div`
 
 const HeaderContainer = styled.div`
   width: 100%;
-  height: 3rem;
+  height: 2.5rem;
   background-color: rgb(225, 225, 225);
 `
 

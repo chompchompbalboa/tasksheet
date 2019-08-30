@@ -82,7 +82,7 @@ const Tabs = ({
             handleTabClick={handleFileOpen}/>))
         }
         <MiniTab
-          isActiveTab={localActiveTabId === 'FOLDERS' || localTabs.length === 0}
+          isActiveTab={localActiveTabId === 'FOLDERS'}
           onClick={() => handleFileOpen('FOLDERS')}>
           <Icon
             icon={FOLDER}
@@ -121,7 +121,7 @@ const Tabs = ({
         }
         <Folders
           handleFileOpen={handleFileOpen}
-          isActiveTab={localActiveTabId === 'FOLDERS' || localTabs.length === 0}/>
+          isActiveTab={localActiveTabId === 'FOLDERS'}/>
         <User
           isActiveTab={localActiveTabId === 'USER'}/>
       </FilesContainer>

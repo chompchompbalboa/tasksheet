@@ -27,10 +27,10 @@ const FoldersHeader = ({
   const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
 
   const styledInput = useRef(null)
-  const [ name, setName ] = useState(activeItem ? activeItem.name : 'Home')
+  const [ name, setName ] = useState(activeItem.name)
 
   useEffect(() => {
-    !isSavingNewFile && setName(activeItem ? activeItem.name : 'Home')
+    !isSavingNewFile && setName(activeItem.name)
   }, [ activeFileId, activeFolderPath ])
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const FoldersHeader = ({
     <Container>
       <StyledInput
         ref={styledInput}
-        disabled={!isSavingNewFile && typeof activeItem === 'undefined'}
+        disabled={!isSavingNewFile}
         placeholder="Name...          "
         placeholderIsMinWidth
         onChange={e => setName(e.target.value)}
@@ -92,7 +92,6 @@ interface FoldersHeaderProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   height: 100%;
-  padding-left: 0.375rem;
   background-color: rgb(240, 240, 240);
   display: flex;
   align-items: center;
@@ -101,7 +100,7 @@ const Container = styled.div`
 const StyledInput = styled(AutosizeInput)`
   outline: none;
   background-color: transparent;
-  font-size: 1rem;
+  font-size: 0.9rem;
   border-radius: 3px;
 `
 

@@ -5,7 +5,7 @@ import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { PLUS_SIGN } from '@app/assets/icons'
+import { PLUS_SIGN, UPLOAD } from '@app/assets/icons'
 
 import { AppState } from '@app/state'
 import { Folder } from '@app/state/folder/types'
@@ -42,7 +42,7 @@ const FoldersSidebar = ({
         </Action>
         <Action
           onClick={() => updateModal({ activeModal: 'CREATE_SHEET_FROM_CSV', createSheetFolderId: activeFolderId })}>
-          <ActionIcon><Icon icon={PLUS_SIGN} size="0.85rem"/></ActionIcon>
+          <ActionIcon><Icon icon={UPLOAD} size="0.85rem"/></ActionIcon>
           <ActionText>Upload CSV</ActionText>
         </Action>
       </ActionsContainer>
@@ -63,8 +63,7 @@ const Container = styled.div`
   height: 100%;
   width: 100%;
   background-color: rgb(240, 240, 240);
-  padding: 0.4rem;
-  padding-top: 3rem;
+  padding: 2.5rem 0rem 0.5rem 0rem;
 `
 
 const ActionsContainer = styled.div`
@@ -73,10 +72,13 @@ const ActionsContainer = styled.div`
 const Action = styled.div`
   cursor: default;
   display: flex;
-  align-items: center;
+  align-items: space-between;
   width: 100%;
   white-space: nowrap;
-  padding: 0.2rem 0;
+  padding: 0.375rem 1.5rem 0.375rem 0.5rem;
+  &:hover {
+    background-color: rgb(220, 220, 220);
+  }
 `
 
 const ActionIcon = styled.span`
@@ -85,15 +87,12 @@ const ActionIcon = styled.span`
 `
 
 const ActionText = styled.span`
-  margin-left: 0.25rem;
+  margin-left: 0.625rem;
   width: 100%;
   display: flex;
   align-items: center;
   white-space: nowrap;
   font-size: 0.75rem;
-  &:hover {
-    text-decoration: underline;
-  }
 `
 
 //-----------------------------------------------------------------------------
