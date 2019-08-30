@@ -52,7 +52,7 @@ const Folders = ({
   updateActiveFileId,
   updateActiveFolderPath
 }: FoldersProps) => {
-  console.log(isActiveTab)
+  
   return (
     <Container
       isActiveTab={isActiveTab}>

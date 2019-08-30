@@ -4,6 +4,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import SettingsUserColor from '@app/bundles/Settings/SettingsUserColor'
 import UserLogout from '@app/bundles/User/UserLogout'
 
 //-----------------------------------------------------------------------------
@@ -16,6 +17,7 @@ const User = ({
     <Container
       isActiveTab={isActiveTab}>
       <UserLogout />
+      <SettingsUserColor />
     </Container>
   )
 }
@@ -35,6 +37,7 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
+  padding: 1.5rem;
 `
 interface ContainerProps {
   isActiveTab: boolean

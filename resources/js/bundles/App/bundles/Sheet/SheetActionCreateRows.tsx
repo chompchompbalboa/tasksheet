@@ -34,23 +34,12 @@ const SheetCreateRows = ({
     batch(() => {
       for(let i = 1; i <= inputValue; i++) {
         createSheetRow(sheetId, sourceSheetId)
-      }
-    })
-  }
+  }})}
   
-  const handleAutosizeInputBlur = () => {
-    setIsEditingInputValue(false)
-  }
+  const handleAutosizeInputFocus = () => setIsEditingInputValue(true)
+  const handleAutosizeInputBlur = () => setIsEditingInputValue(false)
   
-  const handleAutosizeInputFocus = () => {
-    setIsEditingInputValue(true)
-  }
-  
-  const createRowsOnKeydownEnter = (e: KeyboardEvent) => {
-    if(e.key === 'Enter') {
-      createRows()
-    }
-  }
+  const createRowsOnKeydownEnter = (e: KeyboardEvent) => { if(e.key === 'Enter') { createRows() } }
 
   return (
     <Container>
@@ -97,7 +86,6 @@ interface SheetCreateRowsProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   height: 100%;
-  color: rgb(110, 110, 110);
   display: flex;
   align-items: center;
 `
@@ -109,7 +97,6 @@ const AddRowButton = styled.div`
   justify-content: center;
   align-items: center;
   background-color: rgb(210, 210, 210);
-  color: rgb(80, 80, 80);
   border-radius: 3px;
   padding: 0.25rem;
   transition: all 0.05s;
