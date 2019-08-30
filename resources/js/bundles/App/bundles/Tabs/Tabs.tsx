@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { FOLDER } from '@app/assets/icons'
+import { FOLDER, SETTINGS, FILE_SHEET, USER } from '@app/assets/icons'
 
 import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
@@ -20,6 +20,7 @@ import File from '@app/bundles/File/File'
 import Folders from '@app/bundles/Folders/Folders'
 import Icon from '@/components/Icon'
 import Tab from '@app/bundles/Tabs/Tab'
+import User from '@app/bundles/User/User'
 
 //-----------------------------------------------------------------------------
 // Redux
@@ -61,14 +62,15 @@ const Tabs = ({
     setLocalActiveTabId(nextActiveTabId)
     tabs.includes(nextActiveTabId)
       ? window.setTimeout(() => updateActiveTabId(nextActiveTabId), 10)
-      : nextActiveTabId !== 'FOLDERS' 
+      : !['FOLDERS', 'USER', 'APP_SETTINGS', 'SHEET_SETTINGS'].includes(nextActiveTabId)
         ? (
             setLocalTabs([ ...localTabs, nextActiveTabId]),
             setTimeout(() => openFileInNewTab(nextActiveTabId), 10)
           )
-        : setLocalActiveTabId('FOLDERS')
+        : setLocalActiveTabId(nextActiveTabId)
   }
-
+console.log(localActiveTabId)
+console.log(localTabs)
   return (
     <Container>
       <TabsContainer>
@@ -80,13 +82,34 @@ const Tabs = ({
             closeTab={closeTab}
             handleTabClick={handleFileOpen}/>))
         }
-        <FoldersTab
+        <MiniTab
           isActiveTab={localActiveTabId === 'FOLDERS' || localTabs.length === 0}
           onClick={() => handleFileOpen('FOLDERS')}>
           <Icon
             icon={FOLDER}
             size="1rem"/>
-        </FoldersTab>
+        </MiniTab>
+        <MiniTab
+          isActiveTab={localActiveTabId === 'FOLDERS'}
+          onClick={() => handleFileOpen('FOLDERS')}>
+          <Icon
+            icon={FILE_SHEET}
+            size="0.88rem"/>
+        </MiniTab>
+        <MiniTab
+          isActiveTab={localActiveTabId === 'USER'}
+          onClick={() => handleFileOpen('USER')}>
+          <Icon
+            icon={USER}
+            size="1rem"/>
+        </MiniTab>
+        <MiniTab
+          isActiveTab={localActiveTabId === 'FOLDERS'}
+          onClick={() => handleFileOpen('FOLDERS')}>
+          <Icon
+            icon={SETTINGS}
+            size="1rem"/>
+        </MiniTab>
       </TabsContainer>
       <FilesContainer>
         {localTabs.map((fileId) => (
@@ -100,6 +123,8 @@ const Tabs = ({
         <Folders
           handleFileOpen={handleFileOpen}
           isActiveTab={localActiveTabId === 'FOLDERS' || localTabs.length === 0}/>
+        <User
+          isActiveTab={localActiveTabId === 'USER'}/>
       </FilesContainer>
     </Container>
   )
@@ -136,18 +161,21 @@ const TabsContainer = styled.div`
   align-items: flex-end;
 `
 
-const FoldersTab = styled.div`
+const MiniTab = styled.div`
   cursor: default;
-  padding: 0.2rem 0.4rem;
+  margin-top: 0.2rem;
+  height: 1.4rem;
+  padding: 0.4rem;
+  margin-right: 1px;
   background-color: rgb(240,240,240);
   color: rgb(80, 80, 80);
   border-radius: 6px 6px 0 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: ${ ({ isActiveTab }: FoldersTabProps) => isActiveTab ? '1' : '0.75'};
+  opacity: ${ ({ isActiveTab }: MiniTabProps) => isActiveTab ? '1' : '0.75'};
 `
-interface FoldersTabProps {
+interface MiniTabProps {
   isActiveTab: boolean
 }
 
@@ -156,7 +184,7 @@ const FilesContainer = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: white;
+  background-color: rgb(240,240,240);
   box-shadow: -1px 0px 10px 0px rgba(0,0,0,0.5);
 `
 

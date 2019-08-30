@@ -52,6 +52,7 @@ const Folders = ({
   updateActiveFileId,
   updateActiveFolderPath
 }: FoldersProps) => {
+  console.log(isActiveTab)
   return (
     <Container
       isActiveTab={isActiveTab}>
@@ -124,7 +125,6 @@ const Container = styled.div`
   display: ${ ({ isActiveTab }: ContainerProps) => isActiveTab ? 'flex' : 'none' };
   width: 100%;
   height: 100%;
-  display: flex;
 `
 interface ContainerProps {
   isActiveTab: boolean

@@ -81,7 +81,7 @@ const SheetColumnContextMenu = ({
           <ContextMenuItem text="Rename" onClick={() => closeOnClick(() => updateSheetActive({ columnRenamingId: columnId }))}/>
           <ContextMenuItem text="Type">
             <ContextMenuItem 
-              text="String" 
+              text="Text" 
               logo={ columnType === 'STRING' ? CHECKMARK : null}
               onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'STRING' }))}/>
             <ContextMenuItem 
@@ -96,26 +96,15 @@ const SheetColumnContextMenu = ({
               text="Date" 
               logo={ columnType === 'DATETIME' ? CHECKMARK : null}
               onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DATETIME' }))}/>
-            <ContextMenuItem 
-              text="Dropdown">
-              <ContextMenuItem
-                text="Dropdown 1"
-                logo={ columnType === 'DROPDOWN' ? CHECKMARK : null}
-                onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DROPDOWN' }))}/>
-              <ContextMenuItem
-                text="Dropdown 2"
-                logo={ columnType === 'DROPDOWN' ? CHECKMARK : null}
-                onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DROPDOWN' }))}/>
-              <ContextMenuItem
-                text="Dropdown 3"
-                logo={ columnType === 'DROPDOWN' ? CHECKMARK : null}
-                onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DROPDOWN' }))}/>
-              <ContextMenuDivider />
-              <ContextMenuItem
-                text="Manage Dropdowns"
-                logo={ columnType === 'DROPDOWN' ? CHECKMARK : null}
-                onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DROPDOWN' }))}/>
-            </ContextMenuItem>
+            <ContextMenuDivider />
+            <ContextMenuItem
+              text="Employees"
+              logo={ columnType === 'DROPDOWN' ? CHECKMARK : null}
+              onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DROPDOWN' }))}/>
+            <ContextMenuItem
+              text="Departments"
+              logo={ columnType === 'DROPDOWN' ? CHECKMARK : null}
+              onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DROPDOWN' }))}/>
           </ContextMenuItem>
           <ContextMenuDivider />
         </>

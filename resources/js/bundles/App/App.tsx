@@ -10,9 +10,7 @@ import { selectUserColorPrimary } from '@app/state/user/selectors'
 
 import History from '@app/bundles/History/History'
 import Modals from '@app/bundles/Modal/Modals'
-import Settings from '@app/bundles/Settings/Settings'
 import Tabs from '@app/bundles/Tabs/Tabs'
-import User from '@app/bundles/User/User'
 
 //-----------------------------------------------------------------------------
 // Redux
@@ -31,8 +29,6 @@ const App = ({
     appBackgroundColor={appBackgroundColor}>
     <History />
     <Modals />
-    <User />
-		<Settings />
 		<Tabs />
 	</Container>
 )
