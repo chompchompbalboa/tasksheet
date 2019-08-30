@@ -34,23 +34,12 @@ const SheetCreateRows = ({
     batch(() => {
       for(let i = 1; i <= inputValue; i++) {
         createSheetRow(sheetId, sourceSheetId)
-      }
-    })
-  }
+  }})}
   
-  const handleAutosizeInputBlur = () => {
-    setIsEditingInputValue(false)
-  }
+  const handleAutosizeInputFocus = () => setIsEditingInputValue(true)
+  const handleAutosizeInputBlur = () => setIsEditingInputValue(false)
   
-  const handleAutosizeInputFocus = () => {
-    setIsEditingInputValue(true)
-  }
-  
-  const createRowsOnKeydownEnter = (e: KeyboardEvent) => {
-    if(e.key === 'Enter') {
-      createRows()
-    }
-  }
+  const createRowsOnKeydownEnter = (e: KeyboardEvent) => { if(e.key === 'Enter') { createRows() } }
 
   return (
     <Container>

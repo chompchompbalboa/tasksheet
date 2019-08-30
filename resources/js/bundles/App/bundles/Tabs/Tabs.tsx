@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { FOLDER, SETTINGS, FILE_SHEET, USER } from '@app/assets/icons'
+import { FOLDER, ORGANIZATION, FILE_SHEET, USER } from '@app/assets/icons'
 
 import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
@@ -62,15 +62,14 @@ const Tabs = ({
     setLocalActiveTabId(nextActiveTabId)
     tabs.includes(nextActiveTabId)
       ? window.setTimeout(() => updateActiveTabId(nextActiveTabId), 10)
-      : !['FOLDERS', 'USER', 'APP_SETTINGS', 'SHEET_SETTINGS'].includes(nextActiveTabId)
+      : !['FOLDERS', 'USER', 'SHEET_SETTINGS', 'ORGANIZATION'].includes(nextActiveTabId)
         ? (
             setLocalTabs([ ...localTabs, nextActiveTabId]),
             setTimeout(() => openFileInNewTab(nextActiveTabId), 10)
           )
         : setLocalActiveTabId(nextActiveTabId)
   }
-console.log(localActiveTabId)
-console.log(localTabs)
+
   return (
     <Container>
       <TabsContainer>
@@ -90,8 +89,8 @@ console.log(localTabs)
             size="1rem"/>
         </MiniTab>
         <MiniTab
-          isActiveTab={localActiveTabId === 'FOLDERS'}
-          onClick={() => handleFileOpen('FOLDERS')}>
+          isActiveTab={localActiveTabId === 'SHEET_SETTINGS'}
+          onClick={() => handleFileOpen('SHEET_SETTINGS')}>
           <Icon
             icon={FILE_SHEET}
             size="0.88rem"/>
@@ -104,10 +103,10 @@ console.log(localTabs)
             size="1rem"/>
         </MiniTab>
         <MiniTab
-          isActiveTab={localActiveTabId === 'FOLDERS'}
-          onClick={() => handleFileOpen('FOLDERS')}>
+          isActiveTab={localActiveTabId === 'ORGANIZATION'}
+          onClick={() => handleFileOpen('ORGANIZATION')}>
           <Icon
-            icon={SETTINGS}
+            icon={ORGANIZATION}
             size="1rem"/>
         </MiniTab>
       </TabsContainer>
