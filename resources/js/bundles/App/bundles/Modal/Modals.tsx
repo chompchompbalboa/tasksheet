@@ -8,7 +8,6 @@ import { AppState } from '@app/state'
 import { Modal as TModal, ModalUpdates } from '@app/state/modal/types'
 import { selectActiveModal } from '@app/state/modal/selectors'
 
-import SheetModalCreateSheet from '@app/bundles/Sheet/SheetModalCreateSheet'
 import SheetModalCreateSheetFromCsv from '@app/bundles/Sheet/SheetModalCreateSheetFromCsv'
 
 //-----------------------------------------------------------------------------
@@ -26,7 +25,6 @@ const Modals = ({
 }: ModalsProps) => {
   
   const modals = {
-    CREATE_SHEET: SheetModalCreateSheet,
     CREATE_SHEET_FROM_CSV: SheetModalCreateSheetFromCsv
   }
   

@@ -5,7 +5,7 @@ import React, { MouseEvent, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { FILE_SHEET, FILE_SHEET_VIEW } from '@app/assets/icons'
+import { SHEET, SHEET_VIEW } from '@app/assets/icons'
 
 import { ThunkDispatch } from '@app/state/types'
 import { ClipboardUpdates, File, FileUpdates } from '@app/state/folder/types'
@@ -104,7 +104,7 @@ const FoldersFolderFile = ({
         onDoubleClick={() => { if(!file.isPreventedFromSelecting) { handleFileOpen(file.id) }}}>
         <IconContainer
           isFile>
-          <Icon icon={file.type === 'SHEET' ? FILE_SHEET : FILE_SHEET_VIEW} size='0.95rem'/>
+          <Icon icon={file.type === 'SHEET' ? SHEET : SHEET_VIEW} size='0.95rem'/>
         </IconContainer>
         {!isRenaming
           ? <NameContainer

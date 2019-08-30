@@ -103,7 +103,8 @@ const SheetGrid = memo(({
     }
     if(columnIndex === 0) {
       return (
-        <SheetRowLeader
+        <SheetRowLeader 
+          sheetId={sheetId}
           rowId={rowId}
           handleContextMenu={handleContextMenu}
           isRowBreak={rowId === 'ROW_BREAK'}

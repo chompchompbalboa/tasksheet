@@ -60,9 +60,8 @@ const SheetModalCreateSheetFromCsv = ({
   return (
     <StyledInput
       ref={input}
-      name="Csv"
       type="file"
-      accept=".csv,.xls,.xlsx"
+      accept=".csv"
       onChange={e => handleFileDialogSelect(e)}/>
   )
 }

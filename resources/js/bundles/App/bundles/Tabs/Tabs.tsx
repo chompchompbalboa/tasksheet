@@ -5,7 +5,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { FOLDER, ORGANIZATION, FILE_SHEET, USER } from '@app/assets/icons'
+import { FOLDER, ORGANIZATION, SHEET, USER } from '@app/assets/icons'
 
 import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
@@ -92,7 +92,7 @@ const Tabs = ({
           isActiveTab={localActiveTabId === 'SHEET_SETTINGS'}
           onClick={() => handleFileOpen('SHEET_SETTINGS')}>
           <Icon
-            icon={FILE_SHEET}
+            icon={SHEET}
             size="0.88rem"/>
         </MiniTab>
         <MiniTab

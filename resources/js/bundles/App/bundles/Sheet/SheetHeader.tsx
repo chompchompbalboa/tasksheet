@@ -134,8 +134,8 @@ const Container = styled.div`
   text-align: left;
   background-color: ${({ isColumnBreak }: ContainerProps ) => isColumnBreak ? 'rgb(190, 190, 190)' : 'rgb(250, 250, 250)'};
   box-shadow: ${({ isNextColumnAColumnBreak }: ContainerProps ) => isNextColumnAColumnBreak ? 'inset 0 -1px 0px 0px rgba(190,190,190,1)' : 'inset 0 -1px 0px 0px rgba(180,180,180,1)'};
-  border-right: ${ ({ isNextColumnAColumnBreak, isLast }: ContainerProps ) => 
-    isNextColumnAColumnBreak 
+  border-right: ${ ({ isColumnBreak, isNextColumnAColumnBreak, isLast }: ContainerProps ) => 
+    isColumnBreak || isNextColumnAColumnBreak 
       ? '0.5px solid rgb(190, 190, 190)'
       : isLast 
         ? '1px solid rgb(180, 180, 180)' 

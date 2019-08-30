@@ -1040,6 +1040,21 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
       for(let rowIndex = nextRangeStartRowIndex; rowIndex <= nextRangeEndRowIndex; rowIndex++) {
         nextRangeHeight = nextRangeHeight + 24
       }
+      dispatch(selectSheetRange({
+        rangeStartCellId: selections.rangeStartCellId,
+        rangeEndCellId: selections.rangeStartCellId,
+        selections,
+        nextRangeStartColumnId,
+        nextRangeStartRowId,
+        nextRangeStartCellId,
+        nextRangeEndColumnId,
+        nextRangeEndRowId,
+        nextRangeEndCellId,
+        nextRangeCellIds,
+        nextRangeWidth,
+        nextRangeHeight
+      }))
+      /*
       batch(() => {
         // Update previous range start and end
         dispatch(updateSheetCellReducer(selections.rangeStartCellId, removeSelectionCellState))
@@ -1071,6 +1086,7 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
           rangeHeight: nextRangeHeight
         }))
       })
+      */
     }
   }
 }
@@ -1146,6 +1162,112 @@ export const clearSheetSelection = (): ThunkAction => {
       rangeStartCellId !== null && dispatch(updateSheetCellReducer(rangeStartCellId, removeSelectionCellState))
       rangeEndCellId !== null && dispatch(updateSheetCellReducer(rangeEndCellId, removeSelectionCellState))
     })
+  }
+}
+
+export const selectSheetRange = ({
+  rangeStartCellId,
+  rangeEndCellId,
+  selections,
+  nextRangeStartColumnId,
+  nextRangeStartRowId,
+  nextRangeStartCellId,
+  nextRangeEndColumnId,
+  nextRangeEndRowId,
+  nextRangeEndCellId,
+  nextRangeCellIds,
+  nextRangeWidth,
+  nextRangeHeight
+}: IselectSheetRange): ThunkAction => {
+  return async (dispatch: ThunkDispatch) => {
+    dispatch(clearSheetSelection())
+    batch(() => {
+      // Update previous range start and end
+      dispatch(updateSheetCellReducer(rangeStartCellId, removeSelectionCellState))
+      dispatch(updateSheetCellReducer(rangeEndCellId, removeSelectionCellState))
+      // Update next range start and end
+      dispatch(updateSheetCellReducer(nextRangeStartCellId, { 
+        isRangeStart: true,
+        isRangeRenderedFromOtherEnd: true,
+        rangeWidth: nextRangeWidth,
+        rangeHeight: nextRangeHeight
+      }))
+      dispatch(updateSheetCellReducer(nextRangeEndCellId, { 
+        isRangeEnd: true,
+        isRangeRenderedFromOtherEnd: false,
+        rangeWidth: nextRangeWidth,
+        rangeHeight: nextRangeHeight
+      }))
+      dispatch(updateSheetSelectionReducer({
+        ...selections,
+        isRangeEndCellRendered: true,
+        rangeStartColumnId: nextRangeStartColumnId,
+        rangeStartRowId: nextRangeStartRowId,
+        rangeStartCellId: nextRangeStartCellId,
+        rangeEndColumnId: nextRangeEndColumnId, 
+        rangeEndRowId: nextRangeEndRowId,
+        rangeEndCellId: nextRangeEndCellId,
+        rangeCellIds: nextRangeCellIds,
+        rangeWidth: nextRangeWidth,
+        rangeHeight: nextRangeHeight
+      }))
+    })
+  }
+} 
+
+interface IselectSheetRange {
+  rangeStartCellId: SheetCell['id']
+  rangeEndCellId: SheetCell['id']
+  selections: SheetActiveSelections
+  nextRangeStartColumnId: SheetColumn['id']
+  nextRangeStartRowId: SheetRow['id']
+  nextRangeStartCellId: SheetCell['id']
+  nextRangeEndColumnId: SheetColumn['id']
+  nextRangeEndRowId: SheetRow['id']
+  nextRangeEndCellId: SheetCell['id']
+  nextRangeWidth: number
+  nextRangeHeight: number
+  nextRangeCellIds: SheetCell['id'][]
+}
+
+export const selectSheetRows = (sheetId: Sheet['id'], startRowId: SheetRow['id'], endRowId?: SheetRow['id']): ThunkAction => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      active: { selections },
+      columns,
+      rows,
+      sheets: { [sheetId]: { visibleColumns } }
+    } = getState().sheet
+    
+    const startRow = rows[startRowId]
+    const startColumnId = visibleColumns[0]
+    const startCellId = startRow.cells[startColumnId]
+    const endRow = rows[startRowId]
+    const endColumnId = visibleColumns[Math.max(0, visibleColumns.length - 1)]
+    const endCellId = endRow.cells[endColumnId]
+    
+    let nextRangeWidth = 0
+    for(let columnIndex = 0; columnIndex <= visibleColumns.length - 1; columnIndex++) {
+      const columnId = visibleColumns[columnIndex]
+      const column = columns[columnId]
+      nextRangeWidth = columnId === 'COLUMN_BREAK' ? nextRangeWidth + 10 : nextRangeWidth + column.width // Column or column break width
+    }
+    
+    dispatch(selectSheetRange({
+      rangeStartCellId: selections.rangeStartCellId,
+      rangeEndCellId: selections.rangeEndCellId,
+      selections,
+      nextRangeStartColumnId: startColumnId,
+      nextRangeStartRowId: startRow.id,
+      nextRangeStartCellId: startCellId,
+      nextRangeEndColumnId: endColumnId,
+      nextRangeEndRowId: endRow.id,
+      nextRangeEndCellId: endCellId,
+      nextRangeWidth: nextRangeWidth,
+      nextRangeHeight: 24,
+      nextRangeCellIds: Object.keys(startRow.cells).map(columnId => startRow.cells[columnId])
+    }))
+    console.log(startRowId)
   }
 }
 

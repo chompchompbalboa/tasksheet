@@ -34,6 +34,7 @@ const SheetHeaders = ({
     width: 10,
     type: 'STRING'
   }
+  
   const isNextColumnAColumnBreak = (index: number) => {
     return sheetVisibleColumns[index + 1] && sheetVisibleColumns[index + 1] === 'COLUMN_BREAK'
   } 
@@ -41,6 +42,7 @@ const SheetHeaders = ({
   return (
     <Container>
       <SheetRowLeader
+        sheetId={null}
         rowId={'SHEET_HEADER'}
         isRowBreak={false}
         style={{ width: '30px' }}/>

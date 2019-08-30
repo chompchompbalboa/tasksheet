@@ -2,22 +2,33 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { memo, MouseEvent } from 'react'
+import { useDispatch } from 'react-redux'
 import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
-import { SheetRow } from '@app/state/sheet/types'
+import { Sheet, SheetRow } from '@app/state/sheet/types'
+import {
+  selectSheetRows as selectSheetRowsAction
+} from '@app/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetRowLeader = memo(({
+  sheetId,
   rowId,
   handleContextMenu,
   isRowBreak,
   style,
   text = null
-}: SheetRowLeaderProps) => (
-    <Container 
+}: SheetRowLeaderProps) => {
+  
+  const dispatch = useDispatch()
+  const selectSheetRows = (startRowId: SheetRow['id'], endRowId?: SheetRow['id']) => dispatch(selectSheetRowsAction(sheetId, startRowId, endRowId))
+  
+  return (
+    <Container
+      onClick={() => selectSheetRows(rowId)}
       onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'ROW', rowId)}
       isRowBreak={isRowBreak}
       style={style}>
@@ -26,12 +37,14 @@ const SheetRowLeader = memo(({
         {text || '1'}
       </TextContainer>
     </Container>
-), areEqual)
+  )
+}, areEqual)
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
 interface SheetRowLeaderProps {
+  sheetId: Sheet['id']
   rowId: SheetRow['id']
   handleContextMenu?(e: MouseEvent, type: string, id: string, index?: number): void
   isRowBreak: boolean
