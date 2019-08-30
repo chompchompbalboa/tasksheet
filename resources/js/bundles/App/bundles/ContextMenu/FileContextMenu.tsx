@@ -32,7 +32,9 @@ const FileContextMenu = ({
       closeContextMenu={closeContextMenu}
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}>
-      <ContextMenuItem text="Open" />
+      <ContextMenuItem 
+        isFirstItem
+        text="Open" />
       <ContextMenuDivider />
       <ContextMenuItem 
         text="Cut"
@@ -44,6 +46,7 @@ const FileContextMenu = ({
         onClick={() => closeOnClick(() => setIsRenaming(true))}/>
       <ContextMenuDivider />
       <ContextMenuItem 
+        isLastItem
         text="Delete"
         onClick={() => closeOnClick(() => deleteFile(fileId))}/>
     </ContextMenu>

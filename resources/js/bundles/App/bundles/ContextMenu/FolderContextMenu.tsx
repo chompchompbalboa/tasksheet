@@ -37,6 +37,7 @@ const FolderContextMenu = ({
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}>
       <ContextMenuItem 
+        isFirstItem
         text="Cut"
         onClick={() => closeOnClick(() => updateClipboard({ itemId: folderId, folderOrFile: 'FOLDER', cutOrCopy: 'CUT' }))}/>
       <ContextMenuItem text="Copy" />
@@ -59,7 +60,9 @@ const FolderContextMenu = ({
         text="Rename"
         onClick={() => closeOnClick(() => setIsRenaming(true))}/>
       <ContextMenuDivider />
-      <ContextMenuItem text="Delete" />
+      <ContextMenuItem 
+        isLastItem
+        text="Delete" />
     </ContextMenu>
   )
 }

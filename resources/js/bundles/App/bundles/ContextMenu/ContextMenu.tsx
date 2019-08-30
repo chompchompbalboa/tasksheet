@@ -62,7 +62,8 @@ const Container = styled.div`
   left: ${( { contextMenuLeft }: ContainerProps ) => contextMenuLeft ? contextMenuLeft + 'px' : 'auto'};
   right: ${( { contextMenuRight }: ContainerProps ) => contextMenuRight ? contextMenuRight + 'px' : 'auto' };
   background-color: white;
-  border-radius: 3px;
+  border-radius: 8px;
+  min-width: 8rem;
   box-shadow: 3px 3px 10px 0px rgba(150,150,150,1);
 `
 interface ContainerProps {

@@ -65,7 +65,7 @@ const SheetColumnContextMenu = ({
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}
       contextMenuRight={contextMenuRight}>
-      <ContextMenuItem text="Insert Column" onClick={() => closeOnClick(() => createSheetColumn())}/>
+      <ContextMenuItem isFirstItem text="Insert Column" onClick={() => closeOnClick(() => createSheetColumn())}/>
       {columnType !== 'COLUMN_BREAK' && 
         <>
           <ContextMenuItem text="Insert Column Break" onClick={() => closeOnClick(() => createSheetColumnBreak())}/>
@@ -81,6 +81,7 @@ const SheetColumnContextMenu = ({
           <ContextMenuItem text="Rename" onClick={() => closeOnClick(() => updateSheetActive({ columnRenamingId: columnId }))}/>
           <ContextMenuItem text="Type">
             <ContextMenuItem 
+              isFirstItem
               text="Text" 
               logo={ columnType === 'STRING' ? CHECKMARK : null}
               onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'STRING' }))}/>
@@ -102,6 +103,7 @@ const SheetColumnContextMenu = ({
               logo={ columnType === 'DROPDOWN' ? CHECKMARK : null}
               onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DROPDOWN' }))}/>
             <ContextMenuItem
+              isLastItem
               text="Departments"
               logo={ columnType === 'DROPDOWN' ? CHECKMARK : null}
               onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DROPDOWN' }))}/>
@@ -110,6 +112,7 @@ const SheetColumnContextMenu = ({
         </>
       }
         <ContextMenuItem 
+          isLastItem
           text="Delete"
           onClick={() => closeOnClick(() => onDeleteClick())}>
         </ContextMenuItem>

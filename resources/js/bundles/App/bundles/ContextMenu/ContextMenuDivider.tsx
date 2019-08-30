@@ -13,7 +13,7 @@ const ContextMenuDivider = () => <Container/>
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  width: calc(100% - 2.5rem);
+  width: calc(100% - 2rem);
   margin-left: auto;
   height: 1px;
   background-color: rgb(225, 225, 225);

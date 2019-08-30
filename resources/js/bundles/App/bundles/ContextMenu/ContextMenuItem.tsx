@@ -14,6 +14,8 @@ import Icon from '@/components/Icon'
 const ContextMenuItem = ({
   children,
   decorator = null,
+  isFirstItem = false,
+  isLastItem = false,
   logo = null,
   onClick,
   text
@@ -23,6 +25,8 @@ const ContextMenuItem = ({
 
   return (
     <Container
+      isFirstItem={isFirstItem}
+      isLastItem={isLastItem}
       onClick={onClick}
       onMouseEnter={() => setIsSubItemsVisible(true)}
       onMouseLeave={() => setIsSubItemsVisible(false)}>
@@ -46,6 +50,8 @@ const ContextMenuItem = ({
 interface ContextMenuItemProps {
   children?: any
   decorator?: string
+  isFirstItem?: boolean
+  isLastItem?: boolean
   logo?: string
   onClick?(...args: any): void
   text: string
@@ -58,20 +64,26 @@ const Container = styled.div`
   cursor: default;
   min-width: 8rem;
   width: 100%;
-  padding: 0.5rem 0.5rem 0.5rem 0;
+  padding: ${ ({ isFirstItem, isLastItem }: IContainer ) => isFirstItem ? '0.55rem 0.75rem 0.425rem 0' : (isLastItem ? '0.425rem 0.75rem 0.55rem 0' : '0.425rem 0.75rem 0.425rem 0') };
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 1rem;
   transition: background-color 0.05s;
+  border-radius: ${ ({ isFirstItem, isLastItem }: IContainer ) => isFirstItem ? '10px 10px 0 0' : (isLastItem ? '0 0 10px 10px' : 'none') };
   &:hover {
     background-color: rgb(242, 242, 242);
   }
 `
 
+interface IContainer {
+  isFirstItem: boolean
+  isLastItem: boolean
+}
+
 const Logo = styled.div`
   margin: 0 0.5rem;
-  width: 1.125rem;
+  width: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -99,7 +111,7 @@ const SubItems = styled.div`
   left: 100%;
   margin-top: -0.625rem;
   background-color: white;
-  border-radius: 3px;
+  border-radius: 10px;
   box-shadow: 3px 3px 10px 0px rgba(150,150,150,1);
   max-height: 50vh;
 	overflow-y: scroll;
