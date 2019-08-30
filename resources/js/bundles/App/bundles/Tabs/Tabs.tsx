@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
@@ -49,12 +49,12 @@ const Tabs = ({
 
   const [ localActiveTabId, setLocalActiveTabId ] = useState(activeTabId)
   const [ localTabs, setLocalTabs ] = useState(tabs)
-
+  
   useEffect(() => {
-    setLocalActiveTabId(activeTabId)
+    setLocalActiveTabId(activeTabId || 'FOLDERS')
   }, [ activeTabId ])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setLocalTabs(tabs)
   }, [ tabs ])
 
