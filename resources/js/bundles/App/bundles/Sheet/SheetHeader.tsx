@@ -139,10 +139,13 @@ const Container = styled.div`
       ? '0.5px solid rgb(190, 190, 190)'
       : isLast 
         ? '1px solid rgb(180, 180, 180)' 
-        : 'none'
+        : '1px solid rgb(230, 230, 230)'
   };
   font-size: 0.875rem;
   font-weight: bold;
+  &:hover {
+    background-color: ${({ isColumnBreak }: ContainerProps ) => isColumnBreak ? 'rgb(190, 190, 190)' : 'rgb(243, 243, 243)'};
+  }
 `
 interface ContainerProps {
   containerWidth: number
