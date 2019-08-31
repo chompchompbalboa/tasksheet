@@ -1110,7 +1110,10 @@ export const updateSheetSelectionOnCellMountOrUnmount = (cellId: SheetCell['id']
       const nextIsRangeEndCellRendered = isCellRangeStartOrEnd === 'END' ? mountOrUnmount === 'MOUNT' : selections.isRangeEndCellRendered
       const nextIsRangeStartCellRendered = isCellRangeStartOrEnd === 'START' ? mountOrUnmount === 'MOUNT' : selections.isRangeStartCellRendered
       const nextShouldRangeHelperRender = 
-        selections.rangeHeight !== null && !nextIsRangeStartCellRendered && !nextIsRangeEndCellRendered && (
+        selections.rangeHeight !== null && 
+        rangeStartCell.rowId !== rangeEndCell.rowId &&
+        !nextIsRangeStartCellRendered &&
+        !nextIsRangeEndCellRendered && (
           isCellRangeStartOrEnd === 'END' && mountOrUnmount === 'UNMOUNT' && verticalScrollDirection === 'backward' ||
           isCellRangeStartOrEnd === 'START' && mountOrUnmount === 'UNMOUNT' && verticalScrollDirection === 'forward'
         )
