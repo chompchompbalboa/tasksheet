@@ -63,7 +63,7 @@ const SheetCell = memo(({
     DATETIME: SheetCellDatetime,
     DROPDOWN: SheetCellDropdown
   }
-  const SheetCellType = sheetCellTypes[type]
+  const SheetCellType = sheetCellTypes[type.cellType]
   // Selections
   const handleClick = (e: MouseEvent) => {
     updateSheetSelection(cell.id, e.shiftKey)

@@ -3,41 +3,27 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 
-import Content from '@app/bundles/Content/Content'
+import { SHEET_COLUMN } from '@app/assets/icons'
+
+import { TActiveSheetSetting } from '@app/bundles/Sheet/SheetSettings'
+
+import SheetSettingsSidebarItem from '@app/bundles/Sheet/SheetSettingsSidebarItem'
 
 //-----------------------------------------------------------------------------
 // Components
 //-----------------------------------------------------------------------------
-const User = ({
-}: UserProps) => {
-  return (
-    <Content
-      Sidebar={UserSidebar}
-      Content={UserContent}
-      Header={UserHeader}/>
-  )
-}
+const SheetSettingsSidebar = ({
+  activeSheetSetting,
+  setActiveSheetSetting
+}: SheetSettingsSidebarProps) => {
 
-const UserSidebar = () => {
   return (
     <>
-      User Sidebar
-    </>
-  )
-}
-
-const UserHeader = () => {
-  return (
-    <>
-      User Header
-    </>
-  )
-}
-
-const UserContent = () => {
-  return (
-    <>
-      User Content
+      <SheetSettingsSidebarItem 
+        text="Column Types"
+        icon={SHEET_COLUMN}
+        isActive={activeSheetSetting === 'COLUMN_TYPES'}
+        onClick={() => setActiveSheetSetting('COLUMN_TYPES')}/>
     </>
   )
 }
@@ -45,10 +31,12 @@ const UserContent = () => {
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface UserProps {
+interface SheetSettingsSidebarProps {
+  activeSheetSetting: TActiveSheetSetting
+  setActiveSheetSetting(nextSheetSetting: TActiveSheetSetting): void
 }
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default User
+export default SheetSettingsSidebar

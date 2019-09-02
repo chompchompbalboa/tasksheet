@@ -23,14 +23,38 @@ class OrganizationTableSeeder extends Seeder
         // User Active + Color
         $user->active()->save(factory(App\Models\UserActive::class)->make());
         $user->color()->save(factory(App\Models\UserColor::class)->make());
+        $user->save();
 
         // Organization
         $organizationFolder = factory(App\Models\Folder::class)->create([ 'name' => 'Company' ]);
         $organization = factory(App\Models\Organization::class)->create([
           'folderId' => $organizationFolder->id
         ])->each(function($organization) use($organizationFolder, $user) {
-          //$user->organizationId = $organization->id;
-          $user->save();
+
+          // Departments Dropdown
+          $departmentsOptions = [
+            'Sales',
+            'Estimating',
+            'Purchasing',
+            'PM',
+            'CNC',
+            'Fab',
+            'Metal',
+            'Paint',
+            'Shipping'
+          ];
+          $departmentsDropdown = factory(App\Models\SheetDropdown::class)->create([ 
+            'name' => 'Departments',
+            'userId' => $user->id // For now, have it belong to the user
+          ]);
+          $departmentsDropdownOptions = factory(App\Models\SheetDropdownOption::class, count($departmentsOptions))->create([
+            'sheetDropdownId' => $departmentsDropdown->id
+          ]);
+          $departmentsDropdownOptions->each(function($deparmentsDropdownOption, $index) use($departmentsOptions) {
+            $deparmentsDropdownOption->value = $departmentsOptions[$index];
+            $deparmentsDropdownOption->save();
+          });
+
 
           // Organization Folders
           factory(App\Models\Folder::class, 1)->create()->each(function ($folder, $folderKey) use($organizationFolder) {

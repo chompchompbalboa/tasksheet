@@ -63,7 +63,6 @@ const Container = styled.div`
   height: 100%;
   width: 100%;
   background-color: rgb(240, 240, 240);
-  padding: 2.5rem 0rem 0.5rem 0rem;
 `
 
 const ActionsContainer = styled.div`

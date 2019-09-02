@@ -6,7 +6,7 @@ import { AppState } from '@app/state'
 //-----------------------------------------------------------------------------
 // Select Active Tab
 //-----------------------------------------------------------------------------
-export const selectActiveTabId = (state: AppState): string => state.tab.activeTabId
+export const selectActiveTab = (state: AppState): string => state.tab.activeTab
 
 //-----------------------------------------------------------------------------
 // Select Tabs

@@ -26,8 +26,8 @@ const SheetCreateRows = ({
   
   useEffect(() => {
     if(isEditingInputValue) { window.addEventListener('keydown', createRowsOnKeydownEnter) }
-    else { window.addEventListener('keydown', createRowsOnKeydownEnter) }
-    return () => window.addEventListener('keydown', createRowsOnKeydownEnter)
+    else { window.removeEventListener('keydown', createRowsOnKeydownEnter) }
+    return () => window.removeEventListener('keydown', createRowsOnKeydownEnter)
   }, [ inputValue ])
 
   const createRows = () => {

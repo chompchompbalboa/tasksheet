@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSheetGroup extends Migration
+class CreateSheetFilter extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateSheetGroup extends Migration
      */
     public function up()
     {
-        Schema::create('sheetGroups', function (Blueprint $table) {
+        Schema::create('sheetFilters', function (Blueprint $table) {
           $table->uuid('id')->primary();
-          $table->uuid('sheetId')->nullable();
+          $table->uuid('sheetId');
           $table->uuid('columnId');
-          $table->string('order', 4);
+          $table->string('type');
+          $table->string('value');
           $table->boolean('isLocked');
           $table->timestamps();
 
@@ -33,6 +34,6 @@ class CreateSheetGroup extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sheetGroups');
+        Schema::dropIfExists('sheetFilters');
     }
 }

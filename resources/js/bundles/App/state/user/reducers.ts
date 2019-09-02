@@ -8,7 +8,7 @@ import { UserActions, UPDATE_USER_ACTIVE, UPDATE_USER_COLOR } from '@app/state/u
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
-export const initialUserState: User = typeof initialData !== 'undefined' ? initialData.user : defaultInitialData.user
+export const initialUserState: User = initialData !== undefined ? initialData.user : defaultInitialData.user
 
 //-----------------------------------------------------------------------------
 // Reducers

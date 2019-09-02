@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import { Sheets, SheetActive, SheetCells, SheetColumns, SheetFilters, SheetGroups, SheetRows, SheetSorts } from '@app/state/sheet/types'
+import { Sheets, SheetActive, SheetCells, SheetColumns, SheetColumnTypes, SheetFilters, SheetGroups, SheetRows, SheetSorts } from '@app/state/sheet/types'
 import { 
   SheetActions, 
   LOAD_SHEET, UPDATE_SHEET, 
@@ -24,6 +24,7 @@ export interface SheetState {
   sheets: Sheets
   cells: SheetCells
   columns: SheetColumns
+  columnTypes: SheetColumnTypes
   filters: SheetFilters
   groups: SheetGroups
   rows: SheetRows
@@ -34,6 +35,7 @@ export interface SheetState {
 //-----------------------------------------------------------------------------
 // Default State
 //-----------------------------------------------------------------------------
+const columnTypesFromServer = initialData && initialData.columnTypes ? initialData.columnTypes : {}
 export const defaultSheetState: SheetState = {
   active: {
     columnRenamingId: null,
@@ -56,6 +58,45 @@ export const defaultSheetState: SheetState = {
   sheets: null,
   cells: null,
   columns: null,
+  columnTypes: {
+    STRING: {
+      id: 'STRING',
+      organizationId: null,
+      userId: null,
+      sheetId: null,
+      name: 'Text',
+      cellType: 'STRING',
+      data: null
+    },
+    NUMBER: {
+      id: 'NUMBER',
+      organizationId: null,
+      userId: null,
+      sheetId: null,
+      name: 'Number',
+      cellType: 'NUMBER',
+      data: null
+    },
+    BOOLEAN: {
+      id: 'BOOLEAN',
+      organizationId: null,
+      userId: null,
+      sheetId: null,
+      name: 'Checkbox',
+      cellType: 'BOOLEAN',
+      data: null
+    },
+    DATETIME: {
+      id: 'DATETIME',
+      organizationId: null,
+      userId: null,
+      sheetId: null,
+      name: 'Date',
+      cellType: 'DATETIME',
+      data: null
+    },
+    ...columnTypesFromServer
+  },
   filters: null,
   groups: null,
   rows: null,
@@ -67,6 +108,7 @@ export const defaultSheetState: SheetState = {
 // Reducers
 //-----------------------------------------------------------------------------
 export const userReducer = (state: SheetState = defaultSheetState, action: SheetActions): SheetState => {
+
 	switch (action.type) {
     
 		case LOAD_SHEET: {

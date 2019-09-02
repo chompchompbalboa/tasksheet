@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 import { connect } from 'react-redux'
+import styled from 'styled-components'
 
 import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
@@ -13,7 +14,6 @@ import {
 } from '@app/state/folder/actions'
 import { selectActiveFileId, selectActiveFolderPath, selectFiles, selectFolders, selectIsSavingNewFile, selectOnFileSave, selectRootFolderIds } from '@app/state/folder/selectors'
 
-import Content from '@app/bundles/Content/Content'
 import FoldersFolder from '@app/bundles/Folders/FoldersFolder'
 import FoldersHeader from '@app/bundles/Folders/FoldersHeader'
 import FoldersSidebar from '@app/bundles/Folders/FoldersSidebar'
@@ -53,63 +53,52 @@ const Folders = ({
   updateActiveFolderPath
 }: FoldersProps) => {
 
-  const Sidebar = () => {
-    return <FoldersSidebar />
-  }
-
-  const Header = () => {
-    return (
-      <FoldersHeader
-        activeFileId={activeFileId}
-        activeFolderPath={activeFolderPath}
-        files={files}
-        folders={folders}
-        isSavingNewFile={isSavingNewFile}
-        onFileSave={onFileSave}/>
-    )
-  }
-
-  const FoldersContent = () => {
-    return (
-      <>
-        <FoldersFolder
-          activeFileId={activeFileId}
-          activeFolderPath={activeFolderPath}
-          files={files}
-          folderId="ROOT"
-          folders={folders}
-          handleFileOpen={handleFileOpen}
-          level={0}
-          rootFolderIds={rootFolderIds}
-          updateActiveFileId={updateActiveFileId}
-          updateActiveFolderPath={updateActiveFolderPath}/>
-        {activeFolderPath.length > 0 && 
-          activeFolderPath.map((folderId: string, index: number) => (
-            <FoldersFolder 
-              key={folderId}
-              activeFileId={activeFileId}
-              activeFolderPath={activeFolderPath}
-              files={files}
-              folderId={folderId}
-              folders={folders}
-              handleFileOpen={handleFileOpen}
-              level={index + 1}
-              rootFolderIds={rootFolderIds}
-              updateActiveFileId={updateActiveFileId}
-              updateActiveFolderPath={updateActiveFolderPath}/>))}
-      </>
-    )
-  }
-
-  if(isActiveTab) {
-    return (
-      <Content
-        Sidebar={Sidebar}
-        Content={FoldersContent}
-        Header={Header}/>
-    )
-  }
-  return null
+  return (
+    <Container
+      isActiveTab={isActiveTab}>
+      <SidebarContainer>
+        <FoldersSidebar />
+      </SidebarContainer>
+      <ContentContainer>
+        <HeaderContainer>
+          <FoldersHeader
+            activeFileId={activeFileId}
+            activeFolderPath={activeFolderPath}
+            files={files}
+            folders={folders}
+            isSavingNewFile={isSavingNewFile}
+            onFileSave={onFileSave}/>
+        </HeaderContainer>
+        <FoldersContainer>
+          <FoldersFolder
+            activeFileId={activeFileId}
+            activeFolderPath={activeFolderPath}
+            files={files}
+            folderId="ROOT"
+            folders={folders}
+            handleFileOpen={handleFileOpen}
+            level={0}
+            rootFolderIds={rootFolderIds}
+            updateActiveFileId={updateActiveFileId}
+            updateActiveFolderPath={updateActiveFolderPath}/>
+          {activeFolderPath.length > 0 && 
+            activeFolderPath.map((folderId: string, index: number) => (
+              <FoldersFolder 
+                key={folderId}
+                activeFileId={activeFileId}
+                activeFolderPath={activeFolderPath}
+                files={files}
+                folderId={folderId}
+                folders={folders}
+                handleFileOpen={handleFileOpen}
+                level={index + 1}
+                rootFolderIds={rootFolderIds}
+                updateActiveFileId={updateActiveFileId}
+                updateActiveFolderPath={updateActiveFolderPath}/>))}
+        </FoldersContainer>
+      </ContentContainer>
+    </Container>
+  )
 }
 
 //-----------------------------------------------------------------------------
@@ -128,6 +117,47 @@ interface FoldersProps {
   updateActiveFileId(nextActiveFileId: string): void
   updateActiveFolderPath(level: number, nextActiveFolderId: string): void
 }
+
+//-----------------------------------------------------------------------------
+// Styled Components
+//-----------------------------------------------------------------------------
+const Container = styled.div`
+  display: ${ ({ isActiveTab }: ContainerProps) => isActiveTab ? 'flex' : 'none' };
+  width: 100%;
+  height: 100%;
+`
+interface ContainerProps {
+  isActiveTab: boolean
+}
+
+
+const SidebarContainer = styled.div`
+  z-index: 0;
+  height: 100%;
+`
+
+const ContentContainer = styled.div`
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+`
+
+const FoldersContainer = styled.div`
+  width: 100%;
+  height: calc(100% - 2.5rem);
+  display: flex;
+  border-top: 1px solid rgb(220, 220, 220);
+  border-left: 1px solid rgb(220, 220, 220);
+`
+
+const HeaderContainer = styled.div`
+  width: 100%;
+  height: 2.5rem;
+  background-color: rgb(225, 225, 225);
+`
 
 //-----------------------------------------------------------------------------
 // Export

@@ -8,36 +8,36 @@ import Content from '@app/bundles/Content/Content'
 //-----------------------------------------------------------------------------
 // Components
 //-----------------------------------------------------------------------------
-const User = ({
-}: UserProps) => {
+const Organization = ({
+}: OrganizationProps) => {
   return (
     <Content
-      Sidebar={UserSidebar}
-      Content={UserContent}
-      Header={UserHeader}/>
+      Sidebar={OrganizationSidebar}
+      Content={OrganizationContent}
+      Header={OrganizationHeader}/>
   )
 }
 
-const UserSidebar = () => {
+const OrganizationSidebar = () => {
   return (
     <>
-      User Sidebar
+      Organization Sidebar
     </>
   )
 }
 
-const UserHeader = () => {
+const OrganizationHeader = () => {
   return (
     <>
-      User Header
+      Organization Header
     </>
   )
 }
 
-const UserContent = () => {
+const OrganizationContent = () => {
   return (
     <>
-      User Content
+      Organization Content
     </>
   )
 }
@@ -45,10 +45,10 @@ const UserContent = () => {
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface UserProps {
+interface OrganizationProps {
 }
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default User
+export default Organization

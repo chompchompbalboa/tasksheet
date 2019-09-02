@@ -2,6 +2,7 @@ import { FileType } from '@app/state/folder/types'
 
 export type Sheets = { [sheetId: string]: Sheet }
 export type SheetColumns = { [columnId: string]: SheetColumn }
+export type SheetColumnTypes = { [cellId: string]: SheetColumnType }
 export type SheetRows = { [rowId: string]: SheetRow }
 export type SheetCells = { [cellId: string]: SheetCell }
 export type SheetFilters = { [filterId: string]: SheetFilter }
@@ -74,29 +75,44 @@ export type SheetFromServerRow = {
 export type SheetColumn = {
 	id: string
 	sheetId: string
+	typeId: SheetColumnType['id']
 	name: string
 	width: number
-	type: SheetColumnType
 }
 export type SheetColumnUpdates = {
+  typeId?: SheetColumnType['id']
   name?: string
   width?: number
-  type?: SheetColumnType
 }
 export type SheetColumnToServer = {
   id: string
   sheetId: string
+  typeId: SheetColumnType['id']
   name: string
   width: number
-  type: SheetColumnType
   cells: SheetCell[]
 }
-export type SheetColumnType = 
-	'STRING'|
-	'DATETIME'|
-	'BOOLEAN'|
-	'NUMBER' | 
-  'DROPDOWN'
+export type SheetColumnType = {
+  id: string
+  organizationId: string
+  userId: string
+  sheetId: string
+  name: string
+  cellType: 
+    'STRING' |
+    'DATETIME'|
+    'BOOLEAN'|
+    'NUMBER' | 
+    'DROPDOWN'
+  data: SheetColumnTypeDropdown
+}
+export type SheetColumnTypeDropdown = {
+  options: SheetColumnTypeDropdownOption[]
+}
+export type SheetColumnTypeDropdownOption = {
+  id: string
+  value: string
+}
 
 export type SheetRow = {
 	id: string

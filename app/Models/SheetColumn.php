@@ -10,8 +10,8 @@ class SheetColumn extends Model
 
   protected $table = 'sheetColumns';
 
-  protected $visible = ['id', 'name', 'width', 'type'];
-  protected $fillable = ['id', 'sheetId', 'name', 'width', 'type'];
+  protected $visible = ['id', 'name', 'width', 'typeId'];
+  protected $fillable = ['id', 'sheetId', 'name', 'width', 'typeId'];
   
   public function sheet() {
     return $this->belongsTo('App\Models\Sheet', 'sheetId');

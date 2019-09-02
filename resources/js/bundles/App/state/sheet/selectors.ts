@@ -7,7 +7,7 @@ import {
   Sheet,
   SheetActive,
   SheetCell, SheetCells,
-  SheetColumn, SheetColumns, 
+  SheetColumn, SheetColumns, SheetColumnTypes,
   SheetRow, SheetRows, 
   SheetFilter, SheetFilters, 
   SheetGroup, SheetGroups, 
@@ -50,6 +50,13 @@ export const selectColumn = (
 export const selectColumns = (
   state: AppState
 ): SheetColumns => state.sheet.columns
+
+//-----------------------------------------------------------------------------
+// Select Column Types
+//-----------------------------------------------------------------------------
+export const selectColumnTypes = (
+  state: AppState
+): SheetColumnTypes => state.sheet.columnTypes
 
 //-----------------------------------------------------------------------------
 // Select Filter

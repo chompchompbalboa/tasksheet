@@ -11,7 +11,7 @@ export interface User {
 
 export interface UserActive {
 	id: string
-	tabId: string
+	tab: string
 	tabs: string[]
 }
 

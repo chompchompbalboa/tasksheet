@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { 
   SheetActiveUpdates, 
-  SheetColumn, SheetColumns, SheetColumnUpdates,
+  SheetColumn, SheetColumns, SheetColumnTypes, SheetColumnUpdates,
   SheetCellUpdates, 
   SheetRow, SheetRows 
 } from '@app/state/sheet/types'
@@ -23,6 +23,7 @@ import SheetRowLeader from '@app/bundles/Sheet/SheetRowLeader'
 //-----------------------------------------------------------------------------
 const SheetGrid = memo(({
   columns,
+  columnTypes,
   handleContextMenu,
   highlightColor,
   rows,
@@ -94,7 +95,7 @@ const SheetGrid = memo(({
           highlightColor={highlightColor}
           sheetId={sheetId}
           style={style}
-          type={columns[columnId].type}
+          type={columnTypes[columns[columnId].typeId]}
           updateSheetCell={updateSheetCell}
           updateSheetSelectedCell={updateSheetSelectedCell}
           updateSheetSelection={updateSheetSelection}
@@ -144,6 +145,7 @@ const SheetGrid = memo(({
 //-----------------------------------------------------------------------------
 interface SheetGridProps {
   columns: SheetColumns
+  columnTypes: SheetColumnTypes
   handleContextMenu(e: MouseEvent, type: string, id: string): void
   highlightColor: string
   rows: SheetRows

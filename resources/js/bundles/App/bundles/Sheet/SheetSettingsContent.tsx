@@ -3,52 +3,34 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 
-import Content from '@app/bundles/Content/Content'
+import { TActiveSheetSetting } from '@app/bundles/Sheet/SheetSettings'
+
+import SheetSettingsContentColumnTypes from '@app/bundles/Sheet/SheetSettingsContentColumnTypes'
 
 //-----------------------------------------------------------------------------
 // Components
 //-----------------------------------------------------------------------------
-const User = ({
-}: UserProps) => {
-  return (
-    <Content
-      Sidebar={UserSidebar}
-      Content={UserContent}
-      Header={UserHeader}/>
-  )
-}
+const SheetSettingsContent = ({
+  activeSheetSetting
+}: SheetSettingsContentProps) => {
 
-const UserSidebar = () => {
-  return (
-    <>
-      User Sidebar
-    </>
-  )
-}
+  const content = {
+    COLUMN_TYPES: SheetSettingsContentColumnTypes
+  }
 
-const UserHeader = () => {
-  return (
-    <>
-      User Header
-    </>
-  )
-}
+  const ContentComponent = activeSheetSetting ? content[activeSheetSetting] : null
 
-const UserContent = () => {
-  return (
-    <>
-      User Content
-    </>
-  )
+  return <ContentComponent />
 }
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface UserProps {
+interface SheetSettingsContentProps {
+  activeSheetSetting: TActiveSheetSetting
 }
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default User
+export default SheetSettingsContent

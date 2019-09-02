@@ -9,7 +9,7 @@ const initalData: InitialData = {
 		active: <UserActive>{
 			id: 'uuid',
 			tabs: [],
-			tabId: null,
+			tab: null,
 		},
 		color: <UserColor>{
 			primary: '',
@@ -23,7 +23,8 @@ const initalData: InitialData = {
 			folders: <Folder[]>[],
 			files: <File[]>[],
 		},
-	],
+  ],
+  columnTypes: []
 }
 
 export default initalData

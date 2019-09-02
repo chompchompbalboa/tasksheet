@@ -32,7 +32,7 @@ const SheetHeaders = ({
     sheetId: '',
     name: 'Break',
     width: 10,
-    type: 'STRING'
+    typeId: null
   }
   
   const isNextColumnAColumnBreak = (index: number) => {

@@ -56,7 +56,7 @@ export const defaultColumn = (sheetId: string, newColumnIndex?: number): SheetCo
     id: createUuid(),
     sheetId: sheetId, 
     name: columnName,
-    type: 'STRING',
+    typeId: 'STRING',
     width: 100
   }
 }

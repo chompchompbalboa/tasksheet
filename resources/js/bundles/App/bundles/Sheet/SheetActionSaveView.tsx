@@ -16,7 +16,7 @@ import {
    createSheetView as createSheetViewAction
   } from '@app/state/sheet/actions'
 import { 
-  updateActiveTabId as updateActiveTabIdAction
+  updateActiveTab as updateActiveTabAction
  } from '@app/state/tab/actions'
  import { selectUserColorPrimary } from '@app/state/user/selectors'
 
@@ -32,7 +32,7 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   createSheetView: (sheetId: string, newViewName: string) => dispatch(createSheetViewAction(sheetId, newViewName)),
   updateIsSavingNewFile: (nextIsSavingNewFile: boolean, onFileSave: () => void) => dispatch(updateIsSavingNewFileAction(nextIsSavingNewFile, onFileSave)),
-  updateActiveTabId: (nextActiveTabId: string) => dispatch(updateActiveTabIdAction(nextActiveTabId))
+  updateActiveTab: (nextActiveTabId: string) => dispatch(updateActiveTabAction(nextActiveTabId))
 })
 //-----------------------------------------------------------------------------
 // Component
@@ -41,12 +41,12 @@ const SheetActionSaveView = ({
   createSheetView,
   sheetId,
   updateIsSavingNewFile,
-  updateActiveTabId,
+  updateActiveTab,
   userColorPrimary,
 }: SheetActionSaveViewProps) => {
 
   const handleClick = () => {
-    updateActiveTabId('FOLDERS')
+    updateActiveTab('FOLDERS')
     updateIsSavingNewFile(true, (newViewName: string) => {
       createSheetView(sheetId, newViewName)
       updateIsSavingNewFile(false, null)
@@ -71,7 +71,7 @@ interface SheetActionSaveViewProps {
   sheetId: string
   createSheetView(sheetId: string, newViewName: string): void
   updateIsSavingNewFile(nextIsSavingNewFile: boolean, onFileSave: (...args: any) => void): void
-  updateActiveTabId(nextActiveTabId: string): void
+  updateActiveTab(nextActiveTabId: string): void
   userColorPrimary: string
 }
 

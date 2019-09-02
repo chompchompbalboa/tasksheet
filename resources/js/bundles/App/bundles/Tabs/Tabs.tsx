@@ -12,13 +12,15 @@ import { ThunkDispatch } from '@app/state/types'
 import { 
   closeTab as closeTabAction,
   openFileInNewTab as openFileInNewTabAction,
-  updateActiveTabId as updateActiveTabIdAction 
+  updateActiveTab as updateActiveTabAction 
 } from '@app/state/tab/actions'
-import { selectActiveTabId, selectTabs } from '@app/state/tab/selectors'
+import { selectActiveTab, selectTabs } from '@app/state/tab/selectors'
 
 import File from '@app/bundles/File/File'
 import Folders from '@app/bundles/Folders/Folders'
 import Icon from '@/components/Icon'
+import Organization from '@app/bundles/Organization/Organization'
+import SheetSettings from '@app/bundles/Sheet/SheetSettings'
 import Tab from '@app/bundles/Tabs/Tab'
 import User from '@app/bundles/User/User'
 
@@ -26,48 +28,48 @@ import User from '@app/bundles/User/User'
 // Redux
 //-----------------------------------------------------------------------------
 const mapStateToProps = (state: AppState) => ({
-  activeTabId: selectActiveTabId(state),
+  activeTab: selectActiveTab(state),
   tabs: selectTabs(state)
 })
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   closeTab: (fileId: string) => dispatch(closeTabAction(fileId)),
-  openFileInNewTab: (nextActiveTabId: string) => dispatch(openFileInNewTabAction(nextActiveTabId)),
-  updateActiveTabId: (nextActiveTabId: string) => dispatch(updateActiveTabIdAction(nextActiveTabId))
+  openFileInNewTab: (nextActiveTab: string) => dispatch(openFileInNewTabAction(nextActiveTab)),
+  updateActiveTab: (nextActiveTab: string) => dispatch(updateActiveTabAction(nextActiveTab))
 })
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const Tabs = ({ 
-  activeTabId,
+  activeTab,
   closeTab,
   openFileInNewTab,
   tabs,
-  updateActiveTabId
+  updateActiveTab
 }: TabsProps) => {
 
-  const [ localActiveTabId, setLocalActiveTabId ] = useState(activeTabId)
+  const [ localActiveTab, setLocalActiveTabId ] = useState(activeTab)
   const [ localTabs, setLocalTabs ] = useState(tabs)
   
   useEffect(() => {
-    setLocalActiveTabId(activeTabId || 'FOLDERS')
-  }, [ activeTabId ])
+    setLocalActiveTabId(activeTab || 'FOLDERS')
+  }, [ activeTab ])
 
   useLayoutEffect(() => {
     setLocalTabs(tabs)
   }, [ tabs ])
 
-  const handleFileOpen = (nextActiveTabId: string) => {
-    setLocalActiveTabId(nextActiveTabId)
-    tabs.includes(nextActiveTabId)
-      ? window.setTimeout(() => updateActiveTabId(nextActiveTabId), 10)
-      : !['FOLDERS', 'USER', 'SHEET_SETTINGS', 'ORGANIZATION'].includes(nextActiveTabId)
+  const handleFileOpen = (nextActiveTab: string) => {
+    setLocalActiveTabId(nextActiveTab)
+    tabs.includes(nextActiveTab)
+      ? window.setTimeout(() => updateActiveTab(nextActiveTab), 10)
+      : !['FOLDERS', 'USER', 'SHEET_SETTINGS', 'ORGANIZATION'].includes(nextActiveTab)
         ? (
-            setLocalTabs([ ...localTabs, nextActiveTabId]),
-            setTimeout(() => openFileInNewTab(nextActiveTabId), 10)
+            setLocalTabs([ ...localTabs, nextActiveTab]),
+            setTimeout(() => openFileInNewTab(nextActiveTab), 10)
           )
-        : setLocalActiveTabId(nextActiveTabId)
+        : setLocalActiveTabId(nextActiveTab)
   }
 
   return (
@@ -77,33 +79,33 @@ const Tabs = ({
           <Tab
             key={fileId}
             fileId={fileId}
-            isActiveTab={localActiveTabId === fileId}
+            isActiveTab={localActiveTab === fileId}
             closeTab={closeTab}
             handleTabClick={handleFileOpen}/>))
         }
         <MiniTab
-          isActiveTab={localActiveTabId === 'FOLDERS'}
+          isActiveTab={localActiveTab === 'FOLDERS'}
           onClick={() => handleFileOpen('FOLDERS')}>
           <Icon
             icon={FOLDER}
             size="1rem"/>
         </MiniTab>
         <MiniTab
-          isActiveTab={localActiveTabId === 'SHEET_SETTINGS'}
+          isActiveTab={localActiveTab === 'SHEET_SETTINGS'}
           onClick={() => handleFileOpen('SHEET_SETTINGS')}>
           <Icon
             icon={SHEET}
             size="0.88rem"/>
         </MiniTab>
         <MiniTab
-          isActiveTab={localActiveTabId === 'USER'}
+          isActiveTab={localActiveTab === 'USER'}
           onClick={() => handleFileOpen('USER')}>
           <Icon
             icon={USER}
             size="1rem"/>
         </MiniTab>
         <MiniTab
-          isActiveTab={localActiveTabId === 'ORGANIZATION'}
+          isActiveTab={localActiveTab === 'ORGANIZATION'}
           onClick={() => handleFileOpen('ORGANIZATION')}>
           <Icon
             icon={ORGANIZATION}
@@ -114,16 +116,17 @@ const Tabs = ({
         {localTabs.map((fileId) => (
           <FileContainer
             key={fileId}
-            isActiveTab={localActiveTabId === fileId}>
+            isActiveTab={localActiveTab === fileId}>
             <File
               fileId={fileId}/>
           </FileContainer>))
         }
         <Folders
           handleFileOpen={handleFileOpen}
-          isActiveTab={localActiveTabId === 'FOLDERS'}/>
-        <User
-          isActiveTab={localActiveTabId === 'USER'}/>
+          isActiveTab={localActiveTab === 'FOLDERS'}/>
+        {localActiveTab === 'SHEET_SETTINGS' && <SheetSettings />}
+        {localActiveTab === 'USER' && <User />}
+        {localActiveTab === 'ORGANIZATION' && <Organization />}
       </FilesContainer>
     </Container>
   )
@@ -133,11 +136,11 @@ const Tabs = ({
 // Props
 //-----------------------------------------------------------------------------
 interface TabsProps {
-  activeTabId: string
+  activeTab: string
   closeTab?(fileId: string): void
-  openFileInNewTab?(nextActiveTabId: string): void
+  openFileInNewTab?(nextActiveTab: string): void
   tabs: string[]
-  updateActiveTabId?(nextActiveTabId: string): void
+  updateActiveTab?(nextActiveTab: string): void
 }
 
 //-----------------------------------------------------------------------------

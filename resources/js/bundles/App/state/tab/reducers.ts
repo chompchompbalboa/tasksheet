@@ -10,7 +10,7 @@ import {
   CLOSE_TAB, 
   OPEN_FILE, 
   OPEN_FILE_IN_NEW_TAB, 
-  UPDATE_ACTIVE_TAB_ID,
+  UPDATE_ACTIVE_TAB,
   UPDATE_TABS
 } from '@app/state/tab/actions'
 
@@ -19,12 +19,12 @@ import {
 //-----------------------------------------------------------------------------
 const initialActiveState = typeof initialData !== 'undefined' ? initialData.user.active : defaultInitialData.user.active
 export const initialTabState: TabState = {
-	//activeTabId: 'FOLDERS',
-	activeTabId: initialActiveState.tabId === null ? 'FOLDERS' : initialActiveState.tabId,
+	activeTab: 'SHEET_SETTINGS',
+	//activeTab: initialActiveState.tabId === null ? 'FOLDERS' : initialActiveState.tabId,
 	tabs: initialActiveState.tabs === null ? [] : initialActiveState.tabs,
 }
 export type TabState = {
-	activeTabId: string
+	activeTab: string
 	tabs: string[]
 }
 
@@ -35,35 +35,35 @@ export const userReducer = (state = initialTabState, action: TabActions): TabSta
 	switch (action.type) {
 		case CLOSE_TAB: {
 			const { fileId } = action
-			const { activeTabId, tabs } = state
+			const { activeTab, tabs } = state
 			const tabIndex = tabs.findIndex(tabId => tabId === fileId)
 			const nextTabs = tabs.filter(tabFileId => tabFileId !== fileId)
 			const willAnyTabsBeOpen = nextTabs.length > 0
-			const wasClosedTabActiveTab = fileId === activeTabId
+			const wasClosedTabActiveTab = fileId === activeTab
 			const wasClosedTabFirstTab = tabIndex === 0
 			const wasClosedTabLastTab = tabIndex === tabs.length - 1
-			const nextActiveTabIdIndex = wasClosedTabFirstTab ? 0 : wasClosedTabLastTab ? tabIndex - 1 : tabIndex
-			const nextActiveTabId = willAnyTabsBeOpen
+			const nextActiveTabIndex = wasClosedTabFirstTab ? 0 : wasClosedTabLastTab ? tabIndex - 1 : tabIndex
+			const nextActiveTab = willAnyTabsBeOpen
 				? wasClosedTabActiveTab
-					? nextTabs[nextActiveTabIdIndex]
-					: activeTabId
+					? nextTabs[nextActiveTabIndex]
+					: activeTab
 				: null
 			return {
 				...state,
-				activeTabId: nextActiveTabId,
+				activeTab: nextActiveTab,
 				tabs: nextTabs,
 			}
 		}
 
 		case OPEN_FILE: {
-			const { activeTabId, tabs } = state
+			const { activeTab, tabs } = state
 			const { fileId } = action
 			const nextTabs = clone(state.tabs)
-			const activeTabIndex = tabs.findIndex(tabId => tabId === activeTabId)
+			const activeTabIndex = tabs.findIndex(tabId => tabId === activeTab)
 			nextTabs[activeTabIndex] = fileId
 			return {
 				...state,
-				activeTabId: fileId,
+				activeTab: fileId,
 				tabs: nextTabs,
 			}
 		}
@@ -72,20 +72,20 @@ export const userReducer = (state = initialTabState, action: TabActions): TabSta
 			const { fileId } = action
 			const { tabs } = state
 			if (!tabs.includes(fileId)) {
-				return { ...state, activeTabId: fileId, tabs: [...state.tabs, fileId] }
+				return { ...state, activeTab: fileId, tabs: [...state.tabs, fileId] }
 			} else {
 				return {
 					...state,
-					activeTabId: fileId,
+					activeTab: fileId,
 				}
 			}
 		}
 
-		case UPDATE_ACTIVE_TAB_ID: {
-			const { nextActiveTabId } = action
+		case UPDATE_ACTIVE_TAB: {
+			const { nextActiveTab } = action
 			return {
 				...state,
-				activeTabId: nextActiveTabId,
+				activeTab: nextActiveTab,
 			}
 		}
 

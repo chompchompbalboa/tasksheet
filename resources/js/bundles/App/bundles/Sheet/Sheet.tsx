@@ -25,7 +25,7 @@ import {
 import { 
   Sheet, SheetFromServer, SheetUpdates,
   SheetActiveUpdates,
-  SheetColumn, SheetColumns, SheetColumnUpdates, 
+  SheetColumn, SheetColumns, SheetColumnTypes, SheetColumnUpdates, 
   SheetCellUpdates, 
   SheetFilter, SheetFilters, 
   SheetGroup, SheetGroups, 
@@ -34,6 +34,7 @@ import {
 } from '@app/state/sheet/types'
 import {  
   selectColumns, 
+  selectColumnTypes,
   selectFilters,
   selectGroups,
   selectRows,
@@ -46,7 +47,7 @@ import {
   selectSheetVisibleColumns,
   selectSheetVisibleRows
 } from '@app/state/sheet/selectors'
-import { selectActiveTabId } from '@app/state/tab/selectors'
+import { selectActiveTab } from '@app/state/tab/selectors'
 import { 
   selectUserColorSecondary
 } from '@app/state/user/selectors'
@@ -60,8 +61,9 @@ import SheetGrid from '@app/bundles/Sheet/SheetGrid'
 // Redux
 //-----------------------------------------------------------------------------
 const mapStateToProps = (state: AppState, props: SheetComponentProps) => ({
-  activeTabId: selectActiveTabId(state),
+  activeTab: selectActiveTab(state),
   columns: selectColumns(state),
+  columnTypes: selectColumnTypes(state),
   filters: selectFilters(state),
   groups: selectGroups(state),
   rows: selectRows(state),
@@ -93,8 +95,9 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
 // Component
 //-----------------------------------------------------------------------------
 const SheetComponent = memo(({
-  activeTabId,
+  activeTab,
   columns,
+  columnTypes,
   createSheetRow,
   fileId,
   filters,
@@ -102,7 +105,6 @@ const SheetComponent = memo(({
   id,
   loadSheet,
   rows,
-  sheetColumns,
   sheetFilters,
   sheetGroups,
   sheetSorts,
@@ -121,7 +123,7 @@ const SheetComponent = memo(({
   userColorSecondary
 }: SheetComponentProps) => {
   
-  const isActiveFile = fileId === activeTabId
+  const isActiveFile = fileId === activeTab
   const memoizedCreateSheetRow = useCallback((id, sourceSheetId) => createSheetRow(id, sourceSheetId), [])
   const memoizedUpdateSheet = useCallback((sheetId, updates) => updateSheet(sheetId, updates), [])
   const memoizedUpdateSheetActive = useCallback((updates) => updateSheetActive(updates), [])
@@ -141,7 +143,7 @@ const SheetComponent = memo(({
         })
       })
     }
-  }, [ activeTabId ])
+  }, [ activeTab ])
 
   const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
   const [ contextMenuType, setContextMenuType ] = useState(null)
@@ -209,6 +211,7 @@ const SheetComponent = memo(({
           ? isActiveFile ? <LoadingTimer fromId={id}/> : null
           : <SheetGrid
               columns={columns}
+              columnTypes={columnTypes}
               handleContextMenu={handleContextMenu}
               highlightColor={userColorSecondary}
               rows={rows}
@@ -232,8 +235,9 @@ const SheetComponent = memo(({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetComponentProps {
-  activeTabId?: string
+  activeTab?: string
   columns?: SheetColumns
+  columnTypes?: SheetColumnTypes
   createSheetRow?(sheetId: string, sourceSheetId: string): void
   fileId: string
   filters?: SheetFilters

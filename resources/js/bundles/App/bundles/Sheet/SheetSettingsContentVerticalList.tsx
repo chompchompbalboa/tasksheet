@@ -2,53 +2,39 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-
-import Content from '@app/bundles/Content/Content'
+import styled from 'styled-components'
 
 //-----------------------------------------------------------------------------
 // Components
 //-----------------------------------------------------------------------------
-const User = ({
-}: UserProps) => {
-  return (
-    <Content
-      Sidebar={UserSidebar}
-      Content={UserContent}
-      Header={UserHeader}/>
-  )
-}
-
-const UserSidebar = () => {
-  return (
-    <>
-      User Sidebar
-    </>
-  )
-}
-
-const UserHeader = () => {
-  return (
-    <>
-      User Header
-    </>
-  )
-}
-
-const UserContent = () => {
-  return (
-    <>
-      User Content
-    </>
-  )
-}
+const SheetSettingsContentColumn = ({
+  children
+}: SheetSettingsContentColumnProps) => (
+  <Container>
+    {children}
+  </Container>
+)
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface UserProps {
+interface SheetSettingsContentColumnProps {
+  children?: any
 }
+
+//-----------------------------------------------------------------------------
+// Styled Components
+//-----------------------------------------------------------------------------
+const Container = styled.div`
+  height: 100%;
+  width: 13rem;
+  border-right: 1px solid rgb(220, 220, 220);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+`
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default User
+export default SheetSettingsContentColumn

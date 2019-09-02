@@ -24,11 +24,13 @@ Route::group([
     //$organization = $user->organization;
 
     $userFolders = $user->folder()->get();
+    $userColumnTypes = $user->columnTypes();
     //$organizationFolders = $organization->folder()->get();
     //$folders = $organizationFolders->merge($userFolders)->values()->all();
     return view('app')->with([
       'user' => $user,
-      'folders' => $userFolders
+      'folders' => $userFolders,
+      'columnTypes' => $userColumnTypes
     ]);
   })->name('app');
 

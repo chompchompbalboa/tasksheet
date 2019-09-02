@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSheetSort extends Migration
+class CreateSheetGroup extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateSheetSort extends Migration
      */
     public function up()
     {
-        Schema::create('sheetSorts', function (Blueprint $table) {
+        Schema::create('sheetGroups', function (Blueprint $table) {
           $table->uuid('id')->primary();
-          $table->uuid('sheetId')->nullable();
+          $table->uuid('sheetId');
           $table->uuid('columnId');
           $table->string('order', 4);
           $table->boolean('isLocked');
@@ -33,6 +33,6 @@ class CreateSheetSort extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sheetSorts');
+        Schema::dropIfExists('sheetGroups');
     }
 }

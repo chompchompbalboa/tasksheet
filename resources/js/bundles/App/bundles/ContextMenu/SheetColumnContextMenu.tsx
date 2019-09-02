@@ -2,11 +2,12 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import arrayMove from 'array-move'
 
 import { CHECKMARK } from '@app/assets/icons'
 
+import { AppState } from '@app/state'
 import { Sheet, SheetActiveUpdates, SheetUpdates, SheetColumn, SheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
 import { 
   createSheetColumn as createSheetColumnAction,
@@ -37,13 +38,15 @@ const SheetColumnContextMenu = ({
   updateSheetColumn
 }: SheetColumnContextMenuProps) => {
   
+  const columnTypes = useSelector((state: AppState) => state.sheet.columnTypes)
+  const columnTypeIds = Object.keys(columnTypes)
   const dispatch = useDispatch()
   const createSheetColumn = () => dispatch(createSheetColumnAction(sheetId, columnIndex))
   const createSheetColumnBreak = () => dispatch(createSheetColumnBreakAction(sheetId, columnIndex))
   const deleteSheetColumn = () => dispatch(deleteSheetColumnAction(sheetId, columnId))
   const deleteSheetColumnBreak = () => dispatch(deleteSheetColumnBreakAction(sheetId, columnIndex))
   
-  const columnType = columnId === 'COLUMN_BREAK' ? 'COLUMN_BREAK' : columns[columnId].type
+  const columnType = columnId === 'COLUMN_BREAK' ? 'COLUMN_BREAK' : columnTypes[columns[columnId].typeId]
   const onDeleteClick = columnId === 'COLUMN_BREAK' ? deleteSheetColumnBreak : deleteSheetColumn
 
   const closeOnClick = (thenCallThis: (...args: any) => void) => {
@@ -80,33 +83,19 @@ const SheetColumnContextMenu = ({
           <ContextMenuDivider />
           <ContextMenuItem text="Rename" onClick={() => closeOnClick(() => updateSheetActive({ columnRenamingId: columnId }))}/>
           <ContextMenuItem text="Type">
-            <ContextMenuItem 
-              isFirstItem
-              text="Text" 
-              logo={ columnType === 'STRING' ? CHECKMARK : null}
-              onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'STRING' }))}/>
-            <ContextMenuItem 
-              text="Number" 
-              logo={ columnType === 'NUMBER' ? CHECKMARK : null}
-              onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'NUMBER' }))}/>
-            <ContextMenuItem 
-              text="Checkbox" 
-              logo={ columnType === 'BOOLEAN' ? CHECKMARK : null}
-              onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'BOOLEAN' }))}/>
-            <ContextMenuItem 
-              text="Date" 
-              logo={ columnType === 'DATETIME' ? CHECKMARK : null}
-              onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DATETIME' }))}/>
-            <ContextMenuDivider />
-            <ContextMenuItem
-              text="Employees"
-              logo={ columnType === 'DROPDOWN' ? CHECKMARK : null}
-              onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DROPDOWN' }))}/>
-            <ContextMenuItem
-              isLastItem
-              text="Departments"
-              logo={ columnType === 'DROPDOWN' ? CHECKMARK : null}
-              onClick={() => closeOnClick(() => updateSheetColumn(columnId, { type: 'DROPDOWN' }))}/>
+            {columnTypeIds.map((columnTypeId, index) => {
+              const currentColumnType = columnTypes[columnTypeId]
+              return (
+                <ContextMenuItem
+                  key={columnTypeId}
+                  isFirstItem={index === 0}
+                  isLastItem={index === (columnTypeIds.length - 1)}
+                  logo={columnType.id === currentColumnType.id ? CHECKMARK : null}
+                  onClick={() => closeOnClick(() => updateSheetColumn(columnId, { typeId: currentColumnType.id }))}
+                  text={currentColumnType.name}
+                  />
+              )
+            })}
           </ContextMenuItem>
           <ContextMenuDivider />
         </>

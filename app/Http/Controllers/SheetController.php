@@ -37,7 +37,7 @@ class SheetController extends Controller
         'id' => $newColumnId,
         'sheetId' => $newSheet->id,
         'name' => $columnName,
-        'type' => 'STRING',
+        'typeId' => 'STRING',
         'width' => 100
       ]);
     }
@@ -92,7 +92,7 @@ class SheetController extends Controller
           'id' => $newColumnId,
           'sheetId' => $newSheet->id,
           'name' => $columnName,
-          'type' => 'STRING',
+          'typeId' => 'STRING',
           'width' => 50
         ]);
       }
