@@ -26,7 +26,7 @@ export const closeTab = (fileId: string): ThunkAction => {
       activeTab,
       tabs
     } = getState().tab
-		dispatch(updateUserActive({ tabId: activeTab, tabs: tabs }))
+		dispatch(updateUserActive({ tab: activeTab, tabs: tabs }))
 	}
 }
 
@@ -50,7 +50,7 @@ export const openFile = (fileId: string): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
 		dispatch(openFileReducer(fileId))
 		const tab = getState().tab
-		dispatch(updateUserActive({ tabId: tab.activeTab, tabs: tab.tabs }))
+		dispatch(updateUserActive({ tab: tab.activeTab, tabs: tab.tabs }))
 	}
 }
 
@@ -76,7 +76,7 @@ export const openFileInNewTab = (fileId: string): ThunkAction => {
 		if (Object.keys(files).includes(fileId)) { 
       dispatch(openFileInNewTabReducer(fileId)) 
       const tab = getState().tab
-      dispatch(updateUserActive({ tabId: tab.activeTab, tabs: tab.tabs }))
+      dispatch(updateUserActive({ tab: tab.activeTab, tabs: tab.tabs }))
     }
 	}
 }
@@ -101,7 +101,7 @@ export const updateActiveTab = (nextActiveTab: string): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
 		dispatch(updateActiveTabReducer(nextActiveTab))
 		const tab = getState().tab
-		dispatch(updateUserActive({ tabId: tab.activeTab, tabs: tab.tabs }))
+		dispatch(updateUserActive({ tab: tab.activeTab, tabs: tab.tabs }))
 	}
 }
 

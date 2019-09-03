@@ -16,7 +16,7 @@ export type UserActions = UpdateUserActive | UpdateUserColor
 //-----------------------------------------------------------------------------
 export const UPDATE_USER_ACTIVE = 'UPDATE_USER_ACTIVE'
 export type UserActiveUpdates = {
-	tabId?: string
+	tab?: string
 	tabs?: string[]
 }
 interface UpdateUserActive {

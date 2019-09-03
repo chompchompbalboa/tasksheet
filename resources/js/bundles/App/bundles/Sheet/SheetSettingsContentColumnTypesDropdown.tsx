@@ -17,12 +17,15 @@ const SheetSettingsContentColumnTypesDropdown = ({
 
   return (
     <Container>
-      {options && options.map(option => (
-        <DropdownOption
-          key={option.id}>
-          {option.value}
-        </DropdownOption>
-      ))}
+      {Object.keys(options) && Object.keys(options).map(optionId => {
+        const option = options[optionId]
+        return (
+          <DropdownOption
+            key={option.id}>
+            {option.value}
+          </DropdownOption>
+        )
+      })}
     </Container>
   )
 }
@@ -32,7 +35,7 @@ const SheetSettingsContentColumnTypesDropdown = ({
 //-----------------------------------------------------------------------------
 interface SheetSettingsContentColumnTypesDropdownProps {
   data: {
-    options: SheetColumnTypeDropdownOption[]
+    options: { [id: string]: SheetColumnTypeDropdownOption }
   }
 }
 

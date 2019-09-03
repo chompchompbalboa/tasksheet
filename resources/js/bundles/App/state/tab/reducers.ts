@@ -19,8 +19,8 @@ import {
 //-----------------------------------------------------------------------------
 const initialActiveState = typeof initialData !== 'undefined' ? initialData.user.active : defaultInitialData.user.active
 export const initialTabState: TabState = {
-	activeTab: 'SHEET_SETTINGS',
-	//activeTab: initialActiveState.tabId === null ? 'FOLDERS' : initialActiveState.tabId,
+  //activeTab: 'SHEET_SETTINGS',
+	activeTab: initialActiveState.tab === null ? 'FOLDERS' : initialActiveState.tab,
 	tabs: initialActiveState.tabs === null ? [] : initialActiveState.tabs,
 }
 export type TabState = {

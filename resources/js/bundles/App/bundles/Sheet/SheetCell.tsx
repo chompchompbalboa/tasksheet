@@ -28,9 +28,9 @@ const mapStateToProps = (state: AppState, props: SheetCellProps) => ({
 //-----------------------------------------------------------------------------
 const SheetCell = memo(({
   cell,
+  columnType,
   highlightColor,
   style,
-  type,
   updateSheetCell,
   updateSheetSelectedCell,
   updateSheetSelection,
@@ -63,7 +63,7 @@ const SheetCell = memo(({
     DATETIME: SheetCellDatetime,
     DROPDOWN: SheetCellDropdown
   }
-  const SheetCellType = sheetCellTypes[type.cellType]
+  const SheetCellType = sheetCellTypes[columnType.cellType]
   // Selections
   const handleClick = (e: MouseEvent) => {
     updateSheetSelection(cell.id, e.shiftKey)
@@ -99,6 +99,7 @@ const SheetCell = memo(({
           rangeHeight={cell.rangeHeight}/>
         <SheetCellType
           cellId={cell.id}
+          columnType={columnType}
           isCellSelected={cell.isCellSelected || cell.isRangeStart}
           updateCellValue={setCellValue}
           updateSheetSelectedCell={updateSheetSelectedCell}
@@ -114,12 +115,12 @@ const SheetCell = memo(({
 interface SheetCellProps {
   cellId: SheetColumn['id']
   cell?: SheetCell
+  columnType: SheetColumnType
   highlightColor: string
   sheetId: string
   style: {
     width?: ReactText
   }
-  type: SheetColumnType
   updateSheetCell(cellId: string, updates: SheetCellUpdates, undoUpdates?: SheetCellUpdates, skipServerUpdate?: boolean): void
   updateSheetSelectedCell(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   updateSheetSelection(cellId: string, isShiftPressed: boolean): void
@@ -130,7 +131,7 @@ interface SheetCellProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  z-index: ${ ({ isRangeSelected }: ContainerProps ) => isRangeSelected ? '10' : '5' };
+  z-index: ${ ({ isCellSelected, isRangeSelected }: ContainerProps ) => isCellSelected || isRangeSelected ? '10' : '5' };
   position: relative;
   cursor: default;
   padding: 0.15rem 0.25rem;
@@ -140,7 +141,7 @@ const Container = styled.div`
   box-shadow: ${ ({ containerBoxShadow }: ContainerProps ) => containerBoxShadow };
   user-select: none;
   background-color: ${ ({ isCellSelected, isRangeSelected }: ContainerProps ) => isCellSelected && !isRangeSelected ? 'rgb(245, 245, 245)' : 'white' };
-  overflow: ${ ({ isRangeSelected }: ContainerProps ) => isRangeSelected ? 'visible' : 'hidden' };
+  overflow: ${ ({ isCellSelected, isRangeSelected }: ContainerProps ) => isCellSelected || isRangeSelected ? 'visible' : 'hidden' };
   &:hover {
     background-color: ${ ({ isRangeSelected }: ContainerProps ) => !isRangeSelected ? 'rgb(245, 245, 245)' : 'white' };
   }

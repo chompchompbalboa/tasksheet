@@ -9,8 +9,8 @@ class UserActive extends Model
   use Traits\UsesUuid;
 
   protected $table = 'userActive';
-  protected $visible = ['id', 'tabId', 'tabs'];
-  protected $fillable = ['tabId', 'tabs'];
+  protected $visible = ['id', 'tab', 'tabs'];
+  protected $fillable = ['tab', 'tabs'];
   protected $casts = [
     'tabs' => 'array'
   ];

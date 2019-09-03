@@ -98,16 +98,11 @@ export type SheetColumnType = {
   userId: string
   sheetId: string
   name: string
-  cellType: 
-    'STRING' |
-    'DATETIME'|
-    'BOOLEAN'|
-    'NUMBER' | 
-    'DROPDOWN'
+  cellType: SheetCellType
   data: SheetColumnTypeDropdown
 }
 export type SheetColumnTypeDropdown = {
-  options: SheetColumnTypeDropdownOption[]
+  options: { [key: string]: SheetColumnTypeDropdownOption }
 }
 export type SheetColumnTypeDropdownOption = {
   id: string
@@ -150,6 +145,12 @@ export interface SheetCellUpdates {
   rangeHeight?: number
   rangeWidth?: number
 }
+export type SheetCellType = 
+'STRING' |
+'DATETIME'|
+'BOOLEAN'|
+'NUMBER' | 
+'DROPDOWN'
 
 export type SheetSort = {
   id: string

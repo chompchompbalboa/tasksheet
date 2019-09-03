@@ -20,11 +20,16 @@ class SheetDropdown extends Model
 
   public function getDataAttribute() {
     return [
-      'options' => $this->options()->get()
+      'options' => $this->options()
     ];
   }
   
   public function options() {
-    return $this->hasMany('App\Models\SheetDropdownOption', 'sheetDropdownId');
+    $options = SheetDropdownOption::where('sheetDropdownId', $this->id)->get();
+    $returnOptions = [];
+    foreach($options as $option) {
+      $returnOptions[$option->id] = $option;
+    }
+    return $returnOptions;
   }
 }

@@ -83,7 +83,7 @@ const SheetCellContainer = ({
   const handleKeydownWhileCellIsSelected = (e: KeyboardEvent) => {
     e.preventDefault()
     // If a character key is pressed, start editing the cell
-    if(e.key && e.key.length === 1 && !e.metaKey && !e.shiftKey) {
+    if(e.key && e.key.length === 1) {
       setIsCellEditing(true)
       e.key.length === 1 && updateCellValue(e.key)
       localStorage.setItem('sheetCellIsEditing', cellId)
@@ -109,6 +109,7 @@ const SheetCellContainer = ({
   return (
     <Container
       ref={container}
+      isCellEditing={isCellEditing}
       onDoubleClick={(e) => openOnDoubleClick(e)}>
         {isCellEditing 
           ? children
@@ -125,6 +126,7 @@ interface SheetCellContainerProps {
   cellId: string
   children?: any
   focusCell?(): void
+  isCellEditing?: boolean
   isCellSelected: boolean
   updateCellValue(nextCellValue: string): void
   updateSheetSelectedCell(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
@@ -135,6 +137,7 @@ interface SheetCellContainerProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  z-index: ${ ({ isCellEditing }: IContainer ) => isCellEditing ? '10' : '5' };
   position: relative;
   width: 100%;
   height: 100%;
@@ -143,6 +146,9 @@ const Container = styled.div`
   white-space: nowrap;
   text-overflow: ellipsis;
 `
+interface IContainer {
+  isCellEditing: boolean
+}
 
 //-----------------------------------------------------------------------------
 // Export

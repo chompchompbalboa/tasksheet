@@ -7,6 +7,8 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import styled from 'styled-components'
 
+import { SheetColumnType } from '@app/state/sheet/types'
+
 import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 
 //-----------------------------------------------------------------------------
@@ -45,6 +47,7 @@ const SheetCellDatetime = ({
 //-----------------------------------------------------------------------------
 interface SheetCellDatetimeProps {
   cellId: string
+  columnType: SheetColumnType
   isCellSelected: boolean
   updateCellValue(nextCellValue: string): void
   updateSheetSelectedCell(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void

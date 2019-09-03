@@ -4,6 +4,8 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 
+import { SheetColumnType } from '@app/state/sheet/types'
+
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
@@ -62,6 +64,7 @@ const SheetCellBoolean = ({
 //-----------------------------------------------------------------------------
 interface SheetCellBooleanProps {
   cellId: string
+  columnType: SheetColumnType
   isCellSelected: boolean
   updateCellValue(nextCellValue: string): void
   updateSheetSelectedCell(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void

@@ -1270,7 +1270,6 @@ export const selectSheetRows = (sheetId: Sheet['id'], startRowId: SheetRow['id']
       nextRangeHeight: 24,
       nextRangeCellIds: Object.keys(startRow.cells).map(columnId => startRow.cells[columnId])
     }))
-    console.log(startRowId)
   }
 }
 

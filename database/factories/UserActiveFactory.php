@@ -15,7 +15,7 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Models\UserActive::class, function (Faker $faker) {
     return [
-      'tabId' => null,
+      'tab' => null,
       'tabs' => null
     ];
 });

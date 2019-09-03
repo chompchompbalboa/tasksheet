@@ -16,7 +16,7 @@ class CreateUserActive extends Migration
         Schema::create('userActive', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('userId');
-            $table->uuid('tabId')->nullable();
+            $table->uuid('tab')->nullable();
             $table->json('tabs')->nullable();
             $table->timestamps();
 

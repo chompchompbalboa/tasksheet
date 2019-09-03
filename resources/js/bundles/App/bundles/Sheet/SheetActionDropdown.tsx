@@ -242,7 +242,6 @@ const Dropdown = styled.div`
   left: -0.25rem;
   top: calc(100% + 0.25rem);
   min-width: 7.5rem;
-  background-color: white;
   border-radius: 5px;
   background-color: rgb(250, 250, 250);
   box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.5);

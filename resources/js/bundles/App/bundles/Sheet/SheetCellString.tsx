@@ -4,6 +4,8 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components'
 
+import { SheetColumnType } from '@app/state/sheet/types'
+
 import AutosizeTextArea from 'react-autosize-textarea'
 import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 
@@ -46,6 +48,7 @@ const SheetCellString = ({
 //-----------------------------------------------------------------------------
 interface SheetCellStringProps {
   cellId: string
+  columnType: SheetColumnType
   isCellSelected: boolean
   updateCellValue(nextCellValue: string): void
   updateSheetSelectedCell(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void

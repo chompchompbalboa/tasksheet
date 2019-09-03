@@ -4,6 +4,8 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components'
 
+import { SheetColumnType } from '@app/state/sheet/types'
+
 import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 
 //-----------------------------------------------------------------------------
@@ -43,6 +45,7 @@ const SheetCellNumber = ({
 //-----------------------------------------------------------------------------
 interface SheetCellNumberProps {
   cellId: string
+  columnType: SheetColumnType
   isCellSelected: boolean
   updateCellValue(nextCellValue: string): void
   updateSheetSelectedCell(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
