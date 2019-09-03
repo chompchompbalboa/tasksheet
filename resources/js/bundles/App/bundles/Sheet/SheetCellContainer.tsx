@@ -17,6 +17,7 @@ const SheetCellContainer = ({
   children,
   focusCell,
   isCellSelected,
+  onClickOutside,
   updateCellValue,
   updateSheetSelectedCell,
   value
@@ -30,32 +31,32 @@ const SheetCellContainer = ({
   
   useEffect(() => {
     if(isCellSelected && !isCellEditing) {
-      window.addEventListener('keydown', handleKeydownWhileCellIsSelected)
-      window.addEventListener('mousedown', closeOnClickOutside)
+      addEventListener('keydown', handleKeydownWhileCellIsSelected)
+      addEventListener('mousedown', closeOnClickOutside)
     }
     else {
-      window.removeEventListener('keydown', handleKeydownWhileCellIsSelected)
-      window.removeEventListener('mousedown', closeOnClickOutside)
+      removeEventListener('keydown', handleKeydownWhileCellIsSelected)
+      removeEventListener('mousedown', closeOnClickOutside)
     }
     return () => {
-      window.removeEventListener('keydown', handleKeydownWhileCellIsSelected)
-      window.removeEventListener('mousedown', closeOnClickOutside)
+      removeEventListener('keydown', handleKeydownWhileCellIsSelected)
+      removeEventListener('mousedown', closeOnClickOutside)
     }
   }, [ isCellSelected, isCellEditing ])
   
   useEffect(() => {
     if(isCellEditing) {
       focusCell()
-      window.addEventListener('mousedown', closeOnClickOutside)
-      window.addEventListener('keydown', closeOnKeydownEnter)
+      addEventListener('mousedown', closeOnClickOutside)
+      addEventListener('keydown', closeOnKeydownEnter)
     }
     else {
-      window.removeEventListener('mousedown', closeOnClickOutside)
-      window.removeEventListener('keydown', closeOnKeydownEnter)
+      removeEventListener('mousedown', closeOnClickOutside)
+      removeEventListener('keydown', closeOnKeydownEnter)
     }
     return () => {
-      window.removeEventListener('mousedown', closeOnClickOutside)
-      window.removeEventListener('keydown', closeOnKeydownEnter)
+      removeEventListener('mousedown', closeOnClickOutside)
+      removeEventListener('keydown', closeOnKeydownEnter)
     }
   }, [ isCellEditing ])
 
@@ -64,6 +65,7 @@ const SheetCellContainer = ({
       setIsCellEditing(false)
       !e.shiftKey && clearSheetSelection()
       localStorage.setItem('sheetCellIsEditing', null)
+      onClickOutside && onClickOutside()
     }
   }
 
@@ -83,7 +85,7 @@ const SheetCellContainer = ({
   const handleKeydownWhileCellIsSelected = (e: KeyboardEvent) => {
     e.preventDefault()
     // If a character key is pressed, start editing the cell
-    if(e.key && e.key.length === 1) {
+    if(e.key && e.key.length === 1 && !e.metaKey) {
       setIsCellEditing(true)
       e.key.length === 1 && updateCellValue(e.key)
       localStorage.setItem('sheetCellIsEditing', cellId)
@@ -128,6 +130,7 @@ interface SheetCellContainerProps {
   focusCell?(): void
   isCellEditing?: boolean
   isCellSelected: boolean
+  onClickOutside?(...args: any): void
   updateCellValue(nextCellValue: string): void
   updateSheetSelectedCell(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   value: string

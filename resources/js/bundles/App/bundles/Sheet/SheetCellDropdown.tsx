@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { SheetColumnType } from '@app/state/sheet/types'
@@ -25,21 +25,19 @@ const SheetCellDropdown = ({
   // Local Variables
   const dropdownOptions = columnType.data.options
   const dropdownOptionsIds = Object.keys(dropdownOptions)
-  const safeValue = 
-    value === null 
-      ? "" 
-      : dropdownOptions[value] !== undefined ? dropdownOptions[value].value : value
+  const safeValue = value || ''
 
   // State
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
   const [ visibleDropdownOptionsIds, setVisibleDropdownOptionsIds ] = useState(dropdownOptionsIds || [])
+  const [ highlightedDropdownOptionId, setHighlightedDropdownOptionId ] = useState(null)
 
   // Effects
   useEffect(() => {
     if(isDropdownVisible) { addEventListener('keydown', handleKeydownWhileDropdownIsVisible) }
     else { removeEventListener('keydown', handleKeydownWhileDropdownIsVisible) }
     return () => removeEventListener('keydown', handleKeydownWhileDropdownIsVisible)
-  }, [ isDropdownVisible ])
+  }, [ highlightedDropdownOptionId, isDropdownVisible, visibleDropdownOptionsIds ])
   
   // Focus Cell
   const focusCell = () => {
@@ -60,37 +58,59 @@ const SheetCellDropdown = ({
   // Handle Keydown While Dropdown is Visible
   const handleKeydownWhileDropdownIsVisible = (e: KeyboardEvent) => {
     if(e.key === 'Enter') {
-      handleCellEditingComplete()
+      if(dropdownOptions && dropdownOptions[highlightedDropdownOptionId]) {
+        const nextCellValue = dropdownOptions[highlightedDropdownOptionId].value
+        updateCellValue(nextCellValue)
+        handleCellEditingComplete()
+      }
+    }
+    if(e.key === "ArrowUp") {
+      e.preventDefault()
+      const highlightedDropdownOptionIdIndex = visibleDropdownOptionsIds.findIndex(dropdownOptionId => highlightedDropdownOptionId === dropdownOptionId)
+      const nextHighlightedDropdownOptionIdIndex = Math.max(highlightedDropdownOptionIdIndex - 1, 0)
+      const nextHighlightedDropdownOptionId = visibleDropdownOptionsIds[nextHighlightedDropdownOptionIdIndex]
+      setHighlightedDropdownOptionId(highlightedDropdownOptionId === null ? null : nextHighlightedDropdownOptionId)
+    }
+    if(e.key === "ArrowDown") {
+      e.preventDefault()
+      const highlightedDropdownOptionIdIndex = visibleDropdownOptionsIds.findIndex(dropdownOptionId => highlightedDropdownOptionId === dropdownOptionId)
+      const nextHighlightedDropdownOptionIdIndex = Math.min(highlightedDropdownOptionIdIndex + 1, visibleDropdownOptionsIds.length - 1)
+      const nextHighlightedDropdownOptionId = visibleDropdownOptionsIds[nextHighlightedDropdownOptionIdIndex]
+      setHighlightedDropdownOptionId(highlightedDropdownOptionId === null ? visibleDropdownOptionsIds[0] : nextHighlightedDropdownOptionId)
     }
   }
 
   // Handle Cell Editing Complete
-  const handleCellEditingComplete = useCallback(() => {
-    const nextCellValue = visibleDropdownOptionsIds.length === 1 ? dropdownOptions[visibleDropdownOptionsIds[0]].id : value
-    updateCellValue(nextCellValue)
+  const handleCellEditingComplete = () => {
     setIsDropdownVisible(false)
     setVisibleDropdownOptionsIds(dropdownOptionsIds)
-  }, [ value ])
+    setHighlightedDropdownOptionId(null)
+  }
+  
+  const handleDropdownOptionClick = (optionId: string) => {
+    const nextCellValue = dropdownOptions[optionId].value
+    updateCellValue(nextCellValue)
+    handleCellEditingComplete()
+  }
 
   // Handle Update Cell Value
   const handleUpdateCellValue = (nextValue: string) => {
-    setIsDropdownVisible(true)
     const nextVisibleDropdownOptionsIds = getVisibleDropdownOptionsIds(nextValue)
+    nextVisibleDropdownOptionsIds.length === 1 && setHighlightedDropdownOptionId(nextVisibleDropdownOptionsIds[0])
     setVisibleDropdownOptionsIds(nextVisibleDropdownOptionsIds)
-    const nextCellValue = visibleDropdownOptionsIds.length === 1 ? dropdownOptions[visibleDropdownOptionsIds[0]].id : nextValue
-    updateCellValue(nextCellValue)
+    updateCellValue(nextValue)
   }
 
   // Render
   return (
     <SheetCellContainer
       focusCell={focusCell}
+      onClickOutside={() => handleCellEditingComplete()}
       updateCellValue={(nextValue: string) => handleUpdateCellValue(nextValue)}
       value={safeValue}
       {...passThroughProps}>
       <StyledTextarea
         ref={textarea}
-        onBlur={() => handleCellEditingComplete()}
         onChange={(e: any) => handleUpdateCellValue(e.target.value)}
         value={safeValue}/>
       <Dropdown
@@ -99,7 +119,10 @@ const SheetCellDropdown = ({
           const dropdownOption = dropdownOptions[dropdownOptionId]
           return (
             <DropdownOption
-              key={dropdownOption.id}>
+              key={dropdownOption.id}
+              isHighlighted={highlightedDropdownOptionId === dropdownOptionId}
+              onClick={() => handleDropdownOptionClick(dropdownOptionId)}
+              onMouseEnter={() => setHighlightedDropdownOptionId(dropdownOptionId)}>
               {dropdownOption.value}
             </DropdownOption>
           )
@@ -159,9 +182,14 @@ interface IDropdown {
 }
 
 const DropdownOption = styled.div`
+  cursor: default;
   width: 100%;
-  padding: 0.25rem 0.5rem;
+  padding: 0.15rem 0.25rem;
+  background-color: ${ ({ isHighlighted }: IDropdownOption ) => isHighlighted ? 'rgb(240, 240, 240)' : 'transparent'};
 `
+interface IDropdownOption {
+  isHighlighted: boolean
+}
 
 //-----------------------------------------------------------------------------
 // Export

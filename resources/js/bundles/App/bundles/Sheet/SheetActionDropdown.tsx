@@ -118,10 +118,6 @@ const SheetActionDropdown = ({
     if(e.key === "ArrowDown") {
       setHighlightedOptionIndex(highlightedOptionIndex === null ? 0 : Math.min(highlightedOptionIndex + 1, visibleOptions.length - 1))
     }
-    if(e.key === ";") {
-      setIsDropdownVisible(false)
-      setHighlightedOptionIndex(null)
-    }
   }
   
   const SelectedOption = selectedOptionComponent
