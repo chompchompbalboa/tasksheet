@@ -85,7 +85,7 @@ const SheetCellContainer = ({
   const handleKeydownWhileCellIsSelected = (e: KeyboardEvent) => {
     e.preventDefault()
     // If a character key is pressed, start editing the cell
-    if(e.key && e.key.length === 1 && !e.metaKey) {
+    if(e.key && e.key.length === 1 && !e.ctrlKey) {
       setIsCellEditing(true)
       e.key.length === 1 && updateCellValue(e.key)
       localStorage.setItem('sheetCellIsEditing', cellId)
