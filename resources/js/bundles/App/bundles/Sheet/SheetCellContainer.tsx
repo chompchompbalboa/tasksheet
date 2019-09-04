@@ -18,6 +18,7 @@ const SheetCellContainer = ({
   focusCell,
   isCellSelected,
   onCloseCell,
+  onlyRenderChildren,
   updateCellValue,
   updateSheetSelectedCell,
   value
@@ -119,7 +120,7 @@ const SheetCellContainer = ({
       ref={container}
       isCellEditing={isCellEditing}
       onDoubleClick={(e) => openOnDoubleClick(e)}>
-        {isCellEditing 
+        {isCellEditing || onlyRenderChildren
           ? children
           : value === null ? " " : value}
     </Container>
@@ -137,6 +138,7 @@ interface SheetCellContainerProps {
   isCellEditing?: boolean
   isCellSelected: boolean
   onCloseCell?(...args: any): void
+  onlyRenderChildren?: boolean
   updateCellValue(nextCellValue: string): void
   updateSheetSelectedCell(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   value: string

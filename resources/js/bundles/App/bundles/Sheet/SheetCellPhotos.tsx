@@ -1,43 +1,35 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useRef } from 'react'
+import React from 'react'
 import styled from 'styled-components'
+
+import { PHOTOS } from '@app/assets/icons'
 
 import { SheetColumnType } from '@app/state/sheet/types'
 
-import AutosizeTextArea from 'react-autosize-textarea'
+import Icon from '@/components/Icon'
 import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellPhotos = ({
-  updateCellValue,
-  value,
   ...passThroughProps
 }: SheetCellPhotosProps) => {
-  
-  const textarea = useRef(null)
-  
-  const focusCell = () => {
-    const textareaLength = textarea && textarea.current && textarea.current.value && textarea.current.value.length || 0
-    textarea.current.focus()
-    textarea.current.setSelectionRange(textareaLength,textareaLength)
-  }
-  
-  const safeValue = value === null ? "" : value
 
   return (
     <SheetCellContainer
-      focusCell={focusCell}
-      updateCellValue={updateCellValue}
-      value={safeValue}
+      onlyRenderChildren
+      focusCell={() => null}
+      updateCellValue={() => null}
+      value={null}
       {...passThroughProps}>
-      <StyledTextarea
-        ref={textarea}
-        onChange={(e: any) => updateCellValue(e.target.value)}
-        value={'Photos' + safeValue}/>
+      <Container>
+        <Icon 
+          icon={PHOTOS}
+          size="12px"/>
+      </Container>
     </SheetCellContainer>
   )
 
@@ -58,23 +50,14 @@ interface SheetCellPhotosProps {
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const StyledTextarea = styled(AutosizeTextArea)`
+const Container = styled.div`
+  cursor: pointer;
   width: 100%;
   height: 100%;
-  font-size: inherit;
-  font-weight: inherit;
-  font-family: inherit;
-  letter-spacing: inherit;
-  border: none;
-  outline: none;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: transparent;
-  -moz-appearance: textfield;
-  resize: none;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  color: rgb(100, 100, 100);
 `
 
 //-----------------------------------------------------------------------------
