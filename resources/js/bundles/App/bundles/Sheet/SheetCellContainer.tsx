@@ -17,7 +17,7 @@ const SheetCellContainer = ({
   children,
   focusCell,
   isCellSelected,
-  onClickOutside,
+  onCloseCell,
   updateCellValue,
   updateSheetSelectedCell,
   value
@@ -65,7 +65,7 @@ const SheetCellContainer = ({
       setIsCellEditing(false)
       !e.shiftKey && clearSheetSelection()
       localStorage.setItem('sheetCellIsEditing', null)
-      onClickOutside && onClickOutside()
+      onCloseCell && onCloseCell()
     }
   }
 
@@ -73,6 +73,7 @@ const SheetCellContainer = ({
     if(e.key === "Enter") {
       setIsCellEditing(false)
       localStorage.setItem('sheetCellIsEditing', null)
+      onCloseCell && onCloseCell()
     }
   }
 
@@ -83,27 +84,32 @@ const SheetCellContainer = ({
   }
 
   const handleKeydownWhileCellIsSelected = (e: KeyboardEvent) => {
-    e.preventDefault()
     // If a character key is pressed, start editing the cell
-    if(e.key && e.key.length === 1 && !e.ctrlKey) {
+    if(e.key && e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+      e.preventDefault()
       setIsCellEditing(true)
       e.key.length === 1 && updateCellValue(e.key)
       localStorage.setItem('sheetCellIsEditing', cellId)
     }
     // Otherwise, navigate to an adjacent cell on an arrow or enter press
     if(e.key === 'Enter' || e.key === 'ArrowDown') {
+      e.preventDefault()
       updateSheetSelectedCell(cellId, 'DOWN')
     }
     if(e.key === 'Tab' || e.key === 'ArrowRight') {
+      e.preventDefault()
       updateSheetSelectedCell(cellId, 'RIGHT')
     }
     if(e.key === 'ArrowLeft') {
+      e.preventDefault()
       updateSheetSelectedCell(cellId, 'LEFT')
     }
     if(e.key === 'ArrowUp') {
+      e.preventDefault()
       updateSheetSelectedCell(cellId, 'UP')
     }
     if(e.key === 'Delete' || e.key === 'Backspace') {
+      e.preventDefault()
       updateCellValue('')
     }
   }
@@ -130,7 +136,7 @@ interface SheetCellContainerProps {
   focusCell?(): void
   isCellEditing?: boolean
   isCellSelected: boolean
-  onClickOutside?(...args: any): void
+  onCloseCell?(...args: any): void
   updateCellValue(nextCellValue: string): void
   updateSheetSelectedCell(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   value: string
