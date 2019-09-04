@@ -105,7 +105,7 @@ const SheetCellDropdown = ({
   return (
     <SheetCellContainer
       focusCell={focusCell}
-      onCloseCell={() => handleCellEditingComplete()}
+      onCloseCell={() => setTimeout(() => handleCellEditingComplete(), 10)}
       updateCellValue={(nextValue: string) => handleUpdateCellValue(nextValue)}
       value={safeValue}
       {...passThroughProps}>
