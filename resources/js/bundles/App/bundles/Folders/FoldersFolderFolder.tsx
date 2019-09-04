@@ -59,7 +59,6 @@ const FoldersFolderFolder = ({
     setIsContextMenuVisible(true)
     setContextMenuTop(e.clientY)
     setContextMenuLeft(e.clientX)
-    updateActiveFolderPath(level, folder.id)
   }
 
   const [ isRenaming, setIsRenaming ] = useState(folder.name === null)
