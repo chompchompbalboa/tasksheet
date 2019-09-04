@@ -2,10 +2,11 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { memo, MouseEvent } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
+import { AppState } from '@app/state'
 import { Sheet, SheetRow } from '@app/state/sheet/types'
 import {
   selectSheetRows as selectSheetRowsAction
@@ -25,10 +26,22 @@ const SheetRowLeader = memo(({
   
   const dispatch = useDispatch()
   const selectSheetRows = (startRowId: SheetRow['id'], endRowId?: SheetRow['id']) => dispatch(selectSheetRowsAction(sheetId, startRowId, endRowId))
+  const rangeStartRowId = useSelector((state: AppState) => state.sheet.active.selections.rangeStartRowId)
+  
+  const handleClick = (e: MouseEvent) => {
+    if(e.shiftKey) {
+      const nextRangeStartRowId = rangeStartRowId || rowId
+      const nextRangeEndRowId = rowId
+      selectSheetRows(nextRangeStartRowId, nextRangeEndRowId)
+    }
+    else {
+      selectSheetRows(rowId)
+    }
+  }
   
   return (
     <Container
-      onClick={() => selectSheetRows(rowId)}
+      onClick={(e: MouseEvent) => handleClick(e)}
       onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'ROW', rowId)}
       isRowBreak={isRowBreak}
       style={style}>

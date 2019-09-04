@@ -11,6 +11,8 @@ import SheetSettingsContentColumnTypesNumber from '@/bundles/App/bundles/Sheet/S
 import SheetSettingsContentColumnTypesBoolean from '@/bundles/App/bundles/Sheet/SheetSettingsContentColumnTypesBoolean'
 import SheetSettingsContentColumnTypesDatetime from '@/bundles/App/bundles/Sheet/SheetSettingsContentColumnTypesDatetime'
 import SheetSettingsContentColumnTypesDropdown from '@/bundles/App/bundles/Sheet/SheetSettingsContentColumnTypesDropdown'
+import SheetSettingsContentColumnTypesPhotos from '@/bundles/App/bundles/Sheet/SheetSettingsContentColumnTypesPhotos'
+import SheetSettingsContentColumnTypesFiles from '@/bundles/App/bundles/Sheet/SheetSettingsContentColumnTypesFiles'
 import SheetSettingsContentVerticalList from '@/bundles/App/bundles/Sheet/SheetSettingsContentVerticalList'
 import SheetSettingsContentVerticalListItem from '@/bundles/App/bundles/Sheet/SheetSettingsContentVerticalListItem'
 import SheetSettingsContentContent from '@app/bundles/Sheet/SheetSettingsContentContent'
@@ -32,7 +34,9 @@ const SheetSettingsContentColumnTypes = ({
     NUMBER: SheetSettingsContentColumnTypesNumber,
     BOOLEAN: SheetSettingsContentColumnTypesBoolean,
     DATETIME: SheetSettingsContentColumnTypesDatetime,
-    DROPDOWN: SheetSettingsContentColumnTypesDropdown
+    DROPDOWN: SheetSettingsContentColumnTypesDropdown,
+    PHOTOS: SheetSettingsContentColumnTypesPhotos,
+    FILES: SheetSettingsContentColumnTypesFiles,
   }
 
   const ColumnTypeSettingsComponent = columnTypeSettingsComponents[activeColumnType.cellType]

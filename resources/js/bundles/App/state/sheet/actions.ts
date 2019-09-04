@@ -1239,13 +1239,22 @@ export const selectSheetRows = (sheetId: Sheet['id'], startRowId: SheetRow['id']
       active: { selections },
       columns,
       rows,
-      sheets: { [sheetId]: { visibleColumns } }
+      sheets: { [sheetId]: { visibleColumns, visibleRows } }
     } = getState().sheet
     
-    const startRow = rows[startRowId]
+    const startRowIdVisibleRowsIndex = visibleRows.indexOf(startRowId)
+    const endRowIdVisibleRowsIndex = endRowId ? visibleRows.indexOf(endRowId) : visibleRows.indexOf(startRowId)
+    const nextStartRowIndex = Math.min(startRowIdVisibleRowsIndex, endRowIdVisibleRowsIndex)
+    const nextEndRowIndex = Math.max(startRowIdVisibleRowsIndex, endRowIdVisibleRowsIndex)
+    const nextStartRowId = visibleRows[nextStartRowIndex]
+    const nextEndRowId = visibleRows[nextEndRowIndex]
+    
+    const startRow = rows[nextStartRowId]
+    const startRowIndex = visibleRows.indexOf(startRow.id)
     const startColumnId = visibleColumns[0]
     const startCellId = startRow.cells[startColumnId]
-    const endRow = rows[startRowId]
+    const endRow = rows[nextEndRowId]
+    const endRowIndex = visibleRows.indexOf(endRow.id)
     const endColumnId = visibleColumns[Math.max(0, visibleColumns.length - 1)]
     const endCellId = endRow.cells[endColumnId]
     
@@ -1267,7 +1276,7 @@ export const selectSheetRows = (sheetId: Sheet['id'], startRowId: SheetRow['id']
       nextRangeEndRowId: endRow.id,
       nextRangeEndCellId: endCellId,
       nextRangeWidth: nextRangeWidth,
-      nextRangeHeight: 24,
+      nextRangeHeight: (Math.abs((endRowIndex - startRowIndex)) + 1) * 24,
       nextRangeCellIds: Object.keys(startRow.cells).map(columnId => startRow.cells[columnId])
     }))
   }

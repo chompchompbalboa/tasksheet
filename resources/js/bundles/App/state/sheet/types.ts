@@ -150,7 +150,9 @@ export type SheetCellType =
 'DATETIME'|
 'BOOLEAN'|
 'NUMBER' | 
-'DROPDOWN'
+'DROPDOWN' |
+'PHOTOS' | 
+'FILES'
 
 export type SheetSort = {
   id: string

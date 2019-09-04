@@ -95,6 +95,24 @@ export const defaultSheetState: SheetState = {
       cellType: 'DATETIME',
       data: null
     },
+    PHOTOS: {
+      id: 'PHOTOS',
+      organizationId: null,
+      userId: null,
+      sheetId: null,
+      name: 'Photos',
+      cellType: 'PHOTOS',
+      data: null
+    },
+    FILES: {
+      id: 'FILES',
+      organizationId: null,
+      userId: null,
+      sheetId: null,
+      name: 'Files',
+      cellType: 'FILES',
+      data: null
+    },
     ...columnTypesFromServer
   },
   filters: null,
