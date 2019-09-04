@@ -20,23 +20,23 @@ const SheetCellDatetime = ({
   ...passThroughProps
 }: SheetCellDatetimeProps) => {  
   
-  const safeValue = [null, ""].includes(value) ? "" : moment(value).format('MM/DD/YYYY')
+  const safeValue = moment(safeValue).isValid() ? moment(value).format('MM/DD/YYYY') : ''
 
   const formatNextCellValue = (date: any) => {
-    return date !== null ? moment(date).format('YYYY-MM-DD HH:mm:ss') : null
+    return moment(safeValue).isValid() ? moment(date).format('YYYY-MM-DD HH:mm:ss') : ''
   }
 
   return (
     <StyledSheetCellContainer
       focusCell={() => null}
-      updateCellValue={updateCellValue}
+      updateCellValue={(date: any) => updateCellValue(formatNextCellValue(date))}
       value={safeValue}
       {...passThroughProps}>
       <DatePicker
         autoComplete="new-password"
         autoFocus
         customInput={<StyledInput/>}
-        selected={![null, ""].includes(value) ? moment(value).toDate() : null}
+        selected={moment(safeValue).isValid() ? moment(safeValue).toDate() : null}
         onChange={(date: any) => updateCellValue(formatNextCellValue(date))}/>
     </StyledSheetCellContainer>
   )
