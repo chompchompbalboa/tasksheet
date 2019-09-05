@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { PHOTOS } from '@app/assets/icons'
@@ -15,20 +15,59 @@ import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellPhotos = ({
+  cellId,
   ...passThroughProps
 }: SheetCellPhotosProps) => {
 
+  // Refs
+  const container = useRef(null)
+
+  // State
+  const [ isPhotosVisible, setIsPhotosVisible ] = useState(localStorage.getItem('sheetCellPhotosIsVisible') === cellId)
+
+  useEffect(() => {
+    if(isPhotosVisible) { addEventListener('click', closeOnClickOutside) }
+    else { removeEventListener('click', closeOnClickOutside) }
+    return () => removeEventListener('click', closeOnClickOutside)
+  }, [ isPhotosVisible ])
+  useEffect(() => {
+    return () => {
+      setIsPhotosVisible(false)
+      localStorage.setItem('sheetCellPhotosIsVisible', null)
+    }
+  }, [])
+
+  const closeOnClickOutside = (e: MouseEvent) => {
+    if(!container.current.contains(e.target)) {
+      setIsPhotosVisible(false)
+      localStorage.setItem('sheetCellPhotosIsVisible', null)
+    }
+  }
+
+  const handleContainerClick = () => {
+    setIsPhotosVisible(true)
+    localStorage.setItem('sheetCellPhotosIsVisible', cellId)
+  }
+
   return (
     <SheetCellContainer
-      onlyRenderChildren
+      cellId={cellId}
       focusCell={() => null}
+      onlyRenderChildren
       updateCellValue={() => null}
       value={null}
       {...passThroughProps}>
-      <Container>
-        <Icon 
-          icon={PHOTOS}
-          size="12px"/>
+      <Container
+        ref={container}
+        onClick={() => handleContainerClick()}>
+        <IconContainer>
+          <Icon 
+            icon={PHOTOS}
+            size="18px"/>
+        </IconContainer>
+        <PhotosContainer
+          isPhotosVisible={isPhotosVisible}>
+        </PhotosContainer>
       </Container>
     </SheetCellContainer>
   )
@@ -51,6 +90,12 @@ interface SheetCellPhotosProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+`
+
+const IconContainer = styled.div`
   cursor: pointer;
   width: 100%;
   height: 100%;
@@ -58,7 +103,26 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   color: rgb(100, 100, 100);
+  &:hover {
+    color: rgb(60, 60, 60);
+  }
 `
+
+const PhotosContainer = styled.div`
+  display: ${ ({ isPhotosVisible }: IPhotosContainer ) => isPhotosVisible ? 'block' : 'none' };
+  position: absolute;
+  top: calc(100% + 2.5px);
+  left: -4px;
+  background-color: white;
+  height: 75vh;
+  width: 50vw;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+  box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.5);
+`
+interface IPhotosContainer {
+  isPhotosVisible: boolean
+}
 
 //-----------------------------------------------------------------------------
 // Export
