@@ -129,6 +129,8 @@ export type SheetCell = {
 	columnId: string
 	rowId: string
 	value: string
+  isCellEditing: boolean
+  isCellEditingSheetId: Sheet['id']
   isCellSelected: boolean
   isRangeStart: boolean
   isRangeEnd: boolean
@@ -138,6 +140,8 @@ export type SheetCell = {
 }
 export interface SheetCellUpdates {
   value?: string
+  isCellEditing?: boolean
+  isCellEditingSheetId?: Sheet['id']
   isCellSelected?: boolean
   isRangeStart?: boolean
   isRangeEnd?: boolean

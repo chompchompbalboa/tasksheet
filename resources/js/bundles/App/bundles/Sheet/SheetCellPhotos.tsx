@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import { PHOTOS } from '@app/assets/icons'
 
-import { SheetColumnType } from '@app/state/sheet/types'
+import { SheetCell, SheetColumnType } from '@app/state/sheet/types'
 
 import Icon from '@/components/Icon'
 import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
@@ -78,6 +78,8 @@ const SheetCellPhotos = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetCellPhotosProps {
+  sheetId: string
+  cell: SheetCell
   cellId: string
   columnType: SheetColumnType
   isCellSelected: boolean

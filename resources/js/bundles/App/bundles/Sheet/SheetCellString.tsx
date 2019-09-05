@@ -4,7 +4,7 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components'
 
-import { SheetColumnType } from '@app/state/sheet/types'
+import { SheetCell, SheetColumnType } from '@app/state/sheet/types'
 
 import AutosizeTextArea from 'react-autosize-textarea'
 import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
@@ -21,9 +21,11 @@ const SheetCellString = ({
   const textarea = useRef(null)
   
   const focusCell = () => {
-    const textareaLength = textarea && textarea.current && textarea.current.value && textarea.current.value.length || 0
-    textarea.current.focus()
-    textarea.current.setSelectionRange(textareaLength,textareaLength)
+    if(textarea && textarea.current) {
+      const textareaLength = textarea.current.value && textarea.current.value.length || 0
+      textarea.current.focus()
+      textarea.current.setSelectionRange(textareaLength,textareaLength)
+    }
   }
   
   const safeValue = value === null ? "" : value
@@ -47,6 +49,8 @@ const SheetCellString = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetCellStringProps {
+  sheetId: string
+  cell: SheetCell
   cellId: string
   columnType: SheetColumnType
   isCellSelected: boolean

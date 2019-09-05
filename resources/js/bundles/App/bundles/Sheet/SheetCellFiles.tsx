@@ -4,7 +4,7 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components'
 
-import { SheetColumnType } from '@app/state/sheet/types'
+import { SheetCell, SheetColumnType } from '@app/state/sheet/types'
 
 import AutosizeTextArea from 'react-autosize-textarea'
 import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
@@ -47,6 +47,8 @@ const SheetCellFiles = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetCellFilesProps {
+  sheetId: string
+  cell: SheetCell
   cellId: string
   columnType: SheetColumnType
   isCellSelected: boolean

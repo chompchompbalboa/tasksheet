@@ -49,11 +49,11 @@ const Tabs = ({
   updateActiveTab
 }: TabsProps) => {
 
-  const [ localActiveTab, setLocalActiveTabId ] = useState(activeTab)
+  const [ localActiveTab, setLocalActiveTab ] = useState(activeTab)
   const [ localTabs, setLocalTabs ] = useState(tabs)
   
   useEffect(() => {
-    setLocalActiveTabId(activeTab || 'FOLDERS')
+    setLocalActiveTab(activeTab || 'FOLDERS')
   }, [ activeTab ])
 
   useLayoutEffect(() => {
@@ -61,7 +61,7 @@ const Tabs = ({
   }, [ tabs ])
 
   const handleFileOpen = (nextActiveTab: string) => {
-    setLocalActiveTabId(nextActiveTab)
+    setLocalActiveTab(nextActiveTab)
     tabs.includes(nextActiveTab)
       ? window.setTimeout(() => updateActiveTab(nextActiveTab), 10)
       : !['FOLDERS', 'USER', 'SHEET_SETTINGS', 'ORGANIZATION'].includes(nextActiveTab)
@@ -69,7 +69,7 @@ const Tabs = ({
             setLocalTabs([ ...localTabs, nextActiveTab]),
             setTimeout(() => openFileInNewTab(nextActiveTab), 10)
           )
-        : setLocalActiveTabId(nextActiveTab)
+        : setLocalActiveTab(nextActiveTab)
   }
 
   return (

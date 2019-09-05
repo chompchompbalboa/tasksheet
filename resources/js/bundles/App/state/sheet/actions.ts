@@ -592,6 +592,8 @@ export const loadSheet = (sheetFromServer: SheetFromServer): ThunkAction => {
       row.cells.forEach(cell => {
         normalizedCells[cell.id] = { 
           ...cell, 
+          isCellEditing: false,
+          isCellEditingSheetId: null,
           isCellSelected: false,
           isRangeStart: false,
           isRangeEnd: false,

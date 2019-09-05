@@ -28,6 +28,8 @@ export const defaultCell = (sheetId: string, rowId: string, columnId: string, ce
     columnId: columnId,
     rowId: rowId,
     value: "",
+    isCellEditing: false,
+    isCellEditingSheetId: null,
     isCellSelected: false,
     isRangeStart: false,
     isRangeEnd: false,

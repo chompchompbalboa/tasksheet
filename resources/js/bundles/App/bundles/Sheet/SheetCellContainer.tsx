@@ -1,18 +1,23 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useCallback, useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { AppState } from '@app/state'
+import { SheetCell, SheetCellUpdates } from '@app/state/sheet/types'
 import {
-  clearSheetSelection as clearSheetSelectionAction
+  clearSheetSelection as clearSheetSelectionAction,
+  updateSheetCell as updateSheetCellAction
 } from '@app/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellContainer = ({
+  sheetId,
+  cell,
   cellId,
   children,
   focusCell,
@@ -26,12 +31,15 @@ const SheetCellContainer = ({
   
   const dispatch = useDispatch()
   const clearSheetSelection = useCallback(() => dispatch(clearSheetSelectionAction()), [])
+  const updateSheetCell = useCallback((updates: SheetCellUpdates) => dispatch(updateSheetCellAction(cellId, updates, null, true)), [])
+  
+  const activeSheetId = useSelector((state: AppState) => state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].typeId)
 
   const container = useRef(null)
-  const [ isCellEditing, setIsCellEditing ] = useState(localStorage.getItem('sheetCellIsEditing') === cellId)
+  const isCellEditing = cell.isCellEditing && sheetId === activeSheetId
   
   useEffect(() => {
-    if(isCellSelected && !isCellEditing) {
+    if(cell.isCellSelected && !cell.isCellEditing) {
       addEventListener('keydown', handleKeydownWhileCellIsSelected)
       addEventListener('mousedown', closeOnClickOutside)
     }
@@ -43,10 +51,10 @@ const SheetCellContainer = ({
       removeEventListener('keydown', handleKeydownWhileCellIsSelected)
       removeEventListener('mousedown', closeOnClickOutside)
     }
-  }, [ isCellSelected, isCellEditing ])
+  }, [ cell.isCellSelected, cell.isCellEditing ])
   
   useEffect(() => {
-    if(isCellEditing) {
+    if(cell.isCellEditing) {
       focusCell()
       addEventListener('mousedown', closeOnClickOutside)
       addEventListener('keydown', closeOnKeydownEnter)
@@ -59,38 +67,46 @@ const SheetCellContainer = ({
       removeEventListener('mousedown', closeOnClickOutside)
       removeEventListener('keydown', closeOnKeydownEnter)
     }
-  }, [ isCellEditing ])
+  }, [ cell.isCellEditing ])
 
   const closeOnClickOutside = (e: MouseEvent) => {
     if(!container.current.contains(e.target)) {
-      setIsCellEditing(false)
       !e.shiftKey && clearSheetSelection()
-      localStorage.setItem('sheetCellIsEditing', null)
+      updateSheetCell({ 
+        isCellEditing: false,
+        isCellEditingSheetId: null
+      })
       onCloseCell && onCloseCell()
     }
   }
 
   const closeOnKeydownEnter = (e: KeyboardEvent) => {
     if(e.key === "Enter") {
-      setIsCellEditing(false)
-      localStorage.setItem('sheetCellIsEditing', null)
+      updateSheetCell({ 
+        isCellEditing: false,
+        isCellEditingSheetId: null
+      })
       onCloseCell && onCloseCell()
     }
   }
 
   const openOnDoubleClick = (e: any) => {
     e.preventDefault()
-    setIsCellEditing(true)
-    localStorage.setItem('sheetCellIsEditing', cellId)
+    updateSheetCell({ 
+      isCellEditing: true,
+      isCellEditingSheetId: sheetId
+    })
   }
 
   const handleKeydownWhileCellIsSelected = (e: KeyboardEvent) => {
     // If a character key is pressed, start editing the cell
     if(e.key && e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
       e.preventDefault()
-      setIsCellEditing(true)
-      e.key.length === 1 && updateCellValue(e.key)
-      localStorage.setItem('sheetCellIsEditing', cellId)
+      updateSheetCell({
+        value: e.key,
+        isCellEditing: true,
+        isCellEditingSheetId: sheetId
+      })
     }
     // Otherwise, navigate to an adjacent cell on an arrow or enter press
     if(e.key === 'Enter' || e.key === 'ArrowDown') {
@@ -132,6 +148,8 @@ const SheetCellContainer = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetCellContainerProps {
+  sheetId: string
+  cell: SheetCell
   cellId: string
   children?: any
   focusCell?(): void

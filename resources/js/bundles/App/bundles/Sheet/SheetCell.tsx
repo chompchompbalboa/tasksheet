@@ -29,6 +29,7 @@ const mapStateToProps = (state: AppState, props: SheetCellProps) => ({
 // Component
 //-----------------------------------------------------------------------------
 const SheetCell = memo(({
+  sheetId,
   cell,
   columnType,
   highlightColor,
@@ -102,6 +103,8 @@ const SheetCell = memo(({
           rangeWidth={cell.rangeWidth}
           rangeHeight={cell.rangeHeight}/>
         <SheetCellType
+          sheetId={sheetId}
+          cell={cell}
           cellId={cell.id}
           columnType={columnType}
           isCellSelected={cell.isCellSelected || cell.isRangeStart}
@@ -117,11 +120,11 @@ const SheetCell = memo(({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetCellProps {
+  sheetId: string
   cellId: SheetColumn['id']
   cell?: SheetCell
   columnType: SheetColumnType
   highlightColor: string
-  sheetId: string
   style: {
     width?: ReactText
   }
