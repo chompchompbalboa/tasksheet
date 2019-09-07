@@ -11,3 +11,10 @@ export const getSheet = async (sheetId: string) => {
 		return response.data
 	})
 }
+
+export const getSheetCellPhotos = async (sheetCellId: string) => {
+	return axios.get('/app/sheets/cells/photos/' + sheetCellId).then(response => {
+		return response.data
+	})
+}
+

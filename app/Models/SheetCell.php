@@ -19,5 +19,8 @@ class SheetCell extends Model
   public function column() {
     return $this->belongsTo('App\Models\SheetColumn', 'columnId');
   }
-
+  
+  public function photos() {
+    return $this->hasMany('App\Models\SheetPhoto', 'cellId');
+  }
 }

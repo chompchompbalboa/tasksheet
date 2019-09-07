@@ -1,73 +1,52 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { ARROW_LEFT, ARROW_RIGHT, PHOTOS } from '@app/assets/icons'
+
+import { mutation, query } from '@app/api'
 
 import { SheetCell, SheetColumnType } from '@app/state/sheet/types'
 
 import Icon from '@/components/Icon'
 import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 
-const photos = [
-  {
-    url: 'https://natureconservancy-h.assetsadobe.com/is/image/content/dam/tnc/nature/en/photos/LakeWakatipuNewZealand.jpg?crop=0,30,4928,2710&wid=4000&hei=2200&scl=1.232',
-    uploadedBy: 'George Washington',
-    uploadedDate: '08/10/2019'
-  },
-  {
-    url: 'https://www.newzealand.com/assets/Videos/794d90bf26/img-1536194798-4751-15338-34BFCBA3-C25A-17FB-A15D11670B2F607E__FocalPointCropWzQyNyw2NDAsNTAsNTAsODUsImpwZyIsNjUsMi41XQ.jpg',
-    uploadedBy: 'Abraham Lincoln',
-    uploadedDate: '08/11/2019'
-  },
-  {
-    url:'https://techcrunch.com/wp-content/uploads/2018/08/GettyImages-939027862.jpg?w=730&crop=1',
-    uploadedBy: 'Dwight Eisenhower',
-    uploadedDate: '08/12/2019'
-  },
-  {
-    url: 'https://pbs.twimg.com/media/DW6KCAcVMAA5Hne.jpg',
-    uploadedBy: 'Franklin D. Roosevelt',
-    uploadedDate: '08/13/2019'
-  },
-  {
-    url: 'https://cdn.cnn.com/cnnnext/dam/assets/170606121305-new-zealand---travel-destination---shutterstock-180140354.jpg',
-    uploadedBy: 'Bill Clinton',
-    uploadedDate: '08/14/2019'
-  },
-  {
-    url: 'https://www.trafalgar.com/~/media/images/home/destinations/south-pacific/new-zealand/2016-licensed-images/newzealand-milfordsound-hero-l-515663650.jpg?mw=1200&',
-    uploadedBy: 'Barack Obama',
-    uploadedDate: '08/15/2019'
-  },
-  {
-    url: 'https://www.nzherald.co.nz/resizer/nd6c_OkU6Z3mTXajhjciCH5U8Os=/360x384/filters:quality(70)/arc-anglerfish-syd-prod-nzme.s3.amazonaws.com/public/PE3NR7BS4RDIZHW7V3YGCOVWYI.jpg',
-    uploadedBy: 'Jimmy Carter',
-    uploadedDate: '08/16/2019'
-  },
-]
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellPhotos = ({
+  sheetId,
   cellId,
   ...passThroughProps
 }: SheetCellPhotosProps) => {
 
   // Refs
   const container = useRef(null)
+  const uploadInput = useRef(null)
 
   // State
+  const [ hasPhotosLoaded, setHasPhotosLoaded ] = useState(false)
+  const [ photos, setPhotos ] = useState([])
   const [ isPhotosVisible, setIsPhotosVisible ] = useState(false)
+  const [ uploadStatus, setUploadStatus ] = useState('READY' as TUploadStatus)
   const [ visiblePhotoIndex, setVisiblePhotoIndex ] = useState(0)
 
   useEffect(() => {
-    if(isPhotosVisible) { addEventListener('click', closeOnClickOutside) }
+    if(isPhotosVisible) { 
+      addEventListener('click', closeOnClickOutside)
+      if(!hasPhotosLoaded) {
+        query.getSheetCellPhotos(cellId).then(photosFromServer => {
+          setHasPhotosLoaded(true)
+          setPhotos(photosFromServer)
+        })
+      }
+    }
     else { removeEventListener('click', closeOnClickOutside) }
     return () => removeEventListener('click', closeOnClickOutside)
   }, [ isPhotosVisible ])
+  
   useEffect(() => {
     return () => {
       setIsPhotosVisible(false)
@@ -83,9 +62,36 @@ const SheetCellPhotos = ({
   const handleContainerClick = () => {
     setIsPhotosVisible(true)
   }
+  
+  const handleUploadPhotosButtonClick = () => {
+    uploadInput.current.click()
+  }
+  
+  // This only fires when a file is selected
+  const handleUploadInputSelect = (e: ChangeEvent<HTMLInputElement>) => {
+    const photosList = e.target.files
+    const photosIndices = Object.keys(photosList)
+    if(photosIndices.length > 0) {
+      setUploadStatus('UPLOADING')
+      const photosToUpload = photosIndices.map((index: any) => photosList[index])
+      mutation.createSheetCellPhotos(sheetId, cellId, photosToUpload).then(nextSheetCellPhotos => {
+        //setPhotos(nextSheetCellPhotos)
+        setPhotos(photos)
+        setUploadStatus('UPLOADED')
+        setTimeout(() => setUploadStatus('READY'), 1000)
+      })
+    }
+  }
+  
+  const uploadStatusMessages = {
+    READY: 'Add photos',
+    UPLOADING: 'Uploading...',
+    UPLOADED: 'Uploaded!'
+  }
 
   return (
     <SheetCellContainer
+      sheetId={sheetId}
       cellId={cellId}
       focusCell={() => null}
       onlyRenderChildren
@@ -100,7 +106,7 @@ const SheetCellPhotos = ({
             icon={PHOTOS}
             size="18px"/>
         </IconContainer>
-        {isPhotosVisible && 
+        {isPhotosVisible &&
           <PhotosContainer>
             <LeftArrow 
               onClick={() => setVisiblePhotoIndex(visiblePhotoIndex - 1 < 0 ? photos.length - 1 : visiblePhotoIndex - 1)}>
@@ -110,14 +116,18 @@ const SheetCellPhotos = ({
             <Photos>
               <PhotoHeader>
                 <PhotoLabel>
-                  {photos[visiblePhotoIndex].uploadedBy} on {photos[visiblePhotoIndex].uploadedDate}
+                  {hasPhotosLoaded && photos.length > 0
+                    ? photos[visiblePhotoIndex].uploadedBy + ' on ' + photos[visiblePhotoIndex].uploadedDate
+                    : ''
+                  }
                 </PhotoLabel>
-                <UploadPhotoButton>
-                  Add photos
+                <UploadPhotoButton
+                  onClick={() => handleUploadPhotosButtonClick()}>
+                  {uploadStatusMessages[uploadStatus]}
                 </UploadPhotoButton>
               </PhotoHeader>
               <PhotoContainer>
-                {photos.map((photo, index) => (
+                {hasPhotosLoaded && photos.length > 0 && photos.map((photo, index) => (
                   <Photo
                     key={index}
                     isVisible={index === visiblePhotoIndex}
@@ -133,6 +143,12 @@ const SheetCellPhotos = ({
           </PhotosContainer>
         }
       </Container>
+      <UploadInput
+        ref={uploadInput}
+        type="file"
+        accept="image/*"
+        multiple
+        onChange={e => handleUploadInputSelect(e)}/>
     </SheetCellContainer>
   )
 
@@ -151,6 +167,8 @@ interface SheetCellPhotosProps {
   updateSheetSelectedCell(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   value: string
 }
+
+type TUploadStatus = 'READY' | 'UPLOADING' | 'UPLOADED'
 
 //-----------------------------------------------------------------------------
 // Styled Components
@@ -258,6 +276,10 @@ const Photo = styled.img`
 interface IStyledImg {
   isVisible: boolean
 }
+
+const UploadInput = styled.input`
+  display: none;
+`
 
 //-----------------------------------------------------------------------------
 // Export

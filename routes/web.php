@@ -36,6 +36,7 @@ Route::group([
 
   // Uploads
   Route::post('/sheets/upload/csv', 'SheetController@createFromCsv');
+  Route::post('/sheets/cells/photos/upload', 'SheetCellPhotoController@uploadPhotos');
   
   // Restore soft deletes
   Route::post('/files/restore/{file}', 'FileController@restore');
@@ -62,6 +63,7 @@ Route::group([
     // Sheet
     'sheets' => 'SheetController',
     'sheets/cells' => 'SheetCellController',
+    'sheets/cells/photos' => 'SheetCellPhotoController',
     'sheets/columns' => 'SheetColumnController',
     'sheets/filters' => 'SheetFilterController',
     'sheets/groups' => 'SheetGroupController',

@@ -1,0 +1,112 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+
+use App\Models\SheetCell;
+use App\Models\SheetPhoto;
+
+class SheetCellPhotoController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function uploadPhotos(Request $request)
+    {
+      $formData = $request->all();
+      $sheetId = $formData['sheetId'];
+      $sheetCellId = $formData['sheetCellId'];
+      $photosToUpload = $formData['photosToUpload'];
+      $user = Auth::user();
+      foreach($photosToUpload as $photoToUpload) {
+        $newPhotoId = Str::uuid()->toString();
+        $newPhotoFileName = $newPhotoId.'.'.$photoToUpload->extension();
+        //dd($newPhotoFileName);
+        $photoToUpload->storeAs('/public', $newPhotoFileName);
+        //$newUploadedPhoto = Storage::disk('local')->put('/public', $photoToUpload);
+        $newPhotoUrl = asset($newPhotoFileName);
+        $newSheetPhoto = SheetPhoto::create([
+          'id' => $newPhotoId,
+          'sheetId' => $sheetId,
+          'cellId' => $sheetCellId,
+          'url' => $newPhotoUrl,
+          'uploadedBy' => $user->name,
+          'uploadedDate' => date('m-d-Y')
+        ]);
+      }
+      return response()->json(SheetPhoto::where('cellId', $sheetCellId), 200);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Cell  $photo
+     * @return \Illuminate\Http\Response
+     */
+    public function show(SheetCell $cell)
+    {
+      return response()->json($cell->photos()->get(), 200);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Cell  $photo
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(SheetCellPhoto $photo)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Cell  $photo
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, SheetCellPhoto $photo)
+    {
+      $photo->update($request->all());
+      return response()->json($photo, 200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Cell  $photo
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Cell $photo)
+    {
+        //
+    }
+}

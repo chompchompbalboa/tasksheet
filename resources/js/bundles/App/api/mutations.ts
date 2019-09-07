@@ -104,6 +104,18 @@ export const updateSheetCell = async (id: string, updates: SheetCellUpdates) => 
 	})
 }
 
+export const createSheetCellPhotos = async (sheetId: Sheet['id'], sheetCellId: SheetCell['id'], photosToUpload: File[]) => {
+  const formData = new FormData()
+  formData.append('sheetId', sheetId)
+  formData.append('sheetCellId', sheetCellId)
+  photosToUpload.forEach(photoToUpload => {
+    formData.append('photosToUpload[]', photoToUpload)
+  })
+	return axios.post('/app/sheets/cells/photos/upload', formData).then(response => {
+		return response.data
+	})
+}
+
 export const createSheetColumn = async (newColumn: SheetColumn, newCells: SheetCell[]) => {
 	return axios.post('/app/sheets/columns', {
     newColumn: newColumn,
