@@ -17,7 +17,7 @@ class CreateSheetPhoto extends Migration
           $table->uuid('id')->primary();
           $table->uuid('sheetId');
           $table->uuid('cellId');
-          $table->string('url');
+          $table->string('filename');
           $table->string('uploadedBy');
           $table->string('uploadedDate');
           $table->timestamps();

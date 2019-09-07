@@ -13,8 +13,8 @@ class SheetPhoto extends Model
   /**
    * Define which attributes will be visible
    */
-  protected $visible = ['id', 'sheetId', 'cellId', 'url', 'uploadedBy', 'uploadedDate'];
-  protected $fillable = ['id', 'sheetId', 'cellId', 'url', 'uploadedBy', 'uploadedDate'];
+  protected $visible = ['id', 'sheetId', 'cellId', 'filename', 'uploadedBy', 'uploadedDate'];
+  protected $fillable = ['id', 'sheetId', 'cellId', 'filename', 'uploadedBy', 'uploadedDate'];
   
   public function cell() {
     return $this->belongsTo('App\Models\SheetCell', 'cellId');

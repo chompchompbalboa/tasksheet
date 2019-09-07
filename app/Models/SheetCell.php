@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\SheetPhoto;
+
 class SheetCell extends Model
 {
   use Traits\UsesUuid;
@@ -18,9 +20,5 @@ class SheetCell extends Model
   
   public function column() {
     return $this->belongsTo('App\Models\SheetColumn', 'columnId');
-  }
-  
-  public function photos() {
-    return $this->hasMany('App\Models\SheetPhoto', 'cellId');
   }
 }

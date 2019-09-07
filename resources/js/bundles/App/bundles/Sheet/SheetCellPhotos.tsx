@@ -71,13 +71,14 @@ const SheetCellPhotos = ({
   const handleUploadInputSelect = (e: ChangeEvent<HTMLInputElement>) => {
     const photosList = e.target.files
     const photosIndices = Object.keys(photosList)
+    const previousPhotosLength = photos.length
     if(photosIndices.length > 0) {
       setUploadStatus('UPLOADING')
       const photosToUpload = photosIndices.map((index: any) => photosList[index])
       mutation.createSheetCellPhotos(sheetId, cellId, photosToUpload).then(nextSheetCellPhotos => {
-        //setPhotos(nextSheetCellPhotos)
-        setPhotos(photos)
+        setPhotos(nextSheetCellPhotos)
         setUploadStatus('UPLOADED')
+        setVisiblePhotoIndex(previousPhotosLength)
         setTimeout(() => setUploadStatus('READY'), 1000)
       })
     }
@@ -127,12 +128,18 @@ const SheetCellPhotos = ({
                 </UploadPhotoButton>
               </PhotoHeader>
               <PhotoContainer>
-                {hasPhotosLoaded && photos.length > 0 && photos.map((photo, index) => (
-                  <Photo
-                    key={index}
-                    isVisible={index === visiblePhotoIndex}
-                    src={photo.url}/>
-                ))}
+                {hasPhotosLoaded && photos.length > 0 
+                  ? photos.map((photo, index) => (
+                      <Photo
+                        key={index}
+                        isVisible={index === visiblePhotoIndex}
+                        src={'/storage/' + photo.filename}/>
+                    ))
+                  : <NoPhotoMessage
+                      hasPhotosLoaded={hasPhotosLoaded}>
+                      Click 'Add Photos' above to add photos to this cell
+                    </NoPhotoMessage>
+              }
               </PhotoContainer>
             </Photos>
             <RightArrow 
@@ -275,6 +282,18 @@ const Photo = styled.img`
 `
 interface IStyledImg {
   isVisible: boolean
+}
+
+const NoPhotoMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  opacity: ${ ({ hasPhotosLoaded }: INoPhotoMessage ) => hasPhotosLoaded ? '1' : '0' };
+  transition: opacity 0.5s;
+`
+interface INoPhotoMessage {
+  hasPhotosLoaded: boolean
 }
 
 const UploadInput = styled.input`

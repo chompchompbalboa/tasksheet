@@ -48,20 +48,21 @@ class SheetCellPhotoController extends Controller
       foreach($photosToUpload as $photoToUpload) {
         $newPhotoId = Str::uuid()->toString();
         $newPhotoFileName = $newPhotoId.'.'.$photoToUpload->extension();
-        //dd($newPhotoFileName);
         $photoToUpload->storeAs('/public', $newPhotoFileName);
-        //$newUploadedPhoto = Storage::disk('local')->put('/public', $photoToUpload);
-        $newPhotoUrl = asset($newPhotoFileName);
         $newSheetPhoto = SheetPhoto::create([
           'id' => $newPhotoId,
           'sheetId' => $sheetId,
           'cellId' => $sheetCellId,
-          'url' => $newPhotoUrl,
+          'filename' => $newPhotoFileName,
           'uploadedBy' => $user->name,
           'uploadedDate' => date('m-d-Y')
         ]);
       }
-      return response()->json(SheetPhoto::where('cellId', $sheetCellId), 200);
+      return response()->json(
+        SheetPhoto::where('cellId', $sheetCellId)
+          ->orderBy('created_at')
+          ->get()
+      , 200);
     }
 
     /**
@@ -70,9 +71,13 @@ class SheetCellPhotoController extends Controller
      * @param  \App\Cell  $photo
      * @return \Illuminate\Http\Response
      */
-    public function show(SheetCell $cell)
+    public function show($cellId)
     {
-      return response()->json($cell->photos()->get(), 200);
+      return response()->json(
+        SheetPhoto::where('cellId', $cellId)
+        ->orderBy('created_at')
+        ->get()
+      , 200);
     }
 
     /**
