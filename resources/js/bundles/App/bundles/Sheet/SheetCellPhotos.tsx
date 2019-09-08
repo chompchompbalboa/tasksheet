@@ -67,14 +67,13 @@ const SheetCellPhotos = ({
     uploadInput.current.click()
   }
   
-  // This only fires when a file is selected
   const handleUploadInputSelect = (e: ChangeEvent<HTMLInputElement>) => {
     const photosList = e.target.files
-    const photosIndices = Object.keys(photosList)
+    const photosIndexes = Object.keys(photosList)
     const previousPhotosLength = photos.length
-    if(photosIndices.length > 0) {
+    if(photosIndexes.length > 0) {
       setUploadStatus('UPLOADING')
-      const photosToUpload = photosIndices.map((index: any) => photosList[index])
+      const photosToUpload = photosIndexes.map((index: any) => photosList[index])
       mutation.createSheetCellPhotos(sheetId, cellId, photosToUpload).then(nextSheetCellPhotos => {
         setPhotos(nextSheetCellPhotos)
         setUploadStatus('UPLOADED')
