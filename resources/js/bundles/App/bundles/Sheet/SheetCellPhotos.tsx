@@ -132,7 +132,7 @@ const SheetCellPhotos = ({
                       <Photo
                         key={index}
                         isVisible={index === visiblePhotoIndex}
-                        src={'/storage/' + photo.filename}/>
+                        src={'/storage/photos/' + photo.filename}/>
                     ))
                   : <NoPhotoMessage
                       hasPhotosLoaded={hasPhotosLoaded}>

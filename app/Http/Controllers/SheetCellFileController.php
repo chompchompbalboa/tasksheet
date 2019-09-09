@@ -8,9 +8,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 use App\Models\SheetCell;
-use App\Models\SheetPhoto;
+use App\Models\SheetFile;
 
-class SheetCellPhotoController extends Controller
+class SheetCellFileController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -38,28 +38,27 @@ class SheetCellPhotoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function uploadPhotos(Request $request)
+    public function uploadFiles(Request $request)
     {
       $formData = $request->all();
       $sheetId = $formData['sheetId'];
       $sheetCellId = $formData['sheetCellId'];
-      $photosToUpload = $formData['photosToUpload'];
+      $filesToUpload = $formData['filesToUpload'];
       $user = Auth::user();
-      foreach($photosToUpload as $photoToUpload) {
-        $newPhotoId = Str::uuid()->toString();
-        $newPhotoFileName = $newPhotoId.'.'.$photoToUpload->extension();
-        $photoToUpload->storeAs('/public/photos/', $newPhotoFileName);
-        $newSheetPhoto = SheetPhoto::create([
-          'id' => $newPhotoId,
+      foreach($filesToUpload as $fileToUpload) {
+        $newSheetFileName = $fileToUpload->getClientOriginalName();
+        $fileToUpload->storeAs('/public/files/', $newSheetFileName);
+        $newSheetFile = SheetFile::create([
+          'id' => Str::uuid()->toString(),
           'sheetId' => $sheetId,
           'cellId' => $sheetCellId,
-          'filename' => $newPhotoFileName,
+          'filename' => $newSheetFileName,
           'uploadedBy' => $user->name,
           'uploadedDate' => date('m-d-Y')
         ]);
       }
       return response()->json(
-        SheetPhoto::where('cellId', $sheetCellId)
+        SheetFile::where('cellId', $sheetCellId)
           ->orderBy('created_at')
           ->get()
       , 200);
@@ -68,13 +67,13 @@ class SheetCellPhotoController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Cell  $photo
+     * @param  \App\Cell  $file
      * @return \Illuminate\Http\Response
      */
     public function show($cellId)
     {
       return response()->json(
-        SheetPhoto::where('cellId', $cellId)
+        SheetFile::where('cellId', $cellId)
         ->orderBy('created_at')
         ->get()
       , 200);
@@ -83,10 +82,10 @@ class SheetCellPhotoController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Cell  $photo
+     * @param  \App\Cell  $file
      * @return \Illuminate\Http\Response
      */
-    public function edit(SheetCellPhoto $photo)
+    public function edit(SheetCellFile $file)
     {
         //
     }
@@ -95,22 +94,22 @@ class SheetCellPhotoController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Cell  $photo
+     * @param  \App\Cell  $file
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SheetCellPhoto $photo)
+    public function update(Request $request, SheetCellFile $file)
     {
-      $photo->update($request->all());
-      return response()->json($photo, 200);
+      $file->update($request->all());
+      return response()->json($file, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Cell  $photo
+     * @param  \App\Cell  $file
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cell $photo)
+    public function destroy(Cell $file)
     {
         //
     }
