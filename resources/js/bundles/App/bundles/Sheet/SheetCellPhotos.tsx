@@ -136,7 +136,6 @@ const SheetCellPhotos = ({
                     ))
                   : <NoPhotoMessage
                       hasPhotosLoaded={hasPhotosLoaded}>
-                      Click 'Add Photos' above to add photos to this cell
                     </NoPhotoMessage>
               }
               </PhotoContainer>

@@ -97,7 +97,7 @@ class SheetCellFileController extends Controller
      * @param  \App\Cell  $file
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SheetCellFile $file)
+    public function update(Request $request, SheetFile $file)
     {
       $file->update($request->all());
       return response()->json($file, 200);
@@ -106,11 +106,31 @@ class SheetCellFileController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Cell  $file
+     * @param  \App\SheetFile  $sheetFileId
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cell $file)
+    public function destroy($sheetFileId)
     {
-        //
+      $sheetFile = SheetFile::find($sheetFileId);
+      $cellId = $sheetFile->cellId;
+      Storage::delete('/public/files/'.$sheetFile->filename);
+      $sheetFile->delete();
+      return response()->json(
+        SheetFile::where('cellId', $cellId)
+        ->orderBy('created_at')
+        ->get()
+      , 200);
+    }
+
+    /**
+     * Download specified resource from storage.
+     *
+     * @param  \App\SheetFile  $sheetFileId
+     * @return \Illuminate\Http\Response
+     */
+    public function downloadFiles($sheetFileId)
+    {
+      $sheetFile = SheetFile::find($sheetFileId);
+      return Storage::download('/public/files/'.$sheetFile->filename);
     }
 }

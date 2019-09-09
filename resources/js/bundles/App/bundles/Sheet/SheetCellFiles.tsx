@@ -81,17 +81,25 @@ const SheetCellFiles = ({
   }
 
   const handleFileDownloadClick = (sheetFileId: string) => {
-    console.log(sheetFileId)
+    const url = '/app/sheets/cells/files/download/' + sheetFileId
+    window.open(url, '_blank')
   }
 
   const handleFileDeleteClick = (sheetFileId: string) => {
-    console.log(sheetFileId)
+    setUploadStatus('DELETING')
+    mutation.deleteSheetCellFile(sheetFileId).then(nextSheetCellFiles => {
+      setUploadStatus('DELETED')
+      setFiles(nextSheetCellFiles)
+      setTimeout(() => setUploadStatus('READY'), 1000)
+    })
   }
   
   const uploadStatusMessages = {
     READY: 'Add files',
     UPLOADING: 'Uploading...',
-    UPLOADED: 'Uploaded!'
+    UPLOADED: 'Uploaded!',
+    DELETING: 'Deleting...',
+    DELETED: 'Deleted'
   }
 
   return (
@@ -166,7 +174,7 @@ interface SheetCellFilesProps {
   value: string
 }
 
-type TUploadStatus = 'READY' | 'UPLOADING' | 'UPLOADED'
+type TUploadStatus = 'READY' | 'UPLOADING' | 'UPLOADED' | 'DELETING' | 'DELETED'
 
 //-----------------------------------------------------------------------------
 // Styled Components

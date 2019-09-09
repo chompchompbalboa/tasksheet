@@ -39,6 +39,9 @@ Route::group([
   Route::post('/sheets/cells/photos/upload', 'SheetCellPhotoController@uploadPhotos');
   Route::post('/sheets/cells/files/upload', 'SheetCellFileController@uploadFiles');
   
+  // Downloads
+  Route::get('/sheets/cells/files/download/{file}', 'SheetCellFileController@downloadFiles');
+  
   // Restore soft deletes
   Route::post('/files/restore/{file}', 'FileController@restore');
 

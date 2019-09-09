@@ -116,6 +116,16 @@ export const createSheetCellFiles = async (sheetId: Sheet['id'], sheetCellId: Sh
 	})
 }
 
+export const deleteSheetCellFile = async (sheetCellFileId: string) => {
+	return axios.delete('/app/sheets/cells/files/' + sheetCellFileId).then(response => {
+		return response.data
+	})
+}
+
+export const downloadSheetCellFile = async (sheetCellFileId: string) => {
+	return axios.post('/app/sheets/cells/files/download/' + sheetCellFileId)
+}
+
 export const createSheetCellPhotos = async (sheetId: Sheet['id'], sheetCellId: SheetCell['id'], photosToUpload: File[]) => {
   const formData = new FormData()
   formData.append('sheetId', sheetId)
