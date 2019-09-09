@@ -19,6 +19,8 @@ import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 const SheetCellFiles = ({
   sheetId,
   cellId,
+  cell,
+  updateCellValue,
   ...passThroughProps
 }: SheetCellFilesProps) => {
 
@@ -75,6 +77,7 @@ const SheetCellFiles = ({
       mutation.createSheetCellFiles(sheetId, cellId, filesToUpload).then(nextSheetCellFiles => {
         setFiles(nextSheetCellFiles)
         setUploadStatus('UPLOADED')
+        updateCellValue(nextSheetCellFiles.length)
         setTimeout(() => setUploadStatus('READY'), 1000)
       })
     }
@@ -90,6 +93,7 @@ const SheetCellFiles = ({
     mutation.deleteSheetCellFile(sheetFileId).then(nextSheetCellFiles => {
       setUploadStatus('DELETED')
       setFiles(nextSheetCellFiles)
+      updateCellValue(nextSheetCellFiles.length)
       setTimeout(() => setUploadStatus('READY'), 1000)
     })
   }
@@ -106,6 +110,7 @@ const SheetCellFiles = ({
     <SheetCellContainer
       sheetId={sheetId}
       cellId={cellId}
+      cell={cell}
       focusCell={() => null}
       onlyRenderChildren
       updateCellValue={() => null}
@@ -118,6 +123,9 @@ const SheetCellFiles = ({
           <Icon 
             icon={FILES}
             size="18px"/>
+          <FileCount>
+            ({ cell.value || 0 })
+          </FileCount>
         </IconContainer>
         {isFilesVisible &&
           <FilesDropdown>
@@ -190,12 +198,16 @@ const IconContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   color: rgb(100, 100, 100);
   &:hover {
     color: rgb(60, 60, 60);
   }
+`
+
+const FileCount = styled.div`
+  font-weight: bold;
 `
 
 const FilesDropdown = styled.div`

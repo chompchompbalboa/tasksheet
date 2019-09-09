@@ -19,6 +19,8 @@ import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 const SheetCellPhotos = ({
   sheetId,
   cellId,
+  cell,
+  updateCellValue,
   ...passThroughProps
 }: SheetCellPhotosProps) => {
 
@@ -70,7 +72,7 @@ const SheetCellPhotos = ({
   const handleUploadInputSelect = (e: ChangeEvent<HTMLInputElement>) => {
     const photosList = e.target.files
     const photosIndexes = Object.keys(photosList)
-    const previousPhotosLength = photos.length
+    const previousPhotosLength = photos.length || 0
     if(photosIndexes.length > 0) {
       setUploadStatus('UPLOADING')
       const photosToUpload = photosIndexes.map((index: any) => photosList[index])
@@ -78,6 +80,7 @@ const SheetCellPhotos = ({
         setPhotos(nextSheetCellPhotos)
         setUploadStatus('UPLOADED')
         setVisiblePhotoIndex(previousPhotosLength)
+        updateCellValue(nextSheetCellPhotos.length)
         setTimeout(() => setUploadStatus('READY'), 1000)
       })
     }
@@ -93,6 +96,7 @@ const SheetCellPhotos = ({
     <SheetCellContainer
       sheetId={sheetId}
       cellId={cellId}
+      cell={cell}
       focusCell={() => null}
       onlyRenderChildren
       updateCellValue={() => null}
@@ -105,6 +109,9 @@ const SheetCellPhotos = ({
           <Icon 
             icon={PHOTOS}
             size="18px"/>
+          <PhotoCount>
+            ({ cell.value || 0 })
+          </PhotoCount>
         </IconContainer>
         {isPhotosVisible &&
           <PhotosContainer>
@@ -116,7 +123,7 @@ const SheetCellPhotos = ({
             <Photos>
               <PhotoHeader>
                 <PhotoLabel>
-                  {hasPhotosLoaded && photos.length > 0
+                  {hasPhotosLoaded && photos.length > 0 && photos[visiblePhotoIndex]
                     ? photos[visiblePhotoIndex].uploadedBy + ' on ' + photos[visiblePhotoIndex].uploadedDate
                     : ''
                   }
@@ -189,12 +196,16 @@ const IconContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   color: rgb(100, 100, 100);
   &:hover {
     color: rgb(60, 60, 60);
   }
+`
+
+const PhotoCount = styled.div`
+  font-weight: bold;
 `
 
 const PhotosContainer = styled.div`
