@@ -568,6 +568,19 @@ export const deleteSheetRow = (sheetId: string, rowId: SheetRow['id']): ThunkAct
 }
 
 //-----------------------------------------------------------------------------
+// Hide Sheet Column
+//-----------------------------------------------------------------------------
+export const hideSheetColumn = (sheetId: Sheet['id'], columnVisibleColumnsIndex: number) => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      visibleColumns
+    } = getState().sheet.sheets[sheetId]
+    const nextVisibleColumns = visibleColumns.filter((_, index) => index !== columnVisibleColumnsIndex)
+    dispatch(updateSheet(sheetId, { visibleColumns: nextVisibleColumns }))
+  }
+}
+
+//-----------------------------------------------------------------------------
 // Load Sheet
 //-----------------------------------------------------------------------------
 export const LOAD_SHEET = 'LOAD_SHEET'
@@ -674,6 +687,24 @@ export const loadSheetReducer = (sheet: Sheet, cells: SheetCells, columns: Sheet
     rows,
     sorts,
 	}
+}
+
+//-----------------------------------------------------------------------------
+// Show Sheet Column
+//-----------------------------------------------------------------------------
+export const showSheetColumn = (sheetId: Sheet['id'], columnVisibleColumnsIndex: number, columnIdToShow: SheetColumn['id']) => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      visibleColumns
+    } = getState().sheet.sheets[sheetId]
+    // Update the sheet's visible columns
+    const nextVisibleColumns = [
+      ...visibleColumns.slice(0, columnVisibleColumnsIndex),
+      columnIdToShow,
+      ...visibleColumns.slice(columnVisibleColumnsIndex)
+    ]
+    dispatch(updateSheet(sheetId, { visibleColumns: nextVisibleColumns }))
+  }
 }
 
 //-----------------------------------------------------------------------------

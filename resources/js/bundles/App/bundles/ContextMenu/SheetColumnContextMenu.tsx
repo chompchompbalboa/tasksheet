@@ -13,7 +13,9 @@ import {
   createSheetColumn as createSheetColumnAction,
   createSheetColumnBreak as createSheetColumnBreakAction,
   deleteSheetColumn as deleteSheetColumnAction,
-  deleteSheetColumnBreak as deleteSheetColumnBreakAction
+  deleteSheetColumnBreak as deleteSheetColumnBreakAction,
+  hideSheetColumn as hideSheetColumnAction,
+  showSheetColumn as showSheetColumnAction
 } from '@app/state/sheet/actions'
 
 import ContextMenu from '@app/bundles/ContextMenu/ContextMenu'
@@ -39,12 +41,15 @@ const SheetColumnContextMenu = ({
 }: SheetColumnContextMenuProps) => {
   
   const columnTypes = useSelector((state: AppState) => state.sheet.columnTypes)
+  const sheetColumns = useSelector((state: AppState) => state.sheet.sheets[sheetId].columns)
   const columnTypeIds = Object.keys(columnTypes)
   const dispatch = useDispatch()
   const createSheetColumn = () => dispatch(createSheetColumnAction(sheetId, columnIndex))
   const createSheetColumnBreak = () => dispatch(createSheetColumnBreakAction(sheetId, columnIndex))
   const deleteSheetColumn = () => dispatch(deleteSheetColumnAction(sheetId, columnId))
   const deleteSheetColumnBreak = () => dispatch(deleteSheetColumnBreakAction(sheetId, columnIndex))
+  const hideSheetColumn = () => dispatch(hideSheetColumnAction(sheetId, columnIndex))
+  const showSheetColumn = (columnIdToShow: SheetColumn['id']) => dispatch(showSheetColumnAction(sheetId, columnIndex, columnIdToShow))
   
   const columnType = columnId === 'COLUMN_BREAK' ? 'COLUMN_BREAK' : columnTypes[columns[columnId].typeId]
   const onDeleteClick = columnId === 'COLUMN_BREAK' ? deleteSheetColumnBreak : deleteSheetColumn
@@ -71,8 +76,11 @@ const SheetColumnContextMenu = ({
       <ContextMenuItem isFirstItem text="Insert Column" onClick={() => closeOnClick(() => createSheetColumn())}/>
       {columnType !== 'COLUMN_BREAK' && 
         <>
-          <ContextMenuItem text="Insert Column Break" onClick={() => closeOnClick(() => createSheetColumnBreak())}/>
-          <ContextMenuItem text="Move Before">
+          <ContextMenuItem 
+            text="Insert Column Break" 
+            onClick={() => closeOnClick(() => createSheetColumnBreak())}/>
+          <ContextMenuItem 
+            text="Move Before">
             {sheetVisibleColumns.map((sheetColumnId, index) => (
               <ContextMenuItem 
                 key={sheetColumnId === 'COLUMN_BREAK' ? sheetColumnId + index : sheetColumnId}
@@ -81,8 +89,27 @@ const SheetColumnContextMenu = ({
             ))}
           </ContextMenuItem>
           <ContextMenuDivider />
-          <ContextMenuItem text="Rename" onClick={() => closeOnClick(() => updateSheetActive({ columnRenamingId: columnId }))}/>
-          <ContextMenuItem text="Type">
+          <ContextMenuItem 
+            text="Hide" 
+            onClick={() => closeOnClick(() => hideSheetColumn())}/>
+          <ContextMenuItem 
+            text="Show">
+            {sheetColumns.filter(columnId => !sheetVisibleColumns.includes(columnId)).map(columnId => {
+              const column = columns[columnId]
+              return (
+                <ContextMenuItem
+                  key={column.id}
+                  text={column.name}
+                  onClick={() => showSheetColumn(column.id)}/>
+              )
+            })}
+          </ContextMenuItem>
+          <ContextMenuDivider />
+          <ContextMenuItem 
+            text="Rename" 
+            onClick={() => closeOnClick(() => updateSheetActive({ columnRenamingId: columnId }))}/>
+          <ContextMenuItem 
+            text="Type">
             {columnTypeIds.map((columnTypeId, index) => {
               const currentColumnType = columnTypes[columnTypeId]
               return (
