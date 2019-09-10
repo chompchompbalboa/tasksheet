@@ -70,10 +70,10 @@ const SheetHeader = ({
   
   const handleContainerClick = (e: MouseEvent) => {
     if(e.shiftKey) {
-      selectSheetColumns(id)
+      selectSheetColumns(rangeStartColumnId, id)
     }
     else {
-      selectSheetColumns(rangeStartColumnId, id)
+      selectSheetColumns(id)
     }
     
   }

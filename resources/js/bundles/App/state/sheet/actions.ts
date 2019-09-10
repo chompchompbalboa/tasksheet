@@ -1243,9 +1243,7 @@ export const selectSheetColumns = (sheetId: Sheet['id'], startColumnId: SheetCol
       rows,
       sheets: { [sheetId]: { visibleColumns, visibleRows } }
     } = getState().sheet
-    
-    const startColumn = columns[startColumnId]
-    
+
     const startColumnIndex = visibleColumns.indexOf(startColumnId)
     const endColumnIndex = endColumnId ? visibleColumns.indexOf(endColumnId) : visibleColumns.indexOf(startColumnId)
     
