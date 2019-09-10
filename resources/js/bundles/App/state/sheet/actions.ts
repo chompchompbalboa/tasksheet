@@ -1235,6 +1235,50 @@ interface IselectSheetRange {
   nextRangeCellIds: SheetCell['id'][]
 }
 
+export const selectSheetColumns = (sheetId: Sheet['id'], startColumnId: SheetColumn['id'], endColumnId?: SheetColumn['id']): ThunkAction => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      active: { selections },
+      columns,
+      rows,
+      sheets: { [sheetId]: { visibleColumns, visibleRows } }
+    } = getState().sheet
+    
+    const startColumn = columns[startColumnId]
+    
+    const startColumnIndex = visibleColumns.indexOf(startColumnId)
+    const endColumnIndex = endColumnId ? visibleColumns.indexOf(endColumnId) : visibleColumns.indexOf(startColumnId)
+    
+    const startRow = rows[visibleRows[0]]
+    const endRow = rows[visibleRows[visibleRows.length - 1]]
+    
+    const startCellId = startRow.cells[startColumnId]
+    const endCellId = endColumnId ? endRow.cells[endColumnId] : endRow.cells[startColumnId]
+    
+    let nextRangeWidth = 0
+    for(let columnIndex = startColumnIndex; columnIndex <= endColumnIndex; columnIndex++) {
+      const columnId = visibleColumns[columnIndex]
+      const column = columns[columnId]
+      nextRangeWidth = columnId === 'COLUMN_BREAK' ? nextRangeWidth + 10 : nextRangeWidth + column.width // Column or column break width
+    }
+    
+    dispatch(selectSheetRange({
+      rangeStartCellId: selections.rangeStartCellId,
+      rangeEndCellId: selections.rangeEndCellId,
+      selections,
+      nextRangeStartColumnId: startColumnId,
+      nextRangeStartRowId: startRow.id,
+      nextRangeStartCellId: startCellId,
+      nextRangeEndColumnId: endColumnId,
+      nextRangeEndRowId: endRow.id,
+      nextRangeEndCellId: endCellId,
+      nextRangeWidth: nextRangeWidth,
+      nextRangeHeight: visibleRows.length * 24,
+      nextRangeCellIds: null
+    }))
+  }
+}
+
 export const selectSheetRows = (sheetId: Sheet['id'], startRowId: SheetRow['id'], endRowId?: SheetRow['id']): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
@@ -1279,7 +1323,7 @@ export const selectSheetRows = (sheetId: Sheet['id'], startRowId: SheetRow['id']
       nextRangeEndCellId: endCellId,
       nextRangeWidth: nextRangeWidth,
       nextRangeHeight: (Math.abs((endRowIndex - startRowIndex)) + 1) * 24,
-      nextRangeCellIds: Object.keys(startRow.cells).map(columnId => startRow.cells[columnId])
+      nextRangeCellIds: null
     }))
   }
 }

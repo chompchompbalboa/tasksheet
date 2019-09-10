@@ -2,12 +2,15 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { MouseEvent, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { SheetActive, SheetActiveUpdates, SheetColumn, SheetColumnUpdates } from '@app/state/sheet/types'
+import { Sheet, SheetActive, SheetActiveUpdates, SheetColumn, SheetColumnUpdates } from '@app/state/sheet/types'
 import { selectActive } from '@app/state/sheet/selectors'
+import {
+  selectSheetColumns as selectSheetColumnsAction
+} from '@app/state/sheet/actions'
 
 import AutosizeInput from 'react-input-autosize'
 import ResizeContainer from '@app/components/ResizeContainer'
@@ -23,6 +26,7 @@ const mapStateToProps = (state: AppState) => ({
 // Component
 //-----------------------------------------------------------------------------
 const SheetHeader = ({
+  sheetId,
   active: {
     columnRenamingId
   },
@@ -42,6 +46,10 @@ const SheetHeader = ({
   visibleColumnsIndex
 }: SheetHeaderProps) => {
   
+  const dispatch = useDispatch()
+  const rangeStartColumnId = useSelector((state: AppState) => state.sheet.active.selections.rangeStartColumnId)
+  const selectSheetColumns = (startColumnId: SheetColumn['id'], endColumnId?: SheetColumn['id']) => dispatch(selectSheetColumnsAction(sheetId, startColumnId, endColumnId))
+  
   const isColumnBreak = id === 'COLUMN_BREAK'
 
   const [ isRenaming, setIsRenaming ] = useState(false)
@@ -59,6 +67,16 @@ const SheetHeader = ({
       setIsRenaming(true)
     }
   }, [ columnRenamingId ])
+  
+  const handleContainerClick = (e: MouseEvent) => {
+    if(e.shiftKey) {
+      selectSheetColumns(id)
+    }
+    else {
+      selectSheetColumns(rangeStartColumnId, id)
+    }
+    
+  }
 
   return (
     <Container
@@ -67,6 +85,7 @@ const SheetHeader = ({
       isLast={isLast}
       isNextColumnAColumnBreak={isNextColumnAColumnBreak}
       isResizing={isResizing}
+      onClick={(e: MouseEvent) => handleContainerClick(e)}
       onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'COLUMN', id, visibleColumnsIndex)}>
       {!isRenaming
         ? <NameContainer
@@ -107,6 +126,7 @@ const SheetHeader = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetHeaderProps {
+  sheetId: Sheet['id']
   active?: SheetActive
   column: SheetColumn
   handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void

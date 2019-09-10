@@ -70,6 +70,7 @@ const SheetGrid = memo(({
       //@ts-ignore ref={ref}
       ref={ref} {...rest}>
       <SheetHeaders
+        sheetId={sheetId}
         columns={columns}
         handleContextMenu={handleContextMenu}
         sheetVisibleColumns={sheetVisibleColumns}

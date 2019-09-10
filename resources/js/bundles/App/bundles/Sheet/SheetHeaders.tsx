@@ -4,7 +4,7 @@
 import React, { MouseEvent, useState } from 'react'
 import styled from 'styled-components'
 
-import { SheetActiveUpdates, SheetColumn, SheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
+import { Sheet, SheetActiveUpdates, SheetColumn, SheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
 
 import SheetHeader from '@app/bundles/Sheet/SheetHeader'
 import SheetRangeHelpers from '@app/bundles/Sheet/SheetRangeHelpers'
@@ -14,6 +14,7 @@ import SheetRowLeader from '@app/bundles/Sheet/SheetRowLeader'
 // Component
 //-----------------------------------------------------------------------------
 const SheetHeaders = ({
+  sheetId,
   columns,
   handleContextMenu,
   sheetVisibleColumns,
@@ -49,6 +50,7 @@ const SheetHeaders = ({
       {sheetVisibleColumns.map((columnId: string, index: number) => (
         <SheetHeader
           key={index}
+          sheetId={sheetId}
           column={columnId !== 'COLUMN_BREAK' ? columns[columnId] : columnBreakHeader}
           visibleColumnsIndex={index}
           handleContextMenu={handleContextMenu}
@@ -70,6 +72,7 @@ const SheetHeaders = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetHeadersProps {
+  sheetId: Sheet['id']
   columns: SheetColumns
   handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void
   sheetVisibleColumns: SheetColumn['id'][]
