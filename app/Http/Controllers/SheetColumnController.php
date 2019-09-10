@@ -20,7 +20,9 @@ class SheetColumnController extends Controller
     public function store(Request $request)
     {
       SheetColumn::create($request->input('newColumn'));
-      SheetCell::insert($request->input('newCells'));
+      foreach($request->input('newCells') as $newCell) {
+        SheetCell::create($newCell);
+      }
       return response()->json(null, 200);
     }
 

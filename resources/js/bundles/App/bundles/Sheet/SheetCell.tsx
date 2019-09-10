@@ -47,7 +47,7 @@ const SheetCell = memo(({
     if(cellValue !== cell.value) {
       setCellValue(cell.value)
     }
-  }, [ cell.value ])
+  }, [ cell && cell.value ])
   useEffect(() => {
     let updateSheetCellTimer: number = null
     if(cell && cellValue !== cell.value) {
