@@ -1279,7 +1279,8 @@ export const selectSheetColumns = (sheetId: Sheet['id'], startColumnId: SheetCol
     const endColumnIndex = endColumnId ? visibleColumns.indexOf(endColumnId) : visibleColumns.indexOf(startColumnId)
     
     const startRow = rows[visibleRows[0]]
-    const endRow = rows[visibleRows[visibleRows.length - 1]]
+    const endRowIndex = visibleRows[visibleRows.length - 1] === 'ROW_BREAK' ? visibleRows.length - 2 : visibleRows.length - 1
+    const endRow =  rows[visibleRows[endRowIndex]]
     
     const startCellId = startRow.cells[startColumnId]
     const endCellId = endColumnId ? endRow.cells[endColumnId] : endRow.cells[startColumnId]
