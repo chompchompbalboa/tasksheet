@@ -2,13 +2,14 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { MouseEvent, useEffect, useState } from 'react'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { batch, connect, useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
 import { Sheet, SheetActive, SheetActiveUpdates, SheetColumn, SheetColumnUpdates } from '@app/state/sheet/types'
 import { selectActive } from '@app/state/sheet/selectors'
 import {
+  clearSheetSelection as clearSheetSelectionAction,
   selectSheetColumns as selectSheetColumnsAction
 } from '@app/state/sheet/actions'
 
@@ -49,6 +50,7 @@ const SheetHeader = ({
   const dispatch = useDispatch()
   const rangeStartColumnId = useSelector((state: AppState) => state.sheet.active.selections.rangeStartColumnId)
   const selectSheetColumns = (startColumnId: SheetColumn['id'], endColumnId?: SheetColumn['id']) => dispatch(selectSheetColumnsAction(sheetId, startColumnId, endColumnId))
+  const clearSheetSelection = () => dispatch(clearSheetSelectionAction())
   
   const isColumnBreak = id === 'COLUMN_BREAK'
 
@@ -56,26 +58,43 @@ const SheetHeader = ({
   const [ columnName, setColumnName ] = useState(name && name.length > 0 ? name : '?')
   const handleAutosizeInputBlur = () => {
     if(columnName !== null) {
-      setIsRenaming(false)
-      updateSheetActive({ columnRenamingId: null })
-      setTimeout(() => updateSheetColumn(id, { name: columnName }), 250)
+      handleColumnRenamingFinish()
     }
   }
   
   useEffect(() => {
     if(columnRenamingId === id) { 
       setIsRenaming(true)
-    }
-  }, [ columnRenamingId ])
-  
-  const handleContainerClick = (e: MouseEvent) => {
-    if(e.shiftKey) {
-      selectSheetColumns(rangeStartColumnId, id)
+      addEventListener('keypress', handleKeypressWhileColumnIsRenaming)
     }
     else {
-      selectSheetColumns(id)
+      removeEventListener('keypress', handleKeypressWhileColumnIsRenaming)
     }
-    
+    return () => removeEventListener('keypress', handleKeypressWhileColumnIsRenaming)
+  }, [ columnName, columnRenamingId ])
+  
+  const handleContainerClick = (e: MouseEvent) => {
+    if(e.shiftKey && !isRenaming) {
+      selectSheetColumns(rangeStartColumnId, id)
+    }
+    else if (!isRenaming) {
+      selectSheetColumns(id)
+    } 
+  }
+  
+  const handleKeypressWhileColumnIsRenaming = (e: KeyboardEvent) => {
+    if(e.key === 'Enter') {
+      handleColumnRenamingFinish()
+    }
+  }
+  
+  const handleColumnRenamingFinish = () => {
+    setIsRenaming(false)
+    batch(() => {
+      clearSheetSelection()
+      updateSheetActive({ columnRenamingId: null })
+    })
+    setTimeout(() => updateSheetColumn(id, { name: columnName }), 250)
   }
 
   return (
