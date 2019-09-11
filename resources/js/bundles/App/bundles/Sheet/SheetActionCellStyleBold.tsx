@@ -26,7 +26,6 @@ const SheetActionCellStyleBold = ({
   const cells = useSelector((state: AppState) => state.sheet.cells)
   const activeSelections = useSelector((state: AppState) => state.sheet.active.selections)
   const rangeStartCell = cells && activeSelections && activeSelections.rangeStartCellId && cells[activeSelections.rangeStartCellId]
-  console.log(rangeStartCell)
 
   const dispatch = useDispatch()
 

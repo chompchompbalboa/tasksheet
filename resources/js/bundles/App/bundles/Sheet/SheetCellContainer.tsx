@@ -2,13 +2,12 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useCallback, useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
 import { SheetCell, SheetCellUpdates } from '@app/state/sheet/types'
 import {
-  clearSheetSelection as clearSheetSelectionAction,
   updateSheetCell as updateSheetCellAction
 } from '@app/state/sheet/actions'
 
@@ -29,8 +28,6 @@ const SheetCellContainer = ({
   value
 }: SheetCellContainerProps) => {
   
-  const dispatch = useDispatch()
-  const clearSheetSelection = useCallback(() => dispatch(clearSheetSelectionAction()), [])
   const updateSheetCell = useCallback((updates: SheetCellUpdates) => dispatch(updateSheetCellAction(cellId, updates, null, true)), [])
   
   const activeSheetId = useSelector((state: AppState) => state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].typeId)
@@ -71,7 +68,7 @@ const SheetCellContainer = ({
 
   const closeOnClickOutside = (e: MouseEvent) => {
     if(!container.current.contains(e.target)) {
-      !e.shiftKey && clearSheetSelection()
+      //!e.shiftKey && clearSheetSelection()
       updateSheetCell({ 
         isCellEditing: false,
         isCellEditingSheetId: null
