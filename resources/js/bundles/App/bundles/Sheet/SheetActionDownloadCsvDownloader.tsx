@@ -1,10 +1,9 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useLayoutEffect, useRef } from 'react'
-import { CSVLink } from 'react-csv'
+import React from 'react'
+import { CSVDownload } from 'react-csv'
 import { useSelector } from 'react-redux'
-import styled from 'styled-components'
 
 import { AppState } from '@app/state'
 import { Sheet } from '@app/state/sheet/types'
@@ -15,13 +14,6 @@ import { Sheet } from '@app/state/sheet/types'
 const SheetActionDownloadCsvDownloader = ({
   sheetId
 }: SheetActionDownloadCsvDownloaderProps) => {
-  
-  const downloader = useRef(null)
-  
-  useLayoutEffect(() => {
-    if(downloader) { console.log(downloader.current.link) }
-    downloader && downloader.current && downloader.current.link && downloader.current.link.click()
-  }, [])
   
   const { cells, columns, rows, sheets } = useSelector((state: AppState) => state.sheet)
   const sheet = sheets && sheets[sheetId]
@@ -40,11 +32,8 @@ const SheetActionDownloadCsvDownloader = ({
   const csvData = [ headers, ...data ]
 
   return (
-    <StyledCSVLink
-      ref={downloader}
-      data={csvData}
-      filename={'tracksheet.csv'}>
-    </StyledCSVLink>
+    <CSVDownload
+      data={csvData}/>
   )
 }
 
@@ -54,10 +43,6 @@ const SheetActionDownloadCsvDownloader = ({
 interface SheetActionDownloadCsvDownloaderProps {
   sheetId: Sheet['id']
 }
-
-const StyledCSVLink = styled(CSVLink)`
-  display: none;
-`
 
 //-----------------------------------------------------------------------------
 // Export

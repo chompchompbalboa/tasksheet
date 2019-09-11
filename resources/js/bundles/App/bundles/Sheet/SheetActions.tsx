@@ -6,6 +6,8 @@ import styled from 'styled-components'
 
 import { Sheet, SheetColumn, SheetColumns, SheetFilter, SheetFilters, SheetGroup, SheetGroups, SheetSort, SheetSorts } from '@app/state/sheet/types'
 
+import SheetActionCellStyleBold from '@app/bundles/Sheet/SheetActionCellStyleBold'
+import SheetActionCellStyleItalic from '@app/bundles/Sheet/SheetActionCellStyleItalic'
 import SheetActionCreateRows from '@app/bundles/Sheet/SheetActionCreateRows'
 import SheetActionDownloadCsv from '@app/bundles/Sheet/SheetActionDownloadCsv'
 import SheetActionFilter from '@app/bundles/Sheet/SheetActionFilter'
@@ -58,6 +60,11 @@ const SheetActions = ({
         sheetId={sheetId}/>
       <Divider />
       <SheetActionDownloadCsv
+        sheetId={sheetId}/>
+      <Divider />
+      <SheetActionCellStyleBold
+        sheetId={sheetId}/>
+      <SheetActionCellStyleItalic
         sheetId={sheetId}/>
     </Container>
   )
