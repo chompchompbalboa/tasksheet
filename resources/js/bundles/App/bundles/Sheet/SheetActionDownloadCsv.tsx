@@ -21,6 +21,7 @@ const SheetActionDownloadCsv = ({
 }: SheetActionDownloadCsvProps) => {
   
   const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
+  /*
   const { cells, columns, rows, sheets } = useSelector((state: AppState) => state.sheet)
   const sheet = sheets && sheets[sheetId]
   const visibleColumns = sheet && sheet.visibleColumns
@@ -36,6 +37,8 @@ const SheetActionDownloadCsv = ({
   }).filter(row => row !== null) : []
   
   const csvData = [ headers, ...data ]
+  */
+  const csvData: string[] = []
 
   return (
     <Container

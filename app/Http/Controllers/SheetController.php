@@ -12,6 +12,7 @@ use App\Models\SheetRow;
 use App\Models\Sheet;
 
 use App\Utils\Csv;
+use App\Utils\SheetUtils;
 
 class SheetController extends Controller
 {
@@ -80,26 +81,47 @@ class SheetController extends Controller
       $newSheetId = $request->input('newSheetId');
       $newSheet = Sheet::create([ 'id' => $newSheetId ]);
       // Build the array we'll use to insert the columns, rows, and cells
-      $rowsFromCsv = Csv::toArray($request->file('fileToUpload')->path());
-      $rowsFromCsvCount = count($rowsFromCsv);
+      $arrayOfRows = Csv::toArray($request->file('fileToUpload')->path());
+      $this->createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $arrayOfRows);
+      return response()->json(null, 200);
+    }
+  
+
+    /**
+     * Create a new sheet from an array of rows with the format:
+     * [ 'columnName' => 'cellValue', ... ]
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public static function createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $arrayOfRows) {
+      $arrayOfRowsCount = count($arrayOfRows);
       // Create the columns
       $columns = [];
       $visibleColumns = [];
-      foreach($rowsFromCsv[0] as $columnName => $value) {
-        $newColumnId = Str::uuid()->toString();
-        array_push($visibleColumns, $newColumnId);
-        array_push($columns, [
-          'id' => $newColumnId,
-          'sheetId' => $newSheet->id,
-          'name' => $columnName,
-          'typeId' => 'STRING',
-          'width' => 50
-        ]);
+      $currentColumnIndex = 0;
+      foreach($arrayOfRows[0] as $columnName => $value) {
+        if(!Str::contains($columnName, 'COLUMN_BREAK')) {
+          $newColumnId = Str::uuid()->toString();
+          $visibleColumns[$currentColumnIndex] = $newColumnId;
+          $nextColumnWidth = max(50, strlen($columnName) * 8);
+          array_push($columns, [
+            'id' => $newColumnId,
+            'sheetId' => $newSheet->id,
+            'name' => $columnName,
+            'typeId' => SheetUtils::getColumnType($value),
+            'width' => $nextColumnWidth
+          ]);
+        }
+        else {
+          $visibleColumns[$currentColumnIndex] = 'COLUMN_BREAK';
+        }
+        $currentColumnIndex++;
       }
       // Create the rows and cells
       $newSheetRows = [];
       $newSheetCells = [];
-      foreach($rowsFromCsv as $rowFromCsv) {
+      foreach($arrayOfRows as $rowFromCsv) {
         $newRowId = Str::uuid()->toString();
         array_push($newSheetRows, [ 
           'id' => $newRowId,
@@ -130,7 +152,7 @@ class SheetController extends Controller
       foreach (array_chunk($newSheetCells, 2500) as $chunk) {
         SheetCell::insert($chunk);
       }  
-      return response()->json(null, 200);
+      
     }
 
     /**
