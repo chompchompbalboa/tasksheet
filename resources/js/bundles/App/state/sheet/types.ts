@@ -19,9 +19,11 @@ export type SheetActiveUpdates = {
 }
 export type SheetActiveSelections = {
   cellId: SheetCell['id']
-  shouldRangeHelperRender: boolean
   isRangeStartCellRendered: boolean
   isRangeEndCellRendered: boolean
+  isRangeHelperRendered: boolean
+  isSelectedCellEditingPrevented: boolean
+  isSelectedCellNavigationPrevented: boolean
   rangeStartColumnId: SheetColumn['id']
   rangeStartRowId: SheetRow['id']
   rangeStartCellId: SheetCell['id']
@@ -146,6 +148,8 @@ export interface SheetCellUpdates {
   isRangeStart?: boolean
   isRangeEnd?: boolean
   isRangeRenderedFromOtherEnd?: boolean
+  isSelectedCellEditingPrevented?: boolean
+  isSelectedCellNavigationPrevented?: boolean
   rangeHeight?: number
   rangeWidth?: number
 }

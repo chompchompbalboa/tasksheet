@@ -994,6 +994,8 @@ const removeSelectionCellState: SheetCellUpdates = {
   isRangeStart: false,
   isRangeEnd: false,
   isRangeRenderedFromOtherEnd: false,
+  isSelectedCellEditingPrevented: false,
+  isSelectedCellNavigationPrevented: false,
   rangeHeight: null,
   rangeWidth: null
 }
@@ -1142,7 +1144,7 @@ export const updateSheetSelectionOnCellMountOrUnmount = (cellId: SheetCell['id']
               : 'END'
       const nextIsRangeEndCellRendered = isCellRangeStartOrEnd === 'END' ? mountOrUnmount === 'MOUNT' : selections.isRangeEndCellRendered
       const nextIsRangeStartCellRendered = isCellRangeStartOrEnd === 'START' ? mountOrUnmount === 'MOUNT' : selections.isRangeStartCellRendered
-      const nextShouldRangeHelperRender = 
+      const nextIsRangeHelperRendered = 
         selections.rangeHeight !== null && 
         rangeStartCell.rowId !== rangeEndCell.rowId &&
         !nextIsRangeStartCellRendered &&
@@ -1162,7 +1164,7 @@ export const updateSheetSelectionOnCellMountOrUnmount = (cellId: SheetCell['id']
             ...selections,
             isRangeStartCellRendered: nextIsRangeStartCellRendered,
             isRangeEndCellRendered: nextIsRangeEndCellRendered,
-            shouldRangeHelperRender: nextShouldRangeHelperRender
+            isRangeHelperRendered: nextIsRangeHelperRendered
           }))
         }
         if(isCellRangeStartOrEnd === 'END') {
@@ -1170,7 +1172,7 @@ export const updateSheetSelectionOnCellMountOrUnmount = (cellId: SheetCell['id']
             ...selections,
             isRangeStartCellRendered: nextIsRangeStartCellRendered,
             isRangeEndCellRendered: nextIsRangeEndCellRendered,
-            shouldRangeHelperRender: nextShouldRangeHelperRender
+            isRangeHelperRendered: nextIsRangeHelperRendered
           }))
         }
         dispatch(updateSheetCellReducer(rangeStartCell.id, rangeStartCellUpdates))
@@ -1198,6 +1200,62 @@ export const clearSheetSelection = (): ThunkAction => {
       rangeStartCellId !== null && dispatch(updateSheetCellReducer(rangeStartCellId, removeSelectionCellState))
       rangeEndCellId !== null && dispatch(updateSheetCellReducer(rangeEndCellId, removeSelectionCellState))
     })
+  }
+}
+
+export const preventSelectedCellEditing = (): ThunkAction => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      active: { 
+        selections
+      }
+    } = getState().sheet
+    dispatch(updateSheetSelectionReducer({
+      ...selections,
+      isSelectedCellEditingPrevented: true
+    }))
+  }
+}
+
+export const allowSelectedCellEditing = (): ThunkAction => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      active: { 
+        selections
+      }
+    } = getState().sheet
+    dispatch(updateSheetSelectionReducer({
+      ...selections,
+      isSelectedCellEditingPrevented: false
+    }))
+  }
+}
+
+export const preventSelectedCellNavigation = (): ThunkAction => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      active: { 
+        selections
+      }
+    } = getState().sheet
+    dispatch(updateSheetSelectionReducer({
+      ...selections,
+      isSelectedCellNavigationPrevented: true
+    }))
+  }
+}
+
+export const allowSelectedCellNavigation = (): ThunkAction => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      active: { 
+        selections
+      }
+    } = getState().sheet
+    dispatch(updateSheetSelectionReducer({
+      ...selections,
+      isSelectedCellNavigationPrevented: false
+    }))
   }
 }
 

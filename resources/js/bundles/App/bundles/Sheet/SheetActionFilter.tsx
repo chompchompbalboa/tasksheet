@@ -2,7 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
+import { batch, connect } from 'react-redux'
 import styled from 'styled-components'
 import { v4 as createUuid } from 'uuid'
 
@@ -12,7 +12,11 @@ import { Sheet, SheetColumn, SheetColumns, SheetFilter, SheetFilters, SheetFilte
 import { 
   createSheetFilter as createSheetFilterAction,
   deleteSheetFilter as deleteSheetFilterAction,
-  updateSheetFilter as updateSheetFilterAction
+  updateSheetFilter as updateSheetFilterAction,
+  allowSelectedCellEditing as allowSelectedCellEditingAction,
+  preventSelectedCellEditing as preventSelectedCellEditingAction,
+  allowSelectedCellNavigation as allowSelectedCellNavigationAction,
+  preventSelectedCellNavigation as preventSelectedCellNavigationAction,
 } from '@app/state/sheet/actions'
 
 import AutosizeInput from 'react-input-autosize'
@@ -26,17 +30,25 @@ import SheetActionFilterExistingFilters from '@app/bundles/Sheet/SheetActionFilt
 const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionFilterProps) => ({
   createSheetFilter: (sheetId: string, newFilter: SheetFilter) => dispatch(createSheetFilterAction(sheetId, newFilter)),
   deleteSheetFilter: (sheetId: string, filterId: string) => dispatch(deleteSheetFilterAction(sheetId, filterId)),
-  updateSheetFilter: (filterId: string, updates: SheetFilterUpdates) => dispatch(updateSheetFilterAction(filterId, updates))
+  updateSheetFilter: (filterId: string, updates: SheetFilterUpdates) => dispatch(updateSheetFilterAction(filterId, updates)),
+  allowSelectedCellEditing: () => dispatch(allowSelectedCellEditingAction()),
+  preventSelectedCellEditing: () => dispatch(preventSelectedCellEditingAction()),
+  allowSelectedCellNavigation: () => dispatch(allowSelectedCellNavigationAction()),
+  preventSelectedCellNavigation: () => dispatch(preventSelectedCellNavigationAction()),
 })
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetActionFilter = ({
+  allowSelectedCellEditing,
+  allowSelectedCellNavigation,
   columns,
   createSheetFilter,
   deleteSheetFilter,
   filters,
+  preventSelectedCellEditing,
+  preventSelectedCellNavigation,
   sheetFilters,
   sheetId,
   sheetVisibleColumns,
@@ -85,6 +97,10 @@ const SheetActionFilter = ({
   const closeDropdownOnClickOutside = (e: Event) => {
     if(!dropdown.current.contains(e.target) && !container.current.contains(e.target)) {
       setIsDropdownVisible(false)
+      setTimeout(() => batch(() => {
+        allowSelectedCellEditing()
+        allowSelectedCellNavigation()
+      }), 10)
     }
   }
   // Create a filter when the input value is a valid filter and the user presses enter
@@ -133,6 +149,10 @@ const SheetActionFilter = ({
   
   const handleAutosizeInputFocus = () => {
     setIsDropdownVisible(true)
+    setTimeout(() => batch(() => {
+      preventSelectedCellEditing()
+      preventSelectedCellNavigation()
+    }), 10)
   }
 
   const validateColumnName = (nextAutosizeInputValue: string) => {
@@ -267,6 +287,10 @@ interface SheetActionFilterProps {
   sheetFilters: SheetFilter['id'][]
   sheetVisibleColumns: SheetColumn['id'][]
   updateSheetFilter?(filterId: SheetFilter['id'], updates: SheetFilterUpdates): void
+  allowSelectedCellEditing?(): void
+  preventSelectedCellEditing?(): void
+  allowSelectedCellNavigation?(): void
+  preventSelectedCellNavigation?(): void
 }
 
 //-----------------------------------------------------------------------------

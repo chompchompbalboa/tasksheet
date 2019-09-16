@@ -8,7 +8,6 @@ import styled from 'styled-components'
 import { AppState } from '@app/state'
 import { SheetCell, SheetCellUpdates } from '@app/state/sheet/types'
 import {
-  clearSheetSelection as clearSheetSelectionAction,
   updateSheetCell as updateSheetCellAction
 } from '@app/state/sheet/actions'
 
@@ -31,9 +30,10 @@ const SheetCellContainer = ({
   
   const dispatch = useDispatch()
   const updateSheetCell = useCallback((updates: SheetCellUpdates) => dispatch(updateSheetCellAction(cellId, updates, null, true)), [])
-  const clearSheetSelection = useCallback(() => dispatch(clearSheetSelectionAction()), [])
   
   const activeSheetId = useSelector((state: AppState) => state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].typeId)
+  const isSelectedCellEditingPrevented = useSelector((state: AppState) => state.sheet.active.selections.isSelectedCellEditingPrevented)
+  const isSelectedCellNavigationPrevented = useSelector((state: AppState) => state.sheet.active.selections.isSelectedCellNavigationPrevented)
 
   const container = useRef(null)
   const isCellEditing = cell.isCellEditing && sheetId === activeSheetId
@@ -41,44 +41,27 @@ const SheetCellContainer = ({
   useEffect(() => {
     if(cell.isCellSelected && !cell.isCellEditing) {
       addEventListener('keydown', handleKeydownWhileCellIsSelected)
-      addEventListener('mousedown', closeOnClickOutside)
     }
     else {
       removeEventListener('keydown', handleKeydownWhileCellIsSelected)
-      removeEventListener('mousedown', closeOnClickOutside)
     }
     return () => {
       removeEventListener('keydown', handleKeydownWhileCellIsSelected)
-      removeEventListener('mousedown', closeOnClickOutside)
     }
-  }, [ cell.isCellSelected, cell.isCellEditing ])
+  }, [ cell.isCellSelected, cell.isCellEditing, isSelectedCellEditingPrevented, isSelectedCellNavigationPrevented ])
   
   useEffect(() => {
     if(cell.isCellEditing) {
       focusCell()
-      addEventListener('mousedown', closeOnClickOutside)
       addEventListener('keydown', closeOnKeydownEnter)
     }
     else {
-      removeEventListener('mousedown', closeOnClickOutside)
       removeEventListener('keydown', closeOnKeydownEnter)
     }
     return () => {
-      removeEventListener('mousedown', closeOnClickOutside)
       removeEventListener('keydown', closeOnKeydownEnter)
     }
   }, [ cell.isCellEditing ])
-
-  const closeOnClickOutside = (e: MouseEvent) => {
-    if(!container.current.contains(e.target)) {
-      !e.shiftKey && clearSheetSelection()
-      updateSheetCell({ 
-        isCellEditing: false,
-        isCellEditingSheetId: null
-      })
-      onCloseCell && onCloseCell()
-    }
-  }
 
   const closeOnKeydownEnter = (e: KeyboardEvent) => {
     if(e.key === "Enter") {
@@ -100,7 +83,7 @@ const SheetCellContainer = ({
 
   const handleKeydownWhileCellIsSelected = (e: KeyboardEvent) => {
     // If a character key is pressed, start editing the cell
-    if(e.key && e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+    if(e.key && e.key.length === 1 && !e.ctrlKey && !e.metaKey && !isSelectedCellEditingPrevented) {
       e.preventDefault()
       updateSheetCell({
         value: e.key,
@@ -108,26 +91,28 @@ const SheetCellContainer = ({
         isCellEditingSheetId: sheetId
       })
     }
-    // Otherwise, navigate to an adjacent cell on an arrow or enter press
-    if(e.key === 'Enter' || e.key === 'ArrowDown') {
-      e.preventDefault()
-      updateSheetSelectedCell(cellId, 'DOWN')
-    }
-    if(e.key === 'Tab' || e.key === 'ArrowRight') {
-      e.preventDefault()
-      updateSheetSelectedCell(cellId, 'RIGHT')
-    }
-    if(e.key === 'ArrowLeft') {
-      e.preventDefault()
-      updateSheetSelectedCell(cellId, 'LEFT')
-    }
-    if(e.key === 'ArrowUp') {
-      e.preventDefault()
-      updateSheetSelectedCell(cellId, 'UP')
-    }
-    if(e.key === 'Delete' || e.key === 'Backspace') {
-      e.preventDefault()
-      updateCellValue('')
+    if(!isSelectedCellNavigationPrevented) {
+      // Otherwise, navigate to an adjacent cell on an arrow or enter press
+      if(e.key === 'Enter' || e.key === 'ArrowDown') {
+        e.preventDefault()
+        updateSheetSelectedCell(cellId, 'DOWN')
+      }
+      if(e.key === 'Tab' || e.key === 'ArrowRight') {
+        e.preventDefault()
+        updateSheetSelectedCell(cellId, 'RIGHT')
+      }
+      if(e.key === 'ArrowLeft') {
+        e.preventDefault()
+        updateSheetSelectedCell(cellId, 'LEFT')
+      }
+      if(e.key === 'ArrowUp') {
+        e.preventDefault()
+        updateSheetSelectedCell(cellId, 'UP')
+      }
+      if(e.key === 'Delete' || e.key === 'Backspace') {
+        e.preventDefault()
+        updateCellValue('')
+      }
     }
   }
   

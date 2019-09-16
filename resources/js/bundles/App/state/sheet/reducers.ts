@@ -43,6 +43,9 @@ export const defaultSheetState: SheetState = {
       cellId: null,
       isRangeStartCellRendered: false,
       isRangeEndCellRendered: false,
+      isRangeHelperRendered: false,
+      isSelectedCellEditingPrevented: false,
+      isSelectedCellNavigationPrevented: false,
       rangeStartColumnId: null,
       rangeStartRowId: null,
       rangeStartCellId: null,
@@ -52,7 +55,6 @@ export const defaultSheetState: SheetState = {
       rangeCellIds: null,
       rangeWidth: null,
       rangeHeight: null,
-      shouldRangeHelperRender: false
     }
   },
   sheets: null,

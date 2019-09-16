@@ -19,7 +19,7 @@ const SheetRangeHelpers = memo(({
 
   const rangeStartColumnId = useSelector((state: AppState) => state.sheet.active.selections.rangeStartColumnId)
   const rangeWidth = useSelector((state: AppState) => state.sheet.active.selections.rangeWidth)
-  const shouldRangeHelperRender = useSelector((state: AppState) => state.sheet.active.selections.shouldRangeHelperRender)
+  const isRangeHelperRendered = useSelector((state: AppState) => state.sheet.active.selections.isRangeHelperRendered)
   
   return (
     <Container>
@@ -29,7 +29,7 @@ const SheetRangeHelpers = memo(({
           columnWidth={columnId === 'COLUMN_BREAK' ? 10 : columns[columnId].width}>
           <SheetRange
             rangeWidth={rangeWidth}
-            isVisible={shouldRangeHelperRender && columnId === rangeStartColumnId}/>
+            isVisible={isRangeHelperRendered && columnId === rangeStartColumnId}/>
         </SheetRangeColumn>
       ))}
     </Container>

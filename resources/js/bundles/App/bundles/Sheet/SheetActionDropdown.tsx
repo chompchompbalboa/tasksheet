@@ -2,7 +2,15 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { ChangeEvent, FocusEvent, useEffect, useRef, useState } from 'react'
+import { batch, useDispatch } from 'react-redux'
 import styled from 'styled-components'
+
+import { 
+  allowSelectedCellEditing as allowSelectedCellEditingAction,
+  preventSelectedCellEditing as preventSelectedCellEditingAction,
+  allowSelectedCellNavigation as allowSelectedCellNavigationAction,
+  preventSelectedCellNavigation as preventSelectedCellNavigationAction,
+} from '@app/state/sheet/actions'
 
 import AutosizeInput from 'react-input-autosize'
 import SheetActionDropdownSelectedOption from '@app/bundles/Sheet/SheetActionDropdownSelectedOption'
@@ -24,6 +32,12 @@ const SheetActionDropdown = ({
 
   const container = useRef(null)
   const dropdown = useRef(null)
+  
+  const dispatch = useDispatch()
+  const allowSelectedCellEditing = () => dispatch(allowSelectedCellEditingAction())
+  const preventSelectedCellEditing = () => dispatch(preventSelectedCellEditingAction())
+  const allowSelectedCellNavigation = () => dispatch(allowSelectedCellNavigationAction())
+  const preventSelectedCellNavigation = () => dispatch(preventSelectedCellNavigationAction())
 
   const getVisibleOptions = (value: string) => {
     return options && options.filter(option => {
@@ -76,6 +90,13 @@ const SheetActionDropdown = ({
     }
   }
 
+  const handleAutosizeInputBlur = (e: FocusEvent<HTMLInputElement>) => {
+    setTimeout(() => batch(() => {
+      allowSelectedCellEditing()
+      allowSelectedCellNavigation()
+    }), 10)
+  }
+
   const handleAutosizeInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const nextAutosizeInputValue = e.target.value
     const nextVisibleOptions = getVisibleOptions(nextAutosizeInputValue)
@@ -89,6 +110,10 @@ const SheetActionDropdown = ({
   const handleAutosizeInputFocus = (e: FocusEvent<HTMLInputElement>) => {
     e.preventDefault()
     setIsDropdownVisible(true)
+    setTimeout(() => batch(() => {
+      preventSelectedCellEditing()
+      preventSelectedCellNavigation()
+    }), 10)
   }
   
   const handleOptionDelete = (option: SheetActionDropdownOption) => {
@@ -142,6 +167,7 @@ const SheetActionDropdown = ({
           <AutosizeInput
             placeholder={placeholder}
             value={autosizeInputValue}
+            onBlur={handleAutosizeInputBlur}
             onChange={handleAutosizeInputChange}
             onFocus={handleAutosizeInputFocus}
             inputStyle={{

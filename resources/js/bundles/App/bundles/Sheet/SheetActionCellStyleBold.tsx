@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -22,18 +22,24 @@ const SheetActionCellStyleBold = ({
   sheetId
 }: SheetActionCellStyleBoldProps) => {
   
+  const dispatch = useDispatch()
+  
   const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
   const cells = useSelector((state: AppState) => state.sheet.cells)
   const activeSelections = useSelector((state: AppState) => state.sheet.active.selections)
-  const rangeStartCell = cells && activeSelections && activeSelections.rangeStartCellId && cells[activeSelections.rangeStartCellId]
-
-  const dispatch = useDispatch()
+  
+  const [ localActiveSelections, setLocalActiveSelections ] = useState(activeSelections)
+  useEffect(() => {
+    if(activeSelections.cellId && activeSelections.rangeStartCellId) {
+      setLocalActiveSelections(localActiveSelections)
+    }
+  }, [ activeSelections ])
+  
+  const rangeStartCell = cells && localActiveSelections && localActiveSelections.rangeStartCellId && cells[localActiveSelections.rangeStartCellId]
 
   const handleContainerClick = () => {
-    if(rangeStartCell) {
-      console.log('Made it')
-      dispatch(updateSheetCell(rangeStartCell.id, { value: 'Bold' }))
-    }
+    console.log(localActiveSelections)
+    false && dispatch(updateSheetCell(rangeStartCell.id, { value: 'Bold' }))
   }
 
   return (
