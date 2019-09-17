@@ -10,7 +10,7 @@ import { BOLD } from '@app/assets/icons'
 import { AppState } from '@app/state'
 import { Sheet } from '@app/state/sheet/types'
 import {
-  updateSheetCell
+  updateSheet
 } from '@app/state/sheet/actions'
 
 import Icon from '@/components/Icon'
@@ -25,8 +25,11 @@ const SheetActionCellStyleBold = ({
   const dispatch = useDispatch()
   
   const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
-  const cells = useSelector((state: AppState) => state.sheet.cells)
+  const rows = useSelector((state: AppState) => state.sheet.rows)
   const activeSelections = useSelector((state: AppState) => state.sheet.active.selections)
+  const sheetStylesBold = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].styles.BOLD)
+  const sheetVisibleColumns = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].visibleColumns)
+  const sheetVisibleRows = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].visibleRows)
   
   const [ localActiveSelections, setLocalActiveSelections ] = useState(activeSelections)
   useEffect(() => {
@@ -36,11 +39,45 @@ const SheetActionCellStyleBold = ({
   }, [ activeSelections ])
 
   const handleContainerClick = () => {
-    const rangeStartCell = cells && localActiveSelections && localActiveSelections.rangeStartCellId && cells[localActiveSelections.rangeStartCellId]
-    if(rangeStartCell) {
-      const nextRangeStartCellFontWeight = rangeStartCell.style && rangeStartCell.style.fontWeight && rangeStartCell.style.fontWeight === 'bold' ? 'normal' : 'bold'
-      // Check the style on the first cell to see if we should bold or unbold
-      dispatch(updateSheetCell(rangeStartCell.id, { style: { fontWeight: nextRangeStartCellFontWeight }}))
+    const {
+      rangeStartCellId,
+      rangeStartColumnId,
+      rangeStartRowId,
+      rangeEndCellId,
+      rangeEndColumnId,
+      rangeEndRowId,
+    } = localActiveSelections
+
+    // Range
+    if(rangeEndCellId) {
+      const isNextStyleBold = !sheetStylesBold.has(rangeStartCellId)
+      const rangeStartColumnIndex = sheetVisibleColumns.findIndex(visibleColumnId => visibleColumnId === rangeStartColumnId)
+      const rangeStartRowIndex = sheetVisibleRows.findIndex(visibleRowId => visibleRowId === rangeStartRowId)
+      const rangeEndColumnIndex = sheetVisibleColumns.findIndex(visibleColumnId => visibleColumnId === rangeEndColumnId)
+      const rangeEndRowIndex = sheetVisibleRows.findIndex(visibleRowId => visibleRowId === rangeEndRowId)
+      const nextSheetStylesBold = new Set([ ...sheetStylesBold ])
+
+      for(let rowIndex = rangeStartRowIndex; rowIndex <= rangeEndRowIndex; rowIndex++) {
+        const rowId = sheetVisibleRows[rowIndex]
+        if(rowId !== 'ROW_BREAK') {
+          const row = rows[rowId]
+          for(let columnIndex = rangeStartColumnIndex; columnIndex <= rangeEndColumnIndex; columnIndex++) {
+            const columnId = sheetVisibleColumns[columnIndex]
+            if(columnId !== 'COLUMN_BREAK') {
+              const cellId = row.cells[columnId]
+              isNextStyleBold ? nextSheetStylesBold.add(cellId) : nextSheetStylesBold.delete(cellId)
+            }
+          }
+        }
+      }
+      dispatch(updateSheet(sheetId, { styles: { BOLD: nextSheetStylesBold }}, true))
+    }
+    // Cell
+    else if(rangeStartCellId) {
+      const isNextStyleBold = !sheetStylesBold.has(rangeStartCellId)
+      const nextSheetStylesBold = new Set([ ...sheetStylesBold ])
+      isNextStyleBold ? nextSheetStylesBold.add(rangeStartCellId) : nextSheetStylesBold.delete(rangeStartCellId)
+      dispatch(updateSheet(sheetId, { styles: { BOLD: nextSheetStylesBold }}, true))
     }
   }
 

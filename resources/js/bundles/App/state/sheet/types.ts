@@ -46,6 +46,7 @@ export type Sheet = {
   filters: SheetFilter['id'][]
   groups: SheetGroup['id'][]
   sorts: SheetSort['id'][]
+  styles: SheetStyles
 }
 export type SheetUpdates = {
   rows?: SheetRow['id'][]
@@ -55,6 +56,10 @@ export type SheetUpdates = {
   filters?: SheetFilter['id'][]
   groups?: SheetGroup['id'][]
   sorts?: SheetSort['id'][]
+  styles?: SheetStyles
+}
+export type SheetStyles = {
+  BOLD: Set<string>
 }
 
 export type SheetFromServer = {
@@ -67,6 +72,7 @@ export type SheetFromServer = {
   groups: SheetGroup[]
   rows: SheetFromServerRow[]
   sorts: SheetSort[]
+  styles: SheetStyles
 }
 export type SheetFromServerRow = {
 	id: string
@@ -139,7 +145,6 @@ export type SheetCell = {
   isRangeRenderedFromOtherEnd: boolean
   rangeHeight: number
   rangeWidth: number
-  style: SheetCellStyle
 }
 export interface SheetCellUpdates {
   value?: string
@@ -162,11 +167,6 @@ export type SheetCellType =
 'DROPDOWN' |
 'PHOTOS' | 
 'FILES'
-
-export interface SheetCellStyle {
-  fontWeight?: SheetCellStyleFontWeight
-}
-export type SheetCellStyleFontWeight = 'bold' | 'normal'
 
 export type SheetSort = {
   id: string

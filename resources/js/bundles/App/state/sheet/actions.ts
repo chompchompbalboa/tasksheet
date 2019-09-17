@@ -331,6 +331,9 @@ export const createSheetView = (sheetId: string, viewName: string): ThunkAction 
         sorts: newSheetViewSorts,
         visibleColumns: clone(sourceSheet.visibleColumns),
         visibleRows: clone(sourceSheet.visibleRows),
+        styles: {
+          BOLD: sourceSheet.styles.BOLD
+        }
       },
       null, // Cells
       null, // Columns
@@ -657,6 +660,9 @@ export const loadSheet = (sheetFromServer: SheetFromServer): ThunkAction => {
       sorts: sheetSorts,
       visibleColumns: sheetFromServer.visibleColumns !== null ? sheetFromServer.visibleColumns : sheetColumns,
       visibleRows: null,
+      styles: {
+        BOLD: new Set
+      }
     }
     
 		dispatch(
@@ -717,10 +723,10 @@ interface UpdateSheet {
 	updates: SheetUpdates
 }
 
-export const updateSheet = (sheetId: string, updates: SheetUpdates): ThunkAction => {
+export const updateSheet = (sheetId: string, updates: SheetUpdates, skipServerUpdate: boolean = false): ThunkAction => {
 	return async (dispatch: ThunkDispatch) => {
     dispatch(updateSheetReducer(sheetId, updates))
-    mutation.updateSheet(sheetId, updates)
+    !skipServerUpdate && mutation.updateSheet(sheetId, updates)
 	}
 }
 

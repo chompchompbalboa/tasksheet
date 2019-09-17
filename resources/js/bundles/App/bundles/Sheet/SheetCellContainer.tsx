@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { SheetCell, SheetCellUpdates } from '@app/state/sheet/types'
+import { SheetCell, SheetCellUpdates, SheetStyles } from '@app/state/sheet/types'
 import {
   updateSheetCell as updateSheetCellAction
 } from '@app/state/sheet/actions'
@@ -20,7 +20,6 @@ const SheetCellContainer = ({
   cellId,
   children,
   focusCell,
-  isCellSelected,
   onCloseCell,
   onlyRenderChildren,
   updateCellValue,
@@ -34,6 +33,7 @@ const SheetCellContainer = ({
   const activeSheetId = useSelector((state: AppState) => state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].typeId)
   const isSelectedCellEditingPrevented = useSelector((state: AppState) => state.sheet.active.selections.isSelectedCellEditingPrevented)
   const isSelectedCellNavigationPrevented = useSelector((state: AppState) => state.sheet.active.selections.isSelectedCellNavigationPrevented)
+  const sheetStyles = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].styles)
 
   const container = useRef(null)
   const isCellEditing = cell.isCellEditing && sheetId === activeSheetId
@@ -115,12 +115,14 @@ const SheetCellContainer = ({
       }
     }
   }
-  
+
   return (
     <Container
       ref={container}
+      cellId={cellId}
       isCellEditing={isCellEditing}
-      onDoubleClick={(e) => openOnDoubleClick(e)}>
+      onDoubleClick={(e) => openOnDoubleClick(e)}
+      styles={sheetStyles}>
         {isCellEditing || onlyRenderChildren
           ? children
           : value === null ? " " : value}
@@ -159,9 +161,12 @@ const Container = styled.div`
   align-items: center;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-weight: ${ ({ cellId, styles }: IContainer ) => styles.BOLD.has(cellId) ? 'bold' : 'normal' };
 `
 interface IContainer {
+  cellId: SheetCell['id']
   isCellEditing: boolean
+  styles: SheetStyles
 }
 
 //-----------------------------------------------------------------------------
