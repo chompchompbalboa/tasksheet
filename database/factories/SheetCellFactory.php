@@ -18,6 +18,7 @@ $factory->define(App\Models\SheetCell::class, function (Faker $faker) {
       'sheetId' => null,
       'columnId' => null,
       'rowId' => null,
-      'value' => $faker->text($faker->numberBetween(10, 100))
+      'value' => $faker->text($faker->numberBetween(10, 100)),
+      'style' => []
     ];
 });

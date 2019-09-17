@@ -139,6 +139,7 @@ export type SheetCell = {
   isRangeRenderedFromOtherEnd: boolean
   rangeHeight: number
   rangeWidth: number
+  style: SheetCellStyle
 }
 export interface SheetCellUpdates {
   value?: string
@@ -161,6 +162,11 @@ export type SheetCellType =
 'DROPDOWN' |
 'PHOTOS' | 
 'FILES'
+
+export interface SheetCellStyle {
+  fontWeight?: SheetCellStyleFontWeight
+}
+export type SheetCellStyleFontWeight = 'bold' | 'normal'
 
 export type SheetSort = {
   id: string

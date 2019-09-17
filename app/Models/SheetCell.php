@@ -15,8 +15,8 @@ class SheetCell extends Model
   /**
    * Define which attributes will be visible
    */
-  protected $visible = ['id', 'columnId', 'rowId', 'value'];
-  protected $fillable = ['id', 'sheetId', 'columnId', 'rowId', 'value'];
+  protected $visible = ['id', 'columnId', 'rowId', 'value', 'style'];
+  protected $fillable = ['id', 'sheetId', 'columnId', 'rowId', 'value', 'style'];
   
   public function column() {
     return $this->belongsTo('App\Models\SheetColumn', 'columnId');

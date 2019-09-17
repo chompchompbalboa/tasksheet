@@ -31,15 +31,17 @@ const SheetActionCellStyleBold = ({
   const [ localActiveSelections, setLocalActiveSelections ] = useState(activeSelections)
   useEffect(() => {
     if(activeSelections.cellId && activeSelections.rangeStartCellId) {
-      setLocalActiveSelections(localActiveSelections)
+      setLocalActiveSelections(activeSelections)
     }
   }, [ activeSelections ])
-  
-  const rangeStartCell = cells && localActiveSelections && localActiveSelections.rangeStartCellId && cells[localActiveSelections.rangeStartCellId]
 
   const handleContainerClick = () => {
-    console.log(localActiveSelections)
-    false && dispatch(updateSheetCell(rangeStartCell.id, { value: 'Bold' }))
+    const rangeStartCell = cells && localActiveSelections && localActiveSelections.rangeStartCellId && cells[localActiveSelections.rangeStartCellId]
+    if(rangeStartCell) {
+      const nextRangeStartCellFontWeight = rangeStartCell.style && rangeStartCell.style.fontWeight && rangeStartCell.style.fontWeight === 'bold' ? 'normal' : 'bold'
+      // Check the style on the first cell to see if we should bold or unbold
+      dispatch(updateSheetCell(rangeStartCell.id, { style: { fontWeight: nextRangeStartCellFontWeight }}))
+    }
   }
 
   return (

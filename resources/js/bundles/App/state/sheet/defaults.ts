@@ -35,7 +35,8 @@ export const defaultCell = (sheetId: string, rowId: string, columnId: string, ce
     isRangeEnd: false,
     isRangeRenderedFromOtherEnd: false,
     rangeWidth: null,
-    rangeHeight: null
+    rangeHeight: null,
+    style: {}
   }
 }
 
