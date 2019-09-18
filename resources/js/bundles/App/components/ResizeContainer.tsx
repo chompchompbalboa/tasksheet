@@ -80,13 +80,17 @@ export type ResizeContainerProps = {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  z-index: 100;
+  z-index: 10000;
   position: ${ ({ isResizing }: ContainerProps) => isResizing ? 'fixed' : 'relative' };
   cursor: col-resize;
   left: ${ ({ containerLeft }: ContainerProps) => containerLeft };
-  width: ${ ({ containerWidth, isResizing }: ContainerProps) => isResizing ? containerWidth : '10px' };
+  width: ${ ({ containerWidth, isResizing }: ContainerProps) => isResizing ? containerWidth : '4px' };
   height: 100%;
   background-color: ${ ({ containerBackgroundColor, isResizing }: ContainerProps) => isResizing ? containerBackgroundColor : 'transparent' };
+  &:hover {
+    background-color: ${ ({ containerBackgroundColor }: ContainerProps) => containerBackgroundColor };
+    opacity: ${ ({ isResizing }: ContainerProps) => !isResizing ? '0.625' : '1' };
+  }
 `
 type ContainerProps = {
   containerBackgroundColor: string
