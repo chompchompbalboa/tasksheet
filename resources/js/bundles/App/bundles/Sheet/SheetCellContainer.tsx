@@ -54,12 +54,15 @@ const SheetCellContainer = ({
     if(cell.isCellEditing) {
       focusCell()
       addEventListener('keydown', closeOnKeydownEnter)
+      addEventListener('click', handleClickWhileCellIsEditing)
     }
     else {
       removeEventListener('keydown', closeOnKeydownEnter)
+      removeEventListener('click', handleClickWhileCellIsEditing)
     }
     return () => {
       removeEventListener('keydown', closeOnKeydownEnter)
+      removeEventListener('click', handleClickWhileCellIsEditing)
     }
   }, [ cell.isCellEditing ])
 
@@ -77,6 +80,15 @@ const SheetCellContainer = ({
     updateSheetCell({ 
       isCellEditing: true
     })
+  }
+  
+  const handleClickWhileCellIsEditing = (e: MouseEvent) => {
+    if(!container.current.contains(e.target)) {
+      updateSheetCell({ 
+        isCellEditing: false
+      })
+      onCloseCell && onCloseCell()
+    }
   }
 
   const handleKeydownWhileCellIsSelected = (e: KeyboardEvent) => {
