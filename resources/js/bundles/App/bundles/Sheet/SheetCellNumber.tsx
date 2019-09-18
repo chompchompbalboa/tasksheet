@@ -50,7 +50,7 @@ interface SheetCellNumberProps {
   columnType: SheetColumnType
   isCellSelected: boolean
   updateCellValue(nextCellValue: string): void
-  updateSheetSelectedCell(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
+  updateSheetSelectionFromArrowKey(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   value: string
 }
 

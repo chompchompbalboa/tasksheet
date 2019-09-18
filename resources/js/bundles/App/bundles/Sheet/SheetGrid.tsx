@@ -31,8 +31,8 @@ const SheetGrid = memo(({
   updateSheetActive,
   updateSheetCell,
   updateSheetColumn,
-  updateSheetSelectedCell,
-  updateSheetSelection,
+  updateSheetSelectionFromArrowKey,
+  updateSheetSelectionFromCellClick,
   updateSheetSelectionOnCellMountOrUnmount,
   updateSheetVerticalScrollDirection,
   sheetVisibleColumns,
@@ -98,8 +98,8 @@ const SheetGrid = memo(({
           style={style}
           columnType={columnTypes[columns[columnId].typeId]}
           updateSheetCell={updateSheetCell}
-          updateSheetSelectedCell={updateSheetSelectedCell}
-          updateSheetSelection={updateSheetSelection}
+          updateSheetSelectionFromArrowKey={updateSheetSelectionFromArrowKey}
+          updateSheetSelectionFromCellClick={updateSheetSelectionFromCellClick}
           updateSheetSelectionOnCellMountOrUnmount={updateSheetSelectionOnCellMountOrUnmount}/>
       )
     }
@@ -154,8 +154,8 @@ interface SheetGridProps {
   updateSheetActive(updates: SheetActiveUpdates): void
   updateSheetCell(cellId: string, updates: SheetCellUpdates, undoUpdates?: SheetCellUpdates, skipServerUpdate?: boolean): void
   updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
-  updateSheetSelectedCell(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
-  updateSheetSelection(cellId: string, isShiftPressed: boolean): void
+  updateSheetSelectionFromArrowKey(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
+  updateSheetSelectionFromCellClick(cellId: string, isShiftPressed: boolean): void
   updateSheetSelectionOnCellMountOrUnmount(cellId: string, mountOrUnmount: 'MOUNT' | 'UNMOUNT'): void
   updateSheetVerticalScrollDirection(nextScrollDirection: 'forward' | 'backward'): void
   sheetVisibleColumns: SheetColumn['id'][]

@@ -13,7 +13,7 @@ const SheetCellBoolean = ({
   cellId,
   isCellSelected,
   updateCellValue,
-  updateSheetSelectedCell,
+  updateSheetSelectionFromArrowKey,
   value
 }: SheetCellBooleanProps) => {
   
@@ -33,16 +33,16 @@ const SheetCellBoolean = ({
     e.preventDefault()
     // Otherwise, navigate to an adjacent cell on an arrow or enter press
     if(e.key === 'Enter' || e.key === 'ArrowDown') {
-      updateSheetSelectedCell(cellId, 'DOWN')
+      updateSheetSelectionFromArrowKey(cellId, 'DOWN')
     }
     if(e.key === 'Tab' || e.key === 'ArrowRight') {
-      updateSheetSelectedCell(cellId, 'RIGHT')
+      updateSheetSelectionFromArrowKey(cellId, 'RIGHT')
     }
     if(e.key === 'ArrowLeft') {
-      updateSheetSelectedCell(cellId, 'LEFT')
+      updateSheetSelectionFromArrowKey(cellId, 'LEFT')
     }
     if(e.key === 'ArrowUp') {
-      updateSheetSelectedCell(cellId, 'UP')
+      updateSheetSelectionFromArrowKey(cellId, 'UP')
     }
   }
   
@@ -69,7 +69,7 @@ interface SheetCellBooleanProps {
   columnType: SheetColumnType
   isCellSelected: boolean
   updateCellValue(nextCellValue: string): void
-  updateSheetSelectedCell(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
+  updateSheetSelectionFromArrowKey(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   value: string
 }
 

@@ -61,7 +61,7 @@ export type SheetUpdates = {
   selections?: SheetSelections
 }
 export type SheetSelections = {
-  cellIds: Set<SheetCell['id']>
+  rangeCellIds: Set<SheetCell['id']>
   rangeStartColumnId: SheetColumn['id']
   rangeStartRowId: SheetRow['id']
   rangeStartCellId: SheetCell['id']

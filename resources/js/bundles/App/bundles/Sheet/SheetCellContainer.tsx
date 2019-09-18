@@ -23,7 +23,7 @@ const SheetCellContainer = ({
   onCloseCell,
   onlyRenderChildren,
   updateCellValue,
-  updateSheetSelectedCell,
+  updateSheetSelectionFromArrowKey,
   value
 }: SheetCellContainerProps) => {
   
@@ -95,19 +95,19 @@ const SheetCellContainer = ({
       // Otherwise, navigate to an adjacent cell on an arrow or enter press
       if(e.key === 'Enter' || e.key === 'ArrowDown') {
         e.preventDefault()
-        updateSheetSelectedCell(cellId, 'DOWN')
+        updateSheetSelectionFromArrowKey(cellId, 'DOWN')
       }
       if(e.key === 'Tab' || e.key === 'ArrowRight') {
         e.preventDefault()
-        updateSheetSelectedCell(cellId, 'RIGHT')
+        updateSheetSelectionFromArrowKey(cellId, 'RIGHT')
       }
       if(e.key === 'ArrowLeft') {
         e.preventDefault()
-        updateSheetSelectedCell(cellId, 'LEFT')
+        updateSheetSelectionFromArrowKey(cellId, 'LEFT')
       }
       if(e.key === 'ArrowUp') {
         e.preventDefault()
-        updateSheetSelectedCell(cellId, 'UP')
+        updateSheetSelectionFromArrowKey(cellId, 'UP')
       }
       if(e.key === 'Delete' || e.key === 'Backspace') {
         e.preventDefault()
@@ -145,7 +145,7 @@ interface SheetCellContainerProps {
   onCloseCell?(...args: any): void
   onlyRenderChildren?: boolean
   updateCellValue(nextCellValue: string): void
-  updateSheetSelectedCell(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
+  updateSheetSelectionFromArrowKey(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   value: string
 }
 

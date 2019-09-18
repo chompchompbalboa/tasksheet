@@ -67,7 +67,7 @@ export const defaultColumn = (sheetId: string, newColumnIndex?: number): SheetCo
 // Default Sheet Selections
 //-----------------------------------------------------------------------------
 export const defaultSheetSelections: SheetSelections = {
-  cellIds: new Set() as Set<SheetCell['id']>,
+  rangeCellIds: new Set() as Set<SheetCell['id']>,
   rangeStartColumnId: null,
   rangeStartRowId: null,
   rangeStartCellId: null,

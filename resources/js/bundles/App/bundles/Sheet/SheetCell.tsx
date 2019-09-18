@@ -1,14 +1,13 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { ReactText, memo, MouseEvent, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
+import React, { ReactText, memo, MouseEvent, useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
 import { SheetCell, SheetColumnType, SheetCellUpdates, SheetColumn } from '@app/state/sheet/types'
-import { selectCell } from '@app/state/sheet/selectors'
 
 import SheetCellBoolean from '@app/bundles/Sheet/SheetCellBoolean'
 import SheetCellDatetime from '@app/bundles/Sheet/SheetCellDatetime'
@@ -18,27 +17,24 @@ import SheetCellNumber from '@app/bundles/Sheet/SheetCellNumber'
 import SheetCellPhotos from '@app/bundles/Sheet/SheetCellPhotos'
 import SheetCellString from '@app/bundles/Sheet/SheetCellString'
 
-//-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState, props: SheetCellProps) => ({
-  cell: selectCell(state, props.cellId)
-})
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetCell = memo(({
   sheetId,
-  cell,
+  cellId,
   columnType,
   highlightColor,
   style,
   updateSheetCell,
-  updateSheetSelectedCell,
-  updateSheetSelection,
-  updateSheetSelectionOnCellMountOrUnmount
+  updateSheetSelectionFromArrowKey,
+  updateSheetSelectionFromCellClick
 }: SheetCellProps) => {
+
+  // Redux
+  const cell = useSelector((state: AppState) => state.sheet.cells[cellId])
+  const sheetSelectionsRangeCellIds = useSelector((state: AppState) => state.sheet.sheets[sheetId].selections.rangeCellIds)
   // Refs
   const cellContainer = useRef(null)
   // Cell Value
@@ -70,37 +66,33 @@ const SheetCell = memo(({
   }
   const SheetCellType = sheetCellTypes[columnType.cellType]
   // Selections
+  const isCellSelected = cell.isCellSelected
+  const isCellInRange = sheetSelectionsRangeCellIds.has(cellId)
   const handleClick = (e: MouseEvent) => {
-    updateSheetSelection(cell.id, e.shiftKey)
+    updateSheetSelectionFromCellClick(cell.id, e.shiftKey)
   }
-  const getContainerBoxShadow = () => {
-    if(cell && (cell.isCellSelected || cell.isRangeStart)) { return 'inset 0px 0px 0px 2px ' + highlightColor }
-    return 'none'
-  }
-  useLayoutEffect(() => {
-    if(cell.isRangeStart || cell.isRangeEnd || cell.isCellSelected) { updateSheetSelectionOnCellMountOrUnmount(cell.id, 'MOUNT') }
-  }, [])
-  useLayoutEffect(() => {
-    return () => { if(cell.isRangeStart || cell.isRangeEnd || cell.isCellSelected) { updateSheetSelectionOnCellMountOrUnmount(cell.id, 'UNMOUNT') }}
-  }, [ (cell.isCellSelected || cell.isRangeStart), cell.isRangeEnd ])
   
   return (
     <>
       <Container
         ref={cellContainer}
-        containerBoxShadow={getContainerBoxShadow()}
-        isCellSelected={cell.isCellSelected || cell.isRangeStart}
-        isRangeSelected={(cell.isRangeStart || cell.isRangeEnd) && !cell.isRangeRenderedFromOtherEnd}
+        cellId={cellId}
+        highlightColor={highlightColor}
+        isCellSelected={isCellSelected}
+        isCellInRange={isCellInRange}
         onClick={handleClick}
         style={style}>
+        <SheetRange
+          isCellInRange={isCellInRange}
+          highlightColor={highlightColor}/>
         <SheetCellType
           sheetId={sheetId}
           cell={cell}
           cellId={cell.id}
           columnType={columnType}
-          isCellSelected={cell.isCellSelected || cell.isRangeStart}
+          isCellSelected={cell.isCellSelected}
           updateCellValue={setCellValue}
-          updateSheetSelectedCell={updateSheetSelectedCell}
+          updateSheetSelectionFromArrowKey={updateSheetSelectionFromArrowKey}
           value={cellValue}/>
       </Container>
     </>
@@ -113,15 +105,14 @@ const SheetCell = memo(({
 interface SheetCellProps {
   sheetId: string
   cellId: SheetColumn['id']
-  cell?: SheetCell
   columnType: SheetColumnType
   highlightColor: string
   style: {
     width?: ReactText
   }
   updateSheetCell(cellId: string, updates: SheetCellUpdates, undoUpdates?: SheetCellUpdates, skipServerUpdate?: boolean): void
-  updateSheetSelectedCell(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
-  updateSheetSelection(cellId: string, isShiftPressed: boolean): void
+  updateSheetSelectionFromArrowKey(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
+  updateSheetSelectionFromCellClick(cellId: string, isShiftPressed: boolean): void
   updateSheetSelectionOnCellMountOrUnmount(cellId: string, mountOrUnmount: 'MOUNT' | 'UNMOUNT'): void
 }
 
@@ -129,29 +120,42 @@ interface SheetCellProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  z-index: ${ ({ isCellSelected, isRangeSelected }: ContainerProps ) => isCellSelected || isRangeSelected ? '10' : '5' };
+  z-index: ${ ({ isCellSelected, isCellInRange }: IContainer ) => isCellSelected || isCellInRange ? '10' : '5' };
   position: relative;
   cursor: default;
   padding: 0.15rem 0.25rem;
   font-size: 0.9rem;
   border-right: 0.5px solid rgb(180, 180, 180);
   border-bottom: 0.5px solid rgb(180, 180, 180);
-  box-shadow: ${ ({ containerBoxShadow }: ContainerProps ) => containerBoxShadow };
+  box-shadow: ${ ({ isCellSelected, highlightColor }: IContainer ) => isCellSelected ? 'inset 0px 0px 0px 2px ' + highlightColor : 'none' };
   user-select: none;
-  background-color: ${ ({ isCellSelected, isRangeSelected }: ContainerProps ) => isCellSelected && !isRangeSelected ? 'rgb(245, 245, 245)' : 'white' };
-  overflow: ${ ({ isCellSelected, isRangeSelected }: ContainerProps ) => isCellSelected || isRangeSelected ? 'visible' : 'hidden' };
+  background-color: ${ ({ isCellSelected, isCellInRange, highlightColor }: IContainer ) => isCellSelected ? 'rgb(245, 245, 245)' : 'white' };
+  overflow: ${ ({ isCellSelected, isCellInRange }: IContainer ) => isCellSelected || isCellInRange ? 'visible' : 'hidden' };
   &:hover {
-    background-color: ${ ({ isRangeSelected }: ContainerProps ) => !isRangeSelected ? 'rgb(245, 245, 245)' : 'white' };
+    background-color: ${ ({ isCellInRange }: IContainer ) => !isCellInRange ? 'rgb(245, 245, 245)' : 'rgb(245, 245, 245)' };
   }
 `
-interface ContainerProps {
-  containerBoxShadow: string
+interface IContainer {
+  cellId: SheetCell['id']
   isCellSelected: boolean
-  isRangeSelected: boolean
+  isCellInRange: boolean
+  highlightColor: string
+}
+
+const SheetRange = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.25;
+  background-color: ${ ({ isCellInRange, highlightColor }: ISheetRange ) => isCellInRange ? highlightColor : 'transparent'};
+`
+interface ISheetRange {
+  isCellInRange: boolean
+  highlightColor: string
 }
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  mapStateToProps
-)(SheetCell)
+export default SheetCell

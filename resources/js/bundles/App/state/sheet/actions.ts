@@ -998,36 +998,33 @@ interface UpdateSheetSelection {
 }
 
 const removeSelectionCellState: SheetCellUpdates = {
-  isCellSelected: false,
-  isRangeStart: false,
-  isRangeEnd: false,
-  isRangeRenderedFromOtherEnd: false,
-  isSelectedCellEditingPrevented: false,
-  isSelectedCellNavigationPrevented: false,
-  rangeHeight: null,
-  rangeWidth: null
+  isCellSelected: false
 }
 
-export const updateSheetSelectionNew = (sheetId: string, cellId: string, isShiftClicked: boolean): ThunkAction => {
+export const updateSheetSelectionFromCellClick = (sheetId: string, cellId: string, isShiftClicked: boolean): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       cells,
+      rows,
       sheets: {
         [sheetId]: { 
-          selections: {
-            rangeStartCellId
-          }
+          selections,
+          visibleColumns,
+          visibleRows,
         }
       }
     } = getState().sheet
     const cell = cells[cellId]
-    if(!isShiftClicked) {
+
+    const selectCell = () => {
       batch(() => {
-        dispatch(updateSheetCellReducer(rangeStartCellId, removeSelectionCellState))
+        const nextSelectionsRangeCellIds = selections.rangeCellIds.size > 0 ? new Set() as Set<SheetCell['id']> : selections.rangeCellIds
+        dispatch(updateSheetCellReducer(selections.rangeStartCellId, removeSelectionCellState))
         dispatch(updateSheetCellReducer(cell.id, { isCellSelected: true }))
         dispatch(updateSheet(sheetId, {
           selections: {
-            cellIds: new Set([ cell.id ]),
+            ...selections,
+            rangeCellIds: nextSelectionsRangeCellIds,
             rangeStartCellId: cell.id,
             rangeStartColumnId: cell.columnId,
             rangeStartRowId: cell.rowId,
@@ -1038,8 +1035,113 @@ export const updateSheetSelectionNew = (sheetId: string, cellId: string, isShift
         }, true))
       })
     }
+
+    if(!isShiftClicked) {
+      selectCell()
+    }
     else if(isShiftClicked) {
-      console.log('Range: ' + cellId)
+      // Range start and end column and row indexes
+      const rangeStartColumnIndex = visibleColumns.indexOf(selections.rangeStartColumnId)
+      const rangeStartRowIndex = visibleRows.indexOf(selections.rangeStartRowId)
+      const rangeEndColumnIndex = visibleColumns.indexOf(cell.columnId)
+      const rangeEndRowIndex = visibleRows.indexOf(cell.rowId)
+      if(rangeStartColumnIndex > rangeEndColumnIndex || rangeStartRowIndex > rangeEndRowIndex) {
+        selectCell()
+      }
+      else {
+        // Next sheet selection cell ids
+        const nextSheetSelectionRangeCellIds = new Set([ ...selections.rangeCellIds ])
+        for(let rowIndex = rangeStartRowIndex; rowIndex <= rangeEndRowIndex; rowIndex++) {
+          const rowId = visibleRows[rowIndex]
+          if(rowId !== 'ROW_BREAK') {
+            const row = rows[rowId]
+            for(let columnIndex = rangeStartColumnIndex; columnIndex <= rangeEndColumnIndex; columnIndex++) {
+              const columnId = visibleColumns[columnIndex]
+              if(columnId !== 'COLUMN_BREAK') {
+                const cellId = row.cells[columnId]
+                nextSheetSelectionRangeCellIds.add(cellId)
+              }
+            }
+          }
+        }
+      
+        dispatch(updateSheet(sheetId, {
+          selections: {
+            ...selections,
+            rangeCellIds: nextSheetSelectionRangeCellIds,
+            rangeEndCellId: cell.id,
+            rangeEndColumnId: cell.columnId,
+            rangeEndRowId: cell.rowId,
+          }
+        }, true))
+      }
+    }
+  }
+}
+
+export const updateSheetSelectionFromArrowKey = (sheetId: Sheet['id'], cellId: SheetCell['id'], moveDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): ThunkAction => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      cells,
+      rows,
+      sheets: { 
+        [sheetId]: {
+          visibleColumns,
+          visibleRows,
+          selections
+        }
+      }
+    } = getState().sheet
+    // Cell
+    const cell = cells[cellId]
+    // Column and row indexes
+    const selectedCellColumnIndex = visibleColumns.indexOf(cell.columnId)
+    const selectedCellRowIndex = visibleRows.indexOf(cell.rowId)
+    // Next column and row indexes
+    let nextSelectedCellColumnIndex = Math.min(visibleColumns.length - 1, Math.max(0,
+      !['RIGHT', 'LEFT'].includes(moveDirection) 
+        ? selectedCellColumnIndex 
+        : (moveDirection === 'RIGHT' ? selectedCellColumnIndex + 1 : selectedCellColumnIndex - 1)
+    ))
+    let nextSelectedCellRowIndex = Math.min(visibleRows.length - 1, Math.max(0,
+      !['UP', 'DOWN'].includes(moveDirection) 
+        ? selectedCellRowIndex 
+        : (moveDirection === 'UP' ? selectedCellRowIndex - 1 : selectedCellRowIndex + 1)
+    ))
+    // Next column and row ids
+    let nextSelectedCellRowId = visibleRows[nextSelectedCellRowIndex]
+    while(nextSelectedCellRowId === 'ROW_BREAK') { // Row breaks are not selectable, skip over them
+      nextSelectedCellRowIndex = Math.min(visibleRows.length, Math.max(0, (moveDirection === 'UP' ? nextSelectedCellRowIndex - 1 : nextSelectedCellRowIndex + 1)))
+      nextSelectedCellRowId = visibleRows[nextSelectedCellRowIndex]
+    }
+    let nextSelectedCellColumnId = visibleColumns[nextSelectedCellColumnIndex]
+    while(nextSelectedCellColumnId === 'COLUMN_BREAK') { // Column breaks are not selectable, skip over them
+      nextSelectedCellColumnIndex = Math.min(visibleColumns.length - 1, Math.max(0, (moveDirection === 'RIGHT' ? nextSelectedCellColumnIndex + 1 : nextSelectedCellColumnIndex - 1)))
+      nextSelectedCellColumnId = visibleColumns[nextSelectedCellColumnIndex]
+    }
+    // Next row and cell
+    const nextSelectedCellRow = rows[nextSelectedCellRowId]
+    const nextSelectedCell = nextSelectedCellRow ? cells[nextSelectedCellRow.cells[nextSelectedCellColumnId]] : null
+    // If we selected a cell, update the sheet state
+    if(nextSelectedCell !== null) {
+      batch(() => {
+        // Reset selection state
+        dispatch(updateSheet(sheetId, {
+          selections: {
+            ...defaultSheetSelections,
+            rangeStartColumnId: nextSelectedCell.columnId, 
+            rangeStartRowId: nextSelectedCell.rowId, 
+            rangeStartCellId: nextSelectedCell.id
+          }
+        }, true))
+        // Clear the current selections
+        selections.rangeStartCellId !== null && dispatch(updateSheetCellReducer(selections.rangeStartCellId, removeSelectionCellState))
+        selections.rangeEndCellId !== null && dispatch(updateSheetCellReducer(selections.rangeEndCellId, removeSelectionCellState))
+        // Update the next selected cell
+        dispatch(updateSheetCellReducer(nextSelectedCell.id, {
+          isCellSelected: true
+        }))
+      })
     }
   }
 }
@@ -1457,66 +1559,6 @@ export const selectSheetRows = (sheetId: Sheet['id'], startRowId: SheetRow['id']
       nextRangeHeight: (Math.abs((endRowIndex - startRowIndex)) + 1) * 24,
       nextRangeCellIds: null
     }))
-  }
-}
-
-export const updateSheetSelectedCell = (sheetId: Sheet['id'], cellId: SheetCell['id'], moveDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): ThunkAction => {
-  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
-    const {
-      cells,
-      rows,
-      sheets: { [sheetId]: {
-        visibleColumns,
-        visibleRows,
-        selections
-      }}
-    } = getState().sheet
-    const cell = cells[cellId]
-    const selectedCellColumnIndex = visibleColumns.indexOf(cell.columnId)
-    const selectedCellRowIndex = visibleRows.indexOf(cell.rowId)
-    let nextSelectedCellColumnIndex = Math.min(visibleColumns.length - 1, Math.max(0,
-      !['RIGHT', 'LEFT'].includes(moveDirection) 
-        ? selectedCellColumnIndex 
-        : (moveDirection === 'RIGHT' ? selectedCellColumnIndex + 1 : selectedCellColumnIndex - 1)
-    ))
-    let nextSelectedCellRowIndex = Math.min(visibleRows.length - 1, Math.max(0,
-      !['UP', 'DOWN'].includes(moveDirection) 
-        ? selectedCellRowIndex 
-        : (moveDirection === 'UP' ? selectedCellRowIndex - 1 : selectedCellRowIndex + 1)
-    ))
-    let nextSelectedCellRowId = visibleRows[nextSelectedCellRowIndex]
-    while(nextSelectedCellRowId === 'ROW_BREAK') {
-      nextSelectedCellRowIndex = Math.min(visibleRows.length, Math.max(0, (moveDirection === 'UP' ? nextSelectedCellRowIndex - 1 : nextSelectedCellRowIndex + 1)))
-      nextSelectedCellRowId = visibleRows[nextSelectedCellRowIndex]
-    }
-    let nextSelectedCellColumnId = visibleColumns[nextSelectedCellColumnIndex]
-    while(nextSelectedCellColumnId === 'COLUMN_BREAK') {
-      nextSelectedCellColumnIndex = Math.min(visibleColumns.length - 1, Math.max(0, (moveDirection === 'RIGHT' ? nextSelectedCellColumnIndex + 1 : nextSelectedCellColumnIndex - 1)))
-      nextSelectedCellColumnId = visibleColumns[nextSelectedCellColumnIndex]
-    }
-    const nextSelectedCellRow = rows[nextSelectedCellRowId]
-    const nextSelectedCell = nextSelectedCellRow ? cells[nextSelectedCellRow.cells[nextSelectedCellColumnId]] : null
-    if(nextSelectedCell !== null) {
-      batch(() => {
-        // Reset selection state
-        dispatch(updateSheetSelectionReducer({
-          ...defaultSheetState.active.selections,
-          cellId: nextSelectedCell.id,
-          isRangeStartCellRendered: true,
-          isRangeEndCellRendered: false,
-          rangeStartColumnId: nextSelectedCell.columnId, 
-          rangeStartRowId: nextSelectedCell.rowId, 
-          rangeStartCellId: nextSelectedCell.id
-        }))
-        // Clear the selected cell, the range start cell and the range end cell
-        selections.rangeStartCellId !== null && dispatch(updateSheetCellReducer(selections.rangeStartCellId, removeSelectionCellState))
-        selections.rangeEndCellId !== null && dispatch(updateSheetCellReducer(selections.rangeEndCellId, removeSelectionCellState))
-        // Update the next selected cell
-        dispatch(updateSheetCellReducer(nextSelectedCell.id, {
-          isCellSelected: true
-        }))
-      })
-    }
   }
 }
 
