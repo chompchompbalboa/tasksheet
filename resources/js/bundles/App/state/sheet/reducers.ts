@@ -11,9 +11,7 @@ import {
   UPDATE_SHEET_FILTER, UPDATE_SHEET_FILTERS,
   UPDATE_SHEET_GROUP, UPDATE_SHEET_GROUPS,
   UPDATE_SHEET_ROW, UPDATE_SHEET_ROWS,
-  UPDATE_SHEET_SELECTION,
-  UPDATE_SHEET_SORT, UPDATE_SHEET_SORTS,
-  UPDATE_SHEET_VERTICAL_SCROLL_DIRECTION
+  UPDATE_SHEET_SORT, UPDATE_SHEET_SORTS
 } from '@app/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
@@ -29,7 +27,6 @@ export interface SheetState {
   groups: SheetGroups
   rows: SheetRows
   sorts: SheetSorts
-  verticalScrollDirection: 'forward' | 'backward'
 }
 
 //-----------------------------------------------------------------------------
@@ -38,24 +35,7 @@ export interface SheetState {
 const columnTypesFromServer = initialData && initialData.columnTypes ? initialData.columnTypes : {}
 export const defaultSheetState: SheetState = {
   active: {
-    columnRenamingId: null,
-    selections: {
-      cellId: null,
-      isRangeStartCellRendered: false,
-      isRangeEndCellRendered: false,
-      isRangeHelperRendered: false,
-      isSelectedCellEditingPrevented: false,
-      isSelectedCellNavigationPrevented: false,
-      rangeStartColumnId: null,
-      rangeStartRowId: null,
-      rangeStartCellId: null,
-      rangeEndColumnId: null,
-      rangeEndRowId: null,
-      rangeEndCellId: null,
-      rangeCellIds: null,
-      rangeWidth: null,
-      rangeHeight: null,
-    }
+    columnRenamingId: null
   },
   sheets: null,
   cells: null,
@@ -120,8 +100,7 @@ export const defaultSheetState: SheetState = {
   filters: null,
   groups: null,
   rows: null,
-  sorts: null,
-  verticalScrollDirection: 'forward'
+  sorts: null
 }
 
 //-----------------------------------------------------------------------------
@@ -252,17 +231,6 @@ export const userReducer = (state: SheetState = defaultSheetState, action: Sheet
         rows: nextSheetRows
       }
 		}
-      
-		case UPDATE_SHEET_SELECTION: {
-      const { nextSheetSelection } = action
-      return {
-        ...state,
-        active: {
-          ...state.active,
-          selections: nextSheetSelection
-        }
-      }
-		}
 
 		case UPDATE_SHEET_SORT: {
 			const { sortId, updates } = action
@@ -279,14 +247,6 @@ export const userReducer = (state: SheetState = defaultSheetState, action: Sheet
 			return {
         ...state,
         sorts: nextSheetSorts
-      }
-		}
-
-		case UPDATE_SHEET_VERTICAL_SCROLL_DIRECTION: {
-			const { nextVerticalScrollDirection } = action
-			return {
-        ...state,
-        verticalScrollDirection: nextVerticalScrollDirection
       }
 		}
 

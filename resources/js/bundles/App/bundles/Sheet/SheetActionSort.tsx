@@ -56,6 +56,7 @@ const SheetActionSort = ({
   return (
     <SheetAction>
       <SheetActionDropdown
+        sheetId={sheetId}
         onOptionDelete={(optionToDelete: SheetActionDropdownOption) => deleteSheetSort(optionToDelete.value)}
         onOptionSelect={(selectedOption: SheetActionDropdownOption) => createSheetSort({ id: createUuid(), sheetId: sheetId, columnId: selectedOption.value, order: 'ASC', isLocked: false })}
         onOptionUpdate={(sortId, updates) => updateSheetSort(sheetId, sortId, updates, true)}

@@ -33,8 +33,6 @@ const SheetGrid = memo(({
   updateSheetColumn,
   updateSheetSelectionFromArrowKey,
   updateSheetSelectionFromCellClick,
-  updateSheetSelectionOnCellMountOrUnmount,
-  updateSheetVerticalScrollDirection,
   sheetVisibleColumns,
   sheetVisibleRows,
 }: SheetGridProps) => {
@@ -55,14 +53,6 @@ const SheetGrid = memo(({
       grid.current.resetAfterColumnIndex(0)
     // @ts-ignore
       grid.current.resetAfterRowIndex(0)
-  }
-  
-  const handleGridScroll = ({ verticalScrollDirection}: IHandleGridScroll) => {
-    updateSheetVerticalScrollDirection(verticalScrollDirection)
-  }
-  
-  interface IHandleGridScroll {
-    verticalScrollDirection: 'forward' | 'backward'
   }
 
   const GridWrapper = forwardRef(({ children, ...rest }, ref) => (
@@ -99,8 +89,7 @@ const SheetGrid = memo(({
           columnType={columnTypes[columns[columnId].typeId]}
           updateSheetCell={updateSheetCell}
           updateSheetSelectionFromArrowKey={updateSheetSelectionFromArrowKey}
-          updateSheetSelectionFromCellClick={updateSheetSelectionFromCellClick}
-          updateSheetSelectionOnCellMountOrUnmount={updateSheetSelectionOnCellMountOrUnmount}/>
+          updateSheetSelectionFromCellClick={updateSheetSelectionFromCellClick}/>
       )
     }
     if(columnIndex === 0) {
@@ -131,7 +120,6 @@ const SheetGrid = memo(({
           columnCount={sheetVisibleColumns.length + 1}
           rowHeight={rowIndex => 24}
           rowCount={sheetVisibleRows.length}
-          onScroll={handleGridScroll}
           overscanColumnCount={sheetVisibleColumns.length}
           overscanRowCount={3}>
           {Cell}
@@ -156,8 +144,6 @@ interface SheetGridProps {
   updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
   updateSheetSelectionFromArrowKey(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   updateSheetSelectionFromCellClick(cellId: string, isShiftPressed: boolean): void
-  updateSheetSelectionOnCellMountOrUnmount(cellId: string, mountOrUnmount: 'MOUNT' | 'UNMOUNT'): void
-  updateSheetVerticalScrollDirection(nextScrollDirection: 'forward' | 'backward'): void
   sheetVisibleColumns: SheetColumn['id'][]
   sheetVisibleRows: SheetRow['id'][]
 }

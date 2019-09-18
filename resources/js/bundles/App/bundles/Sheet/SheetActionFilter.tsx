@@ -31,10 +31,10 @@ const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionFilterPro
   createSheetFilter: (sheetId: string, newFilter: SheetFilter) => dispatch(createSheetFilterAction(sheetId, newFilter)),
   deleteSheetFilter: (sheetId: string, filterId: string) => dispatch(deleteSheetFilterAction(sheetId, filterId)),
   updateSheetFilter: (sheetId: string, filterId: string, updates: SheetFilterUpdates) => dispatch(updateSheetFilterAction(sheetId, filterId, updates)),
-  allowSelectedCellEditing: () => dispatch(allowSelectedCellEditingAction()),
-  preventSelectedCellEditing: () => dispatch(preventSelectedCellEditingAction()),
-  allowSelectedCellNavigation: () => dispatch(allowSelectedCellNavigationAction()),
-  preventSelectedCellNavigation: () => dispatch(preventSelectedCellNavigationAction()),
+  allowSelectedCellEditing: (sheetId: Sheet['id']) => dispatch(allowSelectedCellEditingAction(sheetId)),
+  preventSelectedCellEditing: (sheetId: Sheet['id']) => dispatch(preventSelectedCellEditingAction(sheetId)),
+  allowSelectedCellNavigation: (sheetId: Sheet['id']) => dispatch(allowSelectedCellNavigationAction(sheetId)),
+  preventSelectedCellNavigation: (sheetId: Sheet['id']) => dispatch(preventSelectedCellNavigationAction(sheetId)),
 })
 
 //-----------------------------------------------------------------------------
@@ -98,8 +98,8 @@ const SheetActionFilter = ({
     if(!dropdown.current.contains(e.target) && !container.current.contains(e.target)) {
       setIsDropdownVisible(false)
       setTimeout(() => batch(() => {
-        allowSelectedCellEditing()
-        allowSelectedCellNavigation()
+        allowSelectedCellEditing(sheetId)
+        allowSelectedCellNavigation(sheetId)
       }), 10)
     }
   }
@@ -150,8 +150,8 @@ const SheetActionFilter = ({
   const handleAutosizeInputFocus = () => {
     setIsDropdownVisible(true)
     setTimeout(() => batch(() => {
-      preventSelectedCellEditing()
-      preventSelectedCellNavigation()
+      preventSelectedCellEditing(sheetId)
+      preventSelectedCellNavigation(sheetId)
     }), 10)
   }
 
@@ -287,10 +287,10 @@ interface SheetActionFilterProps {
   sheetFilters: SheetFilter['id'][]
   sheetVisibleColumns: SheetColumn['id'][]
   updateSheetFilter?(sheetId: Sheet['id'], filterId: SheetFilter['id'], updates: SheetFilterUpdates): void
-  allowSelectedCellEditing?(): void
-  preventSelectedCellEditing?(): void
-  allowSelectedCellNavigation?(): void
-  preventSelectedCellNavigation?(): void
+  allowSelectedCellEditing?(sheetId: Sheet['id']): void
+  preventSelectedCellEditing?(sheetId: Sheet['id']): void
+  allowSelectedCellNavigation?(sheetId: Sheet['id']): void
+  preventSelectedCellNavigation?(sheetId: Sheet['id']): void
 }
 
 //-----------------------------------------------------------------------------

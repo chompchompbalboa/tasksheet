@@ -19,8 +19,6 @@ import {
   updateSheetColumn as updateSheetColumnAction,
   updateSheetSelectionFromArrowKey as updateSheetSelectionFromArrowKeyAction,
   updateSheetSelectionFromCellClick as updateSheetSelectionFromCellClickAction,
-  updateSheetSelectionOnCellMountOrUnmount as updateSheetSelectionOnCellMountOrUnmountAction,
-  updateSheetVerticalScrollDirection as updateSheetVerticalScrollDirectionAction,
 } from '@app/state/sheet/actions'
 import { 
   Sheet, SheetFromServer, SheetUpdates,
@@ -87,8 +85,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   updateSheetColumn: (columnId: string, updates: SheetColumnUpdates) => dispatch(updateSheetColumnAction(columnId, updates)),
   updateSheetSelectionFromArrowKey: (sheetId: string, cellId: string, moveDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT') => dispatch(updateSheetSelectionFromArrowKeyAction(sheetId, cellId, moveDirection)),
   updateSheetSelectionFromCellClick: (sheetId: string, cellId: string, isShiftPressed: boolean) => dispatch(updateSheetSelectionFromCellClickAction(sheetId, cellId, isShiftPressed)),
-  updateSheetSelectionOnCellMountOrUnmount: (cellId: string, mountOrUnmount: 'MOUNT' | 'UNMOUNT') => dispatch(updateSheetSelectionOnCellMountOrUnmountAction(cellId, mountOrUnmount)),
-  updateSheetVerticalScrollDirection: (nextScrollDirection: 'forward' | 'backward') => dispatch(updateSheetVerticalScrollDirectionAction(nextScrollDirection))
 })
 
 //-----------------------------------------------------------------------------
@@ -118,8 +114,6 @@ const SheetComponent = memo(({
   updateSheetColumn,
   updateSheetSelectionFromArrowKey,
   updateSheetSelectionFromCellClick,
-  updateSheetSelectionOnCellMountOrUnmount,
-  updateSheetVerticalScrollDirection,
   userColorSecondary
 }: SheetComponentProps) => {
   
@@ -131,8 +125,6 @@ const SheetComponent = memo(({
   const memoizedUpdateSheetColumn = useCallback((columnId, updates) => updateSheetColumn(columnId, updates), [])
   const memoizedUpdateSheetSelectionFromCellClick = useCallback((cellId, isShiftPressed) => updateSheetSelectionFromCellClick(id, cellId, isShiftPressed), [])
   const memoizedUpdateSheetSelectionFromArrowKey = useCallback((cellId, moveSelectedCellDirection) => updateSheetSelectionFromArrowKey(id, cellId, moveSelectedCellDirection), [])
-  const memoizedUpdateSheetSelectionOnCellMountOrUnmount = useCallback((cellId, mountOrUnmount) => updateSheetSelectionOnCellMountOrUnmount(cellId, mountOrUnmount), [])
-  const memoizedUpdateSheetVerticalScrollDirection = useCallback((nextScrollDirection) => updateSheetVerticalScrollDirection(nextScrollDirection), [])
 
   const [ hasLoaded, setHasLoaded ] = useState(false)
   useEffect(() => {
@@ -222,9 +214,7 @@ const SheetComponent = memo(({
               updateSheetActive={memoizedUpdateSheetActive}
               updateSheetColumn={memoizedUpdateSheetColumn}
               updateSheetSelectionFromArrowKey={memoizedUpdateSheetSelectionFromArrowKey}
-              updateSheetSelectionFromCellClick={memoizedUpdateSheetSelectionFromCellClick}
-              updateSheetSelectionOnCellMountOrUnmount={memoizedUpdateSheetSelectionOnCellMountOrUnmount}
-              updateSheetVerticalScrollDirection={memoizedUpdateSheetVerticalScrollDirection}/>
+              updateSheetSelectionFromCellClick={memoizedUpdateSheetSelectionFromCellClick}/>
         }
         </SheetContainer>
     </Container>
@@ -259,8 +249,6 @@ interface SheetComponentProps {
   updateSheetColumn?(columnId: string, updates: SheetColumnUpdates): void
   updateSheetSelectionFromArrowKey?(sheetId: string, cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   updateSheetSelectionFromCellClick?(sheetId: string, cellId: string, isShiftPressed: boolean): void
-  updateSheetSelectionOnCellMountOrUnmount?(cellId: string, mountOrUnmount: 'MOUNT' | 'UNMOUNT'): void
-  updateSheetVerticalScrollDirection?(nextScrollDirection: 'forward' | 'backward'): void
   userColorSecondary?: string
 }
 

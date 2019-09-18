@@ -7,7 +7,6 @@ import styled from 'styled-components'
 import { Sheet, SheetActiveUpdates, SheetColumn, SheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
 
 import SheetHeader from '@app/bundles/Sheet/SheetHeader'
-import SheetRangeHelpers from '@app/bundles/Sheet/SheetRangeHelpers'
 import SheetRowLeader from '@app/bundles/Sheet/SheetRowLeader'
 
 //-----------------------------------------------------------------------------
@@ -61,9 +60,6 @@ const SheetHeaders = ({
           onResizeEnd={(columnWidthChange: number) => handleResizeEnd(columnId, columnWidthChange)}
           updateSheetActive={updateSheetActive}
           updateSheetColumn={updateSheetColumn}/>))}
-      <SheetRangeHelpers
-        columns={columns}
-        sheetVisibleColumns={sheetVisibleColumns}/>
     </Container>
   )
 }

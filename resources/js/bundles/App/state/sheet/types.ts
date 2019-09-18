@@ -11,28 +11,9 @@ export type SheetSorts = { [sortId: string]: SheetSort }
 
 export type SheetActive = {
   columnRenamingId: SheetColumn['id']
-  selections: SheetActiveSelections
 }
 export type SheetActiveUpdates = {
   columnRenamingId?: SheetColumn['id']
-  selections?: SheetActiveSelections
-}
-export type SheetActiveSelections = {
-  cellId: SheetCell['id']
-  isRangeStartCellRendered: boolean
-  isRangeEndCellRendered: boolean
-  isRangeHelperRendered: boolean
-  isSelectedCellEditingPrevented: boolean
-  isSelectedCellNavigationPrevented: boolean
-  rangeStartColumnId: SheetColumn['id']
-  rangeStartRowId: SheetRow['id']
-  rangeStartCellId: SheetCell['id']
-  rangeEndColumnId: SheetColumn['id']
-  rangeEndRowId: SheetRow['id']
-  rangeEndCellId: SheetCell['id']
-  rangeCellIds: Set<SheetCell['id']>
-  rangeWidth: number
-  rangeHeight: number
 }
 
 export type Sheet = {
@@ -61,6 +42,8 @@ export type SheetUpdates = {
   selections?: SheetSelections
 }
 export type SheetSelections = {
+  isSelectedCellEditingPrevented: boolean
+  isSelectedCellNavigationPrevented: boolean
   rangeCellIds: Set<SheetCell['id']>
   rangeStartColumnId: SheetColumn['id']
   rangeStartRowId: SheetRow['id']
@@ -149,26 +132,12 @@ export type SheetCell = {
 	rowId: string
 	value: string
   isCellEditing: boolean
-  isCellEditingSheetId: Sheet['id']
   isCellSelected: boolean
-  isRangeStart: boolean
-  isRangeEnd: boolean
-  isRangeRenderedFromOtherEnd: boolean
-  rangeHeight: number
-  rangeWidth: number
 }
 export interface SheetCellUpdates {
   value?: string
   isCellEditing?: boolean
-  isCellEditingSheetId?: Sheet['id']
   isCellSelected?: boolean
-  isRangeStart?: boolean
-  isRangeEnd?: boolean
-  isRangeRenderedFromOtherEnd?: boolean
-  isSelectedCellEditingPrevented?: boolean
-  isSelectedCellNavigationPrevented?: boolean
-  rangeHeight?: number
-  rangeWidth?: number
 }
 export type SheetCellType = 
 'STRING' |

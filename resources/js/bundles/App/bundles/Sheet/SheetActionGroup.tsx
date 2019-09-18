@@ -56,6 +56,7 @@ const SheetActionGroup = ({
   return (
     <SheetAction>
       <SheetActionDropdown
+        sheetId={sheetId}
         onOptionDelete={(optionToDelete: SheetActionDropdownOption) => deleteSheetGroup(optionToDelete.value)}
         onOptionSelect={(selectedOption: SheetActionDropdownOption) => createSheetGroup({ id: createUuid(), sheetId: sheetId, columnId: selectedOption.value, order: 'ASC', isLocked: false })}
         onOptionUpdate={(groupId, updates) => updateSheetGroup(sheetId, groupId, updates, true)}

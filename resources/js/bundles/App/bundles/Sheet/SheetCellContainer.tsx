@@ -31,8 +31,8 @@ const SheetCellContainer = ({
   const updateSheetCell = useCallback((updates: SheetCellUpdates) => dispatch(updateSheetCellAction(cellId, updates, null, true)), [])
   
   const activeSheetId = useSelector((state: AppState) => state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].typeId)
-  const isSelectedCellEditingPrevented = useSelector((state: AppState) => state.sheet.active.selections.isSelectedCellEditingPrevented)
-  const isSelectedCellNavigationPrevented = useSelector((state: AppState) => state.sheet.active.selections.isSelectedCellNavigationPrevented)
+  const isSelectedCellEditingPrevented = useSelector((state: AppState) => state.sheet.sheets[sheetId].selections.isSelectedCellEditingPrevented)
+  const isSelectedCellNavigationPrevented = useSelector((state: AppState) => state.sheet.sheets[sheetId].selections.isSelectedCellNavigationPrevented)
   const sheetStyles = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].styles)
 
   const container = useRef(null)
@@ -66,8 +66,7 @@ const SheetCellContainer = ({
   const closeOnKeydownEnter = (e: KeyboardEvent) => {
     if(e.key === "Enter") {
       updateSheetCell({ 
-        isCellEditing: false,
-        isCellEditingSheetId: null
+        isCellEditing: false
       })
       onCloseCell && onCloseCell()
     }
@@ -76,8 +75,7 @@ const SheetCellContainer = ({
   const openOnDoubleClick = (e: any) => {
     e.preventDefault()
     updateSheetCell({ 
-      isCellEditing: true,
-      isCellEditingSheetId: sheetId
+      isCellEditing: true
     })
   }
 
@@ -87,8 +85,7 @@ const SheetCellContainer = ({
       e.preventDefault()
       updateSheetCell({
         value: e.key,
-        isCellEditing: true,
-        isCellEditingSheetId: sheetId
+        isCellEditing: true
       })
     }
     if(!isSelectedCellNavigationPrevented) {

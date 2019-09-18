@@ -26,17 +26,17 @@ const SheetActionCellStyleBold = ({
   
   const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
   const rows = useSelector((state: AppState) => state.sheet.rows)
-  const activeSelections = useSelector((state: AppState) => state.sheet.active.selections)
+  const selections = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].selections)
   const sheetStylesBold = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].styles.BOLD)
   const sheetVisibleColumns = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].visibleColumns)
   const sheetVisibleRows = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].visibleRows)
   
-  const [ localActiveSelections, setLocalActiveSelections ] = useState(activeSelections)
+  const [ localSelections, setLocalSelections ] = useState(selections)
   useEffect(() => {
-    if(activeSelections.cellId && activeSelections.rangeStartCellId) {
-      setLocalActiveSelections(activeSelections)
+    if(selections && selections.rangeStartCellId) {
+      setLocalSelections(selections)
     }
-  }, [ activeSelections ])
+  }, [ selections ])
 
   const handleContainerClick = () => {
     const {
@@ -46,7 +46,7 @@ const SheetActionCellStyleBold = ({
       rangeEndCellId,
       rangeEndColumnId,
       rangeEndRowId,
-    } = localActiveSelections
+    } = localSelections
 
     // Range
     if(rangeEndCellId) {

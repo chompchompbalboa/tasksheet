@@ -5,6 +5,7 @@ import React, { ChangeEvent, FocusEvent, useEffect, useRef, useState } from 'rea
 import { batch, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
+import { Sheet } from '@app/state/sheet/types'
 import { 
   allowSelectedCellEditing as allowSelectedCellEditingAction,
   preventSelectedCellEditing as preventSelectedCellEditingAction,
@@ -19,6 +20,7 @@ import SheetActionDropdownSelectedOption from '@app/bundles/Sheet/SheetActionDro
 // Component
 //-----------------------------------------------------------------------------
 const SheetActionDropdown = ({
+  sheetId,
   onInputChange,
   onOptionSelect,
   onOptionDelete,
@@ -34,10 +36,10 @@ const SheetActionDropdown = ({
   const dropdown = useRef(null)
   
   const dispatch = useDispatch()
-  const allowSelectedCellEditing = () => dispatch(allowSelectedCellEditingAction())
-  const preventSelectedCellEditing = () => dispatch(preventSelectedCellEditingAction())
-  const allowSelectedCellNavigation = () => dispatch(allowSelectedCellNavigationAction())
-  const preventSelectedCellNavigation = () => dispatch(preventSelectedCellNavigationAction())
+  const allowSelectedCellEditing = () => dispatch(allowSelectedCellEditingAction(sheetId))
+  const preventSelectedCellEditing = () => dispatch(preventSelectedCellEditingAction(sheetId))
+  const allowSelectedCellNavigation = () => dispatch(allowSelectedCellNavigationAction(sheetId))
+  const preventSelectedCellNavigation = () => dispatch(preventSelectedCellNavigationAction(sheetId))
 
   const getVisibleOptions = (value: string) => {
     return options && options.filter(option => {
@@ -204,6 +206,7 @@ const SheetActionDropdown = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionDropdownProps {
+  sheetId: Sheet['id']
   onInputChange?(nextValue: string): void
   onOptionDelete(optionToDelete: SheetActionDropdownOption): void
   onOptionSelect(selectedOption: SheetActionDropdownOption): void

@@ -29,13 +29,7 @@ export const defaultCell = (sheetId: string, rowId: string, columnId: string, ce
     rowId: rowId,
     value: "",
     isCellEditing: false,
-    isCellEditingSheetId: null,
-    isCellSelected: false,
-    isRangeStart: false,
-    isRangeEnd: false,
-    isRangeRenderedFromOtherEnd: false,
-    rangeWidth: null,
-    rangeHeight: null
+    isCellSelected: false
   }
 }
 
@@ -67,6 +61,8 @@ export const defaultColumn = (sheetId: string, newColumnIndex?: number): SheetCo
 // Default Sheet Selections
 //-----------------------------------------------------------------------------
 export const defaultSheetSelections: SheetSelections = {
+  isSelectedCellEditingPrevented: false,
+  isSelectedCellNavigationPrevented: false,
   rangeCellIds: new Set() as Set<SheetCell['id']>,
   rangeStartColumnId: null,
   rangeStartRowId: null,

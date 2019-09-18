@@ -10,7 +10,7 @@ import { mutation } from '@app/api'
 import { AppState } from '@app/state'
 import { 
   Sheet, SheetFromServer, SheetUpdates,
-  SheetActiveSelections, SheetActiveUpdates, 
+  SheetActiveUpdates, 
   SheetCell, SheetCells, SheetCellUpdates,
   SheetColumn, SheetColumns, SheetColumnUpdates,
   SheetRows, SheetRowUpdates, 
@@ -41,7 +41,6 @@ export type SheetActions =
   DeleteSheetFilter | UpdateSheetFilter | UpdateSheetFilters |
   DeleteSheetGroup | UpdateSheetGroup | UpdateSheetGroups |
   UpdateSheetRow | UpdateSheetRows | 
-  UpdateSheetSelection | 
   DeleteSheetSort | UpdateSheetSort | UpdateSheetSorts |
   UpdateSheetVerticalScrollDirection
 
@@ -609,12 +608,7 @@ export const loadSheet = (sheetFromServer: SheetFromServer): ThunkAction => {
         normalizedCells[cell.id] = { 
           ...cell, 
           isCellEditing: false,
-          isCellEditingSheetId: null,
           isCellSelected: false,
-          isRangeStart: false,
-          isRangeEnd: false,
-          isRangeRenderedFromOtherEnd: false,
-          rangeWidth: null,
         }
         rowCells[cell.columnId] = cell.id
       })
@@ -989,12 +983,6 @@ export const updateSheetRows = (nextSheetRows: SheetRows): SheetActions => {
 //-----------------------------------------------------------------------------
 // Update Sheet Selection
 //-----------------------------------------------------------------------------
-export const UPDATE_SHEET_SELECTION = 'UPDATE_SHEET_SELECTION'
-interface UpdateSheetSelection {
-  type: typeof UPDATE_SHEET_SELECTION,
-  nextSheetSelection: SheetActiveSelections
-}
-
 const removeSelectionCellState: SheetCellUpdates = {
   isCellSelected: false
 }
@@ -1146,62 +1134,6 @@ export const updateSheetSelectionFromArrowKey = (sheetId: Sheet['id'], cellId: S
   }
 }
 
-export const updateSheetSelectionOnCellMountOrUnmount = (cellId: SheetCell['id'], mountOrUnmount: 'MOUNT' | 'UNMOUNT'): ThunkAction => {
-  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
-    const {
-      active: { selections },
-      cells,
-      verticalScrollDirection
-    } = getState().sheet
-    const isCellRangeStartOrEnd = [selections.rangeStartCellId, selections.cellId].includes(cellId) ? 'START' : (cellId === selections.rangeEndCellId ? 'END' : null)
-    if(isCellRangeStartOrEnd) {
-      const rangeStartCell = cells[selections.rangeStartCellId]
-      const rangeEndCell = cells[selections.rangeEndCellId]
-      const nextRangeRenderedFrom = 
-            (isCellRangeStartOrEnd === 'END' && mountOrUnmount === 'UNMOUNT' && selections.isRangeStartCellRendered) ||
-            (isCellRangeStartOrEnd === 'START' && mountOrUnmount === 'MOUNT' && !selections.isRangeEndCellRendered)
-              ? 'START'
-              : 'END'
-      const nextIsRangeEndCellRendered = isCellRangeStartOrEnd === 'END' ? mountOrUnmount === 'MOUNT' : selections.isRangeEndCellRendered
-      const nextIsRangeStartCellRendered = isCellRangeStartOrEnd === 'START' ? mountOrUnmount === 'MOUNT' : selections.isRangeStartCellRendered
-      const nextIsRangeHelperRendered = 
-        selections.rangeHeight !== null && 
-        rangeStartCell.rowId !== rangeEndCell.rowId &&
-        !nextIsRangeStartCellRendered &&
-        !nextIsRangeEndCellRendered && (
-          isCellRangeStartOrEnd === 'END' && mountOrUnmount === 'UNMOUNT' && verticalScrollDirection === 'backward' ||
-          isCellRangeStartOrEnd === 'START' && mountOrUnmount === 'UNMOUNT' && verticalScrollDirection === 'forward'
-        )
-      const rangeStartCellUpdates = {
-        isRangeRenderedFromOtherEnd: nextRangeRenderedFrom === 'END'
-      }
-      const rangeEndCellUpdates = {
-        isRangeRenderedFromOtherEnd: nextRangeRenderedFrom === 'START'
-      }
-      batch(() => {
-        if(isCellRangeStartOrEnd === 'START') {
-          dispatch(updateSheetSelectionReducer({
-            ...selections,
-            isRangeStartCellRendered: nextIsRangeStartCellRendered,
-            isRangeEndCellRendered: nextIsRangeEndCellRendered,
-            isRangeHelperRendered: nextIsRangeHelperRendered
-          }))
-        }
-        if(isCellRangeStartOrEnd === 'END') {
-          dispatch(updateSheetSelectionReducer({
-            ...selections,
-            isRangeStartCellRendered: nextIsRangeStartCellRendered,
-            isRangeEndCellRendered: nextIsRangeEndCellRendered,
-            isRangeHelperRendered: nextIsRangeHelperRendered
-          }))
-        }
-        dispatch(updateSheetCellReducer(rangeStartCell.id, rangeStartCellUpdates))
-        dispatch(updateSheetCellReducer(rangeEndCell.id, rangeEndCellUpdates))
-      })
-    }
-  }
-}
-
 export const clearSheetSelection = (sheetId: Sheet['id']): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
@@ -1224,58 +1156,74 @@ export const clearSheetSelection = (sheetId: Sheet['id']): ThunkAction => {
   }
 }
 
-export const preventSelectedCellEditing = (): ThunkAction => {
+export const preventSelectedCellEditing = (sheetId: Sheet['id']): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
-      active: { 
-        selections
+      sheets: {
+        [sheetId]: { 
+          selections
+        }
       }
     } = getState().sheet
-    dispatch(updateSheetSelectionReducer({
-      ...selections,
-      isSelectedCellEditingPrevented: true
+    dispatch(updateSheet(sheetId, {
+      selections: {
+        ...selections,
+        isSelectedCellEditingPrevented: true
+      }
     }))
   }
 }
 
-export const allowSelectedCellEditing = (): ThunkAction => {
+export const allowSelectedCellEditing = (sheetId: Sheet['id']): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
-      active: { 
-        selections
+      sheets: {
+        [sheetId]: { 
+          selections
+        }
       }
     } = getState().sheet
-    dispatch(updateSheetSelectionReducer({
-      ...selections,
-      isSelectedCellEditingPrevented: false
+    dispatch(updateSheet(sheetId, {
+      selections: {
+        ...selections,
+        isSelectedCellEditingPrevented: false
+      }
     }))
   }
 }
 
-export const preventSelectedCellNavigation = (): ThunkAction => {
+export const preventSelectedCellNavigation = (sheetId: Sheet['id']): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
-      active: { 
-        selections
+      sheets: {
+        [sheetId]: { 
+          selections
+        }
       }
     } = getState().sheet
-    dispatch(updateSheetSelectionReducer({
-      ...selections,
-      isSelectedCellNavigationPrevented: true
+    dispatch(updateSheet(sheetId, {
+      selections: {
+        ...selections,
+        isSelectedCellNavigationPrevented: true
+      }
     }))
   }
 }
 
-export const allowSelectedCellNavigation = (): ThunkAction => {
+export const allowSelectedCellNavigation = (sheetId: Sheet['id']): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
-      active: { 
-        selections
+      sheets: {
+        [sheetId]: { 
+          selections
+        }
       }
     } = getState().sheet
-    dispatch(updateSheetSelectionReducer({
-      ...selections,
-      isSelectedCellNavigationPrevented: false
+    dispatch(updateSheet(sheetId, {
+      selections: {
+        ...selections,
+        isSelectedCellNavigationPrevented: false
+      }
     }))
   }
 }
@@ -1382,13 +1330,6 @@ export const selectSheetRows = (sheetId: Sheet['id'], startRowId: SheetRow['id']
       }
     }, true))
   }
-}
-
-export const updateSheetSelectionReducer = (nextSheetSelection: SheetActiveSelections): SheetActions => {
-	return {
-		type: UPDATE_SHEET_SELECTION,
-    nextSheetSelection,
-	}
 }
 
 //-----------------------------------------------------------------------------
