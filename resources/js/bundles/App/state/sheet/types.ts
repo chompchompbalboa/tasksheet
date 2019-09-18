@@ -30,7 +30,7 @@ export type SheetActiveSelections = {
   rangeEndColumnId: SheetColumn['id']
   rangeEndRowId: SheetRow['id']
   rangeEndCellId: SheetCell['id']
-  rangeCellIds: SheetCell['id'][]
+  rangeCellIds: Set<SheetCell['id']>
   rangeWidth: number
   rangeHeight: number
 }
@@ -47,6 +47,7 @@ export type Sheet = {
   groups: SheetGroup['id'][]
   sorts: SheetSort['id'][]
   styles: SheetStyles
+  selections: SheetSelections
 }
 export type SheetUpdates = {
   rows?: SheetRow['id'][]
@@ -57,6 +58,16 @@ export type SheetUpdates = {
   groups?: SheetGroup['id'][]
   sorts?: SheetSort['id'][]
   styles?: SheetStyles
+  selections?: SheetSelections
+}
+export type SheetSelections = {
+  cellIds: Set<SheetCell['id']>
+  rangeStartColumnId: SheetColumn['id']
+  rangeStartRowId: SheetRow['id']
+  rangeStartCellId: SheetCell['id']
+  rangeEndColumnId: SheetColumn['id']
+  rangeEndRowId: SheetRow['id']
+  rangeEndCellId: SheetCell['id']
 }
 export type SheetStyles = {
   BOLD: Set<string>

@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 import { v4 as createUuid } from 'uuid'
 
-import { SheetCell, SheetColumn, SheetRow } from '@app/state/sheet/types'
+import { SheetCell, SheetColumn, SheetRow, SheetSelections } from '@app/state/sheet/types'
 
 //-----------------------------------------------------------------------------
 // Default Row
@@ -61,4 +61,17 @@ export const defaultColumn = (sheetId: string, newColumnIndex?: number): SheetCo
     typeId: 'STRING',
     width: 100
   }
+}
+
+//-----------------------------------------------------------------------------
+// Default Sheet Selections
+//-----------------------------------------------------------------------------
+export const defaultSheetSelections: SheetSelections = {
+  cellIds: new Set() as Set<SheetCell['id']>,
+  rangeStartColumnId: null,
+  rangeStartRowId: null,
+  rangeStartCellId: null,
+  rangeEndColumnId: null,
+  rangeEndRowId: null,
+  rangeEndCellId: null,
 }

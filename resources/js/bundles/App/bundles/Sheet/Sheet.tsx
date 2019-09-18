@@ -18,7 +18,7 @@ import {
   updateSheetCell as updateSheetCellAction,
   updateSheetColumn as updateSheetColumnAction,
   updateSheetSelectedCell as updateSheetSelectedCellAction,
-  updateSheetSelection as updateSheetSelectionAction,
+  updateSheetSelectionNew as updateSheetSelectionAction,
   updateSheetSelectionOnCellMountOrUnmount as updateSheetSelectionOnCellMountOrUnmountAction,
   updateSheetVerticalScrollDirection as updateSheetVerticalScrollDirectionAction,
 } from '@app/state/sheet/actions'

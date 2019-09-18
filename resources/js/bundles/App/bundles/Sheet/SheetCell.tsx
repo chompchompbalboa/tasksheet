@@ -93,15 +93,6 @@ const SheetCell = memo(({
         isRangeSelected={(cell.isRangeStart || cell.isRangeEnd) && !cell.isRangeRenderedFromOtherEnd}
         onClick={handleClick}
         style={style}>
-        <RangeSelection
-          cellHeight={24}
-          cellWidth={style.width as number}
-          highlightColor={highlightColor}
-          isRangeStart={cell.isRangeStart}
-          isRangeEnd={cell.isRangeEnd}
-          isRangeRenderedFromOtherEnd={cell.isRangeRenderedFromOtherEnd}
-          rangeWidth={cell.rangeWidth}
-          rangeHeight={cell.rangeHeight}/>
         <SheetCellType
           sheetId={sheetId}
           cell={cell}
@@ -157,28 +148,6 @@ interface ContainerProps {
   containerBoxShadow: string
   isCellSelected: boolean
   isRangeSelected: boolean
-}
-
-const RangeSelection = styled.div`
-  pointer-events: none;
-  display: ${ ({ isRangeStart, isRangeEnd, isRangeRenderedFromOtherEnd }: RangeSelectionProps ) => ((isRangeStart || isRangeEnd) && !isRangeRenderedFromOtherEnd) ? 'block' : 'none' };
-  position: absolute;
-  top: ${ ({ cellHeight, isRangeStart, rangeHeight }: RangeSelectionProps ) => isRangeStart ? 0 : -(rangeHeight - cellHeight) + 'px' };
-  left: ${ ({ cellWidth, isRangeStart, rangeWidth }: RangeSelectionProps ) => isRangeStart ? 0 : -(rangeWidth - cellWidth) + 'px' };
-  width: ${ ({ rangeWidth }: RangeSelectionProps ) => rangeWidth + 'px' };
-  height: ${ ({ rangeHeight }: RangeSelectionProps ) => rangeHeight + 'px' };
-  background-color: ${ ({ highlightColor }: RangeSelectionProps ) => highlightColor };
-  opacity: 0.15;
-`
-interface RangeSelectionProps {
-  cellWidth: number
-  cellHeight: number
-  highlightColor: string
-  isRangeStart: boolean
-  isRangeEnd: boolean
-  isRangeRenderedFromOtherEnd: boolean
-  rangeWidth: number
-  rangeHeight: number
 }
 //-----------------------------------------------------------------------------
 // Export

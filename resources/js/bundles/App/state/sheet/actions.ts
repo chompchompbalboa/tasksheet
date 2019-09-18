@@ -29,7 +29,7 @@ import { updateTabs } from '@app/state/tab/actions'
 
 import { resolveVisibleRows } from '@app/state/sheet/resolvers'
 
-import { defaultCell, defaultColumn, defaultRow } from '@app/state/sheet/defaults'
+import { defaultCell, defaultColumn, defaultRow, defaultSheetSelections } from '@app/state/sheet/defaults'
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -331,6 +331,7 @@ export const createSheetView = (sheetId: string, viewName: string): ThunkAction 
         sorts: newSheetViewSorts,
         visibleColumns: clone(sourceSheet.visibleColumns),
         visibleRows: clone(sourceSheet.visibleRows),
+        selections: defaultSheetSelections,
         styles: {
           BOLD: sourceSheet.styles.BOLD
         }
@@ -660,6 +661,7 @@ export const loadSheet = (sheetFromServer: SheetFromServer): ThunkAction => {
       sorts: sheetSorts,
       visibleColumns: sheetFromServer.visibleColumns !== null ? sheetFromServer.visibleColumns : sheetColumns,
       visibleRows: null,
+      selections: defaultSheetSelections,
       styles: {
         BOLD: new Set
       }
@@ -1006,6 +1008,42 @@ const removeSelectionCellState: SheetCellUpdates = {
   rangeWidth: null
 }
 
+export const updateSheetSelectionNew = (sheetId: string, cellId: string, isShiftClicked: boolean): ThunkAction => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      cells,
+      sheets: {
+        [sheetId]: { 
+          selections: {
+            rangeStartCellId
+          }
+        }
+      }
+    } = getState().sheet
+    const cell = cells[cellId]
+    if(!isShiftClicked) {
+      batch(() => {
+        dispatch(updateSheetCellReducer(rangeStartCellId, removeSelectionCellState))
+        dispatch(updateSheetCellReducer(cell.id, { isCellSelected: true }))
+        dispatch(updateSheet(sheetId, {
+          selections: {
+            cellIds: new Set([ cell.id ]),
+            rangeStartCellId: cell.id,
+            rangeStartColumnId: cell.columnId,
+            rangeStartRowId: cell.rowId,
+            rangeEndCellId: null,
+            rangeEndColumnId: null,
+            rangeEndRowId: null
+          }
+        }, true))
+      })
+    }
+    else if(isShiftClicked) {
+      console.log('Range: ' + cellId)
+    }
+  }
+}
+
 export const updateSheetSelection = (sheetId: string, cellId: string, isShiftClicked: boolean): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
@@ -1059,7 +1097,7 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
       const nextRangeEndColumnId = visibleColumns[nextRangeEndColumnIndex]
       const nextRangeEndRowId = visibleRows[nextRangeEndRowIndex]
       const nextRangeEndCellId = rows[nextRangeEndRowId].cells[nextRangeEndColumnId]
-      let nextRangeCellIds: string[] = []
+      let nextRangeCellIds: Set<string> = new Set()
       let nextRangeHeight = 0
       let nextRangeWidth = 0
       // Calculate range width
@@ -1073,7 +1111,7 @@ export const updateSheetSelection = (sheetId: string, cellId: string, isShiftCli
           if(rowId !== 'ROW_BREAK') {
             const row = rows[rowId]
             const currentCellId = row.cells[columnId]
-            nextRangeCellIds.push(currentCellId)
+            nextRangeCellIds.add(currentCellId)
           }
         }
       }
@@ -1327,7 +1365,7 @@ interface IselectSheetRange {
   nextRangeEndCellId: SheetCell['id']
   nextRangeWidth: number
   nextRangeHeight: number
-  nextRangeCellIds: SheetCell['id'][]
+  nextRangeCellIds: Set<SheetCell['id']>
 }
 
 export const selectSheetColumns = (sheetId: Sheet['id'], startColumnId: SheetColumn['id'], endColumnId?: SheetColumn['id']): ThunkAction => {
@@ -1425,12 +1463,12 @@ export const selectSheetRows = (sheetId: Sheet['id'], startRowId: SheetRow['id']
 export const updateSheetSelectedCell = (sheetId: Sheet['id'], cellId: SheetCell['id'], moveDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
-      active: { selections },
       cells,
       rows,
       sheets: { [sheetId]: {
         visibleColumns,
-        visibleRows
+        visibleRows,
+        selections
       }}
     } = getState().sheet
     const cell = cells[cellId]
@@ -1471,7 +1509,6 @@ export const updateSheetSelectedCell = (sheetId: Sheet['id'], cellId: SheetCell[
           rangeStartCellId: nextSelectedCell.id
         }))
         // Clear the selected cell, the range start cell and the range end cell
-        selections.cellId !== null && dispatch(updateSheetCellReducer(selections.cellId, removeSelectionCellState))
         selections.rangeStartCellId !== null && dispatch(updateSheetCellReducer(selections.rangeStartCellId, removeSelectionCellState))
         selections.rangeEndCellId !== null && dispatch(updateSheetCellReducer(selections.rangeEndCellId, removeSelectionCellState))
         // Update the next selected cell
