@@ -12,6 +12,7 @@ import SheetActionDropdownSelectedOption from '@app/bundles/Sheet/SheetActionDro
 // Component
 //-----------------------------------------------------------------------------
 const SheetActionFilterExistingFilter = ({
+  sheetId,
   columns,
   deleteSheetFilter,
   filter,
@@ -21,7 +22,7 @@ const SheetActionFilterExistingFilter = ({
     return (
       <SheetActionDropdownSelectedOption
         isLocked={filter.isLocked}
-        onOptionUpdate={(updates) => updateSheetFilter(filter.id, updates)}
+        onOptionUpdate={(updates) => updateSheetFilter(sheetId, filter.id, updates)}
         onOptionDelete={() => deleteSheetFilter(filter.id)}>
         <Container>
           {columns[filter.columnId].name} {filter.type} {filter.value}
@@ -36,7 +37,7 @@ const SheetActionFilterExistingFilter = ({
 interface SheetActionFilterExistingFilterProps {
   columns: SheetColumns
   deleteSheetFilter(filterId: SheetFilter['id']): void
-  updateSheetFilter(filterId: SheetFilter['id'], updates: SheetFilterUpdates): void
+  updateSheetFilter(sheetId: Sheet['id'], filterId: SheetFilter['id'], updates: SheetFilterUpdates): void
   filter: SheetFilter
   sheetId: Sheet['id']
 }

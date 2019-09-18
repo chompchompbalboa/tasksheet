@@ -30,7 +30,7 @@ import SheetActionFilterExistingFilters from '@app/bundles/Sheet/SheetActionFilt
 const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionFilterProps) => ({
   createSheetFilter: (sheetId: string, newFilter: SheetFilter) => dispatch(createSheetFilterAction(sheetId, newFilter)),
   deleteSheetFilter: (sheetId: string, filterId: string) => dispatch(deleteSheetFilterAction(sheetId, filterId)),
-  updateSheetFilter: (filterId: string, updates: SheetFilterUpdates) => dispatch(updateSheetFilterAction(filterId, updates)),
+  updateSheetFilter: (sheetId: string, filterId: string, updates: SheetFilterUpdates) => dispatch(updateSheetFilterAction(sheetId, filterId, updates)),
   allowSelectedCellEditing: () => dispatch(allowSelectedCellEditingAction()),
   preventSelectedCellEditing: () => dispatch(preventSelectedCellEditingAction()),
   allowSelectedCellNavigation: () => dispatch(allowSelectedCellNavigationAction()),
@@ -225,11 +225,11 @@ const SheetActionFilter = ({
             {localSheetFilters && localSheetFilters.map(filterId => (
               <SheetActionFilterExistingFilters 
                 key={filterId}
+                sheetId={sheetId}
                 columns={columns}
                 deleteSheetFilter={handleDeleteSheetFilter}
                 updateSheetFilter={updateSheetFilter}
-                filter={localFilters[filterId]}
-                sheetId={sheetId}/>
+                filter={localFilters[filterId]}/>
             ))}
           </ExistingFilters>
           <InputContainer>
@@ -286,7 +286,7 @@ interface SheetActionFilterProps {
   sheetId: string
   sheetFilters: SheetFilter['id'][]
   sheetVisibleColumns: SheetColumn['id'][]
-  updateSheetFilter?(filterId: SheetFilter['id'], updates: SheetFilterUpdates): void
+  updateSheetFilter?(sheetId: Sheet['id'], filterId: SheetFilter['id'], updates: SheetFilterUpdates): void
   allowSelectedCellEditing?(): void
   preventSelectedCellEditing?(): void
   allowSelectedCellNavigation?(): void

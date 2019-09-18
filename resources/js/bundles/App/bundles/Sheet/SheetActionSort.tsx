@@ -5,7 +5,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { v4 as createUuid } from 'uuid'
 
-import { SheetColumn, SheetColumns, SheetSort, SheetSorts } from '@app/state/sheet/types'
+import { Sheet, SheetColumn, SheetColumns, SheetSort, SheetSorts } from '@app/state/sheet/types'
 
 import { ThunkDispatch } from '@app/state/types'
 import { SheetSortUpdates } from '@app/state/sheet/types'
@@ -25,7 +25,7 @@ import SheetActionSortSelectedOption from '@app/bundles/Sheet/SheetActionSortSel
 const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionProps) => ({
   createSheetSort: (newSort: SheetSort) => dispatch(createSheetSortAction(props.sheetId, newSort)),
   deleteSheetSort: (columnId: string) => dispatch(deleteSheetSortAction(props.sheetId, columnId)),
-  updateSheetSort: (sortId: string, updates: SheetSortUpdates, skipVisibleRowsUpdate?: boolean) => dispatch(updateSheetSortAction(sortId, updates, skipVisibleRowsUpdate))
+  updateSheetSort: (sheetId: Sheet['id'], sortId: string, updates: SheetSortUpdates, skipVisibleRowsUpdate?: boolean) => dispatch(updateSheetSortAction(sheetId, sortId, updates, skipVisibleRowsUpdate))
 })
 
 //-----------------------------------------------------------------------------
@@ -58,11 +58,11 @@ const SheetActionSort = ({
       <SheetActionDropdown
         onOptionDelete={(optionToDelete: SheetActionDropdownOption) => deleteSheetSort(optionToDelete.value)}
         onOptionSelect={(selectedOption: SheetActionDropdownOption) => createSheetSort({ id: createUuid(), sheetId: sheetId, columnId: selectedOption.value, order: 'ASC', isLocked: false })}
-        onOptionUpdate={(sortId, updates) => updateSheetSort(sortId, updates, true)}
+        onOptionUpdate={(sortId, updates) => updateSheetSort(sheetId, sortId, updates, true)}
         options={options}
         placeholder={"Sort By..."}
         selectedOptions={selectedOptions}
-        selectedOptionComponent={({ option }: { option: SheetActionDropdownOption }) => <SheetActionSortSelectedOption option={option} sorts={sorts} updateSheetSort={updateSheetSort} />}/>
+        selectedOptionComponent={({ option }: { option: SheetActionDropdownOption }) => <SheetActionSortSelectedOption option={option} sorts={sorts} updateSheetSort={(...args) => updateSheetSort(sheetId, ...args)} />}/>
     </SheetAction>
   )
 }
@@ -74,7 +74,7 @@ interface SheetActionProps {
   columns: SheetColumns
   createSheetSort?(newSort: SheetSort): void
   deleteSheetSort?(columnId: string): void
-  updateSheetSort?(sortId: string, updates: SheetSortUpdates, skipVisibleRowsUpdate?: boolean): void
+  updateSheetSort?(sheetId: Sheet['id'], sortId: string, updates: SheetSortUpdates, skipVisibleRowsUpdate?: boolean): void
   sorts: SheetSorts
   sheetSorts: SheetSort['id'][]
   sheetVisibleColumns: SheetColumn['id'][]
