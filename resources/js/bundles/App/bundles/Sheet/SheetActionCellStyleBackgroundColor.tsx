@@ -25,19 +25,26 @@ const SheetActionCellStyleBackgroundColor = ({
   
   const sheetStyles = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].styles)
   
-  const updateSheetStylesSet = (nextSheetStylesSet: Set<string>) => {
+  const updateSheetStyles = (nextSheetStylesSet: Set<string>, nextSheetStylesColorReference: { [cellId: string]: string }) => {
     dispatch(updateSheet(sheetId, { styles: {
       ...sheetStyles,
-      BACKGROUND_COLOR: nextSheetStylesSet 
+      BACKGROUND_COLOR: nextSheetStylesSet,
+      colorReferences: {
+        ...sheetStyles.colorReferences,
+        BACKGROUND_COLOR: nextSheetStylesColorReference
+      }
     }}))
   }
+
+  console.log(sheetStyles)
 
   return (
     <SheetActionCellStyleColorPicker
       sheetId={sheetId}
       icon={BACKGROUND_COLOR}
       sheetStylesSet={sheetStyles && sheetStyles.BACKGROUND_COLOR}
-      updateSheetStylesSet={updateSheetStylesSet}/>
+      sheetStylesColorReference={sheetStyles && sheetStyles.colorReferences && sheetStyles.colorReferences.BACKGROUND_COLOR}
+      updateSheetStyles={updateSheetStyles}/>
   )
 }
 

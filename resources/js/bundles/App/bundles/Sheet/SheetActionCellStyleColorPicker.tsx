@@ -2,10 +2,11 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from 'react'
+import { CirclePicker } from 'react-color'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { ARROW_DOWN } from '@app/assets/icons'
+import { ARROW_DOWN, RESET_COLOR } from '@app/assets/icons'
 
 import { AppState } from '@app/state'
 import { Sheet } from '@app/state/sheet/types'
@@ -19,7 +20,8 @@ const SheetActionCellStyleColorPicker = ({
   sheetId,
   icon,
   sheetStylesSet,
-  updateSheetStylesSet
+  sheetStylesColorReference,
+  updateSheetStyles,
 }: SheetActionCellStyleColorPickerProps) => {
   
   // Redux
@@ -42,8 +44,9 @@ const SheetActionCellStyleColorPicker = ({
       setIsDropdownVisible(false)
     }
   }
-  
-  const addOrDeleteFromSet = sheetStylesSet && sheetStylesSet.has(selections.rangeStartCellId) ? 'DELETE' : 'ADD'
+
+  // Local Color
+  const [ localColor, setLocalColor ] = useState('rgb(0,0,0)')
 
   const handleContainerClick = () => {
     const {
@@ -62,6 +65,7 @@ const SheetActionCellStyleColorPicker = ({
       const rangeEndColumnIndex = sheetVisibleColumns.findIndex(visibleColumnId => visibleColumnId === rangeEndColumnId)
       const rangeEndRowIndex = sheetVisibleRows.findIndex(visibleRowId => visibleRowId === rangeEndRowId)
       const nextSheetStylesSet = new Set([ ...sheetStylesSet ])
+      const nextSheetStylesColorReference = { ...sheetStylesColorReference }
 
       for(let rowIndex = rangeStartRowIndex; rowIndex <= rangeEndRowIndex; rowIndex++) {
         const rowId = sheetVisibleRows[rowIndex]
@@ -71,18 +75,21 @@ const SheetActionCellStyleColorPicker = ({
             const columnId = sheetVisibleColumns[columnIndex]
             if(columnId !== 'COLUMN_BREAK') {
               const cellId = row.cells[columnId]
-              addOrDeleteFromSet === 'ADD' ? nextSheetStylesSet.add(cellId) : nextSheetStylesSet.delete(cellId)
+              nextSheetStylesSet.add(cellId)
+              nextSheetStylesColorReference[cellId] = localColor
             }
           }
         }
       }
-      updateSheetStylesSet(nextSheetStylesSet)
+      updateSheetStyles(nextSheetStylesSet, nextSheetStylesColorReference)
     }
     // Cell
     else if(rangeStartCellId) {
       const nextSheetStylesSet = new Set([ ...sheetStylesSet ])
-      addOrDeleteFromSet === 'ADD' ? nextSheetStylesSet.add(rangeStartCellId) : nextSheetStylesSet.delete(rangeStartCellId)
-      updateSheetStylesSet(nextSheetStylesSet)
+      const nextSheetStylesColorReference = { ...sheetStylesColorReference }
+      nextSheetStylesSet.add(rangeStartCellId)
+      nextSheetStylesColorReference[rangeStartCellId] = localColor
+      updateSheetStyles(nextSheetStylesSet, nextSheetStylesColorReference)
     }
   }
 
@@ -94,7 +101,7 @@ const SheetActionCellStyleColorPicker = ({
         <Icon 
           icon={icon}/>
         <CurrentColor
-          currentColor='red'/>
+          currentColor={localColor}/>
       </CurrentColorContainer>
       <DropdownToggle
         dropdownToggleBackgroundColor={userColorPrimary}
@@ -105,7 +112,15 @@ const SheetActionCellStyleColorPicker = ({
       <Dropdown
         ref={dropdown}
         isDropdownVisible={isDropdownVisible}>
-        Dropdown
+        <ResetColor>
+          <Icon 
+            icon={RESET_COLOR}
+            size="1.25rem"/>
+          &nbsp;&nbsp;Reset
+        </ResetColor>
+        <CirclePicker
+          color={localColor}
+          onChange={color => setLocalColor(color.hex)}/>
       </Dropdown>
     </Container>
   )
@@ -118,13 +133,15 @@ interface SheetActionCellStyleColorPickerProps {
   sheetId: Sheet['id']
   icon: string
   sheetStylesSet: Set<string>
-  updateSheetStylesSet(nextSheetStylesSet: Set<string>): void
+  sheetStylesColorReference: { [cellId: string]: string }
+  updateSheetStyles(nextSheetStylesSet: Set<string>, nextSheetStylesColorReference: { [cellId: string ]: string }): void
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  position: relative;
   margin-right: 0.375rem;
   cursor: pointer;  
   display: flex;
@@ -186,13 +203,29 @@ interface IDropdownToggle {
 const Dropdown = styled.div`
   display: ${ ({ isDropdownVisible }: IDropdown) => isDropdownVisible ? 'block' : 'none' };
   position: absolute;
-  margin-left: 0.375rem;
+  left: 0;
   top: 100%;
-  background-color: white;
+  padding: 1rem;
+  border-radius: 5px;
+  background-color: rgb(250, 250, 250);
+  box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.5);
 `
 interface IDropdown {
   isDropdownVisible: boolean
 }
+
+const ResetColor = styled.div`
+  width: 100%;
+  padding: 0.375rem;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  &:hover {
+    background-color: rgb(200, 200, 200);
+  }
+`
 
 //-----------------------------------------------------------------------------
 // Export

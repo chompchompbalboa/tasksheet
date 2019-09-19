@@ -166,6 +166,7 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
+  padding: 0.15rem 0.25rem;
   display: flex;
   align-items: center;
   white-space: nowrap;

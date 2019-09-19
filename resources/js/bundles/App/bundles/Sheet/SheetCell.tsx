@@ -7,7 +7,7 @@ import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { SheetCell, SheetColumnType, SheetCellUpdates, SheetColumn } from '@app/state/sheet/types'
+import { SheetCell, SheetColumnType, SheetCellUpdates, SheetColumn, SheetStyles } from '@app/state/sheet/types'
 
 import SheetCellBoolean from '@app/bundles/Sheet/SheetCellBoolean'
 import SheetCellDatetime from '@app/bundles/Sheet/SheetCellDatetime'
@@ -35,6 +35,7 @@ const SheetCell = memo(({
   // Redux
   const cell = useSelector((state: AppState) => state.sheet.cells[cellId])
   const sheetSelectionsRangeCellIds = useSelector((state: AppState) => state.sheet.sheets[sheetId].selections.rangeCellIds)
+  const sheetStyles = useSelector((state: AppState) => state.sheet.sheets[sheetId].styles)
   // Refs
   const cellContainer = useRef(null)
   // Cell Value
@@ -81,6 +82,7 @@ const SheetCell = memo(({
         isCellSelected={isCellSelected}
         isCellInRange={isCellInRange}
         onClick={handleClick}
+        sheetStyles={sheetStyles}
         style={style}>
         <SheetRange
           isCellInRange={isCellInRange}
@@ -122,23 +124,26 @@ const Container = styled.div`
   z-index: ${ ({ isCellSelected, isCellInRange }: IContainer ) => isCellSelected || isCellInRange ? '10' : '5' };
   position: relative;
   cursor: default;
-  padding: 0.15rem 0.25rem;
   font-size: 0.9rem;
   border-right: 0.5px solid rgb(180, 180, 180);
   border-bottom: 0.5px solid rgb(180, 180, 180);
-  box-shadow: ${ ({ isCellSelected, highlightColor }: IContainer ) => isCellSelected ? 'inset 0px 0px 0px 2px ' + highlightColor : 'none' };
   user-select: none;
-  background-color: ${ ({ isCellSelected, isCellInRange, highlightColor }: IContainer ) => isCellSelected ? 'rgb(245, 245, 245)' : 'white' };
+  background-color: ${ ({ cellId, isCellSelected, sheetStyles }: IContainer ) => 
+    sheetStyles.BACKGROUND_COLOR.has(cellId)
+      ? sheetStyles.colorReferences.BACKGROUND_COLOR[cellId]
+      : isCellSelected
+        ? 'rgb(245, 245, 245)'
+        : 'white'
+  };
+  box-shadow: ${ ({ isCellSelected, highlightColor }: IContainer ) => isCellSelected ? 'inset 0px 0px 0px 2px ' + highlightColor : 'none' };
   overflow: ${ ({ isCellSelected, isCellInRange }: IContainer ) => isCellSelected || isCellInRange ? 'visible' : 'hidden' };
-  &:hover {
-    background-color: ${ ({ isCellInRange }: IContainer ) => !isCellInRange ? 'rgb(245, 245, 245)' : 'rgb(245, 245, 245)' };
-  }
 `
 interface IContainer {
   cellId: SheetCell['id']
   isCellSelected: boolean
   isCellInRange: boolean
   highlightColor: string
+  sheetStyles: SheetStyles
 }
 
 const SheetRange = styled.div`

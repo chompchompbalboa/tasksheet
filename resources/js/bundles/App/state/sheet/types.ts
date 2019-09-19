@@ -56,6 +56,10 @@ export type SheetStyles = {
   BACKGROUND_COLOR: Set<string>
   BOLD: Set<string>
   ITALIC: Set<string>
+  colorReferences: SheetStylesColorReferences
+}
+export type SheetStylesColorReferences = {
+  BACKGROUND_COLOR?: { [cellId: string]: string }
 }
 
 export type SheetFromServer = {
