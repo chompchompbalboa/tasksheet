@@ -138,6 +138,13 @@ const Container = styled.div`
   color: ${ ({ cellId, isCellSelected, sheetStyles }: IContainer ) => sheetStyles.color.has(cellId) ? sheetStyles.colorReference[cellId] : 'black' };
   box-shadow: ${ ({ isCellSelected, highlightColor }: IContainer ) => isCellSelected ? 'inset 0px 0px 0px 2px ' + highlightColor : 'none' };
   overflow: ${ ({ isCellSelected, isCellInRange }: IContainer ) => isCellSelected || isCellInRange ? 'visible' : 'hidden' };
+  &:hover {
+    background-color: ${ ({ cellId, isCellSelected, sheetStyles }: IContainer ) => 
+      sheetStyles.backgroundColor.has(cellId)
+        ? sheetStyles.backgroundColorReference[cellId]
+        : 'rgb(245, 245, 245)'
+    };
+  }
 `
 interface IContainer {
   cellId: SheetCell['id']

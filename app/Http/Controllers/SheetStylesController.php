@@ -70,7 +70,7 @@ class SheetStylesController extends Controller
     {
       $styles = SheetStyles::find($id);
       $styles->update($request->all());
-      return response()->json($styles, 200);
+      return response()->json(null, 200);
     }
 
     /**
