@@ -17,6 +17,7 @@ import {
   SheetFilter, SheetFilters, SheetFilterUpdates,
   SheetGroup, SheetGroups, SheetGroupUpdates,
   SheetSort, SheetSorts, SheetSortUpdates,
+  SheetStylesUpdates, SheetStylesServerUpdates,
   SheetRow
 } from '@app/state/sheet/types'
 import { FileType, File as TFile, Folder } from '@app/state/folder/types'
@@ -28,7 +29,7 @@ import { updateTabs } from '@app/state/tab/actions'
 
 import { resolveVisibleRows } from '@app/state/sheet/resolvers'
 
-import { defaultCell, defaultColumn, defaultRow, defaultSheetSelections } from '@app/state/sheet/defaults'
+import { defaultCell, defaultColumn, defaultRow, defaultSheetSelections, defaultSheetStyles } from '@app/state/sheet/defaults'
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -41,8 +42,7 @@ export type SheetActions =
   DeleteSheetFilter | UpdateSheetFilter | UpdateSheetFilters |
   DeleteSheetGroup | UpdateSheetGroup | UpdateSheetGroups |
   UpdateSheetRow | UpdateSheetRows | 
-  DeleteSheetSort | UpdateSheetSort | UpdateSheetSorts |
-  UpdateSheetVerticalScrollDirection
+  DeleteSheetSort | UpdateSheetSort | UpdateSheetSorts
 
 //-----------------------------------------------------------------------------
 // Create Sheet
@@ -330,14 +330,7 @@ export const createSheetView = (sheetId: string, viewName: string): ThunkAction 
         visibleColumns: clone(sourceSheet.visibleColumns),
         visibleRows: clone(sourceSheet.visibleRows),
         selections: defaultSheetSelections,
-        styles: {
-          backgroundColor: sourceSheet.styles.backgroundColor,
-          backgroundColorReference: sourceSheet.styles.backgroundColorReference,
-          bold: sourceSheet.styles.bold,
-          color: sourceSheet.styles.color,
-          colorReference: sourceSheet.styles.colorReference,
-          italic: sourceSheet.styles.italic,
-        }
+        styles: defaultSheetStyles
       },
       null, // Cells
       null, // Columns
@@ -661,12 +654,13 @@ export const loadSheet = (sheetFromServer: SheetFromServer): ThunkAction => {
       visibleRows: null,
       selections: defaultSheetSelections,
       styles: {
-        backgroundColor: new Set,
-        backgroundColorReference: {},
-        bold: new Set,
-        color: new Set,
-        colorReference: {},
-        italic: new Set,
+        id: sheetFromServer.styles.id,
+        backgroundColor: new Set(sheetFromServer.styles.backgroundColor) as Set<string>,
+        backgroundColorReference: sheetFromServer.styles.backgroundColorReference || {},
+        bold: new Set(sheetFromServer.styles.bold) as Set<string>,
+        color: new Set(sheetFromServer.styles.color) as Set<string>,
+        colorReference: sheetFromServer.styles.colorReference || {},
+        italic: new Set(sheetFromServer.styles.italic) as Set<string>,
       }
     }
     
@@ -1409,17 +1403,29 @@ export const updateSheetSorts = (nextSheetSorts: SheetSorts): SheetActions => {
 }
 
 //-----------------------------------------------------------------------------
-// Update Sheet Sorts
+// Update Sheet Styles
 //-----------------------------------------------------------------------------
-export const UPDATE_SHEET_VERTICAL_SCROLL_DIRECTION = 'UPDATE_SHEET_VERTICAL_SCROLL_DIRECTION'
-interface UpdateSheetVerticalScrollDirection {
-  type: typeof UPDATE_SHEET_VERTICAL_SCROLL_DIRECTION,
-  nextVerticalScrollDirection: 'forward' | 'backward'
-}
-
-export const updateSheetVerticalScrollDirection = (nextVerticalScrollDirection: 'forward' | 'backward'): SheetActions => {
-	return {
-		type: UPDATE_SHEET_VERTICAL_SCROLL_DIRECTION,
-    nextVerticalScrollDirection,
+export const updateSheetStyles = (sheetId: Sheet['id'], updates: SheetStylesUpdates): ThunkAction => {	
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      sheets
+    } = getState().sheet
+    const sheet = sheets[sheetId]
+    // Update state
+    dispatch(updateSheet(sheetId, { styles: {
+      ...sheet.styles,
+      ...updates
+    }}, true))
+    // Server update
+    const serverUpdates: any = {}
+    Object.entries(updates).forEach(([key, update]) => {
+      if(update instanceof Set) {
+        serverUpdates[key] = [ ...update ]
+      }
+      else {
+        serverUpdates[key] = update
+      }
+    })
+    mutation.updateSheetStyles(sheet.styles.id, serverUpdates as SheetStylesServerUpdates)
 	}
 }

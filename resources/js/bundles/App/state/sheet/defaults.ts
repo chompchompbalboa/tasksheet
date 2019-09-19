@@ -71,3 +71,16 @@ export const defaultSheetSelections: SheetSelections = {
   rangeEndRowId: null,
   rangeEndCellId: null,
 }
+
+//-----------------------------------------------------------------------------
+// Default Sheet Styles
+//-----------------------------------------------------------------------------
+export const defaultSheetStyles = {
+  id: createUuid(),
+  backgroundColor: new Set as Set<string>,
+  backgroundColorReference: {},
+  color: new Set as Set<string>,
+  colorReference: {},
+  bold: new Set as Set<string>,
+  italic: new Set as Set<string>
+}

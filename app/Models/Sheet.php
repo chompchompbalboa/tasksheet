@@ -11,10 +11,10 @@ class Sheet extends Model
   /**
    * Define which attributes will be visible
    */
-  protected $visible = ['id', 'sourceSheetId', 'fileType', 'rows', 'columns', 'filters', 'groups', 'sorts', 'visibleColumns'];
+  protected $visible = ['id', 'sourceSheetId', 'fileType', 'rows', 'columns', 'filters', 'groups', 'sorts', 'styles', 'visibleColumns'];
   protected $fillable = ['id', 'sourceSheetId', 'visibleColumns'];
   protected $with = ['filters', 'groups', 'sorts'];
-  protected $appends = ['columns', 'rows', 'fileType'];
+  protected $appends = ['columns', 'rows', 'fileType', 'styles'];
   protected $casts = [
     'visibleColumns' => 'array'
   ];
@@ -61,6 +61,13 @@ class Sheet extends Model
    */
   public function sorts() {
     return $this->hasMany('App\Models\SheetSort', 'sheetId');
+  }
+  
+  /**
+   * Get all the styles that belong to this table
+   */
+  public function getStylesAttribute() {
+    return SheetStyles::where('sheetId', '=', $this->id)->first();
   }
   
   /**

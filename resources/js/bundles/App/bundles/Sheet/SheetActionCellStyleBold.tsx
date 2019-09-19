@@ -9,7 +9,7 @@ import { BOLD } from '@app/assets/icons'
 import { AppState } from '@app/state'
 import { Sheet } from '@app/state/sheet/types'
 import {
-  updateSheet
+  updateSheetStyles as updateSheetStylesAction
 } from '@app/state/sheet/actions'
 
 import SheetActionCellStyleButton from '@app/bundles/Sheet/SheetActionCellStyleButton'
@@ -26,10 +26,9 @@ const SheetActionCellStyleBold = ({
   const sheetStyles = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].styles)
   
   const updateSheetStylesSet = (nextSheetStylesSet: Set<string>) => {
-    dispatch(updateSheet(sheetId, { styles: {
-      ...sheetStyles,
+    dispatch(updateSheetStylesAction(sheetId, {
       bold: nextSheetStylesSet 
-    }}))
+    }))
   }
 
   return (

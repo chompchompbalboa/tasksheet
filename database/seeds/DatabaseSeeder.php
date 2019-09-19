@@ -182,6 +182,12 @@ class DatabaseSeeder extends Seeder
                 $newSheet = factory(App\Models\Sheet::class)->create([
                   'id' => $newSheetId
                 ]);
+
+                // Create the sheet styles
+                $newSheetStyles = factory(App\Models\SheetStyles::class)->create([
+                  'id' => Str::uuid()->toString(),
+                  'sheetId' => $newSheetId
+                ]);
                 
                 // Load the CSV we'll create the sheet from
                 $sourceCsv = Storage::disk('sources')->get($path.$folderItem);

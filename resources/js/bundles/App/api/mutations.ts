@@ -12,7 +12,9 @@ import {
   SheetGroup, SheetGroupUpdates, 
   SheetRowToServer, 
   SheetSort, SheetSortUpdates, 
-  SheetView } from '@app/state/sheet/types'
+  SheetStylesServerUpdates,
+  SheetView 
+} from '@app/state/sheet/types'
 import { UserActiveUpdates, UserColorUpdates} from '@app/state/user/actions'
 
 //-----------------------------------------------------------------------------
@@ -215,6 +217,12 @@ export const deleteSheetSort = async (sortId: string) => {
 
 export const updateSheetSort = async (id: string, updates: SheetSortUpdates) => {
 	return axios.patch('/app/sheets/sorts/' + id, updates).then(response => {
+		return response.data
+	})
+}
+
+export const updateSheetStyles = async (id: string, updates: SheetStylesServerUpdates) => {
+	return axios.patch('/app/sheets/styles/' + id, updates).then(response => {
 		return response.data
 	})
 }

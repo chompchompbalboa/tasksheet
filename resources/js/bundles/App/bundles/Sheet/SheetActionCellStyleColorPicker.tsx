@@ -132,10 +132,12 @@ const SheetActionCellStyleColorPicker = ({
           &nbsp;&nbsp;Reset
         </ResetColor>
         <Colors>
-          {colors.map(colorGroup => (
-            <ColorGroup>
-              {colorGroup.map(color => (
+          {colors.map((colorGroup, colorGroupIndex) => (
+            <ColorGroup
+              key={colorGroupIndex}>
+              {colorGroup.map((color, colorIndex) => (
                 <Color
+                  key={colorIndex}
                   colorBackgroundColor={color}
                   isCurrentColor={color === localColor}
                   onClick={() => handleColorChange(color)}/>

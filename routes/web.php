@@ -75,6 +75,7 @@ Route::group([
     'sheets/groups' => 'SheetGroupController',
     'sheets/rows' => 'SheetRowController',
     'sheets/sorts' => 'SheetSortController',
+    'sheets/styles' => 'SheetStylesController',
     'sheets/views' => 'SheetViewController',
     // User
     'user/active' => 'UserActiveController',

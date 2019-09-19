@@ -9,7 +9,7 @@ import { BACKGROUND_COLOR } from '@app/assets/icons'
 import { AppState } from '@app/state'
 import { Sheet } from '@app/state/sheet/types'
 import {
-  updateSheet
+  updateSheetStyles as updateSheetStylesAction
 } from '@app/state/sheet/actions'
 
 import SheetActionCellStyleColorPicker from '@app/bundles/Sheet/SheetActionCellStyleColorPicker'
@@ -26,11 +26,10 @@ const SheetActionCellStyleBackgroundColor = ({
   const sheetStyles = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].styles)
   
   const updateSheetStyles = (nextSheetStylesSet: Set<string>, nextSheetStylesColorReference: { [cellId: string]: string }) => {
-    dispatch(updateSheet(sheetId, { styles: {
-      ...sheetStyles,
+    dispatch(updateSheetStylesAction(sheetId, {
       backgroundColor: nextSheetStylesSet,
       backgroundColorReference: nextSheetStylesColorReference
-    }}, true))
+    }))
   }
 
   return (
