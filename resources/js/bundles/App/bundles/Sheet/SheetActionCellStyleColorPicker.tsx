@@ -2,7 +2,6 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from 'react'
-import { CirclePicker, ColorResult } from 'react-color'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -68,9 +67,9 @@ const SheetActionCellStyleColorPicker = ({
     updateSheetStyles(nextSheetStylesSet, nextSheetStylesColorReference)
   }
 
-  const handleColorChange = (color: ColorResult) => {
-    setLocalColor(color.hex)
-    handleContainerClick(color.hex)
+  const handleColorChange = (nextColor: string) => {
+    setLocalColor(nextColor)
+    handleContainerClick(nextColor)
   }
 
   const handleResetClick = () => {
@@ -93,6 +92,18 @@ const SheetActionCellStyleColorPicker = ({
 
     updateSheetStyles(nextSheetStylesSet, nextSheetStylesColorReference)
   }
+  
+  const colors = [
+    ['rgba(255, 255, 255, 1)', 'rgba(0, 0, 0, 0.125)', 'rgba(0, 0, 0, 0.25)', 'rgba(0, 0, 0, 0.375)'],
+    ['rgba(0, 0, 0, 0.5)', 'rgba(0, 0, 0, 0.625)', 'rgba(0, 0, 0, 0.75)', 'rgba(0, 0, 0, 1)'],
+    ['rgba(255, 0, 0, 0.25)', 'rgba(255, 0, 0, 0.5)', 'rgba(255, 0, 0, 0.75)', 'rgba(255, 0, 0, 1)'],
+    ['rgba(255, 127, 0, 0.25)', 'rgba(255, 127, 0, 0.5)', 'rgba(255, 127, 0, 0.75)', 'rgba(255, 127, 0, 1)'],
+    ['rgba(255, 255, 0, 0.25)', 'rgba(255, 255, 0, 0.5)', 'rgba(255, 255, 0, 0.75)', 'rgba(255, 255, 0, 1)'],
+    ['rgba(0, 255, 0 , 0.25)', 'rgba(0, 255, 0 , 0.5)', 'rgba(0, 255, 0 , 0.75)', 'rgba(0, 255, 0 , 1)'],
+    ['rgba(0, 0, 255, 0.25)', 'rgba(0, 0, 255, 0.5)', 'rgba(0, 0, 255, 0.75)', 'rgba(0, 0, 255, 1)'],
+    ['rgba(75, 0, 130, 0.25)', 'rgba(75, 0, 130, 0.5)', 'rgba(75, 0, 130, 0.75)', 'rgba(75, 0, 130, 1)'],
+    ['rgba(143, 0, 255, 0.25)', 'rgba(143, 0, 255, 0.5)', 'rgba(143, 0, 255, 0.75)', 'rgba(143, 0, 255, 1)'],
+  ]
 
   return (
     <Container>
@@ -117,12 +128,21 @@ const SheetActionCellStyleColorPicker = ({
           onClick={handleResetClick}>
           <Icon 
             icon={RESET_COLOR}
-            size="1.25rem"/>
+            size="1.125rem"/>
           &nbsp;&nbsp;Reset
         </ResetColor>
-        <CirclePicker
-          color={localColor}
-          onChange={color => handleColorChange(color)}/>
+        <Colors>
+          {colors.map(colorGroup => (
+            <ColorGroup>
+              {colorGroup.map(color => (
+                <Color
+                  colorBackgroundColor={color}
+                  isCurrentColor={color === localColor}
+                  onClick={() => handleColorChange(color)}/>
+              ))}
+            </ColorGroup>
+          ))}
+        </Colors>
       </Dropdown>
     </Container>
   )
@@ -208,7 +228,7 @@ const Dropdown = styled.div`
   position: absolute;
   left: 0;
   top: 100%;
-  padding: 1rem;
+  padding: 0.625rem;
   border-radius: 5px;
   background-color: rgb(250, 250, 250);
   box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.5);
@@ -219,16 +239,46 @@ interface IDropdown {
 
 const ResetColor = styled.div`
   width: 100%;
-  padding: 0.375rem;
-  margin-bottom: 1rem;
-  border-radius: 5px;
+  padding: 0.25rem;
+  margin-bottom: 0.25rem;
+  border-radius: 3px;
   display: flex;
   align-items: center;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   &:hover {
-    background-color: rgb(200, 200, 200);
+    background-color: rgb(210, 210, 210);
   }
 `
+
+const Colors = styled.div`
+  display: flex;
+`
+
+const ColorGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 0.0625rem;
+`
+
+const Color = styled.div`
+  cursor: pointer;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 1px;
+  background-color: ${ ({ colorBackgroundColor }: IColor) => colorBackgroundColor};
+  box-shadow: ${ ({ colorBackgroundColor, isCurrentColor }: IColor) => isCurrentColor ? 'inset 0px 0px 0px 1px white' : 'inset 0px 0px 0px 1px trasnparent' };
+  border: ${ ({ isCurrentColor }: IColor) => isCurrentColor ? '2px solid black' : '1px solid rgb(230, 230, 230)' };
+  transition: all 0.15s;
+  &:hover {
+    box-shadow: inset 0px 0px 0px 1px white;
+    border: 2px solid black;
+  }
+`
+interface IColor {
+  colorBackgroundColor: string
+  isCurrentColor: boolean
+}
 
 //-----------------------------------------------------------------------------
 // Export

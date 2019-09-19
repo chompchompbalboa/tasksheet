@@ -40,7 +40,7 @@ const SheetActionCellStyleBackgroundColor = ({
     <SheetActionCellStyleColorPicker
       sheetId={sheetId}
       icon={BACKGROUND_COLOR}
-      initialColor='#f44336'
+      initialColor='rgba(0, 0, 0, 0.125)'
       sheetStylesSet={sheetStyles && sheetStyles.BACKGROUND_COLOR}
       sheetStylesColorReference={sheetStyles && sheetStyles.colorReferences && sheetStyles.colorReferences.BACKGROUND_COLOR}
       updateSheetStyles={updateSheetStyles}/>
