@@ -36,10 +36,14 @@ const SheetCellContainer = ({
   const sheetStyles = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].styles)
 
   const container = useRef(null)
-  const isCellEditing = cell.isCellEditing && sheetId === activeSheetId
+
+  const isActiveSheet = sheetId === activeSheetId
+  const isCellEditing = cell.isCellEditing && isActiveSheet
+  const isCellSelected = cell.isCellSelected && isActiveSheet
+
   
   useEffect(() => {
-    if(cell.isCellSelected && !cell.isCellEditing) {
+    if(isCellSelected && !isCellEditing) {
       addEventListener('keydown', handleKeydownWhileCellIsSelected)
     }
     else {
@@ -48,10 +52,10 @@ const SheetCellContainer = ({
     return () => {
       removeEventListener('keydown', handleKeydownWhileCellIsSelected)
     }
-  }, [ cell.isCellSelected, cell.isCellEditing, isSelectedCellEditingPrevented, isSelectedCellNavigationPrevented ])
+  }, [ isCellSelected, isCellEditing, isSelectedCellEditingPrevented, isSelectedCellNavigationPrevented ])
   
   useEffect(() => {
-    if(cell.isCellEditing) {
+    if(isCellEditing) {
       focusCell()
       addEventListener('keydown', closeOnKeydownEnter)
       addEventListener('click', handleClickWhileCellIsEditing)
@@ -64,7 +68,7 @@ const SheetCellContainer = ({
       removeEventListener('keydown', closeOnKeydownEnter)
       removeEventListener('click', handleClickWhileCellIsEditing)
     }
-  }, [ cell.isCellEditing ])
+  }, [ isCellEditing ])
 
   const closeOnKeydownEnter = (e: KeyboardEvent) => {
     if(e.key === "Enter") {

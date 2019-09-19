@@ -63,13 +63,16 @@ const Tabs = ({
   const handleFileOpen = (nextActiveTab: string) => {
     setLocalActiveTab(nextActiveTab)
     tabs.includes(nextActiveTab)
-      ? window.setTimeout(() => updateActiveTab(nextActiveTab), 10)
+      ? setTimeout(() => updateActiveTab(nextActiveTab), 10)
       : !['FOLDERS', 'USER', 'SHEET_SETTINGS', 'ORGANIZATION'].includes(nextActiveTab)
         ? (
             setLocalTabs([ ...localTabs, nextActiveTab]),
             setTimeout(() => openFileInNewTab(nextActiveTab), 10)
           )
-        : setLocalActiveTab(nextActiveTab)
+        : (
+            setLocalActiveTab(nextActiveTab),
+            setTimeout(() => updateActiveTab(nextActiveTab), 10)
+          )
   }
 
   return (
