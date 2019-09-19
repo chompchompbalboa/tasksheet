@@ -1,9 +1,11 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
+
+import { ARROW_DOWN } from '@app/assets/icons'
 
 import { AppState } from '@app/state'
 import { Sheet } from '@app/state/sheet/types'
@@ -13,18 +15,33 @@ import Icon from '@/components/Icon'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetActionCellStyleButton = ({
+const SheetActionCellStyleColorPicker = ({
   sheetId,
   icon,
   sheetStylesSet,
   updateSheetStylesSet
-}: SheetActionCellStyleButtonProps) => {
+}: SheetActionCellStyleColorPickerProps) => {
   
+  // Redux
   const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
   const rows = useSelector((state: AppState) => state.sheet.rows)
   const selections = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].selections)
   const sheetVisibleColumns = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].visibleColumns)
   const sheetVisibleRows = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].visibleRows)
+  
+  // Dropdown
+  const dropdown = useRef(null)
+  const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
+  useEffect(() => {
+    if(isDropdownVisible) { addEventListener('click', closeOnClickOutside) }
+    else { removeEventListener('click', closeOnClickOutside) }
+    return () => removeEventListener('click', closeOnClickOutside)
+  })
+  const closeOnClickOutside = (e: MouseEvent) => {
+    if(!dropdown.current.contains(e.target)) {
+      setIsDropdownVisible(false)
+    }
+  }
   
   const addOrDeleteFromSet = sheetStylesSet && sheetStylesSet.has(selections.rangeStartCellId) ? 'DELETE' : 'ADD'
 
@@ -70,11 +87,26 @@ const SheetActionCellStyleButton = ({
   }
 
   return (
-    <Container
-      containerBackgroundColor={userColorPrimary}
-      onClick={handleContainerClick}>
-      <Icon 
-        icon={icon}/>
+    <Container>
+      <CurrentColorContainer
+        containerBackgroundColor={userColorPrimary}
+        onClick={handleContainerClick}>
+        <Icon 
+          icon={icon}/>
+        <CurrentColor
+          currentColor='red'/>
+      </CurrentColorContainer>
+      <DropdownToggle
+        dropdownToggleBackgroundColor={userColorPrimary}
+        onClick={() => setIsDropdownVisible(true)}>
+        <Icon 
+          icon={ARROW_DOWN}/>
+      </DropdownToggle>
+      <Dropdown
+        ref={dropdown}
+        isDropdownVisible={isDropdownVisible}>
+        Dropdown
+      </Dropdown>
     </Container>
   )
 }
@@ -82,7 +114,7 @@ const SheetActionCellStyleButton = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetActionCellStyleButtonProps {
+interface SheetActionCellStyleColorPickerProps {
   sheetId: Sheet['id']
   icon: string
   sheetStylesSet: Set<string>
@@ -102,8 +134,17 @@ const Container = styled.div`
   color: rgb(80, 80, 80);
   text-decoration: none;
   border-radius: 3px;
-  padding: 0.4rem;
+`
+
+const CurrentColorContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0.325rem 0.4rem;
   transition: all 0.05s;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
   &:hover {
     background-color: ${ ({ containerBackgroundColor }: IContainer) => containerBackgroundColor};
     color: rgb(240, 240, 240);
@@ -113,7 +154,47 @@ interface IContainer {
   containerBackgroundColor: string
 }
 
+const CurrentColor = styled.div`
+  width: 100%;
+  height: 0.15rem;
+  background-color: ${ ({ currentColor }: ICurrentColor ) => currentColor};
+`
+interface ICurrentColor {
+  currentColor: string
+}
+
+const DropdownToggle = styled.div`
+  cursor: pointer;
+  padding: 0.4rem 0.1rem;
+  border-left: 1px solid rgb(170, 170, 170);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.05s;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  &:hover {
+    background-color: ${ ({ dropdownToggleBackgroundColor }: IDropdownToggle) => dropdownToggleBackgroundColor};
+    color: rgb(240, 240, 240);
+  }
+`
+interface IDropdownToggle {
+  dropdownToggleBackgroundColor: string
+}
+
+const Dropdown = styled.div`
+  display: ${ ({ isDropdownVisible }: IDropdown) => isDropdownVisible ? 'block' : 'none' };
+  position: absolute;
+  margin-left: 0.375rem;
+  top: 100%;
+  background-color: white;
+`
+interface IDropdown {
+  isDropdownVisible: boolean
+}
+
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetActionCellStyleButton
+export default SheetActionCellStyleColorPicker

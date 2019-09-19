@@ -331,7 +331,9 @@ export const createSheetView = (sheetId: string, viewName: string): ThunkAction 
         visibleRows: clone(sourceSheet.visibleRows),
         selections: defaultSheetSelections,
         styles: {
-          BOLD: sourceSheet.styles.BOLD
+          BACKGROUND_COLOR: sourceSheet.styles.BACKGROUND_COLOR,
+          BOLD: sourceSheet.styles.BOLD,
+          ITALIC: sourceSheet.styles.ITALIC
         }
       },
       null, // Cells
@@ -656,7 +658,9 @@ export const loadSheet = (sheetFromServer: SheetFromServer): ThunkAction => {
       visibleRows: null,
       selections: defaultSheetSelections,
       styles: {
-        BOLD: new Set
+        BACKGROUND_COLOR: new Set,
+        BOLD: new Set,
+        ITALIC: new Set
       }
     }
     

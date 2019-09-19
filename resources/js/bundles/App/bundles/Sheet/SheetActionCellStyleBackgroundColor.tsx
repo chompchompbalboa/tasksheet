@@ -4,7 +4,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { ITALIC } from '@app/assets/icons'
+import { BACKGROUND_COLOR } from '@app/assets/icons'
 
 import { AppState } from '@app/state'
 import { Sheet } from '@app/state/sheet/types'
@@ -12,14 +12,14 @@ import {
   updateSheet
 } from '@app/state/sheet/actions'
 
-import SheetActionCellStyleButton from '@app/bundles/Sheet/SheetActionCellStyleButton'
+import SheetActionCellStyleColorPicker from '@app/bundles/Sheet/SheetActionCellStyleColorPicker'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetActionCellStyleItalic = ({
+const SheetActionCellStyleBackgroundColor = ({
   sheetId
-}: SheetActionCellStyleItalicProps) => {
+}: SheetActionCellStyleBackgroundColorProps) => {
   
   const dispatch = useDispatch()
   
@@ -28,15 +28,15 @@ const SheetActionCellStyleItalic = ({
   const updateSheetStylesSet = (nextSheetStylesSet: Set<string>) => {
     dispatch(updateSheet(sheetId, { styles: {
       ...sheetStyles,
-      ITALIC: nextSheetStylesSet 
+      BACKGROUND_COLOR: nextSheetStylesSet 
     }}))
   }
 
   return (
-    <SheetActionCellStyleButton
+    <SheetActionCellStyleColorPicker
       sheetId={sheetId}
-      icon={ITALIC}
-      sheetStylesSet={sheetStyles && sheetStyles.ITALIC}
+      icon={BACKGROUND_COLOR}
+      sheetStylesSet={sheetStyles && sheetStyles.BACKGROUND_COLOR}
       updateSheetStylesSet={updateSheetStylesSet}/>
   )
 }
@@ -44,11 +44,11 @@ const SheetActionCellStyleItalic = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetActionCellStyleItalicProps {
+interface SheetActionCellStyleBackgroundColorProps {
   sheetId: Sheet['id']
 }
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetActionCellStyleItalic
+export default SheetActionCellStyleBackgroundColor

@@ -6,6 +6,7 @@ import styled from 'styled-components'
 
 import { Sheet, SheetColumn, SheetColumns, SheetFilter, SheetFilters, SheetGroup, SheetGroups, SheetSort, SheetSorts } from '@app/state/sheet/types'
 
+import SheetActionCellStyleBackgroundColor from '@app/bundles/Sheet/SheetActionCellStyleBackgroundColor'
 import SheetActionCellStyleBold from '@app/bundles/Sheet/SheetActionCellStyleBold'
 import SheetActionCellStyleItalic from '@app/bundles/Sheet/SheetActionCellStyleItalic'
 import SheetActionCreateRows from '@app/bundles/Sheet/SheetActionCreateRows'
@@ -65,6 +66,8 @@ const SheetActions = ({
       <SheetActionCellStyleBold
         sheetId={sheetId}/>
       <SheetActionCellStyleItalic
+        sheetId={sheetId}/>
+      <SheetActionCellStyleBackgroundColor
         sheetId={sheetId}/>
     </Container>
   )
