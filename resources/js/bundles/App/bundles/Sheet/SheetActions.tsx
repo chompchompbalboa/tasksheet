@@ -8,6 +8,7 @@ import { Sheet, SheetColumn, SheetColumns, SheetFilter, SheetFilters, SheetGroup
 
 import SheetActionCellStyleBackgroundColor from '@app/bundles/Sheet/SheetActionCellStyleBackgroundColor'
 import SheetActionCellStyleBold from '@app/bundles/Sheet/SheetActionCellStyleBold'
+import SheetActionCellStyleColor from '@app/bundles/Sheet/SheetActionCellStyleColor'
 import SheetActionCellStyleItalic from '@app/bundles/Sheet/SheetActionCellStyleItalic'
 import SheetActionCreateRows from '@app/bundles/Sheet/SheetActionCreateRows'
 import SheetActionDownloadCsv from '@app/bundles/Sheet/SheetActionDownloadCsv'
@@ -68,6 +69,8 @@ const SheetActions = ({
       <SheetActionCellStyleItalic
         sheetId={sheetId}/>
       <SheetActionCellStyleBackgroundColor
+        sheetId={sheetId}/>
+      <SheetActionCellStyleColor
         sheetId={sheetId}/>
     </Container>
   )

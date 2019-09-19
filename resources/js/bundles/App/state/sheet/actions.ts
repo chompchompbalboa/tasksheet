@@ -333,6 +333,7 @@ export const createSheetView = (sheetId: string, viewName: string): ThunkAction 
         styles: {
           BACKGROUND_COLOR: sourceSheet.styles.BACKGROUND_COLOR,
           BOLD: sourceSheet.styles.BOLD,
+          COLOR: sourceSheet.styles.COLOR,
           ITALIC: sourceSheet.styles.ITALIC,
           colorReferences: {}
         }
@@ -661,6 +662,7 @@ export const loadSheet = (sheetFromServer: SheetFromServer): ThunkAction => {
       styles: {
         BACKGROUND_COLOR: new Set,
         BOLD: new Set,
+        COLOR: new Set,
         ITALIC: new Set,
         colorReferences: {}
       }

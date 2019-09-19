@@ -4,7 +4,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { BACKGROUND_COLOR } from '@app/assets/icons'
+import { COLOR } from '@app/assets/icons'
 
 import { AppState } from '@app/state'
 import { Sheet } from '@app/state/sheet/types'
@@ -17,9 +17,9 @@ import SheetActionCellStyleColorPicker from '@app/bundles/Sheet/SheetActionCellS
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetActionCellStyleBackgroundColor = ({
+const SheetActionCellStyleColor = ({
   sheetId
-}: SheetActionCellStyleBackgroundColorProps) => {
+}: SheetActionCellStyleColorProps) => {
   
   const dispatch = useDispatch()
   
@@ -28,10 +28,10 @@ const SheetActionCellStyleBackgroundColor = ({
   const updateSheetStyles = (nextSheetStylesSet: Set<string>, nextSheetStylesColorReference: { [cellId: string]: string }) => {
     dispatch(updateSheet(sheetId, { styles: {
       ...sheetStyles,
-      BACKGROUND_COLOR: nextSheetStylesSet,
+      COLOR: nextSheetStylesSet,
       colorReferences: {
         ...sheetStyles.colorReferences,
-        BACKGROUND_COLOR: nextSheetStylesColorReference
+        COLOR: nextSheetStylesColorReference
       }
     }}, true))
   }
@@ -39,10 +39,10 @@ const SheetActionCellStyleBackgroundColor = ({
   return (
     <SheetActionCellStyleColorPicker
       sheetId={sheetId}
-      icon={BACKGROUND_COLOR}
-      initialColor='#f44336'
-      sheetStylesSet={sheetStyles && sheetStyles.BACKGROUND_COLOR}
-      sheetStylesColorReference={sheetStyles && sheetStyles.colorReferences && sheetStyles.colorReferences.BACKGROUND_COLOR}
+      icon={COLOR}
+      initialColor='black'
+      sheetStylesSet={sheetStyles && sheetStyles.COLOR}
+      sheetStylesColorReference={sheetStyles && sheetStyles.colorReferences && sheetStyles.colorReferences.COLOR}
       updateSheetStyles={updateSheetStyles}/>
   )
 }
@@ -50,11 +50,11 @@ const SheetActionCellStyleBackgroundColor = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetActionCellStyleBackgroundColorProps {
+interface SheetActionCellStyleColorProps {
   sheetId: Sheet['id']
 }
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetActionCellStyleBackgroundColor
+export default SheetActionCellStyleColor

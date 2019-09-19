@@ -2,7 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from 'react'
-import { CirclePicker } from 'react-color'
+import { CirclePicker, ColorResult } from 'react-color'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -19,6 +19,7 @@ import Icon from '@/components/Icon'
 const SheetActionCellStyleColorPicker = ({
   sheetId,
   icon,
+  initialColor,
   sheetStylesSet,
   sheetStylesColorReference,
   updateSheetStyles,
@@ -26,10 +27,7 @@ const SheetActionCellStyleColorPicker = ({
   
   // Redux
   const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
-  const rows = useSelector((state: AppState) => state.sheet.rows)
   const selections = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].selections)
-  const sheetVisibleColumns = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].visibleColumns)
-  const sheetVisibleRows = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].visibleRows)
   
   // Dropdown
   const dropdown = useRef(null)
@@ -46,58 +44,61 @@ const SheetActionCellStyleColorPicker = ({
   }
 
   // Local Color
-  const [ localColor, setLocalColor ] = useState('rgb(0,0,0)')
+  const [ localColor, setLocalColor ] = useState(initialColor || 'black')
 
-  const handleContainerClick = () => {
+  const handleContainerClick = (color?: string) => {
     const {
-      rangeStartCellId,
-      rangeStartColumnId,
-      rangeStartRowId,
-      rangeEndCellId,
-      rangeEndColumnId,
-      rangeEndRowId,
+      rangeCellIds,
+      rangeStartCellId
     } = selections
 
-    // Range
-    if(rangeEndCellId) {
-      const rangeStartColumnIndex = sheetVisibleColumns.findIndex(visibleColumnId => visibleColumnId === rangeStartColumnId)
-      const rangeStartRowIndex = sheetVisibleRows.findIndex(visibleRowId => visibleRowId === rangeStartRowId)
-      const rangeEndColumnIndex = sheetVisibleColumns.findIndex(visibleColumnId => visibleColumnId === rangeEndColumnId)
-      const rangeEndRowIndex = sheetVisibleRows.findIndex(visibleRowId => visibleRowId === rangeEndRowId)
-      const nextSheetStylesSet = new Set([ ...sheetStylesSet ])
-      const nextSheetStylesColorReference = { ...sheetStylesColorReference }
+    const nextColor = color || localColor
+    const nextSheetStylesSet = new Set([ ...sheetStylesSet ])
+    const nextSheetStylesColorReference = { ...sheetStylesColorReference }
 
-      for(let rowIndex = rangeStartRowIndex; rowIndex <= rangeEndRowIndex; rowIndex++) {
-        const rowId = sheetVisibleRows[rowIndex]
-        if(rowId !== 'ROW_BREAK') {
-          const row = rows[rowId]
-          for(let columnIndex = rangeStartColumnIndex; columnIndex <= rangeEndColumnIndex; columnIndex++) {
-            const columnId = sheetVisibleColumns[columnIndex]
-            if(columnId !== 'COLUMN_BREAK') {
-              const cellId = row.cells[columnId]
-              nextSheetStylesSet.add(cellId)
-              nextSheetStylesColorReference[cellId] = localColor
-            }
-          }
-        }
-      }
-      updateSheetStyles(nextSheetStylesSet, nextSheetStylesColorReference)
-    }
-    // Cell
-    else if(rangeStartCellId) {
-      const nextSheetStylesSet = new Set([ ...sheetStylesSet ])
-      const nextSheetStylesColorReference = { ...sheetStylesColorReference }
-      nextSheetStylesSet.add(rangeStartCellId)
-      nextSheetStylesColorReference[rangeStartCellId] = localColor
-      updateSheetStyles(nextSheetStylesSet, nextSheetStylesColorReference)
-    }
+    // Ranges
+    rangeCellIds.forEach(cellId => {
+      nextSheetStylesSet.add(cellId)
+      nextSheetStylesColorReference[cellId] = nextColor
+    })
+    // Cells
+    nextSheetStylesSet.add(rangeStartCellId)
+    nextSheetStylesColorReference[rangeStartCellId] = nextColor
+
+    updateSheetStyles(nextSheetStylesSet, nextSheetStylesColorReference)
+  }
+
+  const handleColorChange = (color: ColorResult) => {
+    setLocalColor(color.hex)
+    handleContainerClick(color.hex)
+  }
+
+  const handleResetClick = () => {
+    const {
+      rangeCellIds,
+      rangeStartCellId
+    } = selections
+
+    const nextSheetStylesSet = new Set([ ...sheetStylesSet ])
+    const nextSheetStylesColorReference = { ...sheetStylesColorReference }
+
+    // Ranges
+    rangeCellIds.forEach(cellId => {
+      nextSheetStylesSet.delete(cellId)
+      nextSheetStylesColorReference[cellId] = null
+    })
+    // Cells
+    nextSheetStylesSet.delete(rangeStartCellId)
+    nextSheetStylesColorReference[rangeStartCellId] = null
+
+    updateSheetStyles(nextSheetStylesSet, nextSheetStylesColorReference)
   }
 
   return (
     <Container>
       <CurrentColorContainer
         containerBackgroundColor={userColorPrimary}
-        onClick={handleContainerClick}>
+        onClick={() => handleContainerClick()}>
         <Icon 
           icon={icon}/>
         <CurrentColor
@@ -112,7 +113,8 @@ const SheetActionCellStyleColorPicker = ({
       <Dropdown
         ref={dropdown}
         isDropdownVisible={isDropdownVisible}>
-        <ResetColor>
+        <ResetColor
+          onClick={handleResetClick}>
           <Icon 
             icon={RESET_COLOR}
             size="1.25rem"/>
@@ -120,7 +122,7 @@ const SheetActionCellStyleColorPicker = ({
         </ResetColor>
         <CirclePicker
           color={localColor}
-          onChange={color => setLocalColor(color.hex)}/>
+          onChange={color => handleColorChange(color)}/>
       </Dropdown>
     </Container>
   )
@@ -132,6 +134,7 @@ const SheetActionCellStyleColorPicker = ({
 interface SheetActionCellStyleColorPickerProps {
   sheetId: Sheet['id']
   icon: string
+  initialColor?: string
   sheetStylesSet: Set<string>
   sheetStylesColorReference: { [cellId: string]: string }
   updateSheetStyles(nextSheetStylesSet: Set<string>, nextSheetStylesColorReference: { [cellId: string ]: string }): void

@@ -135,6 +135,7 @@ const Container = styled.div`
         ? 'rgb(245, 245, 245)'
         : 'white'
   };
+  color: ${ ({ cellId, isCellSelected, sheetStyles }: IContainer ) => sheetStyles.COLOR.has(cellId) ? sheetStyles.colorReferences.COLOR[cellId] : 'black' };
   box-shadow: ${ ({ isCellSelected, highlightColor }: IContainer ) => isCellSelected ? 'inset 0px 0px 0px 2px ' + highlightColor : 'none' };
   overflow: ${ ({ isCellSelected, isCellInRange }: IContainer ) => isCellSelected || isCellInRange ? 'visible' : 'hidden' };
 `
