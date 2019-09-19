@@ -28,7 +28,7 @@ const SheetActionCellStyleItalic = ({
   const updateSheetStylesSet = (nextSheetStylesSet: Set<string>) => {
     dispatch(updateSheet(sheetId, { styles: {
       ...sheetStyles,
-      ITALIC: nextSheetStylesSet 
+      italic: nextSheetStylesSet 
     }}))
   }
 
@@ -36,7 +36,7 @@ const SheetActionCellStyleItalic = ({
     <SheetActionCellStyleButton
       sheetId={sheetId}
       icon={ITALIC}
-      sheetStylesSet={sheetStyles && sheetStyles.ITALIC}
+      sheetStylesSet={sheetStyles && sheetStyles.italic}
       updateSheetStylesSet={updateSheetStylesSet}/>
   )
 }

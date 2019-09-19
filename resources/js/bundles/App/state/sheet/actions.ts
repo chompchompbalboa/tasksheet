@@ -331,11 +331,12 @@ export const createSheetView = (sheetId: string, viewName: string): ThunkAction 
         visibleRows: clone(sourceSheet.visibleRows),
         selections: defaultSheetSelections,
         styles: {
-          BACKGROUND_COLOR: sourceSheet.styles.BACKGROUND_COLOR,
-          BOLD: sourceSheet.styles.BOLD,
-          COLOR: sourceSheet.styles.COLOR,
-          ITALIC: sourceSheet.styles.ITALIC,
-          colorReferences: {}
+          backgroundColor: sourceSheet.styles.backgroundColor,
+          backgroundColorReference: sourceSheet.styles.backgroundColorReference,
+          bold: sourceSheet.styles.bold,
+          color: sourceSheet.styles.color,
+          colorReference: sourceSheet.styles.colorReference,
+          italic: sourceSheet.styles.italic,
         }
       },
       null, // Cells
@@ -660,11 +661,12 @@ export const loadSheet = (sheetFromServer: SheetFromServer): ThunkAction => {
       visibleRows: null,
       selections: defaultSheetSelections,
       styles: {
-        BACKGROUND_COLOR: new Set,
-        BOLD: new Set,
-        COLOR: new Set,
-        ITALIC: new Set,
-        colorReferences: {}
+        backgroundColor: new Set,
+        backgroundColorReference: {},
+        bold: new Set,
+        color: new Set,
+        colorReference: {},
+        italic: new Set,
       }
     }
     

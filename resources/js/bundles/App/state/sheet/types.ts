@@ -53,15 +53,12 @@ export type SheetSelections = {
   rangeEndCellId: SheetCell['id']
 }
 export type SheetStyles = {
-  BACKGROUND_COLOR: Set<string>
-  BOLD: Set<string>
-  COLOR: Set<string>
-  ITALIC: Set<string>
-  colorReferences: SheetStylesColorReferences
-}
-export type SheetStylesColorReferences = {
-  BACKGROUND_COLOR?: { [cellId: string]: string }
-  COLOR?: { [cellId: string]: string }
+  backgroundColor: Set<string>
+  backgroundColorReference: { [cellId: string]: string }
+  color: Set<string>
+  colorReference: { [cellId: string]: string }
+  bold: Set<string>
+  italic: Set<string>
 }
 
 export type SheetFromServer = {

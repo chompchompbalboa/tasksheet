@@ -129,13 +129,13 @@ const Container = styled.div`
   border-bottom: 0.5px solid rgb(180, 180, 180);
   user-select: none;
   background-color: ${ ({ cellId, isCellSelected, sheetStyles }: IContainer ) => 
-    sheetStyles.BACKGROUND_COLOR.has(cellId)
-      ? sheetStyles.colorReferences.BACKGROUND_COLOR[cellId]
+    sheetStyles.backgroundColor.has(cellId)
+      ? sheetStyles.backgroundColorReference[cellId]
       : isCellSelected
         ? 'rgb(245, 245, 245)'
         : 'white'
   };
-  color: ${ ({ cellId, isCellSelected, sheetStyles }: IContainer ) => sheetStyles.COLOR.has(cellId) ? sheetStyles.colorReferences.COLOR[cellId] : 'black' };
+  color: ${ ({ cellId, isCellSelected, sheetStyles }: IContainer ) => sheetStyles.color.has(cellId) ? sheetStyles.colorReference[cellId] : 'black' };
   box-shadow: ${ ({ isCellSelected, highlightColor }: IContainer ) => isCellSelected ? 'inset 0px 0px 0px 2px ' + highlightColor : 'none' };
   overflow: ${ ({ isCellSelected, isCellInRange }: IContainer ) => isCellSelected || isCellInRange ? 'visible' : 'hidden' };
 `

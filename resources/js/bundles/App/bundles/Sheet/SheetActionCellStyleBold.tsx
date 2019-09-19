@@ -28,7 +28,7 @@ const SheetActionCellStyleBold = ({
   const updateSheetStylesSet = (nextSheetStylesSet: Set<string>) => {
     dispatch(updateSheet(sheetId, { styles: {
       ...sheetStyles,
-      BOLD: nextSheetStylesSet 
+      bold: nextSheetStylesSet 
     }}))
   }
 
@@ -36,7 +36,7 @@ const SheetActionCellStyleBold = ({
     <SheetActionCellStyleButton
       sheetId={sheetId}
       icon={BOLD}
-      sheetStylesSet={sheetStyles && sheetStyles.BOLD}
+      sheetStylesSet={sheetStyles && sheetStyles.bold}
       updateSheetStylesSet={updateSheetStylesSet}/>
   )
 }

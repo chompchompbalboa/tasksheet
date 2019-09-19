@@ -175,8 +175,8 @@ const Container = styled.div`
   align-items: center;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-weight: ${ ({ cellId, styles }: IContainer ) => styles.BOLD.has(cellId) ? 'bold' : 'normal' };
-  font-style: ${ ({ cellId, styles }: IContainer ) => styles.ITALIC.has(cellId) ? 'italic' : 'normal' };
+  font-weight: ${ ({ cellId, styles }: IContainer ) => styles.bold.has(cellId) ? 'bold' : 'normal' };
+  font-style: ${ ({ cellId, styles }: IContainer ) => styles.italic.has(cellId) ? 'italic' : 'normal' };
 `
 interface IContainer {
   cellId: SheetCell['id']

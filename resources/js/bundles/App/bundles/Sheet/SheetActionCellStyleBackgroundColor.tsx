@@ -28,11 +28,8 @@ const SheetActionCellStyleBackgroundColor = ({
   const updateSheetStyles = (nextSheetStylesSet: Set<string>, nextSheetStylesColorReference: { [cellId: string]: string }) => {
     dispatch(updateSheet(sheetId, { styles: {
       ...sheetStyles,
-      BACKGROUND_COLOR: nextSheetStylesSet,
-      colorReferences: {
-        ...sheetStyles.colorReferences,
-        BACKGROUND_COLOR: nextSheetStylesColorReference
-      }
+      backgroundColor: nextSheetStylesSet,
+      backgroundColorReference: nextSheetStylesColorReference
     }}, true))
   }
 
@@ -41,8 +38,8 @@ const SheetActionCellStyleBackgroundColor = ({
       sheetId={sheetId}
       icon={BACKGROUND_COLOR}
       initialColor='rgba(0, 0, 0, 0.125)'
-      sheetStylesSet={sheetStyles && sheetStyles.BACKGROUND_COLOR}
-      sheetStylesColorReference={sheetStyles && sheetStyles.colorReferences && sheetStyles.colorReferences.BACKGROUND_COLOR}
+      sheetStylesSet={sheetStyles && sheetStyles.backgroundColor}
+      sheetStylesColorReference={sheetStyles && sheetStyles.backgroundColorReference}
       updateSheetStyles={updateSheetStyles}/>
   )
 }
