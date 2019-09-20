@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 import React, { memo, MouseEvent, useCallback, useEffect, useState } from 'react'
 import { areEqual } from 'react-window'
-import { batch, connect } from 'react-redux'
+import { batch, connect, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { query } from '@app/api'
@@ -11,6 +11,9 @@ import { query } from '@app/api'
 import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
 import { 
+  copySheetRange as copySheetRangeAction,
+  cutSheetRange as cutSheetRangeAction,
+  pasteSheetRange as pasteSheetRangeAction,
   createSheetRow as createSheetRowAction,
   loadSheet as loadSheetAction,
   updateSheet as updateSheetAction,
@@ -137,6 +140,8 @@ const SheetComponent = memo(({
     }
   }, [ activeTab ])
 
+  const dispatch = useDispatch()
+  
   useEffect(() => {
     if(isActiveFile) { 
       addEventListener('cut', handleCut) 
@@ -156,15 +161,15 @@ const SheetComponent = memo(({
   }, [ activeTab ])
 
   const handleCut = (e: ClipboardEvent) => {
-    console.log('handleCut')
+    dispatch(cutSheetRangeAction(id))
   }
 
   const handleCopy = (e: ClipboardEvent) => {
-    console.log('handleCopy')
+    dispatch(copySheetRangeAction(id))
   }
 
   const handlePaste = (e: ClipboardEvent) => {
-    console.log('handlePaste')
+    dispatch(pasteSheetRangeAction(id))
   }
 
   const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)

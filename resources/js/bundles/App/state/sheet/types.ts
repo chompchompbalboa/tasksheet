@@ -16,6 +16,23 @@ export type SheetActiveUpdates = {
   columnRenamingId?: SheetColumn['id']
 }
 
+export type SheetClipboard = {
+  sheetId: Sheet['id']
+  cutOrCopy: 'CUT' | 'COPY'
+  selections: SheetClipboardSelections
+}
+export type SheetClipboardSelections = {
+  rangeCellIds: Set<SheetCell['id']>
+  rangeStartColumnId: SheetColumn['id']
+  rangeStartRowId: SheetRow['id']
+  rangeStartCellId: SheetCell['id']
+  rangeEndColumnId: SheetColumn['id']
+  rangeEndRowId: SheetRow['id']
+  rangeEndCellId: SheetCell['id']
+  visibleColumns: SheetColumn['id'][]
+  visibleRows: SheetRow['id'][]
+}
+
 export type Sheet = {
   id: string
   sourceSheetId: Sheet['id']

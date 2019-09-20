@@ -13,6 +13,7 @@ import {
   SheetActiveUpdates, 
   SheetCell, SheetCells, SheetCellUpdates,
   SheetColumn, SheetColumns, SheetColumnUpdates,
+  SheetClipboard,
   SheetRows, SheetRowUpdates, 
   SheetFilter, SheetFilters, SheetFilterUpdates,
   SheetGroup, SheetGroups, SheetGroupUpdates,
@@ -38,11 +39,120 @@ export type SheetActions =
   LoadSheet | UpdateSheet | 
   UpdateSheetActive |
   UpdateSheetCell | UpdateSheetCells | 
+  UpdateSheetClipboard |
   UpdateSheetColumn | UpdateSheetColumns | 
   DeleteSheetFilter | UpdateSheetFilter | UpdateSheetFilters |
   DeleteSheetGroup | UpdateSheetGroup | UpdateSheetGroups |
   UpdateSheetRow | UpdateSheetRows | 
   DeleteSheetSort | UpdateSheetSort | UpdateSheetSorts
+
+//-----------------------------------------------------------------------------
+// Copy Sheet Range
+//-----------------------------------------------------------------------------
+export const copySheetRange = (sheetId: Sheet['id']): ThunkAction => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      sheets: {
+        [sheetId]: {
+          selections: {
+            rangeCellIds,
+            rangeStartColumnId,
+            rangeStartRowId,
+            rangeStartCellId,
+            rangeEndColumnId,
+            rangeEndRowId,
+            rangeEndCellId,
+          },
+          visibleColumns,
+          visibleRows
+        }
+      }
+    } = getState().sheet
+    dispatch(updateSheetClipboard({
+      sheetId: sheetId,
+      cutOrCopy: 'COPY',
+      selections: {
+          rangeCellIds,
+          rangeStartColumnId,
+          rangeStartRowId,
+          rangeStartCellId,
+          rangeEndColumnId,
+          rangeEndRowId,
+          rangeEndCellId,
+          visibleColumns,
+          visibleRows
+      }
+    }))
+  }
+}
+
+//-----------------------------------------------------------------------------
+// Cut Sheet Range
+//-----------------------------------------------------------------------------
+export const cutSheetRange = (sheetId: Sheet['id']): ThunkAction => {
+  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+    const {
+      sheets: {
+        [sheetId]: {
+          selections: {
+            rangeCellIds,
+            rangeStartColumnId,
+            rangeStartRowId,
+            rangeStartCellId,
+            rangeEndColumnId,
+            rangeEndRowId,
+            rangeEndCellId,
+          },
+          visibleColumns,
+          visibleRows
+        }
+      }
+    } = getState().sheet
+    dispatch(updateSheetClipboard({
+      sheetId: sheetId,
+      cutOrCopy: 'CUT',
+      selections: {
+          rangeCellIds,
+          rangeStartColumnId,
+          rangeStartRowId,
+          rangeStartCellId,
+          rangeEndColumnId,
+          rangeEndRowId,
+          rangeEndCellId,
+          visibleColumns,
+          visibleRows
+      }
+    }))
+  }
+}
+
+//-----------------------------------------------------------------------------
+// Paste Sheet Range
+//-----------------------------------------------------------------------------
+export const pasteSheetRange = (sheetId: Sheet['id']): ThunkAction => {
+  return async (_, getState: () => AppState) => {
+    const {
+      clipboard
+    } = getState().sheet
+    console.log(sheetId)
+    console.log(clipboard)
+  }
+}
+
+//-----------------------------------------------------------------------------
+// Update Sheet Clipboard
+//-----------------------------------------------------------------------------
+export const UPDATE_SHEET_CLIPBOARD = 'UPDATE_SHEET_CLIPBOARD'
+interface UpdateSheetClipboard {
+	type: typeof UPDATE_SHEET_CLIPBOARD
+  nextSheetClipboard: SheetClipboard
+}
+export const updateSheetClipboard = (nextSheetClipboard: SheetClipboard): SheetActions => {
+	return {
+		type: UPDATE_SHEET_CLIPBOARD,
+		nextSheetClipboard
+	}
+}
 
 //-----------------------------------------------------------------------------
 // Create Sheet

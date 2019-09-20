@@ -1,12 +1,13 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import { Sheets, SheetActive, SheetCells, SheetColumns, SheetColumnTypes, SheetFilters, SheetGroups, SheetRows, SheetSorts } from '@app/state/sheet/types'
+import { Sheets, SheetActive, SheetCells, SheetColumns, SheetColumnTypes, SheetClipboard, SheetFilters, SheetGroups, SheetRows, SheetSorts } from '@app/state/sheet/types'
 import { 
   SheetActions, 
   LOAD_SHEET, UPDATE_SHEET, 
   UPDATE_SHEET_ACTIVE,
   UPDATE_SHEET_CELL, UPDATE_SHEET_CELLS,
+  UPDATE_SHEET_CLIPBOARD,
   UPDATE_SHEET_COLUMN, UPDATE_SHEET_COLUMNS,
   UPDATE_SHEET_FILTER, UPDATE_SHEET_FILTERS,
   UPDATE_SHEET_GROUP, UPDATE_SHEET_GROUPS,
@@ -19,6 +20,7 @@ import {
 //-----------------------------------------------------------------------------
 export interface SheetState {
   active: SheetActive
+  clipboard: SheetClipboard
   sheets: Sheets
   cells: SheetCells
   columns: SheetColumns
@@ -36,6 +38,11 @@ const columnTypesFromServer = initialData && initialData.columnTypes ? initialDa
 export const defaultSheetState: SheetState = {
   active: {
     columnRenamingId: null
+  },
+  clipboard: {
+    sheetId: null,
+    cutOrCopy: null,
+    selections: null
   },
   sheets: null,
   cells: null,
@@ -157,6 +164,14 @@ export const userReducer = (state: SheetState = defaultSheetState, action: Sheet
 			return {
         ...state,
         cells: nextSheetCells
+      }
+		}
+
+		case UPDATE_SHEET_CLIPBOARD: {
+			const { nextSheetClipboard } = action
+			return {
+        ...state,
+        clipboard: nextSheetClipboard
       }
 		}
 
