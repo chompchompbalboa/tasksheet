@@ -137,6 +137,36 @@ const SheetComponent = memo(({
     }
   }, [ activeTab ])
 
+  useEffect(() => {
+    if(isActiveFile) { 
+      addEventListener('cut', handleCut) 
+      addEventListener('copy', handleCopy) 
+      addEventListener('paste', handlePaste) 
+    }
+    else {
+      removeEventListener('cut', handleCut) 
+      removeEventListener('copy', handleCopy) 
+      removeEventListener('paste', handlePaste) 
+    }
+    return () => {
+      removeEventListener('cut', handleCut) 
+      removeEventListener('copy', handleCopy) 
+      removeEventListener('paste', handlePaste) 
+    }
+  }, [ activeTab ])
+
+  const handleCut = (e: ClipboardEvent) => {
+    console.log('handleCut')
+  }
+
+  const handleCopy = (e: ClipboardEvent) => {
+    console.log('handleCopy')
+  }
+
+  const handlePaste = (e: ClipboardEvent) => {
+    console.log('handlePaste')
+  }
+
   const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
   const [ contextMenuType, setContextMenuType ] = useState(null)
   const [ contextMenuId, setContextMenuId ] = useState(null)

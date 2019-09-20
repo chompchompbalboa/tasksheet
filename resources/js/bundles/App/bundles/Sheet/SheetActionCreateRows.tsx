@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { batch } from 'react-redux'
 import styled from 'styled-components'
 
-import { PLUS_SIGN } from '@app/assets/icons'
+import { ARROW_RIGHT } from '@app/assets/icons'
 
 import { Sheet } from '@app/state/sheet/types'
 
@@ -66,7 +66,7 @@ const SheetCreateRows = ({
       <AddRowButton
         onClick={() => createRows()}>
         <Icon
-          icon={PLUS_SIGN}/>
+          icon={ARROW_RIGHT}/>
       </AddRowButton>
     </Container>
   )
