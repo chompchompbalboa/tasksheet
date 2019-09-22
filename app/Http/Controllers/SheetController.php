@@ -10,6 +10,7 @@ use App\Models\SheetCell;
 use App\Models\SheetColumn;
 use App\Models\SheetRow;
 use App\Models\Sheet;
+use App\Models\SheetStyles;
 
 use App\Utils\Csv;
 use App\Utils\SheetUtils;
@@ -28,6 +29,7 @@ class SheetController extends Controller
     // Create the sheet
     $newSheetId = $request->input('newSheetId');
     $newSheet = Sheet::create([ 'id' => $newSheetId ]);
+    $newSheetStyles = SheetStyles::create([ 'id' => Str::uuid()->toString(), 'sheetId' => $newSheetId ]);
     // Create the columns
     $newColumns = [];
     $visibleColumns = [];
@@ -80,6 +82,7 @@ class SheetController extends Controller
       // Create the sheet
       $newSheetId = $request->input('newSheetId');
       $newSheet = Sheet::create([ 'id' => $newSheetId ]);
+      $newSheetStyles = SheetStyles::create([ 'id' => Str::uuid()->toString(), 'sheetId' => $newSheetId ]);
       // Build the array we'll use to insert the columns, rows, and cells
       $arrayOfRows = Csv::toArray($request->file('fileToUpload')->path());
       $this->createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $arrayOfRows);
