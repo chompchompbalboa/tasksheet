@@ -53,7 +53,7 @@ const SheetCell = memo(({
         updateSheetCell(cell.id, { value: cellValue }, { value: cell.value })
       }, 1000)
     }
-    return () => clearTimeout(updateSheetCellTimer);
+    return () => clearTimeout(updateSheetCellTimer)
   }, [ cellValue ])
   // Cell type
   const sheetCellTypes = {

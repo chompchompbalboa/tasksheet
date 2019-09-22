@@ -28,7 +28,7 @@ const SheetCellContainer = ({
 }: SheetCellContainerProps) => {
   
   const dispatch = useDispatch()
-  const updateSheetCell = useCallback((updates: SheetCellUpdates) => dispatch(updateSheetCellAction(cellId, updates, null, true)), [])
+  const updateSheetCell = useCallback((updates: SheetCellUpdates, skipServerUpdate: boolean = true) => dispatch(updateSheetCellAction(cellId, updates, null, skipServerUpdate)), [])
   
   const activeSheetId = useSelector((state: AppState) => state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].typeId)
   const isSelectedCellEditingPrevented = useSelector((state: AppState) => state.sheet.sheets[sheetId].selections.isSelectedCellEditingPrevented)
@@ -102,7 +102,7 @@ const SheetCellContainer = ({
       updateSheetCell({
         value: e.key,
         isCellEditing: true
-      })
+      }, false)
     }
     if(!isSelectedCellNavigationPrevented) {
       // Otherwise, navigate to an adjacent cell on an arrow or enter press
