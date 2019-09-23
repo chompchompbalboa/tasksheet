@@ -75,6 +75,22 @@ class SheetCellController extends Controller
     }
 
     /**
+     * Batch update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Cell  $cell
+     * @return \Illuminate\Http\Response
+     */
+    public function batchUpdate(Request $request)
+    {
+      $updates = $request->all();
+      foreach($updates as $update) {
+        SheetCell::find($update['id'])->update($update);
+      }
+      return response()->json(null, 200);
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Cell  $cell

@@ -46,6 +46,9 @@ Route::group([
   // Restore soft deletes
   Route::post('/files/restore/{file}', 'FileController@restore');
 
+  // Batch actions
+  Route::patch('/sheets/cells/batch/update', 'SheetCellController@batchUpdate');
+
   /*
   // Copy
   Route::post('/calendars/copy', 'CalendarController@copyFromRequest');

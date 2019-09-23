@@ -145,8 +145,8 @@ export const pasteSheetRange = (sheetId: Sheet['id']): ThunkAction => {
         rangeEndRowId: clipboardRangeEndRowId,
         rangeStartColumnId: clipboardRangeStartColumnId,
         rangeStartRowId: clipboardRangeStartRowId,
-        visibleColumns: clipboardVisibleColumns,
-        visibleRows: clipboardVisibleRows
+        visibleColumns: allClipboardVisibleColumns,
+        visibleRows: allClipboardVisibleRows
       }
     } = clipboard
     const {
@@ -154,9 +154,16 @@ export const pasteSheetRange = (sheetId: Sheet['id']): ThunkAction => {
         rangeStartColumnId: sheetRangeStartColumnId,
         rangeStartRowId: sheetRangeStartRowId,
       },
-      visibleColumns: sheetVisibleColumns,
-      visibleRows: sheetVisibleRows
+      visibleColumns: allSheetVisibleColumns,
+      visibleRows: allSheetVisibleRows
     } = sheet
+    const nextAllCells = clone(cells)
+    const sheetCellUpdates: SheetCellUpdates[] = []
+
+    const clipboardVisibleColumns = allClipboardVisibleColumns.filter(columnId => columnId !== 'COLUMN_BREAK')
+    const clipboardVisibleRows = allClipboardVisibleRows.filter(rowId => rowId !== 'ROW_BREAK')
+    const sheetVisibleColumns = allSheetVisibleColumns.filter(columnId => columnId !== 'COLUMN_BREAK')
+    const sheetVisibleRows = allSheetVisibleRows.filter(rowId => rowId !== 'COLUMN_BREAK')
 
     const clipboardRangeStartColumnIndex = clipboardVisibleColumns.indexOf(clipboardRangeStartColumnId)
     const sheetRangeStartColumnIndex = sheetVisibleColumns.indexOf(sheetRangeStartColumnId)
@@ -169,15 +176,22 @@ export const pasteSheetRange = (sheetId: Sheet['id']): ThunkAction => {
       const clipboardRow = rows[clipboardRowId]
       const sheetRow = rows[sheetRowId]
 
-      for(let clipboardColumnIndex = clipboardVisibleColumns.indexOf(clipboardRangeStartColumnId); clipboardColumnIndex <= clipboardVisibleColumns.indexOf(clipboardRangeEndColumnId); clipboardColumnIndex++) {
-        const clipboardColumnId = clipboardVisibleColumns[clipboardColumnIndex]
-        const sheetColumnId = sheetVisibleColumns[sheetRangeStartColumnIndex + (clipboardColumnIndex - clipboardRangeStartColumnIndex)]
-        const clipboardCellId = clipboardRow.cells[clipboardColumnId]
-        const sheetCellId = sheetRow.cells[sheetColumnId]
-        const clipboardCell = cells[clipboardCellId]
-        sheetCellId && dispatch(updateSheetCell(sheetCellId, { value: clipboardCell.value }))
+      if(clipboardRow && sheetRow) {
+        for(let clipboardColumnIndex = clipboardVisibleColumns.indexOf(clipboardRangeStartColumnId); clipboardColumnIndex <= clipboardVisibleColumns.indexOf(clipboardRangeEndColumnId); clipboardColumnIndex++) {
+          const clipboardColumnId = clipboardVisibleColumns[clipboardColumnIndex]
+          const sheetColumnId = sheetVisibleColumns[sheetRangeStartColumnIndex + (clipboardColumnIndex - clipboardRangeStartColumnIndex)]
+          const clipboardCellId = clipboardRow.cells[clipboardColumnId]
+          const sheetCellId = sheetRow.cells[sheetColumnId]
+          const clipboardCell = cells[clipboardCellId]
+          if(clipboardCell && sheetCellId) {
+            nextAllCells[sheetCellId].value = clipboardCell.value
+            sheetCellUpdates.push({ id: sheetCellId, value: clipboardCell.value })
+          }
+        }
       }
     }
+    dispatch(updateSheetCells(nextAllCells))
+    mutation.updateSheetCells(sheetCellUpdates)
   }
 }
 

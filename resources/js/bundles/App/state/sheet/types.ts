@@ -174,6 +174,7 @@ export type SheetCell = {
   isCellSelected: boolean
 }
 export interface SheetCellUpdates {
+  id?: string
   value?: string
   isCellEditing?: boolean
   isCellSelected?: boolean

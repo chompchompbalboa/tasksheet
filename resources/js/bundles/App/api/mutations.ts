@@ -106,6 +106,12 @@ export const updateSheetCell = async (id: string, updates: SheetCellUpdates) => 
 	})
 }
 
+export const updateSheetCells = async (updates: SheetCellUpdates[]) => {
+	return axios.patch('/app/sheets/cells/batch/update', updates).then(response => {
+		return response.data
+	})
+}
+
 export const createSheetCellFiles = async (sheetId: Sheet['id'], sheetCellId: SheetCell['id'], filesToUpload: File[]) => {
   const formData = new FormData()
   formData.append('sheetId', sheetId)
