@@ -8,10 +8,9 @@ import { AppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
 import { Files, Folders } from '@app/state/folder/types'
 import { 
-  updateActiveFileId as updateActiveFileIdAction,
   updateActiveFolderPath as updateActiveFolderPathAction 
 } from '@app/state/folder/actions'
-import { selectActiveFileId, selectActiveFolderPath, selectFiles, selectFolders, selectIsSavingNewFile, selectOnFileSave, selectRootFolderIds } from '@app/state/folder/selectors'
+import { selectActiveFolderPath, selectFiles, selectFolders, selectIsSavingNewFile, selectOnFileSave, selectRootFolderIds } from '@app/state/folder/selectors'
 
 import Content from '@app/bundles/Content/Content'
 import FoldersFolder from '@app/bundles/Folders/FoldersFolder'
@@ -22,7 +21,6 @@ import FoldersSidebar from '@app/bundles/Folders/FoldersSidebar'
 // Redux
 //-----------------------------------------------------------------------------
 const mapStateToProps = (state: AppState) => ({
-  activeFileId: selectActiveFileId(state),
   activeFolderPath: selectActiveFolderPath(state),
   files: selectFiles(state),
   folders: selectFolders(state),
@@ -32,7 +30,6 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-  updateActiveFileId: (nextActiveFolderId: string) => dispatch(updateActiveFileIdAction(nextActiveFolderId)),
   updateActiveFolderPath: (level: number, nextActiveFolderId: string) => dispatch(updateActiveFolderPathAction(level, nextActiveFolderId))
 })
 
@@ -40,7 +37,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
 // Component
 //-----------------------------------------------------------------------------
 const Folders = ({
-  activeFileId,
   activeFolderPath,
   files,
   folders,
@@ -49,7 +45,6 @@ const Folders = ({
   isSavingNewFile,
   onFileSave,
   rootFolderIds,
-  updateActiveFileId,
   updateActiveFolderPath
 }: FoldersProps) => {
 
@@ -60,7 +55,6 @@ const Folders = ({
   const Header = () => {
     return (
       <FoldersHeader
-        activeFileId={activeFileId}
         activeFolderPath={activeFolderPath}
         files={files}
         folders={folders}
@@ -73,7 +67,6 @@ const Folders = ({
     return (
       <>
         <FoldersFolder
-          activeFileId={activeFileId}
           activeFolderPath={activeFolderPath}
           files={files}
           folderId="ROOT"
@@ -81,13 +74,11 @@ const Folders = ({
           handleFileOpen={handleFileOpen}
           level={0}
           rootFolderIds={rootFolderIds}
-          updateActiveFileId={updateActiveFileId}
           updateActiveFolderPath={updateActiveFolderPath}/>
         {activeFolderPath.length > 0 && 
           activeFolderPath.map((folderId: string, index: number) => (
             <FoldersFolder 
               key={folderId}
-              activeFileId={activeFileId}
               activeFolderPath={activeFolderPath}
               files={files}
               folderId={folderId}
@@ -95,7 +86,6 @@ const Folders = ({
               handleFileOpen={handleFileOpen}
               level={index + 1}
               rootFolderIds={rootFolderIds}
-              updateActiveFileId={updateActiveFileId}
               updateActiveFolderPath={updateActiveFolderPath}/>))}
       </>
     )
@@ -116,7 +106,6 @@ const Folders = ({
 // Props
 //-----------------------------------------------------------------------------
 interface FoldersProps {
-  activeFileId: string
   activeFolderPath: string[]
   files: Files
   folders: Folders
@@ -125,7 +114,6 @@ interface FoldersProps {
   isSavingNewFile: boolean
   onFileSave: () => void
   rootFolderIds: string[]
-  updateActiveFileId(nextActiveFileId: string): void
   updateActiveFolderPath(level: number, nextActiveFolderId: string): void
 }
 

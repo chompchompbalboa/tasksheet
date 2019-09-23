@@ -6,11 +6,6 @@ import { AppState } from '@app/state'
 import { File, Files, Folder, Folders } from './types'
 
 //-----------------------------------------------------------------------------
-// Select Active File Id
-//-----------------------------------------------------------------------------
-export const selectActiveFileId = (state: AppState): string => state.folder.activeFileId
-
-//-----------------------------------------------------------------------------
 // Select Active Folder Path
 //-----------------------------------------------------------------------------
 export const selectActiveFolderPath = (state: AppState): string[] => state.folder.activeFolderPath

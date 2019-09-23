@@ -14,7 +14,6 @@ import AutosizeInput from 'react-input-autosize'
 // Component
 //-----------------------------------------------------------------------------
 const FoldersHeader = ({
-  activeFileId,
   activeFolderPath,
   files,
   folders,
@@ -22,7 +21,7 @@ const FoldersHeader = ({
   onFileSave
 }: FoldersHeaderProps) => {
 
-  const activeItem = activeFileId !== null ? files[activeFileId] : folders[activeFolderPath[activeFolderPath.length - 1]]
+  const activeItem = folders[activeFolderPath[activeFolderPath.length - 1]]
 
   const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
 
@@ -31,7 +30,7 @@ const FoldersHeader = ({
 
   useEffect(() => {
     !isSavingNewFile && setName(activeItem.name)
-  }, [ activeFileId, activeFolderPath ])
+  }, [ activeFolderPath ])
 
   useEffect(() => {
     isSavingNewFile && setName('')
@@ -79,7 +78,6 @@ const FoldersHeader = ({
 // Props
 //-----------------------------------------------------------------------------
 interface FoldersHeaderProps {
-  activeFileId: string
   activeFolderPath: string[]
   files: Files
   folders: Folders

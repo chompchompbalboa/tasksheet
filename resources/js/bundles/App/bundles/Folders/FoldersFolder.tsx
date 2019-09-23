@@ -13,7 +13,6 @@ import FoldersFolderFolder from '@app/bundles/Folders/FoldersFolderFolder'
 // Component
 //-----------------------------------------------------------------------------
 const FoldersFolder = ({
-  activeFileId,
   activeFolderPath,
   files,
   folderId,
@@ -21,7 +20,6 @@ const FoldersFolder = ({
   handleFileOpen,
   level,
   rootFolderIds,
-  updateActiveFileId,
   updateActiveFolderPath
 }: FoldersFolderProps) => {
 
@@ -48,10 +46,8 @@ const FoldersFolder = ({
           return (
             <FoldersFolderFile
               key={fileId}
-              activeFileId={activeFileId}
               handleFileOpen={handleFileOpen}
-              file={fileItem}
-              updateActiveFileId={updateActiveFileId}/>
+              file={fileItem}/>
           )
         })}
       </ItemsContainer>
@@ -63,7 +59,6 @@ const FoldersFolder = ({
 // Props
 //-----------------------------------------------------------------------------
 interface FoldersFolderProps {
-  activeFileId: string
   activeFolderPath: string[]
   files: Files
   folderId: string
@@ -71,7 +66,6 @@ interface FoldersFolderProps {
   handleFileOpen(nextActiveTabId: string): void
   level: number
   rootFolderIds: string[]
-  updateActiveFileId(nextActiveFileId: string): void
   updateActiveFolderPath(level: number, nextActiveFolderId: string): void
 }
 

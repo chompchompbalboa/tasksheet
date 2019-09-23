@@ -8,7 +8,6 @@ import {
   FolderActions,
   CREATE_FILE,
   CREATE_FOLDER,
-	UPDATE_ACTIVE_FILE_ID,
   UPDATE_ACTIVE_FOLDER_PATH,
   UPDATE_CLIPBOARD,
 	UPDATE_FOLDER,
@@ -25,7 +24,6 @@ const normalizedFolders = normalizer(
 	typeof initialData !== 'undefined' ? initialData.folders : defaultInitialData.folders
 )
 export const initialFoldersState: FolderState = {
-  activeFileId: null,
   activeFolderPath: [initialData.folders[0].id],
   clipboard: { itemId: null, cutOrCopy: null, folderOrFile: null },
 	folders: <Folders>normalizedFolders.entities.folder,
@@ -35,7 +33,6 @@ export const initialFoldersState: FolderState = {
 	rootFolderIds: normalizedFolders.result,
 }
 export type FolderState = {
-  activeFileId: string
   activeFolderPath: string[]
   clipboard: Clipboard
 	folders: { [key: string]: Folder }
@@ -83,15 +80,7 @@ export const folderReducer = (state = initialFoldersState, action: FolderActions
 				},
 			}
 		}
-
-		case UPDATE_ACTIVE_FILE_ID: {
-      const { nextActiveFileId } = action
-			return {
-				...state,
-				activeFileId: nextActiveFileId,
-			}
-		}
-
+      
 		case UPDATE_ACTIVE_FOLDER_PATH: {
       const { nextActiveFolderPath } = action
 			return {

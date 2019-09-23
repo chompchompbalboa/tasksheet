@@ -20,7 +20,7 @@ import { closeTab } from '@app/state/tab/actions'
 // Exports
 //-----------------------------------------------------------------------------
 export type FolderActions = 
-  UpdateActiveFileId | UpdateActiveFolderPath | 
+  UpdateActiveFolderPath | 
   UpdateClipboard |
   CreateFolder | UpdateFolder | UpdateFolders | 
   CreateFile | UpdateFile | UpdateFiles | 
@@ -37,22 +37,6 @@ const defaultFolder = (folderId: string): Folder => {
     files: [],
     folders: [],
   }
-}
-
-//-----------------------------------------------------------------------------
-// Update Active File Id
-//-----------------------------------------------------------------------------
-export const UPDATE_ACTIVE_FILE_ID = 'UPDATE_ACTIVE_FILE_ID'
-interface UpdateActiveFileId {
-	type: typeof UPDATE_ACTIVE_FILE_ID
-	nextActiveFileId: string
-}
-
-export const updateActiveFileId = (nextActiveFileId: string): FolderActions => {
-	return {
-		type: UPDATE_ACTIVE_FILE_ID,
-		nextActiveFileId: nextActiveFileId,
-	}
 }
 
 //-----------------------------------------------------------------------------

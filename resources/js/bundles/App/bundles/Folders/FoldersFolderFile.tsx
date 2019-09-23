@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { MouseEvent, useEffect, useRef, useState } from 'react'
+import React, { MouseEvent, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
@@ -32,32 +32,12 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
 // Component
 //-----------------------------------------------------------------------------
 const FoldersFolderFile = ({
-  activeFileId,
   deleteFile,
   file,
   handleFileOpen,
-  updateActiveFileId,
   updateClipboard,
   updateFile
 }: FoldersFolderFileProps) => {
-  
-  const container = useRef(null)
-  useEffect(() => {
-    if(activeFileId === file.id) {
-      addEventListener('mouseup', checkForClickOutside)
-    }
-    else {
-      removeEventListener('mouseup', checkForClickOutside)
-    }
-    return () => {
-      removeEventListener('mouseup', checkForClickOutside)
-    }
-  }, [ activeFileId ])
-  const checkForClickOutside = (e: Event) => {
-    if(!container.current.contains(e.target)) {
-      updateActiveFileId(null)
-    }
-  }
   
   const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
   const [ contextMenuTop, setContextMenuTop ] = useState(null)
@@ -96,10 +76,7 @@ const FoldersFolderFile = ({
   return (
     <>
       <Container
-        ref={container}
-        isHighlighted={file.id === activeFileId}
         isPreventedFromSelecting={file.isPreventedFromSelecting}
-        onClick={() => updateActiveFileId(file.id)}
         onContextMenu={e => handleContextMenu(e)}
         onDoubleClick={() => { if(!file.isPreventedFromSelecting) { handleFileOpen(file.id) }}}>
         <IconContainer
@@ -151,11 +128,9 @@ const FoldersFolderFile = ({
 // Props
 //-----------------------------------------------------------------------------
 interface FoldersFolderFileProps {
-  activeFileId: string
   deleteFile(fileId: string): void
   file: File
   handleFileOpen(nextActiveTabId: string): void
-  updateActiveFileId(nextActiveFileId: string): void
   updateClipboard(updates: ClipboardUpdates): void
   updateFile(fileId: string, updates: FileUpdates): void
 }
@@ -164,7 +139,6 @@ interface FoldersFolderFileProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 interface ContainerProps {
-  isHighlighted?: boolean
   isPreventedFromSelecting: boolean
 }
 
@@ -175,7 +149,7 @@ const Container = styled.div`
   padding: 0.125rem 0 0.125rem 0.325rem;
   display: flex;
   align-items: center;
-  background-color: ${ ({ isHighlighted }: ContainerProps ) => isHighlighted ? 'rgb(235, 235, 235)' : 'transparent' };
+  background-color: transparent;
   color: rgb(20, 20, 20);
   &:hover {
     background-color: rgb(235, 235, 235);
