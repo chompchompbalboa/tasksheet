@@ -88,7 +88,6 @@ class SheetController extends Controller
       $this->createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $arrayOfRows);
       return response()->json(null, 200);
     }
-  
 
     /**
      * Create a new sheet from an array of rows with the format:
@@ -98,6 +97,20 @@ class SheetController extends Controller
      * @return \Illuminate\Http\Response
      */
     public static function createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $arrayOfRows) {
+      $firstRow = $arrayOfRows[0];
+      $firstRowFirstCellValue = $arrayOfRows[0][array_keys($arrayOfRows[0])[0]];
+      $isColumnTypeInformationIncluded = Str::contains($firstRowFirstCellValue, '[TS]');
+      $delimiters = ['[', '][', ']'];
+      $columnTypes = [];
+      if($isColumnTypeInformationIncluded) {
+        foreach($firstRow as $columnName => $cellValue) {
+          $currentColumnTypeInformation = explode(']', $cellValue);
+          $columnType = str_replace('[', '', $currentColumnTypeInformation[1]);
+          array_push($columnTypes, $columnType);
+        }
+
+        array_splice($arrayOfRows, 0, 1);
+      }
       $arrayOfRowsCount = count($arrayOfRows);
       // Create the columns
       $columns = [];
@@ -112,7 +125,7 @@ class SheetController extends Controller
             'id' => $newColumnId,
             'sheetId' => $newSheet->id,
             'name' => $columnName,
-            'typeId' => SheetUtils::getColumnType($value),
+            'typeId' => $isColumnTypeInformationIncluded ? $columnTypes[$currentColumnIndex] : SheetUtils::getColumnType($value),
             'width' => $nextColumnWidth
           ]);
         }

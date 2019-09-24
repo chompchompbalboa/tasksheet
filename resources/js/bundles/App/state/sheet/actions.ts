@@ -1171,7 +1171,7 @@ export const allowSelectedCellEditing = (sheetId: Sheet['id']): ThunkAction => {
         ...selections,
         isSelectedCellEditingPrevented: false
       }
-    }))
+    }, true))
   }
 }
 
@@ -1189,7 +1189,7 @@ export const allowSelectedCellNavigation = (sheetId: Sheet['id']): ThunkAction =
         ...selections,
         isSelectedCellNavigationPrevented: false
       }
-    }))
+    }, true))
   }
 }
 
@@ -1229,7 +1229,7 @@ export const preventSelectedCellEditing = (sheetId: Sheet['id']): ThunkAction =>
         ...selections,
         isSelectedCellEditingPrevented: true
       }
-    }))
+    }, true))
   }
 }
 
@@ -1247,7 +1247,7 @@ export const preventSelectedCellNavigation = (sheetId: Sheet['id']): ThunkAction
         ...selections,
         isSelectedCellNavigationPrevented: true
       }
-    }))
+    }, true))
   }
 }
 
