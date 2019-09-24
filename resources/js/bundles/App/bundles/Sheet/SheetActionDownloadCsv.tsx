@@ -55,11 +55,14 @@ const SheetActionDownloadCsv = ({
   
   // Filename
   const [ filename, setFilename ] = useState(activeFilename)
-  const handleFilenameBlur = () => {
+  useEffect(() => {
+    setFilename(activeFilename)
+  }, [ activeFilename ])
+  const handleFilenameInputBlur = () => {
     dispatch(allowSelectedCellEditing(sheetId))
     dispatch(allowSelectedCellNavigation(sheetId))
   }
-  const handleFilenameFocus = () => {
+  const handleFilenameInputFocus = () => {
     dispatch(preventSelectedCellEditing(sheetId))
     dispatch(preventSelectedCellNavigation(sheetId))
   }
@@ -107,9 +110,9 @@ const SheetActionDownloadCsv = ({
             Filename&nbsp;&nbsp;
             <StyledInput
               value={filename}
-              onBlur={() => handleFilenameBlur()}
+              onBlur={() => handleFilenameInputBlur()}
               onChange={e => setFilename(e.target.value)}
-              onFocus={() => handleFilenameFocus()}/>
+              onFocus={() => handleFilenameInputFocus()}/>
           </DownloadOption>
           <DownloadOption>
             <DownloadOptionCheckbox
