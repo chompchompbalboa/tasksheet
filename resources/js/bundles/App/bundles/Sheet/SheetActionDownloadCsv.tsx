@@ -78,8 +78,8 @@ const SheetActionDownloadCsv = ({
 
   const columnTypeInformation = data && data.length > 0 ? visibleColumns.map(columnId => {
     const column = columns[columnId]
-    const columnType = columnTypes[column.typeId]
-    return '[TS][' + columnType.cellType + ']'
+    const columnType = columnId === 'COLUMN_BREAK' ? columnId : columnTypes[column.typeId].cellType
+    return '[TS][' + columnType + ']'
   }) : []
   
   const csvData = isIncludeColumnTypeInformation ? [ headers, columnTypeInformation, ...data ]  : [ headers, ...data ] 
