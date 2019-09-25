@@ -9,7 +9,10 @@ import { AppState } from '@app/state'
 import { Sheet, SheetActive, SheetActiveUpdates, SheetColumn, SheetColumnUpdates } from '@app/state/sheet/types'
 import { selectActive } from '@app/state/sheet/selectors'
 import {
-  clearSheetSelection as clearSheetSelectionAction,
+  allowSelectedCellEditing as allowSelectedCellEditingAction,
+  allowSelectedCellNavigation as allowSelectedCellNavigationAction,
+  preventSelectedCellEditing as preventSelectedCellEditingAction,
+  preventSelectedCellNavigation as preventSelectedCellNavigationAction,
   selectSheetColumns as selectSheetColumnsAction
 } from '@app/state/sheet/actions'
 
@@ -50,7 +53,10 @@ const SheetHeader = ({
   const dispatch = useDispatch()
   const rangeStartColumnId = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].selections.rangeStartColumnId)
   const selectSheetColumns = (startColumnId: SheetColumn['id'], endColumnId?: SheetColumn['id']) => dispatch(selectSheetColumnsAction(sheetId, startColumnId, endColumnId))
-  const clearSheetSelection = () => dispatch(clearSheetSelectionAction(sheetId))
+  const allowSelectedCellEditing = () => dispatch(allowSelectedCellEditingAction(sheetId))
+  const allowSelectedCellNavigation = () => dispatch(allowSelectedCellNavigationAction(sheetId))
+  const preventSelectedCellEditing = () => dispatch(preventSelectedCellEditingAction(sheetId))
+  const preventSelectedCellNavigation = () => dispatch(preventSelectedCellNavigationAction(sheetId))
   
   const isColumnBreak = id === 'COLUMN_BREAK'
 
@@ -65,6 +71,10 @@ const SheetHeader = ({
   useEffect(() => {
     if(columnRenamingId === id) { 
       setIsRenaming(true)
+      batch(() => {
+        preventSelectedCellEditing()
+        preventSelectedCellNavigation()
+      })
       addEventListener('keypress', handleKeypressWhileColumnIsRenaming)
     }
     else {
@@ -91,7 +101,8 @@ const SheetHeader = ({
   const handleColumnRenamingFinish = () => {
     setIsRenaming(false)
     batch(() => {
-      clearSheetSelection()
+      allowSelectedCellEditing()
+      allowSelectedCellNavigation()
       updateSheetActive({ columnRenamingId: null })
     })
     setTimeout(() => updateSheetColumn(id, { name: columnName }), 250)

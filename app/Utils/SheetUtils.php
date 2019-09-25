@@ -5,6 +5,7 @@ namespace App\Utils;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Sheet;
+use App\Models\SheetCell;
 use App\Models\SheetColumn;
 use App\Models\SheetRow;
 
@@ -17,7 +18,7 @@ class SheetUtils
     return "STRING";
   }
 
-  public static function createCsv(Sheet $sheet, string $filename, bool $includeColumnTypeInformation, $visibleRows) {
+  public static function createCsv(Sheet $sheet, bool $includeColumnTypeInformation, $visibleRows) {
     // Variables
     $headers = [];
     $columnTypeInformation = [];
@@ -46,25 +47,33 @@ class SheetUtils
     }
     // Rows
     foreach($visibleRows as $visibleRowId) {
-      $row = $sheet->rows->firstWhere('id', $visibleRowId);
+      $row = SheetRow::find($visibleRowId);
       if($row) {
         $rowValues = [];
         foreach($visibleColumns as $visibleColumnId) {
-          $cell = $row->cells->firstWhere('columnId', $visibleColumnId);
+          $cell = SheetCell::where([
+            [ 'columnId', $visibleColumnId ],
+            [ 'rowId', $visibleRowId ],
+          ])->first();
           if($cell) {
             array_push($rowValues, $cell->value);
           }
         }
         array_push($rows, $rowValues);
       }
+    }    
+    
+    // Write csv and return the string
+    $csvBuffer = fopen('php://memory', 'r+');
+    fputcsv($csvBuffer, $headers);
+    if($includeColumnTypeInformation) {
+        fputcsv($csvBuffer, $columnTypeInformation);
     }
-    // Write csv
-    $csv = fopen('tracksheet', 'w');
-    fputcsv($csv, $headers);
     foreach ($rows as $row) {
-        fputcsv($csv, $row);
+        fputcsv($csvBuffer, $row);
     }
-    fclose($csv);
-    return $csv;
+    rewind($csvBuffer);
+    $csv = stream_get_contents($csvBuffer);
+    return rtrim($csv);
   }
 }

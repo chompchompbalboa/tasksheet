@@ -69,22 +69,32 @@ const SheetActionDownloadCsv = ({
   }
 
   // Options
+  const [ downloadId, setDownloadId ] = useState(null)
   const [ filename, setFilename ] = useState(activeFilename)
   const [ isIncludeColumnTypeInformation, setIsIncludeColumnTypeInformation ] = useState(true)
   const [ isIncludeAssets, setIsIncludeAssets ] = useState(true)
-  const [ isDownloading, setIsDownloading ] = useState(false)
+  const [ isDownloadPreparing, setIsDownloadPreparing ] = useState(false)
+  const [ isDownloadPrepared, setIsDownloadPrepared ] = useState(false)
 
-  const handleDownloadContainerClick = () => {
-    setIsDownloading(true)
-    download.downloadSheet(sheetId, {
+  const handlePrepareDownloadClick = () => {
+    setIsDownloadPreparing(true)
+    download.prepareSheetDownload(sheetId, {
       filename: filename,
       includeAssets: isIncludeAssets,
       includeColumnTypeInformation: isIncludeColumnTypeInformation,
       visibleRows: visibleRows
-    }).then(response => {
-      setIsDownloading(false)
-      console.log(response)
+    }).then(sheetDownloadId => {
+      setIsDownloadPreparing(false)
+      setIsDownloadPrepared(true)
+      setDownloadId(sheetDownloadId)
     })
+  }
+  
+  const handleDownloadClick = () => {
+    if(isDownloadPrepared) {
+      const url = '/app/sheets/download/' + downloadId
+      window.open(url, '_blank')
+    }
   }
   /*
   const headers = visibleColumns ? visibleColumns.map(columnId => columnId !== 'COLUMN_BREAK' ? columns[columnId].name : null) : []
@@ -109,11 +119,10 @@ const SheetActionDownloadCsv = ({
   return (
     <Container>
       <DownloadContainer
-        //data={csvData}
-        //filename={filename + '.csv'}
+        isDownloadPrepared={isDownloadPrepared}
         containerBackgroundColor={userColorPrimary}
-        onClick={() => handleDownloadContainerClick()}>
-        <Icon icon={DOWNLOAD}/>&nbsp;{isDownloading ? '...' : 'CSV'}
+        onClick={isDownloadPrepared ? () => handleDownloadClick() : () => null}>
+        <Icon icon={DOWNLOAD}/>&nbsp;{isDownloadPrepared ? 'Download' : (isDownloadPreparing ? 'Preparing...' : 'Sheet')}
       </DownloadContainer>
       <DropdownToggle
         dropdownToggleBackgroundColor={userColorPrimary}
@@ -151,6 +160,12 @@ const SheetActionDownloadCsv = ({
               Include Photos and Files
             </DownloadOptionText>
           </DownloadOption>
+          <DownloadOption>
+            <DownloadButton
+              onClick={isDownloadPrepared ? () => handleDownloadClick() : () => handlePrepareDownloadClick()}>
+              {isDownloadPrepared ? 'Download' : (isDownloadPreparing ? 'Preparing...' : 'Prepare Download')}
+            </DownloadButton>
+          </DownloadOption>
         </DownloadOptions>
       </Dropdown>
     </Container>
@@ -178,7 +193,7 @@ const Container = styled.div`
 `
 
 const DownloadContainer = styled.div`
-  cursor: pointer;
+  cursor: ${ ({ isDownloadPrepared }: IDownloadContainer) => isDownloadPrepared ? 'pointer' : 'not-allowed'};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -189,11 +204,12 @@ const DownloadContainer = styled.div`
   border-bottom-left-radius: 3px;
   transition: all 0.05s;
   &:hover {
-    background-color: ${ ({ containerBackgroundColor }: IDownloadContainer) => containerBackgroundColor};
-    color: rgb(240, 240, 240);
+    background-color: ${ ({ isDownloadPrepared, containerBackgroundColor }: IDownloadContainer) => isDownloadPrepared ? containerBackgroundColor : 'auto'};
+    color: ${ ({ isDownloadPrepared }: IDownloadContainer) => isDownloadPrepared ? 'white' : 'rgb(80, 80, 80)'};
   }
 `
 interface IDownloadContainer {
+  isDownloadPrepared: boolean
   containerBackgroundColor: string
 }
 
@@ -255,6 +271,13 @@ const StyledInput = styled.input`
   outline: none;
   font-size: 0.9rem;
   padding: 0.0625rem;
+`
+
+const DownloadButton = styled.div`
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 5px;
+  border: 1px solid rgb(80, 80, 80);
 `
 
 //-----------------------------------------------------------------------------
