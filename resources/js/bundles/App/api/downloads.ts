@@ -1,15 +1,15 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import * as actions from './actions'
-import * as downloads from './downloads'
-import * as mutations from './mutations'
-import * as queries from './queries'
+import axios from '@/api/axios'
+import { Sheet, SheetDownloadOptions } from '@app/state/sheet/types' 
 
 //-----------------------------------------------------------------------------
-// Export
+// Queries
 //-----------------------------------------------------------------------------
-export const action = actions
-export const download = downloads
-export const mutation = mutations
-export const query = queries
+export const downloadSheet = async (sheetId: Sheet['id'], options: SheetDownloadOptions) => {
+	return axios.post('/app/sheets/download/' + sheetId, options).then(response => {
+		return response.data
+	})
+}
+

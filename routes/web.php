@@ -41,6 +41,7 @@ Route::group([
   Route::post('/sheets/cells/files/upload', 'SheetCellFileController@uploadFiles');
   
   // Downloads
+  Route::post('/sheets/download/{sheet}', 'SheetController@downloadSheet');
   Route::get('/sheets/cells/files/download/{file}', 'SheetCellFileController@downloadFiles');
   
   // Restore soft deletes

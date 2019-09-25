@@ -232,3 +232,10 @@ export type SheetView = {
   groups: SheetGroups
   sorts: SheetSorts
 }
+
+export type SheetDownloadOptions = {
+  filename: string
+  includeColumnTypeInformation: boolean
+  includeAssets: boolean
+  visibleRows: SheetRow['id'][]
+}

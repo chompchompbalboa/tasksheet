@@ -172,6 +172,22 @@ class SheetController extends Controller
     }
 
     /**
+     * Download the sheet
+     *
+     * @param  \App\Sheet  $sheet
+     * @return \Illuminate\Http\Response
+     */
+    public static function downloadSheet(Request $request, Sheet $sheet)
+    {
+      $filename = $request->input('filename');
+      $includeAssets = $request->input('includeAssets');
+      $includeColumnTypeInformation = $request->input('includeColumnTypeInformation');
+      $visibleRows = $request->input('visibleRows');
+      $sheetCsv = SheetUtils::createCsv($sheet, $filename, $includeColumnTypeInformation, $visibleRows);
+      dd($sheetCsv);
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  \App\Sheet  $sheet
