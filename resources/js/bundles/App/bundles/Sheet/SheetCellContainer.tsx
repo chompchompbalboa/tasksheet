@@ -31,9 +31,9 @@ const SheetCellContainer = ({
   const updateSheetCell = useCallback((updates: SheetCellUpdates, skipServerUpdate: boolean = true) => dispatch(updateSheetCellAction(cellId, updates, null, skipServerUpdate)), [])
   
   const activeSheetId = useSelector((state: AppState) => state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].typeId)
-  const isSelectedCellEditingPrevented = useSelector((state: AppState) => state.sheet.sheets[sheetId].selections.isSelectedCellEditingPrevented)
-  const isSelectedCellNavigationPrevented = useSelector((state: AppState) => state.sheet.sheets[sheetId].selections.isSelectedCellNavigationPrevented)
-  const sheetStyles = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].styles)
+  const isSelectedCellEditingPrevented = useSelector((state: AppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellEditingPrevented)
+  const isSelectedCellNavigationPrevented = useSelector((state: AppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellNavigationPrevented)
+  const sheetStyles = useSelector((state: AppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].styles)
 
   const container = useRef(null)
 

@@ -8,7 +8,7 @@ import { v4 as createUuid } from 'uuid'
 
 import clone from '@/utils/clone'
 import { ThunkDispatch } from '@app/state/types'
-import { Sheet, SheetColumn, SheetColumns, SheetFilter, SheetFilters, SheetFilterType, SheetFilterUpdates } from '@app/state/sheet/types'
+import { Sheet, SheetColumn, IAllSheetColumns, SheetFilter, SheetFilters, SheetFilterType, SheetFilterUpdates } from '@app/state/sheet/types'
 import { 
   createSheetFilter as createSheetFilterAction,
   deleteSheetFilter as deleteSheetFilterAction,
@@ -279,7 +279,7 @@ const SheetActionFilter = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionFilterProps {
-  columns: SheetColumns
+  columns: IAllSheetColumns
   createSheetFilter?(sheetId: string, newFilter: SheetFilter): void
   deleteSheetFilter?(sheetId: Sheet['id'], filterId: SheetFilter['id']): void
   filters: SheetFilters

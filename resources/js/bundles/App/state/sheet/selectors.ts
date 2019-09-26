@@ -6,9 +6,9 @@ import { FileType } from '@app/state/folder/types'
 import { 
   Sheet,
   SheetActive,
-  SheetCell, SheetCells,
-  SheetColumn, SheetColumns, SheetColumnTypes,
-  SheetRow, SheetRows, 
+  SheetCell, IAllSheetCells,
+  SheetColumn, IAllSheetColumns, IAllSheetColumnTypes,
+  SheetRow, IAllSheetRows, 
   SheetFilter, SheetFilters, 
   SheetGroup, SheetGroups, 
   SheetSort, SheetSorts
@@ -27,14 +27,14 @@ export const selectActive = (
 export const selectCell = (
   state: AppState,
   cellId: string
-): SheetCell => state.sheet.cells[cellId]
+): SheetCell => state.sheet.allSheetCells[cellId]
 
 //-----------------------------------------------------------------------------
 // Select Cells
 //-----------------------------------------------------------------------------
 export const selectCells = (
   state: AppState
-): SheetCells => state.sheet.cells
+): IAllSheetCells => state.sheet.allSheetCells
 
 //-----------------------------------------------------------------------------
 // Select Column
@@ -42,21 +42,21 @@ export const selectCells = (
 export const selectColumn = (
   state: AppState,
   columnId: string
-): SheetColumn => state.sheet.columns[columnId]
+): SheetColumn => state.sheet.allSheetColumns[columnId]
 
 //-----------------------------------------------------------------------------
 // Select Columns
 //-----------------------------------------------------------------------------
 export const selectColumns = (
   state: AppState
-): SheetColumns => state.sheet.columns
+): IAllSheetColumns => state.sheet.allSheetColumns
 
 //-----------------------------------------------------------------------------
 // Select Column Types
 //-----------------------------------------------------------------------------
 export const selectColumnTypes = (
   state: AppState
-): SheetColumnTypes => state.sheet.columnTypes
+): IAllSheetColumnTypes => state.sheet.allSheetColumnTypes
 
 //-----------------------------------------------------------------------------
 // Select Filter
@@ -94,14 +94,14 @@ export const selectGroups = (
 export const selectRow = (
   state: AppState,
   rowId: string
-): SheetRow => state.sheet.rows[rowId]
+): SheetRow => state.sheet.allSheetRows[rowId]
 
 //-----------------------------------------------------------------------------
 // Select Rows
 //-----------------------------------------------------------------------------
 export const selectRows = (
   state: AppState
-): SheetRows => state.sheet.rows
+): IAllSheetRows => state.sheet.allSheetRows
 
 //-----------------------------------------------------------------------------
 // Select Sort
@@ -124,7 +124,7 @@ export const selectSorts = (
 export const selectSheetColumns = (
   state: AppState, 
   sheetId: string
-): SheetColumn['id'][] => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].columns
+): SheetColumn['id'][] => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].columns
 
 //-----------------------------------------------------------------------------
 // Select Sheet File Type
@@ -132,7 +132,7 @@ export const selectSheetColumns = (
 export const selectSheetFileType = (
   state: AppState, 
   sheetId: string
-): FileType => state.sheet.sheets && state.sheet.sheets[sheetId] ? state.sheet.sheets[sheetId].fileType : null
+): FileType => state.sheet.allSheets && state.sheet.allSheets[sheetId] ? state.sheet.allSheets[sheetId].fileType : null
 
 //-----------------------------------------------------------------------------
 // Select Sheet Filters
@@ -140,7 +140,7 @@ export const selectSheetFileType = (
 export const selectSheetFilters = (
   state: AppState, 
   sheetId: string
-): SheetFilter['id'][] => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].filters
+): SheetFilter['id'][] => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].filters
 
 //-----------------------------------------------------------------------------
 // Select Sheet Groups
@@ -148,7 +148,7 @@ export const selectSheetFilters = (
 export const selectSheetGroups = (
   state: AppState, 
   sheetId: string
-): SheetGroup['id'][] => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].groups
+): SheetGroup['id'][] => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].groups
 
 //-----------------------------------------------------------------------------
 // Select Sheet Rows
@@ -156,7 +156,7 @@ export const selectSheetGroups = (
 export const selectSheetRows = (
   state: AppState, 
   sheetId: string
-): SheetRow['id'][] => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].rows
+): SheetRow['id'][] => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].rows
 
 //-----------------------------------------------------------------------------
 // Select Sheet Source Sheet Id
@@ -164,7 +164,7 @@ export const selectSheetRows = (
 export const selectSheetSourceSheetId = (
   state: AppState, 
   sheetId: string
-): Sheet['id'] => state.sheet.sheets && state.sheet.sheets[sheetId] ? state.sheet.sheets[sheetId].sourceSheetId : null
+): Sheet['id'] => state.sheet.allSheets && state.sheet.allSheets[sheetId] ? state.sheet.allSheets[sheetId].sourceSheetId : null
 
 //-----------------------------------------------------------------------------
 // Select Sheet Sorts
@@ -172,7 +172,7 @@ export const selectSheetSourceSheetId = (
 export const selectSheetSorts = (
   state: AppState, 
   sheetId: string
-): SheetSort['id'][] => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].sorts
+): SheetSort['id'][] => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].sorts
 
 //-----------------------------------------------------------------------------
 // Select Sheet Visible Columns
@@ -181,9 +181,9 @@ export const selectSheetVisibleColumns = (
   state: AppState, 
   sheetId: string
 ): SheetColumn['id'][] => {
-  if(state.sheet.sheets && state.sheet.sheets[sheetId]) {
-    const columns = state.sheet.sheets[sheetId].columns
-    const visibleColumns = state.sheet.sheets[sheetId].visibleColumns
+  if(state.sheet.allSheets && state.sheet.allSheets[sheetId]) {
+    const columns = state.sheet.allSheets[sheetId].columns
+    const visibleColumns = state.sheet.allSheets[sheetId].visibleColumns
     return visibleColumns.length === 0 ? columns : visibleColumns
   }
   return null
@@ -195,4 +195,4 @@ export const selectSheetVisibleColumns = (
 export const selectSheetVisibleRows = (
   state: AppState, 
   sheetId: string
-): SheetRow['id'][] => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].visibleRows
+): SheetRow['id'][] => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleRows

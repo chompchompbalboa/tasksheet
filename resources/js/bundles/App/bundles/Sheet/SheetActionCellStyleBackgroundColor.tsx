@@ -23,7 +23,7 @@ const SheetActionCellStyleBackgroundColor = ({
   
   const dispatch = useDispatch()
   
-  const sheetStyles = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].styles)
+  const sheetStyles = useSelector((state: AppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].styles)
   
   const updateSheetStyles = (nextSheetStylesSet: Set<string>, nextSheetStylesColorReference: { [cellId: string]: string }) => {
     dispatch(updateSheetStylesAction(sheetId, {

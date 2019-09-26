@@ -31,12 +31,17 @@ const SheetActionDownloadCsv = ({
 
   // Redux
   const dispatch = useDispatch()
+  const { 
+    allSheets,
+    allSheetCells, 
+    allSheetColumns, 
+    allSheetColumnTypes, 
+    allSheetRows, 
+  } = useSelector((state: AppState) => state.sheet)
 
   const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
-  
-  const { cells, columns, columnTypes, rows, sheets } = useSelector((state: AppState) => state.sheet)
   const activeFilename = useSelector((state: AppState) => state.folder.files && state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].name)
-  const sheet = sheets && sheets[sheetId]
+  const sheet = allSheets && allSheets[sheetId]
   const visibleColumns = sheet && sheet.visibleColumns
   const visibleRows = sheet && sheet.visibleRows
 
@@ -69,19 +74,19 @@ const SheetActionDownloadCsv = ({
 
   // CSV data
   const [ isIncludeColumnTypeInformation, setIsIncludeColumnTypeInformation ] = useState(true)
-  const headers = visibleColumns ? visibleColumns.map(columnId => columnId !== 'COLUMN_BREAK' ? columns[columnId].name : null) : []
+  const headers = visibleColumns ? visibleColumns.map(columnId => columnId !== 'COLUMN_BREAK' ? allSheetColumns[columnId].name : null) : []
 
   const data = visibleRows ? visibleRows.map(rowId => {
     if(rowId !== 'ROW_BREAK') {
-      const row = rows[rowId]
-      return visibleColumns.map(columnId => columnId !== 'COLUMN_BREAK' ? cells[row.cells[columnId]].value : null)
+      const row = allSheetRows[rowId]
+      return visibleColumns.map(columnId => columnId !== 'COLUMN_BREAK' ? allSheetCells[row.cells[columnId]].value : null)
     }
     return null
   }).filter(row => row !== null) : []
 
   const columnTypeInformation = data && data.length > 0 ? visibleColumns.map(columnId => {
-    const column = columns[columnId]
-    const columnType = columnId === 'COLUMN_BREAK' ? columnId : columnTypes[column.typeId].cellType
+    const column = allSheetColumns[columnId]
+    const columnType = columnId === 'COLUMN_BREAK' ? columnId : allSheetColumnTypes[column.typeId].cellType
     return '[TS][' + columnType + ']'
   }) : []
   

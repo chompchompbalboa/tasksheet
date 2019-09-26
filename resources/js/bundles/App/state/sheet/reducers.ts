@@ -1,17 +1,28 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import { Sheets, SheetActive, SheetCells, SheetColumns, SheetColumnTypes, SheetClipboard, SheetFilters, SheetGroups, SheetRows, SheetSorts } from '@app/state/sheet/types'
+import { 
+  IAllSheets, 
+  IAllSheetColumns,
+  IAllSheetRows,
+  IAllSheetCells, 
+  IAllSheetColumnTypes,   
+  SheetActive,
+  SheetClipboard, 
+  SheetFilters, 
+  SheetGroups, 
+  SheetSorts 
+} from '@app/state/sheet/types'
 import { 
   SheetActions, 
   LOAD_SHEET, UPDATE_SHEET, 
   UPDATE_SHEET_ACTIVE,
-  UPDATE_SHEET_CELL, UPDATE_SHEET_CELLS,
+  UPDATE_SHEET_CELL, SET_ALL_SHEET_CELLS,
   UPDATE_SHEET_CLIPBOARD,
-  UPDATE_SHEET_COLUMN, UPDATE_SHEET_COLUMNS,
+  UPDATE_SHEET_COLUMN, SET_ALL_SHEET_COLUMNS,
   UPDATE_SHEET_FILTER, UPDATE_SHEET_FILTERS,
   UPDATE_SHEET_GROUP, UPDATE_SHEET_GROUPS,
-  UPDATE_SHEET_ROW, UPDATE_SHEET_ROWS,
+  UPDATE_SHEET_ROW, SET_ALL_SHEET_ROWS,
   UPDATE_SHEET_SORT, UPDATE_SHEET_SORTS
 } from '@app/state/sheet/actions'
 
@@ -19,15 +30,15 @@ import {
 // Types
 //-----------------------------------------------------------------------------
 export interface SheetState {
+  allSheets: IAllSheets
+  allSheetColumns: IAllSheetColumns
+  allSheetRows: IAllSheetRows
+  allSheetCells: IAllSheetCells
+  allSheetColumnTypes: IAllSheetColumnTypes
   active: SheetActive
   clipboard: SheetClipboard
-  sheets: Sheets
-  cells: SheetCells
-  columns: SheetColumns
-  columnTypes: SheetColumnTypes
   filters: SheetFilters
   groups: SheetGroups
-  rows: SheetRows
   sorts: SheetSorts
 }
 
@@ -36,6 +47,10 @@ export interface SheetState {
 //-----------------------------------------------------------------------------
 const columnTypesFromServer = initialData && initialData.columnTypes ? initialData.columnTypes : {}
 export const defaultSheetState: SheetState = {
+  allSheets: null,
+  allSheetColumns: null,
+  allSheetCells: null,
+  allSheetRows: null,
   active: {
     columnRenamingId: null
   },
@@ -44,10 +59,7 @@ export const defaultSheetState: SheetState = {
     cutOrCopy: null,
     selections: null
   },
-  sheets: null,
-  cells: null,
-  columns: null,
-  columnTypes: {
+  allSheetColumnTypes: {
     STRING: {
       id: 'STRING',
       organizationId: null,
@@ -106,7 +118,6 @@ export const defaultSheetState: SheetState = {
   },
   filters: null,
   groups: null,
-  rows: null,
   sorts: null
 }
 
@@ -116,17 +127,41 @@ export const defaultSheetState: SheetState = {
 export const userReducer = (state: SheetState = defaultSheetState, action: SheetActions): SheetState => {
 
 	switch (action.type) {
+
+		case SET_ALL_SHEET_COLUMNS: {
+			const { nextAllSheetColumns } = action
+			return {
+        ...state,
+        allSheetColumns: nextAllSheetColumns
+      }
+		}
+
+		case SET_ALL_SHEET_ROWS: {
+			const { nextAllSheetRows } = action
+			return {
+        ...state,
+        allSheetRows: nextAllSheetRows
+      }
+		}
+
+		case SET_ALL_SHEET_CELLS: {
+			const { nextAllSheetCells } = action
+			return {
+        ...state,
+        allSheetCells: nextAllSheetCells
+      }
+		}
     
 		case LOAD_SHEET: {
 			const { cells, columns, filters, groups, rows, sheet, sorts } = action
 			return {
         ...state,
-        sheets: { ...state.sheets, [sheet.id]: sheet },
-        cells: { ...state.cells, ...cells },
-        columns: { ...state.columns, ...columns },
+        allSheets: { ...state.allSheets, [sheet.id]: sheet },
+        allSheetColumns: { ...state.allSheetColumns, ...columns },
+        allSheetRows: { ...state.allSheetRows, ...rows },
+        allSheetCells: { ...state.allSheetCells, ...cells },
         filters: { ...state.filters, ...filters },
         groups: { ...state.groups, ...groups },
-        rows: { ...state.rows, ...rows },
         sorts: { ...state.sorts, ...sorts }
 			}
 		}
@@ -135,8 +170,8 @@ export const userReducer = (state: SheetState = defaultSheetState, action: Sheet
       const { sheetId, updates } = action
       return {
         ...state,
-        sheets: {...state.sheets, 
-          [sheetId]: { ...state.sheets[sheetId], ...updates}
+        allSheets: {...state.allSheets, 
+          [sheetId]: { ...state.allSheets[sheetId], ...updates}
         }
       }
 		}
@@ -153,17 +188,9 @@ export const userReducer = (state: SheetState = defaultSheetState, action: Sheet
 			const { cellId, updates } = action
 			return {
         ...state,
-        cells: { ...state.cells,
-          [cellId]: { ...state.cells[cellId], ...updates }
+        allSheetCells: { ...state.allSheetCells,
+          [cellId]: { ...state.allSheetCells[cellId], ...updates }
         }
-      }
-		}
-
-		case UPDATE_SHEET_CELLS: {
-			const { nextSheetCells } = action
-			return {
-        ...state,
-        cells: nextSheetCells
       }
 		}
 
@@ -179,17 +206,9 @@ export const userReducer = (state: SheetState = defaultSheetState, action: Sheet
 			const { columnId, updates } = action
 			return {
         ...state,
-        columns: { ...state.columns,
-          [columnId]: { ...state.columns[columnId], ...updates}
+        allSheetColumns: { ...state.allSheetColumns,
+          [columnId]: { ...state.allSheetColumns[columnId], ...updates}
         }
-      }
-		}
-
-		case UPDATE_SHEET_COLUMNS: {
-			const { nextSheetColumns } = action
-			return {
-        ...state,
-        columns: nextSheetColumns
       }
 		}
 
@@ -233,17 +252,9 @@ export const userReducer = (state: SheetState = defaultSheetState, action: Sheet
 			const { rowId, updates } = action
 			return {
         ...state,
-        rows: { ...state.rows,
-          [rowId]: { ...state.rows[rowId], ...updates}
+        allSheetRows: { ...state.allSheetRows,
+          [rowId]: { ...state.allSheetRows[rowId], ...updates}
         }
-      }
-		}
-
-		case UPDATE_SHEET_ROWS: {
-			const { nextSheetRows } = action
-			return {
-        ...state,
-        rows: nextSheetRows
       }
 		}
 

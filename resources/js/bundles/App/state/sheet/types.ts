@@ -1,27 +1,27 @@
 import { FileType } from '@app/state/folder/types'
 
-export type Sheets = { [sheetId: string]: Sheet }
-export type SheetColumns = { [columnId: string]: SheetColumn }
-export type SheetColumnTypes = { [cellId: string]: SheetColumnType }
-export type SheetRows = { [rowId: string]: SheetRow }
-export type SheetCells = { [cellId: string]: SheetCell }
-export type SheetFilters = { [filterId: string]: SheetFilter }
-export type SheetGroups = { [groupId: string]: SheetGroup }
-export type SheetSorts = { [sortId: string]: SheetSort }
+export interface IAllSheets { [sheetId: string]: Sheet }
+export interface IAllSheetColumns { [columnId: string]: SheetColumn }
+export interface IAllSheetRows { [rowId: string]: SheetRow }
+export interface IAllSheetCells { [cellId: string]: SheetCell }
+export interface IAllSheetColumnTypes { [cellId: string]: SheetColumnType }
+export interface SheetFilters { [filterId: string]: SheetFilter }
+export interface SheetGroups { [groupId: string]: SheetGroup }
+export interface SheetSorts { [sortId: string]: SheetSort }
 
-export type SheetActive = {
+export interface SheetActive {
   columnRenamingId: SheetColumn['id']
 }
-export type SheetActiveUpdates = {
+export interface SheetActiveUpdates {
   columnRenamingId?: SheetColumn['id']
 }
 
-export type SheetClipboard = {
+export interface SheetClipboard {
   sheetId: Sheet['id']
   cutOrCopy: 'CUT' | 'COPY'
   selections: SheetClipboardSelections
 }
-export type SheetClipboardSelections = {
+export interface SheetClipboardSelections {
   rangeCellIds: Set<SheetCell['id']>
   rangeStartColumnId: SheetColumn['id']
   rangeStartRowId: SheetRow['id']
@@ -33,7 +33,7 @@ export type SheetClipboardSelections = {
   visibleRows: SheetRow['id'][]
 }
 
-export type Sheet = {
+export interface Sheet {
   id: string
   sourceSheetId: Sheet['id']
   fileType: FileType
@@ -47,7 +47,7 @@ export type Sheet = {
   styles: SheetStyles
   selections: SheetSelections
 }
-export type SheetUpdates = {
+export interface SheetUpdates {
   rows?: SheetRow['id'][]
   visibleRows?: SheetRow['id'][]
   columns?: SheetColumn['id'][]
@@ -58,7 +58,7 @@ export type SheetUpdates = {
   styles?: SheetStyles
   selections?: SheetSelections
 }
-export type SheetSelections = {
+export interface SheetSelections {
   isSelectedCellEditingPrevented: boolean
   isSelectedCellNavigationPrevented: boolean
   rangeCellIds: Set<SheetCell['id']>
@@ -69,7 +69,7 @@ export type SheetSelections = {
   rangeEndRowId: SheetRow['id']
   rangeEndCellId: SheetCell['id']
 }
-export type SheetStyles = {
+export interface SheetStyles {
   id: string
   backgroundColor: Set<string>
   backgroundColorReference: { [cellId: string]: string }
@@ -78,7 +78,7 @@ export type SheetStyles = {
   bold: Set<string>
   italic: Set<string>
 }
-export type SheetStylesUpdates = {
+export interface SheetStylesUpdates {
   backgroundColor?: Set<string>
   backgroundColorReference?: { [cellId: string]: string }
   color?: Set<string>
@@ -86,7 +86,7 @@ export type SheetStylesUpdates = {
   bold?: Set<string>
   italic?: Set<string>
 }
-export type SheetStylesServerUpdates = {
+export interface SheetStylesServerUpdates {
   backgroundColor?: string[]
   backgroundColorReference?: { [cellId: string]: string }
   color?: string[]
@@ -95,7 +95,7 @@ export type SheetStylesServerUpdates = {
   italic?: string[]
 }
 
-export type SheetFromServer = {
+export interface SheetFromServer {
   id: string
   sourceSheetId: string
   fileType: FileType
@@ -107,25 +107,25 @@ export type SheetFromServer = {
   sorts: SheetSort[]
   styles: SheetStyles
 }
-export type SheetFromServerRow = {
+export interface SheetFromServerRow {
 	id: string
 	sheetId: string
 	cells: SheetCell[]
 }
 
-export type SheetColumn = {
+export interface SheetColumn {
 	id: string
 	sheetId: string
 	typeId: SheetColumnType['id']
 	name: string
 	width: number
 }
-export type SheetColumnUpdates = {
+export interface SheetColumnUpdates {
   typeId?: SheetColumnType['id']
   name?: string
   width?: number
 }
-export type SheetColumnToServer = {
+export interface SheetColumnToServer {
   id: string
   sheetId: string
   typeId: SheetColumnType['id']
@@ -133,7 +133,7 @@ export type SheetColumnToServer = {
   width: number
   cells: SheetCell[]
 }
-export type SheetColumnType = {
+export interface SheetColumnType {
   id: string
   organizationId: string
   userId: string
@@ -142,29 +142,29 @@ export type SheetColumnType = {
   cellType: SheetCellType
   data: SheetColumnTypeDropdown
 }
-export type SheetColumnTypeDropdown = {
+export interface SheetColumnTypeDropdown {
   options: { [key: string]: SheetColumnTypeDropdownOption }
 }
-export type SheetColumnTypeDropdownOption = {
+export interface SheetColumnTypeDropdownOption {
   id: string
   value: string
 }
 
-export type SheetRow = {
+export interface SheetRow {
 	id: string
 	sheetId: string
 	cells: { [columnId: string]: SheetCell['id'] }
 }
-export type SheetRowUpdates = {
+export interface SheetRowUpdates {
   cells?: { [columnId: string]: SheetCell['id'] }
 }
-export type SheetRowToServer = {
+export interface SheetRowToServer {
   id: string
   sheetId: string
   cells: SheetCell[]
 }
 
-export type SheetCell = {
+export interface SheetCell {
 	id: string
 	sheetId: string
 	columnId: string
@@ -188,19 +188,19 @@ export type SheetCellType =
 'PHOTOS' | 
 'FILES'
 
-export type SheetSort = {
+export interface SheetSort {
   id: string
   sheetId: string
   columnId: string
   order: SheetSortOrder
   isLocked: boolean
 }
-export type SheetSortUpdates = {
+export interface SheetSortUpdates {
   order?: SheetSortOrder
 }
 export type SheetSortOrder = 'ASC' | 'DESC'
 
-export type SheetFilter = {
+export interface SheetFilter {
   id: string
   sheetId: string
   columnId: string
@@ -208,23 +208,23 @@ export type SheetFilter = {
   value: string
   isLocked: boolean
 }
-export type SheetFilterUpdates = {}
+export interface SheetFilterUpdates {}
 export type SheetFilterType = '=' | '!=' | '>' | '>=' | '<' | '<='
 
-export type SheetGroup = {
+export interface SheetGroup {
   id: string
   sheetId: string
   columnId: string
   order: SheetGroupOrder
   isLocked: boolean
 }
-export type SheetGroupUpdates = {
+export interface SheetGroupUpdates {
   order?: SheetGroupOrder
 }
 
 export type SheetGroupOrder = 'ASC' | 'DESC'
 
-export type SheetView = {
+export interface SheetView {
   id: string
   sourceSheetId: string
   visibleColumns: SheetColumn['id'][]
@@ -233,7 +233,7 @@ export type SheetView = {
   sorts: SheetSorts
 }
 
-export type SheetDownloadOptions = {
+export interface SheetDownloadOptions {
   filename: string
   includeColumnTypeInformation: boolean
   includeAssets: boolean

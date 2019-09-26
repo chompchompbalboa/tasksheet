@@ -26,11 +26,11 @@ import {
 import { 
   Sheet, SheetFromServer, SheetUpdates,
   SheetActiveUpdates,
-  SheetColumn, SheetColumns, SheetColumnTypes, SheetColumnUpdates, 
+  SheetColumn, IAllSheetColumns, IAllSheetColumnTypes, SheetColumnUpdates, 
   SheetCellUpdates, 
   SheetFilter, SheetFilters, 
   SheetGroup, SheetGroups, 
-  SheetRow, SheetRows, 
+  SheetRow, IAllSheetRows, 
   SheetSort, SheetSorts 
 } from '@app/state/sheet/types'
 import {  
@@ -261,15 +261,15 @@ const SheetComponent = memo(({
 //-----------------------------------------------------------------------------
 interface SheetComponentProps {
   activeTab?: string
-  columns?: SheetColumns
-  columnTypes?: SheetColumnTypes
+  columns?: IAllSheetColumns
+  columnTypes?: IAllSheetColumnTypes
   createSheetRow?(sheetId: string, sourceSheetId: string): void
   fileId: string
   filters?: SheetFilters
   groups?: SheetGroups
   id: Sheet['id']
   loadSheet?(sheet: SheetFromServer): Promise<void>
-  rows?: SheetRows
+  rows?: IAllSheetRows
   sheetColumns?: SheetColumn['id'][]
   sheetFilters?: SheetFilter['id'][]
   sheetGroups?: SheetGroup['id'][]

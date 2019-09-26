@@ -5,7 +5,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { v4 as createUuid } from 'uuid'
 
-import { Sheet, SheetColumn, SheetColumns, SheetSort, SheetSorts } from '@app/state/sheet/types'
+import { Sheet, SheetColumn, IAllSheetColumns, SheetSort, SheetSorts } from '@app/state/sheet/types'
 
 import { ThunkDispatch } from '@app/state/types'
 import { SheetSortUpdates } from '@app/state/sheet/types'
@@ -72,7 +72,7 @@ const SheetActionSort = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionProps {
-  columns: SheetColumns
+  columns: IAllSheetColumns
   createSheetSort?(newSort: SheetSort): void
   deleteSheetSort?(columnId: string): void
   updateSheetSort?(sheetId: Sheet['id'], sortId: string, updates: SheetSortUpdates, skipVisibleRowsUpdate?: boolean): void

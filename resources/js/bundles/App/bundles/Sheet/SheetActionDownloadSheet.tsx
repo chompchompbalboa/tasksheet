@@ -35,10 +35,9 @@ const SheetActionDownloadSheet = ({
 
   const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
   
-  const sheets = useSelector((state: AppState) => state.sheet.sheets)
+  const allSheets = useSelector((state: AppState) => state.sheet.allSheets)
   const activeFilename = useSelector((state: AppState) => state.folder.files && state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].name)
-  const sheet = sheets && sheets[sheetId]
-  //const visibleColumns = sheet && sheet.visibleColumns
+  const sheet = allSheets && allSheets[sheetId]
   const visibleRows = sheet && sheet.visibleRows
 
   // Dropdown

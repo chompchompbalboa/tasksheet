@@ -26,7 +26,7 @@ const SheetRowLeader = memo(({
   
   const dispatch = useDispatch()
   const selectSheetRows = (startRowId: SheetRow['id'], endRowId?: SheetRow['id']) => dispatch(selectSheetRowsAction(sheetId, startRowId, endRowId))
-  const rangeStartRowId = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].selections.rangeStartRowId)
+  const rangeStartRowId = useSelector((state: AppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeStartRowId)
   
   const handleClick = (e: MouseEvent) => {
     if(e.shiftKey) {

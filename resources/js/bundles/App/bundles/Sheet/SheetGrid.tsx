@@ -7,9 +7,9 @@ import styled from 'styled-components'
 
 import { 
   SheetActiveUpdates, 
-  SheetColumn, SheetColumns, SheetColumnTypes, SheetColumnUpdates,
+  SheetColumn, IAllSheetColumns, IAllSheetColumnTypes, SheetColumnUpdates,
   SheetCellUpdates, 
-  SheetRow, SheetRows 
+  SheetRow, IAllSheetRows 
 } from '@app/state/sheet/types'
 
 import Autosizer from 'react-virtualized-auto-sizer'
@@ -133,11 +133,11 @@ const SheetGrid = memo(({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetGridProps {
-  columns: SheetColumns
-  columnTypes: SheetColumnTypes
+  columns: IAllSheetColumns
+  columnTypes: IAllSheetColumnTypes
   handleContextMenu(e: MouseEvent, type: string, id: string): void
   highlightColor: string
-  rows: SheetRows
+  rows: IAllSheetRows
   sheetId: string
   updateSheetActive(updates: SheetActiveUpdates): void
   updateSheetCell(cellId: string, updates: SheetCellUpdates, undoUpdates?: SheetCellUpdates, skipServerUpdate?: boolean): void

@@ -21,10 +21,10 @@ const SheetActionCellStyleButton = ({
 }: SheetActionCellStyleButtonProps) => {
   
   const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
-  const rows = useSelector((state: AppState) => state.sheet.rows)
-  const selections = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].selections)
-  const sheetVisibleColumns = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].visibleColumns)
-  const sheetVisibleRows = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].visibleRows)
+  const allSheetRows = useSelector((state: AppState) => state.sheet.allSheetRows)
+  const selections = useSelector((state: AppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections)
+  const sheetVisibleColumns = useSelector((state: AppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleColumns)
+  const sheetVisibleRows = useSelector((state: AppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleRows)
   
   const addOrDeleteFromSet = sheetStylesSet && sheetStylesSet.has(selections.rangeStartCellId) ? 'DELETE' : 'ADD'
 
@@ -49,7 +49,7 @@ const SheetActionCellStyleButton = ({
       for(let rowIndex = rangeStartRowIndex; rowIndex <= rangeEndRowIndex; rowIndex++) {
         const rowId = sheetVisibleRows[rowIndex]
         if(rowId !== 'ROW_BREAK') {
-          const row = rows[rowId]
+          const row = allSheetRows[rowId]
           for(let columnIndex = rangeStartColumnIndex; columnIndex <= rangeEndColumnIndex; columnIndex++) {
             const columnId = sheetVisibleColumns[columnIndex]
             if(columnId !== 'COLUMN_BREAK') {

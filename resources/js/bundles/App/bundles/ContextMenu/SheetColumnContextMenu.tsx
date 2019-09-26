@@ -8,7 +8,7 @@ import arrayMove from 'array-move'
 import { CHECKMARK } from '@app/assets/icons'
 
 import { AppState } from '@app/state'
-import { Sheet, SheetActiveUpdates, SheetUpdates, SheetColumn, SheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
+import { Sheet, SheetActiveUpdates, SheetUpdates, SheetColumn, IAllSheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
 import { 
   createSheetColumn as createSheetColumnAction,
   createSheetColumnBreak as createSheetColumnBreakAction,
@@ -40,9 +40,9 @@ const SheetColumnContextMenu = ({
   updateSheetColumn
 }: SheetColumnContextMenuProps) => {
   
-  const columnTypes = useSelector((state: AppState) => state.sheet.columnTypes)
-  const sheetColumns = useSelector((state: AppState) => state.sheet.sheets[sheetId].columns)
-  const columnTypeIds = Object.keys(columnTypes)
+  const allSheetColumnTypes = useSelector((state: AppState) => state.sheet.allSheetColumnTypes)
+  const sheetColumns = useSelector((state: AppState) => state.sheet.allSheets[sheetId].columns)
+  const columnTypeIds = Object.keys(allSheetColumnTypes)
   const dispatch = useDispatch()
   const createSheetColumn = () => dispatch(createSheetColumnAction(sheetId, columnIndex))
   const createSheetColumnBreak = () => dispatch(createSheetColumnBreakAction(sheetId, columnIndex))
@@ -51,7 +51,7 @@ const SheetColumnContextMenu = ({
   const hideSheetColumn = () => dispatch(hideSheetColumnAction(sheetId, columnIndex))
   const showSheetColumn = (columnIdToShow: SheetColumn['id']) => dispatch(showSheetColumnAction(sheetId, columnIndex, columnIdToShow))
   
-  const columnType = columnId === 'COLUMN_BREAK' ? 'COLUMN_BREAK' : columnTypes[columns[columnId].typeId]
+  const columnType = columnId === 'COLUMN_BREAK' ? 'COLUMN_BREAK' : allSheetColumnTypes[columns[columnId].typeId]
   const onDeleteClick = columnId === 'COLUMN_BREAK' ? deleteSheetColumnBreak : deleteSheetColumn
 
   const closeOnClick = (thenCallThis: (...args: any) => void) => {
@@ -111,7 +111,7 @@ const SheetColumnContextMenu = ({
           <ContextMenuItem 
             text="Type">
             {columnTypeIds.map((columnTypeId, index) => {
-              const currentColumnType = columnTypes[columnTypeId]
+              const currentColumnType = allSheetColumnTypes[columnTypeId]
               return (
                 <ContextMenuItem
                   key={columnTypeId}
@@ -143,7 +143,7 @@ interface SheetColumnContextMenuProps {
   sheetId: Sheet['id']
   columnId: SheetColumn['id']
   columnIndex: number
-  columns: SheetColumns
+  columns: IAllSheetColumns
   closeContextMenu(): void
   contextMenuLeft: number
   contextMenuTop: number

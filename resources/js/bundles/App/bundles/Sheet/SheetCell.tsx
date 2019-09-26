@@ -33,9 +33,9 @@ const SheetCell = memo(({
 }: SheetCellProps) => {
 
   // Redux
-  const cell = useSelector((state: AppState) => state.sheet.cells[cellId])
-  const sheetSelectionsRangeCellIds = useSelector((state: AppState) => state.sheet.sheets[sheetId].selections.rangeCellIds)
-  const sheetStyles = useSelector((state: AppState) => state.sheet.sheets[sheetId].styles)
+  const cell = useSelector((state: AppState) => state.sheet.allSheetCells[cellId])
+  const sheetSelectionsRangeCellIds = useSelector((state: AppState) => state.sheet.allSheets[sheetId].selections.rangeCellIds)
+  const sheetStyles = useSelector((state: AppState) => state.sheet.allSheets[sheetId].styles)
   // Refs
   const cellContainer = useRef(null)
   // Cell Value

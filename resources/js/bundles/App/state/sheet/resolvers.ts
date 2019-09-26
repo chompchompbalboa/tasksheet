@@ -5,8 +5,8 @@ import { groupBy, orderBy } from 'lodash'
 
 import { 
   Sheet,
-  SheetCells,
-  SheetRows,
+  IAllSheetCells,
+  IAllSheetRows,
   SheetFilters, SheetFilterType,
   SheetGroup, SheetGroups, 
   SheetSorts, 
@@ -52,7 +52,7 @@ export const resolveValue = (value: string) => {
 //-----------------------------------------------------------------------------
 // Resolve Visible Rows
 //-----------------------------------------------------------------------------
-export const resolveVisibleRows = (sheet: Sheet, rows: SheetRows, cells: SheetCells, filters: SheetFilters, groups: SheetGroups, sorts: SheetSorts) => {
+export const resolveVisibleRows = (sheet: Sheet, rows: IAllSheetRows, cells: IAllSheetCells, filters: SheetFilters, groups: SheetGroups, sorts: SheetSorts) => {
   const rowIds: string[] = sheet.rows
   const filterIds: string[] = sheet.filters
   const groupIds: string[] = sheet.groups

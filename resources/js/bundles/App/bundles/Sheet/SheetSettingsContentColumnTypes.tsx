@@ -23,11 +23,11 @@ import SheetSettingsContentContent from '@app/bundles/Sheet/SheetSettingsContent
 const SheetSettingsContentColumnTypes = ({
 }: SheetSettingsContentColumnTypesProps) => {
 
-  const columnTypes = useSelector((state: AppState) => state.sheet.columnTypes)
-  const columnTypeIds = Object.keys(columnTypes)
+  const allSheetColumnTypes = useSelector((state: AppState) => state.sheet.allSheetColumnTypes)
+  const columnTypeIds = Object.keys(allSheetColumnTypes)
 
   const [ activeColumnTypeId, setActiveColumnTypeId ] = useState(columnTypeIds[0])
-  const activeColumnType = columnTypes[activeColumnTypeId]
+  const activeColumnType = allSheetColumnTypes[activeColumnTypeId]
 
   const columnTypeSettingsComponents = {
     STRING: SheetSettingsContentColumnTypesString,
@@ -45,7 +45,7 @@ const SheetSettingsContentColumnTypes = ({
     <>
       <SheetSettingsContentVerticalList>
         {columnTypeIds.map(columnTypeId => {
-          const columnType = columnTypes[columnTypeId]
+          const columnType = allSheetColumnTypes[columnTypeId]
           return (
             <SheetSettingsContentVerticalListItem
               key={columnType.id}

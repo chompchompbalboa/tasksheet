@@ -5,7 +5,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { v4 as createUuid } from 'uuid'
 
-import { SheetColumn, SheetColumns, SheetGroup, SheetGroups } from '@app/state/sheet/types'
+import { SheetColumn, IAllSheetColumns, SheetGroup, SheetGroups } from '@app/state/sheet/types'
 
 import { ThunkDispatch } from '@app/state/types'
 import { SheetGroupUpdates } from '@app/state/sheet/types'
@@ -72,7 +72,7 @@ const SheetActionGroup = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionGroupProps {
-  columns: SheetColumns
+  columns: IAllSheetColumns
   createSheetGroup?(newGroup: SheetGroup): void
   deleteSheetGroup?(columnId: string): void
   updateSheetGroup?(sheetId: string, groupId: string, updates: SheetGroupUpdates, skipVisibleRowsUpdate?: boolean): void

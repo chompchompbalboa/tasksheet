@@ -26,7 +26,7 @@ const SheetActionCellStyleColorPicker = ({
   
   // Redux
   const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
-  const selections = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].selections)
+  const selections = useSelector((state: AppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections)
   
   // Dropdown
   const dropdown = useRef(null)

@@ -51,7 +51,7 @@ const SheetHeader = ({
 }: SheetHeaderProps) => {
   
   const dispatch = useDispatch()
-  const rangeStartColumnId = useSelector((state: AppState) => state.sheet.sheets && state.sheet.sheets[sheetId] && state.sheet.sheets[sheetId].selections.rangeStartColumnId)
+  const rangeStartColumnId = useSelector((state: AppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeStartColumnId)
   const selectSheetColumns = (startColumnId: SheetColumn['id'], endColumnId?: SheetColumn['id']) => dispatch(selectSheetColumnsAction(sheetId, startColumnId, endColumnId))
   const allowSelectedCellEditing = () => dispatch(allowSelectedCellEditingAction(sheetId))
   const allowSelectedCellNavigation = () => dispatch(allowSelectedCellNavigationAction(sheetId))
