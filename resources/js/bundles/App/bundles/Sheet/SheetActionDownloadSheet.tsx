@@ -2,9 +2,10 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from 'react'
-import { CSVLink } from 'react-csv'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
+
+import { download } from '@app/api'
 
 import { ARROW_DOWN, DOWNLOAD } from '@app/assets/icons'
 
@@ -22,9 +23,9 @@ import Icon from '@/components/Icon'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetActionDownloadCsv = ({
+const SheetActionDownloadSheet = ({
   sheetId
-}: SheetActionDownloadCsvProps) => {
+}: SheetActionDownloadSheetProps) => {
 
   // Refs
   const dropdown = useRef(null)
@@ -34,10 +35,10 @@ const SheetActionDownloadCsv = ({
 
   const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
   
-  const { cells, columns, columnTypes, rows, sheets } = useSelector((state: AppState) => state.sheet)
+  const sheets = useSelector((state: AppState) => state.sheet.sheets)
   const activeFilename = useSelector((state: AppState) => state.folder.files && state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].name)
   const sheet = sheets && sheets[sheetId]
-  const visibleColumns = sheet && sheet.visibleColumns
+  //const visibleColumns = sheet && sheet.visibleColumns
   const visibleRows = sheet && sheet.visibleRows
 
   // Dropdown
@@ -54,7 +55,6 @@ const SheetActionDownloadCsv = ({
   }
   
   // Filename
-  const [ filename, setFilename ] = useState(activeFilename)
   useEffect(() => {
     setFilename(activeFilename)
   }, [ activeFilename ])
@@ -67,34 +67,45 @@ const SheetActionDownloadCsv = ({
     dispatch(preventSelectedCellNavigation(sheetId))
   }
 
-  // CSV data
+  // Options
+  const [ downloadId, setDownloadId ] = useState(null)
+  const [ filename, setFilename ] = useState(activeFilename)
   const [ isIncludeColumnTypeInformation, setIsIncludeColumnTypeInformation ] = useState(true)
-  const headers = visibleColumns ? visibleColumns.map(columnId => columnId !== 'COLUMN_BREAK' ? columns[columnId].name : null) : []
+  const [ isIncludeAssets, setIsIncludeAssets ] = useState(true)
+  const [ isDownloadPreparing, setIsDownloadPreparing ] = useState(false)
+  const [ isDownloadPrepared, setIsDownloadPrepared ] = useState(false)
 
-  const data = visibleRows ? visibleRows.map(rowId => {
-    if(rowId !== 'ROW_BREAK') {
-      const row = rows[rowId]
-      return visibleColumns.map(columnId => columnId !== 'COLUMN_BREAK' ? cells[row.cells[columnId]].value : null)
-    }
-    return null
-  }).filter(row => row !== null) : []
-
-  const columnTypeInformation = data && data.length > 0 ? visibleColumns.map(columnId => {
-    const column = columns[columnId]
-    const columnType = columnId === 'COLUMN_BREAK' ? columnId : columnTypes[column.typeId].cellType
-    return '[TS][' + columnType + ']'
-  }) : []
+  const handlePrepareDownloadClick = () => {
+    setIsDownloadPreparing(true)
+    download.prepareSheetDownload(sheetId, {
+      filename: filename,
+      includeAssets: isIncludeAssets,
+      includeColumnTypeInformation: isIncludeColumnTypeInformation,
+      visibleRows: visibleRows
+    }).then(sheetDownloadId => {
+      setIsDownloadPreparing(false)
+      setIsDownloadPrepared(true)
+      setDownloadId(sheetDownloadId)
+    })
+  }
   
-  const csvData = isIncludeColumnTypeInformation ? [ headers, columnTypeInformation, ...data ]  : [ headers, ...data ] 
-
+  const handleDownloadClick = () => {
+    if(isDownloadPrepared) {
+      setIsDownloadPreparing(false)
+      setIsDownloadPrepared(false)
+      setDownloadId(null)
+      const url = '/app/sheets/download/' + downloadId
+      window.open(url, '_blank')
+    }
+  }
   // Render
   return (
     <Container>
       <DownloadContainer
-        data={csvData}
-        filename={filename + '.csv'}
-        containerBackgroundColor={userColorPrimary}>
-        <Icon icon={DOWNLOAD}/>&nbsp;CSV
+        isDownloadPrepared={isDownloadPrepared}
+        containerBackgroundColor={userColorPrimary}
+        onClick={isDownloadPrepared ? () => handleDownloadClick() : () => null}>
+        <Icon icon={DOWNLOAD}/>&nbsp;{isDownloadPrepared ? 'Download' : (isDownloadPreparing ? 'Preparing...' : 'Sheet')}
       </DownloadContainer>
       <DropdownToggle
         dropdownToggleBackgroundColor={userColorPrimary}
@@ -123,6 +134,22 @@ const SheetActionDownloadCsv = ({
               Include Column Type Information
             </DownloadOptionText>
           </DownloadOption>
+          <DownloadOption>
+            <DownloadOptionCheckbox
+              type="checkbox"
+              checked={isIncludeAssets}
+              onChange={() => setIsIncludeAssets(!isIncludeAssets)}/>
+            <DownloadOptionText>
+              Include Photos and Files
+            </DownloadOptionText>
+          </DownloadOption>
+          <DownloadOption>
+            <DownloadButton
+              containerBackgroundColor={userColorPrimary}
+              onClick={isDownloadPrepared ? () => handleDownloadClick() : () => handlePrepareDownloadClick()}>
+              {isDownloadPrepared ? 'Download' : (isDownloadPreparing ? 'Preparing...' : 'Prepare Download')}
+            </DownloadButton>
+          </DownloadOption>
         </DownloadOptions>
       </Dropdown>
     </Container>
@@ -132,7 +159,7 @@ const SheetActionDownloadCsv = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetActionDownloadCsvProps {
+interface SheetActionDownloadSheetProps {
   sheetId: Sheet['id']
 }
 
@@ -147,11 +174,10 @@ const Container = styled.div`
   background-color: rgb(210, 210, 210);
   border-radius: 3px;
   transition: all 0.05s;
-  margin-right: 0.375rem;
 `
 
-const DownloadContainer = styled(({ containerBackgroundColor, ...rest }) => <CSVLink {...rest}/>)`
-  cursor: pointer;
+const DownloadContainer = styled.div`
+  cursor: ${ ({ isDownloadPrepared }: IDownloadContainer) => isDownloadPrepared ? 'pointer' : 'not-allowed'};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -162,11 +188,12 @@ const DownloadContainer = styled(({ containerBackgroundColor, ...rest }) => <CSV
   border-bottom-left-radius: 3px;
   transition: all 0.05s;
   &:hover {
-    background-color: ${ ({ containerBackgroundColor }: IDownloadContainer) => containerBackgroundColor};
-    color: rgb(240, 240, 240);
+    background-color: ${ ({ isDownloadPrepared, containerBackgroundColor }: IDownloadContainer) => isDownloadPrepared ? containerBackgroundColor : 'auto'};
+    color: ${ ({ isDownloadPrepared }: IDownloadContainer) => isDownloadPrepared ? 'white' : 'rgb(80, 80, 80)'};
   }
 `
 interface IDownloadContainer {
+  isDownloadPrepared: boolean
   containerBackgroundColor: string
 }
 
@@ -230,7 +257,23 @@ const StyledInput = styled.input`
   padding: 0.0625rem;
 `
 
+const DownloadButton = styled.div`
+  cursor: pointer;
+  padding: 0.325rem 0.4rem;
+  background-color: rgb(210, 210, 210);
+  color: rgb(80, 80, 80);
+  text-decoration: none;
+  border-radius: 5px;
+  &:hover {
+    background-color: ${ ({ containerBackgroundColor }: IDownloadButton) => containerBackgroundColor};
+    color: white;
+  }
+`
+interface IDownloadButton {
+  containerBackgroundColor: string
+}
+
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetActionDownloadCsv
+export default SheetActionDownloadSheet
