@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import { ARROW_UP, ARROW_DOWN } from '@app/assets/icons'
 
-import { SheetGroup, IAllSheetGroups, SheetGroupUpdates } from '@app/state/sheet/types'
+import { ISheetGroup, IAllSheetGroups, SheetGroupUpdates } from '@app/state/sheet/types'
 
 import Icon from '@/components/Icon'
 import { SheetActionDropdownOption } from '@app/bundles/Sheet/SheetActionDropdown'
@@ -23,7 +23,7 @@ const SheetActionGroupSelectedOption = ({
     const group = groups[option.value]
     const [ groupOrder, setGroupOrder ] = useState(group ? group.order : 'ASC')
     
-    const handleOptionClick = (group: SheetGroup) => {
+    const handleOptionClick = (group: ISheetGroup) => {
       if(!group.isLocked) {
         const nextGroupOrder = group.order === 'ASC' ? 'DESC' : 'ASC'
         setGroupOrder(nextGroupOrder)

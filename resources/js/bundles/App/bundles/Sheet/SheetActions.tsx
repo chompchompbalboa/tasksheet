@@ -6,10 +6,10 @@ import styled from 'styled-components'
 
 import { 
   ISheet, 
-  SheetColumn, IAllSheetColumns, 
-  SheetFilter, IAllSheetFilters, 
-  SheetGroup, IAllSheetGroups, 
-  SheetSort, IAllSheetSorts 
+  ISheetColumn, IAllSheetColumns, 
+  ISheetFilter, IAllSheetFilters, 
+  ISheetGroup, IAllSheetGroups, 
+  ISheetSort, IAllSheetSorts 
 } from '@app/state/sheet/types'
 
 import SheetActionCellStyleBackgroundColor from '@app/bundles/Sheet/SheetActionCellStyleBackgroundColor'
@@ -96,10 +96,10 @@ interface SheetActionsProps {
   sorts: IAllSheetSorts
   sheetId: ISheet['id']
   sourceSheetId: ISheet['id']
-  sheetFilters?: SheetFilter['id'][]
-  sheetGroups?: SheetGroup['id'][]
-  sheetSorts?: SheetSort['id'][]
-  sheetVisibleColumns: SheetColumn['id'][]
+  sheetFilters?: ISheetFilter['id'][]
+  sheetGroups?: ISheetGroup['id'][]
+  sheetSorts?: ISheetSort['id'][]
+  sheetVisibleColumns: ISheetColumn['id'][]
 }
 
 //-----------------------------------------------------------------------------

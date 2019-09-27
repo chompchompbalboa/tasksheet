@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { SheetCell, SheetCellUpdates, SheetStyles } from '@app/state/sheet/types'
+import { ISheetCell, SheetCellUpdates, SheetStyles } from '@app/state/sheet/types'
 import {
   updateSheetCell as updateSheetCellAction
 } from '@app/state/sheet/actions'
@@ -149,7 +149,7 @@ const SheetCellContainer = ({
 //-----------------------------------------------------------------------------
 interface SheetCellContainerProps {
   sheetId: string
-  cell: SheetCell
+  cell: ISheetCell
   cellId: string
   children?: any
   focusCell?(): void
@@ -179,7 +179,7 @@ const Container = styled.div`
   font-style: ${ ({ cellId, styles }: IContainer ) => styles.italic.has(cellId) ? 'italic' : 'normal' };
 `
 interface IContainer {
-  cellId: SheetCell['id']
+  cellId: ISheetCell['id']
   isCellEditing: boolean
   styles: SheetStyles
 }

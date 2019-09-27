@@ -10,8 +10,8 @@ import clone from '@/utils/clone'
 import { ThunkDispatch } from '@app/state/types'
 import { 
   ISheet, 
-  SheetColumn, IAllSheetColumns, 
-  SheetFilter, IAllSheetFilters, SheetFilterType, SheetFilterUpdates 
+  ISheetColumn, IAllSheetColumns, 
+  ISheetFilter, IAllSheetFilters, SheetFilterType, SheetFilterUpdates 
 } from '@app/state/sheet/types'
 import { 
   createSheetFilter as createSheetFilterAction,
@@ -32,7 +32,7 @@ import SheetActionFilterExistingFilters from '@app/bundles/Sheet/SheetActionFilt
 // Redux
 //-----------------------------------------------------------------------------
 const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionFilterProps) => ({
-  createSheetFilter: (sheetId: string, newFilter: SheetFilter) => dispatch(createSheetFilterAction(sheetId, newFilter)),
+  createSheetFilter: (sheetId: string, newFilter: ISheetFilter) => dispatch(createSheetFilterAction(sheetId, newFilter)),
   deleteSheetFilter: (sheetId: string, filterId: string) => dispatch(deleteSheetFilterAction(sheetId, filterId)),
   updateSheetFilter: (sheetId: string, filterId: string, updates: SheetFilterUpdates) => dispatch(updateSheetFilterAction(sheetId, filterId, updates)),
   allowSelectedCellEditing: (sheetId: ISheet['id']) => dispatch(allowSelectedCellEditingAction(sheetId)),
@@ -284,13 +284,13 @@ const SheetActionFilter = ({
 //-----------------------------------------------------------------------------
 interface SheetActionFilterProps {
   columns: IAllSheetColumns
-  createSheetFilter?(sheetId: string, newFilter: SheetFilter): void
-  deleteSheetFilter?(sheetId: ISheet['id'], filterId: SheetFilter['id']): void
+  createSheetFilter?(sheetId: string, newFilter: ISheetFilter): void
+  deleteSheetFilter?(sheetId: ISheet['id'], filterId: ISheetFilter['id']): void
   filters: IAllSheetFilters
   sheetId: string
-  sheetFilters: SheetFilter['id'][]
-  sheetVisibleColumns: SheetColumn['id'][]
-  updateSheetFilter?(sheetId: ISheet['id'], filterId: SheetFilter['id'], updates: SheetFilterUpdates): void
+  sheetFilters: ISheetFilter['id'][]
+  sheetVisibleColumns: ISheetColumn['id'][]
+  updateSheetFilter?(sheetId: ISheet['id'], filterId: ISheetFilter['id'], updates: SheetFilterUpdates): void
   allowSelectedCellEditing?(sheetId: ISheet['id']): void
   preventSelectedCellEditing?(sheetId: ISheet['id']): void
   allowSelectedCellNavigation?(sheetId: ISheet['id']): void

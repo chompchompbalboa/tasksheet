@@ -6,12 +6,12 @@ import axios from '@/api/axios'
 import { File as TFile, FileUpdates, Folder, FolderUpdates } from '@app/state/folder/types'
 import { 
   ISheet, SheetUpdates,
-  SheetCell, SheetCellUpdates,
-  SheetColumn, SheetColumnUpdates,
-  SheetFilter, 
-  SheetGroup, SheetGroupUpdates, 
+  ISheetCell, SheetCellUpdates,
+  ISheetColumn, SheetColumnUpdates,
+  ISheetFilter, 
+  ISheetGroup, SheetGroupUpdates, 
   SheetRowToServer, 
-  SheetSort, SheetSortUpdates, 
+  ISheetSort, SheetSortUpdates, 
   SheetStylesServerUpdates,
   SheetView 
 } from '@app/state/sheet/types'
@@ -112,7 +112,7 @@ export const updateSheetCells = async (updates: SheetCellUpdates[]) => {
 	})
 }
 
-export const createSheetCellFiles = async (sheetId: ISheet['id'], sheetCellId: SheetCell['id'], filesToUpload: File[]) => {
+export const createSheetCellFiles = async (sheetId: ISheet['id'], sheetCellId: ISheetCell['id'], filesToUpload: File[]) => {
   const formData = new FormData()
   formData.append('sheetId', sheetId)
   formData.append('sheetCellId', sheetCellId)
@@ -134,7 +134,7 @@ export const downloadSheetCellFile = async (sheetCellFileId: string) => {
 	return axios.post('/app/sheets/cells/files/download/' + sheetCellFileId)
 }
 
-export const createSheetCellPhotos = async (sheetId: ISheet['id'], sheetCellId: SheetCell['id'], photosToUpload: File[]) => {
+export const createSheetCellPhotos = async (sheetId: ISheet['id'], sheetCellId: ISheetCell['id'], photosToUpload: File[]) => {
   const formData = new FormData()
   formData.append('sheetId', sheetId)
   formData.append('sheetCellId', sheetCellId)
@@ -146,7 +146,7 @@ export const createSheetCellPhotos = async (sheetId: ISheet['id'], sheetCellId: 
 	})
 }
 
-export const createSheetColumn = async (newColumn: SheetColumn, newCells: SheetCell[]) => {
+export const createSheetColumn = async (newColumn: ISheetColumn, newCells: ISheetCell[]) => {
 	return axios.post('/app/sheets/columns', {
     newColumn: newColumn,
     newCells: newCells
@@ -167,7 +167,7 @@ export const updateSheetColumn = async (id: string, updates: SheetColumnUpdates)
 	})
 }
 
-export const createSheetFilter = async (filter: SheetFilter) => {
+export const createSheetFilter = async (filter: ISheetFilter) => {
 	return axios.post('/app/sheets/filters', filter).then(response => {
 		return response.data
 	})
@@ -179,7 +179,7 @@ export const deleteSheetFilter = async (filterId: string) => {
 	})
 }
 
-export const createSheetGroup = async (group: SheetGroup) => {
+export const createSheetGroup = async (group: ISheetGroup) => {
 	return axios.post('/app/sheets/groups', group).then(response => {
 		return response.data
 	})
@@ -209,7 +209,7 @@ export const deleteSheetRow = async (rowId: string) => {
 	})
 }
 
-export const createSheetSort = async (sort: SheetSort) => {
+export const createSheetSort = async (sort: ISheetSort) => {
 	return axios.post('/app/sheets/sorts', sort).then(response => {
 		return response.data
 	})

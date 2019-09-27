@@ -3,13 +3,18 @@
 //-----------------------------------------------------------------------------
 import { v4 as createUuid } from 'uuid'
 
-import { SheetCell, SheetColumn, SheetRow, SheetSelections } from '@app/state/sheet/types'
+import { 
+  ISheetCell, 
+  ISheetColumn, 
+  ISheetRow, 
+  SheetSelections 
+} from '@app/state/sheet/types'
 
 //-----------------------------------------------------------------------------
 // Default Row
 //-----------------------------------------------------------------------------
-export const defaultRow = (sheetId: string, rowId: string, columns: SheetColumn['id'][]): SheetRow => {
-  const newCells: { [columnId: string ]: SheetCell['id'] } = {}
+export const defaultRow = (sheetId: string, rowId: ISheetRow['id'], columns: ISheetColumn['id'][]): ISheetRow => {
+  const newCells: { [columnId: string ]: ISheetCell['id'] } = {}
   columns.forEach(columnId => { newCells[columnId] = createUuid() })
   return {
     id: rowId,
@@ -21,7 +26,7 @@ export const defaultRow = (sheetId: string, rowId: string, columns: SheetColumn[
 //-----------------------------------------------------------------------------
 // Default Cell
 //-----------------------------------------------------------------------------
-export const defaultCell = (sheetId: string, rowId: string, columnId: string, cellId: string): SheetCell => {
+export const defaultCell = (sheetId: string, rowId: ISheetRow['id'], columnId: string, cellId: string): ISheetCell => {
   return {
     id: cellId,
     sheetId: sheetId, 
@@ -36,7 +41,7 @@ export const defaultCell = (sheetId: string, rowId: string, columnId: string, ce
 //-----------------------------------------------------------------------------
 // Default Cell
 //-----------------------------------------------------------------------------
-export const defaultColumn = (sheetId: string, newColumnIndex?: number): SheetColumn => {
+export const defaultColumn = (sheetId: string, newColumnIndex?: number): ISheetColumn => {
 
   const alphabetString = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
@@ -63,7 +68,7 @@ export const defaultColumn = (sheetId: string, newColumnIndex?: number): SheetCo
 export const defaultSheetSelections: SheetSelections = {
   isSelectedCellEditingPrevented: false,
   isSelectedCellNavigationPrevented: false,
-  rangeCellIds: new Set() as Set<SheetCell['id']>,
+  rangeCellIds: new Set() as Set<ISheetCell['id']>,
   rangeStartColumnId: null,
   rangeStartRowId: null,
   rangeStartCellId: null,

@@ -7,9 +7,9 @@ import { v4 as createUuid } from 'uuid'
 
 import { 
   ISheet, 
-  SheetColumn, 
+  ISheetColumn, 
   IAllSheetColumns, 
-  SheetSort, 
+  ISheetSort, 
   IAllSheetSorts 
 } from '@app/state/sheet/types'
 
@@ -29,7 +29,7 @@ import SheetActionSortSelectedOption from '@app/bundles/Sheet/SheetActionSortSel
 // Redux
 //-----------------------------------------------------------------------------
 const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionProps) => ({
-  createSheetSort: (newSort: SheetSort) => dispatch(createSheetSortAction(props.sheetId, newSort)),
+  createSheetSort: (newSort: ISheetSort) => dispatch(createSheetSortAction(props.sheetId, newSort)),
   deleteSheetSort: (columnId: string) => dispatch(deleteSheetSortAction(props.sheetId, columnId)),
   updateSheetSort: (sheetId: ISheet['id'], sortId: string, updates: SheetSortUpdates, skipVisibleRowsUpdate?: boolean) => dispatch(updateSheetSortAction(sheetId, sortId, updates, skipVisibleRowsUpdate))
 })
@@ -54,7 +54,7 @@ const SheetActionSort = ({
     }
   }).filter(Boolean)
   
-  const selectedOptions = sheetSorts && sheetSorts.map((sortId: SheetSort['id']) => { 
+  const selectedOptions = sheetSorts && sheetSorts.map((sortId: ISheetSort['id']) => { 
     const sort = sorts[sortId]
     return { label: columns[sort.columnId].name, value: sortId, isLocked: sort.isLocked }
   })
@@ -79,12 +79,12 @@ const SheetActionSort = ({
 //-----------------------------------------------------------------------------
 interface SheetActionProps {
   columns: IAllSheetColumns
-  createSheetSort?(newSort: SheetSort): void
+  createSheetSort?(newSort: ISheetSort): void
   deleteSheetSort?(columnId: string): void
   updateSheetSort?(sheetId: ISheet['id'], sortId: string, updates: SheetSortUpdates, skipVisibleRowsUpdate?: boolean): void
   sorts: IAllSheetSorts
-  sheetSorts: SheetSort['id'][]
-  sheetVisibleColumns: SheetColumn['id'][]
+  sheetSorts: ISheetSort['id'][]
+  sheetVisibleColumns: ISheetColumn['id'][]
   sheetId: string
 }
 

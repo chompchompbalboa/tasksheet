@@ -7,9 +7,9 @@ import styled from 'styled-components'
 
 import { 
   SheetActiveUpdates, 
-  SheetColumn, IAllSheetColumns, IAllSheetColumnTypes, SheetColumnUpdates,
+  ISheetColumn, IAllSheetColumns, IAllSheetColumnTypes, SheetColumnUpdates,
   SheetCellUpdates, 
-  SheetRow, IAllSheetRows 
+  ISheetRow, IAllSheetRows 
 } from '@app/state/sheet/types'
 
 import Autosizer from 'react-virtualized-auto-sizer'
@@ -144,8 +144,8 @@ interface SheetGridProps {
   updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
   updateSheetSelectionFromArrowKey(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   updateSheetSelectionFromCellClick(cellId: string, isShiftPressed: boolean): void
-  sheetVisibleColumns: SheetColumn['id'][]
-  sheetVisibleRows: SheetRow['id'][]
+  sheetVisibleColumns: ISheetColumn['id'][]
+  sheetVisibleRows: ISheetRow['id'][]
 }
 
 interface CellProps {

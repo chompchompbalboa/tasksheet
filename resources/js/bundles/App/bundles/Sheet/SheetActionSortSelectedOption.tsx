@@ -10,7 +10,7 @@ import {
 } from '@app/assets/icons'
 
 import { 
-  SheetSort, IAllSheetSorts, SheetSortUpdates 
+  ISheetSort, IAllSheetSorts, SheetSortUpdates 
 } from '@app/state/sheet/types'
 
 import Icon from '@/components/Icon'
@@ -27,7 +27,7 @@ const SheetActionSortSelectedOption = ({
     const sort = sorts[option.value]
     const [ sortOrder, setSortOrder ] = useState(sort ? sort.order : 'ASC')
     
-    const handleOptionClick = (sort: SheetSort) => {
+    const handleOptionClick = (sort: ISheetSort) => {
       if(!sort.isLocked) {
         const nextSortOrder = sort.order === 'ASC' ? 'DESC' : 'ASC'
         setSortOrder(nextSortOrder)

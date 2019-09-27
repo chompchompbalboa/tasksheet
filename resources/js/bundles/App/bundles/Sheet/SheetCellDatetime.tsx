@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 
-import { SheetCell, SheetColumnType } from '@app/state/sheet/types'
+import { ISheetCell, ISheetColumnType } from '@app/state/sheet/types'
 
 import SheetCellString from '@app/bundles/Sheet/SheetCellString'
 
@@ -63,9 +63,9 @@ const SheetCellDatetime = ({
 //-----------------------------------------------------------------------------
 interface SheetCellDatetimeProps {
   sheetId: string
-  cell: SheetCell
+  cell: ISheetCell
   cellId: string
-  columnType: SheetColumnType
+  columnType: ISheetColumnType
   isCellSelected: boolean
   updateCellValue(nextCellValue: string): void
   updateSheetSelectionFromArrowKey(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void

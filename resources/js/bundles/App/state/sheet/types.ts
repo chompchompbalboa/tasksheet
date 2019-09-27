@@ -1,19 +1,19 @@
 import { FileType } from '@app/state/folder/types'
 
 export interface IAllSheets { [sheetId: string]: ISheet }
-export interface IAllSheetColumns { [columnId: string]: SheetColumn }
-export interface IAllSheetRows { [rowId: string]: SheetRow }
-export interface IAllSheetCells { [cellId: string]: SheetCell }
-export interface IAllSheetColumnTypes { [cellId: string]: SheetColumnType }
-export interface IAllSheetFilters { [filterId: string]: SheetFilter }
-export interface IAllSheetGroups { [groupId: string]: SheetGroup }
-export interface IAllSheetSorts { [sortId: string]: SheetSort }
+export interface IAllSheetColumns { [columnId: string]: ISheetColumn }
+export interface IAllSheetRows { [rowId: string]: ISheetRow }
+export interface IAllSheetCells { [cellId: string]: ISheetCell }
+export interface IAllSheetColumnTypes { [cellId: string]: ISheetColumnType }
+export interface IAllSheetFilters { [filterId: string]: ISheetFilter }
+export interface IAllSheetGroups { [groupId: string]: ISheetGroup }
+export interface IAllSheetSorts { [sortId: string]: ISheetSort }
 
 export interface SheetActive {
-  columnRenamingId: SheetColumn['id']
+  columnRenamingId: ISheetColumn['id']
 }
 export interface SheetActiveUpdates {
-  columnRenamingId?: SheetColumn['id']
+  columnRenamingId?: ISheetColumn['id']
 }
 
 export interface SheetClipboard {
@@ -22,52 +22,52 @@ export interface SheetClipboard {
   selections: SheetClipboardSelections
 }
 export interface SheetClipboardSelections {
-  rangeCellIds: Set<SheetCell['id']>
-  rangeStartColumnId: SheetColumn['id']
-  rangeStartRowId: SheetRow['id']
-  rangeStartCellId: SheetCell['id']
-  rangeEndColumnId: SheetColumn['id']
-  rangeEndRowId: SheetRow['id']
-  rangeEndCellId: SheetCell['id']
-  visibleColumns: SheetColumn['id'][]
-  visibleRows: SheetRow['id'][]
+  rangeCellIds: Set<ISheetCell['id']>
+  rangeStartColumnId: ISheetColumn['id']
+  rangeStartRowId: ISheetRow['id']
+  rangeStartCellId: ISheetCell['id']
+  rangeEndColumnId: ISheetColumn['id']
+  rangeEndRowId: ISheetRow['id']
+  rangeEndCellId: ISheetCell['id']
+  visibleColumns: ISheetColumn['id'][]
+  visibleRows: ISheetRow['id'][]
 }
 
 export interface ISheet {
   id: string
   sourceSheetId: ISheet['id']
   fileType: FileType
-	rows: SheetRow['id'][]
-  visibleRows: SheetRow['id'][]
-  columns: SheetColumn['id'][]
-  visibleColumns: SheetColumn['id'][]
-  filters: SheetFilter['id'][]
-  groups: SheetGroup['id'][]
-  sorts: SheetSort['id'][]
+	rows: ISheetRow['id'][]
+  visibleRows: ISheetRow['id'][]
+  columns: ISheetColumn['id'][]
+  visibleColumns: ISheetColumn['id'][]
+  filters: ISheetFilter['id'][]
+  groups: ISheetGroup['id'][]
+  sorts: ISheetSort['id'][]
   styles: SheetStyles
   selections: SheetSelections
 }
 export interface SheetUpdates {
-  rows?: SheetRow['id'][]
-  visibleRows?: SheetRow['id'][]
-  columns?: SheetColumn['id'][]
-  visibleColumns?: SheetColumn['id'][]
-  filters?: SheetFilter['id'][]
-  groups?: SheetGroup['id'][]
-  sorts?: SheetSort['id'][]
+  rows?: ISheetRow['id'][]
+  visibleRows?: ISheetRow['id'][]
+  columns?: ISheetColumn['id'][]
+  visibleColumns?: ISheetColumn['id'][]
+  filters?: ISheetFilter['id'][]
+  groups?: ISheetGroup['id'][]
+  sorts?: ISheetSort['id'][]
   styles?: SheetStyles
   selections?: SheetSelections
 }
 export interface SheetSelections {
   isSelectedCellEditingPrevented: boolean
   isSelectedCellNavigationPrevented: boolean
-  rangeCellIds: Set<SheetCell['id']>
-  rangeStartColumnId: SheetColumn['id']
-  rangeStartRowId: SheetRow['id']
-  rangeStartCellId: SheetCell['id']
-  rangeEndColumnId: SheetColumn['id']
-  rangeEndRowId: SheetRow['id']
-  rangeEndCellId: SheetCell['id']
+  rangeCellIds: Set<ISheetCell['id']>
+  rangeStartColumnId: ISheetColumn['id']
+  rangeStartRowId: ISheetRow['id']
+  rangeStartCellId: ISheetCell['id']
+  rangeEndColumnId: ISheetColumn['id']
+  rangeEndRowId: ISheetRow['id']
+  rangeEndCellId: ISheetCell['id']
 }
 export interface SheetStyles {
   id: string
@@ -99,41 +99,41 @@ export interface SheetFromServer {
   id: string
   sourceSheetId: string
   fileType: FileType
-  columns: SheetColumn[]
-  visibleColumns: SheetColumn['id'][]
-  filters: SheetFilter[]
-  groups: SheetGroup[]
+  columns: ISheetColumn[]
+  visibleColumns: ISheetColumn['id'][]
+  filters: ISheetFilter[]
+  groups: ISheetGroup[]
   rows: SheetFromServerRow[]
-  sorts: SheetSort[]
+  sorts: ISheetSort[]
   styles: SheetStyles
 }
 export interface SheetFromServerRow {
 	id: string
 	sheetId: string
-	cells: SheetCell[]
+	cells: ISheetCell[]
 }
 
-export interface SheetColumn {
+export interface ISheetColumn {
 	id: string
 	sheetId: string
-	typeId: SheetColumnType['id']
+	typeId: ISheetColumnType['id']
 	name: string
 	width: number
 }
 export interface SheetColumnUpdates {
-  typeId?: SheetColumnType['id']
+  typeId?: ISheetColumnType['id']
   name?: string
   width?: number
 }
 export interface SheetColumnToServer {
   id: string
   sheetId: string
-  typeId: SheetColumnType['id']
+  typeId: ISheetColumnType['id']
   name: string
   width: number
-  cells: SheetCell[]
+  cells: ISheetCell[]
 }
-export interface SheetColumnType {
+export interface ISheetColumnType {
   id: string
   organizationId: string
   userId: string
@@ -150,21 +150,21 @@ export interface SheetColumnTypeDropdownOption {
   value: string
 }
 
-export interface SheetRow {
+export interface ISheetRow {
 	id: string
 	sheetId: string
-	cells: { [columnId: string]: SheetCell['id'] }
+	cells: { [columnId: string]: ISheetCell['id'] }
 }
 export interface SheetRowUpdates {
-  cells?: { [columnId: string]: SheetCell['id'] }
+  cells?: { [columnId: string]: ISheetCell['id'] }
 }
 export interface SheetRowToServer {
   id: string
   sheetId: string
-  cells: SheetCell[]
+  cells: ISheetCell[]
 }
 
-export interface SheetCell {
+export interface ISheetCell {
 	id: string
 	sheetId: string
 	columnId: string
@@ -188,7 +188,7 @@ export type SheetCellType =
 'PHOTOS' | 
 'FILES'
 
-export interface SheetSort {
+export interface ISheetSort {
   id: string
   sheetId: string
   columnId: string
@@ -200,7 +200,7 @@ export interface SheetSortUpdates {
 }
 export type SheetSortOrder = 'ASC' | 'DESC'
 
-export interface SheetFilter {
+export interface ISheetFilter {
   id: string
   sheetId: string
   columnId: string
@@ -211,7 +211,7 @@ export interface SheetFilter {
 export interface SheetFilterUpdates {}
 export type SheetFilterType = '=' | '!=' | '>' | '>=' | '<' | '<='
 
-export interface SheetGroup {
+export interface ISheetGroup {
   id: string
   sheetId: string
   columnId: string
@@ -227,7 +227,7 @@ export type SheetGroupOrder = 'ASC' | 'DESC'
 export interface SheetView {
   id: string
   sourceSheetId: string
-  visibleColumns: SheetColumn['id'][]
+  visibleColumns: ISheetColumn['id'][]
   filters: IAllSheetFilters
   groups: IAllSheetGroups
   sorts: IAllSheetSorts
@@ -237,5 +237,5 @@ export interface SheetDownloadOptions {
   filename: string
   includeColumnTypeInformation: boolean
   includeAssets: boolean
-  visibleRows: SheetRow['id'][]
+  visibleRows: ISheetRow['id'][]
 }

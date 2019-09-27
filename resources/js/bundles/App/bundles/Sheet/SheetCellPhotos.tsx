@@ -8,7 +8,7 @@ import { ARROW_LEFT, ARROW_RIGHT, PHOTOS } from '@app/assets/icons'
 
 import { mutation, query } from '@app/api'
 
-import { SheetCell, SheetColumnType } from '@app/state/sheet/types'
+import { ISheetCell, ISheetColumnType } from '@app/state/sheet/types'
 
 import Icon from '@/components/Icon'
 import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
@@ -171,9 +171,9 @@ const SheetCellPhotos = ({
 //-----------------------------------------------------------------------------
 interface SheetCellPhotosProps {
   sheetId: string
-  cell: SheetCell
+  cell: ISheetCell
   cellId: string
-  columnType: SheetColumnType
+  columnType: ISheetColumnType
   isCellSelected: boolean
   updateCellValue(nextCellValue: string): void
   updateSheetSelectionFromArrowKey(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void

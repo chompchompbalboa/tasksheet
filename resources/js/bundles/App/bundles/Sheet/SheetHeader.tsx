@@ -6,7 +6,11 @@ import { batch, connect, useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { ISheet, SheetActive, SheetActiveUpdates, SheetColumn, SheetColumnUpdates } from '@app/state/sheet/types'
+import { 
+  ISheet, 
+  SheetActive, SheetActiveUpdates, 
+  ISheetColumn, SheetColumnUpdates 
+} from '@app/state/sheet/types'
 import { selectActive } from '@app/state/sheet/selectors'
 import {
   allowSelectedCellEditing as allowSelectedCellEditingAction,
@@ -52,7 +56,7 @@ const SheetHeader = ({
   
   const dispatch = useDispatch()
   const rangeStartColumnId = useSelector((state: AppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeStartColumnId)
-  const selectSheetColumns = (startColumnId: SheetColumn['id'], endColumnId?: SheetColumn['id']) => dispatch(selectSheetColumnsAction(sheetId, startColumnId, endColumnId))
+  const selectSheetColumns = (startColumnId: ISheetColumn['id'], endColumnId?: ISheetColumn['id']) => dispatch(selectSheetColumnsAction(sheetId, startColumnId, endColumnId))
   const allowSelectedCellEditing = () => dispatch(allowSelectedCellEditingAction(sheetId))
   const allowSelectedCellNavigation = () => dispatch(allowSelectedCellNavigationAction(sheetId))
   const preventSelectedCellEditing = () => dispatch(preventSelectedCellEditingAction(sheetId))
@@ -158,7 +162,7 @@ const SheetHeader = ({
 interface SheetHeaderProps {
   sheetId: ISheet['id']
   active?: SheetActive
-  column: SheetColumn
+  column: ISheetColumn
   handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void
   isLast: boolean
   isNextColumnAColumnBreak: boolean

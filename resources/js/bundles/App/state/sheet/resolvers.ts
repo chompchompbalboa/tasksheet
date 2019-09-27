@@ -8,7 +8,7 @@ import {
   IAllSheetCells,
   IAllSheetRows,
   IAllSheetFilters, SheetFilterType,
-  SheetGroup, IAllSheetGroups, 
+  ISheetGroup, IAllSheetGroups, 
   IAllSheetSorts, 
 } from '@app/state/sheet/types'
 
@@ -85,7 +85,7 @@ export const resolveVisibleRows = (sheet: ISheet, rows: IAllSheetRows, cells: IA
   }
   else {
     const groupedRowIds = groupBy(filteredSortedRowIds, (rowId: string) => {
-      const getValue = (group: SheetGroup) => {
+      const getValue = (group: ISheetGroup) => {
         const cell = rows[rowId] && cells[rows[rowId].cells[group.columnId]]
         return cell && cell.value
       }

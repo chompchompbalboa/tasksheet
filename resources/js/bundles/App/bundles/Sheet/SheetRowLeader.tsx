@@ -7,7 +7,7 @@ import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { ISheet, SheetRow } from '@app/state/sheet/types'
+import { ISheet, ISheetRow } from '@app/state/sheet/types'
 import {
   selectSheetRows as selectSheetRowsAction
 } from '@app/state/sheet/actions'
@@ -25,7 +25,7 @@ const SheetRowLeader = memo(({
 }: SheetRowLeaderProps) => {
   
   const dispatch = useDispatch()
-  const selectSheetRows = (startRowId: SheetRow['id'], endRowId?: SheetRow['id']) => dispatch(selectSheetRowsAction(sheetId, startRowId, endRowId))
+  const selectSheetRows = (startRowId: ISheetRow['id'], endRowId?: ISheetRow['id']) => dispatch(selectSheetRowsAction(sheetId, startRowId, endRowId))
   const rangeStartRowId = useSelector((state: AppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeStartRowId)
   
   const handleClick = (e: MouseEvent) => {
@@ -58,7 +58,7 @@ const SheetRowLeader = memo(({
 //-----------------------------------------------------------------------------
 interface SheetRowLeaderProps {
   sheetId: ISheet['id']
-  rowId: SheetRow['id']
+  rowId: ISheetRow['id']
   handleContextMenu?(e: MouseEvent, type: string, id: string, index?: number): void
   isRowBreak: boolean
   style: {},

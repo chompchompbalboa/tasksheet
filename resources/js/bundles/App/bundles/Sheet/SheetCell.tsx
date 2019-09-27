@@ -7,7 +7,11 @@ import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { SheetCell, SheetColumnType, SheetCellUpdates, SheetColumn, SheetStyles } from '@app/state/sheet/types'
+import { 
+  ISheetCell, SheetCellUpdates, 
+  ISheetColumnType, 
+  SheetStyles 
+} from '@app/state/sheet/types'
 
 import SheetCellBoolean from '@app/bundles/Sheet/SheetCellBoolean'
 import SheetCellDatetime from '@app/bundles/Sheet/SheetCellDatetime'
@@ -106,8 +110,8 @@ const SheetCell = memo(({
 //-----------------------------------------------------------------------------
 interface SheetCellProps {
   sheetId: string
-  cellId: SheetColumn['id']
-  columnType: SheetColumnType
+  cellId: ISheetCell['id']
+  columnType: ISheetColumnType
   highlightColor: string
   style: {
     width?: ReactText
@@ -147,7 +151,7 @@ const Container = styled.div`
   }
 `
 interface IContainer {
-  cellId: SheetCell['id']
+  cellId: ISheetCell['id']
   isCellSelected: boolean
   isCellInRange: boolean
   highlightColor: string

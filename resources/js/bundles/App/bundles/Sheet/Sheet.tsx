@@ -26,12 +26,12 @@ import {
 import { 
   ISheet, SheetFromServer, SheetUpdates,
   SheetActiveUpdates,
-  SheetColumn, IAllSheetColumns, IAllSheetColumnTypes, SheetColumnUpdates, 
+  ISheetColumn, IAllSheetColumns, IAllSheetColumnTypes, SheetColumnUpdates, 
   SheetCellUpdates, 
-  SheetFilter, IAllSheetFilters, 
-  SheetGroup, IAllSheetGroups, 
-  SheetRow, IAllSheetRows, 
-  SheetSort, IAllSheetSorts 
+  ISheetFilter, IAllSheetFilters, 
+  ISheetGroup, IAllSheetGroups, 
+  ISheetRow, IAllSheetRows, 
+  ISheetSort, IAllSheetSorts 
 } from '@app/state/sheet/types'
 import {  
   selectColumns, 
@@ -270,12 +270,12 @@ interface SheetComponentProps {
   id: ISheet['id']
   loadSheet?(sheet: SheetFromServer): Promise<void>
   rows?: IAllSheetRows
-  sheetColumns?: SheetColumn['id'][]
-  sheetFilters?: SheetFilter['id'][]
-  sheetGroups?: SheetGroup['id'][]
-  sheetSorts?: SheetSort['id'][]
-  sheetVisibleColumns?: SheetColumn['id'][]
-  sheetVisibleRows?: SheetRow['id'][]
+  sheetColumns?: ISheetColumn['id'][]
+  sheetFilters?: ISheetFilter['id'][]
+  sheetGroups?: ISheetGroup['id'][]
+  sheetSorts?: ISheetSort['id'][]
+  sheetVisibleColumns?: ISheetColumn['id'][]
+  sheetVisibleRows?: ISheetRow['id'][]
   sorts?: IAllSheetSorts
   sourceSheetId?: string
   updateSheet?(sheetId: string, updates: SheetUpdates): void

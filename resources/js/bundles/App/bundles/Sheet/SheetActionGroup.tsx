@@ -5,7 +5,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { v4 as createUuid } from 'uuid'
 
-import { SheetColumn, IAllSheetColumns, SheetGroup, IAllSheetGroups } from '@app/state/sheet/types'
+import { ISheetColumn, IAllSheetColumns, ISheetGroup, IAllSheetGroups } from '@app/state/sheet/types'
 
 import { ThunkDispatch } from '@app/state/types'
 import { SheetGroupUpdates } from '@app/state/sheet/types'
@@ -23,7 +23,7 @@ import SheetActionGroupSelectedOption from '@app/bundles/Sheet/SheetActionGroupS
 // Redux
 //-----------------------------------------------------------------------------
 const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionGroupProps) => ({
-  createSheetGroup: (newGroup: SheetGroup) => dispatch(createSheetGroupAction(props.sheetId, newGroup)),
+  createSheetGroup: (newGroup: ISheetGroup) => dispatch(createSheetGroupAction(props.sheetId, newGroup)),
   deleteSheetGroup: (columnId: string) => dispatch(deleteSheetGroupAction(props.sheetId, columnId)),
   updateSheetGroup: (sheetId: string, groupId: string, updates: SheetGroupUpdates, skipVisibleRowsUpdate?: boolean) => dispatch(updateSheetGroupAction(sheetId, groupId, updates, skipVisibleRowsUpdate))
 })
@@ -48,7 +48,7 @@ const SheetActionGroup = ({
     }
   }).filter(Boolean)
 
-  const selectedOptions = sheetGroups && sheetGroups.map((groupId: SheetGroup['id']) => { 
+  const selectedOptions = sheetGroups && sheetGroups.map((groupId: ISheetGroup['id']) => { 
     const group = groups[groupId]
     return { label: columns[group.columnId].name, value: group.id, isLocked: group.isLocked }
   })
@@ -73,12 +73,12 @@ const SheetActionGroup = ({
 //-----------------------------------------------------------------------------
 interface SheetActionGroupProps {
   columns: IAllSheetColumns
-  createSheetGroup?(newGroup: SheetGroup): void
+  createSheetGroup?(newGroup: ISheetGroup): void
   deleteSheetGroup?(columnId: string): void
   updateSheetGroup?(sheetId: string, groupId: string, updates: SheetGroupUpdates, skipVisibleRowsUpdate?: boolean): void
   groups: IAllSheetGroups
-  sheetGroups: SheetGroup['id'][]
-  sheetVisibleColumns: SheetColumn['id'][]
+  sheetGroups: ISheetGroup['id'][]
+  sheetVisibleColumns: ISheetColumn['id'][]
   sheetId: string
 }
 

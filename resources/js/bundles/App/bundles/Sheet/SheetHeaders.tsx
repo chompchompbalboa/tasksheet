@@ -4,7 +4,7 @@
 import React, { MouseEvent, useState } from 'react'
 import styled from 'styled-components'
 
-import { ISheet, SheetActiveUpdates, SheetColumn, IAllSheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
+import { ISheet, SheetActiveUpdates, ISheetColumn, IAllSheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
 
 import SheetHeader from '@app/bundles/Sheet/SheetHeader'
 import SheetRowLeader from '@app/bundles/Sheet/SheetRowLeader'
@@ -22,12 +22,12 @@ const SheetHeaders = ({
 }: SheetHeadersProps) => {
 
   const [ isResizing, setIsResizing ] = useState(false)
-  const handleResizeEnd = (columnId: SheetColumn['id'], columnWidthChange: number) => {
+  const handleResizeEnd = (columnId: ISheetColumn['id'], columnWidthChange: number) => {
     const column = columns[columnId]
     updateSheetColumn(columnId, { width: column.width + columnWidthChange })
   }
   
-  const columnBreakHeader: SheetColumn = {
+  const columnBreakHeader: ISheetColumn = {
     id: 'COLUMN_BREAK',
     sheetId: '',
     name: 'Break',
@@ -71,15 +71,15 @@ interface SheetHeadersProps {
   sheetId: ISheet['id']
   columns: IAllSheetColumns
   handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void
-  sheetVisibleColumns: SheetColumn['id'][]
+  sheetVisibleColumns: ISheetColumn['id'][]
   updateSheetActive(updates: SheetActiveUpdates): void
-  updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
+  updateSheetColumn(columnId: ISheetColumn['id'], updates: SheetColumnUpdates): void
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div`  
+const Container = styled.div`
   z-index: 1000;
   position: sticky;
   top: 0;

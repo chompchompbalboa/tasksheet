@@ -8,7 +8,7 @@ import ContextMenu from '@app/bundles/ContextMenu/ContextMenu'
 import ContextMenuDivider from '@app/bundles/ContextMenu/ContextMenuDivider'
 import ContextMenuItem from '@app/bundles/ContextMenu/ContextMenuItem'
 
-import { ISheet, SheetRow } from '@app/state/sheet/types'
+import { ISheet, ISheetRow } from '@app/state/sheet/types'
 import { 
   deleteSheetRow as deleteSheetRowAction
 } from '@app/state/sheet/actions'
@@ -50,7 +50,7 @@ const SheetRowContextMenu = ({
 //-----------------------------------------------------------------------------
 interface SheetRowContextMenuProps {
   sheetId: ISheet['id']
-  rowId: SheetRow['id']
+  rowId: ISheetRow['id']
   closeContextMenu(): void
   contextMenuLeft: number
   contextMenuTop: number
