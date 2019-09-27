@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { BOLD } from '@app/assets/icons'
 
 import { AppState } from '@app/state'
-import { Sheet } from '@app/state/sheet/types'
+import { ISheet } from '@app/state/sheet/types'
 import {
   updateSheetStyles as updateSheetStylesAction
 } from '@app/state/sheet/actions'
@@ -44,7 +44,7 @@ const SheetActionCellStyleBold = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionCellStyleBoldProps {
-  sheetId: Sheet['id']
+  sheetId: ISheet['id']
 }
 
 //-----------------------------------------------------------------------------

@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { Sheet } from '@app/state/sheet/types'
+import { ISheet } from '@app/state/sheet/types'
 
 import Icon from '@/components/Icon'
 
@@ -83,7 +83,7 @@ const SheetActionCellStyleButton = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionCellStyleButtonProps {
-  sheetId: Sheet['id']
+  sheetId: ISheet['id']
   icon: string
   sheetStylesSet: Set<string>
   updateSheetStylesSet(nextSheetStylesSet: Set<string>): void

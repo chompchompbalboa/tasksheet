@@ -9,15 +9,15 @@ import { mutation } from '@app/api'
 
 import { AppState } from '@app/state'
 import { 
-  Sheet, SheetFromServer, SheetUpdates,
+  ISheet, SheetFromServer, SheetUpdates,
   SheetActiveUpdates, 
   IAllSheetColumns, SheetColumn, SheetColumnUpdates,
   IAllSheetRows, SheetRowUpdates, 
   IAllSheetCells, SheetCell, SheetCellUpdates,
   SheetClipboard,
-  SheetFilter, SheetFilters, SheetFilterUpdates,
-  SheetGroup, SheetGroups, SheetGroupUpdates,
-  SheetSort, SheetSorts, SheetSortUpdates,
+  IAllSheetFilters, SheetFilter, SheetFilterUpdates,
+  IAllSheetGroups, SheetGroup, SheetGroupUpdates,
+  IAllSheetSorts, SheetSort, SheetSortUpdates,
   SheetStylesUpdates, SheetStylesServerUpdates,
   SheetRow
 } from '@app/state/sheet/types'
@@ -41,15 +41,15 @@ export type SheetActions =
   UpdateSheetCell | SetAllSheetCells | 
   UpdateSheetClipboard |
   UpdateSheetColumn | SetAllSheetColumns | 
-  DeleteSheetFilter | UpdateSheetFilter | UpdateSheetFilters |
-  DeleteSheetGroup | UpdateSheetGroup | UpdateSheetGroups |
+  DeleteSheetFilter | UpdateSheetFilter | SetAllSheetFilters |
+  DeleteSheetGroup | UpdateSheetGroup | SetAllSheetGroups |
   UpdateSheetRow | SetAllSheetRows | 
-  DeleteSheetSort | UpdateSheetSort | UpdateSheetSorts
+  DeleteSheetSort | UpdateSheetSort | SetAllSheetSorts
 
 //-----------------------------------------------------------------------------
 // Copy Sheet Range
 //-----------------------------------------------------------------------------
-export const copySheetRange = (sheetId: Sheet['id']): ThunkAction => {
+export const copySheetRange = (sheetId: ISheet['id']): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       allSheets: {
@@ -89,7 +89,7 @@ export const copySheetRange = (sheetId: Sheet['id']): ThunkAction => {
 //-----------------------------------------------------------------------------
 // Cut Sheet Range
 //-----------------------------------------------------------------------------
-export const cutSheetRange = (sheetId: Sheet['id']): ThunkAction => {
+export const cutSheetRange = (sheetId: ISheet['id']): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       allSheets: {
@@ -129,7 +129,7 @@ export const cutSheetRange = (sheetId: Sheet['id']): ThunkAction => {
 //-----------------------------------------------------------------------------
 // Paste Sheet Range
 //-----------------------------------------------------------------------------
-export const pasteSheetRange = (sheetId: Sheet['id']): ThunkAction => {
+export const pasteSheetRange = (sheetId: ISheet['id']): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       allSheetCells,
@@ -255,7 +255,7 @@ export const createSheetFromCsv = (folderId: Folder['id'], fileToUpload: File): 
 //-----------------------------------------------------------------------------
 // Create Sheet Column
 //-----------------------------------------------------------------------------
-export const createSheetColumn = (sheetId: Sheet['id'], newColumnVisibleColumnsIndex: number): ThunkAction => {
+export const createSheetColumn = (sheetId: ISheet['id'], newColumnVisibleColumnsIndex: number): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       allSheets,
@@ -303,7 +303,7 @@ export const createSheetColumn = (sheetId: Sheet['id'], newColumnVisibleColumnsI
 //-----------------------------------------------------------------------------
 // Create Sheet Column Break
 //-----------------------------------------------------------------------------
-export const createSheetColumnBreak = (sheetId: Sheet['id'], newColumnVisibleColumnsIndex: number): ThunkAction => {
+export const createSheetColumnBreak = (sheetId: ISheet['id'], newColumnVisibleColumnsIndex: number): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       allSheets,
@@ -336,16 +336,16 @@ export const createSheetFilter = (sheetId: string, newFilter: SheetFilter): Thun
       allSheets,
       allSheetRows,
       allSheetCells,
-      filters,
-      groups,
-      sorts
+      allSheetFilters,
+      allSheetGroups,
+      allSheetSorts
     } = getState().sheet
     const sheet = allSheets[sheetId]
-    const nextFilters = { ...filters, [newFilter.id]: newFilter }
+    const nextFilters = { ...allSheetFilters, [newFilter.id]: newFilter }
     const nextSheetFilters = [ ...sheet.filters, newFilter.id ]
-    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, filters: nextSheetFilters }, allSheetRows, allSheetCells, nextFilters, groups, sorts)
+    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, filters: nextSheetFilters }, allSheetRows, allSheetCells, nextFilters, allSheetGroups, allSheetSorts)
     batch(() => {
-      dispatch(updateSheetFilters({ ...filters, [newFilter.id]: newFilter }))
+      dispatch(setAllSheetFilters({ ...allSheetFilters, [newFilter.id]: newFilter }))
       dispatch(updateSheetReducer(sheetId, {
         filters: nextSheetFilters,
         visibleRows: nextSheetVisibleRows
@@ -363,17 +363,17 @@ export const createSheetGroup = (sheetId: string, newGroup: SheetGroup): ThunkAc
     const {
       allSheets,
       allSheetCells,
-      filters,
-      groups,
+      allSheetFilters,
+      allSheetGroups,
       allSheetRows,
-      sorts,
+      allSheetSorts,
     } = getState().sheet
     const sheet = allSheets[sheetId]
-    const nextGroups = { ...groups, [newGroup.id]: newGroup }
+    const nextAllSheetGroups = { ...allSheetGroups, [newGroup.id]: newGroup }
     const nextSheetGroups = [ ...sheet.groups, newGroup.id ]
-    const nextSheetVisible = resolveVisibleRows({ ...sheet, groups: nextSheetGroups }, allSheetRows, allSheetCells, filters, nextGroups, sorts)
+    const nextSheetVisible = resolveVisibleRows({ ...sheet, groups: nextSheetGroups }, allSheetRows, allSheetCells, allSheetFilters, nextAllSheetGroups, allSheetSorts)
     batch(() => {
-      dispatch(updateSheetGroups({ ...groups, [newGroup.id]: newGroup }))
+      dispatch(setAllSheetGroups({ ...allSheetGroups, [newGroup.id]: newGroup }))
       dispatch(updateSheetReducer(sheetId, {
         groups: nextSheetGroups,
         visibleRows: nextSheetVisible
@@ -425,17 +425,17 @@ export const createSheetSort = (sheetId: string, newSort: SheetSort): ThunkActio
     const {
       allSheets,
       allSheetCells,
-      filters,
-      groups,
+      allSheetFilters,
+      allSheetGroups,
       allSheetRows,
-      sorts,
+      allSheetSorts,
     } = getState().sheet
     const sheet = allSheets[sheetId]
-    const nextSorts = { ...sorts, [newSort.id]: newSort }
+    const nextAllSheetSorts = { ...allSheetSorts, [newSort.id]: newSort }
     const nextSheetSorts = [ ...sheet.sorts, newSort.id ]
-    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, sorts: nextSheetSorts }, allSheetRows, allSheetCells, filters, groups, nextSorts)
+    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, sorts: nextSheetSorts }, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, nextAllSheetSorts)
     batch(() => {
-      dispatch(updateSheetSorts({ ...sorts, [newSort.id]: newSort }))
+      dispatch(setAllSheetSorts(nextAllSheetSorts))
       dispatch(updateSheetReducer(sheetId, {
         sorts: nextSheetSorts,
         visibleRows: nextSheetVisibleRows
@@ -452,9 +452,20 @@ export const createSheetSort = (sheetId: string, newSort: SheetSort): ThunkActio
 export const createSheetView = (sheetId: string, viewName: string): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
-      folder: { activeFolderPath, files, folders },
-      sheet: { allSheets, filters, groups, sorts },
-      tab: { tabs }
+      folder: { 
+        activeFolderPath, 
+        files, 
+        folders 
+      },
+      sheet: { 
+        allSheets, 
+        allSheetFilters, 
+        allSheetGroups, 
+        allSheetSorts 
+      },
+      tab: { 
+        tabs 
+      }
     } = getState()
     const sourceSheet = allSheets[sheetId]
     const fileId = Object.keys(files).find(fileId => files[fileId].typeId === sheetId)
@@ -462,25 +473,25 @@ export const createSheetView = (sheetId: string, viewName: string): ThunkAction 
     const newFileId = createUuid()
     const newSheetViewId = createUuid()
     // Filters
-    const newFilters: SheetFilters = {}
+    const newFilters: IAllSheetFilters = {}
     const newSheetViewFilters: SheetFilter['id'][] = []
     sourceSheet.filters.forEach(filterId => {
       const newFilterId = createUuid()
-      newFilters[newFilterId] = { ...filters[filterId], id: newFilterId, sheetId: newSheetViewId, isLocked: true }
+      newFilters[newFilterId] = { ...allSheetFilters[filterId], id: newFilterId, sheetId: newSheetViewId, isLocked: true }
     })
     // Groups
-    const newGroups: SheetGroups = {}
+    const newGroups: IAllSheetGroups = {}
     const newSheetViewGroups: SheetGroup['id'][] = []
     sourceSheet.groups.forEach(groupId => {
       const newGroupId = createUuid()
-      newGroups[newGroupId] = { ...groups[groupId], id: newGroupId, sheetId: newSheetViewId, isLocked: true }
+      newGroups[newGroupId] = { ...allSheetGroups[groupId], id: newGroupId, sheetId: newSheetViewId, isLocked: true }
     })
     // Sorts
-    const newSorts: SheetSorts = {}
+    const newSorts: IAllSheetSorts = {}
     const newSheetViewSorts: SheetSort['id'][] = []
     sourceSheet.sorts.forEach(sortId => {
       const newSortId = createUuid()
-      newSorts[newSortId] = { ...sorts[sortId], id: newSortId, sheetId: newSheetViewId, isLocked: true }
+      newSorts[newSortId] = { ...allSheetSorts[sortId], id: newSortId, sheetId: newSheetViewId, isLocked: true }
     })
   // Update allSheets
     dispatch(loadSheetReducer(
@@ -623,17 +634,17 @@ export const deleteSheetFilter = (sheetId: string, filterId: string): ThunkActio
     const {
       allSheets,
       allSheetCells,
-      filters,
-      groups,
+      allSheetFilters,
+      allSheetGroups,
       allSheetRows,
-      sorts
+      allSheetSorts
     } = getState().sheet
     const sheet = allSheets[sheetId]
-    const { [filterId]: deletedFilter, ...nextFilters } = filters
+    const { [filterId]: deletedFilter, ...nextFilters } = allSheetFilters
     const nextSheetFilters = sheet.filters.filter(sheetFilterId => sheetFilterId !== filterId)
-    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, filters: nextSheetFilters}, allSheetRows, allSheetCells, nextFilters, groups, sorts)
+    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, filters: nextSheetFilters}, allSheetRows, allSheetCells, nextFilters, allSheetGroups, allSheetSorts)
     batch(() => {
-      dispatch(updateSheetFilters(nextFilters))
+      dispatch(setAllSheetFilters(nextFilters))
       dispatch(updateSheetReducer(sheetId, {
         filters: nextSheetFilters,
         visibleRows: nextSheetVisibleRows
@@ -656,17 +667,17 @@ export const deleteSheetGroup = (sheetId: string, groupId: string): ThunkAction 
     const {
       allSheets,
       allSheetCells,
-      filters,
-      groups,
+      allSheetFilters,
+      allSheetGroups,
       allSheetRows,
-      sorts
+      allSheetSorts
     } = getState().sheet
     const sheet = allSheets[sheetId]
-    const { [groupId]: deletedGroup, ...nextGroups } = groups
+    const { [groupId]: deletedGroup, ...nextAllSheetGroups } = allSheetGroups
     const nextSheetGroups = sheet.groups.filter(sheetGroupId => sheetGroupId !== groupId)
-    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, groups: nextSheetGroups}, allSheetRows, allSheetCells, filters, nextGroups, sorts)
+    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, groups: nextSheetGroups}, allSheetRows, allSheetCells, allSheetFilters, nextAllSheetGroups, allSheetSorts)
     batch(() => {
-      dispatch(updateSheetGroups(nextGroups))
+      dispatch(setAllSheetGroups(nextAllSheetGroups))
       dispatch(updateSheetReducer(sheetId, {
         groups: nextSheetGroups,
         visibleRows: nextSheetVisibleRows
@@ -689,17 +700,17 @@ export const deleteSheetSort = (sheetId: string, sortId: string): ThunkAction =>
     const {
       allSheets,
       allSheetCells,
-      filters,
-      groups,
+      allSheetFilters,
+      allSheetGroups,
       allSheetRows,
-      sorts,
+      allSheetSorts,
     } = getState().sheet
     const sheet = allSheets[sheetId]
-    const { [sortId]: deletedSort, ...nextSorts } = sorts
+    const { [sortId]: deletedSort, ...nextAllSheetSorts } = allSheetSorts
     const nextSheetSorts = sheet.sorts.filter(sheetSortId => sheetSortId !== sortId)
-    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, sorts: nextSheetSorts}, allSheetRows, allSheetCells, filters, groups, nextSorts)
+    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, sorts: nextSheetSorts}, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, nextAllSheetSorts)
     batch(() => {
-      dispatch(updateSheetSorts(nextSorts))
+      dispatch(setAllSheetSorts(nextAllSheetSorts))
       dispatch(updateSheetReducer(sheetId, {
         sorts: nextSheetSorts,
         visibleRows: nextSheetVisibleRows
@@ -736,7 +747,7 @@ export const deleteSheetRow = (sheetId: string, rowId: SheetRow['id']): ThunkAct
 //-----------------------------------------------------------------------------
 // Hide Sheet Column
 //-----------------------------------------------------------------------------
-export const hideSheetColumn = (sheetId: Sheet['id'], columnVisibleColumnsIndex: number) => {
+export const hideSheetColumn = (sheetId: ISheet['id'], columnVisibleColumnsIndex: number) => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       visibleColumns
@@ -752,13 +763,13 @@ export const hideSheetColumn = (sheetId: Sheet['id'], columnVisibleColumnsIndex:
 export const LOAD_SHEET = 'LOAD_SHEET'
 interface LoadSheet {
 	type: typeof LOAD_SHEET
-  sheet: Sheet
+  sheet: ISheet
   cells: IAllSheetCells
   columns: IAllSheetColumns
-  filters: SheetFilters
-  groups: SheetGroups
+  filters: IAllSheetFilters
+  groups: IAllSheetGroups
   rows: IAllSheetRows
-  sorts: SheetSorts
+  sorts: IAllSheetSorts
 }
 
 export const loadSheet = (sheetFromServer: SheetFromServer): ThunkAction => {
@@ -786,28 +797,28 @@ export const loadSheet = (sheetFromServer: SheetFromServer): ThunkAction => {
       sheetColumns.push(column.id)
     })
     // Filters
-    const normalizedFilters: SheetFilters = {}
+    const normalizedFilters: IAllSheetFilters = {}
     const sheetFilters: SheetFilter['id'][] = []
     sheetFromServer.filters.forEach((filter: SheetFilter) => { 
       normalizedFilters[filter.id] = filter 
       sheetFilters.push(filter.id)
     })
     // Groups
-    const normalizedGroups: SheetGroups = {}
+    const normalizedGroups: IAllSheetGroups = {}
     const sheetGroups: SheetGroup['id'][] = []
     sheetFromServer.groups.forEach(group => { 
       normalizedGroups[group.id] = group 
       sheetGroups.push(group.id)
     })
     // Sorts
-    const normalizedSorts: SheetSorts = {}
+    const normalizedSorts: IAllSheetSorts = {}
     const sheetSorts: SheetSort['id'][] = []
     sheetFromServer.sorts.forEach(sort => { 
       normalizedSorts[sort.id] = sort 
       sheetSorts.push(sort.id)
     })
     // New Sheet
-    const newSheet: Sheet = {
+    const newSheet: ISheet = {
       id: sheetFromServer.id,
       sourceSheetId: sheetFromServer.sourceSheetId,
       fileType: sheetFromServer.fileType,
@@ -847,7 +858,7 @@ export const loadSheet = (sheetFromServer: SheetFromServer): ThunkAction => {
 	}
 }
 
-export const loadSheetReducer = (sheet: Sheet, cells: IAllSheetCells, columns: IAllSheetColumns, filters: SheetFilters, groups: SheetGroups, rows: IAllSheetRows, sorts: SheetSorts): SheetActions => {
+export const loadSheetReducer = (sheet: ISheet, cells: IAllSheetCells, columns: IAllSheetColumns, filters: IAllSheetFilters, groups: IAllSheetGroups, rows: IAllSheetRows, sorts: IAllSheetSorts): SheetActions => {
 	return {
 		type: LOAD_SHEET,
     columns,
@@ -863,7 +874,7 @@ export const loadSheetReducer = (sheet: Sheet, cells: IAllSheetCells, columns: I
 //-----------------------------------------------------------------------------
 // Show Sheet Column
 //-----------------------------------------------------------------------------
-export const showSheetColumn = (sheetId: Sheet['id'], columnVisibleColumnsIndex: number, columnIdToShow: SheetColumn['id']) => {
+export const showSheetColumn = (sheetId: ISheet['id'], columnVisibleColumnsIndex: number, columnIdToShow: SheetColumn['id']) => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       visibleColumns
@@ -1019,7 +1030,7 @@ interface UpdateSheetFilter {
 	updates: SheetFilterUpdates
 }
 
-export const updateSheetFilter = (sheetId: Sheet['id'], filterId: string, updates: SheetFilterUpdates): ThunkAction => {
+export const updateSheetFilter = (sheetId: ISheet['id'], filterId: string, updates: SheetFilterUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch) => {
     dispatch(clearSheetSelection(sheetId))
     dispatch(updateSheetFilterReducer(filterId, updates))
@@ -1038,16 +1049,16 @@ export const updateSheetFilterReducer = (filterId: string, updates: SheetFilterU
 //-----------------------------------------------------------------------------
 // Update Sheet Filters
 //-----------------------------------------------------------------------------
-export const UPDATE_SHEET_FILTERS = 'UPDATE_SHEET_FILTERS'
-interface UpdateSheetFilters {
-  type: typeof UPDATE_SHEET_FILTERS,
-  nextSheetFilters: SheetFilters
+export const SET_ALL_SHEET_FILTERS = 'SET_ALL_SHEET_FILTERS'
+interface SetAllSheetFilters {
+  type: typeof SET_ALL_SHEET_FILTERS,
+  nextAllSheetFilters: IAllSheetFilters
 }
 
-export const updateSheetFilters = (nextSheetFilters: SheetFilters): SheetActions => {
+export const setAllSheetFilters = (nextAllSheetFilters: IAllSheetFilters): SheetActions => {
 	return {
-		type: UPDATE_SHEET_FILTERS,
-    nextSheetFilters,
+		type: SET_ALL_SHEET_FILTERS,
+    nextAllSheetFilters,
 	}
 }
 
@@ -1061,7 +1072,7 @@ interface UpdateSheetGroup {
 	updates: SheetGroupUpdates
 }
 
-export const updateSheetGroup = (sheetId: Sheet['id'], groupId: string, updates: SheetGroupUpdates, skipVisibleRowsUpdate?: boolean): ThunkAction => {
+export const updateSheetGroup = (sheetId: ISheet['id'], groupId: string, updates: SheetGroupUpdates, skipVisibleRowsUpdate?: boolean): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     dispatch(updateSheetGroupReducer(groupId, updates))
     mutation.updateSheetGroup(groupId, updates)
@@ -1070,15 +1081,15 @@ export const updateSheetGroup = (sheetId: Sheet['id'], groupId: string, updates:
         const {
           allSheets,
           allSheetCells,
-          filters,
-          groups,
+          allSheetFilters,
+          allSheetGroups,
           allSheetRows,
-          sorts,
+          allSheetSorts,
         } = getState().sheet
         const sheet = allSheets[sheetId]
         dispatch(clearSheetSelection(sheetId))
         dispatch(updateSheet(sheetId, {
-          visibleRows: resolveVisibleRows(sheet, allSheetRows, allSheetCells, filters, groups, sorts)
+          visibleRows: resolveVisibleRows(sheet, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, allSheetSorts)
         }))
       }, 10)
     }
@@ -1096,16 +1107,16 @@ export const updateSheetGroupReducer = (groupId: string, updates: SheetGroupUpda
 //-----------------------------------------------------------------------------
 // Update Sheet Groups
 //-----------------------------------------------------------------------------
-export const UPDATE_SHEET_GROUPS = 'UPDATE_SHEET_GROUPS'
-interface UpdateSheetGroups {
-  type: typeof UPDATE_SHEET_GROUPS,
-  nextSheetGroups: SheetGroups
+export const SET_ALL_SHEET_GROUPS = 'SET_ALL_SHEET_GROUPS'
+interface SetAllSheetGroups {
+  type: typeof SET_ALL_SHEET_GROUPS,
+  nextAllSheetGroups: IAllSheetGroups
 }
 
-export const updateSheetGroups = (nextSheetGroups: SheetGroups): SheetActions => {
+export const setAllSheetGroups = (nextAllSheetGroups: IAllSheetGroups): SheetActions => {
 	return {
-		type: UPDATE_SHEET_GROUPS,
-    nextSheetGroups,
+		type: SET_ALL_SHEET_GROUPS,
+    nextAllSheetGroups,
 	}
 }
 
@@ -1156,7 +1167,7 @@ const removeSelectionCellState: SheetCellUpdates = {
   isCellSelected: false
 }
 
-export const allowSelectedCellEditing = (sheetId: Sheet['id']): ThunkAction => {
+export const allowSelectedCellEditing = (sheetId: ISheet['id']): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       allSheets: {
@@ -1174,7 +1185,7 @@ export const allowSelectedCellEditing = (sheetId: Sheet['id']): ThunkAction => {
   }
 }
 
-export const allowSelectedCellNavigation = (sheetId: Sheet['id']): ThunkAction => {
+export const allowSelectedCellNavigation = (sheetId: ISheet['id']): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       allSheets: {
@@ -1192,7 +1203,7 @@ export const allowSelectedCellNavigation = (sheetId: Sheet['id']): ThunkAction =
   }
 }
 
-export const clearSheetSelection = (sheetId: Sheet['id']): ThunkAction => {
+export const clearSheetSelection = (sheetId: ISheet['id']): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       allSheets: {
@@ -1214,7 +1225,7 @@ export const clearSheetSelection = (sheetId: Sheet['id']): ThunkAction => {
   }
 }
 
-export const preventSelectedCellEditing = (sheetId: Sheet['id']): ThunkAction => {
+export const preventSelectedCellEditing = (sheetId: ISheet['id']): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       allSheets: {
@@ -1232,7 +1243,7 @@ export const preventSelectedCellEditing = (sheetId: Sheet['id']): ThunkAction =>
   }
 }
 
-export const preventSelectedCellNavigation = (sheetId: Sheet['id']): ThunkAction => {
+export const preventSelectedCellNavigation = (sheetId: ISheet['id']): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       allSheets: {
@@ -1250,7 +1261,7 @@ export const preventSelectedCellNavigation = (sheetId: Sheet['id']): ThunkAction
   }
 }
 
-export const selectSheetColumns = (sheetId: Sheet['id'], startColumnId: SheetColumn['id'], endColumnId?: SheetColumn['id']): ThunkAction => {
+export const selectSheetColumns = (sheetId: ISheet['id'], startColumnId: SheetColumn['id'], endColumnId?: SheetColumn['id']): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       allSheetRows,
@@ -1304,7 +1315,7 @@ export const selectSheetColumns = (sheetId: Sheet['id'], startColumnId: SheetCol
   }
 }
 
-export const selectSheetRows = (sheetId: Sheet['id'], startRowId: SheetRow['id'], endRowId?: SheetRow['id']): ThunkAction => {
+export const selectSheetRows = (sheetId: ISheet['id'], startRowId: SheetRow['id'], endRowId?: SheetRow['id']): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       allSheetRows,
@@ -1362,7 +1373,7 @@ export const selectSheetRows = (sheetId: Sheet['id'], startRowId: SheetRow['id']
   }
 }
 
-export const updateSheetSelectionFromArrowKey = (sheetId: Sheet['id'], cellId: SheetCell['id'], moveDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): ThunkAction => {
+export const updateSheetSelectionFromArrowKey = (sheetId: ISheet['id'], cellId: SheetCell['id'], moveDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       allSheetCells,
@@ -1519,7 +1530,7 @@ interface UpdateSheetSort {
 	updates: SheetSortUpdates
 }
 
-export const updateSheetSort = (sheetId: Sheet['id'], sortId: string, updates: SheetSortUpdates, skipVisibleRowsUpdate?: boolean): ThunkAction => {
+export const updateSheetSort = (sheetId: ISheet['id'], sortId: string, updates: SheetSortUpdates, skipVisibleRowsUpdate?: boolean): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     dispatch(updateSheetSortReducer(sortId, updates))
     mutation.updateSheetSort(sortId, updates)
@@ -1528,15 +1539,15 @@ export const updateSheetSort = (sheetId: Sheet['id'], sortId: string, updates: S
         const {
           allSheets,
           allSheetCells,
-          filters,
-          groups,
+          allSheetFilters,
+          allSheetGroups,
           allSheetRows,
-          sorts,
+          allSheetSorts,
         } = getState().sheet
         const sheet = allSheets[sheetId]
         dispatch(clearSheetSelection(sheetId))
         dispatch(updateSheet(sheetId, {
-          visibleRows: resolveVisibleRows(sheet, allSheetRows, allSheetCells, filters, groups, sorts)
+          visibleRows: resolveVisibleRows(sheet, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, allSheetSorts)
         }))
       }, 10)
     }
@@ -1554,23 +1565,23 @@ export const updateSheetSortReducer = (sortId: string, updates: SheetSortUpdates
 //-----------------------------------------------------------------------------
 // Update Sheet Sorts
 //-----------------------------------------------------------------------------
-export const UPDATE_SHEET_SORTS = 'UPDATE_SHEET_SORTS'
-interface UpdateSheetSorts {
-  type: typeof UPDATE_SHEET_SORTS,
-  nextSheetSorts: SheetSorts
+export const SET_ALL_SHEET_SORTS = 'SET_ALL_SHEET_SORTS'
+interface SetAllSheetSorts {
+  type: typeof SET_ALL_SHEET_SORTS,
+  nextAllSheetSorts: IAllSheetSorts
 }
 
-export const updateSheetSorts = (nextSheetSorts: SheetSorts): SheetActions => {
+export const setAllSheetSorts = (nextAllSheetSorts: IAllSheetSorts): SheetActions => {
 	return {
-		type: UPDATE_SHEET_SORTS,
-    nextSheetSorts,
+		type: SET_ALL_SHEET_SORTS,
+    nextAllSheetSorts,
 	}
 }
 
 //-----------------------------------------------------------------------------
 // Update Sheet Styles
 //-----------------------------------------------------------------------------
-export const updateSheetStyles = (sheetId: Sheet['id'], updates: SheetStylesUpdates): ThunkAction => {	
+export const updateSheetStyles = (sheetId: ISheet['id'], updates: SheetStylesUpdates): ThunkAction => {	
   return async (dispatch: ThunkDispatch, getState: () => AppState) => {
     const {
       allSheets

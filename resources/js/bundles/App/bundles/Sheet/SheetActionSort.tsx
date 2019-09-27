@@ -5,7 +5,13 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { v4 as createUuid } from 'uuid'
 
-import { Sheet, SheetColumn, IAllSheetColumns, SheetSort, SheetSorts } from '@app/state/sheet/types'
+import { 
+  ISheet, 
+  SheetColumn, 
+  IAllSheetColumns, 
+  SheetSort, 
+  IAllSheetSorts 
+} from '@app/state/sheet/types'
 
 import { ThunkDispatch } from '@app/state/types'
 import { SheetSortUpdates } from '@app/state/sheet/types'
@@ -25,7 +31,7 @@ import SheetActionSortSelectedOption from '@app/bundles/Sheet/SheetActionSortSel
 const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionProps) => ({
   createSheetSort: (newSort: SheetSort) => dispatch(createSheetSortAction(props.sheetId, newSort)),
   deleteSheetSort: (columnId: string) => dispatch(deleteSheetSortAction(props.sheetId, columnId)),
-  updateSheetSort: (sheetId: Sheet['id'], sortId: string, updates: SheetSortUpdates, skipVisibleRowsUpdate?: boolean) => dispatch(updateSheetSortAction(sheetId, sortId, updates, skipVisibleRowsUpdate))
+  updateSheetSort: (sheetId: ISheet['id'], sortId: string, updates: SheetSortUpdates, skipVisibleRowsUpdate?: boolean) => dispatch(updateSheetSortAction(sheetId, sortId, updates, skipVisibleRowsUpdate))
 })
 
 //-----------------------------------------------------------------------------
@@ -75,8 +81,8 @@ interface SheetActionProps {
   columns: IAllSheetColumns
   createSheetSort?(newSort: SheetSort): void
   deleteSheetSort?(columnId: string): void
-  updateSheetSort?(sheetId: Sheet['id'], sortId: string, updates: SheetSortUpdates, skipVisibleRowsUpdate?: boolean): void
-  sorts: SheetSorts
+  updateSheetSort?(sheetId: ISheet['id'], sortId: string, updates: SheetSortUpdates, skipVisibleRowsUpdate?: boolean): void
+  sorts: IAllSheetSorts
   sheetSorts: SheetSort['id'][]
   sheetVisibleColumns: SheetColumn['id'][]
   sheetId: string

@@ -4,12 +4,12 @@
 import { groupBy, orderBy } from 'lodash'
 
 import { 
-  Sheet,
+  ISheet,
   IAllSheetCells,
   IAllSheetRows,
-  SheetFilters, SheetFilterType,
-  SheetGroup, SheetGroups, 
-  SheetSorts, 
+  IAllSheetFilters, SheetFilterType,
+  SheetGroup, IAllSheetGroups, 
+  IAllSheetSorts, 
 } from '@app/state/sheet/types'
 
 //-----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ export const resolveValue = (value: string) => {
 //-----------------------------------------------------------------------------
 // Resolve Visible Rows
 //-----------------------------------------------------------------------------
-export const resolveVisibleRows = (sheet: Sheet, rows: IAllSheetRows, cells: IAllSheetCells, filters: SheetFilters, groups: SheetGroups, sorts: SheetSorts) => {
+export const resolveVisibleRows = (sheet: ISheet, rows: IAllSheetRows, cells: IAllSheetCells, filters: IAllSheetFilters, groups: IAllSheetGroups, sorts: IAllSheetSorts) => {
   const rowIds: string[] = sheet.rows
   const filterIds: string[] = sheet.filters
   const groupIds: string[] = sheet.groups

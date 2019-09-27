@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import { ARROW_DOWN, RESET_COLOR } from '@app/assets/icons'
 
 import { AppState } from '@app/state'
-import { Sheet } from '@app/state/sheet/types'
+import { ISheet } from '@app/state/sheet/types'
 
 import Icon from '@/components/Icon'
 
@@ -154,7 +154,7 @@ const SheetActionCellStyleColorPicker = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionCellStyleColorPickerProps {
-  sheetId: Sheet['id']
+  sheetId: ISheet['id']
   icon: string
   initialColor?: string
   sheetStylesSet: Set<string>

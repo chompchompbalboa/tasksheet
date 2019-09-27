@@ -5,7 +5,7 @@ import axios from '@/api/axios'
 
 import { File as TFile, FileUpdates, Folder, FolderUpdates } from '@app/state/folder/types'
 import { 
-  Sheet, SheetUpdates,
+  ISheet, SheetUpdates,
   SheetCell, SheetCellUpdates,
   SheetColumn, SheetColumnUpdates,
   SheetFilter, 
@@ -77,7 +77,7 @@ export const updateFolder = async (id: string, updates: FolderUpdates) => {
 //-----------------------------------------------------------------------------
 // Sheet
 //-----------------------------------------------------------------------------
-export const createSheet = async (newSheetId: Sheet['id']) => {
+export const createSheet = async (newSheetId: ISheet['id']) => {
 	return axios.post('/app/sheets', {
     newSheetId: newSheetId,
   }).then(response => {
@@ -85,7 +85,7 @@ export const createSheet = async (newSheetId: Sheet['id']) => {
 	})
 }
 
-export const createSheetFromCsv = async (newSheetId: Sheet['id'], fileToUpload: File) => {
+export const createSheetFromCsv = async (newSheetId: ISheet['id'], fileToUpload: File) => {
   const formData = new FormData()
   formData.append('newSheetId', newSheetId)
   formData.append('fileToUpload', fileToUpload)
@@ -112,7 +112,7 @@ export const updateSheetCells = async (updates: SheetCellUpdates[]) => {
 	})
 }
 
-export const createSheetCellFiles = async (sheetId: Sheet['id'], sheetCellId: SheetCell['id'], filesToUpload: File[]) => {
+export const createSheetCellFiles = async (sheetId: ISheet['id'], sheetCellId: SheetCell['id'], filesToUpload: File[]) => {
   const formData = new FormData()
   formData.append('sheetId', sheetId)
   formData.append('sheetCellId', sheetCellId)
@@ -134,7 +134,7 @@ export const downloadSheetCellFile = async (sheetCellFileId: string) => {
 	return axios.post('/app/sheets/cells/files/download/' + sheetCellFileId)
 }
 
-export const createSheetCellPhotos = async (sheetId: Sheet['id'], sheetCellId: SheetCell['id'], photosToUpload: File[]) => {
+export const createSheetCellPhotos = async (sheetId: ISheet['id'], sheetCellId: SheetCell['id'], photosToUpload: File[]) => {
   const formData = new FormData()
   formData.append('sheetId', sheetId)
   formData.append('sheetCellId', sheetCellId)

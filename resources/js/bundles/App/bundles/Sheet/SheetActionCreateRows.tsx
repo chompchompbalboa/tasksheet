@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { ARROW_RIGHT } from '@app/assets/icons'
 
-import { Sheet } from '@app/state/sheet/types'
+import { ISheet } from '@app/state/sheet/types'
 
 import AutosizeInput from 'react-input-autosize'
 import Icon from '@/components/Icon'
@@ -76,9 +76,9 @@ const SheetCreateRows = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetCreateRowsProps {
-  createSheetRow(sheetId: Sheet['id'], sourceSheetId: Sheet['id']): void
-  sheetId: Sheet['id']
-  sourceSheetId: Sheet['id']
+  createSheetRow(sheetId: ISheet['id'], sourceSheetId: ISheet['id']): void
+  sheetId: ISheet['id']
+  sourceSheetId: ISheet['id']
 }
 
 //-----------------------------------------------------------------------------

@@ -24,14 +24,14 @@ import {
   updateSheetSelectionFromCellClick as updateSheetSelectionFromCellClickAction,
 } from '@app/state/sheet/actions'
 import { 
-  Sheet, SheetFromServer, SheetUpdates,
+  ISheet, SheetFromServer, SheetUpdates,
   SheetActiveUpdates,
   SheetColumn, IAllSheetColumns, IAllSheetColumnTypes, SheetColumnUpdates, 
   SheetCellUpdates, 
-  SheetFilter, SheetFilters, 
-  SheetGroup, SheetGroups, 
+  SheetFilter, IAllSheetFilters, 
+  SheetGroup, IAllSheetGroups, 
   SheetRow, IAllSheetRows, 
-  SheetSort, SheetSorts 
+  SheetSort, IAllSheetSorts 
 } from '@app/state/sheet/types'
 import {  
   selectColumns, 
@@ -265,9 +265,9 @@ interface SheetComponentProps {
   columnTypes?: IAllSheetColumnTypes
   createSheetRow?(sheetId: string, sourceSheetId: string): void
   fileId: string
-  filters?: SheetFilters
-  groups?: SheetGroups
-  id: Sheet['id']
+  filters?: IAllSheetFilters
+  groups?: IAllSheetGroups
+  id: ISheet['id']
   loadSheet?(sheet: SheetFromServer): Promise<void>
   rows?: IAllSheetRows
   sheetColumns?: SheetColumn['id'][]
@@ -276,7 +276,7 @@ interface SheetComponentProps {
   sheetSorts?: SheetSort['id'][]
   sheetVisibleColumns?: SheetColumn['id'][]
   sheetVisibleRows?: SheetRow['id'][]
-  sorts?: SheetSorts
+  sorts?: IAllSheetSorts
   sourceSheetId?: string
   updateSheet?(sheetId: string, updates: SheetUpdates): void
   updateSheetActive?(updates: SheetActiveUpdates): void

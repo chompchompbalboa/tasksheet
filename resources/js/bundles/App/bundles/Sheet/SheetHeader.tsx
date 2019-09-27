@@ -6,7 +6,7 @@ import { batch, connect, useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { Sheet, SheetActive, SheetActiveUpdates, SheetColumn, SheetColumnUpdates } from '@app/state/sheet/types'
+import { ISheet, SheetActive, SheetActiveUpdates, SheetColumn, SheetColumnUpdates } from '@app/state/sheet/types'
 import { selectActive } from '@app/state/sheet/selectors'
 import {
   allowSelectedCellEditing as allowSelectedCellEditingAction,
@@ -156,7 +156,7 @@ const SheetHeader = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetHeaderProps {
-  sheetId: Sheet['id']
+  sheetId: ISheet['id']
   active?: SheetActive
   column: SheetColumn
   handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void

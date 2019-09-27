@@ -4,7 +4,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Sheet, SheetActiveUpdates, SheetUpdates, SheetColumn, IAllSheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
+import { ISheet, SheetActiveUpdates, SheetUpdates, SheetColumn, IAllSheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
 
 import SheetColumnContextMenu from '@app/bundles/ContextMenu/SheetColumnContextMenu'
 import SheetRowContextMenu from '@app/bundles/ContextMenu/SheetRowContextMenu'
@@ -59,7 +59,7 @@ const SheetContextMenus = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetContextMenusProps {
-  sheetId: Sheet['id']
+  sheetId: ISheet['id']
   isContextMenuVisible: boolean
   columns: IAllSheetColumns
   contextMenuType: string

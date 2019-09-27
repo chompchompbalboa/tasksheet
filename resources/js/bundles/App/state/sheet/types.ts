@@ -1,13 +1,13 @@
 import { FileType } from '@app/state/folder/types'
 
-export interface IAllSheets { [sheetId: string]: Sheet }
+export interface IAllSheets { [sheetId: string]: ISheet }
 export interface IAllSheetColumns { [columnId: string]: SheetColumn }
 export interface IAllSheetRows { [rowId: string]: SheetRow }
 export interface IAllSheetCells { [cellId: string]: SheetCell }
 export interface IAllSheetColumnTypes { [cellId: string]: SheetColumnType }
-export interface SheetFilters { [filterId: string]: SheetFilter }
-export interface SheetGroups { [groupId: string]: SheetGroup }
-export interface SheetSorts { [sortId: string]: SheetSort }
+export interface IAllSheetFilters { [filterId: string]: SheetFilter }
+export interface IAllSheetGroups { [groupId: string]: SheetGroup }
+export interface IAllSheetSorts { [sortId: string]: SheetSort }
 
 export interface SheetActive {
   columnRenamingId: SheetColumn['id']
@@ -17,7 +17,7 @@ export interface SheetActiveUpdates {
 }
 
 export interface SheetClipboard {
-  sheetId: Sheet['id']
+  sheetId: ISheet['id']
   cutOrCopy: 'CUT' | 'COPY'
   selections: SheetClipboardSelections
 }
@@ -33,9 +33,9 @@ export interface SheetClipboardSelections {
   visibleRows: SheetRow['id'][]
 }
 
-export interface Sheet {
+export interface ISheet {
   id: string
-  sourceSheetId: Sheet['id']
+  sourceSheetId: ISheet['id']
   fileType: FileType
 	rows: SheetRow['id'][]
   visibleRows: SheetRow['id'][]
@@ -228,9 +228,9 @@ export interface SheetView {
   id: string
   sourceSheetId: string
   visibleColumns: SheetColumn['id'][]
-  filters: SheetFilters
-  groups: SheetGroups
-  sorts: SheetSorts
+  filters: IAllSheetFilters
+  groups: IAllSheetGroups
+  sorts: IAllSheetSorts
 }
 
 export interface SheetDownloadOptions {

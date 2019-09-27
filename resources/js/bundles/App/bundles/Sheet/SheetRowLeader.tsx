@@ -7,7 +7,7 @@ import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { Sheet, SheetRow } from '@app/state/sheet/types'
+import { ISheet, SheetRow } from '@app/state/sheet/types'
 import {
   selectSheetRows as selectSheetRowsAction
 } from '@app/state/sheet/actions'
@@ -57,7 +57,7 @@ const SheetRowLeader = memo(({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetRowLeaderProps {
-  sheetId: Sheet['id']
+  sheetId: ISheet['id']
   rowId: SheetRow['id']
   handleContextMenu?(e: MouseEvent, type: string, id: string, index?: number): void
   isRowBreak: boolean

@@ -4,7 +4,13 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Sheet, SheetColumn, IAllSheetColumns, SheetFilter, SheetFilters, SheetGroup, SheetGroups, SheetSort, SheetSorts } from '@app/state/sheet/types'
+import { 
+  ISheet, 
+  SheetColumn, IAllSheetColumns, 
+  SheetFilter, IAllSheetFilters, 
+  SheetGroup, IAllSheetGroups, 
+  SheetSort, IAllSheetSorts 
+} from '@app/state/sheet/types'
 
 import SheetActionCellStyleBackgroundColor from '@app/bundles/Sheet/SheetActionCellStyleBackgroundColor'
 import SheetActionCellStyleBold from '@app/bundles/Sheet/SheetActionCellStyleBold'
@@ -84,12 +90,12 @@ const SheetActions = ({
 //-----------------------------------------------------------------------------
 interface SheetActionsProps {
   columns: IAllSheetColumns
-  createSheetRow(sheetId: Sheet['id'], sourceSheetId: Sheet['id']): void
-  filters: SheetFilters
-  groups: SheetGroups
-  sorts: SheetSorts
-  sheetId: Sheet['id']
-  sourceSheetId: Sheet['id']
+  createSheetRow(sheetId: ISheet['id'], sourceSheetId: ISheet['id']): void
+  filters: IAllSheetFilters
+  groups: IAllSheetGroups
+  sorts: IAllSheetSorts
+  sheetId: ISheet['id']
+  sourceSheetId: ISheet['id']
   sheetFilters?: SheetFilter['id'][]
   sheetGroups?: SheetGroup['id'][]
   sheetSorts?: SheetSort['id'][]

@@ -8,7 +8,11 @@ import { v4 as createUuid } from 'uuid'
 
 import clone from '@/utils/clone'
 import { ThunkDispatch } from '@app/state/types'
-import { Sheet, SheetColumn, IAllSheetColumns, SheetFilter, SheetFilters, SheetFilterType, SheetFilterUpdates } from '@app/state/sheet/types'
+import { 
+  ISheet, 
+  SheetColumn, IAllSheetColumns, 
+  SheetFilter, IAllSheetFilters, SheetFilterType, SheetFilterUpdates 
+} from '@app/state/sheet/types'
 import { 
   createSheetFilter as createSheetFilterAction,
   deleteSheetFilter as deleteSheetFilterAction,
@@ -31,10 +35,10 @@ const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionFilterPro
   createSheetFilter: (sheetId: string, newFilter: SheetFilter) => dispatch(createSheetFilterAction(sheetId, newFilter)),
   deleteSheetFilter: (sheetId: string, filterId: string) => dispatch(deleteSheetFilterAction(sheetId, filterId)),
   updateSheetFilter: (sheetId: string, filterId: string, updates: SheetFilterUpdates) => dispatch(updateSheetFilterAction(sheetId, filterId, updates)),
-  allowSelectedCellEditing: (sheetId: Sheet['id']) => dispatch(allowSelectedCellEditingAction(sheetId)),
-  preventSelectedCellEditing: (sheetId: Sheet['id']) => dispatch(preventSelectedCellEditingAction(sheetId)),
-  allowSelectedCellNavigation: (sheetId: Sheet['id']) => dispatch(allowSelectedCellNavigationAction(sheetId)),
-  preventSelectedCellNavigation: (sheetId: Sheet['id']) => dispatch(preventSelectedCellNavigationAction(sheetId)),
+  allowSelectedCellEditing: (sheetId: ISheet['id']) => dispatch(allowSelectedCellEditingAction(sheetId)),
+  preventSelectedCellEditing: (sheetId: ISheet['id']) => dispatch(preventSelectedCellEditingAction(sheetId)),
+  allowSelectedCellNavigation: (sheetId: ISheet['id']) => dispatch(allowSelectedCellNavigationAction(sheetId)),
+  preventSelectedCellNavigation: (sheetId: ISheet['id']) => dispatch(preventSelectedCellNavigationAction(sheetId)),
 })
 
 //-----------------------------------------------------------------------------
@@ -281,16 +285,16 @@ const SheetActionFilter = ({
 interface SheetActionFilterProps {
   columns: IAllSheetColumns
   createSheetFilter?(sheetId: string, newFilter: SheetFilter): void
-  deleteSheetFilter?(sheetId: Sheet['id'], filterId: SheetFilter['id']): void
-  filters: SheetFilters
+  deleteSheetFilter?(sheetId: ISheet['id'], filterId: SheetFilter['id']): void
+  filters: IAllSheetFilters
   sheetId: string
   sheetFilters: SheetFilter['id'][]
   sheetVisibleColumns: SheetColumn['id'][]
-  updateSheetFilter?(sheetId: Sheet['id'], filterId: SheetFilter['id'], updates: SheetFilterUpdates): void
-  allowSelectedCellEditing?(sheetId: Sheet['id']): void
-  preventSelectedCellEditing?(sheetId: Sheet['id']): void
-  allowSelectedCellNavigation?(sheetId: Sheet['id']): void
-  preventSelectedCellNavigation?(sheetId: Sheet['id']): void
+  updateSheetFilter?(sheetId: ISheet['id'], filterId: SheetFilter['id'], updates: SheetFilterUpdates): void
+  allowSelectedCellEditing?(sheetId: ISheet['id']): void
+  preventSelectedCellEditing?(sheetId: ISheet['id']): void
+  allowSelectedCellNavigation?(sheetId: ISheet['id']): void
+  preventSelectedCellNavigation?(sheetId: ISheet['id']): void
 }
 
 //-----------------------------------------------------------------------------

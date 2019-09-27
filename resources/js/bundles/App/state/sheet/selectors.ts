@@ -4,14 +4,14 @@
 import { AppState } from '@app/state'
 import { FileType } from '@app/state/folder/types'
 import { 
-  Sheet,
+  ISheet,
   SheetActive,
   SheetCell, IAllSheetCells,
   SheetColumn, IAllSheetColumns, IAllSheetColumnTypes,
   SheetRow, IAllSheetRows, 
-  SheetFilter, SheetFilters, 
-  SheetGroup, SheetGroups, 
-  SheetSort, SheetSorts
+  SheetFilter, IAllSheetFilters, 
+  SheetGroup, IAllSheetGroups, 
+  SheetSort, IAllSheetSorts
 } from '@app/state/sheet/types'
 
 //-----------------------------------------------------------------------------
@@ -64,14 +64,14 @@ export const selectColumnTypes = (
 export const selectFilter = (
   state: AppState,
   filterId: string
-): SheetFilter => state.sheet.filters[filterId]
+): SheetFilter => state.sheet.allSheetFilters[filterId]
 
 //-----------------------------------------------------------------------------
 // Select Filters
 //-----------------------------------------------------------------------------
 export const selectFilters = (
   state: AppState
-): SheetFilters => state.sheet.filters
+): IAllSheetFilters => state.sheet.allSheetFilters
 
 //-----------------------------------------------------------------------------
 // Select Group
@@ -79,14 +79,14 @@ export const selectFilters = (
 export const selectGroup = (
   state: AppState,
   groupId: string
-): SheetGroup => state.sheet.groups[groupId]
+): SheetGroup => state.sheet.allSheetGroups[groupId]
 
 //-----------------------------------------------------------------------------
 // Select Groups
 //-----------------------------------------------------------------------------
 export const selectGroups = (
   state: AppState
-): SheetGroups => state.sheet.groups
+): IAllSheetGroups => state.sheet.allSheetGroups
 
 //-----------------------------------------------------------------------------
 // Select Row
@@ -109,14 +109,14 @@ export const selectRows = (
 export const selectSort = (
   state: AppState,
   sortId: string
-): SheetSort => state.sheet.sorts[sortId]
+): SheetSort => state.sheet.allSheetSorts[sortId]
 
 //-----------------------------------------------------------------------------
 // Select Sorts
 //-----------------------------------------------------------------------------
 export const selectSorts = (
   state: AppState
-): SheetSorts => state.sheet.sorts
+): IAllSheetSorts => state.sheet.allSheetSorts
 
 //-----------------------------------------------------------------------------
 // Select Sheet Columns
@@ -164,7 +164,7 @@ export const selectSheetRows = (
 export const selectSheetSourceSheetId = (
   state: AppState, 
   sheetId: string
-): Sheet['id'] => state.sheet.allSheets && state.sheet.allSheets[sheetId] ? state.sheet.allSheets[sheetId].sourceSheetId : null
+): ISheet['id'] => state.sheet.allSheets && state.sheet.allSheets[sheetId] ? state.sheet.allSheets[sheetId].sourceSheetId : null
 
 //-----------------------------------------------------------------------------
 // Select Sheet Sorts

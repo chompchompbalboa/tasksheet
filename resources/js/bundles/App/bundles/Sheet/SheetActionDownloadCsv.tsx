@@ -9,7 +9,7 @@ import styled from 'styled-components'
 import { ARROW_DOWN, DOWNLOAD } from '@app/assets/icons'
 
 import { AppState } from '@app/state'
-import { Sheet } from '@app/state/sheet/types'
+import { ISheet } from '@app/state/sheet/types'
 import {
   allowSelectedCellEditing,
   allowSelectedCellNavigation,
@@ -138,7 +138,7 @@ const SheetActionDownloadCsv = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionDownloadCsvProps {
-  sheetId: Sheet['id']
+  sheetId: ISheet['id']
 }
 
 //-----------------------------------------------------------------------------

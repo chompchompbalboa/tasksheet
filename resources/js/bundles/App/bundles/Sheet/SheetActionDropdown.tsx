@@ -5,7 +5,7 @@ import React, { ChangeEvent, FocusEvent, useEffect, useRef, useState } from 'rea
 import { batch, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { Sheet } from '@app/state/sheet/types'
+import { ISheet } from '@app/state/sheet/types'
 import { 
   allowSelectedCellEditing as allowSelectedCellEditingAction,
   preventSelectedCellEditing as preventSelectedCellEditingAction,
@@ -206,7 +206,7 @@ const SheetActionDropdown = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionDropdownProps {
-  sheetId: Sheet['id']
+  sheetId: ISheet['id']
   onInputChange?(nextValue: string): void
   onOptionDelete(optionToDelete: SheetActionDropdownOption): void
   onOptionSelect(selectedOption: SheetActionDropdownOption): void

@@ -4,9 +4,14 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import { ARROW_UP, ARROW_DOWN } from '@app/assets/icons'
+import { 
+  ARROW_DOWN,
+  ARROW_UP, 
+} from '@app/assets/icons'
 
-import { SheetSort, SheetSorts, SheetSortUpdates } from '@app/state/sheet/types'
+import { 
+  SheetSort, IAllSheetSorts, SheetSortUpdates 
+} from '@app/state/sheet/types'
 
 import Icon from '@/components/Icon'
 import { SheetActionDropdownOption } from '@app/bundles/Sheet/SheetActionDropdown'
@@ -44,7 +49,7 @@ const SheetActionSortSelectedOption = ({
 //-----------------------------------------------------------------------------
 interface SheetActionSortSelectedOptionProps {
   option: SheetActionDropdownOption
-  sorts: SheetSorts
+  sorts: IAllSheetSorts
   updateSheetSort(sortId: string, updates: SheetSortUpdates): void
 }
 

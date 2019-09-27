@@ -8,7 +8,7 @@ import arrayMove from 'array-move'
 import { CHECKMARK } from '@app/assets/icons'
 
 import { AppState } from '@app/state'
-import { Sheet, SheetActiveUpdates, SheetUpdates, SheetColumn, IAllSheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
+import { ISheet, SheetActiveUpdates, SheetUpdates, SheetColumn, IAllSheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
 import { 
   createSheetColumn as createSheetColumnAction,
   createSheetColumnBreak as createSheetColumnBreakAction,
@@ -140,7 +140,7 @@ const SheetColumnContextMenu = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetColumnContextMenuProps {
-  sheetId: Sheet['id']
+  sheetId: ISheet['id']
   columnId: SheetColumn['id']
   columnIndex: number
   columns: IAllSheetColumns
