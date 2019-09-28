@@ -2,12 +2,12 @@
 // Imports
 //-----------------------------------------------------------------------------
 import axios from '@/api/axios'
-import { ISheet, SheetDownloadOptions } from '@app/state/sheet/types' 
+import { ISheet, ISheetDownloadOptions } from '@app/state/sheet/types' 
 
 //-----------------------------------------------------------------------------
 // Queries
 //-----------------------------------------------------------------------------
-export const prepareSheetDownload = async (sheetId: ISheet['id'], options: SheetDownloadOptions) => {
+export const prepareSheetDownload = async (sheetId: ISheet['id'], options: ISheetDownloadOptions) => {
 	return axios.post('/app/sheets/prepare-download/' + sheetId, options).then(response => {
 		return response.data
 	})

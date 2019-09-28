@@ -7,7 +7,7 @@ import {
   ISheet,
   IAllSheetCells,
   IAllSheetRows,
-  IAllSheetFilters, SheetFilterType,
+  IAllSheetFilters, ISheetFilterType,
   ISheetGroup, IAllSheetGroups, 
   IAllSheetSorts, 
 } from '@app/state/sheet/types'
@@ -15,7 +15,7 @@ import {
 //-----------------------------------------------------------------------------
 // Resolve Filter
 //-----------------------------------------------------------------------------
-export const resolveFilter = (cellValue: string, filterValue: string, type: SheetFilterType) => {
+export const resolveFilter = (cellValue: string, filterValue: string, type: ISheetFilterType) => {
   
   const filterValues = filterValue.split('|').map(untrimmedFilterValue => untrimmedFilterValue.trim())
   

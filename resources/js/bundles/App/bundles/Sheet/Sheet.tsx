@@ -24,10 +24,10 @@ import {
   updateSheetSelectionFromCellClick as updateSheetSelectionFromCellClickAction,
 } from '@app/state/sheet/actions'
 import { 
-  ISheet, SheetFromServer, SheetUpdates,
-  SheetActiveUpdates,
-  ISheetColumn, IAllSheetColumns, IAllSheetColumnTypes, SheetColumnUpdates, 
-  SheetCellUpdates, 
+  ISheet, ISheetFromServer, ISheetUpdates,
+  ISheetActiveUpdates,
+  ISheetColumn, IAllSheetColumns, IAllSheetColumnTypes, ISheetColumnUpdates, 
+  ISheetCellUpdates, 
   ISheetFilter, IAllSheetFilters, 
   ISheetGroup, IAllSheetGroups, 
   ISheetRow, IAllSheetRows, 
@@ -81,11 +81,11 @@ const mapStateToProps = (state: AppState, props: SheetComponentProps) => ({
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   createSheetRow: (sheetId: string, sourceSheetId: string) => dispatch(createSheetRowAction(sheetId, sourceSheetId)),
-  loadSheet: (sheet: SheetFromServer) => dispatch(loadSheetAction(sheet)),
-  updateSheet: (sheetId: string, updates: SheetUpdates) => dispatch(updateSheetAction(sheetId, updates)),
-  updateSheetActive: (updates: SheetActiveUpdates) => dispatch(updateSheetActiveAction(updates)),
-  updateSheetCell: (cellId: string, updates: SheetCellUpdates, undoUpdates?: SheetCellUpdates, skipServerUpdate?: boolean) => dispatch(updateSheetCellAction(cellId, updates, undoUpdates, skipServerUpdate)),
-  updateSheetColumn: (columnId: string, updates: SheetColumnUpdates) => dispatch(updateSheetColumnAction(columnId, updates)),
+  loadSheet: (sheet: ISheetFromServer) => dispatch(loadSheetAction(sheet)),
+  updateSheet: (sheetId: string, updates: ISheetUpdates) => dispatch(updateSheetAction(sheetId, updates)),
+  updateSheetActive: (updates: ISheetActiveUpdates) => dispatch(updateSheetActiveAction(updates)),
+  updateSheetCell: (cellId: string, updates: ISheetCellUpdates, undoUpdates?: ISheetCellUpdates, skipServerUpdate?: boolean) => dispatch(updateSheetCellAction(cellId, updates, undoUpdates, skipServerUpdate)),
+  updateSheetColumn: (columnId: string, updates: ISheetColumnUpdates) => dispatch(updateSheetColumnAction(columnId, updates)),
   updateSheetSelectionFromArrowKey: (sheetId: string, cellId: string, moveDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT') => dispatch(updateSheetSelectionFromArrowKeyAction(sheetId, cellId, moveDirection)),
   updateSheetSelectionFromCellClick: (sheetId: string, cellId: string, isShiftPressed: boolean) => dispatch(updateSheetSelectionFromCellClickAction(sheetId, cellId, isShiftPressed)),
 })
@@ -268,7 +268,7 @@ interface SheetComponentProps {
   filters?: IAllSheetFilters
   groups?: IAllSheetGroups
   id: ISheet['id']
-  loadSheet?(sheet: SheetFromServer): Promise<void>
+  loadSheet?(sheet: ISheetFromServer): Promise<void>
   rows?: IAllSheetRows
   sheetColumns?: ISheetColumn['id'][]
   sheetFilters?: ISheetFilter['id'][]
@@ -278,10 +278,10 @@ interface SheetComponentProps {
   sheetVisibleRows?: ISheetRow['id'][]
   sorts?: IAllSheetSorts
   sourceSheetId?: string
-  updateSheet?(sheetId: string, updates: SheetUpdates): void
-  updateSheetActive?(updates: SheetActiveUpdates): void
-  updateSheetCell?(cellId: string, updates: SheetCellUpdates, undoUpdates?: SheetCellUpdates, skipServerUpdate?: boolean): void
-  updateSheetColumn?(columnId: string, updates: SheetColumnUpdates): void
+  updateSheet?(sheetId: string, updates: ISheetUpdates): void
+  updateSheetActive?(updates: ISheetActiveUpdates): void
+  updateSheetCell?(cellId: string, updates: ISheetCellUpdates, undoUpdates?: ISheetCellUpdates, skipServerUpdate?: boolean): void
+  updateSheetColumn?(columnId: string, updates: ISheetColumnUpdates): void
   updateSheetSelectionFromArrowKey?(sheetId: string, cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   updateSheetSelectionFromCellClick?(sheetId: string, cellId: string, isShiftPressed: boolean): void
   userColorSecondary?: string

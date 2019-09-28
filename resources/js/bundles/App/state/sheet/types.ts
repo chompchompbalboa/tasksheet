@@ -9,19 +9,19 @@ export interface IAllSheetFilters { [filterId: string]: ISheetFilter }
 export interface IAllSheetGroups { [groupId: string]: ISheetGroup }
 export interface IAllSheetSorts { [sortId: string]: ISheetSort }
 
-export interface SheetActive {
+export interface ISheetActive {
   columnRenamingId: ISheetColumn['id']
 }
-export interface SheetActiveUpdates {
+export interface ISheetActiveUpdates {
   columnRenamingId?: ISheetColumn['id']
 }
 
-export interface SheetClipboard {
+export interface ISheetClipboard {
   sheetId: ISheet['id']
   cutOrCopy: 'CUT' | 'COPY'
-  selections: SheetClipboardSelections
+  selections: ISheetClipboardSelections
 }
-export interface SheetClipboardSelections {
+export interface ISheetClipboardSelections {
   rangeCellIds: Set<ISheetCell['id']>
   rangeStartColumnId: ISheetColumn['id']
   rangeStartRowId: ISheetRow['id']
@@ -44,10 +44,10 @@ export interface ISheet {
   filters: ISheetFilter['id'][]
   groups: ISheetGroup['id'][]
   sorts: ISheetSort['id'][]
-  styles: SheetStyles
-  selections: SheetSelections
+  styles: ISheetStyles
+  selections: ISheetSelections
 }
-export interface SheetUpdates {
+export interface ISheetUpdates {
   rows?: ISheetRow['id'][]
   visibleRows?: ISheetRow['id'][]
   columns?: ISheetColumn['id'][]
@@ -55,10 +55,10 @@ export interface SheetUpdates {
   filters?: ISheetFilter['id'][]
   groups?: ISheetGroup['id'][]
   sorts?: ISheetSort['id'][]
-  styles?: SheetStyles
-  selections?: SheetSelections
+  styles?: ISheetStyles
+  selections?: ISheetSelections
 }
-export interface SheetSelections {
+export interface ISheetSelections {
   isSelectedCellEditingPrevented: boolean
   isSelectedCellNavigationPrevented: boolean
   rangeCellIds: Set<ISheetCell['id']>
@@ -69,7 +69,7 @@ export interface SheetSelections {
   rangeEndRowId: ISheetRow['id']
   rangeEndCellId: ISheetCell['id']
 }
-export interface SheetStyles {
+export interface ISheetStyles {
   id: string
   backgroundColor: Set<string>
   backgroundColorReference: { [cellId: string]: string }
@@ -78,7 +78,7 @@ export interface SheetStyles {
   bold: Set<string>
   italic: Set<string>
 }
-export interface SheetStylesUpdates {
+export interface ISheetStylesUpdates {
   backgroundColor?: Set<string>
   backgroundColorReference?: { [cellId: string]: string }
   color?: Set<string>
@@ -86,7 +86,7 @@ export interface SheetStylesUpdates {
   bold?: Set<string>
   italic?: Set<string>
 }
-export interface SheetStylesServerUpdates {
+export interface ISheetStylesServerUpdates {
   backgroundColor?: string[]
   backgroundColorReference?: { [cellId: string]: string }
   color?: string[]
@@ -95,7 +95,7 @@ export interface SheetStylesServerUpdates {
   italic?: string[]
 }
 
-export interface SheetFromServer {
+export interface ISheetFromServer {
   id: string
   sourceSheetId: string
   fileType: FileType
@@ -103,11 +103,11 @@ export interface SheetFromServer {
   visibleColumns: ISheetColumn['id'][]
   filters: ISheetFilter[]
   groups: ISheetGroup[]
-  rows: SheetFromServerRow[]
+  rows: ISheetFromServerRow[]
   sorts: ISheetSort[]
-  styles: SheetStyles
+  styles: ISheetStyles
 }
-export interface SheetFromServerRow {
+export interface ISheetFromServerRow {
 	id: string
 	sheetId: string
 	cells: ISheetCell[]
@@ -120,12 +120,12 @@ export interface ISheetColumn {
 	name: string
 	width: number
 }
-export interface SheetColumnUpdates {
+export interface ISheetColumnUpdates {
   typeId?: ISheetColumnType['id']
   name?: string
   width?: number
 }
-export interface SheetColumnToServer {
+export interface ISheetColumnToServer {
   id: string
   sheetId: string
   typeId: ISheetColumnType['id']
@@ -139,13 +139,13 @@ export interface ISheetColumnType {
   userId: string
   sheetId: string
   name: string
-  cellType: SheetCellType
-  data: SheetColumnTypeDropdown
+  cellType: ISheetCellType
+  data: ISheetColumnTypeDropdown
 }
-export interface SheetColumnTypeDropdown {
-  options: { [key: string]: SheetColumnTypeDropdownOption }
+export interface ISheetColumnTypeDropdown {
+  options: { [key: string]: ISheetColumnTypeDropdownOption }
 }
-export interface SheetColumnTypeDropdownOption {
+export interface ISheetColumnTypeDropdownOption {
   id: string
   value: string
 }
@@ -155,10 +155,10 @@ export interface ISheetRow {
 	sheetId: string
 	cells: { [columnId: string]: ISheetCell['id'] }
 }
-export interface SheetRowUpdates {
+export interface ISheetRowUpdates {
   cells?: { [columnId: string]: ISheetCell['id'] }
 }
-export interface SheetRowToServer {
+export interface ISheetRowToServer {
   id: string
   sheetId: string
   cells: ISheetCell[]
@@ -173,13 +173,13 @@ export interface ISheetCell {
   isCellEditing: boolean
   isCellSelected: boolean
 }
-export interface SheetCellUpdates {
+export interface ISheetCellUpdates {
   id?: string
   value?: string
   isCellEditing?: boolean
   isCellSelected?: boolean
 }
-export type SheetCellType = 
+export type ISheetCellType = 
 'STRING' |
 'DATETIME'|
 'BOOLEAN'|
@@ -192,39 +192,39 @@ export interface ISheetSort {
   id: string
   sheetId: string
   columnId: string
-  order: SheetSortOrder
+  order: ISheetSortOrder
   isLocked: boolean
 }
-export interface SheetSortUpdates {
-  order?: SheetSortOrder
+export interface ISheetSortUpdates {
+  order?: ISheetSortOrder
 }
-export type SheetSortOrder = 'ASC' | 'DESC'
+export type ISheetSortOrder = 'ASC' | 'DESC'
 
 export interface ISheetFilter {
   id: string
   sheetId: string
   columnId: string
-  type: SheetFilterType
+  type: ISheetFilterType
   value: string
   isLocked: boolean
 }
-export interface SheetFilterUpdates {}
-export type SheetFilterType = '=' | '!=' | '>' | '>=' | '<' | '<='
+export interface ISheetFilterUpdates {}
+export type ISheetFilterType = '=' | '!=' | '>' | '>=' | '<' | '<='
 
 export interface ISheetGroup {
   id: string
   sheetId: string
   columnId: string
-  order: SheetGroupOrder
+  order: ISheetGroupOrder
   isLocked: boolean
 }
-export interface SheetGroupUpdates {
-  order?: SheetGroupOrder
+export interface ISheetGroupUpdates {
+  order?: ISheetGroupOrder
 }
 
-export type SheetGroupOrder = 'ASC' | 'DESC'
+export type ISheetGroupOrder = 'ASC' | 'DESC'
 
-export interface SheetView {
+export interface ISheetView {
   id: string
   sourceSheetId: string
   visibleColumns: ISheetColumn['id'][]
@@ -233,7 +233,7 @@ export interface SheetView {
   sorts: IAllSheetSorts
 }
 
-export interface SheetDownloadOptions {
+export interface ISheetDownloadOptions {
   filename: string
   includeColumnTypeInformation: boolean
   includeAssets: boolean

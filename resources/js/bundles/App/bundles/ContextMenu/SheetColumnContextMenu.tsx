@@ -8,7 +8,7 @@ import arrayMove from 'array-move'
 import { CHECKMARK } from '@app/assets/icons'
 
 import { AppState } from '@app/state'
-import { ISheet, SheetActiveUpdates, SheetUpdates, ISheetColumn, IAllSheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
+import { ISheet, ISheetActiveUpdates, ISheetUpdates, ISheetColumn, IAllSheetColumns, ISheetColumnUpdates } from '@app/state/sheet/types'
 import { 
   createSheetColumn as createSheetColumnAction,
   createSheetColumnBreak as createSheetColumnBreakAction,
@@ -149,9 +149,9 @@ interface SheetColumnContextMenuProps {
   contextMenuTop: number
   contextMenuRight: number
   sheetVisibleColumns: ISheetColumn['id'][]
-  updateSheet(sheetId: string, updates: SheetUpdates): void
-  updateSheetActive(updates: SheetActiveUpdates): void
-  updateSheetColumn(columnId: ISheetColumn['id'], updates: SheetColumnUpdates): void
+  updateSheet(sheetId: string, updates: ISheetUpdates): void
+  updateSheetActive(updates: ISheetActiveUpdates): void
+  updateSheetColumn(columnId: ISheetColumn['id'], updates: ISheetColumnUpdates): void
 }
 
 //-----------------------------------------------------------------------------

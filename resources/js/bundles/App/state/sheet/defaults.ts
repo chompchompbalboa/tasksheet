@@ -7,7 +7,7 @@ import {
   ISheetCell, 
   ISheetColumn, 
   ISheetRow, 
-  SheetSelections 
+  ISheetSelections 
 } from '@app/state/sheet/types'
 
 //-----------------------------------------------------------------------------
@@ -65,7 +65,7 @@ export const defaultColumn = (sheetId: string, newColumnIndex?: number): ISheetC
 //-----------------------------------------------------------------------------
 // Default Sheet Selections
 //-----------------------------------------------------------------------------
-export const defaultSheetSelections: SheetSelections = {
+export const defaultSheetSelections: ISheetSelections = {
   isSelectedCellEditingPrevented: false,
   isSelectedCellNavigationPrevented: false,
   rangeCellIds: new Set() as Set<ISheetCell['id']>,

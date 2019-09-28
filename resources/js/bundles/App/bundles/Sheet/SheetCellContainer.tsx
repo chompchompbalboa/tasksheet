@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { AppState } from '@app/state'
-import { ISheetCell, SheetCellUpdates, SheetStyles } from '@app/state/sheet/types'
+import { ISheetCell, ISheetCellUpdates, ISheetStyles } from '@app/state/sheet/types'
 import {
   updateSheetCell as updateSheetCellAction
 } from '@app/state/sheet/actions'
@@ -28,7 +28,7 @@ const SheetCellContainer = ({
 }: SheetCellContainerProps) => {
   
   const dispatch = useDispatch()
-  const updateSheetCell = useCallback((updates: SheetCellUpdates, skipServerUpdate: boolean = true) => dispatch(updateSheetCellAction(cellId, updates, null, skipServerUpdate)), [])
+  const updateSheetCell = useCallback((updates: ISheetCellUpdates, skipServerUpdate: boolean = true) => dispatch(updateSheetCellAction(cellId, updates, null, skipServerUpdate)), [])
   
   const activeSheetId = useSelector((state: AppState) => state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].typeId)
   const isSelectedCellEditingPrevented = useSelector((state: AppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellEditingPrevented)
@@ -181,7 +181,7 @@ const Container = styled.div`
 interface IContainer {
   cellId: ISheetCell['id']
   isCellEditing: boolean
-  styles: SheetStyles
+  styles: ISheetStyles
 }
 
 //-----------------------------------------------------------------------------

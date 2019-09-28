@@ -10,8 +10,8 @@ import {
   IAllSheetFilters, 
   IAllSheetGroups, 
   IAllSheetSorts,
-  SheetActive,
-  SheetClipboard, 
+  ISheetActive,
+  ISheetClipboard, 
 } from '@app/state/sheet/types'
 import { 
   SheetActions, 
@@ -29,7 +29,7 @@ import {
 //-----------------------------------------------------------------------------
 // Types
 //-----------------------------------------------------------------------------
-export interface SheetState {
+export interface ISheetState {
   allSheets: IAllSheets
   allSheetColumns: IAllSheetColumns
   allSheetRows: IAllSheetRows
@@ -38,15 +38,15 @@ export interface SheetState {
   allSheetFilters: IAllSheetFilters
   allSheetGroups: IAllSheetGroups
   allSheetSorts: IAllSheetSorts
-  active: SheetActive
-  clipboard: SheetClipboard
+  active: ISheetActive
+  clipboard: ISheetClipboard
 }
 
 //-----------------------------------------------------------------------------
 // Default State
 //-----------------------------------------------------------------------------
 const columnTypesFromServer = initialData && initialData.columnTypes ? initialData.columnTypes : {}
-export const defaultSheetState: SheetState = {
+export const defaultSheetState: ISheetState = {
   allSheets: null,
   allSheetColumns: null,
   allSheetCells: null,
@@ -124,7 +124,7 @@ export const defaultSheetState: SheetState = {
 //-----------------------------------------------------------------------------
 // Reducers
 //-----------------------------------------------------------------------------
-export const userReducer = (state: SheetState = defaultSheetState, action: SheetActions): SheetState => {
+export const userReducer = (state: ISheetState = defaultSheetState, action: SheetActions): ISheetState => {
 
 	switch (action.type) {
     

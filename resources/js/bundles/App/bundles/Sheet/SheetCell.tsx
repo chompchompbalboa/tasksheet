@@ -8,9 +8,9 @@ import styled from 'styled-components'
 
 import { AppState } from '@app/state'
 import { 
-  ISheetCell, SheetCellUpdates, 
+  ISheetCell, ISheetCellUpdates, 
   ISheetColumnType, 
-  SheetStyles 
+  ISheetStyles 
 } from '@app/state/sheet/types'
 
 import SheetCellBoolean from '@app/bundles/Sheet/SheetCellBoolean'
@@ -116,7 +116,7 @@ interface SheetCellProps {
   style: {
     width?: ReactText
   }
-  updateSheetCell(cellId: string, updates: SheetCellUpdates, undoUpdates?: SheetCellUpdates, skipServerUpdate?: boolean): void
+  updateSheetCell(cellId: string, updates: ISheetCellUpdates, undoUpdates?: ISheetCellUpdates, skipServerUpdate?: boolean): void
   updateSheetSelectionFromArrowKey(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   updateSheetSelectionFromCellClick(cellId: string, isShiftPressed: boolean): void
 }
@@ -155,7 +155,7 @@ interface IContainer {
   isCellSelected: boolean
   isCellInRange: boolean
   highlightColor: string
-  sheetStyles: SheetStyles
+  sheetStyles: ISheetStyles
 }
 
 const SheetRange = styled.div`

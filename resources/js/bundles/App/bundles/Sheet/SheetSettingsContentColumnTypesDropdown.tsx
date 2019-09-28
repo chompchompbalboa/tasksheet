@@ -4,7 +4,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { SheetColumnTypeDropdownOption } from '@app/state/sheet/types'
+import { ISheetColumnTypeDropdownOption } from '@app/state/sheet/types'
 
 //-----------------------------------------------------------------------------
 // Components
@@ -35,7 +35,7 @@ const SheetSettingsContentColumnTypesDropdown = ({
 //-----------------------------------------------------------------------------
 interface SheetSettingsContentColumnTypesDropdownProps {
   data: {
-    options: { [id: string]: SheetColumnTypeDropdownOption }
+    options: { [id: string]: ISheetColumnTypeDropdownOption }
   }
 }
 

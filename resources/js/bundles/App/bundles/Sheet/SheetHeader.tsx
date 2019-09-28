@@ -8,8 +8,8 @@ import styled from 'styled-components'
 import { AppState } from '@app/state'
 import { 
   ISheet, 
-  SheetActive, SheetActiveUpdates, 
-  ISheetColumn, SheetColumnUpdates 
+  ISheetActive, ISheetActiveUpdates, 
+  ISheetColumn, ISheetColumnUpdates 
 } from '@app/state/sheet/types'
 import { selectActive } from '@app/state/sheet/selectors'
 import {
@@ -161,7 +161,7 @@ const SheetHeader = ({
 //-----------------------------------------------------------------------------
 interface SheetHeaderProps {
   sheetId: ISheet['id']
-  active?: SheetActive
+  active?: ISheetActive
   column: ISheetColumn
   handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void
   isLast: boolean
@@ -169,8 +169,8 @@ interface SheetHeaderProps {
   isResizing: boolean
   onResizeStart(): void
   onResizeEnd(widthChange: number): void
-  updateSheetActive(updates: SheetActiveUpdates): void
-  updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
+  updateSheetActive(updates: ISheetActiveUpdates): void
+  updateSheetColumn(columnId: string, updates: ISheetColumnUpdates): void
   visibleColumnsIndex: number
 }
 

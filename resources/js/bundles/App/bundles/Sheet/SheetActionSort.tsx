@@ -14,7 +14,7 @@ import {
 } from '@app/state/sheet/types'
 
 import { ThunkDispatch } from '@app/state/types'
-import { SheetSortUpdates } from '@app/state/sheet/types'
+import { ISheetSortUpdates } from '@app/state/sheet/types'
 import { 
   createSheetSort as createSheetSortAction,
   deleteSheetSort as deleteSheetSortAction,
@@ -31,7 +31,7 @@ import SheetActionSortSelectedOption from '@app/bundles/Sheet/SheetActionSortSel
 const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionProps) => ({
   createSheetSort: (newSort: ISheetSort) => dispatch(createSheetSortAction(props.sheetId, newSort)),
   deleteSheetSort: (columnId: string) => dispatch(deleteSheetSortAction(props.sheetId, columnId)),
-  updateSheetSort: (sheetId: ISheet['id'], sortId: string, updates: SheetSortUpdates, skipVisibleRowsUpdate?: boolean) => dispatch(updateSheetSortAction(sheetId, sortId, updates, skipVisibleRowsUpdate))
+  updateSheetSort: (sheetId: ISheet['id'], sortId: string, updates: ISheetSortUpdates, skipVisibleRowsUpdate?: boolean) => dispatch(updateSheetSortAction(sheetId, sortId, updates, skipVisibleRowsUpdate))
 })
 
 //-----------------------------------------------------------------------------
@@ -81,7 +81,7 @@ interface SheetActionProps {
   columns: IAllSheetColumns
   createSheetSort?(newSort: ISheetSort): void
   deleteSheetSort?(columnId: string): void
-  updateSheetSort?(sheetId: ISheet['id'], sortId: string, updates: SheetSortUpdates, skipVisibleRowsUpdate?: boolean): void
+  updateSheetSort?(sheetId: ISheet['id'], sortId: string, updates: ISheetSortUpdates, skipVisibleRowsUpdate?: boolean): void
   sorts: IAllSheetSorts
   sheetSorts: ISheetSort['id'][]
   sheetVisibleColumns: ISheetColumn['id'][]

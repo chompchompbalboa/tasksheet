@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import { ARROW_UP, ARROW_DOWN } from '@app/assets/icons'
 
-import { ISheetGroup, IAllSheetGroups, SheetGroupUpdates } from '@app/state/sheet/types'
+import { ISheetGroup, IAllSheetGroups, ISheetGroupUpdates } from '@app/state/sheet/types'
 
 import Icon from '@/components/Icon'
 import { SheetActionDropdownOption } from '@app/bundles/Sheet/SheetActionDropdown'
@@ -46,7 +46,7 @@ const SheetActionGroupSelectedOption = ({
 interface SheetActionGroupSelectedOptionProps {
   option: SheetActionDropdownOption
   groups: IAllSheetGroups
-  updateSheetGroup(groupId: string, updates: SheetGroupUpdates): void
+  updateSheetGroup(groupId: string, updates: ISheetGroupUpdates): void
 }
 
 //-----------------------------------------------------------------------------

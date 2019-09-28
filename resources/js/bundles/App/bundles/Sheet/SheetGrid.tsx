@@ -6,9 +6,9 @@ import { areEqual, VariableSizeGrid as Grid } from 'react-window'
 import styled from 'styled-components'
 
 import { 
-  SheetActiveUpdates, 
-  ISheetColumn, IAllSheetColumns, IAllSheetColumnTypes, SheetColumnUpdates,
-  SheetCellUpdates, 
+  ISheetActiveUpdates, 
+  ISheetColumn, IAllSheetColumns, IAllSheetColumnTypes, ISheetColumnUpdates,
+  ISheetCellUpdates, 
   ISheetRow, IAllSheetRows 
 } from '@app/state/sheet/types'
 
@@ -47,7 +47,7 @@ const SheetGrid = memo(({
     }
   }, [ columns, sheetVisibleColumns ])
 
-  const rerenderAfterUpdateSheetColumn = (columnId: string, updates: SheetColumnUpdates) => {
+  const rerenderAfterUpdateSheetColumn = (columnId: string, updates: ISheetColumnUpdates) => {
     updateSheetColumn(columnId, updates)
     // @ts-ignore
       grid.current.resetAfterColumnIndex(0)
@@ -65,7 +65,7 @@ const SheetGrid = memo(({
         handleContextMenu={handleContextMenu}
         sheetVisibleColumns={sheetVisibleColumns}
         updateSheetActive={updateSheetActive}
-        updateSheetColumn={useCallback((columnId: string, updates: SheetColumnUpdates) => rerenderAfterUpdateSheetColumn(columnId, updates), [])}/>
+        updateSheetColumn={useCallback((columnId: string, updates: ISheetColumnUpdates) => rerenderAfterUpdateSheetColumn(columnId, updates), [])}/>
       <GridItems>
         {children}
       </GridItems>
@@ -139,9 +139,9 @@ interface SheetGridProps {
   highlightColor: string
   rows: IAllSheetRows
   sheetId: string
-  updateSheetActive(updates: SheetActiveUpdates): void
-  updateSheetCell(cellId: string, updates: SheetCellUpdates, undoUpdates?: SheetCellUpdates, skipServerUpdate?: boolean): void
-  updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
+  updateSheetActive(updates: ISheetActiveUpdates): void
+  updateSheetCell(cellId: string, updates: ISheetCellUpdates, undoUpdates?: ISheetCellUpdates, skipServerUpdate?: boolean): void
+  updateSheetColumn(columnId: string, updates: ISheetColumnUpdates): void
   updateSheetSelectionFromArrowKey(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   updateSheetSelectionFromCellClick(cellId: string, isShiftPressed: boolean): void
   sheetVisibleColumns: ISheetColumn['id'][]

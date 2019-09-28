@@ -4,7 +4,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { ISheet, IAllSheetColumns, ISheetFilter, SheetFilterUpdates } from '@app/state/sheet/types'
+import { ISheet, IAllSheetColumns, ISheetFilter, ISheetFilterUpdates } from '@app/state/sheet/types'
 
 import SheetActionDropdownSelectedOption from '@app/bundles/Sheet/SheetActionDropdownSelectedOption'
 
@@ -37,7 +37,7 @@ const SheetActionFilterExistingFilter = ({
 interface SheetActionFilterExistingFilterProps {
   columns: IAllSheetColumns
   deleteSheetFilter(filterId: ISheetFilter['id']): void
-  updateSheetFilter(sheetId: ISheet['id'], filterId: ISheetFilter['id'], updates: SheetFilterUpdates): void
+  updateSheetFilter(sheetId: ISheet['id'], filterId: ISheetFilter['id'], updates: ISheetFilterUpdates): void
   filter: ISheetFilter
   sheetId: ISheet['id']
 }
