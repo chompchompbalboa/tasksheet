@@ -5,7 +5,7 @@ import { AppState } from '@app/state'
 import { FileType } from '@app/state/folder/types'
 import { 
   ISheet,
-  SheetActive,
+  ISheetActive,
   IAllSheetCells, ISheetCell, 
   IAllSheetColumns, ISheetColumn, 
   IAllSheetColumnTypes,
@@ -20,7 +20,7 @@ import {
 //-----------------------------------------------------------------------------
 export const selectActive = (
   state: AppState
-): SheetActive => state.sheet.active
+): ISheetActive => state.sheet.active
 
 //-----------------------------------------------------------------------------
 // Select Cell

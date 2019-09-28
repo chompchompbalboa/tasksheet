@@ -10,7 +10,7 @@ import {
 } from '@app/assets/icons'
 
 import { 
-  ISheetSort, IAllSheetSorts, SheetSortUpdates 
+  ISheetSort, IAllSheetSorts, ISheetSortUpdates 
 } from '@app/state/sheet/types'
 
 import Icon from '@/components/Icon'
@@ -50,7 +50,7 @@ const SheetActionSortSelectedOption = ({
 interface SheetActionSortSelectedOptionProps {
   option: SheetActionDropdownOption
   sorts: IAllSheetSorts
-  updateSheetSort(sortId: string, updates: SheetSortUpdates): void
+  updateSheetSort(sortId: string, updates: ISheetSortUpdates): void
 }
 
 //-----------------------------------------------------------------------------

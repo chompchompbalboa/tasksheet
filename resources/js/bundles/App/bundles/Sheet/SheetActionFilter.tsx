@@ -11,7 +11,7 @@ import { ThunkDispatch } from '@app/state/types'
 import { 
   ISheet, 
   ISheetColumn, IAllSheetColumns, 
-  ISheetFilter, IAllSheetFilters, SheetFilterType, SheetFilterUpdates 
+  ISheetFilter, IAllSheetFilters, ISheetFilterType, ISheetFilterUpdates 
 } from '@app/state/sheet/types'
 import { 
   createSheetFilter as createSheetFilterAction,
@@ -34,7 +34,7 @@ import SheetActionFilterExistingFilters from '@app/bundles/Sheet/SheetActionFilt
 const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionFilterProps) => ({
   createSheetFilter: (sheetId: string, newFilter: ISheetFilter) => dispatch(createSheetFilterAction(sheetId, newFilter)),
   deleteSheetFilter: (sheetId: string, filterId: string) => dispatch(deleteSheetFilterAction(sheetId, filterId)),
-  updateSheetFilter: (sheetId: string, filterId: string, updates: SheetFilterUpdates) => dispatch(updateSheetFilterAction(sheetId, filterId, updates)),
+  updateSheetFilter: (sheetId: string, filterId: string, updates: ISheetFilterUpdates) => dispatch(updateSheetFilterAction(sheetId, filterId, updates)),
   allowSelectedCellEditing: (sheetId: ISheet['id']) => dispatch(allowSelectedCellEditingAction(sheetId)),
   preventSelectedCellEditing: (sheetId: ISheet['id']) => dispatch(preventSelectedCellEditingAction(sheetId)),
   allowSelectedCellNavigation: (sheetId: ISheet['id']) => dispatch(allowSelectedCellNavigationAction(sheetId)),
@@ -60,7 +60,7 @@ const SheetActionFilter = ({
 }: SheetActionFilterProps) => {
 
   // Filter Types  
-  const filterTypes: SheetFilterType[] = ['!=', '>=', '<=', '=', '>', '<'] // The multicharacter items need to be before the single character items in this array for the validator to work correctly
+  const filterTypes: ISheetFilterType[] = ['!=', '>=', '<=', '=', '>', '<'] // The multicharacter items need to be before the single character items in this array for the validator to work correctly
   // Column Names
   const columnNames = sheetVisibleColumns && sheetVisibleColumns.map(columnId => {
     if(columns && columns[columnId]) {
@@ -290,7 +290,7 @@ interface SheetActionFilterProps {
   sheetId: string
   sheetFilters: ISheetFilter['id'][]
   sheetVisibleColumns: ISheetColumn['id'][]
-  updateSheetFilter?(sheetId: ISheet['id'], filterId: ISheetFilter['id'], updates: SheetFilterUpdates): void
+  updateSheetFilter?(sheetId: ISheet['id'], filterId: ISheetFilter['id'], updates: ISheetFilterUpdates): void
   allowSelectedCellEditing?(sheetId: ISheet['id']): void
   preventSelectedCellEditing?(sheetId: ISheet['id']): void
   allowSelectedCellNavigation?(sheetId: ISheet['id']): void

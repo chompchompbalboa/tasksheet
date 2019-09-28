@@ -4,7 +4,7 @@
 import React, { MouseEvent, useState } from 'react'
 import styled from 'styled-components'
 
-import { ISheet, SheetActiveUpdates, ISheetColumn, IAllSheetColumns, SheetColumnUpdates } from '@app/state/sheet/types'
+import { ISheet, ISheetActiveUpdates, ISheetColumn, IAllSheetColumns, ISheetColumnUpdates } from '@app/state/sheet/types'
 
 import SheetHeader from '@app/bundles/Sheet/SheetHeader'
 import SheetRowLeader from '@app/bundles/Sheet/SheetRowLeader'
@@ -72,8 +72,8 @@ interface SheetHeadersProps {
   columns: IAllSheetColumns
   handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void
   sheetVisibleColumns: ISheetColumn['id'][]
-  updateSheetActive(updates: SheetActiveUpdates): void
-  updateSheetColumn(columnId: ISheetColumn['id'], updates: SheetColumnUpdates): void
+  updateSheetActive(updates: ISheetActiveUpdates): void
+  updateSheetColumn(columnId: ISheetColumn['id'], updates: ISheetColumnUpdates): void
 }
 
 //-----------------------------------------------------------------------------

@@ -5,9 +5,9 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { 
-  ISheet, SheetUpdates, 
-  SheetActiveUpdates,
-  ISheetColumn, IAllSheetColumns, SheetColumnUpdates 
+  ISheet, ISheetUpdates, 
+  ISheetActiveUpdates,
+  ISheetColumn, IAllSheetColumns, ISheetColumnUpdates 
 } from '@app/state/sheet/types'
 
 import SheetColumnContextMenu from '@app/bundles/ContextMenu/SheetColumnContextMenu'
@@ -74,9 +74,9 @@ interface SheetContextMenusProps {
   contextMenuRight: number
   closeContextMenu(): void
   sheetVisibleColumns: ISheetColumn['id'][]
-  updateSheet(sheetId: string, updates: SheetUpdates): void
-  updateSheetActive(updates: SheetActiveUpdates): void
-  updateSheetColumn(columnId: string, updates: SheetColumnUpdates): void
+  updateSheet(sheetId: string, updates: ISheetUpdates): void
+  updateSheetActive(updates: ISheetActiveUpdates): void
+  updateSheetColumn(columnId: string, updates: ISheetColumnUpdates): void
 }
 
 //-----------------------------------------------------------------------------
