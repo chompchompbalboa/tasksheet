@@ -52,10 +52,12 @@ const SheetCellBoolean = ({
   }
   
   return (
-    <StyledInput 
-       type="checkbox"
-       checked={value && ['1', 'TRUE', 'true'].includes(value)}
-       onChange={(e) => handleChange(e.target.checked)}/>
+    <Container>
+      <StyledInput 
+        type="checkbox"
+        checked={value && ['1', 'TRUE', 'true'].includes(value)}
+        onChange={(e) => handleChange(e.target.checked)}/>
+    </Container>
   )
 }
 
@@ -76,11 +78,16 @@ interface SheetCellBooleanProps {
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const StyledInput = styled.input`
-  margin: auto;
+const Container = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+`
+
+const StyledInput = styled.input`
+  margin: auto;
 `
 
 //-----------------------------------------------------------------------------

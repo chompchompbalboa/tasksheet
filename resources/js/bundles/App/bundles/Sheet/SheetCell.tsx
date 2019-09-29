@@ -74,7 +74,9 @@ const SheetCell = memo(({
   const isCellSelected = cell.isCellSelected
   const isCellInRange = sheetSelectionsRangeCellIds.has(cellId)
   const handleClick = (e: MouseEvent) => {
-    updateSheetSelectionFromCellClick(cell.id, e.shiftKey)
+    if(columnType.cellType !== 'BOOLEAN') {
+      updateSheetSelectionFromCellClick(cell.id, e.shiftKey)
+    }
   }
   
   return (
@@ -166,6 +168,7 @@ const SheetRange = styled.div`
   height: 100%;
   opacity: 0.25;
   background-color: ${ ({ isCellInRange, highlightColor }: ISheetRange ) => isCellInRange ? highlightColor : 'transparent'};
+  pointer-events: none;
 `
 interface ISheetRange {
   isCellInRange: boolean
