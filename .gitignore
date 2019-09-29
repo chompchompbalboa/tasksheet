@@ -20,3 +20,7 @@ public/mix-manifest.json
 public/js/app.js
 public/js/site.js
 tracksheet.code-workspace
+.vapor/
+.env.production
+.env.staging
+.env.tracksheet-staging

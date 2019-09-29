@@ -12,6 +12,8 @@ alias serve=serve-laravel
 alias xoff='sudo phpdismod -s cli xdebug'
 alias xon='sudo phpenmod -s cli xdebug'
 
+alias vapor='vendor/bin/vapor'
+
 function artisan() {
     php artisan "$@"
 }
