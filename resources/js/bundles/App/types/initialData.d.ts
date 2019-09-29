@@ -1,19 +1,19 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import { Folder } from '@app/state/folders/types'
-import { SheetColumnType } from '@app/state/sheet/types'
-import { User } from '@app/state/user/types'
+import { IFolder } from '@app/state/folders/types'
+import { ISheetColumnType } from '@app/state/sheet/types'
+import { IUser } from '@app/state/user/types'
 
 //-----------------------------------------------------------------------------
 // Initial Data
 //-----------------------------------------------------------------------------
 declare global {
-	const initialData: InitialData
-	interface InitialData {
-		user: User
-    folders: Folder[]
-    columnTypes: SheetColumnType[]
+	const initialData: IInitialData
+	interface IInitialData {
+		user: IUser
+    folders: IFolder[]
+    columnTypes: ISheetColumnType[]
 	}
 }
 export {} // Typescript needs this file to be a module

@@ -7,5 +7,5 @@ import { ThunkAction, ThunkDispatch } from 'redux-thunk'
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-export type ThunkAction = ThunkAction<Promise<void>, {}, {}, AnyAction>
-export type ThunkDispatch = ThunkDispatch<{}, {}, AnyAction>
+export type IThunkAction = ThunkAction<Promise<void>, {}, {}, AnyAction>
+export type IThunkDispatch = ThunkDispatch<{}, {}, AnyAction>

@@ -14,7 +14,7 @@ import {
   ISheetClipboard, 
 } from '@app/state/sheet/types'
 import { 
-  SheetActions, 
+  ISheetActions, 
   LOAD_SHEET, UPDATE_SHEET, 
   UPDATE_SHEET_ACTIVE,
   UPDATE_SHEET_CELL, SET_ALL_SHEET_CELLS,
@@ -124,7 +124,7 @@ export const defaultSheetState: ISheetState = {
 //-----------------------------------------------------------------------------
 // Reducers
 //-----------------------------------------------------------------------------
-export const userReducer = (state: ISheetState = defaultSheetState, action: SheetActions): ISheetState => {
+export const userReducer = (state: ISheetState = defaultSheetState, action: ISheetActions): ISheetState => {
 
 	switch (action.type) {
     

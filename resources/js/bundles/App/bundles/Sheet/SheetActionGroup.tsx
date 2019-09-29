@@ -7,7 +7,7 @@ import { v4 as createUuid } from 'uuid'
 
 import { ISheetColumn, IAllSheetColumns, ISheetGroup, IAllSheetGroups } from '@app/state/sheet/types'
 
-import { ThunkDispatch } from '@app/state/types'
+import { IThunkDispatch } from '@app/state/types'
 import { ISheetGroupUpdates } from '@app/state/sheet/types'
 import { 
   createSheetGroup as createSheetGroupAction,
@@ -22,7 +22,7 @@ import SheetActionGroupSelectedOption from '@app/bundles/Sheet/SheetActionGroupS
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionGroupProps) => ({
+const mapDispatchToProps = (dispatch: IThunkDispatch, props: SheetActionGroupProps) => ({
   createSheetGroup: (newGroup: ISheetGroup) => dispatch(createSheetGroupAction(props.sheetId, newGroup)),
   deleteSheetGroup: (columnId: string) => dispatch(deleteSheetGroupAction(props.sheetId, columnId)),
   updateSheetGroup: (sheetId: string, groupId: string, updates: ISheetGroupUpdates, skipVisibleRowsUpdate?: boolean) => dispatch(updateSheetGroupAction(sheetId, groupId, updates, skipVisibleRowsUpdate))

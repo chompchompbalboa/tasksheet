@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { SHEET, SHEET_VIEW } from '@app/assets/icons'
 
-import { ThunkDispatch } from '@app/state/types'
+import { IThunkDispatch } from '@app/state/types'
 import { 
   IFile, IFileUpdates,
   IFolderClipboardUpdates, 
@@ -25,7 +25,7 @@ import Icon from '@/components/Icon'
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+const mapDispatchToProps = (dispatch: IThunkDispatch) => ({
   deleteFile: (fileId: string) => dispatch(deleteFileAction(fileId)),
   updateClipboard: (updates: IFolderClipboardUpdates) => dispatch(updateClipboardAction(updates)),
   updateFile: (fileId: string, updates: IFileUpdates) => dispatch(updateFileAction(fileId, updates))

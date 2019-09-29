@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import changeCase from 'change-case'
 
 import { IAppState } from '@app/state'
-import { ThunkDispatch } from '@app/state/types'
+import { IThunkDispatch } from '@app/state/types'
 import { 
   IUserColor, IUserColorUpdates
 } from '@app/state/user/types'
@@ -25,7 +25,7 @@ const mapStateToProps = (state: IAppState) => ({
   userColors: selectUserColors(state)
 })
 
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+const mapDispatchToProps = (dispatch: IThunkDispatch) => ({
   updateUserColor: (updates: IUserColorUpdates) => dispatch(updateUserColorAction(updates))
 })
 

@@ -13,7 +13,7 @@ import {
   IAllSheetSorts 
 } from '@app/state/sheet/types'
 
-import { ThunkDispatch } from '@app/state/types'
+import { IThunkDispatch } from '@app/state/types'
 import { ISheetSortUpdates } from '@app/state/sheet/types'
 import { 
   createSheetSort as createSheetSortAction,
@@ -28,7 +28,7 @@ import SheetActionSortSelectedOption from '@app/bundles/Sheet/SheetActionSortSel
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionProps) => ({
+const mapDispatchToProps = (dispatch: IThunkDispatch, props: SheetActionProps) => ({
   createSheetSort: (newSort: ISheetSort) => dispatch(createSheetSortAction(props.sheetId, newSort)),
   deleteSheetSort: (columnId: string) => dispatch(deleteSheetSortAction(props.sheetId, columnId)),
   updateSheetSort: (sheetId: ISheet['id'], sortId: string, updates: ISheetSortUpdates, skipVisibleRowsUpdate?: boolean) => dispatch(updateSheetSortAction(sheetId, sortId, updates, skipVisibleRowsUpdate))

@@ -6,7 +6,7 @@ import clone from '@/utils/clone'
 import defaultInitialData from '@app/state/initialData'
 
 import { 
-  TabActions, 
+  ITabActions, 
   CLOSE_TAB, 
   OPEN_FILE, 
   OPEN_FILE_IN_NEW_TAB, 
@@ -18,12 +18,12 @@ import {
 // Initial
 //-----------------------------------------------------------------------------
 const initialActiveState = typeof initialData !== 'undefined' ? initialData.user.active : defaultInitialData.user.active
-export const initialTabState: TabState = {
+export const initialTabState: ITabState = {
   //activeTab: 'SHEET_SETTINGS',
 	activeTab: initialActiveState.tab === null ? 'FOLDERS' : initialActiveState.tab,
 	tabs: initialActiveState.tabs === null ? [] : initialActiveState.tabs,
 }
-export type TabState = {
+export type ITabState = {
 	activeTab: string
 	tabs: string[]
 }
@@ -31,7 +31,7 @@ export type TabState = {
 //-----------------------------------------------------------------------------
 // Reducers
 //-----------------------------------------------------------------------------
-export const userReducer = (state = initialTabState, action: TabActions): TabState => {
+export const userReducer = (state = initialTabState, action: ITabActions): ITabState => {
 	switch (action.type) {
 		case CLOSE_TAB: {
 			const { fileId } = action

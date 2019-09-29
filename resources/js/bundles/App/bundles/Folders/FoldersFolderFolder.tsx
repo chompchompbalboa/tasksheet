@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { SUBITEM_ARROW } from '@app/assets/icons'
 
-import { ThunkDispatch } from '@app/state/types'
+import { IThunkDispatch } from '@app/state/types'
 import { 
   IFolder, IFolderUpdates,
   IFolderClipboardUpdates 
@@ -29,7 +29,7 @@ import Icon from '@/components/Icon'
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+const mapDispatchToProps = (dispatch: IThunkDispatch) => ({
   createFolder: (folderId: string) => dispatch(createFolderAction(folderId)),
   createSheet: (folderId: string) => dispatch(createSheetAction(folderId)),
   pasteFromClipboard: (folderId: string) => dispatch(pasteFromClipboardAction(folderId)),

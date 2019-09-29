@@ -9,7 +9,7 @@ import {
 } from '@app/state/folder/types'
 import normalizer from '@app/state/folder/normalizer'
 import {
-  FolderActions,
+  IFolderActions,
   CREATE_FILE,
   CREATE_FOLDER,
   UPDATE_ACTIVE_FOLDER_PATH,
@@ -27,7 +27,7 @@ import {
 const normalizedFolders = normalizer(
 	typeof initialData !== 'undefined' ? initialData.folders : defaultInitialData.folders
 )
-export const initialFoldersState: FolderState = {
+export const initialFoldersState: IFolderState = {
   activeFolderPath: [initialData.folders[0].id],
   clipboard: { itemId: null, cutOrCopy: null, folderOrFile: null },
 	folders: <IFolders>normalizedFolders.entities.folder,
@@ -36,7 +36,7 @@ export const initialFoldersState: FolderState = {
   onFileSave: null,
 	rootFolderIds: normalizedFolders.result,
 }
-export type FolderState = {
+export type IFolderState = {
   activeFolderPath: string[]
   clipboard: IFolderClipboard
 	folders: { [key: string]: IFolder }
@@ -49,7 +49,7 @@ export type FolderState = {
 //-----------------------------------------------------------------------------
 // Reducers
 //-----------------------------------------------------------------------------
-export const folderReducer = (state = initialFoldersState, action: FolderActions): FolderState => {
+export const folderReducer = (state = initialFoldersState, action: IFolderActions): IFolderState => {
 	switch (action.type) {
 
     case CREATE_FILE: {

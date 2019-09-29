@@ -9,7 +9,7 @@ import styled from 'styled-components'
 import { query } from '@app/api'
 
 import { IAppState } from '@app/state'
-import { ThunkDispatch } from '@app/state/types'
+import { IThunkDispatch } from '@app/state/types'
 import { 
   copySheetRange as copySheetRangeAction,
   cutSheetRange as cutSheetRangeAction,
@@ -79,7 +79,7 @@ const mapStateToProps = (state: IAppState, props: SheetComponentProps) => ({
   userColorSecondary: selectUserColorSecondary(state)
 })
 
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+const mapDispatchToProps = (dispatch: IThunkDispatch) => ({
   createSheetRow: (sheetId: string, sourceSheetId: string) => dispatch(createSheetRowAction(sheetId, sourceSheetId)),
   loadSheet: (sheet: ISheetFromServer) => dispatch(loadSheetAction(sheet)),
   updateSheet: (sheetId: string, updates: ISheetUpdates) => dispatch(updateSheetAction(sheetId, updates)),

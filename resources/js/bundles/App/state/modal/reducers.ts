@@ -3,18 +3,18 @@
 //-----------------------------------------------------------------------------
 import { IModal } from '@app/state/modal/types'
 import { 
-  ModalActions, 
+  IModalActions, 
   UPDATE_MODAL, 
 } from '@app/state/modal/actions'
 
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
-export const initialModalState: ModalState = {
+export const initialModalState: IModalState = {
 	activeModal: null,
   createSheetFolderId: null
 }
-export type ModalState = {
+export type IModalState = {
 	activeModal: IModal,
   createSheetFolderId: string
 }
@@ -22,7 +22,7 @@ export type ModalState = {
 //-----------------------------------------------------------------------------
 // Reducers
 //-----------------------------------------------------------------------------
-export const modalReducer = (state = initialModalState, action: ModalActions): ModalState => {
+export const modalReducer = (state = initialModalState, action: IModalActions): IModalState => {
 	switch (action.type) {
 
 		case UPDATE_MODAL: {

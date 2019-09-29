@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import { FOLDER, ORGANIZATION, SHEET, USER } from '@app/assets/icons'
 
 import { IAppState } from '@app/state'
-import { ThunkDispatch } from '@app/state/types'
+import { IThunkDispatch } from '@app/state/types'
 import { 
   closeTab as closeTabAction,
   openFileInNewTab as openFileInNewTabAction,
@@ -32,7 +32,7 @@ const mapStateToProps = (state: IAppState) => ({
   tabs: selectTabs(state)
 })
 
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+const mapDispatchToProps = (dispatch: IThunkDispatch) => ({
   closeTab: (fileId: string) => dispatch(closeTabAction(fileId)),
   openFileInNewTab: (nextActiveTab: string) => dispatch(openFileInNewTabAction(nextActiveTab)),
   updateActiveTab: (nextActiveTab: string) => dispatch(updateActiveTabAction(nextActiveTab))

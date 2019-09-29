@@ -3,19 +3,19 @@
 //-----------------------------------------------------------------------------
 import { IHistoryStep } from '@app/state/history/types'
 import { 
-  HistoryActions,
+  IHistoryActions,
   UPDATE_HISTORY
 } from '@app/state/history/actions'
 
 //-----------------------------------------------------------------------------
 // Initial State
 //-----------------------------------------------------------------------------
-export const initialHistoryState: HistoryState = {
+export const initialHistoryState: IHistoryState = {
   previousAction: null,
   currentStep: null,
   steps: []
 }
-export type HistoryState = {
+export type IHistoryState = {
   previousAction: 'UNDO' | 'REDO',
   currentStep: number,
   steps: IHistoryStep[]
@@ -24,7 +24,7 @@ export type HistoryState = {
 //-----------------------------------------------------------------------------
 // Reducers
 //-----------------------------------------------------------------------------
-export const userReducer = (state = initialHistoryState, action: HistoryActions): HistoryState => {
+export const userReducer = (state = initialHistoryState, action: IHistoryActions): IHistoryState => {
 	switch (action.type) {
 
     case UPDATE_HISTORY: {

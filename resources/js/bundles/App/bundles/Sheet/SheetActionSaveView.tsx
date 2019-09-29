@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import { SAVE_SHEET_VIEW } from '@app/assets/icons' 
 
 import { IAppState } from '@app/state'
-import { ThunkDispatch } from '@app/state/types'
+import { IThunkDispatch } from '@app/state/types'
 import { 
   updateIsSavingNewFile as updateIsSavingNewFileAction
  } from '@app/state/folder/actions'
@@ -29,7 +29,7 @@ const mapStateToProps = (state: IAppState) => ({
   userColorPrimary: selectUserColorPrimary(state)
 })
 
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+const mapDispatchToProps = (dispatch: IThunkDispatch) => ({
   createSheetView: (sheetId: string, newViewName: string) => dispatch(createSheetViewAction(sheetId, newViewName)),
   updateIsSavingNewFile: (nextIsSavingNewFile: boolean, onFileSave: () => void) => dispatch(updateIsSavingNewFileAction(nextIsSavingNewFile, onFileSave)),
   updateActiveTab: (nextActiveTabId: string) => dispatch(updateActiveTabAction(nextActiveTabId))

@@ -5,7 +5,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { IAppState } from '@app/state'
-import { ThunkDispatch } from '@app/state/types'
+import { IThunkDispatch } from '@app/state/types'
 import { IFiles, IFolders } from '@app/state/folder/types'
 import { 
   updateActiveFolderPath as updateActiveFolderPathAction 
@@ -29,7 +29,7 @@ const mapStateToProps = (state: IAppState) => ({
   rootFolderIds: selectRootFolderIds(state)
 })
 
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+const mapDispatchToProps = (dispatch: IThunkDispatch) => ({
   updateActiveFolderPath: (level: number, nextActiveFolderId: string) => dispatch(updateActiveFolderPathAction(level, nextActiveFolderId))
 })
 

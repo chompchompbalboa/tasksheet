@@ -2,7 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import { IAppState } from '@app/state'
-import { ThunkAction, ThunkDispatch } from '@app/state/types'
+import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import {
   IUserActiveUpdates,
   IUserColorUpdates
@@ -25,8 +25,8 @@ interface IUpdateUserActive {
 }
 
 
-export const updateUserActive = (updates: IUserActiveUpdates): ThunkAction => {
-	return async (dispatch: ThunkDispatch, getState: () => IAppState) => {
+export const updateUserActive = (updates: IUserActiveUpdates): IThunkAction => {
+	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
 		dispatch(updateUserActiveReducer(updates))
 		mutation.updateUserActive(getState().user.active.id, updates)
 	}
@@ -49,8 +49,8 @@ interface IUpdateUserColor {
 }
 
 let userColorTimeout: number = null
-export const updateUserColor = (updates: IUserColorUpdates): ThunkAction => {
-	return async (dispatch: ThunkDispatch, getState: () => IAppState) => {
+export const updateUserColor = (updates: IUserColorUpdates): IThunkAction => {
+	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
 		window.clearTimeout(userColorTimeout)
 		dispatch(updateUserColorReducer(updates))
 		userColorTimeout = window.setTimeout(() => mutation.updateUserColor(getState().user.color.id, updates), 1500)

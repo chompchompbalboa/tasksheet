@@ -5,7 +5,7 @@ import React, { useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { ThunkDispatch } from '@app/state/types'
+import { IThunkDispatch } from '@app/state/types'
 import { IModalUpdates } from '@app/state/modal/types'
 import { 
   updateModal as updateModalAction,
@@ -14,7 +14,7 @@ import {
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+const mapDispatchToProps = (dispatch: IThunkDispatch) => ({
   updateModal: (updates: IModalUpdates) => dispatch(updateModalAction(updates))
 })
 

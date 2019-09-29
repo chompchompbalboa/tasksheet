@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { v4 as createUuid } from 'uuid'
 
 import clone from '@/utils/clone'
-import { ThunkDispatch } from '@app/state/types'
+import { IThunkDispatch } from '@app/state/types'
 import { 
   ISheet, 
   ISheetColumn, IAllSheetColumns, 
@@ -31,7 +31,7 @@ import SheetActionFilterExistingFilters from '@app/bundles/Sheet/SheetActionFilt
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapDispatchToProps = (dispatch: ThunkDispatch, props: SheetActionFilterProps) => ({
+const mapDispatchToProps = (dispatch: IThunkDispatch, props: SheetActionFilterProps) => ({
   createSheetFilter: (sheetId: string, newFilter: ISheetFilter) => dispatch(createSheetFilterAction(sheetId, newFilter)),
   deleteSheetFilter: (sheetId: string, filterId: string) => dispatch(deleteSheetFilterAction(sheetId, filterId)),
   updateSheetFilter: (sheetId: string, filterId: string, updates: ISheetFilterUpdates) => dispatch(updateSheetFilterAction(sheetId, filterId, updates)),

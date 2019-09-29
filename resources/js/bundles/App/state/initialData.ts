@@ -1,7 +1,7 @@
 import { IFile, IFolder } from '@app/state/folder/types'
 import { IUser, IUserActive, IUserColor } from '@app/state/user/types'
 
-const initalData: InitialData = {
+const initalData: IInitialData = {
 	user: <IUser>{
 		id: 'uuid',
 		name: '',

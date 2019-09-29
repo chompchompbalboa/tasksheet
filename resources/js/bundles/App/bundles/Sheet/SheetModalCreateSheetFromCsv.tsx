@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
-import { ThunkDispatch } from '@app/state/types'
+import { IThunkDispatch } from '@app/state/types'
 import { IModalUpdates } from '@app/state/modal/types'
 import { selectModalCreateSheetFolderId } from '@app/state/modal/selectors'
 import { 
@@ -24,7 +24,7 @@ const mapStateToProps = (state: IAppState) => ({
   folderId: selectModalCreateSheetFolderId(state)
 })
 
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+const mapDispatchToProps = (dispatch: IThunkDispatch) => ({
   createSheetFromCsv: (folderId: IFolder['id'], fileToCsv: File) => dispatch(createSheetFromCsvAction(folderId, fileToCsv)),
   updateModal: (updates: IModalUpdates) => dispatch(updateModalAction(updates))
 })
