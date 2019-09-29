@@ -3,36 +3,36 @@
 //-----------------------------------------------------------------------------
 import { IAppState } from '@app/state'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
+import {
+  IUserActiveUpdates,
+  IUserColorUpdates
+} from './types'
 
 import { mutation } from '@app/api'
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-export type UserActions = UpdateUserActive | UpdateUserColor
+export type IUserActions = IUpdateUserActive | IUpdateUserColor
 
 //-----------------------------------------------------------------------------
 // Update User Active
 //-----------------------------------------------------------------------------
 export const UPDATE_USER_ACTIVE = 'UPDATE_USER_ACTIVE'
-export type UserActiveUpdates = {
-	tab?: string
-	tabs?: string[]
-}
-interface UpdateUserActive {
+interface IUpdateUserActive {
 	type: typeof UPDATE_USER_ACTIVE
-	updates: UserActiveUpdates
+	updates: IUserActiveUpdates
 }
 
 
-export const updateUserActive = (updates: UserActiveUpdates): ThunkAction => {
+export const updateUserActive = (updates: IUserActiveUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => IAppState) => {
 		dispatch(updateUserActiveReducer(updates))
 		mutation.updateUserActive(getState().user.active.id, updates)
 	}
 }
 
-export const updateUserActiveReducer = (updates: UserActiveUpdates): UserActions => {
+export const updateUserActiveReducer = (updates: IUserActiveUpdates): IUserActions => {
 	return {
 		type: UPDATE_USER_ACTIVE,
 		updates: updates,
@@ -43,18 +43,13 @@ export const updateUserActiveReducer = (updates: UserActiveUpdates): UserActions
 // Update User Color
 //-----------------------------------------------------------------------------
 export const UPDATE_USER_COLOR = 'UPDATE_USER_COLOR'
-export type UserColorUpdates = {
-	primary?: string
-	secondary?: string
-	tertiary?: string
-}
-interface UpdateUserColor {
+interface IUpdateUserColor {
 	type: typeof UPDATE_USER_COLOR
-	updates: UserColorUpdates
+	updates: IUserColorUpdates
 }
 
 let userColorTimeout: number = null
-export const updateUserColor = (updates: UserColorUpdates): ThunkAction => {
+export const updateUserColor = (updates: IUserColorUpdates): ThunkAction => {
 	return async (dispatch: ThunkDispatch, getState: () => IAppState) => {
 		window.clearTimeout(userColorTimeout)
 		dispatch(updateUserColorReducer(updates))
@@ -62,7 +57,7 @@ export const updateUserColor = (updates: UserColorUpdates): ThunkAction => {
 	}
 }
 
-export const updateUserColorReducer = (updates: UserColorUpdates): UserActions => {
+export const updateUserColorReducer = (updates: IUserColorUpdates): IUserActions => {
 	return {
 		type: UPDATE_USER_COLOR,
 		updates: updates,

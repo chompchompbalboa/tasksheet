@@ -18,18 +18,21 @@ import {
   ISheetStylesServerUpdates,
   ISheetView 
 } from '@app/state/sheet/types'
-import { UserActiveUpdates, UserColorUpdates} from '@app/state/user/actions'
+import { 
+  IUserActiveUpdates, 
+  IUserColorUpdates
+} from '@app/state/user/types'
 
 //-----------------------------------------------------------------------------
 // User
 //-----------------------------------------------------------------------------
-export const updateUserActive = async (id: string, updates: UserActiveUpdates) => {
+export const updateUserActive = async (id: string, updates: IUserActiveUpdates) => {
 	return axios.patch('/app/user/active/' + id, updates).then(response => {
 		return response.data
 	})
 }
 
-export const updateUserColor = async (id: string, updates: UserColorUpdates) => {
+export const updateUserColor = async (id: string, updates: IUserColorUpdates) => {
 	return axios.patch('/app/user/color/' + id, updates).then(response => {
 		return response.data
 	})

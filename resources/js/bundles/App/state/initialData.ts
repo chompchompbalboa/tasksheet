@@ -1,17 +1,17 @@
 import { IFile, IFolder } from '@app/state/folder/types'
-import { User, UserActive, UserColor } from '@app/state/user/types'
+import { IUser, IUserActive, IUserColor } from '@app/state/user/types'
 
 const initalData: InitialData = {
-	user: <User>{
+	user: <IUser>{
 		id: 'uuid',
 		name: '',
 		email: '',
-		active: <UserActive>{
+		active: <IUserActive>{
 			id: 'uuid',
 			tabs: [],
 			tab: null,
 		},
-		color: <UserColor>{
+		color: <IUserColor>{
 			primary: '',
 			secondary: '',
 		}

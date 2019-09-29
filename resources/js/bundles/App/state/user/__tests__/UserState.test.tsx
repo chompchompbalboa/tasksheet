@@ -6,10 +6,16 @@ import AxiosMockAdapter from 'axios-mock-adapter'
 import { applyMiddleware, createStore } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 
-import { IAppState, appReducer } from '@app/state'
+import { 
+  IAppState, 
+  appReducer 
+} from '@app/state'
 import {
-  updateUserColor, UserColorUpdates
-} from '../actions'
+  IUserColorUpdates
+} from '@app/state/user/types'
+import {
+  updateUserColor
+} from '@app/state/user/actions'
 
 //-----------------------------------------------------------------------------
 // Setup
@@ -32,7 +38,7 @@ describe('Update User Color', () => {
   axiosMock.onPatch('/app/user/color/uuid').reply(200)
   
   it('Should update the primary color', () => {
-    const updatePrimary: UserColorUpdates = { primary: '#FFFFFF' }
+    const updatePrimary: IUserColorUpdates = { primary: '#FFFFFF' }
     // @ts-ignore thunk-action
     return store.dispatch(updateUserColor(updatePrimary)).then(() => {
       const state: IAppState = store.getState()
@@ -41,7 +47,7 @@ describe('Update User Color', () => {
   })
   
   it('Should update the secondary color', () => {
-    const updateSecondary: UserColorUpdates = { secondary: '#CCCCCC' }
+    const updateSecondary: IUserColorUpdates = { secondary: '#CCCCCC' }
     // @ts-ignore thunk-action
     return store.dispatch(updateUserColor(updateSecondary)).then(() => {
       const state: IAppState = store.getState()

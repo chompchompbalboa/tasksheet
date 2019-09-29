@@ -7,10 +7,12 @@ import changeCase from 'change-case'
 
 import { IAppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
-import { UserColor } from '@app/state/user/types'
+import { 
+  IUserColor, IUserColorUpdates
+} from '@app/state/user/types'
 import { selectUserColors } from '@app/state/user/selectors'
 import { 
-  updateUserColor as updateUserColorAction, UserColorUpdates
+  updateUserColor as updateUserColorAction
 } from '@app/state/user/actions'
 
 import SettingsTile from './SettingsTile'
@@ -24,7 +26,7 @@ const mapStateToProps = (state: IAppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-  updateUserColor: (updates: UserColorUpdates) => dispatch(updateUserColorAction(updates))
+  updateUserColor: (updates: IUserColorUpdates) => dispatch(updateUserColorAction(updates))
 })
 
 //-----------------------------------------------------------------------------
@@ -38,7 +40,7 @@ export const SettingsUserColor = ({
   return (
     <SettingsTile
       header="Colors">
-      {colorKeys.map((key: keyof UserColor) => (
+      {colorKeys.map((key: keyof IUserColor) => (
         <SettingsUserColorColor
           key={key}
           label={changeCase.titleCase(key)}
@@ -53,8 +55,8 @@ export const SettingsUserColor = ({
 // Props
 //-----------------------------------------------------------------------------
 export type SettingsUserColorProps = {
-  updateUserColor(updates: UserColorUpdates): void
-  userColors: UserColor
+  updateUserColor(updates: IUserColorUpdates): void
+  userColors: IUserColor
 }
 
 export default connect(

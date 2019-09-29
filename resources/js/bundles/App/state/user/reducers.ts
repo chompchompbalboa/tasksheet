@@ -2,18 +2,22 @@
 // Initial
 //-----------------------------------------------------------------------------
 import defaultInitialData from '@app/state/initialData'
-import { User } from '@app/state/user/types'
-import { UserActions, UPDATE_USER_ACTIVE, UPDATE_USER_COLOR } from '@app/state/user/actions'
+import { IUser } from '@app/state/user/types'
+import { 
+  IUserActions, 
+  UPDATE_USER_ACTIVE, 
+  UPDATE_USER_COLOR 
+} from '@app/state/user/actions'
 
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
-export const initialUserState: User = initialData !== undefined ? initialData.user : defaultInitialData.user
+export const initialUserState: IUser = initialData !== undefined ? initialData.user : defaultInitialData.user
 
 //-----------------------------------------------------------------------------
 // Reducers
 //-----------------------------------------------------------------------------
-export const userReducer = (state = initialUserState, action: UserActions): User => {
+export const userReducer = (state = initialUserState, action: IUserActions): IUser => {
 	switch (action.type) {
 		case UPDATE_USER_ACTIVE: {
 			const { updates } = action
