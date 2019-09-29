@@ -8,7 +8,10 @@ import styled from 'styled-components'
 import { SHEET, SHEET_VIEW } from '@app/assets/icons'
 
 import { ThunkDispatch } from '@app/state/types'
-import { ClipboardUpdates, File, FileUpdates } from '@app/state/folder/types'
+import { 
+  IFile, IFileUpdates,
+  IFolderClipboardUpdates, 
+} from '@app/state/folder/types'
 import { 
   deleteFile as deleteFileAction,
   updateClipboard as updateClipboardAction, 
@@ -24,8 +27,8 @@ import Icon from '@/components/Icon'
 //-----------------------------------------------------------------------------
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   deleteFile: (fileId: string) => dispatch(deleteFileAction(fileId)),
-  updateClipboard: (updates: ClipboardUpdates) => dispatch(updateClipboardAction(updates)),
-  updateFile: (fileId: string, updates: FileUpdates) => dispatch(updateFileAction(fileId, updates))
+  updateClipboard: (updates: IFolderClipboardUpdates) => dispatch(updateClipboardAction(updates)),
+  updateFile: (fileId: string, updates: IFileUpdates) => dispatch(updateFileAction(fileId, updates))
 })
 
 //-----------------------------------------------------------------------------
@@ -129,10 +132,10 @@ const FoldersFolderFile = ({
 //-----------------------------------------------------------------------------
 interface FoldersFolderFileProps {
   deleteFile(fileId: string): void
-  file: File
+  file: IFile
   handleFileOpen(nextActiveTabId: string): void
-  updateClipboard(updates: ClipboardUpdates): void
-  updateFile(fileId: string, updates: FileUpdates): void
+  updateClipboard(updates: IFolderClipboardUpdates): void
+  updateFile(fileId: string, updates: IFileUpdates): void
 }
 
 //-----------------------------------------------------------------------------

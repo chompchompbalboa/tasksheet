@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 import { IAppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
-import { Files, Folders } from '@app/state/folder/types'
+import { IFiles, IFolders } from '@app/state/folder/types'
 import { 
   updateActiveFolderPath as updateActiveFolderPathAction 
 } from '@app/state/folder/actions'
@@ -107,8 +107,8 @@ const Folders = ({
 //-----------------------------------------------------------------------------
 interface FoldersProps {
   activeFolderPath: string[]
-  files: Files
-  folders: Folders
+  files: IFiles
+  folders: IFolders
   handleFileOpen(nextActiveTabId: string): void
   isActiveTab: boolean
   isSavingNewFile: boolean

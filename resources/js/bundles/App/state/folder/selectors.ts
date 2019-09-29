@@ -3,7 +3,10 @@
 //-----------------------------------------------------------------------------
 import { IAppState } from '@app/state'
 
-import { File, Files, Folder, Folders } from './types'
+import { 
+  IFile, IFiles, 
+  IFolder, IFolders 
+} from './types'
 
 //-----------------------------------------------------------------------------
 // Select Active Folder Path
@@ -13,22 +16,22 @@ export const selectActiveFolderPath = (state: IAppState): string[] => state.fold
 //-----------------------------------------------------------------------------
 // Select File
 //-----------------------------------------------------------------------------
-export const selectFile = (id: string, state: IAppState): File => state.folder.files && state.folder.files[id]
+export const selectFile = (id: string, state: IAppState): IFile => state.folder.files && state.folder.files[id]
 
 //-----------------------------------------------------------------------------
 // Select Files
 //-----------------------------------------------------------------------------
-export const selectFiles = (state: IAppState): Files => state.folder.files
+export const selectFiles = (state: IAppState): IFiles => state.folder.files
 
 //-----------------------------------------------------------------------------
 // Select Folder
 //-----------------------------------------------------------------------------
-export const selectFolder = (id: string, state: IAppState): Folder => state.folder.folders && state.folder.folders[id]
+export const selectFolder = (id: string, state: IAppState): IFolder => state.folder.folders && state.folder.folders[id]
 
 //-----------------------------------------------------------------------------
 // Select Folders
 //-----------------------------------------------------------------------------
-export const selectFolders = (state: IAppState): Folders => state.folder.folders
+export const selectFolders = (state: IAppState): IFolders => state.folder.folders
 
 //-----------------------------------------------------------------------------
 // Select Is Saving New File

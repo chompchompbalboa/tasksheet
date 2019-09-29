@@ -8,7 +8,10 @@ import styled from 'styled-components'
 import { SUBITEM_ARROW } from '@app/assets/icons'
 
 import { ThunkDispatch } from '@app/state/types'
-import { ClipboardUpdates, Folder, FolderUpdates } from '@app/state/folder/types'
+import { 
+  IFolder, IFolderUpdates,
+  IFolderClipboardUpdates 
+} from '@app/state/folder/types'
 import { 
   createFolder as createFolderAction,
   pasteFromClipboard as pasteFromClipboardAction,
@@ -31,8 +34,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   createSheet: (folderId: string) => dispatch(createSheetAction(folderId)),
   pasteFromClipboard: (folderId: string) => dispatch(pasteFromClipboardAction(folderId)),
   updateModal: (updates: IModalUpdates) => dispatch(updateModalAction(updates)),
-  updateClipboard: (updates: ClipboardUpdates) => dispatch(updateClipboardAction(updates)),
-  updateFolder: (folderId: string, updates: FolderUpdates) => dispatch(updateFolderAction(folderId, updates))
+  updateClipboard: (updates: IFolderClipboardUpdates) => dispatch(updateClipboardAction(updates)),
+  updateFolder: (folderId: string, updates: IFolderUpdates) => dispatch(updateFolderAction(folderId, updates))
 })
 
 //-----------------------------------------------------------------------------
@@ -145,13 +148,13 @@ interface FoldersFolderFolderProps {
   activeFolderPath: string[]
   createFolder?(folderId: string): void
   createSheet?(folderId: string): void
-  folder: Folder
+  folder: IFolder
   level: number
   pasteFromClipboard(folderId: string): void
   updateActiveFolderPath(level: number, nextActiveFolderId: string): void
   updateModal(updates: IModalUpdates): void
-  updateClipboard(updates: ClipboardUpdates): void
-  updateFolder?(folderId: string, updates: FolderUpdates): void
+  updateClipboard(updates: IFolderClipboardUpdates): void
+  updateFolder?(folderId: string, updates: IFolderUpdates): void
 }
 
 //-----------------------------------------------------------------------------

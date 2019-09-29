@@ -20,7 +20,10 @@ import {
   IAllSheetSorts, ISheetSort, ISheetSortUpdates,
   ISheetStylesUpdates, ISheetStylesServerUpdates,
 } from '@app/state/sheet/types'
-import { FileType, File as TFile, Folder } from '@app/state/folder/types'
+import { 
+  IFile, IFileType, 
+  IFolder 
+} from '@app/state/folder/types'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
 
 import { createFile, updateFile, updateFiles, updateFolders } from '@app/state/folder/actions'
@@ -212,10 +215,10 @@ export const updateSheetClipboard = (nextSheetClipboard: ISheetClipboard): Sheet
 //-----------------------------------------------------------------------------
 // Create Sheet
 //-----------------------------------------------------------------------------
-export const createSheet = (folderId: Folder['id']): ThunkAction => {
+export const createSheet = (folderId: IFolder['id']): ThunkAction => {
   return async (dispatch: ThunkDispatch) => {
     const newSheetId = createUuid()
-    const newFile: TFile = {
+    const newFile: IFile = {
       id: createUuid(),
       folderId: folderId,
       name: null,
@@ -233,10 +236,10 @@ export const createSheet = (folderId: Folder['id']): ThunkAction => {
 //-----------------------------------------------------------------------------
 // Create Sheet From Csv
 //-----------------------------------------------------------------------------
-export const createSheetFromCsv = (folderId: Folder['id'], fileToUpload: File): ThunkAction => {
+export const createSheetFromCsv = (folderId: IFolder['id'], fileToUpload: File): ThunkAction => {
   return async (dispatch: ThunkDispatch) => {
     const newSheetId = createUuid()
-    const newFile: TFile = {
+    const newFile: IFile = {
       id: createUuid(),
       folderId: folderId,
       name: fileToUpload.name.split('.').slice(0, -1).join(''), // fileToUpload name without the extension
@@ -520,7 +523,7 @@ export const createSheetView = (sheetId: string, viewName: string): ThunkAction 
       ...files[fileId],
       id: newFileId,
       folderId: folderId,
-      type: 'SHEET_VIEW' as FileType, 
+      type: 'SHEET_VIEW' as IFileType, 
       name: viewName,
       typeId: newSheetViewId
     }

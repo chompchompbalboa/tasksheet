@@ -2,7 +2,11 @@
 // Initial
 //-----------------------------------------------------------------------------
 import defaultInitialData from '@app/state/initialData'
-import { Clipboard, File, Files, Folder, Folders } from '@app/state/folder/types'
+import { 
+  IFile, IFiles, 
+  IFolder, IFolders,
+  IFolderClipboard, 
+} from '@app/state/folder/types'
 import normalizer from '@app/state/folder/normalizer'
 import {
   FolderActions,
@@ -26,17 +30,17 @@ const normalizedFolders = normalizer(
 export const initialFoldersState: FolderState = {
   activeFolderPath: [initialData.folders[0].id],
   clipboard: { itemId: null, cutOrCopy: null, folderOrFile: null },
-	folders: <Folders>normalizedFolders.entities.folder,
-  files: <Files>normalizedFolders.entities.file,
+	folders: <IFolders>normalizedFolders.entities.folder,
+  files: <IFiles>normalizedFolders.entities.file,
   isSavingNewFile: false,
   onFileSave: null,
 	rootFolderIds: normalizedFolders.result,
 }
 export type FolderState = {
   activeFolderPath: string[]
-  clipboard: Clipboard
-	folders: { [key: string]: Folder }
-  files: { [key: string]: File }
+  clipboard: IFolderClipboard
+	folders: { [key: string]: IFolder }
+  files: { [key: string]: IFile }
   onFileSave(...args: any): void
   isSavingNewFile: boolean
 	rootFolderIds: string[]

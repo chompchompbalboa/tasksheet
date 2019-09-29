@@ -2,7 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import { IAppState } from '@app/state'
-import { FileType } from '@app/state/folder/types'
+import { IFileType } from '@app/state/folder/types'
 import { 
   ISheet,
   ISheetActive,
@@ -133,7 +133,7 @@ export const selectSheetColumns = (
 export const selectSheetFileType = (
   state: IAppState, 
   sheetId: string
-): FileType => state.sheet.allSheets && state.sheet.allSheets[sheetId] ? state.sheet.allSheets[sheetId].fileType : null
+): IFileType => state.sheet.allSheets && state.sheet.allSheets[sheetId] ? state.sheet.allSheets[sheetId].fileType : null
 
 //-----------------------------------------------------------------------------
 // Select Sheet Filters

@@ -3,7 +3,10 @@
 //-----------------------------------------------------------------------------
 import axios from '@/api/axios'
 
-import { File as TFile, FileUpdates, Folder, FolderUpdates } from '@app/state/folder/types'
+import { 
+  IFile, IFileUpdates, 
+  IFolder, IFolderUpdates 
+} from '@app/state/folder/types'
 import { 
   ISheet, ISheetUpdates,
   ISheetCell, ISheetCellUpdates,
@@ -35,7 +38,7 @@ export const updateUserColor = async (id: string, updates: UserColorUpdates) => 
 //-----------------------------------------------------------------------------
 // File
 //-----------------------------------------------------------------------------
-export const createFile = async (newFile: TFile) => {
+export const createFile = async (newFile: IFile) => {
 	return axios.post('/app/files', newFile).then(response => {
 		return response.data
 	})
@@ -53,7 +56,7 @@ export const restoreFile = async (fileId: string) => {
 	})
 }
 
-export const updateFile = async (id: string, updates: FileUpdates) => {
+export const updateFile = async (id: string, updates: IFileUpdates) => {
 	return axios.patch('/app/files/' + id, updates).then(response => {
 		return response.data
 	})
@@ -62,13 +65,13 @@ export const updateFile = async (id: string, updates: FileUpdates) => {
 //-----------------------------------------------------------------------------
 // Folder
 //-----------------------------------------------------------------------------
-export const createFolder = async (newFolder: Folder) => {
+export const createFolder = async (newFolder: IFolder) => {
 	return axios.post('/app/folders', newFolder).then(response => {
 		return response.data
 	})
 }
 
-export const updateFolder = async (id: string, updates: FolderUpdates) => {
+export const updateFolder = async (id: string, updates: IFolderUpdates) => {
 	return axios.patch('/app/folders/' + id, updates).then(response => {
 		return response.data
 	})

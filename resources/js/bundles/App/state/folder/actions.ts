@@ -9,9 +9,9 @@ import { mutation } from '@app/api'
 import { IAppState } from '@app/state'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
 import { 
-  ClipboardUpdates, 
-  File, Files, FileUpdates, 
-  Folder, Folders, FolderUpdates
+  IFile, IFiles, IFileUpdates, 
+  IFolder, IFolders, IFolderUpdates,
+  IFolderClipboardUpdates, 
 } from '@app/state/folder/types'
 import { createHistoryStep } from '@app/state/history/actions'
 import { closeTab } from '@app/state/tab/actions'
@@ -29,7 +29,7 @@ export type FolderActions =
 //-----------------------------------------------------------------------------
 // Defaults
 //-----------------------------------------------------------------------------
-const defaultFolder = (folderId: string): Folder => {
+const defaultFolder = (folderId: string): IFolder => {
   return {
     id: createUuid(),
     folderId: folderId,
@@ -71,10 +71,10 @@ export const updateActiveFolderPathReducer = (nextActiveFolderPath: string[]): F
 export const UPDATE_CLIPBOARD = 'UPDATE_CLIPBOARD'
 interface UpdateClipboard {
   type: typeof UPDATE_CLIPBOARD
-	updates: ClipboardUpdates
+	updates: IFolderClipboardUpdates
 }
 
-export const updateClipboard = (updates: ClipboardUpdates): FolderActions => {
+export const updateClipboard = (updates: IFolderClipboardUpdates): FolderActions => {
 	return {
 		type: UPDATE_CLIPBOARD,
 		updates
@@ -144,17 +144,17 @@ export const CREATE_FILE = 'CREATE_FILE'
 interface CreateFile {
 	type: typeof CREATE_FILE
   folderId: string
-  newFile: File
+  newFile: IFile
 }
 
-export const createFile = (folderId: string, newFile: File) => {
+export const createFile = (folderId: string, newFile: IFile) => {
 	return async (dispatch: ThunkDispatch) => {
     dispatch(createFileReducer(folderId, newFile))
     mutation.createFile(newFile)
 	}
 }
 
-export const createFileReducer = (folderId: string, newFile: File): FolderActions => {
+export const createFileReducer = (folderId: string, newFile: IFile): FolderActions => {
 	return {
     type: CREATE_FILE,
     folderId,
@@ -171,7 +171,7 @@ interface CreateFolder {
 	type: typeof CREATE_FOLDER
   folderId: string
   newFolderId: string
-  newFolder: Folder
+  newFolder: IFolder
 }
 
 export const createFolder = (folderId: string) => {
@@ -182,7 +182,7 @@ export const createFolder = (folderId: string) => {
 	}
 }
 
-export const createFolderReducer = (folderId: string, newFolderId: string, newFolder: Folder): FolderActions => {
+export const createFolderReducer = (folderId: string, newFolderId: string, newFolder: IFolder): FolderActions => {
 	return {
     type: CREATE_FOLDER,
     folderId,
@@ -236,11 +236,11 @@ export const UPDATE_FILE = 'UPDATE_FILE'
 interface UpdateFile {
 	type: typeof UPDATE_FILE
 	id: string
-	updates: FileUpdates
+	updates: IFileUpdates
 }
 
 let updateFileTimeout: number = null
-export const updateFile = (id: string, updates: FileUpdates, skipServerUpdate?: boolean) => {
+export const updateFile = (id: string, updates: IFileUpdates, skipServerUpdate?: boolean) => {
 	return async (dispatch: ThunkDispatch) => {
 		if(!skipServerUpdate) { window.clearTimeout(updateFileTimeout) }
 		dispatch(updateFileReducer(id, updates))
@@ -248,7 +248,7 @@ export const updateFile = (id: string, updates: FileUpdates, skipServerUpdate?: 
 	}
 }
 
-export const updateFileReducer = (id: string, updates: FileUpdates): FolderActions => {
+export const updateFileReducer = (id: string, updates: IFileUpdates): FolderActions => {
 	return {
 		type: UPDATE_FILE,
 		id: id,
@@ -262,10 +262,10 @@ export const updateFileReducer = (id: string, updates: FileUpdates): FolderActio
 export const UPDATE_FILES = 'UPDATE_FILES'
 interface UpdateFiles {
 	type: typeof UPDATE_FILES
-  nextFiles: Files
+  nextFiles: IFiles
 }
 
-export const updateFiles = (nextFiles: Files): FolderActions => {
+export const updateFiles = (nextFiles: IFiles): FolderActions => {
 	return {
 		type: UPDATE_FILES,
 		nextFiles
@@ -279,17 +279,17 @@ export const UPDATE_FOLDER = 'UPDATE_FOLDER'
 interface UpdateFolder {
 	type: typeof UPDATE_FOLDER
 	id: string
-	updates: FolderUpdates
+	updates: IFolderUpdates
 }
 
-export const updateFolder = (id: string, updates: FolderUpdates, skipServerUpdate?: boolean) => {
+export const updateFolder = (id: string, updates: IFolderUpdates, skipServerUpdate?: boolean) => {
 	return async (dispatch: ThunkDispatch) => {
 		dispatch(updateFolderReducer(id, updates))
 		if(!skipServerUpdate) { mutation.updateFolder(id, updates) }
 	}
 }
 
-export const updateFolderReducer = (id: string, updates: FolderUpdates): FolderActions => {
+export const updateFolderReducer = (id: string, updates: IFolderUpdates): FolderActions => {
 	return {
 		type: UPDATE_FOLDER,
 		id: id,
@@ -303,10 +303,10 @@ export const updateFolderReducer = (id: string, updates: FolderUpdates): FolderA
 export const UPDATE_FOLDERS = 'UPDATE_FOLDERS'
 interface UpdateFolders {
 	type: typeof UPDATE_FOLDERS
-  nextFolders: Folders
+  nextFolders: IFolders
 }
 
-export const updateFolders = (nextFolders: Folders): FolderActions => {
+export const updateFolders = (nextFolders: IFolders): FolderActions => {
 	return {
 		type: UPDATE_FOLDERS,
 		nextFolders

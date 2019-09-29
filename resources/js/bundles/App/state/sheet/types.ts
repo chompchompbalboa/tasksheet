@@ -1,4 +1,4 @@
-import { FileType } from '@app/state/folder/types'
+import { IFileType } from '@app/state/folder/types'
 
 export interface IAllSheets { [sheetId: string]: ISheet }
 export interface IAllSheetColumns { [columnId: string]: ISheetColumn }
@@ -36,7 +36,7 @@ export interface ISheetClipboardSelections {
 export interface ISheet {
   id: string
   sourceSheetId: ISheet['id']
-  fileType: FileType
+  fileType: IFileType
 	rows: ISheetRow['id'][]
   visibleRows: ISheetRow['id'][]
   columns: ISheetColumn['id'][]
@@ -98,7 +98,7 @@ export interface ISheetStylesServerUpdates {
 export interface ISheetFromServer {
   id: string
   sourceSheetId: string
-  fileType: FileType
+  fileType: IFileType
   columns: ISheetColumn[]
   visibleColumns: ISheetColumn['id'][]
   filters: ISheetFilter[]

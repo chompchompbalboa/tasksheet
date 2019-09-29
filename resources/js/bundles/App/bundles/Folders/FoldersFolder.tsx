@@ -4,7 +4,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Files, Folders } from '@app/state/folder/types'
+import { IFiles, IFolders } from '@app/state/folder/types'
 
 import FoldersFolderFile from '@app/bundles/Folders/FoldersFolderFile'
 import FoldersFolderFolder from '@app/bundles/Folders/FoldersFolderFolder'
@@ -60,9 +60,9 @@ const FoldersFolder = ({
 //-----------------------------------------------------------------------------
 interface FoldersFolderProps {
   activeFolderPath: string[]
-  files: Files
+  files: IFiles
   folderId: string
-  folders: Folders
+  folders: IFolders
   handleFileOpen(nextActiveTabId: string): void
   level: number
   rootFolderIds: string[]

@@ -9,7 +9,7 @@ import { TAB_CLOSE } from '@app/assets/icons'
 
 import { IAppState } from '@app/state'
 import { selectFile } from '@app/state/folder/selectors'
-import { File as TFile } from '@app/state/folder/types'
+import { IFile } from '@app/state/folder/types'
 
 import Icon from '@/components/Icon'
 
@@ -58,7 +58,7 @@ const Tab = ({
 //-----------------------------------------------------------------------------
 interface TabProps {
   closeTab?(fileId: string): void
-  file?: TFile
+  file?: IFile
   fileId: string
   isActiveTab: boolean
   handleTabClick?(nextActiveTabId: string): void

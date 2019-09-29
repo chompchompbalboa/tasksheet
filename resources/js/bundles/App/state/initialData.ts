@@ -1,4 +1,4 @@
-import { File, Folder } from '@app/state/folder/types'
+import { IFile, IFolder } from '@app/state/folder/types'
 import { User, UserActive, UserColor } from '@app/state/user/types'
 
 const initalData: InitialData = {
@@ -20,8 +20,8 @@ const initalData: InitialData = {
 		{
 			id: 'uuid',
 			name: 'name',
-			folders: <Folder[]>[],
-			files: <File[]>[],
+			folders: <IFolder[]>[],
+			files: <IFile[]>[],
 		},
   ],
   columnTypes: []

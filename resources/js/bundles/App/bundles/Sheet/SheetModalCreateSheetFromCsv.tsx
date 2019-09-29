@@ -15,7 +15,7 @@ import {
 import { 
   createSheetFromCsv as createSheetFromCsvAction,
 } from '@app/state/sheet/actions' 
-import { Folder } from '@app/state/folder/types'
+import { IFolder } from '@app/state/folder/types'
 
 //-----------------------------------------------------------------------------
 // Redux
@@ -25,7 +25,7 @@ const mapStateToProps = (state: IAppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-  createSheetFromCsv: (folderId: Folder['id'], fileToCsv: File) => dispatch(createSheetFromCsvAction(folderId, fileToCsv)),
+  createSheetFromCsv: (folderId: IFolder['id'], fileToCsv: File) => dispatch(createSheetFromCsvAction(folderId, fileToCsv)),
   updateModal: (updates: IModalUpdates) => dispatch(updateModalAction(updates))
 })
 
@@ -70,8 +70,8 @@ const SheetModalCreateSheetFromCsv = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetModalCreateSheetFromCsvProps {
-  createSheetFromCsv?(folderId: Folder['id'], fileToCsv: File): void
-  folderId: Folder['id']
+  createSheetFromCsv?(folderId: IFolder['id'], fileToCsv: File): void
+  folderId: IFolder['id']
   updateModal?(updates: IModalUpdates): void
 }
 

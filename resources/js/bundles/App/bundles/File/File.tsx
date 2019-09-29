@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
 import { selectFile } from '@app/state/folder/selectors'
-import { File as TFile } from '@app/state/folder/types'
+import { IFile } from '@app/state/folder/types'
 
 import Sheet from '@app/bundles/Sheet/Sheet'
 
@@ -46,7 +46,7 @@ const File = ({
 // Props
 //-----------------------------------------------------------------------------
 interface FileProps {
-  file?: TFile
+  file?: IFile
   fileId: string
 }
 

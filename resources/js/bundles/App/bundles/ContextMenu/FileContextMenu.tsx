@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 
-import { ClipboardUpdates } from '@app/state/folder/types'
+import { IFolderClipboardUpdates } from '@app/state/folder/types'
 
 import ContextMenu from '@app/bundles/ContextMenu/ContextMenu'
 import ContextMenuDivider from '@app/bundles/ContextMenu/ContextMenuDivider'
@@ -63,7 +63,7 @@ interface FileContextMenuProps {
   contextMenuTop: number
   deleteFile(fileId: string): void
   setIsRenaming(isRenaming: boolean): void
-  updateClipboard(updates: ClipboardUpdates): void
+  updateClipboard(updates: IFolderClipboardUpdates): void
 }
 
 //-----------------------------------------------------------------------------

@@ -1,48 +1,48 @@
-export interface Folders {
-	[key: string]: Folder
+export interface IFolders {
+	[key: string]: IFolder
 }
 
-export interface Files {
-	[key: string]: File
+export interface IFiles {
+	[key: string]: IFile
 }
 
-export interface Folder {
+export interface IFolder {
   id: string
   folderId?: string
 	name: string
 	folders: string[]
 	files: string[]
 }
-export type FolderUpdates = {
+export interface IFolderUpdates {
   folderId?: string
   name?: string
   files?: string[]
   folders?: string[]
 }
 
-export interface File {
+export interface IFile {
 	id: string
   folderId: string
 	name: string
-	type: FileType
+	type: IFileType
   typeId: string
   isPreventedFromSelecting?: boolean
 }
-export type FileUpdates = {
+export interface IFileUpdates {
   folderId?: string
   name?: string
-  type?: FileType
+  type?: IFileType
   isPreventedFromSelecting?: boolean
 }
 
-export type FileType = 'SHEET' | 'SHEET_VIEW'
+export type IFileType = 'SHEET' | 'SHEET_VIEW'
 
-export interface Clipboard {
+export interface IFolderClipboard {
   itemId: string
   cutOrCopy: 'CUT' | 'COPY'
   folderOrFile: 'FOLDER' | 'FILE'
 }
-export type ClipboardUpdates = {
+export interface IFolderClipboardUpdates {
   itemId?: string
   cutOrCopy?: 'CUT' | 'COPY'
   folderOrFile?: 'FOLDER' | 'FILE'

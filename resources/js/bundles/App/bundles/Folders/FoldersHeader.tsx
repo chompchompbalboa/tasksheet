@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
-import { Files, Folders } from '@app/state/folder/types'
+import { IFiles, IFolders } from '@app/state/folder/types'
 
 import AutosizeInput from 'react-input-autosize'
 
@@ -79,8 +79,8 @@ const FoldersHeader = ({
 //-----------------------------------------------------------------------------
 interface FoldersHeaderProps {
   activeFolderPath: string[]
-  files: Files
-  folders: Folders
+  files: IFiles
+  folders: IFolders
   isSavingNewFile: boolean
   onFileSave: (newFileName: string) => void
 }
