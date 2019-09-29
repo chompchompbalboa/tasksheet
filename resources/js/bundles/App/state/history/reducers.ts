@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import { HistoryStep } from '@app/state/history/types'
+import { IHistoryStep } from '@app/state/history/types'
 import { 
   HistoryActions,
   UPDATE_HISTORY
@@ -18,7 +18,7 @@ export const initialHistoryState: HistoryState = {
 export type HistoryState = {
   previousAction: 'UNDO' | 'REDO',
   currentStep: number,
-  steps: HistoryStep[]
+  steps: IHistoryStep[]
 }
 
 //-----------------------------------------------------------------------------

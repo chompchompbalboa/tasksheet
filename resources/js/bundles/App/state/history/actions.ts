@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import { HistoryStep } from '@app/state/history/types'
+import { IHistoryStep } from '@app/state/history/types'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
 import { IAppState } from '@app/state'
 
@@ -13,7 +13,7 @@ export type HistoryActions = UpdateHistory
 //-----------------------------------------------------------------------------
 // Create History Step
 //-----------------------------------------------------------------------------
-export const createHistoryStep = (newHistoryStep: HistoryStep): ThunkAction => {
+export const createHistoryStep = (newHistoryStep: IHistoryStep): ThunkAction => {
   return async (dispatch: ThunkDispatch, getState: () => IAppState) => {
     const {
       currentStep,
@@ -76,7 +76,7 @@ interface UpdateHistory {
 interface HistoryUpdates {
   previousAction?: 'UNDO' | 'REDO'
   currentStep?: number
-  steps?: HistoryStep[]
+  steps?: IHistoryStep[]
 }
 
 export const updateHistory = (updates: HistoryUpdates): HistoryActions => {
