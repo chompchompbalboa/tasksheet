@@ -7,7 +7,7 @@ import arrayMove from 'array-move'
 
 import { CHECKMARK } from '@app/assets/icons'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { ISheet, ISheetActiveUpdates, ISheetUpdates, ISheetColumn, IAllSheetColumns, ISheetColumnUpdates } from '@app/state/sheet/types'
 import { 
   createSheetColumn as createSheetColumnAction,
@@ -40,8 +40,8 @@ const SheetColumnContextMenu = ({
   updateSheetColumn
 }: SheetColumnContextMenuProps) => {
   
-  const allSheetColumnTypes = useSelector((state: AppState) => state.sheet.allSheetColumnTypes)
-  const sheetColumns = useSelector((state: AppState) => state.sheet.allSheets[sheetId].columns)
+  const allSheetColumnTypes = useSelector((state: IAppState) => state.sheet.allSheetColumnTypes)
+  const sheetColumns = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].columns)
   const columnTypeIds = Object.keys(allSheetColumnTypes)
   const dispatch = useDispatch()
   const createSheetColumn = () => dispatch(createSheetColumnAction(sheetId, columnIndex))

@@ -1,14 +1,14 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 
 //-----------------------------------------------------------------------------
 // Select Active Tab
 //-----------------------------------------------------------------------------
-export const selectActiveTab = (state: AppState): string => state.tab.activeTab
+export const selectActiveTab = (state: IAppState): string => state.tab.activeTab
 
 //-----------------------------------------------------------------------------
 // Select Tabs
 //-----------------------------------------------------------------------------
-export const selectTabs = (state: AppState): string[] => state.tab.tabs
+export const selectTabs = (state: IAppState): string[] => state.tab.tabs

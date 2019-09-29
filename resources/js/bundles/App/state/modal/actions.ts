@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import { ModalUpdates } from '@app/state/modal/types'
+import { IModalUpdates } from '@app/state/modal/types'
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -14,10 +14,10 @@ export type ModalActions = UpdateModal
 export const UPDATE_MODAL = 'UPDATE_MODAL'
 interface UpdateModal {
 	type: typeof UPDATE_MODAL
-  updates: ModalUpdates
+  updates: IModalUpdates
 }
 
-export const updateModal = (updates: ModalUpdates): ModalActions => {
+export const updateModal = (updates: IModalUpdates): ModalActions => {
 	return {
 		type: UPDATE_MODAL,
 		updates

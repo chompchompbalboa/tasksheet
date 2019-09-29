@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { TAB_CLOSE } from '@app/assets/icons'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { selectFile } from '@app/state/folder/selectors'
 import { File as TFile } from '@app/state/folder/types'
 
@@ -16,7 +16,7 @@ import Icon from '@/components/Icon'
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState, props: TabProps) => ({
+const mapStateToProps = (state: IAppState, props: TabProps) => ({
   file: selectFile(props.fileId, state)
 })
 

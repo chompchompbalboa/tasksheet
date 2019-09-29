@@ -4,7 +4,7 @@
 import React from 'react'
 
 import { ClipboardUpdates } from '@app/state/folder/types'
-import { ModalUpdates } from '@app/state/modal/types'
+import { IModalUpdates } from '@app/state/modal/types'
 
 import ContextMenu from '@app/bundles/ContextMenu/ContextMenu'
 import ContextMenuDivider from '@app/bundles/ContextMenu/ContextMenuDivider'
@@ -79,7 +79,7 @@ interface FolderContextMenuProps {
   contextMenuTop: number
   pasteFromClipboard(folderId: string): void
   setIsRenaming(isRenaming: boolean): void
-  updateModal(updates: ModalUpdates): void
+  updateModal(updates: IModalUpdates): void
   updateClipboard(updates: ClipboardUpdates): void
 }
 

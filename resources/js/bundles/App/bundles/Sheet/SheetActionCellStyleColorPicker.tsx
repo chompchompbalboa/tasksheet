@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { ARROW_DOWN, RESET_COLOR } from '@app/assets/icons'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { ISheet } from '@app/state/sheet/types'
 
 import Icon from '@/components/Icon'
@@ -25,8 +25,8 @@ const SheetActionCellStyleColorPicker = ({
 }: SheetActionCellStyleColorPickerProps) => {
   
   // Redux
-  const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
-  const selections = useSelector((state: AppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections)
+  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
+  const selections = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections)
   
   // Dropdown
   const dropdown = useRef(null)

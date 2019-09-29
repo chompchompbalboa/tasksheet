@@ -4,7 +4,7 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
  
 import SheetSettingsContentColumnTypesString from '@/bundles/App/bundles/Sheet/SheetSettingsContentColumnTypesString'
 import SheetSettingsContentColumnTypesNumber from '@/bundles/App/bundles/Sheet/SheetSettingsContentColumnTypesNumber'
@@ -23,7 +23,7 @@ import SheetSettingsContentContent from '@app/bundles/Sheet/SheetSettingsContent
 const SheetSettingsContentColumnTypes = ({
 }: SheetSettingsContentColumnTypesProps) => {
 
-  const allSheetColumnTypes = useSelector((state: AppState) => state.sheet.allSheetColumnTypes)
+  const allSheetColumnTypes = useSelector((state: IAppState) => state.sheet.allSheetColumnTypes)
   const columnTypeIds = Object.keys(allSheetColumnTypes)
 
   const [ activeColumnTypeId, setActiveColumnTypeId ] = useState(columnTypeIds[0])

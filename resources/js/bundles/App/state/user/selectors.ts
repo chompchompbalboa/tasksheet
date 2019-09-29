@@ -1,19 +1,19 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 
 //-----------------------------------------------------------------------------
 // Select User Colors
 //-----------------------------------------------------------------------------
-export const selectUserColors = (state: AppState) => state.user.color
+export const selectUserColors = (state: IAppState) => state.user.color
 
 //-----------------------------------------------------------------------------
 // Select User Color Primary
 //-----------------------------------------------------------------------------
-export const selectUserColorPrimary = (state: AppState) => state.user.color.primary
+export const selectUserColorPrimary = (state: IAppState) => state.user.color.primary
 
 //-----------------------------------------------------------------------------
 // Select User Color Secondary
 //-----------------------------------------------------------------------------
-export const selectUserColorSecondary = (state: AppState) => state.user.color.secondary
+export const selectUserColorSecondary = (state: IAppState) => state.user.color.secondary

@@ -5,7 +5,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { ISheet } from '@app/state/sheet/types'
 
 import Icon from '@/components/Icon'
@@ -20,11 +20,11 @@ const SheetActionCellStyleButton = ({
   updateSheetStylesSet
 }: SheetActionCellStyleButtonProps) => {
   
-  const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
-  const allSheetRows = useSelector((state: AppState) => state.sheet.allSheetRows)
-  const selections = useSelector((state: AppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections)
-  const sheetVisibleColumns = useSelector((state: AppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleColumns)
-  const sheetVisibleRows = useSelector((state: AppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleRows)
+  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
+  const allSheetRows = useSelector((state: IAppState) => state.sheet.allSheetRows)
+  const selections = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections)
+  const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleColumns)
+  const sheetVisibleRows = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleRows)
   
   const addOrDeleteFromSet = sheetStylesSet && sheetStylesSet.has(selections.rangeStartCellId) ? 'DELETE' : 'ADD'
 

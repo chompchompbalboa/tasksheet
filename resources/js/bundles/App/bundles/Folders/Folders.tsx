@@ -4,7 +4,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
 import { Files, Folders } from '@app/state/folder/types'
 import { 
@@ -20,7 +20,7 @@ import FoldersSidebar from '@app/bundles/Folders/FoldersSidebar'
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = (state: IAppState) => ({
   activeFolderPath: selectActiveFolderPath(state),
   files: selectFiles(state),
   folders: selectFolders(state),

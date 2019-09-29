@@ -8,7 +8,7 @@ import styled from 'styled-components'
 
 import { ARROW_DOWN, DOWNLOAD } from '@app/assets/icons'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { ISheet } from '@app/state/sheet/types'
 import {
   allowSelectedCellEditing,
@@ -37,10 +37,10 @@ const SheetActionDownloadCsv = ({
     allSheetColumns, 
     allSheetColumnTypes, 
     allSheetRows, 
-  } = useSelector((state: AppState) => state.sheet)
+  } = useSelector((state: IAppState) => state.sheet)
 
-  const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
-  const activeFilename = useSelector((state: AppState) => state.folder.files && state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].name)
+  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
+  const activeFilename = useSelector((state: IAppState) => state.folder.files && state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].name)
   const sheet = allSheets && allSheets[sheetId]
   const visibleColumns = sheet && sheet.visibleColumns
   const visibleRows = sheet && sheet.visibleRows

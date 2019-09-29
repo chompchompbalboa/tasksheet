@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { action } from '@app/api'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -15,7 +15,7 @@ import { AppState } from '@app/state'
 const UserLogout = () => {
 
   // App state
-  const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
+  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   // Local state
   const [ logoutStatus, setLogoutStatus ] = useState('READY')
 

@@ -5,9 +5,9 @@ import React, { ChangeEvent, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
-import { ModalUpdates } from '@app/state/modal/types'
+import { IModalUpdates } from '@app/state/modal/types'
 import { selectModalCreateSheetFolderId } from '@app/state/modal/selectors'
 import { 
   updateModal as updateModalAction,
@@ -20,13 +20,13 @@ import { Folder } from '@app/state/folder/types'
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = (state: IAppState) => ({
   folderId: selectModalCreateSheetFolderId(state)
 })
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
   createSheetFromCsv: (folderId: Folder['id'], fileToCsv: File) => dispatch(createSheetFromCsvAction(folderId, fileToCsv)),
-  updateModal: (updates: ModalUpdates) => dispatch(updateModalAction(updates))
+  updateModal: (updates: IModalUpdates) => dispatch(updateModalAction(updates))
 })
 
 //-----------------------------------------------------------------------------
@@ -72,7 +72,7 @@ const SheetModalCreateSheetFromCsv = ({
 interface SheetModalCreateSheetFromCsvProps {
   createSheetFromCsv?(folderId: Folder['id'], fileToCsv: File): void
   folderId: Folder['id']
-  updateModal?(updates: ModalUpdates): void
+  updateModal?(updates: IModalUpdates): void
 }
 
 //-----------------------------------------------------------------------------

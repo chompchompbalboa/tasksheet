@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { Files, Folders } from '@app/state/folder/types'
 
 import AutosizeInput from 'react-input-autosize'
@@ -23,7 +23,7 @@ const FoldersHeader = ({
 
   const activeItem = folders[activeFolderPath[activeFolderPath.length - 1]]
 
-  const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
+  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 
   const styledInput = useRef(null)
   const [ name, setName ] = useState(activeItem.name)

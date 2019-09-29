@@ -8,7 +8,7 @@ import styled from 'styled-components'
 
 import { query } from '@app/api'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
 import { 
   copySheetRange as copySheetRangeAction,
@@ -61,7 +61,7 @@ import SheetGrid from '@app/bundles/Sheet/SheetGrid'
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState, props: SheetComponentProps) => ({
+const mapStateToProps = (state: IAppState, props: SheetComponentProps) => ({
   activeTab: selectActiveTab(state),
   columns: selectColumns(state),
   columnTypes: selectColumnTypes(state),

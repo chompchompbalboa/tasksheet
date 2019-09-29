@@ -5,7 +5,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { selectFile } from '@app/state/folder/selectors'
 import { File as TFile } from '@app/state/folder/types'
 
@@ -14,7 +14,7 @@ import Sheet from '@app/bundles/Sheet/Sheet'
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState, props: FileProps) => ({
+const mapStateToProps = (state: IAppState, props: FileProps) => ({
   file: selectFile(props.fileId, state)
 })
 

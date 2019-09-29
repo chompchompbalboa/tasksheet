@@ -6,7 +6,7 @@ import { batch } from 'react-redux'
 
 import clone from '@/utils/clone'
 import { mutation } from '@app/api'
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
 import { 
   ClipboardUpdates, 
@@ -49,7 +49,7 @@ interface UpdateActiveFolderPath {
 }
 
 export const updateActiveFolderPath = (level: number, nextActiveFolderId: string): ThunkAction => {
-	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+	return async (dispatch: ThunkDispatch, getState: () => IAppState) => {
     const {
       activeFolderPath
     } = getState().folder
@@ -85,7 +85,7 @@ export const updateClipboard = (updates: ClipboardUpdates): FolderActions => {
 // Paste From Clipboard
 //-----------------------------------------------------------------------------
 export const pasteFromClipboard = (nextFolderId: string) => {
-  return (dispatch: ThunkDispatch, getState: () => AppState) => {
+  return (dispatch: ThunkDispatch, getState: () => IAppState) => {
     const {
       clipboard: {
         itemId,
@@ -195,7 +195,7 @@ export const createFolderReducer = (folderId: string, newFolderId: string, newFo
 // Delete File
 //-----------------------------------------------------------------------------
 export const deleteFile = (fileId: string) => {
-	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+	return async (dispatch: ThunkDispatch, getState: () => IAppState) => {
     const {
       folder: {
         files,

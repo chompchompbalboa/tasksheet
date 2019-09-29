@@ -5,7 +5,7 @@ import React, { MouseEvent, useEffect, useState } from 'react'
 import { batch, connect, useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { 
   ISheet, 
   ISheetActive, ISheetActiveUpdates, 
@@ -26,7 +26,7 @@ import ResizeContainer from '@app/components/ResizeContainer'
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = (state: IAppState) => ({
   active: selectActive(state)
 })
 
@@ -55,7 +55,7 @@ const SheetHeader = ({
 }: SheetHeaderProps) => {
   
   const dispatch = useDispatch()
-  const rangeStartColumnId = useSelector((state: AppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeStartColumnId)
+  const rangeStartColumnId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeStartColumnId)
   const selectSheetColumns = (startColumnId: ISheetColumn['id'], endColumnId?: ISheetColumn['id']) => dispatch(selectSheetColumnsAction(sheetId, startColumnId, endColumnId))
   const allowSelectedCellEditing = () => dispatch(allowSelectedCellEditingAction(sheetId))
   const allowSelectedCellNavigation = () => dispatch(allowSelectedCellNavigationAction(sheetId))

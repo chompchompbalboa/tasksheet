@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 import { HistoryStep } from '@app/state/history/types'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -14,7 +14,7 @@ export type HistoryActions = UpdateHistory
 // Create History Step
 //-----------------------------------------------------------------------------
 export const createHistoryStep = (newHistoryStep: HistoryStep): ThunkAction => {
-  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+  return async (dispatch: ThunkDispatch, getState: () => IAppState) => {
     const {
       currentStep,
       steps
@@ -31,7 +31,7 @@ export const createHistoryStep = (newHistoryStep: HistoryStep): ThunkAction => {
 // History Undo
 //-----------------------------------------------------------------------------
 export const historyUndo = (): ThunkAction => {
-  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+  return async (dispatch: ThunkDispatch, getState: () => IAppState) => {
     const {
       currentStep,
       steps
@@ -50,7 +50,7 @@ export const historyUndo = (): ThunkAction => {
 // History Redo
 //-----------------------------------------------------------------------------
 export const historyRedo = (): ThunkAction => {
-  return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+  return async (dispatch: ThunkDispatch, getState: () => IAppState) => {
     const {
       currentStep,
       steps

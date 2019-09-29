@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
-import { Modal } from '@app/state/modal/types'
+import { IModal } from '@app/state/modal/types'
 import { 
   ModalActions, 
   UPDATE_MODAL, 
@@ -15,7 +15,7 @@ export const initialModalState: ModalState = {
   createSheetFolderId: null
 }
 export type ModalState = {
-	activeModal: Modal,
+	activeModal: IModal,
   createSheetFolderId: string
 }
 

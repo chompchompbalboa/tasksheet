@@ -2,42 +2,30 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { AppState } from '@app/state'
-import { selectUserColorPrimary } from '@app/state/user/selectors'
+import { IAppState } from '@app/state'
 
 import History from '@app/bundles/History/History'
 import Modals from '@app/bundles/Modal/Modals'
 import Tabs from '@app/bundles/Tabs/Tabs'
 
 //-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
-  appBackgroundColor: selectUserColorPrimary(state)
-})
-
-//-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const App = ({
-  appBackgroundColor
-}: AppProps) => (
-	<Container
-    appBackgroundColor={appBackgroundColor}>
-    <History />
-    <Modals />
-		<Tabs />
-	</Container>
-)
+const App = () => {
 
-//-----------------------------------------------------------------------------
-// Props
-//-----------------------------------------------------------------------------
-type AppProps = {
-  appBackgroundColor: string
+  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
+
+  return (
+    <Container
+      containerBackgroundColor={userColorPrimary}>
+      <History />
+      <Modals />
+      <Tabs />
+    </Container>
+  )
 }
 
 //-----------------------------------------------------------------------------
@@ -46,12 +34,10 @@ type AppProps = {
 const Container = styled.div`
 	width: 100vw;
   min-height: 100vh;
-  background-color: ${ ({ appBackgroundColor }: ContainerProps) => appBackgroundColor };
+  background-color: ${ ({ containerBackgroundColor }: ContainerProps) => containerBackgroundColor };
 `
 interface ContainerProps {
-  appBackgroundColor: string
+  containerBackgroundColor: string
 }
 
-export default connect(
-  mapStateToProps
-)(App)
+export default App

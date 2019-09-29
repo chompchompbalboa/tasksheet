@@ -6,7 +6,7 @@ import AxiosMockAdapter from 'axios-mock-adapter'
 import { applyMiddleware, createStore } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 
-import { AppState, appReducer } from '@app/state'
+import { IAppState, appReducer } from '@app/state'
 import {
   updateUserColor, UserColorUpdates
 } from '../actions'
@@ -35,7 +35,7 @@ describe('Update User Color', () => {
     const updatePrimary: UserColorUpdates = { primary: '#FFFFFF' }
     // @ts-ignore thunk-action
     return store.dispatch(updateUserColor(updatePrimary)).then(() => {
-      const state: AppState = store.getState()
+      const state: IAppState = store.getState()
       expect(state.user.color.primary).toEqual("#FFFFFF")
     })
   })
@@ -44,7 +44,7 @@ describe('Update User Color', () => {
     const updateSecondary: UserColorUpdates = { secondary: '#CCCCCC' }
     // @ts-ignore thunk-action
     return store.dispatch(updateUserColor(updateSecondary)).then(() => {
-      const state: AppState = store.getState()
+      const state: IAppState = store.getState()
       expect(state.user.color.secondary).toEqual("#CCCCCC")
     })
   })

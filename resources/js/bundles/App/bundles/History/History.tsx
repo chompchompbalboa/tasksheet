@@ -2,43 +2,35 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { ThunkDispatch } from '@app/state/types'
 import { 
-  historyUndo as historyUndoAction,
-  historyRedo as historyRedoAction
+  historyUndo,
+  historyRedo
 } from '@app/state/history/actions'
-
-//-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-  historyUndo: () => dispatch(historyUndoAction()),
-  historyRedo: () => dispatch(historyRedoAction())
-})
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const History = ({
-  historyUndo,
-  historyRedo
-}: HistoryProps) => {
+const History = () => {
 
+  // Redux
+  const dispatch = useDispatch()
+
+  // Effects
   useEffect(() => {
-    addEventListener('keydown', listenForHistoryTriggers)
     addEventListener('keydown', listenForHistoryTriggers)
     return () => removeEventListener('keydown', listenForHistoryTriggers)
   }, [])
 
+  // Respond to Ctrl-Y and Ctrl-Z
   const listenForHistoryTriggers = (e: KeyboardEvent) => {
     const historyTriggers = new Set([ "y", "z"])
     if(historyTriggers.has(e.key) && (e.ctrlKey || e.metaKey)) {
       e.preventDefault()
-      if(e.key === "z") { historyUndo() }
-      if(e.key === "y") { historyRedo() }
+      if(e.key === "z") { dispatch(historyUndo()) }
+      if(e.key === "y") { dispatch(historyRedo()) }
     }
   }
 
@@ -48,20 +40,10 @@ const History = ({
 }
 
 //-----------------------------------------------------------------------------
-// Props
-//-----------------------------------------------------------------------------
-interface HistoryProps {
-  historyUndo?(): void
-  historyRedo?(): void
-}
-//-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   display: none;
 `
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(History)
+export default History

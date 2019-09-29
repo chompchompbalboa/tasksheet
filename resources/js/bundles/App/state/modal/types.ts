@@ -1,6 +1,6 @@
-export type Modal = 'CREATE_SHEET_FROM_CSV'
+export type IModal = 'CREATE_SHEET_FROM_CSV'
 
-export type ModalUpdates = {
-  activeModal?: Modal,
+export type IModalUpdates = {
+  activeModal?: IModal,
   createSheetFolderId?: string
 }

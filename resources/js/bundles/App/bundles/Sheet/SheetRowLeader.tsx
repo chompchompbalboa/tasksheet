@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { ISheet, ISheetRow } from '@app/state/sheet/types'
 import {
   selectSheetRows as selectSheetRowsAction
@@ -26,7 +26,7 @@ const SheetRowLeader = memo(({
   
   const dispatch = useDispatch()
   const selectSheetRows = (startRowId: ISheetRow['id'], endRowId?: ISheetRow['id']) => dispatch(selectSheetRowsAction(sheetId, startRowId, endRowId))
-  const rangeStartRowId = useSelector((state: AppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeStartRowId)
+  const rangeStartRowId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeStartRowId)
   
   const handleClick = (e: MouseEvent) => {
     if(e.shiftKey) {

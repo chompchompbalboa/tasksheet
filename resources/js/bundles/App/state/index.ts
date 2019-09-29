@@ -21,4 +21,4 @@ export const appReducer = combineReducers({
 	user: userReducer,
 })
 
-export type AppState = ReturnType<typeof appReducer>
+export type IAppState = ReturnType<typeof appReducer>

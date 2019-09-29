@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { FOLDER, ORGANIZATION, SHEET, USER } from '@app/assets/icons'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
 import { 
   closeTab as closeTabAction,
@@ -27,7 +27,7 @@ import User from '@app/bundles/User/User'
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = (state: IAppState) => ({
   activeTab: selectActiveTab(state),
   tabs: selectTabs(state)
 })

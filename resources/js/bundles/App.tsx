@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom'
 import { Provider as ReduxProvider } from 'react-redux'
 import { applyMiddleware, createStore } from 'redux'
 import thunkMiddleware, { ThunkMiddleware } from 'redux-thunk'
-import { appReducer, AppState } from '@app/state'
+import { appReducer, IAppState } from '@app/state'
 
 import App from '@app/App'
 
@@ -15,7 +15,7 @@ import App from '@app/App'
 //-----------------------------------------------------------------------------
 export default class Root extends React.Component {
 
-	store = createStore(appReducer, applyMiddleware(thunkMiddleware as ThunkMiddleware<AppState>))
+	store = createStore(appReducer, applyMiddleware(thunkMiddleware as ThunkMiddleware<IAppState>))
 
 	render() {
 		return (

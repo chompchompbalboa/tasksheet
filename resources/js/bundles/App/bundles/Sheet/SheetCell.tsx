@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { 
   ISheetCell, ISheetCellUpdates, 
   ISheetColumnType, 
@@ -37,9 +37,9 @@ const SheetCell = memo(({
 }: SheetCellProps) => {
 
   // Redux
-  const cell = useSelector((state: AppState) => state.sheet.allSheetCells[cellId])
-  const sheetSelectionsRangeCellIds = useSelector((state: AppState) => state.sheet.allSheets[sheetId].selections.rangeCellIds)
-  const sheetStyles = useSelector((state: AppState) => state.sheet.allSheets[sheetId].styles)
+  const cell = useSelector((state: IAppState) => state.sheet.allSheetCells[cellId])
+  const sheetSelectionsRangeCellIds = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.rangeCellIds)
+  const sheetStyles = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].styles)
   // Refs
   const cellContainer = useRef(null)
   // Cell Value

@@ -5,7 +5,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import changeCase from 'change-case'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
 import { UserColor } from '@app/state/user/types'
 import { selectUserColors } from '@app/state/user/selectors'
@@ -19,7 +19,7 @@ import SettingsUserColorColor from './SettingsUserColorColor'
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = (state: IAppState) => ({
   userColors: selectUserColors(state)
 })
 

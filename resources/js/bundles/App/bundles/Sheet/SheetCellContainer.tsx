@@ -5,8 +5,11 @@ import React, { useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { AppState } from '@app/state'
-import { ISheetCell, ISheetCellUpdates, ISheetStyles } from '@app/state/sheet/types'
+import { IAppState } from '@app/state'
+import { 
+  ISheetCell, ISheetCellUpdates, 
+  ISheetStyles 
+} from '@app/state/sheet/types'
 import {
   updateSheetCell as updateSheetCellAction
 } from '@app/state/sheet/actions'
@@ -30,10 +33,10 @@ const SheetCellContainer = ({
   const dispatch = useDispatch()
   const updateSheetCell = useCallback((updates: ISheetCellUpdates, skipServerUpdate: boolean = true) => dispatch(updateSheetCellAction(cellId, updates, null, skipServerUpdate)), [])
   
-  const activeSheetId = useSelector((state: AppState) => state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].typeId)
-  const isSelectedCellEditingPrevented = useSelector((state: AppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellEditingPrevented)
-  const isSelectedCellNavigationPrevented = useSelector((state: AppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellNavigationPrevented)
-  const sheetStyles = useSelector((state: AppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].styles)
+  const activeSheetId = useSelector((state: IAppState) => state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].typeId)
+  const isSelectedCellEditingPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellEditingPrevented)
+  const isSelectedCellNavigationPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellNavigationPrevented)
+  const sheetStyles = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].styles)
 
   const container = useRef(null)
 

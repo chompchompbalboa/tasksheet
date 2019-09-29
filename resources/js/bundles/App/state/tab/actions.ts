@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { ThunkAction, ThunkDispatch } from '@app/state/types'
 import { updateUserActive } from '@app/state/user/actions'
 
@@ -20,7 +20,7 @@ interface CloseTab {
 }
 
 export const closeTab = (fileId: string): ThunkAction => {
-	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+	return async (dispatch: ThunkDispatch, getState: () => IAppState) => {
 		dispatch(closeTabReducer(fileId))
     const {
       activeTab,
@@ -47,7 +47,7 @@ interface OpenFile {
 }
 
 export const openFile = (fileId: string): ThunkAction => {
-	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+	return async (dispatch: ThunkDispatch, getState: () => IAppState) => {
 		dispatch(openFileReducer(fileId))
 		const tab = getState().tab
 		dispatch(updateUserActive({ tab: tab.activeTab, tabs: tab.tabs }))
@@ -71,7 +71,7 @@ interface OpenFileInNewTab {
 }
 
 export const openFileInNewTab = (fileId: string): ThunkAction => {
-	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+	return async (dispatch: ThunkDispatch, getState: () => IAppState) => {
 		const files = getState().folder.files
 		if (Object.keys(files).includes(fileId)) { 
       dispatch(openFileInNewTabReducer(fileId)) 
@@ -98,7 +98,7 @@ interface UpdateActiveTab {
 }
 
 export const updateActiveTab = (nextActiveTab: string): ThunkAction => {
-	return async (dispatch: ThunkDispatch, getState: () => AppState) => {
+	return async (dispatch: ThunkDispatch, getState: () => IAppState) => {
 		dispatch(updateActiveTabReducer(nextActiveTab))
 		const tab = getState().tab
 		dispatch(updateUserActive({ tab: tab.activeTab, tabs: tab.tabs }))

@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { SAVE_SHEET_VIEW } from '@app/assets/icons' 
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { ThunkDispatch } from '@app/state/types'
 import { 
   updateIsSavingNewFile as updateIsSavingNewFileAction
@@ -25,7 +25,7 @@ import Icon from '@/components/Icon'
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = (state: IAppState) => ({
   userColorPrimary: selectUserColorPrimary(state)
 })
 

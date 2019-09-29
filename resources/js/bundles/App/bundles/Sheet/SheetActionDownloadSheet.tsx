@@ -9,7 +9,7 @@ import { download } from '@app/api'
 
 import { ARROW_DOWN, DOWNLOAD } from '@app/assets/icons'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { ISheet } from '@app/state/sheet/types'
 import {
   allowSelectedCellEditing,
@@ -33,10 +33,10 @@ const SheetActionDownloadSheet = ({
   // Redux
   const dispatch = useDispatch()
 
-  const userColorPrimary = useSelector((state: AppState) => state.user.color.primary)
+  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   
-  const allSheets = useSelector((state: AppState) => state.sheet.allSheets)
-  const activeFilename = useSelector((state: AppState) => state.folder.files && state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].name)
+  const allSheets = useSelector((state: IAppState) => state.sheet.allSheets)
+  const activeFilename = useSelector((state: IAppState) => state.folder.files && state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].name)
   const sheet = allSheets && allSheets[sheetId]
   const visibleRows = sheet && sheet.visibleRows
 

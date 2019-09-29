@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { COLOR } from '@app/assets/icons'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { ISheet } from '@app/state/sheet/types'
 import {
   updateSheetStyles as updateSheetStylesAction
@@ -23,7 +23,7 @@ const SheetActionCellStyleColor = ({
   
   const dispatch = useDispatch()
   
-  const sheetStyles = useSelector((state: AppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].styles)
+  const sheetStyles = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].styles)
   
   const updateSheetStyles = (nextSheetStylesSet: Set<string>, nextSheetStylesColorReference: { [cellId: string]: string }) => {
     dispatch(updateSheetStylesAction(sheetId, {

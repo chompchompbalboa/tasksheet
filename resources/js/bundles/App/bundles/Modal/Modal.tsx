@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { ThunkDispatch } from '@app/state/types'
-import { ModalUpdates } from '@app/state/modal/types'
+import { IModalUpdates } from '@app/state/modal/types'
 import { 
   updateModal as updateModalAction,
 } from '@app/state/modal/actions' 
@@ -15,7 +15,7 @@ import {
 // Redux
 //-----------------------------------------------------------------------------
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-  updateModal: (updates: ModalUpdates) => dispatch(updateModalAction(updates))
+  updateModal: (updates: IModalUpdates) => dispatch(updateModalAction(updates))
 })
 
 //-----------------------------------------------------------------------------
@@ -54,7 +54,7 @@ const Modals = ({
 //-----------------------------------------------------------------------------
 interface ModalsProps {
   children?: any
-  updateModal?(updates: ModalUpdates): void
+  updateModal?(updates: IModalUpdates): void
 }
 //-----------------------------------------------------------------------------
 // Styled Components

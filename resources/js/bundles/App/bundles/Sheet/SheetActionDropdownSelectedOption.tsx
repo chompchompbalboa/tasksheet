@@ -5,7 +5,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { AppState } from '@app/state'
+import { IAppState } from '@app/state'
 import { selectUserColorPrimary } from '@app/state/user/selectors'
 
 import { CLOSE, LOCK_CLOSED } from '@app/assets/icons'
@@ -15,7 +15,7 @@ import Icon from '@/components/Icon'
 //-----------------------------------------------------------------------------
 // Redux
 //-----------------------------------------------------------------------------
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = (state: IAppState) => ({
   userColorPrimary: selectUserColorPrimary(state)
 })
 
