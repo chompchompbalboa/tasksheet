@@ -2,19 +2,17 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { FOLDER, ORGANIZATION, SHEET, USER } from '@app/assets/icons'
 
 import { IAppState } from '@app/state'
-import { IThunkDispatch } from '@app/state/types'
 import { 
-  closeTab as closeTabAction,
-  openFileInNewTab as openFileInNewTabAction,
-  updateActiveTab as updateActiveTabAction 
+  closeTab,
+  openFileInNewTab,
+  updateActiveTab 
 } from '@app/state/tab/actions'
-import { selectActiveTab, selectTabs } from '@app/state/tab/selectors'
 
 import File from '@app/bundles/File/File'
 import Folders from '@app/bundles/Folders/Folders'
@@ -25,33 +23,21 @@ import Tab from '@app/bundles/Tabs/Tab'
 import User from '@app/bundles/User/User'
 
 //-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapStateToProps = (state: IAppState) => ({
-  activeTab: selectActiveTab(state),
-  tabs: selectTabs(state)
-})
-
-const mapDispatchToProps = (dispatch: IThunkDispatch) => ({
-  closeTab: (fileId: string) => dispatch(closeTabAction(fileId)),
-  openFileInNewTab: (nextActiveTab: string) => dispatch(openFileInNewTabAction(nextActiveTab)),
-  updateActiveTab: (nextActiveTab: string) => dispatch(updateActiveTabAction(nextActiveTab))
-})
-
-//-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Tabs = ({ 
-  activeTab,
-  closeTab,
-  openFileInNewTab,
-  tabs,
-  updateActiveTab
-}: TabsProps) => {
+const Tabs = () => {
 
+  // Redux
+  const dispatch = useDispatch()
+
+  const activeTab = useSelector((state: IAppState) => state.tab.activeTab)
+  const tabs = useSelector((state: IAppState) => state.tab.tabs)
+
+  // Local state
   const [ localActiveTab, setLocalActiveTab ] = useState(activeTab)
   const [ localTabs, setLocalTabs ] = useState(tabs)
   
+  // Effects
   useEffect(() => {
     setLocalActiveTab(activeTab || 'FOLDERS')
   }, [ activeTab ])
@@ -60,6 +46,7 @@ const Tabs = ({
     setLocalTabs(tabs)
   }, [ tabs ])
 
+  // Handle file open
   const handleFileOpen = (nextActiveTab: string) => {
     setLocalActiveTab(nextActiveTab)
     tabs.includes(nextActiveTab)
@@ -67,14 +54,15 @@ const Tabs = ({
       : !['FOLDERS', 'USER', 'SHEET_SETTINGS', 'ORGANIZATION'].includes(nextActiveTab)
         ? (
             setLocalTabs([ ...localTabs, nextActiveTab]),
-            setTimeout(() => openFileInNewTab(nextActiveTab), 10)
+            setTimeout(() => dispatch(openFileInNewTab(nextActiveTab)), 10)
           )
         : (
             setLocalActiveTab(nextActiveTab),
-            setTimeout(() => updateActiveTab(nextActiveTab), 10)
+            setTimeout(() => dispatch(updateActiveTab(nextActiveTab)), 10)
           )
   }
 
+  // Render
   return (
     <Container>
       <TabsContainer>
@@ -83,7 +71,7 @@ const Tabs = ({
             key={fileId}
             fileId={fileId}
             isActiveTab={localActiveTab === fileId}
-            closeTab={closeTab}
+            closeTab={fileId => dispatch(closeTab(fileId))}
             handleTabClick={handleFileOpen}/>))
         }
         <MiniTab
@@ -133,17 +121,6 @@ const Tabs = ({
       </FilesContainer>
     </Container>
   )
-}
-
-//-----------------------------------------------------------------------------
-// Props
-//-----------------------------------------------------------------------------
-interface TabsProps {
-  activeTab: string
-  closeTab?(fileId: string): void
-  openFileInNewTab?(nextActiveTab: string): void
-  tabs: string[]
-  updateActiveTab?(nextActiveTab: string): void
 }
 
 //-----------------------------------------------------------------------------
@@ -206,7 +183,4 @@ interface FileContainerProps {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Tabs)
+export default Tabs

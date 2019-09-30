@@ -2,34 +2,26 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { TAB_CLOSE } from '@app/assets/icons'
 
 import { IAppState } from '@app/state'
-import { selectFile } from '@app/state/folder/selectors'
-import { IFile } from '@app/state/folder/types'
 
 import Icon from '@/components/Icon'
-
-//-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapStateToProps = (state: IAppState, props: TabProps) => ({
-  file: selectFile(props.fileId, state)
-})
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const Tab = ({
   closeTab,
-  file,
   fileId,
   isActiveTab,
   handleTabClick
 }: TabProps) => {
+
+  const file = useSelector((state: IAppState) => state.folder.files && state.folder.files[fileId] )
   
   return (
     <Container
@@ -58,7 +50,6 @@ const Tab = ({
 //-----------------------------------------------------------------------------
 interface TabProps {
   closeTab?(fileId: string): void
-  file?: IFile
   fileId: string
   isActiveTab: boolean
   handleTabClick?(nextActiveTabId: string): void
@@ -130,6 +121,4 @@ const CloseTab = styled.div`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  mapStateToProps
-)(Tab)
+export default Tab

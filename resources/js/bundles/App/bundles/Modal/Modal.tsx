@@ -2,29 +2,21 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useRef } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { IThunkDispatch } from '@app/state/types'
-import { IModalUpdates } from '@app/state/modal/types'
 import { 
-  updateModal as updateModalAction,
+  updateModal,
 } from '@app/state/modal/actions' 
-
-//-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapDispatchToProps = (dispatch: IThunkDispatch) => ({
-  updateModal: (updates: IModalUpdates) => dispatch(updateModalAction(updates))
-})
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const Modals = ({
-  children,
-  updateModal
+  children
 }: ModalsProps) => {
+
+  const dispatch = useDispatch()
 
   const modal = useRef(null)
 
@@ -35,7 +27,7 @@ const Modals = ({
 
   const closeModalOnClickOutside = (e: Event) => {
     if(!modal.current.contains(e.target)) {
-      updateModal({ activeModal: null })
+      dispatch(updateModal({ activeModal: null }))
     }
   }
   
@@ -54,8 +46,8 @@ const Modals = ({
 //-----------------------------------------------------------------------------
 interface ModalsProps {
   children?: any
-  updateModal?(updates: IModalUpdates): void
 }
+
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
@@ -78,7 +70,4 @@ const Modal = styled.div`
   align-items: center;
 `
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(Modals)
+export default Modals

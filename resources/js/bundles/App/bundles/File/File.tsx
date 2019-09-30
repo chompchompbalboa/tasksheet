@@ -2,28 +2,21 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
-import { selectFile } from '@app/state/folder/selectors'
-import { IFile } from '@app/state/folder/types'
 
 import Sheet from '@app/bundles/Sheet/Sheet'
-
-//-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapStateToProps = (state: IAppState, props: FileProps) => ({
-  file: selectFile(props.fileId, state)
-})
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const File = ({
-  file
+  fileId
 }: FileProps) => {
+
+  const file = useSelector((state: IAppState) => state.folder.files[fileId])
 
   const fileComponents = {
     SHEET: Sheet,
@@ -46,7 +39,6 @@ const File = ({
 // Props
 //-----------------------------------------------------------------------------
 interface FileProps {
-  file?: IFile
   fileId: string
 }
 
@@ -66,6 +58,4 @@ const Container = styled.div`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  mapStateToProps
-)(File)
+export default File

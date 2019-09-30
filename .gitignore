@@ -24,3 +24,5 @@ tracksheet.code-workspace
 .env.production
 .env.staging
 .env.tracksheet-staging
+public/js/app.js.map
+public/js/site.js.map

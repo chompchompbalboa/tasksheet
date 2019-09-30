@@ -10,9 +10,7 @@ import AutosizeInput from 'react-input-autosize'
 // Component
 //-----------------------------------------------------------------------------
 const ContextMenuConfirmDelete = ({
-  description = 'name',
-  onConfirmedDelete,
-  textToMatch,
+  description = 'name'
 }: ContextMenuConfirmDeleteProps) => {
 
   const [ inputValue, setInputValue ] = useState("")
@@ -41,8 +39,6 @@ const ContextMenuConfirmDelete = ({
 //-----------------------------------------------------------------------------
 export type ContextMenuConfirmDeleteProps = {
   description?: string
-  onConfirmedDelete(): void
-  textToMatch: string
 }
 
 //-----------------------------------------------------------------------------
