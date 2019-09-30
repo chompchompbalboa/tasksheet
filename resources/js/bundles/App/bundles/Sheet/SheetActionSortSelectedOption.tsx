@@ -21,10 +21,11 @@ import { SheetActionDropdownOption } from '@app/bundles/Sheet/SheetActionDropdow
 //-----------------------------------------------------------------------------
 const SheetActionSortSelectedOption = ({ 
   option,
-  sorts,
+  allSheetSorts,
   updateSheetSort
 }: SheetActionSortSelectedOptionProps) => {
-    const sort = sorts[option.value]
+
+    const sort = allSheetSorts[option.value]
     const [ sortOrder, setSortOrder ] = useState(sort ? sort.order : 'ASC')
     
     const handleOptionClick = (sort: ISheetSort) => {
@@ -49,7 +50,7 @@ const SheetActionSortSelectedOption = ({
 //-----------------------------------------------------------------------------
 interface SheetActionSortSelectedOptionProps {
   option: SheetActionDropdownOption
-  sorts: IAllSheetSorts
+  allSheetSorts: IAllSheetSorts
   updateSheetSort(sortId: string, updates: ISheetSortUpdates): void
 }
 

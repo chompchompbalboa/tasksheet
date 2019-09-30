@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { MouseEvent, useState } from 'react'
+import React, { MouseEvent } from 'react'
 import styled from 'styled-components'
 
-import { ISheet, ISheetActiveUpdates, ISheetColumn, IAllSheetColumns, ISheetColumnUpdates } from '@app/state/sheet/types'
+import { ISheet, ISheetColumn, IAllSheetColumns } from '@app/state/sheet/types'
 
 import SheetHeader from '@app/bundles/Sheet/SheetHeader'
 import SheetRowLeader from '@app/bundles/Sheet/SheetRowLeader'
@@ -16,16 +16,8 @@ const SheetHeaders = ({
   sheetId,
   columns,
   handleContextMenu,
-  sheetVisibleColumns,
-  updateSheetActive,
-  updateSheetColumn
+  sheetVisibleColumns
 }: SheetHeadersProps) => {
-
-  const [ isResizing, setIsResizing ] = useState(false)
-  const handleResizeEnd = (columnId: ISheetColumn['id'], columnWidthChange: number) => {
-    const column = columns[columnId]
-    updateSheetColumn(columnId, { width: column.width + columnWidthChange })
-  }
   
   const columnBreakHeader: ISheetColumn = {
     id: 'COLUMN_BREAK',
@@ -54,12 +46,7 @@ const SheetHeaders = ({
           visibleColumnsIndex={index}
           handleContextMenu={handleContextMenu}
           isLast={index === sheetVisibleColumns.length - 1}
-          isNextColumnAColumnBreak={isNextColumnAColumnBreak(index)}
-          isResizing={isResizing}
-          onResizeStart={() => setIsResizing(true)}
-          onResizeEnd={(columnWidthChange: number) => handleResizeEnd(columnId, columnWidthChange)}
-          updateSheetActive={updateSheetActive}
-          updateSheetColumn={updateSheetColumn}/>))}
+          isNextColumnAColumnBreak={isNextColumnAColumnBreak(index)}/>))}
     </Container>
   )
 }
@@ -72,8 +59,6 @@ interface SheetHeadersProps {
   columns: IAllSheetColumns
   handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void
   sheetVisibleColumns: ISheetColumn['id'][]
-  updateSheetActive(updates: ISheetActiveUpdates): void
-  updateSheetColumn(columnId: ISheetColumn['id'], updates: ISheetColumnUpdates): void
 }
 
 //-----------------------------------------------------------------------------

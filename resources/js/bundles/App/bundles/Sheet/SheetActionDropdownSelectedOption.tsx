@@ -2,22 +2,14 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
-import { selectUserColorPrimary } from '@app/state/user/selectors'
 
 import { CLOSE, LOCK_CLOSED } from '@app/assets/icons'
 
 import Icon from '@/components/Icon'
-
-//-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapStateToProps = (state: IAppState) => ({
-  userColorPrimary: selectUserColorPrimary(state)
-})
 
 //-----------------------------------------------------------------------------
 // Component
@@ -26,25 +18,29 @@ const SheetActionDropdownSelectedOption = ({
   children,
   isLocked,
   onOptionDelete,
-  onOptionUpdate,
-  userColorPrimary
-}: SheetActionDropdownSelectedOptionProps) => (
-  <Container
-    isLocked={isLocked}
-    onDoubleClick={isLocked ? () => onOptionUpdate({ isLocked: !isLocked }) : () => null}
-    optionBackgroundColor={userColorPrimary}>
-    <Option>
-      {children}
-    </Option>
-    <Delete
+  onOptionUpdate
+}: SheetActionDropdownSelectedOptionProps) => {
+
+  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
+
+  return (
+    <Container
       isLocked={isLocked}
-      onClick={isLocked ? () => null : () => onOptionDelete()}>
-      <Icon
-        icon={isLocked ? LOCK_CLOSED : CLOSE}
-        size="0.75rem"/>
-    </Delete>
-  </Container>
-)
+      onDoubleClick={isLocked ? () => onOptionUpdate({ isLocked: !isLocked }) : () => null}
+      optionBackgroundColor={userColorPrimary}>
+      <Option>
+        {children}
+      </Option>
+      <Delete
+        isLocked={isLocked}
+        onClick={isLocked ? () => null : () => onOptionDelete()}>
+        <Icon
+          icon={isLocked ? LOCK_CLOSED : CLOSE}
+          size="0.75rem"/>
+      </Delete>
+    </Container>
+  )
+}
 
 //-----------------------------------------------------------------------------
 // Props
@@ -54,7 +50,6 @@ interface SheetActionDropdownSelectedOptionProps {
   isLocked: boolean
   onOptionDelete?(...args: any[]): void
   onOptionUpdate?(...args: any[]): void
-  userColorPrimary?: string
 }
 
 //-----------------------------------------------------------------------------
@@ -100,7 +95,5 @@ interface DeleteProps {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  mapStateToProps
-)(SheetActionDropdownSelectedOption)
+export default SheetActionDropdownSelectedOption
 

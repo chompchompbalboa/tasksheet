@@ -5,11 +5,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { 
-  ISheet, 
-  ISheetColumn, IAllSheetColumns, 
-  ISheetFilter, IAllSheetFilters, 
-  ISheetGroup, IAllSheetGroups, 
-  ISheetSort, IAllSheetSorts 
+  ISheet
 } from '@app/state/sheet/types'
 
 import SheetActionCellStyleBackgroundColor from '@app/bundles/Sheet/SheetActionCellStyleBackgroundColor'
@@ -29,58 +25,24 @@ import SheetActionSort from '@app/bundles/Sheet/SheetActionSort'
 //-----------------------------------------------------------------------------
 const SheetActions = ({
   sheetId,
-  columns,
-  createSheetRow,
-  groups,
-  filters,
-  sheetFilters,
-  sheetGroups,
-  sheetSorts,
-  sheetVisibleColumns,
-  sorts,
   sourceSheetId,
-}: SheetActionsProps) => {
+}: ISheetActionsProps) => {
   return (
     <Container>
-      <SheetActionCreateRows
-        createSheetRow={createSheetRow}
-        sheetId={sheetId}
-        sourceSheetId={sourceSheetId}/>
+      <SheetActionCreateRows sheetId={sheetId} sourceSheetId={sourceSheetId}/>
       <Divider />
-      <SheetActionFilter
-        sheetId={sheetId}
-        columns={columns}
-        filters={filters}
-        sheetFilters={sheetFilters}
-        sheetVisibleColumns={sheetVisibleColumns}/>
-      <SheetActionGroup
-        sheetId={sheetId}
-        columns={columns}
-        groups={groups}
-        sheetGroups={sheetGroups}
-        sheetVisibleColumns={sheetVisibleColumns}/>
-      <SheetActionSort
-        sheetId={sheetId}
-        columns={columns}
-        sorts={sorts}
-        sheetSorts={sheetSorts}
-        sheetVisibleColumns={sheetVisibleColumns}/>
-      <SheetActionSaveView
-        sheetId={sheetId}/>
+      <SheetActionFilter sheetId={sheetId}/>
+      <SheetActionGroup sheetId={sheetId}/>
+      <SheetActionSort sheetId={sheetId}/>
+      <SheetActionSaveView sheetId={sheetId}/>
       <Divider />
-      <SheetActionDownloadCsv
-        sheetId={sheetId}/>
-      <SheetActionDownloadSheet
-        sheetId={sheetId}/>
+      <SheetActionDownloadCsv sheetId={sheetId}/>
+      <SheetActionDownloadSheet sheetId={sheetId}/>
       <Divider />
-      <SheetActionCellStyleBold
-        sheetId={sheetId}/>
-      <SheetActionCellStyleItalic
-        sheetId={sheetId}/>
-      <SheetActionCellStyleBackgroundColor
-        sheetId={sheetId}/>
-      <SheetActionCellStyleColor
-        sheetId={sheetId}/>
+      <SheetActionCellStyleBold sheetId={sheetId}/>
+      <SheetActionCellStyleItalic sheetId={sheetId}/>
+      <SheetActionCellStyleBackgroundColor sheetId={sheetId}/>
+      <SheetActionCellStyleColor sheetId={sheetId}/>
     </Container>
   )
 }
@@ -88,18 +50,9 @@ const SheetActions = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetActionsProps {
-  columns: IAllSheetColumns
-  createSheetRow(sheetId: ISheet['id'], sourceSheetId: ISheet['id']): void
-  filters: IAllSheetFilters
-  groups: IAllSheetGroups
-  sorts: IAllSheetSorts
+interface ISheetActionsProps {
   sheetId: ISheet['id']
   sourceSheetId: ISheet['id']
-  sheetFilters?: ISheetFilter['id'][]
-  sheetGroups?: ISheetGroup['id'][]
-  sheetSorts?: ISheetSort['id'][]
-  sheetVisibleColumns: ISheetColumn['id'][]
 }
 
 //-----------------------------------------------------------------------------

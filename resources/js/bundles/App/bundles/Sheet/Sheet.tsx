@@ -3,55 +3,22 @@
 //-----------------------------------------------------------------------------
 import React, { memo, MouseEvent, useCallback, useEffect, useState } from 'react'
 import { areEqual } from 'react-window'
-import { batch, connect, useDispatch } from 'react-redux'
+import { batch, useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { query } from '@app/api'
 
 import { IAppState } from '@app/state'
-import { IThunkDispatch } from '@app/state/types'
+import { IFile } from '@app/state/folder/types'
 import { 
-  copySheetRange as copySheetRangeAction,
-  cutSheetRange as cutSheetRangeAction,
-  pasteSheetRange as pasteSheetRangeAction,
-  createSheetRow as createSheetRowAction,
-  loadSheet as loadSheetAction,
-  updateSheet as updateSheetAction,
-  updateSheetActive as updateSheetActiveAction,
-  updateSheetCell as updateSheetCellAction,
-  updateSheetColumn as updateSheetColumnAction,
-  updateSheetSelectionFromArrowKey as updateSheetSelectionFromArrowKeyAction,
-  updateSheetSelectionFromCellClick as updateSheetSelectionFromCellClickAction,
+  copySheetRange,
+  cutSheetRange,
+  pasteSheetRange,
+  loadSheet
 } from '@app/state/sheet/actions'
 import { 
-  ISheet, ISheetFromServer, ISheetUpdates,
-  ISheetActiveUpdates,
-  ISheetColumn, IAllSheetColumns, IAllSheetColumnTypes, ISheetColumnUpdates, 
-  ISheetCellUpdates, 
-  ISheetFilter, IAllSheetFilters, 
-  ISheetGroup, IAllSheetGroups, 
-  ISheetRow, IAllSheetRows, 
-  ISheetSort, IAllSheetSorts 
+  ISheet
 } from '@app/state/sheet/types'
-import {  
-  selectColumns, 
-  selectColumnTypes,
-  selectFilters,
-  selectGroups,
-  selectRows,
-  selectSorts,
-  selectSheetColumns,
-  selectSheetFilters,
-  selectSheetGroups,
-  selectSheetSorts,
-  selectSheetSourceSheetId,
-  selectSheetVisibleColumns,
-  selectSheetVisibleRows
-} from '@app/state/sheet/selectors'
-import { selectActiveTab } from '@app/state/tab/selectors'
-import { 
-  selectUserColorSecondary
-} from '@app/state/user/selectors'
 
 import LoadingTimer from '@/components/LoadingTimer'
 import SheetActions from '@app/bundles/Sheet/SheetActions'
@@ -59,88 +26,29 @@ import SheetContextMenus from '@app/bundles/Sheet/SheetContextMenus'
 import SheetGrid from '@app/bundles/Sheet/SheetGrid'
 
 //-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapStateToProps = (state: IAppState, props: SheetComponentProps) => ({
-  activeTab: selectActiveTab(state),
-  columns: selectColumns(state),
-  columnTypes: selectColumnTypes(state),
-  filters: selectFilters(state),
-  groups: selectGroups(state),
-  rows: selectRows(state),
-  sorts: selectSorts(state),
-  sheetColumns: selectSheetColumns(state, props.id),
-  sheetFilters: selectSheetFilters(state, props.id),
-  sheetGroups: selectSheetGroups(state, props.id),
-  sheetSorts: selectSheetSorts(state, props. id),
-  sheetVisibleRows: selectSheetVisibleRows(state, props.id),
-  sheetVisibleColumns: selectSheetVisibleColumns(state, props.id),
-  sourceSheetId: selectSheetSourceSheetId(state, props.id),
-  userColorSecondary: selectUserColorSecondary(state)
-})
-
-const mapDispatchToProps = (dispatch: IThunkDispatch) => ({
-  createSheetRow: (sheetId: string, sourceSheetId: string) => dispatch(createSheetRowAction(sheetId, sourceSheetId)),
-  loadSheet: (sheet: ISheetFromServer) => dispatch(loadSheetAction(sheet)),
-  updateSheet: (sheetId: string, updates: ISheetUpdates) => dispatch(updateSheetAction(sheetId, updates)),
-  updateSheetActive: (updates: ISheetActiveUpdates) => dispatch(updateSheetActiveAction(updates)),
-  updateSheetCell: (cellId: string, updates: ISheetCellUpdates, undoUpdates?: ISheetCellUpdates, skipServerUpdate?: boolean) => dispatch(updateSheetCellAction(cellId, updates, undoUpdates, skipServerUpdate)),
-  updateSheetColumn: (columnId: string, updates: ISheetColumnUpdates) => dispatch(updateSheetColumnAction(columnId, updates)),
-  updateSheetSelectionFromArrowKey: (sheetId: string, cellId: string, moveDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT') => dispatch(updateSheetSelectionFromArrowKeyAction(sheetId, cellId, moveDirection)),
-  updateSheetSelectionFromCellClick: (sheetId: string, cellId: string, isShiftPressed: boolean) => dispatch(updateSheetSelectionFromCellClickAction(sheetId, cellId, isShiftPressed)),
-})
-
-//-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetComponent = memo(({
-  activeTab,
-  columns,
-  columnTypes,
-  createSheetRow,
   fileId,
-  filters,
-  groups,
-  id,
-  loadSheet,
-  rows,
-  sheetFilters,
-  sheetGroups,
-  sheetSorts,
-  sheetVisibleRows,
-  sheetVisibleColumns,
-  sorts,
-  sourceSheetId,
-  updateSheet,
-  updateSheetActive,
-  updateSheetCell,
-  updateSheetColumn,
-  updateSheetSelectionFromArrowKey,
-  updateSheetSelectionFromCellClick,
-  userColorSecondary
+  id: sheetId,
 }: SheetComponentProps) => {
+
+  const dispatch = useDispatch()
+
+  const activeTab = useSelector((state: IAppState) => state.tab.activeTab)
+  const sourceSheetId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].sourceSheetId)
   
   const isActiveFile = fileId === activeTab
-  const memoizedCreateSheetRow = useCallback((id, sourceSheetId) => createSheetRow(id, sourceSheetId), [])
-  const memoizedUpdateSheet = useCallback((sheetId, updates) => updateSheet(sheetId, updates), [])
-  const memoizedUpdateSheetActive = useCallback((updates) => updateSheetActive(updates), [])
-  const memoizedUpdateSheetCell = useCallback((cellId, updates, undoUpdates, skipServerUpdate) => updateSheetCell(cellId, updates, undoUpdates, skipServerUpdate), [])
-  const memoizedUpdateSheetColumn = useCallback((columnId, updates) => updateSheetColumn(columnId, updates), [])
-  const memoizedUpdateSheetSelectionFromCellClick = useCallback((cellId, isShiftPressed) => updateSheetSelectionFromCellClick(id, cellId, isShiftPressed), [])
-  const memoizedUpdateSheetSelectionFromArrowKey = useCallback((cellId, moveSelectedCellDirection) => updateSheetSelectionFromArrowKey(id, cellId, moveSelectedCellDirection), [])
 
   const [ hasLoaded, setHasLoaded ] = useState(false)
   useEffect(() => {
     if(!hasLoaded && isActiveFile) {
-      query.getSheet(id).then(sheet => {
-        loadSheet(sheet).then(() => {
-          setHasLoaded(true)
-        })
+      query.getSheet(sheetId).then(sheet => {
+        dispatch(loadSheet(sheet))
+        setHasLoaded(true)
       })
     }
   }, [ activeTab ])
-
-  const dispatch = useDispatch()
   
   useEffect(() => {
     if(isActiveFile) { 
@@ -161,15 +69,15 @@ const SheetComponent = memo(({
   }, [ activeTab ])
 
   const handleCut = (e: ClipboardEvent) => {
-    dispatch(cutSheetRangeAction(id))
+    dispatch(cutSheetRange(sheetId))
   }
 
   const handleCopy = (e: ClipboardEvent) => {
-    dispatch(copySheetRangeAction(id))
+    dispatch(copySheetRange(sheetId))
   }
 
   const handlePaste = (e: ClipboardEvent) => {
-    dispatch(pasteSheetRangeAction(id))
+    dispatch(pasteSheetRange(sheetId))
   }
 
   const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
@@ -208,48 +116,23 @@ const SheetComponent = memo(({
     <Container>
       <SheetContainer>
         <SheetContextMenus
-          sheetId={id}
+          sheetId={sheetId}
           isContextMenuVisible={isContextMenuVisible}
-          columns={columns}
           contextMenuType={contextMenuType}
           contextMenuIndex={contextMenuIndex}
           contextMenuId={contextMenuId}
           contextMenuTop={contextMenuTop}
           contextMenuLeft={contextMenuLeft}
           contextMenuRight={contextMenuRight}
-          closeContextMenu={closeContextMenu}
-          sheetVisibleColumns={sheetVisibleColumns}
-          updateSheet={memoizedUpdateSheet}
-          updateSheetActive={memoizedUpdateSheetActive}
-          updateSheetColumn={memoizedUpdateSheetColumn}/>
+          closeContextMenu={closeContextMenu}/>
         <SheetActions
-          sheetId={id}
-          sourceSheetId={sourceSheetId}
-          columns={columns}
-          createSheetRow={memoizedCreateSheetRow}
-          filters={filters}
-          groups={groups}
-          sheetFilters={sheetFilters}
-          sheetGroups={sheetGroups}
-          sheetSorts={sheetSorts}
-          sheetVisibleColumns={sheetVisibleColumns}
-          sorts={sorts}/>
+          sheetId={sheetId}
+          sourceSheetId={sourceSheetId}/>
         {!hasLoaded
-          ? isActiveFile ? <LoadingTimer fromId={id}/> : null
+          ? isActiveFile ? <LoadingTimer fromId={sheetId}/> : null
           : <SheetGrid
-              columns={columns}
-              columnTypes={columnTypes}
-              handleContextMenu={handleContextMenu}
-              highlightColor={userColorSecondary}
-              rows={rows}
-              sheetId={id}
-              updateSheetCell={memoizedUpdateSheetCell}
-              sheetVisibleColumns={sheetVisibleColumns}
-              sheetVisibleRows={sheetVisibleRows}
-              updateSheetActive={memoizedUpdateSheetActive}
-              updateSheetColumn={memoizedUpdateSheetColumn}
-              updateSheetSelectionFromArrowKey={memoizedUpdateSheetSelectionFromArrowKey}
-              updateSheetSelectionFromCellClick={memoizedUpdateSheetSelectionFromCellClick}/>
+              sheetId={sheetId}
+              handleContextMenu={handleContextMenu}/>
         }
         </SheetContainer>
     </Container>
@@ -260,31 +143,8 @@ const SheetComponent = memo(({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetComponentProps {
-  activeTab?: string
-  columns?: IAllSheetColumns
-  columnTypes?: IAllSheetColumnTypes
-  createSheetRow?(sheetId: string, sourceSheetId: string): void
-  fileId: string
-  filters?: IAllSheetFilters
-  groups?: IAllSheetGroups
+  fileId: IFile['id']
   id: ISheet['id']
-  loadSheet?(sheet: ISheetFromServer): Promise<void>
-  rows?: IAllSheetRows
-  sheetColumns?: ISheetColumn['id'][]
-  sheetFilters?: ISheetFilter['id'][]
-  sheetGroups?: ISheetGroup['id'][]
-  sheetSorts?: ISheetSort['id'][]
-  sheetVisibleColumns?: ISheetColumn['id'][]
-  sheetVisibleRows?: ISheetRow['id'][]
-  sorts?: IAllSheetSorts
-  sourceSheetId?: string
-  updateSheet?(sheetId: string, updates: ISheetUpdates): void
-  updateSheetActive?(updates: ISheetActiveUpdates): void
-  updateSheetCell?(cellId: string, updates: ISheetCellUpdates, undoUpdates?: ISheetCellUpdates, skipServerUpdate?: boolean): void
-  updateSheetColumn?(columnId: string, updates: ISheetColumnUpdates): void
-  updateSheetSelectionFromArrowKey?(sheetId: string, cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
-  updateSheetSelectionFromCellClick?(sheetId: string, cellId: string, isShiftPressed: boolean): void
-  userColorSecondary?: string
 }
 
 //-----------------------------------------------------------------------------
@@ -306,7 +166,4 @@ const SheetContainer = styled.div`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SheetComponent)
+export default SheetComponent

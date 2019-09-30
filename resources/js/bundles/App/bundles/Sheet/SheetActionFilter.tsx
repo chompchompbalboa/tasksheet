@@ -2,84 +2,71 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { batch, connect } from 'react-redux'
+import { batch, useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { v4 as createUuid } from 'uuid'
 
 import clone from '@/utils/clone'
-import { IThunkDispatch } from '@app/state/types'
+import { IAppState } from '@app/state'
 import { 
   ISheet, 
-  ISheetColumn, IAllSheetColumns, 
-  ISheetFilter, IAllSheetFilters, ISheetFilterType, ISheetFilterUpdates 
+  ISheetFilter, ISheetFilterType, ISheetFilterUpdates 
 } from '@app/state/sheet/types'
 import { 
-  createSheetFilter as createSheetFilterAction,
-  deleteSheetFilter as deleteSheetFilterAction,
-  updateSheetFilter as updateSheetFilterAction,
-  allowSelectedCellEditing as allowSelectedCellEditingAction,
-  preventSelectedCellEditing as preventSelectedCellEditingAction,
-  allowSelectedCellNavigation as allowSelectedCellNavigationAction,
-  preventSelectedCellNavigation as preventSelectedCellNavigationAction,
+  allowSelectedCellEditing,
+  allowSelectedCellNavigation,
+  createSheetFilter,
+  deleteSheetFilter,
+  preventSelectedCellEditing,
+  preventSelectedCellNavigation
 } from '@app/state/sheet/actions'
 
 import AutosizeInput from 'react-input-autosize'
 import SheetAction from '@app/bundles/Sheet/SheetAction'
-
 import SheetActionFilterExistingFilters from '@app/bundles/Sheet/SheetActionFilterExistingFilters'
-
-//-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapDispatchToProps = (dispatch: IThunkDispatch, props: SheetActionFilterProps) => ({
-  createSheetFilter: (sheetId: string, newFilter: ISheetFilter) => dispatch(createSheetFilterAction(sheetId, newFilter)),
-  deleteSheetFilter: (sheetId: string, filterId: string) => dispatch(deleteSheetFilterAction(sheetId, filterId)),
-  updateSheetFilter: (sheetId: string, filterId: string, updates: ISheetFilterUpdates) => dispatch(updateSheetFilterAction(sheetId, filterId, updates)),
-  allowSelectedCellEditing: (sheetId: ISheet['id']) => dispatch(allowSelectedCellEditingAction(sheetId)),
-  preventSelectedCellEditing: (sheetId: ISheet['id']) => dispatch(preventSelectedCellEditingAction(sheetId)),
-  allowSelectedCellNavigation: (sheetId: ISheet['id']) => dispatch(allowSelectedCellNavigationAction(sheetId)),
-  preventSelectedCellNavigation: (sheetId: ISheet['id']) => dispatch(preventSelectedCellNavigationAction(sheetId)),
-})
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetActionFilter = ({
-  allowSelectedCellEditing,
-  allowSelectedCellNavigation,
-  columns,
-  createSheetFilter,
-  deleteSheetFilter,
-  filters,
-  preventSelectedCellEditing,
-  preventSelectedCellNavigation,
-  sheetFilters,
-  sheetId,
-  sheetVisibleColumns,
-  updateSheetFilter
+  sheetId
 }: SheetActionFilterProps) => {
 
+  // Redux
+  const dispatch = useDispatch()
+
+  const allSheetColumns = useSelector((state: IAppState) => state.sheet.allSheetColumns)
+  const allSheetFilters = useSelector((state: IAppState) => state.sheet.allSheetFilters)
+
+  const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleColumns)
+  const sheetFilters = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].filters)
+
   // Filter Types  
-  const filterTypes: ISheetFilterType[] = ['!=', '>=', '<=', '=', '>', '<'] // The multicharacter items need to be before the single character items in this array for the validator to work correctly
+  const validFilterTypes: ISheetFilterType[] = ['!=', '>=', '<=', '=', '>', '<'] // The multicharacter items need to be before the single character items in this array for the validator to work correctly
+
   // Column Names
-  const columnNames = sheetVisibleColumns && sheetVisibleColumns.map(columnId => {
-    if(columns && columns[columnId]) {
-      return columns[columnId].name
+  const sheetColumnNames = sheetVisibleColumns && sheetVisibleColumns.map(columnId => {
+    if(allSheetColumns && allSheetColumns[columnId]) {
+      return allSheetColumns[columnId].name
     }
   })
+
   // Set a local value for existing filters to allow for a quick ui update when the user presses enter
   const [ localSheetFilters, setLocalSheetFilters ] = useState(sheetFilters)
-  const [ localFilters, setLocalFilters ] = useState(filters)
+  const [ localAllSheetFilters, setLocalAllSheetFilters ] = useState(allSheetFilters)
   useEffect(() => {
-    setLocalFilters(filters)
+    setLocalAllSheetFilters(allSheetFilters)
     setLocalSheetFilters(sheetFilters)
-  }, [ filters, sheetFilters ])
+  }, [ allSheetFilters, sheetFilters ])
+
   // Refs
   const container = useRef(null)
   const dropdown = useRef(null)
+
   // Input and dropdown
   const [ autosizeInputValue, setAutosizeInputValue ] = useState('')
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
+
   // Validate filters
   const [ isColumnNameValid, setIsColumnNameValid ] = useState(false)
   const [ isFilterTypeValid, setIsFilterTypeValid ] = useState(false)
@@ -87,26 +74,30 @@ const SheetActionFilter = ({
   const [ filterColumnId, setFilterColumnId ] = useState(null)
   const [ filterFilterType, setFilterFilterType ] = useState(null)
   const [ filterValue, setFilterValue ] = useState(null)
+
   // Add event listeners when the dropdown is visible
   useEffect(() => {
     isDropdownVisible ? addEventListener('mousedown', closeDropdownOnClickOutside) : removeEventListener('mousedown', closeDropdownOnClickOutside)
     return () => removeEventListener('mousedown', closeDropdownOnClickOutside)
   }, [ isDropdownVisible ])
+
   // When the filter is valid, listen for Enter
   useEffect(() => {
     isFilterValid ? addEventListener('keypress', handleKeypressWhileFilterIsValid) : removeEventListener('keypress', handleKeypressWhileFilterIsValid)
     return () => removeEventListener('keypress', handleKeypressWhileFilterIsValid)
   }, [ autosizeInputValue, isFilterValid ])
+
   // Close the dropdown on click outside
   const closeDropdownOnClickOutside = (e: Event) => {
     if(!dropdown.current.contains(e.target) && !container.current.contains(e.target)) {
       setIsDropdownVisible(false)
       setTimeout(() => batch(() => {
-        allowSelectedCellEditing(sheetId)
-        allowSelectedCellNavigation(sheetId)
+        dispatch(allowSelectedCellEditing(sheetId))
+        dispatch(allowSelectedCellNavigation(sheetId))
       }), 10)
     }
   }
+
   // Create a filter when the input value is a valid filter and the user presses enter
   const handleKeypressWhileFilterIsValid = (e: KeyboardEvent) => {
     if(e.key === 'Enter') {
@@ -129,13 +120,14 @@ const SheetActionFilter = ({
           type: filterFilterType,
           isLocked: false
         }
-        setLocalFilters({ ...localFilters, [newSheetFilter.id]: newSheetFilter })
+        setLocalAllSheetFilters({ ...localAllSheetFilters, [newSheetFilter.id]: newSheetFilter })
         setLocalSheetFilters([ ...localSheetFilters, newSheetFilter.id ])
-        setTimeout(() => createSheetFilter(sheetId, newSheetFilter), 10)
+        setTimeout(() => dispatch(createSheetFilter(sheetId, newSheetFilter)), 10)
       }
     }
   }
   
+  // Handle the input value changing
   const handleAutosizeInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const nextAutosizeInputValue = e.target.value
     const { isColumnNameValidated, columnId } = validateColumnName(nextAutosizeInputValue)
@@ -151,19 +143,21 @@ const SheetActionFilter = ({
     setAutosizeInputValue(e.target.value)
   }
   
+  // Handle the input focusing
   const handleAutosizeInputFocus = () => {
     setIsDropdownVisible(true)
     setTimeout(() => batch(() => {
-      preventSelectedCellEditing(sheetId)
-      preventSelectedCellNavigation(sheetId)
+      dispatch(preventSelectedCellEditing(sheetId))
+      dispatch(preventSelectedCellNavigation(sheetId))
     }), 10)
   }
 
+  // Check to see if the input contiains a valid column name
   const validateColumnName = (nextAutosizeInputValue: string) => {
     // Combine the next input value into a single unspaced string
     const valueToTest = nextAutosizeInputValue.split(' ').join('')
     // Find all of the column names that are included in the next input value
-    const columnIndices = columnNames.reduce((returnArray, columnName, index) => columnName && valueToTest.includes(columnName.split(' ').join('')) ? returnArray.concat(index) : returnArray, [])
+    const columnIndices = sheetColumnNames.reduce((returnArray, columnName, index) => columnName && valueToTest.includes(columnName.split(' ').join('')) ? returnArray.concat(index) : returnArray, [])
     // Most of the time, this will only return a single column name. However,
     // when one column name is included in another column name (e.g. IP & WHIP
     // both contain 'IP') we need to figure out which one is the exact match.
@@ -175,7 +169,7 @@ const SheetActionFilter = ({
         : columnIndices.length === 1
           ? 0
           : columnIndices.findIndex(currentColumnIndex => {
-              const columnNameArray = columnNames[currentColumnIndex].split(' ')
+              const columnNameArray = sheetColumnNames[currentColumnIndex].split(' ')
               const lastWordIndex = columnNameArray.length - 1
               const nextAutosizeInputValueArray = nextAutosizeInputValue.split(' ')
               const isFirstLetterSame = columnNameArray[0].charAt(0) === nextAutosizeInputValueArray[0].charAt(0)
@@ -190,16 +184,18 @@ const SheetActionFilter = ({
     }
   }
 
+  // Check to see if the input contains a valid filter type
   const validateFilterType = (nextAutosizeInputValue: string) => {
     const valueToTest = nextAutosizeInputValue.split(' ').join('')
-    const filterTypeIndex = filterTypes.findIndex(filterType => valueToTest.includes(filterType))
-    const filterType = filterTypeIndex > -1 ? filterTypes[filterTypeIndex] : null
+    const filterTypeIndex = validFilterTypes.findIndex(filterType => valueToTest.includes(filterType))
+    const filterType = filterTypeIndex > -1 ? validFilterTypes[filterTypeIndex] : null
     return {
       isFilterTypeValidated: filterTypeIndex > -1,
       filterType: filterType
     }
   }
 
+  // Get the filter value
   const getFilterValue = (nextAutosizeInputValue: string) => {
     const reverseNextValue = clone(nextAutosizeInputValue).split('').reverse().join('')
     const reverseValueStartArray = ['!', '>', '=', '<'].map(filterTypeCharacter => {
@@ -211,12 +207,13 @@ const SheetActionFilter = ({
     return valueStartIndex !== null && valueStartIndex < nextAutosizeInputValue.trim().length ? clone(nextAutosizeInputValue).slice(valueStartIndex).trim() : null
   }
   
+  // Handle a filter delete
   const handleDeleteSheetFilter = (filterId: string) => {
-    const { [filterId]: deletedFilter, ...nextLocalFilters } = localFilters
+    const { [filterId]: deletedFilter, ...nextLocalFilters } = localAllSheetFilters
     const nextLocalSheetFilters = localSheetFilters.filter(localSheetFilterId => localSheetFilterId !== filterId)
-    setLocalFilters(nextLocalFilters)
+    setLocalAllSheetFilters(nextLocalFilters)
     setLocalSheetFilters(nextLocalSheetFilters)
-    setTimeout(() => deleteSheetFilter(sheetId, filterId), 10)
+    setTimeout(() => dispatch(deleteSheetFilter(sheetId, filterId)), 10)
   }
 
   return (
@@ -230,10 +227,8 @@ const SheetActionFilter = ({
               <SheetActionFilterExistingFilters 
                 key={filterId}
                 sheetId={sheetId}
-                columns={columns}
-                deleteSheetFilter={handleDeleteSheetFilter}
-                updateSheetFilter={updateSheetFilter}
-                filter={localFilters[filterId]}/>
+                handleDeleteSheetFilter={handleDeleteSheetFilter}
+                filter={localAllSheetFilters[filterId]}/>
             ))}
           </ExistingFilters>
           <InputContainer>
@@ -259,7 +254,7 @@ const SheetActionFilter = ({
                 isFilterValid={isFilterValid}>
                 <DropdownText 
                   isGrayedOut={false}>
-                  {!(isColumnNameValid && columns[filterColumnId]) ? 'Column' : columns[filterColumnId].name }
+                  {!(isColumnNameValid && allSheetColumns[filterColumnId]) ? 'Column' : allSheetColumns[filterColumnId].name }
                 </DropdownText>
                 &nbsp;
                 <DropdownText 
@@ -283,13 +278,9 @@ const SheetActionFilter = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionFilterProps {
-  columns: IAllSheetColumns
+  sheetId: string
   createSheetFilter?(sheetId: string, newFilter: ISheetFilter): void
   deleteSheetFilter?(sheetId: ISheet['id'], filterId: ISheetFilter['id']): void
-  filters: IAllSheetFilters
-  sheetId: string
-  sheetFilters: ISheetFilter['id'][]
-  sheetVisibleColumns: ISheetColumn['id'][]
   updateSheetFilter?(sheetId: ISheet['id'], filterId: ISheetFilter['id'], updates: ISheetFilterUpdates): void
   allowSelectedCellEditing?(sheetId: ISheet['id']): void
   preventSelectedCellEditing?(sheetId: ISheet['id']): void
@@ -353,7 +344,4 @@ interface DropdownTextProps {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  null,
-  mapDispatchToProps
-)(SheetActionFilter)
+export default SheetActionFilter

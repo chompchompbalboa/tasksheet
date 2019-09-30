@@ -2,9 +2,15 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { ISheet, IAllSheetColumns, ISheetFilter, ISheetFilterUpdates } from '@app/state/sheet/types'
+import { IAppState } from '@app/state'
+import { 
+  ISheet, 
+  ISheetFilter 
+} from '@app/state/sheet/types'
+import { updateSheetFilter } from '@app/state/sheet/actions'
 
 import SheetActionDropdownSelectedOption from '@app/bundles/Sheet/SheetActionDropdownSelectedOption'
 
@@ -13,33 +19,34 @@ import SheetActionDropdownSelectedOption from '@app/bundles/Sheet/SheetActionDro
 //-----------------------------------------------------------------------------
 const SheetActionFilterExistingFilter = ({
   sheetId,
-  columns,
-  deleteSheetFilter,
-  filter,
-  updateSheetFilter
-}: SheetActionFilterExistingFilterProps) => {
-    
-    return (
-      <SheetActionDropdownSelectedOption
-        isLocked={filter.isLocked}
-        onOptionUpdate={(updates) => updateSheetFilter(sheetId, filter.id, updates)}
-        onOptionDelete={() => deleteSheetFilter(filter.id)}>
-        <Container>
-          {columns[filter.columnId].name} {filter.type} {filter.value}
-        </Container>
-      </SheetActionDropdownSelectedOption>
-    )
-  }
+  handleDeleteSheetFilter,
+  filter
+}: ISheetActionFilterExistingFilterProps) => {
+
+  // Redux
+  const dispatch = useDispatch()
+
+  const allSheetColumns = useSelector((state: IAppState) => state.sheet.allSheetColumns)
+
+  return (
+    <SheetActionDropdownSelectedOption
+      isLocked={filter.isLocked}
+      onOptionUpdate={(updates) => dispatch(updateSheetFilter(sheetId, filter.id, updates))}
+      onOptionDelete={() => handleDeleteSheetFilter(filter.id)}>
+      <Container>
+        {allSheetColumns[filter.columnId].name} {filter.type} {filter.value}
+      </Container>
+    </SheetActionDropdownSelectedOption>
+  )
+}
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetActionFilterExistingFilterProps {
-  columns: IAllSheetColumns
-  deleteSheetFilter(filterId: ISheetFilter['id']): void
-  updateSheetFilter(sheetId: ISheet['id'], filterId: ISheetFilter['id'], updates: ISheetFilterUpdates): void
-  filter: ISheetFilter
+interface ISheetActionFilterExistingFilterProps {
   sheetId: ISheet['id']
+  handleDeleteSheetFilter(filterId: ISheetFilter['id']): void
+  filter: ISheetFilter
 }
 
 //-----------------------------------------------------------------------------

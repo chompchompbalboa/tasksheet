@@ -2,23 +2,18 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { v4 as createUuid } from 'uuid'
 
+import { IAppState } from '@app/state'
 import { 
-  ISheet, 
-  ISheetColumn, 
-  IAllSheetColumns, 
-  ISheetSort, 
-  IAllSheetSorts 
+  ISheet,
+  ISheetSort
 } from '@app/state/sheet/types'
-
-import { IThunkDispatch } from '@app/state/types'
-import { ISheetSortUpdates } from '@app/state/sheet/types'
 import { 
-  createSheetSort as createSheetSortAction,
-  deleteSheetSort as deleteSheetSortAction,
-  updateSheetSort as updateSheetSortAction 
+  createSheetSort,
+  deleteSheetSort,
+  updateSheetSort 
 } from '@app/state/sheet/actions'
 
 import SheetAction from '@app/bundles/Sheet/SheetAction'
@@ -26,50 +21,45 @@ import SheetActionDropdown, { SheetActionDropdownOption } from '@app/bundles/She
 import SheetActionSortSelectedOption from '@app/bundles/Sheet/SheetActionSortSelectedOption'
 
 //-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapDispatchToProps = (dispatch: IThunkDispatch, props: SheetActionProps) => ({
-  createSheetSort: (newSort: ISheetSort) => dispatch(createSheetSortAction(props.sheetId, newSort)),
-  deleteSheetSort: (columnId: string) => dispatch(deleteSheetSortAction(props.sheetId, columnId)),
-  updateSheetSort: (sheetId: ISheet['id'], sortId: string, updates: ISheetSortUpdates, skipVisibleRowsUpdate?: boolean) => dispatch(updateSheetSortAction(sheetId, sortId, updates, skipVisibleRowsUpdate))
-})
-
-//-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetActionSort = ({
-  sheetId,
-  columns,
-  createSheetSort,
-  deleteSheetSort,
-  sorts,
-  sheetSorts,
-  sheetVisibleColumns,
-  updateSheetSort
+  sheetId
 }: SheetActionProps) => {
 
+  // Redux
+  const dispatch = useDispatch()
+
+  const allSheetColumns = useSelector((state: IAppState) => state.sheet.allSheetColumns)
+  const allSheetSorts = useSelector((state: IAppState) => state.sheet.allSheetSorts)
+  
+  const sheetSorts = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].sorts)
+  const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleColumns)
+
+  // Use the sheet column names to provide options for the dropdown
   const options = sheetVisibleColumns && sheetVisibleColumns.map((columnId: string) => {
-    if(columns && columns[columnId]) {
-      return { label: columns[columnId].name, value: columnId }
+    if(allSheetColumns && allSheetColumns[columnId]) {
+      return { label: allSheetColumns[columnId].name, value: columnId }
     }
   }).filter(Boolean)
   
+  // Display an existing sheet sort
   const selectedOptions = sheetSorts && sheetSorts.map((sortId: ISheetSort['id']) => { 
-    const sort = sorts[sortId]
-    return { label: columns[sort.columnId].name, value: sortId, isLocked: sort.isLocked }
+    const sort = allSheetSorts[sortId]
+    return { label: allSheetColumns[sort.columnId].name, value: sortId, isLocked: sort.isLocked }
   })
 
   return (
     <SheetAction>
       <SheetActionDropdown
         sheetId={sheetId}
-        onOptionDelete={(optionToDelete: SheetActionDropdownOption) => deleteSheetSort(optionToDelete.value)}
-        onOptionSelect={(selectedOption: SheetActionDropdownOption) => createSheetSort({ id: createUuid(), sheetId: sheetId, columnId: selectedOption.value, order: 'ASC', isLocked: false })}
-        onOptionUpdate={(sortId, updates) => updateSheetSort(sheetId, sortId, updates, true)}
+        onOptionDelete={(optionToDelete: SheetActionDropdownOption) => dispatch(deleteSheetSort(sheetId, optionToDelete.value))}
+        onOptionSelect={(selectedOption: SheetActionDropdownOption) => dispatch(createSheetSort(sheetId, { id: createUuid(), sheetId: sheetId, columnId: selectedOption.value, order: 'ASC', isLocked: false }))}
+        onOptionUpdate={(sortId, updates) => dispatch(updateSheetSort(sheetId, sortId, updates, true))}
         options={options}
         placeholder={"Sort By..."}
         selectedOptions={selectedOptions}
-        selectedOptionComponent={({ option }: { option: SheetActionDropdownOption }) => <SheetActionSortSelectedOption option={option} sorts={sorts} updateSheetSort={(...args) => updateSheetSort(sheetId, ...args)} />}/>
+        selectedOptionComponent={({ option }: { option: SheetActionDropdownOption }) => <SheetActionSortSelectedOption option={option} allSheetSorts={allSheetSorts} updateSheetSort={(...args) => dispatch(updateSheetSort(sheetId, ...args))} />}/>
     </SheetAction>
   )
 }
@@ -78,20 +68,10 @@ const SheetActionSort = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetActionProps {
-  columns: IAllSheetColumns
-  createSheetSort?(newSort: ISheetSort): void
-  deleteSheetSort?(columnId: string): void
-  updateSheetSort?(sheetId: ISheet['id'], sortId: string, updates: ISheetSortUpdates, skipVisibleRowsUpdate?: boolean): void
-  sorts: IAllSheetSorts
-  sheetSorts: ISheetSort['id'][]
-  sheetVisibleColumns: ISheetColumn['id'][]
-  sheetId: string
+  sheetId: ISheet['id']
 }
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  null,
-  mapDispatchToProps
-)(SheetActionSort)
+export default SheetActionSort

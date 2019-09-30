@@ -11,7 +11,8 @@ import {
   ISheetStyles 
 } from '@app/state/sheet/types'
 import {
-  updateSheetCell as updateSheetCellAction
+  updateSheetCell as updateSheetCellAction,
+  updateSheetSelectionFromArrowKey as updateSheetSelectionFromArrowKeyAction
 } from '@app/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
@@ -26,12 +27,12 @@ const SheetCellContainer = ({
   onCloseCell,
   onlyRenderChildren,
   updateCellValue,
-  updateSheetSelectionFromArrowKey,
   value
 }: SheetCellContainerProps) => {
   
   const dispatch = useDispatch()
   const updateSheetCell = useCallback((updates: ISheetCellUpdates, skipServerUpdate: boolean = true) => dispatch(updateSheetCellAction(cellId, updates, null, skipServerUpdate)), [])
+  const updateSheetSelectionFromArrowKey = useCallback((cellId, moveSelectedCellDirection) => dispatch(updateSheetSelectionFromArrowKeyAction(sheetId, cellId, moveSelectedCellDirection)), [])
   
   const activeSheetId = useSelector((state: IAppState) => state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].typeId)
   const isSelectedCellEditingPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellEditingPrevented)
@@ -161,7 +162,6 @@ interface SheetCellContainerProps {
   onCloseCell?(...args: any): void
   onlyRenderChildren?: boolean
   updateCellValue(nextCellValue: string): void
-  updateSheetSelectionFromArrowKey(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   value: string
 }
 

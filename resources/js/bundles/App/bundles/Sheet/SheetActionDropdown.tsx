@@ -7,10 +7,10 @@ import styled from 'styled-components'
 
 import { ISheet } from '@app/state/sheet/types'
 import { 
-  allowSelectedCellEditing as allowSelectedCellEditingAction,
-  preventSelectedCellEditing as preventSelectedCellEditingAction,
-  allowSelectedCellNavigation as allowSelectedCellNavigationAction,
-  preventSelectedCellNavigation as preventSelectedCellNavigationAction,
+  allowSelectedCellEditing,
+  preventSelectedCellEditing,
+  allowSelectedCellNavigation,
+  preventSelectedCellNavigation,
 } from '@app/state/sheet/actions'
 
 import AutosizeInput from 'react-input-autosize'
@@ -36,10 +36,6 @@ const SheetActionDropdown = ({
   const dropdown = useRef(null)
   
   const dispatch = useDispatch()
-  const allowSelectedCellEditing = () => dispatch(allowSelectedCellEditingAction(sheetId))
-  const preventSelectedCellEditing = () => dispatch(preventSelectedCellEditingAction(sheetId))
-  const allowSelectedCellNavigation = () => dispatch(allowSelectedCellNavigationAction(sheetId))
-  const preventSelectedCellNavigation = () => dispatch(preventSelectedCellNavigationAction(sheetId))
 
   const getVisibleOptions = (value: string) => {
     return options && options.filter(option => {
@@ -94,8 +90,8 @@ const SheetActionDropdown = ({
 
   const handleAutosizeInputBlur = (e: FocusEvent<HTMLInputElement>) => {
     setTimeout(() => batch(() => {
-      allowSelectedCellEditing()
-      allowSelectedCellNavigation()
+      dispatch(allowSelectedCellEditing(sheetId))
+      dispatch(allowSelectedCellNavigation(sheetId))
     }), 10)
   }
 
@@ -113,8 +109,8 @@ const SheetActionDropdown = ({
     e.preventDefault()
     setIsDropdownVisible(true)
     setTimeout(() => batch(() => {
-      preventSelectedCellEditing()
-      preventSelectedCellNavigation()
+      dispatch(preventSelectedCellEditing(sheetId))
+      dispatch(preventSelectedCellNavigation(sheetId))
     }), 10)
   }
   

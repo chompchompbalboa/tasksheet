@@ -2,16 +2,20 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { ReactText, memo, MouseEvent, useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
 import { 
-  ISheetCell, ISheetCellUpdates, 
-  ISheetColumnType, 
+  ISheetCell, 
+  ISheetColumnType,
   ISheetStyles 
 } from '@app/state/sheet/types'
+import {
+  updateSheetCell,
+  updateSheetSelectionFromCellClick
+} from '@app/state/sheet/actions'
 
 import SheetCellBoolean from '@app/bundles/Sheet/SheetCellBoolean'
 import SheetCellDatetime from '@app/bundles/Sheet/SheetCellDatetime'
@@ -29,37 +33,42 @@ const SheetCell = memo(({
   sheetId,
   cellId,
   columnType,
-  highlightColor,
-  style,
-  updateSheetCell,
-  updateSheetSelectionFromArrowKey,
-  updateSheetSelectionFromCellClick
-}: SheetCellProps) => {
+  style
+}: ISheetCellProps) => {
 
   // Redux
   const cell = useSelector((state: IAppState) => state.sheet.allSheetCells[cellId])
   const sheetSelectionsRangeCellIds = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.rangeCellIds)
   const sheetStyles = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].styles)
+  const userColorSecondary = useSelector((state: IAppState) => state.user.color.secondary)
+
+  const dispatch = useDispatch()
+
   // Refs
   const cellContainer = useRef(null)
-  // Cell Value
+
+  // Local State
   const [ cellValue, setCellValue ] = useState(cell ? cell.value : null)
+
+  // Effects
   useEffect(() => {
     if(cellValue !== cell.value) {
       setCellValue(cell.value)
     }
   }, [ cell && cell.value ])
+
   useEffect(() => {
     let updateSheetCellTimer: number = null
     if(cell && cellValue !== cell.value) {
       clearTimeout(updateSheetCellTimer)
       updateSheetCellTimer = setTimeout(() => {
-        updateSheetCell(cell.id, { value: cellValue }, { value: cell.value })
+        dispatch(updateSheetCell(cell.id, { value: cellValue }, { value: cell.value }))
       }, 1000)
     }
     return () => clearTimeout(updateSheetCellTimer)
   }, [ cellValue ])
-  // Cell type
+
+  // Cell types
   const sheetCellTypes = {
     STRING: SheetCellString,
     NUMBER: SheetCellNumber,
@@ -69,22 +78,24 @@ const SheetCell = memo(({
     PHOTOS: SheetCellPhotos,
     FILES: SheetCellFiles
   }
-  const SheetCellType = sheetCellTypes[columnType.cellType]
-  // Selections
-  const isCellSelected = cell.isCellSelected
-  const isCellInRange = sheetSelectionsRangeCellIds.has(cellId)
+
+  // Update selection when cell is clicked
   const handleClick = (e: MouseEvent) => {
-    if(columnType.cellType !== 'BOOLEAN') {
-      updateSheetSelectionFromCellClick(cell.id, e.shiftKey)
+    if(columnType.cellType !== 'BOOLEAN' || e.shiftKey) {
+      dispatch(updateSheetSelectionFromCellClick(sheetId, cell.id, e.shiftKey))
     }
   }
+
+  const isCellSelected = cell.isCellSelected
+  const isCellInRange = sheetSelectionsRangeCellIds.has(cellId)
+  const SheetCellType = sheetCellTypes[columnType.cellType]
   
   return (
     <>
       <Container
         ref={cellContainer}
         cellId={cellId}
-        highlightColor={highlightColor}
+        highlightColor={userColorSecondary}
         isCellSelected={isCellSelected}
         isCellInRange={isCellInRange}
         onClick={handleClick}
@@ -92,7 +103,7 @@ const SheetCell = memo(({
         style={style}>
         <SheetRange
           isCellInRange={isCellInRange}
-          highlightColor={highlightColor}/>
+          highlightColor={userColorSecondary}/>
         <SheetCellType
           sheetId={sheetId}
           cell={cell}
@@ -100,7 +111,6 @@ const SheetCell = memo(({
           columnType={columnType}
           isCellSelected={cell.isCellSelected}
           updateCellValue={setCellValue}
-          updateSheetSelectionFromArrowKey={updateSheetSelectionFromArrowKey}
           value={cellValue}/>
       </Container>
     </>
@@ -110,17 +120,13 @@ const SheetCell = memo(({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetCellProps {
+interface ISheetCellProps {
   sheetId: string
   cellId: ISheetCell['id']
   columnType: ISheetColumnType
-  highlightColor: string
   style: {
     width?: ReactText
   }
-  updateSheetCell(cellId: string, updates: ISheetCellUpdates, undoUpdates?: ISheetCellUpdates, skipServerUpdate?: boolean): void
-  updateSheetSelectionFromArrowKey(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
-  updateSheetSelectionFromCellClick(cellId: string, isShiftPressed: boolean): void
 }
 
 //-----------------------------------------------------------------------------
@@ -141,11 +147,11 @@ const Container = styled.div`
         ? 'rgb(245, 245, 245)'
         : 'white'
   };
-  color: ${ ({ cellId, isCellSelected, sheetStyles }: IContainer ) => sheetStyles.color.has(cellId) ? sheetStyles.colorReference[cellId] : 'black' };
+  color: ${ ({ cellId, sheetStyles }: IContainer ) => sheetStyles.color.has(cellId) ? sheetStyles.colorReference[cellId] : 'black' };
   box-shadow: ${ ({ isCellSelected, highlightColor }: IContainer ) => isCellSelected ? 'inset 0px 0px 0px 2px ' + highlightColor : 'none' };
   overflow: ${ ({ isCellSelected, isCellInRange }: IContainer ) => isCellSelected || isCellInRange ? 'visible' : 'hidden' };
   &:hover {
-    background-color: ${ ({ cellId, isCellSelected, sheetStyles }: IContainer ) => 
+    background-color: ${ ({ cellId, sheetStyles }: IContainer ) => 
       sheetStyles.backgroundColor.has(cellId)
         ? sheetStyles.backgroundColorReference[cellId]
         : 'rgb(245, 245, 245)'

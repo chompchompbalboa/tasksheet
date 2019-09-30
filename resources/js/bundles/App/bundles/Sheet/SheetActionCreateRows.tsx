@@ -2,12 +2,13 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useState } from 'react'
-import { batch } from 'react-redux'
+import { batch, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { ARROW_RIGHT } from '@app/assets/icons'
 
 import { ISheet } from '@app/state/sheet/types'
+import { createSheetRow } from '@app/state/sheet/actions'
 
 import AutosizeInput from 'react-input-autosize'
 import Icon from '@/components/Icon'
@@ -16,10 +17,11 @@ import Icon from '@/components/Icon'
 // Component
 //-----------------------------------------------------------------------------
 const SheetCreateRows = ({
-  createSheetRow,
   sheetId,
   sourceSheetId
-}: SheetCreateRowsProps) => {
+}: ISheetCreateRowsProps) => {
+
+  const dispatch = useDispatch()
 
   const [ isEditingInputValue, setIsEditingInputValue ] = useState(false)
   const [ inputValue, setInputValue ] = useState(1)
@@ -33,7 +35,7 @@ const SheetCreateRows = ({
   const createRows = () => {
     batch(() => {
       for(let i = 1; i <= inputValue; i++) {
-        createSheetRow(sheetId, sourceSheetId)
+        dispatch(createSheetRow(sheetId, sourceSheetId))
   }})}
   
   const handleAutosizeInputFocus = () => setIsEditingInputValue(true)
@@ -75,8 +77,7 @@ const SheetCreateRows = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetCreateRowsProps {
-  createSheetRow(sheetId: ISheet['id'], sourceSheetId: ISheet['id']): void
+interface ISheetCreateRowsProps {
   sheetId: ISheet['id']
   sourceSheetId: ISheet['id']
 }

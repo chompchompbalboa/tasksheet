@@ -1,21 +1,28 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { ISheetCell, ISheetColumnType } from '@app/state/sheet/types'
+import {
+  updateSheetSelectionFromArrowKey as updateSheetSelectionFromArrowKeyAction
+} from '@app/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellBoolean = ({
+  sheetId,
   cellId,
   isCellSelected,
   updateCellValue,
-  updateSheetSelectionFromArrowKey,
   value
 }: SheetCellBooleanProps) => {
+
+  const dispatch = useDispatch()
+  const updateSheetSelectionFromArrowKey = useCallback((cellId, moveSelectedCellDirection) => dispatch(updateSheetSelectionFromArrowKeyAction(sheetId, cellId, moveSelectedCellDirection)), [])
   
   useEffect(() => {
     if(isCellSelected) {
@@ -71,7 +78,6 @@ interface SheetCellBooleanProps {
   columnType: ISheetColumnType
   isCellSelected: boolean
   updateCellValue(nextCellValue: string): void
-  updateSheetSelectionFromArrowKey(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   value: string
 }
 

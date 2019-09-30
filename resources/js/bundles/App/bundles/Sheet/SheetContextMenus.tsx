@@ -4,11 +4,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { 
-  ISheet, ISheetUpdates, 
-  ISheetActiveUpdates,
-  ISheetColumn, IAllSheetColumns, ISheetColumnUpdates 
-} from '@app/state/sheet/types'
+import { ISheet } from '@app/state/sheet/types'
 
 import SheetColumnContextMenu from '@app/bundles/ContextMenu/SheetColumnContextMenu'
 import SheetRowContextMenu from '@app/bundles/ContextMenu/SheetRowContextMenu'
@@ -19,18 +15,13 @@ import SheetRowContextMenu from '@app/bundles/ContextMenu/SheetRowContextMenu'
 const SheetContextMenus = ({
   sheetId,
   isContextMenuVisible,
-  columns,
   contextMenuType,
   contextMenuIndex,
   contextMenuId,
   contextMenuTop,
   contextMenuLeft,
   contextMenuRight,
-  closeContextMenu,
-  sheetVisibleColumns,
-  updateSheet,
-  updateSheetActive,
-  updateSheetColumn
+  closeContextMenu
 }: SheetContextMenusProps) => {
   return (
   <Container>
@@ -39,15 +30,10 @@ const SheetContextMenus = ({
         sheetId={sheetId}
         columnIndex={contextMenuIndex}
         columnId={contextMenuId}
-        columns={columns}
         contextMenuTop={contextMenuTop}
         contextMenuLeft={contextMenuLeft}
         contextMenuRight={contextMenuRight}
-        closeContextMenu={() => closeContextMenu()}
-        sheetVisibleColumns={sheetVisibleColumns}
-        updateSheet={updateSheet}
-        updateSheetActive={updateSheetActive}
-        updateSheetColumn={updateSheetColumn}/>}
+        closeContextMenu={() => closeContextMenu()}/>}
     {isContextMenuVisible && contextMenuType === 'ROW' &&
       <SheetRowContextMenu
         sheetId={sheetId}
@@ -65,7 +51,6 @@ const SheetContextMenus = ({
 interface SheetContextMenusProps {
   sheetId: ISheet['id']
   isContextMenuVisible: boolean
-  columns: IAllSheetColumns
   contextMenuType: string
   contextMenuId: string
   contextMenuIndex?: number
@@ -73,10 +58,6 @@ interface SheetContextMenusProps {
   contextMenuLeft: number
   contextMenuRight: number
   closeContextMenu(): void
-  sheetVisibleColumns: ISheetColumn['id'][]
-  updateSheet(sheetId: string, updates: ISheetUpdates): void
-  updateSheetActive(updates: ISheetActiveUpdates): void
-  updateSheetColumn(columnId: string, updates: ISheetColumnUpdates): void
 }
 
 //-----------------------------------------------------------------------------

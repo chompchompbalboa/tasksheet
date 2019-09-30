@@ -10,7 +10,7 @@ import ContextMenuItem from '@app/bundles/ContextMenu/ContextMenuItem'
 
 import { ISheet, ISheetRow } from '@app/state/sheet/types'
 import { 
-  deleteSheetRow as deleteSheetRowAction
+  deleteSheetRow
 } from '@app/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
@@ -25,7 +25,6 @@ const SheetRowContextMenu = ({
 }: SheetRowContextMenuProps) => {
   
   const dispatch = useDispatch()
-  const deleteSheetRow = () => dispatch(deleteSheetRowAction(sheetId, rowId))
 
   const closeOnClick = (andCallThis: (...args: any) => void) => {
     closeContextMenu()
@@ -39,7 +38,7 @@ const SheetRowContextMenu = ({
       contextMenuLeft={contextMenuLeft}>
       <ContextMenuItem 
         text="Delete Row"
-        onClick={() => closeOnClick(() => deleteSheetRow())}/>
+        onClick={() => closeOnClick(() => dispatch(deleteSheetRow(sheetId, rowId)))}/>
       <ContextMenuDivider />
     </ContextMenu>
   )

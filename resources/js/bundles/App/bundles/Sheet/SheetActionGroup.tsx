@@ -2,17 +2,15 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { v4 as createUuid } from 'uuid'
 
-import { ISheetColumn, IAllSheetColumns, ISheetGroup, IAllSheetGroups } from '@app/state/sheet/types'
-
-import { IThunkDispatch } from '@app/state/types'
-import { ISheetGroupUpdates } from '@app/state/sheet/types'
+import { IAppState } from '@app/state'
+import { ISheetGroup } from '@app/state/sheet/types'
 import { 
-  createSheetGroup as createSheetGroupAction,
-  deleteSheetGroup as deleteSheetGroupAction,
-  updateSheetGroup as updateSheetGroupAction 
+  createSheetGroup,
+  deleteSheetGroup,
+  updateSheetGroup 
 } from '@app/state/sheet/actions'
 
 import SheetAction from '@app/bundles/Sheet/SheetAction'
@@ -20,50 +18,45 @@ import SheetActionDropdown, { SheetActionDropdownOption } from '@app/bundles/She
 import SheetActionGroupSelectedOption from '@app/bundles/Sheet/SheetActionGroupSelectedOption'
 
 //-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapDispatchToProps = (dispatch: IThunkDispatch, props: SheetActionGroupProps) => ({
-  createSheetGroup: (newGroup: ISheetGroup) => dispatch(createSheetGroupAction(props.sheetId, newGroup)),
-  deleteSheetGroup: (columnId: string) => dispatch(deleteSheetGroupAction(props.sheetId, columnId)),
-  updateSheetGroup: (sheetId: string, groupId: string, updates: ISheetGroupUpdates, skipVisibleRowsUpdate?: boolean) => dispatch(updateSheetGroupAction(sheetId, groupId, updates, skipVisibleRowsUpdate))
-})
-
-//-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetActionGroup = ({
-  sheetId,
-  columns,
-  createSheetGroup,
-  deleteSheetGroup,
-  groups,
-  sheetGroups,
-  sheetVisibleColumns,
-  updateSheetGroup
-}: SheetActionGroupProps) => {
+  sheetId
+}: ISheetActionGroupProps) => {
 
-  const options = sheetVisibleColumns && sheetVisibleColumns.map((columnId: string) => {
-    if(columns && columns[columnId]) {
-      return { label: columns[columnId].name, value: columnId }
+  // Redux
+  const dispatch = useDispatch()
+
+  const allSheetColumns = useSelector((state: IAppState) => state.sheet.allSheetColumns)
+  const allSheetGroups = useSelector((state: IAppState) => state.sheet.allSheetGroups)
+
+  const sheetGroups = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].groups)
+  const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleColumns)
+
+  // Use the sheet column names to provide options for the dropdown
+  const sheetColumnNames = sheetVisibleColumns && sheetVisibleColumns.map((columnId: string) => {
+    if(allSheetColumns && allSheetColumns[columnId]) {
+      return { label: allSheetColumns[columnId].name, value: columnId }
     }
   }).filter(Boolean)
 
-  const selectedOptions = sheetGroups && sheetGroups.map((groupId: ISheetGroup['id']) => { 
-    const group = groups[groupId]
-    return { label: columns[group.columnId].name, value: group.id, isLocked: group.isLocked }
+  // Display an existing sheet group
+  const sheetGroupSelectedOptions = sheetGroups && sheetGroups.map((groupId: ISheetGroup['id']) => { 
+    const group = allSheetGroups[groupId]
+    return { label: allSheetColumns[group.columnId].name, value: group.id, isLocked: group.isLocked }
   })
 
   return (
     <SheetAction>
       <SheetActionDropdown
         sheetId={sheetId}
-        onOptionDelete={(optionToDelete: SheetActionDropdownOption) => deleteSheetGroup(optionToDelete.value)}
-        onOptionSelect={(selectedOption: SheetActionDropdownOption) => createSheetGroup({ id: createUuid(), sheetId: sheetId, columnId: selectedOption.value, order: 'ASC', isLocked: false })}
-        onOptionUpdate={(groupId, updates) => updateSheetGroup(sheetId, groupId, updates, true)}
-        options={options}
+        onOptionDelete={(optionToDelete: SheetActionDropdownOption) => dispatch(deleteSheetGroup(sheetId, optionToDelete.value))}
+        onOptionSelect={(selectedOption: SheetActionDropdownOption) => dispatch(createSheetGroup(sheetId, { id: createUuid(), sheetId: sheetId, columnId: selectedOption.value, order: 'ASC', isLocked: false }))}
+        onOptionUpdate={(groupId, updates) => dispatch(updateSheetGroup(sheetId, groupId, updates, true))}
+        options={sheetColumnNames}
         placeholder={"Group By..."}
-        selectedOptions={selectedOptions}
-        selectedOptionComponent={({ option }: { option: SheetActionDropdownOption }) => <SheetActionGroupSelectedOption option={option} groups={groups} updateSheetGroup={(...args) => updateSheetGroup(sheetId, ...args)} />}/>
+        selectedOptions={sheetGroupSelectedOptions}
+        selectedOptionComponent={({ option }: { option: SheetActionDropdownOption }) => <SheetActionGroupSelectedOption option={option} groups={allSheetGroups} updateSheetGroup={(...args) => dispatch(updateSheetGroup(sheetId, ...args))} />}/>
     </SheetAction>
   )
 }
@@ -71,21 +64,11 @@ const SheetActionGroup = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetActionGroupProps {
-  columns: IAllSheetColumns
-  createSheetGroup?(newGroup: ISheetGroup): void
-  deleteSheetGroup?(columnId: string): void
-  updateSheetGroup?(sheetId: string, groupId: string, updates: ISheetGroupUpdates, skipVisibleRowsUpdate?: boolean): void
-  groups: IAllSheetGroups
-  sheetGroups: ISheetGroup['id'][]
-  sheetVisibleColumns: ISheetColumn['id'][]
+interface ISheetActionGroupProps {
   sheetId: string
 }
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  null,
-  mapDispatchToProps
-)(SheetActionGroup)
+export default SheetActionGroup

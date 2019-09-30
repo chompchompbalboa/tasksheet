@@ -8,16 +8,18 @@ import styled from 'styled-components'
 import { IAppState } from '@app/state'
 import { 
   ISheet, 
-  ISheetActive, ISheetActiveUpdates, 
-  ISheetColumn, ISheetColumnUpdates 
+  ISheetActive,
+  ISheetColumn,
 } from '@app/state/sheet/types'
 import { selectActive } from '@app/state/sheet/selectors'
 import {
-  allowSelectedCellEditing as allowSelectedCellEditingAction,
-  allowSelectedCellNavigation as allowSelectedCellNavigationAction,
-  preventSelectedCellEditing as preventSelectedCellEditingAction,
-  preventSelectedCellNavigation as preventSelectedCellNavigationAction,
-  selectSheetColumns as selectSheetColumnsAction
+  allowSelectedCellEditing,
+  allowSelectedCellNavigation,
+  preventSelectedCellEditing,
+  preventSelectedCellNavigation,
+  selectSheetColumns,
+  updateSheetActive,
+  updateSheetColumn
 } from '@app/state/sheet/actions'
 
 import AutosizeInput from 'react-input-autosize'
@@ -35,37 +37,23 @@ const mapStateToProps = (state: IAppState) => ({
 //-----------------------------------------------------------------------------
 const SheetHeader = ({
   sheetId,
-  active: {
-    columnRenamingId
-  },
-  column: {
-    id,
-    name,
-    width
-  },
+  column,
   handleContextMenu,
   isLast,
   isNextColumnAColumnBreak,
-  isResizing,
-  onResizeStart,
-  onResizeEnd,
-  updateSheetActive,
-  updateSheetColumn,
   visibleColumnsIndex
 }: SheetHeaderProps) => {
   
   const dispatch = useDispatch()
   const rangeStartColumnId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeStartColumnId)
-  const selectSheetColumns = (startColumnId: ISheetColumn['id'], endColumnId?: ISheetColumn['id']) => dispatch(selectSheetColumnsAction(sheetId, startColumnId, endColumnId))
-  const allowSelectedCellEditing = () => dispatch(allowSelectedCellEditingAction(sheetId))
-  const allowSelectedCellNavigation = () => dispatch(allowSelectedCellNavigationAction(sheetId))
-  const preventSelectedCellEditing = () => dispatch(preventSelectedCellEditingAction(sheetId))
-  const preventSelectedCellNavigation = () => dispatch(preventSelectedCellNavigationAction(sheetId))
+  const columnRenamingId = useSelector((state: IAppState) => state.sheet.active.columnRenamingId)
   
-  const isColumnBreak = id === 'COLUMN_BREAK'
+  const isColumnBreak = column.id === 'COLUMN_BREAK'
 
   const [ isRenaming, setIsRenaming ] = useState(false)
-  const [ columnName, setColumnName ] = useState(name && name.length > 0 ? name : '?')
+  const [ columnName, setColumnName ] = useState(column && column.name && column.name.length > 0 ? column.name : '?')
+  const [ isResizing, setIsResizing ] = useState(false)
+
   const handleAutosizeInputBlur = () => {
     if(columnName !== null) {
       handleColumnRenamingFinish()
@@ -73,11 +61,11 @@ const SheetHeader = ({
   }
   
   useEffect(() => {
-    if(columnRenamingId === id) { 
+    if(columnRenamingId === column.id) { 
       setIsRenaming(true)
       batch(() => {
-        preventSelectedCellEditing()
-        preventSelectedCellNavigation()
+        dispatch(preventSelectedCellEditing(sheetId))
+        dispatch(preventSelectedCellNavigation(sheetId))
       })
       addEventListener('keypress', handleKeypressWhileColumnIsRenaming)
     }
@@ -89,10 +77,11 @@ const SheetHeader = ({
   
   const handleContainerClick = (e: MouseEvent) => {
     if(e.shiftKey && !isRenaming) {
-      selectSheetColumns(rangeStartColumnId, id)
+      dispatch(selectSheetColumns(sheetId, rangeStartColumnId, column.id))
     }
     else if (!isRenaming) {
-      selectSheetColumns(id)
+
+      dispatch(selectSheetColumns(sheetId, column.id))
     } 
   }
   
@@ -105,22 +94,26 @@ const SheetHeader = ({
   const handleColumnRenamingFinish = () => {
     setIsRenaming(false)
     batch(() => {
-      allowSelectedCellEditing()
-      allowSelectedCellNavigation()
-      updateSheetActive({ columnRenamingId: null })
+      dispatch(allowSelectedCellEditing(sheetId))
+      dispatch(allowSelectedCellNavigation(sheetId))
+      dispatch(updateSheetActive({ columnRenamingId: null }))
     })
-    setTimeout(() => updateSheetColumn(id, { name: columnName }), 250)
+    setTimeout(() => dispatch(updateSheetColumn(column.id, { name: columnName })), 250)
+  }
+
+  const handleColumnResizeEnd = (columnWidthChange: number) => {
+    dispatch(updateSheetColumn(column.id, { width: column.width + columnWidthChange }))
   }
 
   return (
     <Container
-      containerWidth={width}
+      containerWidth={column.width}
       isColumnBreak={isColumnBreak}
       isLast={isLast}
       isNextColumnAColumnBreak={isNextColumnAColumnBreak}
       isResizing={isResizing}
       onClick={(e: MouseEvent) => handleContainerClick(e)}
-      onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'COLUMN', id, visibleColumnsIndex)}>
+      onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'COLUMN', column.id, visibleColumnsIndex)}>
       {!isRenaming
         ? <NameContainer
             isColumnBreak={isColumnBreak}>
@@ -149,8 +142,8 @@ const SheetHeader = ({
       }
       {!isColumnBreak && 
         <ResizeContainer
-          onResizeStart={onResizeStart}
-          onResizeEnd={onResizeEnd}/>
+          onResizeStart={() => setIsResizing(true)}
+          onResizeEnd={handleColumnResizeEnd}/>
       }
     </Container>
   )
@@ -166,11 +159,6 @@ interface SheetHeaderProps {
   handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void
   isLast: boolean
   isNextColumnAColumnBreak: boolean
-  isResizing: boolean
-  onResizeStart(): void
-  onResizeEnd(widthChange: number): void
-  updateSheetActive(updates: ISheetActiveUpdates): void
-  updateSheetColumn(columnId: string, updates: ISheetColumnUpdates): void
   visibleColumnsIndex: number
 }
 

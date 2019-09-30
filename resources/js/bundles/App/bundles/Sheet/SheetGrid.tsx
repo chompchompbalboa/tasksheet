@@ -1,16 +1,12 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { ReactText, forwardRef, memo, MouseEvent, useCallback, useLayoutEffect, useRef } from 'react'
+import React, { ReactText, forwardRef, memo, MouseEvent, useLayoutEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import { areEqual, VariableSizeGrid as Grid } from 'react-window'
 import styled from 'styled-components'
 
-import { 
-  ISheetActiveUpdates, 
-  ISheetColumn, IAllSheetColumns, IAllSheetColumnTypes, ISheetColumnUpdates,
-  ISheetCellUpdates, 
-  ISheetRow, IAllSheetRows 
-} from '@app/state/sheet/types'
+import { IAppState } from '@app/state'
 
 import Autosizer from 'react-virtualized-auto-sizer'
 import SheetCell from '@app/bundles/Sheet/SheetCell'
@@ -22,20 +18,16 @@ import SheetRowLeader from '@app/bundles/Sheet/SheetRowLeader'
 // Component
 //-----------------------------------------------------------------------------
 const SheetGrid = memo(({
-  columns,
-  columnTypes,
   handleContextMenu,
-  highlightColor,
-  rows,
   sheetId,
-  updateSheetActive,
-  updateSheetCell,
-  updateSheetColumn,
-  updateSheetSelectionFromArrowKey,
-  updateSheetSelectionFromCellClick,
-  sheetVisibleColumns,
-  sheetVisibleRows,
 }: SheetGridProps) => {
+
+  const allSheetColumns = useSelector((state: IAppState) => state.sheet.allSheetColumns)
+  const allSheetColumnTypes = useSelector((state: IAppState) => state.sheet.allSheetColumnTypes)
+  const allSheetRows = useSelector((state: IAppState) => state.sheet.allSheetRows)
+
+  const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleColumns)
+  const sheetVisibleRows = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleRows)
 
   const grid = useRef()
   useLayoutEffect(() => {
@@ -45,15 +37,7 @@ const SheetGrid = memo(({
     // @ts-ignore
       grid.current.resetAfterRowIndex(0)
     }
-  }, [ columns, sheetVisibleColumns ])
-
-  const rerenderAfterUpdateSheetColumn = (columnId: string, updates: ISheetColumnUpdates) => {
-    updateSheetColumn(columnId, updates)
-    // @ts-ignore
-      grid.current.resetAfterColumnIndex(0)
-    // @ts-ignore
-      grid.current.resetAfterRowIndex(0)
-  }
+  }, [ allSheetColumns, sheetVisibleColumns ])
 
   const GridWrapper = forwardRef(({ children, ...rest }, ref) => (
     <GridContainer
@@ -61,11 +45,9 @@ const SheetGrid = memo(({
       ref={ref} {...rest}>
       <SheetHeaders
         sheetId={sheetId}
-        columns={columns}
+        columns={allSheetColumns}
         handleContextMenu={handleContextMenu}
-        sheetVisibleColumns={sheetVisibleColumns}
-        updateSheetActive={updateSheetActive}
-        updateSheetColumn={useCallback((columnId: string, updates: ISheetColumnUpdates) => rerenderAfterUpdateSheetColumn(columnId, updates), [])}/>
+        sheetVisibleColumns={sheetVisibleColumns}/>
       <GridItems>
         {children}
       </GridItems>
@@ -82,14 +64,10 @@ const SheetGrid = memo(({
     if(columnIndex !== 0 && columnId !== 'COLUMN_BREAK' && rowId !== 'ROW_BREAK') {
       return (
         <SheetCell
-          cellId={rows[rowId].cells[columnId]}
-          highlightColor={highlightColor}
+          cellId={allSheetRows[rowId].cells[columnId]}
           sheetId={sheetId}
           style={style}
-          columnType={columnTypes[columns[columnId].typeId]}
-          updateSheetCell={updateSheetCell}
-          updateSheetSelectionFromArrowKey={updateSheetSelectionFromArrowKey}
-          updateSheetSelectionFromCellClick={updateSheetSelectionFromCellClick}/>
+          columnType={allSheetColumnTypes[allSheetColumns[columnId].typeId]}/>
       )
     }
     if(columnIndex === 0) {
@@ -116,7 +94,7 @@ const SheetGrid = memo(({
           innerElementType={GridWrapper}
           width={width}
           height={height}
-          columnWidth={columnIndex => columnIndex === 0 ? 30 : (sheetVisibleColumns[columnIndex - 1] === 'COLUMN_BREAK' ? 10 : columns[sheetVisibleColumns[columnIndex - 1]].width)}
+          columnWidth={columnIndex => columnIndex === 0 ? 30 : (sheetVisibleColumns[columnIndex - 1] === 'COLUMN_BREAK' ? 10 : allSheetColumns[sheetVisibleColumns[columnIndex - 1]].width)}
           columnCount={sheetVisibleColumns.length + 1}
           rowHeight={rowIndex => 24}
           rowCount={sheetVisibleRows.length}
@@ -133,19 +111,8 @@ const SheetGrid = memo(({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetGridProps {
-  columns: IAllSheetColumns
-  columnTypes: IAllSheetColumnTypes
   handleContextMenu(e: MouseEvent, type: string, id: string): void
-  highlightColor: string
-  rows: IAllSheetRows
   sheetId: string
-  updateSheetActive(updates: ISheetActiveUpdates): void
-  updateSheetCell(cellId: string, updates: ISheetCellUpdates, undoUpdates?: ISheetCellUpdates, skipServerUpdate?: boolean): void
-  updateSheetColumn(columnId: string, updates: ISheetColumnUpdates): void
-  updateSheetSelectionFromArrowKey(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
-  updateSheetSelectionFromCellClick(cellId: string, isShiftPressed: boolean): void
-  sheetVisibleColumns: ISheetColumn['id'][]
-  sheetVisibleRows: ISheetRow['id'][]
 }
 
 interface CellProps {

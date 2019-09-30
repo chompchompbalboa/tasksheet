@@ -18,7 +18,7 @@ const SheetActionGroupSelectedOption = ({
   option,
   groups,
   updateSheetGroup
-}: SheetActionGroupSelectedOptionProps) => {
+}: ISheetActionGroupSelectedOptionProps) => {
   
     const group = groups[option.value]
     const [ groupOrder, setGroupOrder ] = useState(group ? group.order : 'ASC')
@@ -43,7 +43,7 @@ const SheetActionGroupSelectedOption = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetActionGroupSelectedOptionProps {
+interface ISheetActionGroupSelectedOptionProps {
   option: SheetActionDropdownOption
   groups: IAllSheetGroups
   updateSheetGroup(groupId: string, updates: ISheetGroupUpdates): void

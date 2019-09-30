@@ -143,7 +143,6 @@ interface SheetCellDropdownProps {
   columnType: ISheetColumnType
   isCellSelected: boolean
   updateCellValue(nextCellValue: string): void
-  updateSheetSelectionFromArrowKey(cellId: string, moveSelectedCellDirection: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT'): void
   value: string
 }
 

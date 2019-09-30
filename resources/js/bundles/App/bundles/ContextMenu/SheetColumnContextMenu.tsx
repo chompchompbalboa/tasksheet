@@ -8,14 +8,20 @@ import arrayMove from 'array-move'
 import { CHECKMARK } from '@app/assets/icons'
 
 import { IAppState } from '@app/state'
-import { ISheet, ISheetActiveUpdates, ISheetUpdates, ISheetColumn, IAllSheetColumns, ISheetColumnUpdates } from '@app/state/sheet/types'
 import { 
-  createSheetColumn as createSheetColumnAction,
-  createSheetColumnBreak as createSheetColumnBreakAction,
-  deleteSheetColumn as deleteSheetColumnAction,
-  deleteSheetColumnBreak as deleteSheetColumnBreakAction,
-  hideSheetColumn as hideSheetColumnAction,
-  showSheetColumn as showSheetColumnAction
+  ISheet,
+  ISheetColumn
+} from '@app/state/sheet/types'
+import { 
+  createSheetColumn,
+  createSheetColumnBreak,
+  deleteSheetColumn,
+  deleteSheetColumnBreak,
+  hideSheetColumn,
+  showSheetColumn,
+  updateSheet,
+  updateSheetActive,
+  updateSheetColumn
 } from '@app/state/sheet/actions'
 
 import ContextMenu from '@app/bundles/ContextMenu/ContextMenu'
@@ -29,41 +35,40 @@ const SheetColumnContextMenu = ({
   sheetId,
   columnId,
   columnIndex,
-  columns,
   closeContextMenu,
   contextMenuLeft,
   contextMenuTop,
   contextMenuRight,
-  sheetVisibleColumns,
-  updateSheet,
-  updateSheetActive,
-  updateSheetColumn
 }: SheetColumnContextMenuProps) => {
   
-  const allSheetColumnTypes = useSelector((state: IAppState) => state.sheet.allSheetColumnTypes)
-  const sheetColumns = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].columns)
-  const columnTypeIds = Object.keys(allSheetColumnTypes)
+  // Redux
   const dispatch = useDispatch()
-  const createSheetColumn = () => dispatch(createSheetColumnAction(sheetId, columnIndex))
-  const createSheetColumnBreak = () => dispatch(createSheetColumnBreakAction(sheetId, columnIndex))
-  const deleteSheetColumn = () => dispatch(deleteSheetColumnAction(sheetId, columnId))
-  const deleteSheetColumnBreak = () => dispatch(deleteSheetColumnBreakAction(sheetId, columnIndex))
-  const hideSheetColumn = () => dispatch(hideSheetColumnAction(sheetId, columnIndex))
-  const showSheetColumn = (columnIdToShow: ISheetColumn['id']) => dispatch(showSheetColumnAction(sheetId, columnIndex, columnIdToShow))
-  
-  const columnType = columnId === 'COLUMN_BREAK' ? 'COLUMN_BREAK' : allSheetColumnTypes[columns[columnId].typeId]
-  const onDeleteClick = columnId === 'COLUMN_BREAK' ? deleteSheetColumnBreak : deleteSheetColumn
 
-  const closeOnClick = (thenCallThis: (...args: any) => void) => {
+  const allSheetColumns = useSelector((state: IAppState) => state.sheet.allSheetColumns)
+  const allSheetColumnTypes = useSelector((state: IAppState) => state.sheet.allSheetColumnTypes)
+  const allSheetColumnTypesIds = Object.keys(allSheetColumnTypes)
+  
+  const sheetColumns = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].columns)
+  const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].visibleColumns)
+  
+  // Is this is a column break?
+  const sheetColumnType = columnId === 'COLUMN_BREAK' ? 'COLUMN_BREAK' : allSheetColumnTypes[allSheetColumns[columnId].typeId]
+  const onDeleteClick = columnId === 'COLUMN_BREAK' 
+    ? () => dispatch(deleteSheetColumnBreak(sheetId, columnIndex))
+    : () => dispatch(deleteSheetColumn(sheetId, columnId))
+
+  // Close the context menu before handling a click
+  const closeContextMenuOnClick = (thenCallThis: (...args: any) => void) => {
     closeContextMenu()
     setTimeout(() => thenCallThis(), 10)
   }
   
+  // Handle moving a column
   const handleColumnMoveClick = (moveFromColumnId: ISheetColumn['id'], moveToIndex: number) => {
     const moveFromIndex = sheetVisibleColumns.findIndex(sheetVisibleColumnId => sheetVisibleColumnId === moveFromColumnId)
     const nextVisibleColumns = arrayMove(sheetVisibleColumns, moveFromIndex, (moveToIndex > moveFromIndex ? moveToIndex - 1 : moveToIndex))
-    closeOnClick(() => {
-      updateSheet(sheetId, { visibleColumns: nextVisibleColumns })
+    closeContextMenuOnClick(() => {
+      dispatch(updateSheet(sheetId, { visibleColumns: nextVisibleColumns }))
     })
   }
 
@@ -73,52 +78,55 @@ const SheetColumnContextMenu = ({
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}
       contextMenuRight={contextMenuRight}>
-      <ContextMenuItem isFirstItem text="Insert Column" onClick={() => closeOnClick(() => createSheetColumn())}/>
-      {columnType !== 'COLUMN_BREAK' && 
+      <ContextMenuItem 
+        isFirstItem 
+        text="Insert Column" 
+        onClick={() => closeContextMenuOnClick(() => dispatch(createSheetColumn(sheetId, columnIndex)))}/>
+      {sheetColumnType !== 'COLUMN_BREAK' && 
         <>
           <ContextMenuItem 
             text="Insert Column Break" 
-            onClick={() => closeOnClick(() => createSheetColumnBreak())}/>
+            onClick={() => closeContextMenuOnClick(() => dispatch(createSheetColumnBreak(sheetId, columnIndex)))}/>
           <ContextMenuItem 
             text="Move Before">
             {sheetVisibleColumns.map((sheetColumnId, index) => (
               <ContextMenuItem 
                 key={sheetColumnId === 'COLUMN_BREAK' ? sheetColumnId + index : sheetColumnId}
-                text={sheetColumnId === 'COLUMN_BREAK' ? 'Column Break' : columns[sheetColumnId].name} 
+                text={sheetColumnId === 'COLUMN_BREAK' ? 'Column Break' : allSheetColumns[sheetColumnId].name} 
                 onClick={() => handleColumnMoveClick(columnId, index)}/>
             ))}
           </ContextMenuItem>
           <ContextMenuDivider />
           <ContextMenuItem 
             text="Hide" 
-            onClick={() => closeOnClick(() => hideSheetColumn())}/>
+            onClick={() => closeContextMenuOnClick(() => dispatch(hideSheetColumn(sheetId, columnIndex)))}/>
           <ContextMenuItem 
             text="Show">
             {sheetColumns.filter(columnId => !sheetVisibleColumns.includes(columnId)).map(columnId => {
-              const column = columns[columnId]
+              const column = allSheetColumns[columnId]
               return (
                 <ContextMenuItem
                   key={column.id}
                   text={column.name}
-                  onClick={() => showSheetColumn(column.id)}/>
+                  onClick={() => dispatch(showSheetColumn(sheetId, columnIndex, column.id))}/>
               )
             })}
           </ContextMenuItem>
           <ContextMenuDivider />
           <ContextMenuItem 
             text="Rename" 
-            onClick={() => closeOnClick(() => updateSheetActive({ columnRenamingId: columnId }))}/>
+            onClick={() => closeContextMenuOnClick(() => dispatch(updateSheetActive({ columnRenamingId: columnId })))}/>
           <ContextMenuItem 
             text="Type">
-            {columnTypeIds.map((columnTypeId, index) => {
-              const currentColumnType = allSheetColumnTypes[columnTypeId]
+            {allSheetColumnTypesIds.map((sheetColumnTypeId, index) => {
+              const currentColumnType = allSheetColumnTypes[sheetColumnTypeId]
               return (
                 <ContextMenuItem
-                  key={columnTypeId}
+                  key={sheetColumnTypeId}
                   isFirstItem={index === 0}
-                  isLastItem={index === (columnTypeIds.length - 1)}
-                  logo={columnType.id === currentColumnType.id ? CHECKMARK : null}
-                  onClick={() => closeOnClick(() => updateSheetColumn(columnId, { typeId: currentColumnType.id }))}
+                  isLastItem={index === (allSheetColumnTypesIds.length - 1)}
+                  logo={sheetColumnType.id === currentColumnType.id ? CHECKMARK : null}
+                  onClick={() => closeContextMenuOnClick(() => dispatch(updateSheetColumn(columnId, { typeId: currentColumnType.id })))}
                   text={currentColumnType.name}
                   />
               )
@@ -130,7 +138,7 @@ const SheetColumnContextMenu = ({
         <ContextMenuItem 
           isLastItem
           text="Delete"
-          onClick={() => closeOnClick(() => onDeleteClick())}>
+          onClick={() => closeContextMenuOnClick(() => onDeleteClick())}>
         </ContextMenuItem>
     </ContextMenu>
   )
@@ -143,15 +151,10 @@ interface SheetColumnContextMenuProps {
   sheetId: ISheet['id']
   columnId: ISheetColumn['id']
   columnIndex: number
-  columns: IAllSheetColumns
   closeContextMenu(): void
   contextMenuLeft: number
   contextMenuTop: number
   contextMenuRight: number
-  sheetVisibleColumns: ISheetColumn['id'][]
-  updateSheet(sheetId: string, updates: ISheetUpdates): void
-  updateSheetActive(updates: ISheetActiveUpdates): void
-  updateSheetColumn(columnId: ISheetColumn['id'], updates: ISheetColumnUpdates): void
 }
 
 //-----------------------------------------------------------------------------
