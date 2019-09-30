@@ -80,7 +80,7 @@ const SheetCell = memo(({
   }
 
   // Update selection when cell is clicked
-  const handleClick = (e: MouseEvent) => {
+  const handleMouseDown = (e: MouseEvent) => {
     if(columnType.cellType !== 'BOOLEAN' || e.shiftKey) {
       dispatch(updateSheetSelectionFromCellClick(sheetId, cell.id, e.shiftKey))
     }
@@ -98,7 +98,7 @@ const SheetCell = memo(({
         highlightColor={userColorSecondary}
         isCellSelected={isCellSelected}
         isCellInRange={isCellInRange}
-        onClick={handleClick}
+        onMouseDown={handleMouseDown}
         sheetStyles={sheetStyles}
         style={style}>
         <SheetRange

@@ -75,7 +75,7 @@ const SheetHeader = ({
     return () => removeEventListener('keypress', handleKeypressWhileColumnIsRenaming)
   }, [ columnName, columnRenamingId ])
   
-  const handleContainerClick = (e: MouseEvent) => {
+  const handleContainerMouseDown = (e: MouseEvent) => {
     if(e.shiftKey && !isRenaming) {
       dispatch(selectSheetColumns(sheetId, rangeStartColumnId, column.id))
     }
@@ -112,7 +112,7 @@ const SheetHeader = ({
       isLast={isLast}
       isNextColumnAColumnBreak={isNextColumnAColumnBreak}
       isResizing={isResizing}
-      onClick={(e: MouseEvent) => handleContainerClick(e)}
+      onMouseDown={(e: MouseEvent) => handleContainerMouseDown(e)}
       onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'COLUMN', column.id, visibleColumnsIndex)}>
       {!isRenaming
         ? <NameContainer

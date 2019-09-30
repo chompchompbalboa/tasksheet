@@ -28,7 +28,7 @@ const SheetRowLeader = memo(({
   const selectSheetRows = (startRowId: ISheetRow['id'], endRowId?: ISheetRow['id']) => dispatch(selectSheetRowsAction(sheetId, startRowId, endRowId))
   const rangeStartRowId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeStartRowId)
   
-  const handleClick = (e: MouseEvent) => {
+  const handleMouseDown = (e: MouseEvent) => {
     if(e.shiftKey) {
       const nextRangeStartRowId = rangeStartRowId || rowId
       const nextRangeEndRowId = rowId
@@ -41,7 +41,7 @@ const SheetRowLeader = memo(({
   
   return (
     <Container
-      onClick={(e: MouseEvent) => handleClick(e)}
+      onMouseDown={(e: MouseEvent) => handleMouseDown(e)}
       onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'ROW', rowId)}
       isRowBreak={isRowBreak}
       style={style}>
