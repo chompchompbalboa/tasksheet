@@ -2,16 +2,14 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { MouseEvent, useEffect, useState } from 'react'
-import { batch, connect, useDispatch, useSelector } from 'react-redux'
+import { batch, useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
 import { 
   ISheet, 
-  ISheetActive,
   ISheetColumn,
 } from '@app/state/sheet/types'
-import { selectActive } from '@app/state/sheet/selectors'
 import {
   allowSelectedCellEditing,
   allowSelectedCellNavigation,
@@ -24,14 +22,6 @@ import {
 
 import AutosizeInput from 'react-input-autosize'
 import ResizeContainer from '@app/components/ResizeContainer'
-
-//-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapStateToProps = (state: IAppState) => ({
-  active: selectActive(state)
-})
-
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
@@ -112,11 +102,11 @@ const SheetHeader = ({
       isLast={isLast}
       isNextColumnAColumnBreak={isNextColumnAColumnBreak}
       isResizing={isResizing}
-      onMouseDown={(e: MouseEvent) => handleContainerMouseDown(e)}
       onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'COLUMN', column.id, visibleColumnsIndex)}>
       {!isRenaming
         ? <NameContainer
-            isColumnBreak={isColumnBreak}>
+            isColumnBreak={isColumnBreak}
+            onMouseDown={(e: MouseEvent) => handleContainerMouseDown(e)}>
             {columnName}
           </NameContainer>
         : <AutosizeInput
@@ -154,7 +144,6 @@ const SheetHeader = ({
 //-----------------------------------------------------------------------------
 interface SheetHeaderProps {
   sheetId: ISheet['id']
-  active?: ISheetActive
   column: ISheetColumn
   handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void
   isLast: boolean
@@ -214,6 +203,4 @@ interface NameContainerProps {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  mapStateToProps
-)(SheetHeader)
+export default SheetHeader
