@@ -50,7 +50,7 @@ const Tabs = () => {
   const handleFileOpen = (nextActiveTab: string) => {
     setLocalActiveTab(nextActiveTab)
     tabs.includes(nextActiveTab)
-      ? setTimeout(() => updateActiveTab(nextActiveTab), 10)
+      ? setTimeout(() => dispatch(updateActiveTab(nextActiveTab)), 10)
       : !['FOLDERS', 'USER', 'SHEET_SETTINGS', 'ORGANIZATION'].includes(nextActiveTab)
         ? (
             setLocalTabs([ ...localTabs, nextActiveTab]),
