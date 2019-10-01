@@ -8,7 +8,13 @@ import styled from 'styled-components'
 import { ARROW_RIGHT } from '@app/assets/icons'
 
 import { ISheet } from '@app/state/sheet/types'
-import { createSheetRow } from '@app/state/sheet/actions'
+import {  
+  allowSelectedCellEditing,
+  allowSelectedCellNavigation,
+  createSheetRow,
+  preventSelectedCellEditing,
+  preventSelectedCellNavigation
+} from '@app/state/sheet/actions'
 
 import AutosizeInput from 'react-input-autosize'
 import Icon from '@/components/Icon'
@@ -38,8 +44,16 @@ const SheetCreateRows = ({
         dispatch(createSheetRow(sheetId, sourceSheetId))
   }})}
   
-  const handleAutosizeInputFocus = () => setIsEditingInputValue(true)
-  const handleAutosizeInputBlur = () => setIsEditingInputValue(false)
+  const handleAutosizeInputFocus = () => {
+    setIsEditingInputValue(true)
+    dispatch(preventSelectedCellEditing(sheetId))
+    dispatch(preventSelectedCellNavigation(sheetId))
+  }
+  const handleAutosizeInputBlur = () => {
+    setIsEditingInputValue(false)
+    dispatch(allowSelectedCellEditing(sheetId))
+    dispatch(allowSelectedCellNavigation(sheetId))
+  }
   
   const createRowsOnKeydownEnter = (e: KeyboardEvent) => { if(e.key === 'Enter') { createRows() } }
 

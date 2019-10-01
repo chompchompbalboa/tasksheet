@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { batch, useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { v4 as createUuid } from 'uuid'
@@ -67,10 +67,10 @@ const SheetActionFilter = ({
       : validFilterTypes.map(validFilterType => {
           return {
             id: validFilterType,
-            value: validFilterType
+            value: nextAutosizeInputValue + validFilterType
           }
         })
-    return options && options.filter(option => {
+    const dropdownOptions = options && options.filter(option => {
       if(nextAutosizeInputValue) {
         const searchString = nextAutosizeInputValue.toLowerCase().replace(/ /g, "")
         if(!isColumnNameValid) {
@@ -98,6 +98,7 @@ const SheetActionFilter = ({
       }
       return true
     })
+    return !isColumnNameValid ? dropdownOptions : dropdownOptions.reverse()
   }
 
   // Set a local value for existing filters to allow for a quick ui update when the user presses enter
@@ -109,6 +110,7 @@ const SheetActionFilter = ({
   }, [ allSheetFilters, sheetFilters ])
 
   // Refs
+  const autosizeInput = useRef(null)
   const container = useRef(null)
   const dropdown = useRef(null)
 
@@ -179,8 +181,7 @@ const SheetActionFilter = ({
   }
   
   // Handle the input value changing
-  const handleAutosizeInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const nextAutosizeInputValue = e.target.value
+  const handleAutosizeInputChange = (nextAutosizeInputValue: string) => {
     const { isColumnNameValidated, columnId } = validateColumnName(nextAutosizeInputValue)
     const { isFilterTypeValidated, filterType } = validateFilterType(nextAutosizeInputValue)
     const nextFilterValue = getFilterValue(nextAutosizeInputValue)
@@ -194,12 +195,13 @@ const SheetActionFilter = ({
     setFilterFilterType(filterType)
     setFilterValue(nextFilterValue)
     setIsFilterValid(isFilterValidated)
-    setAutosizeInputValue(e.target.value)
+    setAutosizeInputValue(nextAutosizeInputValue)
+    setTimeout(() => autosizeInput.current.focus(), 10)
   }
   
   // Handle the input focusing
   const handleAutosizeInputFocus = () => {
-    setDropdownOptions(getDropdownOptions(null, false, null, false))
+    setDropdownOptions(getDropdownOptions(autosizeInputValue, isColumnNameValid, null, isFilterValid))
     setIsDropdownVisible(true)
     setTimeout(() => batch(() => {
       dispatch(preventSelectedCellEditing(sheetId))
@@ -270,6 +272,11 @@ const SheetActionFilter = ({
     setLocalSheetFilters(nextLocalSheetFilters)
     setTimeout(() => dispatch(deleteSheetFilter(sheetId, filterId)), 10)
   }
+  
+  // Handle dropdown option click
+  const handleDropdownOptionClick = (option: IDropdownOption) => {
+    handleAutosizeInputChange(option.value + ' ')
+  }
 
   return (
     <SheetAction>
@@ -288,9 +295,10 @@ const SheetActionFilter = ({
           </ExistingFilters>
           <InputContainer>
             <AutosizeInput
+              ref={autosizeInput}
               placeholder="Filter By..."
               value={autosizeInputValue}
-              onChange={handleAutosizeInputChange}
+              onChange={e => handleAutosizeInputChange(e.target.value)}
               onFocus={handleAutosizeInputFocus}
               inputStyle={{
                 marginRight: '0.25rem',
@@ -309,21 +317,27 @@ const SheetActionFilter = ({
                 <DropdownTextContainer
                   userColorPrimary={userColorPrimary}
                   isFilterValid={isFilterValid}>
-                  <DropdownText 
+                  <DropdownText
+                    isBold={!isColumnNameValid}
                     isFilterValid={isFilterValid}
-                    isGrayedOut={false}>
+                    isGrayedOut={false}
+                    isItalic={!isColumnNameValid}>
                     {!(isColumnNameValid && allSheetColumns[filterColumnId]) ? 'Column' : allSheetColumns[filterColumnId].name }
                   </DropdownText>
                   &nbsp;
                   <DropdownText
+                    isBold={isColumnNameValid && !isFilterTypeValid}
                     isFilterValid={isFilterValid} 
-                    isGrayedOut={!isColumnNameValid || isColumnNameValid && !isFilterTypeValid}>
+                    isGrayedOut={!isColumnNameValid}
+                    isItalic={!isFilterTypeValid}>
                     {!isColumnNameValid || isColumnNameValid && !isFilterTypeValid ? 'Filter' : filterFilterType }
                   </DropdownText>
                   &nbsp;
                   <DropdownText 
+                    isBold={isColumnNameValid && isFilterTypeValid && !isFilterValid}
                     isFilterValid={isFilterValid}
-                    isGrayedOut={!isColumnNameValid || !isFilterTypeValid || isColumnNameValid && isFilterTypeValid && !isFilterValid}>
+                    isGrayedOut={!isColumnNameValid || !isFilterTypeValid}
+                    isItalic={!isFilterValid}>
                     {isFilterValid ? filterValue : 'Value'}
                   </DropdownText>
                 </DropdownTextContainer>
@@ -332,6 +346,7 @@ const SheetActionFilter = ({
                     <DropdownOption
                       key={index}
                       isHighlighted={dropdownHighlightedOptionIndex === index}
+                      onClick={() => handleDropdownOptionClick(dropdownOption)}
                       onMouseEnter={() => setDropdownHighlightedOptionIndex(index)}>{dropdownOption.value}</DropdownOption>
                   ))}
                 </DropdownOptions>
@@ -420,12 +435,15 @@ interface IDropdownTextContainer {
 
 const DropdownText = styled.span`
   color: ${ ({ isFilterValid, isGrayedOut }: IDropdownText ) => isGrayedOut ? 'rgb(150, 150, 150)' : (isFilterValid ? 'white' : 'black')};
-  font-style: ${ ({ isGrayedOut }: IDropdownText ) => isGrayedOut ? 'italic' : 'auto'};
+  font-style: ${ ({ isItalic }: IDropdownText ) => isItalic ? 'italic' : 'auto'};
+  font-weight: ${ ({ isBold }: IDropdownText ) => isBold ? 'bold' : 'auto'};
   white-space: nowrap;
 `
 interface IDropdownText {
+  isBold: boolean
   isFilterValid: boolean
   isGrayedOut: boolean
+  isItalic: boolean
 }
 
 const DropdownOptions = styled.div``
