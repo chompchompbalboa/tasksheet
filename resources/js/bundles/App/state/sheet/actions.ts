@@ -259,6 +259,11 @@ export const createSheetFromCsv = (folderId: IFolder['id'], fileToUpload: File):
 //-----------------------------------------------------------------------------
 export const createSheetColumn = (sheetId: ISheet['id'], newColumnVisibleColumnsIndex: number): IThunkAction => {
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
+
+    // Clearing the sheet selection prevents selection clashes during undo/redo
+    dispatch(clearSheetSelection(sheetId))
+
+    // Variables
     const {
       allSheets,
       allSheetColumns,
@@ -267,14 +272,17 @@ export const createSheetColumn = (sheetId: ISheet['id'], newColumnVisibleColumns
     } = getState().sheet
     const sheet = allSheets[sheetId]
     const sheetVisibleColumns = sheet.visibleColumns.length === 0 ? clone(sheet.columns) : clone(sheet.visibleColumns)
-    // Create sheet column
+
+    // Create the new column
     const newColumn = defaultColumn(sheetId, newColumnVisibleColumnsIndex)
-    // Update the sheet's visible columns
+
+    // Insert the new column id at the appropriate sheetVisibleColumns index
     const nextSheetVisibleColumns = [
       ...sheetVisibleColumns.slice(0, newColumnVisibleColumnsIndex),
       newColumn.id,
       ...sheetVisibleColumns.slice(newColumnVisibleColumnsIndex)
     ]
+
     // For each row, add a cell 
     let nextAllSheetCells: IAllSheetCells = clone(allSheetCells)
     let nextAllSheetRows: IAllSheetRows = clone(allSheetRows)
@@ -285,20 +293,45 @@ export const createSheetColumn = (sheetId: ISheet['id'], newColumnVisibleColumns
       nextAllSheetRows[rowId].cells = { ...nextAllSheetRows[rowId].cells, [newCell.columnId]: newCell.id }
       newCells.push(newCell)
     })
-    // Make the updates
-    batch(() => {
-      dispatch(setAllSheetColumns({
-        ...allSheetColumns,
-        [newColumn.id]: newColumn
-      }))
-      dispatch(updateSheet(sheetId, {
-        visibleColumns: nextSheetVisibleColumns
-      }))
-      dispatch(setAllSheetCells(nextAllSheetCells))
-      dispatch(setAllSheetRows(nextAllSheetRows))
-    })
-    // Save to server
-    mutation.createSheetColumn(newColumn, newCells)
+
+    // Actions
+    const actions = () => {
+      // Update the app state
+      batch(() => {
+        dispatch(setAllSheetColumns({
+          ...allSheetColumns,
+          [newColumn.id]: newColumn
+        }))
+        dispatch(updateSheet(sheetId, {
+          visibleColumns: nextSheetVisibleColumns
+        }))
+        dispatch(setAllSheetCells(nextAllSheetCells))
+        dispatch(setAllSheetRows(nextAllSheetRows))
+      })
+      // Update the database
+      mutation.createSheetColumn(newColumn, newCells)
+    }
+
+    // Undo actions
+    const undoActions = () => {
+      // Update the app state
+      batch(() => {
+        dispatch(setAllSheetColumns(allSheetColumns))
+        dispatch(updateSheet(sheetId, {
+          visibleColumns: sheetVisibleColumns
+        }))
+        dispatch(setAllSheetCells(allSheetCells))
+        dispatch(setAllSheetRows(allSheetRows))
+      })
+      // Update the database
+      mutation.deleteSheetColumn(newColumn.id)
+    }
+
+    // Create history step
+    dispatch(createHistoryStep({actions, undoActions}))
+
+    // Call the actions
+    actions()
   }
 }
 
@@ -307,24 +340,48 @@ export const createSheetColumn = (sheetId: ISheet['id'], newColumnVisibleColumns
 //-----------------------------------------------------------------------------
 export const createSheetColumnBreak = (sheetId: ISheet['id'], newColumnVisibleColumnsIndex: number): IThunkAction => {
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
+
+    // Variables
     const {
       allSheets,
     } = getState().sheet
     const sheet = allSheets[sheetId]
     const sheetVisibleColumns = sheet.visibleColumns.length === 0 ? clone(sheet.columns) : clone(sheet.visibleColumns)
-    // Update the sheet's visible columns
+
+    // Insert the new column break at the appropriate sheetVisibleColumns index
     const nextSheetVisibleColumns = [
       ...sheetVisibleColumns.slice(0, newColumnVisibleColumnsIndex),
       'COLUMN_BREAK',
       ...sheetVisibleColumns.slice(newColumnVisibleColumnsIndex)
     ]
-    // Make the updates
-    const sheetUpdates = { visibleColumns: nextSheetVisibleColumns }
-    batch(() => {
-      dispatch(updateSheet(sheetId, sheetUpdates))
-    })
-    // Save to server
-    mutation.updateSheet(sheetId, sheetUpdates)
+
+    // Actions
+    const actions = () => {
+      const sheetUpdates = { visibleColumns: nextSheetVisibleColumns }
+      // Update the app state
+      batch(() => {
+        dispatch(updateSheet(sheetId, sheetUpdates))
+      })
+      // Update the database
+      mutation.updateSheet(sheetId, sheetUpdates)
+    }
+
+    // Undo actions
+    const undoActions = () => {
+      const sheetUpdates = { visibleColumns: sheetVisibleColumns }
+      // Update the app state
+      batch(() => {
+        dispatch(updateSheet(sheetId, sheetUpdates))
+      })
+      // Update the database
+      mutation.updateSheet(sheetId, sheetUpdates)
+    }
+
+    // Create history step
+    dispatch(createHistoryStep({actions, undoActions}))
+
+    // Call the action
+    actions()
   }
 }
 
@@ -927,10 +984,10 @@ interface IUpdateSheet {
 	updates: ISheetUpdates
 }
 
-export const updateSheet = (sheetId: string, updates: ISheetUpdates, skipServerUpdate: boolean = false): IThunkAction => {
+export const updateSheet = (sheetId: string, updates: ISheetUpdates, skipDatabaseUpdate: boolean = false): IThunkAction => {
 	return async (dispatch: IThunkDispatch) => {
     dispatch(updateSheetReducer(sheetId, updates))
-    !skipServerUpdate && mutation.updateSheet(sheetId, updates)
+    !skipDatabaseUpdate && mutation.updateSheet(sheetId, updates)
 	}
 }
 
@@ -968,15 +1025,15 @@ interface IUpdateSheetCell {
 	updates: ISheetCellUpdates
 }
 
-export const updateSheetCell = (cellId: string, updates: ISheetCellUpdates, undoUpdates: ISheetCellUpdates = null, skipServerUpdate: boolean = false): IThunkAction => {
+export const updateSheetCell = (cellId: string, updates: ISheetCellUpdates, undoUpdates: ISheetCellUpdates = null, skipDatabaseUpdate: boolean = false): IThunkAction => {
 	return async (dispatch: IThunkDispatch) => {
     const actions = () => {
       dispatch(updateSheetCellReducer(cellId, updates))
-      !skipServerUpdate && mutation.updateSheetCell(cellId, updates)
+      !skipDatabaseUpdate && mutation.updateSheetCell(cellId, updates)
     }
     const undoActions = () => {
       dispatch(updateSheetCellReducer(cellId, undoUpdates))
-      !skipServerUpdate && mutation.updateSheetCell(cellId, undoUpdates)
+      !skipDatabaseUpdate && mutation.updateSheetCell(cellId, undoUpdates)
     }
     undoUpdates !== null && dispatch(createHistoryStep({actions, undoActions}))
     actions()
