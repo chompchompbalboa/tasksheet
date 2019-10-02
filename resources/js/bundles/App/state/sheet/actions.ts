@@ -347,6 +347,7 @@ export const createSheetFilter = (sheetId: string, newFilter: ISheetFilter): ITh
     const nextSheetFilters = [ ...sheet.filters, newFilter.id ]
     const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, filters: nextSheetFilters }, allSheetRows, allSheetCells, nextFilters, allSheetGroups, allSheetSorts)
     batch(() => {
+      dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetFilters({ ...allSheetFilters, [newFilter.id]: newFilter }))
       dispatch(updateSheetReducer(sheetId, {
         filters: nextSheetFilters,
@@ -375,6 +376,7 @@ export const createSheetGroup = (sheetId: string, newGroup: ISheetGroup): IThunk
     const nextSheetGroups = [ ...sheet.groups, newGroup.id ]
     const nextSheetVisible = resolveVisibleRows({ ...sheet, groups: nextSheetGroups }, allSheetRows, allSheetCells, allSheetFilters, nextAllSheetGroups, allSheetSorts)
     batch(() => {
+      dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetGroups({ ...allSheetGroups, [newGroup.id]: newGroup }))
       dispatch(updateSheetReducer(sheetId, {
         groups: nextSheetGroups,
@@ -437,6 +439,7 @@ export const createSheetSort = (sheetId: string, newSort: ISheetSort): IThunkAct
     const nextSheetSorts = [ ...sheet.sorts, newSort.id ]
     const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, sorts: nextSheetSorts }, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, nextAllSheetSorts)
     batch(() => {
+      dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetSorts(nextAllSheetSorts))
       dispatch(updateSheetReducer(sheetId, {
         sorts: nextSheetSorts,
@@ -646,6 +649,7 @@ export const deleteSheetFilter = (sheetId: string, filterId: string): IThunkActi
     const nextSheetFilters = sheet.filters.filter(sheetFilterId => sheetFilterId !== filterId)
     const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, filters: nextSheetFilters}, allSheetRows, allSheetCells, nextFilters, allSheetGroups, allSheetSorts)
     batch(() => {
+      dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetFilters(nextFilters))
       dispatch(updateSheetReducer(sheetId, {
         filters: nextSheetFilters,
@@ -679,6 +683,7 @@ export const deleteSheetGroup = (sheetId: string, groupId: string): IThunkAction
     const nextSheetGroups = sheet.groups.filter(sheetGroupId => sheetGroupId !== groupId)
     const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, groups: nextSheetGroups}, allSheetRows, allSheetCells, allSheetFilters, nextAllSheetGroups, allSheetSorts)
     batch(() => {
+      dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetGroups(nextAllSheetGroups))
       dispatch(updateSheetReducer(sheetId, {
         groups: nextSheetGroups,
@@ -712,6 +717,7 @@ export const deleteSheetSort = (sheetId: string, sortId: string): IThunkAction =
     const nextSheetSorts = sheet.sorts.filter(sheetSortId => sheetSortId !== sortId)
     const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, sorts: nextSheetSorts}, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, nextAllSheetSorts)
     batch(() => {
+      dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetSorts(nextAllSheetSorts))
       dispatch(updateSheetReducer(sheetId, {
         sorts: nextSheetSorts,
