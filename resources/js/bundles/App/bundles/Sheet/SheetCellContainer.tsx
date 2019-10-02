@@ -1,18 +1,18 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useCallback, useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useRef } from 'react'
+import { batch, useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
 import { 
-  ISheetCell, ISheetCellUpdates, 
+  ISheetCell, 
   ISheetStyles 
 } from '@app/state/sheet/types'
 import {
-  updateSheetCell as updateSheetCellAction,
-  updateSheetSelectionFromArrowKey as updateSheetSelectionFromArrowKeyAction
+  updateSheetCell as updateSheetCell,
+  updateSheetSelectionFromArrowKey
 } from '@app/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
@@ -26,14 +26,11 @@ const SheetCellContainer = ({
   focusCell,
   onCloseCell,
   onlyRenderChildren,
-  updateCellValue,
   value
 }: SheetCellContainerProps) => {
   
   const dispatch = useDispatch()
-  const updateSheetCell = useCallback((updates: ISheetCellUpdates, skipServerUpdate: boolean = true) => dispatch(updateSheetCellAction(cellId, updates, null, skipServerUpdate)), [])
-  const updateSheetSelectionFromArrowKey = useCallback((cellId, moveSelectedCellDirection) => dispatch(updateSheetSelectionFromArrowKeyAction(sheetId, cellId, moveSelectedCellDirection)), [])
-  
+
   const activeSheetId = useSelector((state: IAppState) => state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].typeId)
   const isSelectedCellEditingPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellEditingPrevented)
   const isSelectedCellNavigationPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellNavigationPrevented)
@@ -61,41 +58,60 @@ const SheetCellContainer = ({
   useEffect(() => {
     if(isCellEditing) {
       focusCell()
-      addEventListener('keydown', closeOnKeydownEnter)
+      addEventListener('keydown', handleKeydownWhileCellIsEditing)
       addEventListener('click', handleClickWhileCellIsEditing)
     }
     else {
-      removeEventListener('keydown', closeOnKeydownEnter)
+      removeEventListener('keydown', handleKeydownWhileCellIsEditing)
       removeEventListener('click', handleClickWhileCellIsEditing)
     }
     return () => {
-      removeEventListener('keydown', closeOnKeydownEnter)
+      removeEventListener('keydown', handleKeydownWhileCellIsEditing)
       removeEventListener('click', handleClickWhileCellIsEditing)
     }
   }, [ isCellEditing ])
 
-  const closeOnKeydownEnter = (e: KeyboardEvent) => {
-    if(e.key === "Enter") {
-      updateSheetCell({ 
-        isCellEditing: false
-      })
-      onCloseCell && onCloseCell()
-    }
-  }
-
   const openOnDoubleClick = (e: any) => {
     e.preventDefault()
-    updateSheetCell({ 
-      isCellEditing: true
-    })
+    dispatch(updateSheetCell(cellId, { isCellEditing: true }, null, true))
   }
   
   const handleClickWhileCellIsEditing = (e: MouseEvent) => {
     if(!container.current.contains(e.target)) {
-      updateSheetCell({ 
-        isCellEditing: false
+      dispatch(updateSheetCell(cellId, { isCellEditing: false }, null, true))
+      onCloseCell && onCloseCell()
+    }
+  }
+
+  const handleKeydownWhileCellIsEditing = (e: KeyboardEvent) => {
+    if(e.key === "Enter") {
+      batch(() => {
+        dispatch(updateSheetCell(cellId, { isCellEditing: false }, null, true))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'DOWN'))
       })
       onCloseCell && onCloseCell()
+    }
+    if(!isSelectedCellNavigationPrevented) {
+      if(e.key === 'Enter' || e.key === 'ArrowDown') {
+        e.preventDefault()
+        dispatch(updateSheetCell(cellId, { isCellEditing: false }, null, true))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'DOWN'))
+      }
+      if(e.key === 'Tab' || e.key === 'ArrowRight') {
+        e.preventDefault()
+        dispatch(updateSheetCell(cellId, { isCellEditing: false }, null, true))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'RIGHT'))
+      }
+      if(e.key === 'ArrowLeft') {
+        e.preventDefault()
+        dispatch(updateSheetCell(cellId, { isCellEditing: false }, null, true))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'LEFT'))
+      }
+      if(e.key === 'ArrowUp') {
+        e.preventDefault()
+        dispatch(updateSheetCell(cellId, { isCellEditing: false }, null, true))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'UP'))
+      }
     }
   }
 
@@ -103,32 +119,33 @@ const SheetCellContainer = ({
     // If a character key is pressed, start editing the cell
     if(e.key && e.key.length === 1 && !e.ctrlKey && !e.metaKey && !isSelectedCellEditingPrevented) {
       e.preventDefault()
-      updateSheetCell({
-        value: e.key,
-        isCellEditing: true
-      }, false)
+      const updates = { value: e.key, isCellEditing: true }
+      const undoUpdates = { value: value }
+      dispatch(updateSheetCell(cellId, updates, undoUpdates))
     }
     if(!isSelectedCellNavigationPrevented) {
       // Otherwise, navigate to an adjacent cell on an arrow or enter press
       if(e.key === 'Enter' || e.key === 'ArrowDown') {
         e.preventDefault()
-        updateSheetSelectionFromArrowKey(cellId, 'DOWN')
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'DOWN'))
       }
       if(e.key === 'Tab' || e.key === 'ArrowRight') {
         e.preventDefault()
-        updateSheetSelectionFromArrowKey(cellId, 'RIGHT')
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'RIGHT'))
       }
       if(e.key === 'ArrowLeft') {
         e.preventDefault()
-        updateSheetSelectionFromArrowKey(cellId, 'LEFT')
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'LEFT'))
       }
       if(e.key === 'ArrowUp') {
         e.preventDefault()
-        updateSheetSelectionFromArrowKey(cellId, 'UP')
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'UP'))
       }
       if(e.key === 'Delete' || e.key === 'Backspace') {
         e.preventDefault()
-        updateCellValue('')
+        const updates = { value: '', isCellEditing: true}
+        const undoUpdates = { value: value }
+        dispatch(updateSheetCell(cellId, updates, undoUpdates))
       }
     }
   }

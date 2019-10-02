@@ -1027,15 +1027,25 @@ interface IUpdateSheetCell {
 
 export const updateSheetCell = (cellId: string, updates: ISheetCellUpdates, undoUpdates: ISheetCellUpdates = null, skipDatabaseUpdate: boolean = false): IThunkAction => {
 	return async (dispatch: IThunkDispatch) => {
-    const actions = () => {
-      dispatch(updateSheetCellReducer(cellId, updates))
+    const removeAppPropertiesFromCellUpdates = (updates: ISheetCellUpdates) => {
+      const {
+        isCellEditing,
+        isCellSelected,
+        ...remainingUpdates
+      } = updates
+      return remainingUpdates
+    }
+    const updatesForHistoryAction = removeAppPropertiesFromCellUpdates(updates)
+    const undoUpdatesForHistoryAction = undoUpdates ? removeAppPropertiesFromCellUpdates(undoUpdates) : null
+    const actions = (isHistoryAction: boolean = false) => {
+      dispatch(updateSheetCellReducer(cellId, isHistoryAction ? updatesForHistoryAction : updates))
       !skipDatabaseUpdate && mutation.updateSheetCell(cellId, updates)
     }
     const undoActions = () => {
-      dispatch(updateSheetCellReducer(cellId, undoUpdates))
-      !skipDatabaseUpdate && mutation.updateSheetCell(cellId, undoUpdates)
+      dispatch(updateSheetCellReducer(cellId, undoUpdatesForHistoryAction))
+      !skipDatabaseUpdate && mutation.updateSheetCell(cellId, undoUpdatesForHistoryAction)
     }
-    undoUpdates !== null && dispatch(createHistoryStep({actions, undoActions}))
+    undoUpdates !== null && dispatch(createHistoryStep({actions, undoActions }))
     actions()
 	}
 }
@@ -1507,6 +1517,9 @@ export const updateSheetSelectionFromArrowKey = (sheetId: ISheet['id'], cellId: 
     // If we selected a cell, update the sheet state
     if(nextSelectedCell !== null) {
       batch(() => {
+        // Clear the current selections
+        selections.rangeStartCellId !== null && dispatch(updateSheetCellReducer(selections.rangeStartCellId, removeSelectionCellState))
+        selections.rangeEndCellId !== null && dispatch(updateSheetCellReducer(selections.rangeEndCellId, removeSelectionCellState))
         // Reset selection state
         dispatch(updateSheet(sheetId, {
           selections: {
@@ -1516,9 +1529,6 @@ export const updateSheetSelectionFromArrowKey = (sheetId: ISheet['id'], cellId: 
             rangeStartCellId: nextSelectedCell.id
           }
         }, true))
-        // Clear the current selections
-        selections.rangeStartCellId !== null && dispatch(updateSheetCellReducer(selections.rangeStartCellId, removeSelectionCellState))
-        selections.rangeEndCellId !== null && dispatch(updateSheetCellReducer(selections.rangeEndCellId, removeSelectionCellState))
         // Update the next selected cell
         dispatch(updateSheetCellReducer(nextSelectedCell.id, {
           isCellSelected: true

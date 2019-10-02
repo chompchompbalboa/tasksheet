@@ -1,6 +1,6 @@
 export type IHistoryStep = {
-  actions: (...args: any) => void,
-  undoActions: (...args: any) => void
+  actions: (isHistoryAction?: boolean) => void,
+  undoActions: (isHistoryAction?: boolean) => void
 }
 
 

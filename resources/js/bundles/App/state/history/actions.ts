@@ -37,7 +37,7 @@ export const historyUndo = (): IThunkAction => {
       steps
     } = getState().history
     if(steps && steps[currentStep]) {
-      steps[currentStep].undoActions()
+      steps[currentStep].undoActions(true)
       dispatch(updateHistory({
         previousAction: 'UNDO',
         currentStep: currentStep === -1 ? -1 : currentStep - 1
@@ -56,7 +56,7 @@ export const historyRedo = (): IThunkAction => {
       steps
     } = getState().history
     if(steps && steps[currentStep + 1]) {
-      steps[currentStep + 1].actions()
+      steps[currentStep + 1].actions(true)
       dispatch(updateHistory({
         previousAction: 'REDO',
         currentStep: currentStep === (steps.length - 1) ? currentStep : currentStep + 1
