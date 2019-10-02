@@ -67,7 +67,7 @@ const SheetActionFilter = ({
       : validFilterTypes.map(validFilterType => {
           return {
             id: validFilterType,
-            value: nextAutosizeInputValue + validFilterType
+            value: nextAutosizeInputValue.trim() + ' ' + validFilterType
           }
         })
     const dropdownOptions = options && options.filter(option => {
@@ -421,12 +421,12 @@ interface IDropdown {
 }
 
 const DropdownTextContainer = styled.div`
-  padding: 0.1875rem;
+  padding: 0.1875rem 0.3rem;
   padding-right: 0.25rem;
   min-width: 5rem;
   background-color: ${ ({ isFilterValid, userColorPrimary }: IDropdownTextContainer ) => isFilterValid ? userColorPrimary : 'rgb(232, 232, 232)'};
   color: ${ ({ isFilterValid }: IDropdownTextContainer ) => isFilterValid ? 'white' : 'inherit'};
-  border-radius: 7px;
+  border-radius: 5px;
 `
 interface IDropdownTextContainer {
   isFilterValid: boolean
