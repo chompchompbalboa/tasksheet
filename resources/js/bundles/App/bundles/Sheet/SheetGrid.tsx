@@ -29,7 +29,7 @@ const SheetGrid = memo(({
   const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleColumns)
   const sheetVisibleRows = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleRows)
   const sheetRowLeaders = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].rowLeaders)
-  console.log(sheetRowLeaders)
+
   const grid = useRef()
   useLayoutEffect(() => {
     if(grid && grid.current) { 
