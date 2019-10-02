@@ -28,7 +28,8 @@ const SheetGrid = memo(({
 
   const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleColumns)
   const sheetVisibleRows = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleRows)
-
+  const sheetRowLeaders = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].rowLeaders)
+  console.log(sheetRowLeaders)
   const grid = useRef()
   useLayoutEffect(() => {
     if(grid && grid.current) { 
@@ -77,7 +78,8 @@ const SheetGrid = memo(({
           rowId={rowId}
           handleContextMenu={handleContextMenu}
           isRowBreak={rowId === 'ROW_BREAK'}
-          style={style}/>
+          style={style}
+          text={sheetRowLeaders[rowIndex]}/>
       )
     }
     return (
@@ -94,7 +96,7 @@ const SheetGrid = memo(({
           innerElementType={GridWrapper}
           width={width}
           height={height}
-          columnWidth={columnIndex => columnIndex === 0 ? 30 : (sheetVisibleColumns[columnIndex - 1] === 'COLUMN_BREAK' ? 10 : allSheetColumns[sheetVisibleColumns[columnIndex - 1]].width)}
+          columnWidth={columnIndex => columnIndex === 0 ? 35 : (sheetVisibleColumns[columnIndex - 1] === 'COLUMN_BREAK' ? 10 : allSheetColumns[sheetVisibleColumns[columnIndex - 1]].width)}
           columnCount={sheetVisibleColumns.length + 1}
           rowHeight={rowIndex => 24}
           rowCount={sheetVisibleRows.length}

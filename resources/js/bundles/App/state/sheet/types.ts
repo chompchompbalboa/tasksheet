@@ -43,6 +43,7 @@ export interface ISheet {
   visibleColumns: ISheetColumn['id'][]
   filters: ISheetFilter['id'][]
   groups: ISheetGroup['id'][]
+  rowLeaders: ISheetRowLeader[]
   sorts: ISheetSort['id'][]
   styles: ISheetStyles
   selections: ISheetSelections
@@ -54,6 +55,7 @@ export interface ISheetUpdates {
   visibleColumns?: ISheetColumn['id'][]
   filters?: ISheetFilter['id'][]
   groups?: ISheetGroup['id'][]
+  rowLeaders?: ISheetRowLeader[]
   sorts?: ISheetSort['id'][]
   styles?: ISheetStyles
   selections?: ISheetSelections
@@ -163,6 +165,7 @@ export interface ISheetRowToServer {
   sheetId: string
   cells: ISheetCell[]
 }
+export type ISheetRowLeader = string | number
 
 export interface ISheetCell {
 	id: string

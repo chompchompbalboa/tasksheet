@@ -37,7 +37,7 @@ const SheetHeaders = ({
         sheetId={null}
         rowId={'SHEET_HEADER'}
         isRowBreak={false}
-        style={{ width: '30px' }}/>
+        style={{ width: '35px' }}/>
       {sheetVisibleColumns.map((columnId: string, index: number) => (
         <SheetHeader
           key={index}

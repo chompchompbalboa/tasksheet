@@ -30,7 +30,7 @@ import { createFile, updateFile, updateFiles, updateFolders } from '@app/state/f
 import { createHistoryStep } from '@app/state/history/actions'
 import { updateTabs } from '@app/state/tab/actions'
 
-import { resolveVisibleRows } from '@app/state/sheet/resolvers'
+import { resolveSheetRowLeaders, resolveSheetVisibleRows } from '@app/state/sheet/resolvers'
 
 import { defaultCell, defaultColumn, defaultRow, defaultSheetSelections, defaultSheetStyles } from '@app/state/sheet/defaults'
 
@@ -345,12 +345,14 @@ export const createSheetFilter = (sheetId: string, newFilter: ISheetFilter): ITh
     const sheet = allSheets[sheetId]
     const nextFilters = { ...allSheetFilters, [newFilter.id]: newFilter }
     const nextSheetFilters = [ ...sheet.filters, newFilter.id ]
-    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, filters: nextSheetFilters }, allSheetRows, allSheetCells, nextFilters, allSheetGroups, allSheetSorts)
+    const nextSheetVisibleRows = resolveSheetVisibleRows({ ...sheet, filters: nextSheetFilters }, allSheetRows, allSheetCells, nextFilters, allSheetGroups, allSheetSorts)
+    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetFilters({ ...allSheetFilters, [newFilter.id]: newFilter }))
       dispatch(updateSheetReducer(sheetId, {
         filters: nextSheetFilters,
+        rowLeaders: nextSheetRowLeaders,
         visibleRows: nextSheetVisibleRows
       }))
     })
@@ -374,13 +376,15 @@ export const createSheetGroup = (sheetId: string, newGroup: ISheetGroup): IThunk
     const sheet = allSheets[sheetId]
     const nextAllSheetGroups = { ...allSheetGroups, [newGroup.id]: newGroup }
     const nextSheetGroups = [ ...sheet.groups, newGroup.id ]
-    const nextSheetVisible = resolveVisibleRows({ ...sheet, groups: nextSheetGroups }, allSheetRows, allSheetCells, allSheetFilters, nextAllSheetGroups, allSheetSorts)
+    const nextSheetVisibleRows = resolveSheetVisibleRows({ ...sheet, groups: nextSheetGroups }, allSheetRows, allSheetCells, allSheetFilters, nextAllSheetGroups, allSheetSorts)
+    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetGroups({ ...allSheetGroups, [newGroup.id]: newGroup }))
       dispatch(updateSheetReducer(sheetId, {
         groups: nextSheetGroups,
-        visibleRows: nextSheetVisible
+        rowLeaders: nextSheetRowLeaders,
+        visibleRows: nextSheetVisibleRows
       }))
     })
     mutation.createSheetGroup(newGroup)
@@ -406,10 +410,12 @@ export const createSheetRow = (sheetId: string, sourceSheetId: string): IThunkAc
     const nextAllSheetRows = { ...allSheetRows, [newRow.id]: newRow }
     const nextSheetRows = [ ...sheet.rows, newRow.id ]
     const nextSheetVisibleRows = [ newRow.id, ...sheet.visibleRows ]
+    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
     batch(() => {
       dispatch(setAllSheetRows(nextAllSheetRows))
       dispatch(setAllSheetCells(nextAllSheetCells))
       dispatch(updateSheetReducer(sheetId, {
+        rowLeaders: nextSheetRowLeaders,
         rows: nextSheetRows,
         visibleRows: nextSheetVisibleRows
       }))
@@ -437,11 +443,13 @@ export const createSheetSort = (sheetId: string, newSort: ISheetSort): IThunkAct
     const sheet = allSheets[sheetId]
     const nextAllSheetSorts = { ...allSheetSorts, [newSort.id]: newSort }
     const nextSheetSorts = [ ...sheet.sorts, newSort.id ]
-    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, sorts: nextSheetSorts }, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, nextAllSheetSorts)
+    const nextSheetVisibleRows = resolveSheetVisibleRows({ ...sheet, sorts: nextSheetSorts }, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, nextAllSheetSorts)
+    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetSorts(nextAllSheetSorts))
       dispatch(updateSheetReducer(sheetId, {
+        rowLeaders: nextSheetRowLeaders,
         sorts: nextSheetSorts,
         visibleRows: nextSheetVisibleRows
       }))
@@ -508,6 +516,7 @@ export const createSheetView = (sheetId: string, viewName: string): IThunkAction
         filters: newSheetViewFilters,
         groups: newSheetViewGroups,
         rows: clone(sourceSheet.rows),
+        rowLeaders: clone(sourceSheet.rowLeaders),
         sorts: newSheetViewSorts,
         visibleColumns: clone(sourceSheet.visibleColumns),
         visibleRows: clone(sourceSheet.visibleRows),
@@ -647,12 +656,14 @@ export const deleteSheetFilter = (sheetId: string, filterId: string): IThunkActi
     const sheet = allSheets[sheetId]
     const { [filterId]: deletedFilter, ...nextFilters } = allSheetFilters
     const nextSheetFilters = sheet.filters.filter(sheetFilterId => sheetFilterId !== filterId)
-    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, filters: nextSheetFilters}, allSheetRows, allSheetCells, nextFilters, allSheetGroups, allSheetSorts)
+    const nextSheetVisibleRows = resolveSheetVisibleRows({ ...sheet, filters: nextSheetFilters}, allSheetRows, allSheetCells, nextFilters, allSheetGroups, allSheetSorts)
+    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetFilters(nextFilters))
       dispatch(updateSheetReducer(sheetId, {
         filters: nextSheetFilters,
+        rowLeaders: nextSheetRowLeaders,
         visibleRows: nextSheetVisibleRows
       }))
     })
@@ -681,12 +692,14 @@ export const deleteSheetGroup = (sheetId: string, groupId: string): IThunkAction
     const sheet = allSheets[sheetId]
     const { [groupId]: deletedGroup, ...nextAllSheetGroups } = allSheetGroups
     const nextSheetGroups = sheet.groups.filter(sheetGroupId => sheetGroupId !== groupId)
-    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, groups: nextSheetGroups}, allSheetRows, allSheetCells, allSheetFilters, nextAllSheetGroups, allSheetSorts)
+    const nextSheetVisibleRows = resolveSheetVisibleRows({ ...sheet, groups: nextSheetGroups}, allSheetRows, allSheetCells, allSheetFilters, nextAllSheetGroups, allSheetSorts)
+    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetGroups(nextAllSheetGroups))
       dispatch(updateSheetReducer(sheetId, {
         groups: nextSheetGroups,
+        rowLeaders: nextSheetRowLeaders,
         visibleRows: nextSheetVisibleRows
       }))
     })
@@ -715,11 +728,13 @@ export const deleteSheetSort = (sheetId: string, sortId: string): IThunkAction =
     const sheet = allSheets[sheetId]
     const { [sortId]: deletedSort, ...nextAllSheetSorts } = allSheetSorts
     const nextSheetSorts = sheet.sorts.filter(sheetSortId => sheetSortId !== sortId)
-    const nextSheetVisibleRows = resolveVisibleRows({ ...sheet, sorts: nextSheetSorts}, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, nextAllSheetSorts)
+    const nextSheetVisibleRows = resolveSheetVisibleRows({ ...sheet, sorts: nextSheetSorts}, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, nextAllSheetSorts)
+    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetSorts(nextAllSheetSorts))
       dispatch(updateSheetReducer(sheetId, {
+        rowLeaders: nextSheetRowLeaders,
         sorts: nextSheetSorts,
         visibleRows: nextSheetVisibleRows
       }))
@@ -832,7 +847,8 @@ export const loadSheet = (sheetFromServer: ISheetFromServer): IThunkAction => {
       fileType: sheetFromServer.fileType,
       columns: sheetColumns,
       filters: sheetFilters,
-      groups: sheetGroups, 
+      groups: sheetGroups,
+      rowLeaders: null,
       rows: sheetFromServer.rows.map(row => row.id),
       sorts: sheetSorts,
       visibleColumns: sheetFromServer.visibleColumns !== null ? sheetFromServer.visibleColumns : sheetColumns,
@@ -848,12 +864,16 @@ export const loadSheet = (sheetFromServer: ISheetFromServer): IThunkAction => {
         italic: new Set(sheetFromServer.styles.italic) as Set<string>,
       }
     }
+
+    const nextSheetVisibleRows = resolveSheetVisibleRows(newSheet, normalizedRows, normalizedCells, normalizedFilters, normalizedGroups, normalizedSorts)
+    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
     
 		dispatch(
 			loadSheetReducer(
         {
           ...newSheet,
-          visibleRows: resolveVisibleRows(newSheet, normalizedRows, normalizedCells, normalizedFilters, normalizedGroups, normalizedSorts)
+          visibleRows: nextSheetVisibleRows,
+          rowLeaders: nextSheetRowLeaders
         },
         normalizedCells,
         normalizedColumns,
@@ -1095,9 +1115,12 @@ export const updateSheetGroup = (sheetId: ISheet['id'], groupId: string, updates
           allSheetSorts,
         } = getState().sheet
         const sheet = allSheets[sheetId]
+        const nextSheetVisibleRows = resolveSheetVisibleRows(sheet, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, allSheetSorts)
+        const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
         dispatch(clearSheetSelection(sheetId))
         dispatch(updateSheet(sheetId, {
-          visibleRows: resolveVisibleRows(sheet, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, allSheetSorts)
+          rowLeaders: nextSheetRowLeaders,
+          visibleRows: nextSheetVisibleRows
         }))
       }, 10)
     }
@@ -1553,9 +1576,12 @@ export const updateSheetSort = (sheetId: ISheet['id'], sortId: string, updates: 
           allSheetSorts,
         } = getState().sheet
         const sheet = allSheets[sheetId]
+        const nextSheetVisibleRows = resolveSheetVisibleRows(sheet, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, allSheetSorts)
+        const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
         dispatch(clearSheetSelection(sheetId))
         dispatch(updateSheet(sheetId, {
-          visibleRows: resolveVisibleRows(sheet, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, allSheetSorts)
+          rowLeaders: nextSheetRowLeaders,
+          visibleRows: nextSheetVisibleRows
         }))
       }, 10)
     }

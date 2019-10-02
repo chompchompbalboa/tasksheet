@@ -6,7 +6,7 @@ import { groupBy, orderBy } from 'lodash'
 import { 
   ISheet,
   IAllSheetCells,
-  IAllSheetRows,
+  IAllSheetRows, ISheetRow,
   IAllSheetFilters, ISheetFilterType,
   ISheetGroup, IAllSheetGroups, 
   IAllSheetSorts, 
@@ -15,28 +15,28 @@ import {
 //-----------------------------------------------------------------------------
 // Resolve Filter
 //-----------------------------------------------------------------------------
-export const resolveFilter = (cellValue: string, filterValue: string, type: ISheetFilterType) => {
+export const resolveSheetFilter = (cellValue: string, filterValue: string, type: ISheetFilterType) => {
   
   const filterValues = filterValue.split('|').map(untrimmedFilterValue => untrimmedFilterValue.trim())
   
   switch (type) {
     case '=': {
-      return filterValues.some(currentFilterValue => resolveValue(cellValue) == resolveValue(currentFilterValue))
+      return filterValues.some(currentFilterValue => resolveSheetCellValue(cellValue) == resolveSheetCellValue(currentFilterValue))
     }
     case '!=': {
-      return filterValues.every(currentFilterValue => resolveValue(cellValue) != resolveValue(currentFilterValue))
+      return filterValues.every(currentFilterValue => resolveSheetCellValue(cellValue) != resolveSheetCellValue(currentFilterValue))
     }
     case '>': {
-      return filterValues.some(currentFilterValue => resolveValue(cellValue) > resolveValue(currentFilterValue))
+      return filterValues.some(currentFilterValue => resolveSheetCellValue(cellValue) > resolveSheetCellValue(currentFilterValue))
     }
     case '>=': {
-      return filterValues.some(currentFilterValue => resolveValue(cellValue) >= resolveValue(currentFilterValue))
+      return filterValues.some(currentFilterValue => resolveSheetCellValue(cellValue) >= resolveSheetCellValue(currentFilterValue))
     }
     case '<': {
-      return filterValues.some(currentFilterValue => resolveValue(cellValue) < resolveValue(currentFilterValue))
+      return filterValues.some(currentFilterValue => resolveSheetCellValue(cellValue) < resolveSheetCellValue(currentFilterValue))
     }
     case '<=': {
-      return filterValues.some(currentFilterValue => resolveValue(cellValue) <= resolveValue(currentFilterValue))
+      return filterValues.some(currentFilterValue => resolveSheetCellValue(cellValue) <= resolveSheetCellValue(currentFilterValue))
     }
   }
 }
@@ -44,7 +44,7 @@ export const resolveFilter = (cellValue: string, filterValue: string, type: IShe
 //-----------------------------------------------------------------------------
 // Resolve Value
 //-----------------------------------------------------------------------------
-export const resolveValue = (value: string) => {
+export const resolveSheetCellValue = (value: string) => {
   const filteredValue = value !== null ? value.replace('%', '') : ""
   return isNaN(Number(filteredValue)) ? filteredValue : Number(filteredValue)
 }
@@ -52,7 +52,7 @@ export const resolveValue = (value: string) => {
 //-----------------------------------------------------------------------------
 // Resolve Visible Rows
 //-----------------------------------------------------------------------------
-export const resolveVisibleRows = (sheet: ISheet, rows: IAllSheetRows, cells: IAllSheetCells, filters: IAllSheetFilters, groups: IAllSheetGroups, sorts: IAllSheetSorts) => {
+export const resolveSheetVisibleRows = (sheet: ISheet, rows: IAllSheetRows, cells: IAllSheetCells, filters: IAllSheetFilters, groups: IAllSheetGroups, sorts: IAllSheetSorts) => {
   const rowIds: string[] = sheet.rows
   const filterIds: string[] = sheet.filters
   const groupIds: string[] = sheet.groups
@@ -64,7 +64,7 @@ export const resolveVisibleRows = (sheet: ISheet, rows: IAllSheetRows, cells: IA
     return filterIds.every(filterId => {
       const filter = filters[filterId]
       const cell = cells[row.cells[filter.columnId]]
-      return resolveFilter(cell.value, filter.value, filter.type)
+      return resolveSheetFilter(cell.value, filter.value, filter.type)
     }) ? row.id : undefined
   }).filter(Boolean)
 
@@ -73,7 +73,7 @@ export const resolveVisibleRows = (sheet: ISheet, rows: IAllSheetRows, cells: IA
     const sort = sorts[sortId]
     return (rowId: string) => {
       const cell = cells[rows[rowId].cells[sort.columnId]]
-      return resolveValue(cell.value)
+      return resolveSheetCellValue(cell.value)
     }
   })
   const sortOrder = sortIds && sortIds.map(sortId => sorts[sortId].order === 'ASC' ? 'asc' : 'desc')
@@ -100,4 +100,20 @@ export const resolveVisibleRows = (sheet: ISheet, rows: IAllSheetRows, cells: IA
     })
     return filteredSortedGroupedRowIds
   }
+}
+
+//-----------------------------------------------------------------------------
+// Resolve Row Leaders
+//-----------------------------------------------------------------------------
+export const resolveSheetRowLeaders = (visibleRows: ISheetRow['id'][]) => {
+  let currentCount = 1
+  return visibleRows && visibleRows.map(visibleRowId => {
+    if(visibleRowId === 'ROW_BREAK') {
+      currentCount = 1
+      return
+    }
+    else {
+      return currentCount++
+    }
+  })
 }
