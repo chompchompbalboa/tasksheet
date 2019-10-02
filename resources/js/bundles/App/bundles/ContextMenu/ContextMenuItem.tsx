@@ -70,7 +70,7 @@ const Container = styled.div`
   align-items: center;
   font-size: 1rem;
   transition: background-color 0.05s;
-  border-radius: ${ ({ isFirstItem, isLastItem }: IContainer ) => isFirstItem ? '10px 10px 0 0' : (isLastItem ? '0 0 10px 10px' : 'none') };
+  border-radius: ${ ({ isFirstItem, isLastItem }: IContainer ) => isFirstItem ? '3px 3px 0 0' : (isLastItem ? '0 0 3px 3px' : 'none') };
   &:hover {
     background-color: rgb(242, 242, 242);
   }
