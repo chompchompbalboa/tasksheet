@@ -88,7 +88,7 @@ const SheetHeader = ({
       dispatch(allowSelectedCellNavigation(sheetId))
       dispatch(updateSheetActive({ columnRenamingId: null }))
     })
-    setTimeout(() => dispatch(updateSheetColumn(column.id, { name: columnName })), 250)
+    setTimeout(() => dispatch(updateSheetColumn(column.id, { name: columnName }, { name: column.name })), 250)
   }
 
   const handleColumnResizeEnd = (columnWidthChange: number) => {
