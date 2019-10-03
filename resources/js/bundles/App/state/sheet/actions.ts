@@ -628,6 +628,9 @@ export const createSheetView = (sheetId: string, viewName: string): IThunkAction
 //-----------------------------------------------------------------------------
 export const deleteSheetColumn = (sheetId: string, columnId: string): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
+
+    dispatch(clearSheetSelection(sheetId))
+
     const {
       allSheets,
       allSheetCells,
@@ -644,10 +647,12 @@ export const deleteSheetColumn = (sheetId: string, columnId: string): IThunkActi
       nextAllSheetRows[rowId].cells = nextSheetCells
     })
     // Cells
+    const deletedSheetCells: ISheetCell[] = []
     const nextAllSheetCells: IAllSheetCells = {}
     Object.keys(allSheetCells).forEach(cellId => {
       const cell = allSheetCells[cellId]
       if(cell.columnId !== columnId) { nextAllSheetCells[cellId] = cell }
+      else { deletedSheetCells.push(cell) }
     })
     // Sheet Columns
     const nextSheetColumns = sheet.columns.filter(sheetColumnId => sheetColumnId !== columnId)
@@ -665,6 +670,20 @@ export const deleteSheetColumn = (sheetId: string, columnId: string): IThunkActi
       mutation.deleteSheetColumn(columnId)
       mutation.updateSheet(sheetId, { visibleColumns: nextSheetVisibleColumns })
     }
+    const undoActions = () => {
+      batch(() => {
+        dispatch(setAllSheetCells(allSheetCells))
+        dispatch(setAllSheetColumns(allSheetColumns))
+        dispatch(setAllSheetRows(allSheetRows))
+        dispatch(updateSheetReducer(sheetId, {
+          columns: sheet.columns,
+          visibleColumns: sheet.visibleColumns
+        }))
+      })
+      mutation.createSheetColumn(deletedColumn, deletedSheetCells)
+      mutation.updateSheet(sheetId, { visibleColumns: sheet.visibleColumns })
+    }
+    dispatch(createHistoryStep({ actions, undoActions }))
     actions()
 	}
 }
@@ -915,7 +934,7 @@ export const loadSheet = (sheetFromServer: ISheetFromServer): IThunkAction => {
       rowLeaders: null,
       rows: sheetFromServer.rows.map(row => row.id),
       sorts: sheetSorts,
-      visibleColumns: sheetFromServer.visibleColumns !== null ? sheetFromServer.visibleColumns : sheetColumns,
+      visibleColumns: sheetFromServer.visibleColumns !== null ? sheetFromServer.visibleColumns.filter(visibleColumnId => sheetColumns.includes(visibleColumnId) || visibleColumnId === 'COLUMN_BREAK') : sheetColumns,
       visibleRows: null,
       selections: defaultSheetSelections,
       styles: {

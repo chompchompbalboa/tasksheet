@@ -119,7 +119,7 @@ const SheetActionDownloadSheet = ({
           <DownloadOption>
             Filename&nbsp;&nbsp;
             <StyledInput
-              value={filename}
+              value={filename || ''}
               onBlur={() => handleFilenameInputBlur()}
               onChange={e => setFilename(e.target.value)}
               onFocus={() => handleFilenameInputFocus()}/>
