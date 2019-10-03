@@ -833,7 +833,14 @@ export const hideSheetColumn = (sheetId: ISheet['id'], columnVisibleColumnsIndex
       visibleColumns
     } = getState().sheet.allSheets[sheetId]
     const nextVisibleColumns = visibleColumns.filter((_, index) => index !== columnVisibleColumnsIndex)
-    dispatch(updateSheet(sheetId, { visibleColumns: nextVisibleColumns }))
+    const actions = () => {
+      dispatch(updateSheet(sheetId, { visibleColumns: nextVisibleColumns }))
+    }
+    const undoActions = () => {
+      dispatch(updateSheet(sheetId, { visibleColumns: visibleColumns }))
+    }
+    dispatch(createHistoryStep({ actions, undoActions }))
+    actions()
   }
 }
 
@@ -964,13 +971,20 @@ export const showSheetColumn = (sheetId: ISheet['id'], columnVisibleColumnsIndex
     const {
       visibleColumns
     } = getState().sheet.allSheets[sheetId]
-    // Update the sheet's visible columns
     const nextVisibleColumns = [
       ...visibleColumns.slice(0, columnVisibleColumnsIndex),
       columnIdToShow,
       ...visibleColumns.slice(columnVisibleColumnsIndex)
     ]
-    dispatch(updateSheet(sheetId, { visibleColumns: nextVisibleColumns }))
+    const actions = () => {
+      dispatch(updateSheet(sheetId, { visibleColumns: nextVisibleColumns }))
+    }
+    const undoActions = () => {
+      dispatch(updateSheet(sheetId, { visibleColumns: visibleColumns }))
+    }
+    dispatch(createHistoryStep({ actions, undoActions }))
+    actions()
+    
   }
 }
 
