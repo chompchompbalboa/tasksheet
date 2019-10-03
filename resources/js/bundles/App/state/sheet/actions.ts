@@ -1729,22 +1729,37 @@ export const updateSheetStyles = (sheetId: ISheet['id'], updates: ISheetStylesUp
     const {
       allSheets
     } = getState().sheet
+    
     const sheet = allSheets[sheetId]
-    // Update state
-    dispatch(updateSheet(sheetId, { styles: {
-      ...sheet.styles,
-      ...updates
-    }}, true))
-    // Server update
-    const serverUpdates: any = {}
-    Object.entries(updates).forEach(([key, update]) => {
-      if(update instanceof Set) {
-        serverUpdates[key] = [ ...update ]
-      }
-      else {
-        serverUpdates[key] = update
-      }
-    })
-    mutation.updateSheetStyles(sheet.styles.id, serverUpdates as ISheetStylesServerUpdates)
+    
+    const convertUpdatesToDatabaseUpdates = (updatesToConvert: ISheetStylesUpdates) => {
+      const databaseUpdates: any = {}
+      Object.entries(updatesToConvert).forEach(([key, update]) => {
+        if(update instanceof Set) {
+          databaseUpdates[key] = [ ...update ]
+        }
+        else {
+          databaseUpdates[key] = update
+        }
+      })
+      return databaseUpdates as ISheetStylesServerUpdates
+    }
+    
+    // Actions database updates
+    const actionsDatabaseUpdates: ISheetStylesServerUpdates = convertUpdatesToDatabaseUpdates(updates)
+    
+    // Undo actions database updates
+    const undoActionsDatabaseUpdates: ISheetStylesServerUpdates = convertUpdatesToDatabaseUpdates(sheet.styles as ISheetStylesUpdates)
+    
+    const actions = () => {
+      dispatch(updateSheetReducer(sheetId, { styles: { ...sheet.styles, ...updates }}))
+      mutation.updateSheetStyles(sheet.styles.id, actionsDatabaseUpdates)
+    }
+    const undoActions = () => {
+      dispatch(updateSheetReducer(sheetId, { styles: sheet.styles }))
+      mutation.updateSheetStyles(sheet.styles.id, undoActionsDatabaseUpdates)
+    }
+    dispatch(createHistoryStep({ actions, undoActions }))
+    actions()
 	}
 }
