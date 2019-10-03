@@ -100,9 +100,7 @@ const Decorator = styled.div`
   justify-content: flex-end;
 `
 
-const SubItemsScrollContainer = styled.div`
-  
-`
+const SubItemsScrollContainer = styled.div``
 
 const SubItems = styled.div`
   display: ${ ({ isSubItemsVisible }: SubItemProps ) => isSubItemsVisible ? 'block' : 'none'};
@@ -111,7 +109,7 @@ const SubItems = styled.div`
   left: 100%;
   margin-top: -0.625rem;
   background-color: white;
-  border-radius: 10px;
+  border-radius: 3px;
   box-shadow: 3px 3px 10px 0px rgba(150,150,150,1);
   max-height: 50vh;
 	overflow-y: scroll;

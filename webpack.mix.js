@@ -8,6 +8,8 @@ mix.webpackConfig({
 			'@': path.resolve(__dirname, 'resources/js'),
 			'@app': path.resolve(__dirname, 'resources/js/bundles/App'),
 			'@site': path.resolve(__dirname, 'resources/js/bundles/Site'),
+      // Uncomment to enable React profiling in production build: 'react-dom$': 'react-dom/profiling',
+      // Uncomment to enable React profiling in production build: 'scheduler/tracing': 'scheduler/tracing-profiling',
 		},
 	},
 })
