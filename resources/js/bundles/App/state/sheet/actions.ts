@@ -825,12 +825,18 @@ export const deleteSheetSort = (sheetId: string, sortId: string): IThunkAction =
 //-----------------------------------------------------------------------------
 export const deleteSheetRow = (sheetId: string, rowId: ISheetRow['id']): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
+    
     const {
-      allSheets
+      allSheets,
+      allSheetCells,
+      allSheetRows
     } = getState().sheet
     const sheet = allSheets[sheetId]
+    const sheetRow = allSheetRows[rowId]
+    const cellsForUndoActionsDatabaseUpdate = Object.keys(sheetRow.cells).map(columnId => allSheetCells[sheetRow.cells[columnId]])
     const nextSheetRows = sheet.rows.filter(sheetRowId => sheetRowId !== rowId)
     const nextSheetVisibleRows = sheet.visibleRows.filter(visibleRowId => visibleRowId !== rowId)
+    
     const actions = () => {
       batch(() => {
         dispatch(updateSheetReducer(sheetId, {
@@ -840,6 +846,20 @@ export const deleteSheetRow = (sheetId: string, rowId: ISheetRow['id']): IThunkA
       })
       mutation.deleteSheetRow(rowId)
     }
+    
+    const undoActions = () => {
+      batch(() => {
+        dispatch(updateSheetReducer(sheetId, {
+          rows: sheet.rows,
+          visibleRows: sheet.visibleRows
+        }))
+        mutation.createSheetRow({
+          ...sheetRow,
+          cells: cellsForUndoActionsDatabaseUpdate
+        })
+      })
+    }
+    dispatch(createHistoryStep({ actions, undoActions }))
     actions()
 	}
 }
