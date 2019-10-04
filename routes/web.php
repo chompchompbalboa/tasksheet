@@ -50,6 +50,7 @@ Route::group([
 
   // Batch actions
   Route::patch('/sheets/cells/batch/update', 'SheetCellController@batchUpdate');
+  Route::post('/sheets/rows/batch/delete', 'SheetRowController@batchDestroy');
 
   /*
   // Copy

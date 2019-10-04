@@ -53,6 +53,7 @@ export const resolveSheetCellValue = (value: string) => {
 // Resolve Visible Rows
 //-----------------------------------------------------------------------------
 export const resolveSheetVisibleRows = (sheet: ISheet, rows: IAllSheetRows, cells: IAllSheetCells, filters: IAllSheetFilters, groups: IAllSheetGroups, sorts: IAllSheetSorts) => {
+  
   const rowIds: string[] = sheet.rows
   const filterIds: string[] = sheet.filters
   const groupIds: string[] = sheet.groups

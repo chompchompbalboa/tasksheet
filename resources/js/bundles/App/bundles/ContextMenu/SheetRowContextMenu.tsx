@@ -13,7 +13,7 @@ import {
   deleteSheetRow
 } from '@app/state/sheet/actions'
 
-import SheetRowContextMenuCreateRows from '@app/bundles/sheet/SheetRowContextMenuCreateRows'
+import SheetRowContextMenuCreateRows from '@app/bundles/Sheet/SheetRowContextMenuCreateRows'
 
 //-----------------------------------------------------------------------------
 // Component

@@ -9,16 +9,16 @@ import { mutation } from '@app/api'
 
 import { IAppState } from '@app/state'
 import { 
-  ISheet, ISheetFromServer, ISheetUpdates,
+  ISheet, ISheetFromDatabase, ISheetUpdates,
   ISheetActiveUpdates, 
   IAllSheetColumns, ISheetColumn, ISheetColumnUpdates,
-  IAllSheetRows, ISheetRow, ISheetRowUpdates, 
+  IAllSheetRows, ISheetRow, ISheetRowToDatabase, ISheetRowUpdates, 
   IAllSheetCells, ISheetCell, ISheetCellUpdates,
   ISheetClipboard,
   IAllSheetFilters, ISheetFilter, ISheetFilterUpdates,
   IAllSheetGroups, ISheetGroup, ISheetGroupUpdates,
   IAllSheetSorts, ISheetSort, ISheetSortUpdates,
-  ISheetStylesUpdates, ISheetStylesServerUpdates,
+  ISheetStylesUpdates, ISheetStylesDatabaseUpdates,
 } from '@app/state/sheet/types'
 import { 
   IFile, IFileType, 
@@ -447,20 +447,31 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
     const nextAllSheetCells = { ...allSheetCells }
     const nextAllSheetRows = { ...allSheetRows }
     const nextSheetRows = [ ...sheet.rows ] 
-    let nextSheetVisibleRows = [ ...sheet.visibleRows ]
+    const nextSheetVisibleRows = [ ...sheet.visibleRows ]
+    const newRowsToDatabase: ISheetRowToDatabase[] = []
+    const newRowIds: ISheetRow['id'][] = []
 
     const insertBeforeRowIdVisibleRowsIndex = nextSheetVisibleRows.indexOf(insertBeforeRowId)
     const newRowSheetId = sheet.sourceSheetId !== null ? sheet.sourceSheetId : sheetId
 
     for(let i = 0; i < numberOfRowsToAdd; i++) {
       const newRow = defaultRow(newRowSheetId, createUuid(), sheet.columns)
+      const newRowCellsToDatabase: ISheetCell[] = []
       Object.keys(newRow.cells).forEach((columnId: string, index: number) => {
         const cellId = newRow.cells[columnId]
-        nextAllSheetCells[cellId] = defaultCell(sheetId, newRow.id, sheet.columns[index], cellId)
+        const newCell = defaultCell(sheetId, newRow.id, sheet.columns[index], cellId)
+        nextAllSheetCells[cellId] = newCell
+        newRowCellsToDatabase.push(newCell)
       })
       nextAllSheetRows[newRow.id] = newRow
       nextSheetRows.push(newRow.id)
       nextSheetVisibleRows.splice(insertBeforeRowIdVisibleRowsIndex + i, 0, newRow.id)
+      const newRowToDatabase = {
+        ...newRow,
+        cells: newRowCellsToDatabase
+      }
+      newRowsToDatabase.push(newRowToDatabase)
+      newRowIds.push(newRow.id)
     }
     const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
     const actions = () => {
@@ -472,6 +483,7 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
           rows: nextSheetRows,
           visibleRows: nextSheetVisibleRows
         }))
+        mutation.createSheetRows(newRowsToDatabase)
       })
     }
     const undoActions = () => {
@@ -483,6 +495,7 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
           rows: sheet.rows,
           visibleRows: sheet.visibleRows
         }))
+        mutation.deleteSheetRows(newRowIds)
       })
     }
     dispatch(createHistoryStep({ actions, undoActions }))
@@ -878,10 +891,10 @@ export const deleteSheetRow = (sheetId: string, rowId: ISheetRow['id']): IThunkA
           rows: sheet.rows,
           visibleRows: sheet.visibleRows
         }))
-        mutation.createSheetRow({
+        mutation.createSheetRows([{
           ...sheetRow,
           cells: cellsForUndoActionsDatabaseUpdate
-        })
+        }])
       })
     }
     dispatch(createHistoryStep({ actions, undoActions }))
@@ -924,12 +937,12 @@ interface ILoadSheet {
   sorts: IAllSheetSorts
 }
 
-export const loadSheet = (sheetFromServer: ISheetFromServer): IThunkAction => {
+export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction => {
 	return async (dispatch: IThunkDispatch) => {
     // Rows and cells
     const normalizedRows: IAllSheetRows = {}
     const normalizedCells: IAllSheetCells = {}
-    sheetFromServer.rows.forEach(row => { 
+    sheetFromDatabase.rows.forEach(row => { 
       let rowCells: { [columnId: string]: ISheetCell['id'] }  = {}
       row.cells.forEach(cell => {
         normalizedCells[cell.id] = { 
@@ -939,58 +952,59 @@ export const loadSheet = (sheetFromServer: ISheetFromServer): IThunkAction => {
         }
         rowCells[cell.columnId] = cell.id
       })
-      normalizedRows[row.id] = { id: row.id, sheetId: sheetFromServer.id, cells: rowCells}
+      normalizedRows[row.id] = { id: row.id, sheetId: sheetFromDatabase.id, cells: rowCells}
     })
     // Columns
     const normalizedColumns: IAllSheetColumns = {}
     const sheetColumns: ISheetColumn['id'][] = []
-    sheetFromServer.columns.forEach(column => { 
+    sheetFromDatabase.columns.forEach(column => { 
       normalizedColumns[column.id] = column 
       sheetColumns.push(column.id)
     })
     // Filters
     const normalizedFilters: IAllSheetFilters = {}
     const sheetFilters: ISheetFilter['id'][] = []
-    sheetFromServer.filters.forEach((filter: ISheetFilter) => { 
+    sheetFromDatabase.filters.forEach((filter: ISheetFilter) => { 
       normalizedFilters[filter.id] = filter 
       sheetFilters.push(filter.id)
     })
     // Groups
     const normalizedGroups: IAllSheetGroups = {}
     const sheetGroups: ISheetGroup['id'][] = []
-    sheetFromServer.groups.forEach(group => { 
+    sheetFromDatabase.groups.forEach(group => { 
       normalizedGroups[group.id] = group 
       sheetGroups.push(group.id)
     })
     // Sorts
     const normalizedSorts: IAllSheetSorts = {}
     const sheetSorts: ISheetSort['id'][] = []
-    sheetFromServer.sorts.forEach(sort => { 
+    sheetFromDatabase.sorts.forEach(sort => { 
       normalizedSorts[sort.id] = sort 
       sheetSorts.push(sort.id)
     })
+    console.log(sheetFromDatabase.rows)
     // New Sheet
     const newSheet: ISheet = {
-      id: sheetFromServer.id,
-      sourceSheetId: sheetFromServer.sourceSheetId,
-      fileType: sheetFromServer.fileType,
+      id: sheetFromDatabase.id,
+      sourceSheetId: sheetFromDatabase.sourceSheetId,
+      fileType: sheetFromDatabase.fileType,
       columns: sheetColumns,
       filters: sheetFilters,
       groups: sheetGroups,
       rowLeaders: null,
-      rows: sheetFromServer.rows.map(row => row.id),
+      rows: sheetFromDatabase.rows.map(row => row.id),
       sorts: sheetSorts,
-      visibleColumns: sheetFromServer.visibleColumns !== null ? sheetFromServer.visibleColumns.filter(visibleColumnId => sheetColumns.includes(visibleColumnId) || visibleColumnId === 'COLUMN_BREAK') : sheetColumns,
+      visibleColumns: sheetFromDatabase.visibleColumns !== null ? sheetFromDatabase.visibleColumns.filter(visibleColumnId => sheetColumns.includes(visibleColumnId) || visibleColumnId === 'COLUMN_BREAK') : sheetColumns,
       visibleRows: null,
       selections: defaultSheetSelections,
       styles: {
-        id: sheetFromServer.styles.id,
-        backgroundColor: new Set(sheetFromServer.styles.backgroundColor) as Set<string>,
-        backgroundColorReference: sheetFromServer.styles.backgroundColorReference || {},
-        bold: new Set(sheetFromServer.styles.bold) as Set<string>,
-        color: new Set(sheetFromServer.styles.color) as Set<string>,
-        colorReference: sheetFromServer.styles.colorReference || {},
-        italic: new Set(sheetFromServer.styles.italic) as Set<string>,
+        id: sheetFromDatabase.styles.id,
+        backgroundColor: new Set(sheetFromDatabase.styles.backgroundColor) as Set<string>,
+        backgroundColorReference: sheetFromDatabase.styles.backgroundColorReference || {},
+        bold: new Set(sheetFromDatabase.styles.bold) as Set<string>,
+        color: new Set(sheetFromDatabase.styles.color) as Set<string>,
+        colorReference: sheetFromDatabase.styles.colorReference || {},
+        italic: new Set(sheetFromDatabase.styles.italic) as Set<string>,
       }
     }
 
@@ -1787,14 +1801,14 @@ export const updateSheetStyles = (sheetId: ISheet['id'], updates: ISheetStylesUp
           databaseUpdates[key] = update
         }
       })
-      return databaseUpdates as ISheetStylesServerUpdates
+      return databaseUpdates as ISheetStylesDatabaseUpdates
     }
     
     // Actions database updates
-    const actionsDatabaseUpdates: ISheetStylesServerUpdates = convertUpdatesToDatabaseUpdates(updates)
+    const actionsDatabaseUpdates: ISheetStylesDatabaseUpdates = convertUpdatesToDatabaseUpdates(updates)
     
     // Undo actions database updates
-    const undoActionsDatabaseUpdates: ISheetStylesServerUpdates = convertUpdatesToDatabaseUpdates(sheet.styles as ISheetStylesUpdates)
+    const undoActionsDatabaseUpdates: ISheetStylesDatabaseUpdates = convertUpdatesToDatabaseUpdates(sheet.styles as ISheetStylesUpdates)
     
     const actions = () => {
       dispatch(updateSheetReducer(sheetId, { styles: { ...sheet.styles, ...updates }}))

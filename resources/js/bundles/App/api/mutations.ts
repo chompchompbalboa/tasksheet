@@ -13,9 +13,9 @@ import {
   ISheetColumn, ISheetColumnUpdates,
   ISheetFilter, 
   ISheetGroup, ISheetGroupUpdates, 
-  ISheetRowToServer, 
+  ISheetRowToDatabase, 
   ISheetSort, ISheetSortUpdates, 
-  ISheetStylesServerUpdates,
+  ISheetStylesDatabaseUpdates,
   ISheetView 
 } from '@app/state/sheet/types'
 import { 
@@ -203,14 +203,20 @@ export const updateSheetGroup = async (id: string, updates: ISheetGroupUpdates) 
 	})
 }
 
-export const createSheetRow = async (row: ISheetRowToServer) => {
-	return axios.post('/app/sheets/rows', row).then(response => {
+export const createSheetRows = async (newRows: ISheetRowToDatabase[]) => {
+	return axios.post('/app/sheets/rows', newRows).then(response => {
 		return response.data
 	})
 }
 
 export const deleteSheetRow = async (rowId: string) => {
 	return axios.delete('/app/sheets/rows/' + rowId).then(response => {
+		return response.data
+	})
+}
+
+export const deleteSheetRows = async (rowIds: string[]) => {
+	return axios.post('/app/sheets/rows/batch/delete', rowIds).then(response => {
 		return response.data
 	})
 }
@@ -233,7 +239,7 @@ export const updateSheetSort = async (id: string, updates: ISheetSortUpdates) =>
 	})
 }
 
-export const updateSheetStyles = async (id: string, updates: ISheetStylesServerUpdates) => {
+export const updateSheetStyles = async (id: string, updates: ISheetStylesDatabaseUpdates) => {
 	return axios.patch('/app/sheets/styles/' + id, updates).then(response => {
 		return response.data
 	})

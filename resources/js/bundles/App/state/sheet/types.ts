@@ -88,7 +88,7 @@ export interface ISheetStylesUpdates {
   bold?: Set<string>
   italic?: Set<string>
 }
-export interface ISheetStylesServerUpdates {
+export interface ISheetStylesDatabaseUpdates {
   backgroundColor?: string[]
   backgroundColorReference?: { [cellId: string]: string }
   color?: string[]
@@ -97,7 +97,7 @@ export interface ISheetStylesServerUpdates {
   italic?: string[]
 }
 
-export interface ISheetFromServer {
+export interface ISheetFromDatabase {
   id: string
   sourceSheetId: string
   fileType: IFileType
@@ -105,11 +105,11 @@ export interface ISheetFromServer {
   visibleColumns: ISheetColumn['id'][]
   filters: ISheetFilter[]
   groups: ISheetGroup[]
-  rows: ISheetFromServerRow[]
+  rows: ISheetFromDatabaseRow[]
   sorts: ISheetSort[]
   styles: ISheetStyles
 }
-export interface ISheetFromServerRow {
+export interface ISheetFromDatabaseRow {
 	id: string
 	sheetId: string
 	cells: ISheetCell[]
@@ -127,7 +127,7 @@ export interface ISheetColumnUpdates {
   name?: string
   width?: number
 }
-export interface ISheetColumnToServer {
+export interface ISheetColumnToDatabase {
   id: string
   sheetId: string
   typeId: ISheetColumnType['id']
@@ -160,7 +160,7 @@ export interface ISheetRow {
 export interface ISheetRowUpdates {
   cells?: { [columnId: string]: ISheetCell['id'] }
 }
-export interface ISheetRowToServer {
+export interface ISheetRowToDatabase {
   id: string
   sheetId: string
   cells: ISheetCell[]

@@ -36,11 +36,14 @@ class SheetRowController extends Controller
      */
     public function store(Request $request)
     {
-      $sheetRow = SheetRow::create($request->all());
-      foreach($request->input('cells') as $newCell) {
-        SheetCell::create($newCell);
+      $newRows = $request->all();
+      foreach($newRows as $newRow) {
+        $sheetRow = SheetRow::create($newRow);
+        foreach($newRow['cells'] as $newCell) {
+          SheetCell::create($newCell);
+        }
       }
-      return response()->json($sheetRow, 200);
+      return response()->json(null, 200);
     }
 
     /**
@@ -87,6 +90,22 @@ class SheetRowController extends Controller
     {
       SheetCell::where('rowId', $row->id)->delete();
       $row->delete();
+      return response()->json(null, 204);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Row  $row
+     * @return \Illuminate\Http\Response
+     */
+    public function batchDestroy(Request $request)
+    {
+      $rowIds = $request->all();
+      foreach($rowIds as $rowId) {
+        SheetCell::where('rowId', $rowId)->delete();
+      }
+      SheetRow::destroy($rowIds);
       return response()->json(null, 204);
     }
 }
