@@ -37,14 +37,14 @@ class Sheet extends Model
    * Get all the filters that belong to this table
    */
   public function filters() {
-    return $this->hasMany('App\Models\SheetFilter', 'sheetId');
+    return $this->hasMany('App\Models\SheetFilter', 'sheetId')->orderBy('created_at');
   }
   
   /**
    * Get all the groups that belong to this table
    */
   public function groups() {
-    return $this->hasMany('App\Models\SheetGroup', 'sheetId');
+    return $this->hasMany('App\Models\SheetGroup', 'sheetId')->orderBy('created_at');
   }
   
   /**
@@ -60,7 +60,7 @@ class Sheet extends Model
    * Get all the sorts that belong to this table
    */
   public function sorts() {
-    return $this->hasMany('App\Models\SheetSort', 'sheetId');
+    return $this->hasMany('App\Models\SheetSort', 'sheetId')->orderBy('created_at');
   }
   
   /**
