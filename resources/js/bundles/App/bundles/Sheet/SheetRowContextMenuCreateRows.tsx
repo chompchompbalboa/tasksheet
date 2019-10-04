@@ -1,11 +1,9 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useState } from 'react'
-import { batch, useSelector, useDispatch } from 'react-redux'
+import React, { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
-
-import { ARROW_RIGHT } from '@app/assets/icons'
 
 import { IAppState } from '@app/state'
 import { ISheet } from '@app/state/sheet/types'
@@ -18,53 +16,50 @@ import {
 } from '@app/state/sheet/actions'
 
 import AutosizeInput from 'react-input-autosize'
-import Icon from '@/components/Icon'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetCreateRows = ({
-  sheetId
-}: ISheetCreateRowsProps) => {
+const SheetRowContextMenuCreateRows = ({
+  sheetId,
+  closeOnClick
+}: ISheetRowContextMenuCreateRowsProps) => {
 
   const dispatch = useDispatch()
 
   const sheetVisibleRows = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleRows)
 
-  const [ isEditingInputValue, setIsEditingInputValue ] = useState(false)
-  const [ inputValue, setInputValue ] = useState(1)
-  
-  useEffect(() => {
-    if(isEditingInputValue) { window.addEventListener('keydown', createRowsOnKeydownEnter) }
-    else { window.removeEventListener('keydown', createRowsOnKeydownEnter) }
-    return () => window.removeEventListener('keydown', createRowsOnKeydownEnter)
-  }, [ inputValue ])
+  const localStorageKey = 'tracksheet.SheetRowContextMenuCreateRows.inputValue'
+  const [ inputValue, setInputValue ] = useState(Number(localStorage.getItem(localStorageKey)) || 1)
 
   const createRows = () => {
-    batch(() => {
-        dispatch(createSheetRows(sheetId, inputValue, sheetVisibleRows[0]))
-    })}
+    localStorage.setItem(localStorageKey, inputValue + '')
+    closeOnClick(() => {
+      dispatch(allowSelectedCellEditing(sheetId))
+      dispatch(allowSelectedCellNavigation(sheetId))
+      dispatch(createSheetRows(sheetId, inputValue, sheetVisibleRows[0]))
+    })
+  }
   
   const handleAutosizeInputFocus = () => {
-    setIsEditingInputValue(true)
     dispatch(preventSelectedCellEditing(sheetId))
     dispatch(preventSelectedCellNavigation(sheetId))
   }
   const handleAutosizeInputBlur = () => {
-    setIsEditingInputValue(false)
     dispatch(allowSelectedCellEditing(sheetId))
     dispatch(allowSelectedCellNavigation(sheetId))
   }
-  
-  const createRowsOnKeydownEnter = (e: KeyboardEvent) => { if(e.key === 'Enter') { createRows() } }
 
   return (
     <Container>
-      Add
+      <LeftPadding  />
+      <TextContainer onClick={() => createRows()}>
+        Add
+      </TextContainer>
       <AutosizeInput
         value={inputValue === 0 ? '' : inputValue}
         onBlur={() => handleAutosizeInputBlur()}
-        onChange={e => setInputValue(Math.min(Number(e.target.value), 25))}
+        onChange={e => setInputValue(Math.min(Number(e.target.value), 10))}
         onFocus={() => handleAutosizeInputFocus()}
         inputStyle={{
           margin: '0 0.25rem',
@@ -79,12 +74,9 @@ const SheetCreateRows = ({
           fontFamily: 'inherit',
           fontSize: 'inherit',
           fontWeight: 'inherit'}}/>
-      row{inputValue > 1 ? 's' : ''}
-      <AddRowButton
-        onClick={() => createRows()}>
-        <Icon
-          icon={ARROW_RIGHT}/>
-      </AddRowButton>
+      <TextContainer onClick={() => createRows()}>
+        row{inputValue > 1 ? 's' : ''} above
+      </TextContainer>
     </Container>
   )
 }
@@ -92,37 +84,40 @@ const SheetCreateRows = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface ISheetCreateRowsProps {
+interface ISheetRowContextMenuCreateRowsProps {
   sheetId: ISheet['id']
-  sourceSheetId: ISheet['id']
+  closeOnClick(...args: any): void
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  height: 100%;
+  cursor: default;
+  min-width: 8rem;
+  width: 100%;
+  padding: 0.55rem 0.75rem 0.425rem 0;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-`
-
-const AddRowButton = styled.div`
-  margin-left: 0.375rem;
-  cursor: pointer;  
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgb(210, 210, 210);
-  border-radius: 3px;
-  padding: 0.25rem;
-  transition: all 0.05s;
+  transition: background-color 0.05s;
+  border-radius: 3px 3px 0 0;
   &:hover {
-    background-color: rgb(0, 120, 0);
-    color: rgb(240, 240, 240);
+    background-color: rgb(242, 242, 242);
   }
 `
+
+const LeftPadding = styled.div`
+margin: 0 0.5rem;
+width: 0.75rem;
+display: flex;
+align-items: center;
+justify-content: center;
+`
+
+const TextContainer = styled.span``
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetCreateRows
+export default SheetRowContextMenuCreateRows

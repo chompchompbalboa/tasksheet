@@ -13,6 +13,8 @@ import {
   deleteSheetRow
 } from '@app/state/sheet/actions'
 
+import SheetRowContextMenuCreateRows from '@app/bundles/sheet/SheetRowContextMenuCreateRows'
+
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
@@ -36,10 +38,13 @@ const SheetRowContextMenu = ({
       closeContextMenu={closeContextMenu}
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}>
+      <SheetRowContextMenuCreateRows
+        sheetId={sheetId}
+        closeOnClick={closeOnClick}/>
+      <ContextMenuDivider />
       <ContextMenuItem 
         text="Delete Row"
         onClick={() => closeOnClick(() => dispatch(deleteSheetRow(sheetId, rowId)))}/>
-      <ContextMenuDivider />
     </ContextMenu>
   )
 }

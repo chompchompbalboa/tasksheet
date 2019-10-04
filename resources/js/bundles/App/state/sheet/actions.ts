@@ -431,37 +431,62 @@ export const createSheetGroup = (sheetId: string, newGroup: ISheetGroup): IThunk
 //-----------------------------------------------------------------------------
 // Create Sheet Row
 //-----------------------------------------------------------------------------
-export const createSheetRow = (sheetId: string, sourceSheetId: string): IThunkAction => {
+export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, insertBeforeRowId: ISheetRow['id']): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
+
+    dispatch(clearSheetSelection(sheetId))
+    
     const {
       allSheets,
       allSheetCells,
       allSheetRows,
     } = getState().sheet
+
+    // Get sheet
     const sheet = allSheets[sheetId]
-    const newRow = defaultRow(sourceSheetId !== null ? sourceSheetId : sheetId, createUuid(), sheet.columns)
     const nextAllSheetCells = { ...allSheetCells }
-    Object.keys(newRow.cells).forEach((columnId: string, index: number) => {
-      const cellId = newRow.cells[columnId]
-      nextAllSheetCells[cellId] = defaultCell(sheetId, newRow.id, sheet.columns[index], cellId)
-    })
-    const nextAllSheetRows = { ...allSheetRows, [newRow.id]: newRow }
-    const nextSheetRows = [ ...sheet.rows, newRow.id ]
-    const nextSheetVisibleRows = [ newRow.id, ...sheet.visibleRows ]
+    const nextAllSheetRows = { ...allSheetRows }
+    const nextSheetRows = [ ...sheet.rows ] 
+    let nextSheetVisibleRows = [ ...sheet.visibleRows ]
+
+    const insertBeforeRowIdVisibleRowsIndex = nextSheetVisibleRows.indexOf(insertBeforeRowId)
+    const newRowSheetId = sheet.sourceSheetId !== null ? sheet.sourceSheetId : sheetId
+
+    for(let i = 0; i < numberOfRowsToAdd; i++) {
+      const newRow = defaultRow(newRowSheetId, createUuid(), sheet.columns)
+      Object.keys(newRow.cells).forEach((columnId: string, index: number) => {
+        const cellId = newRow.cells[columnId]
+        nextAllSheetCells[cellId] = defaultCell(sheetId, newRow.id, sheet.columns[index], cellId)
+      })
+      nextAllSheetRows[newRow.id] = newRow
+      nextSheetRows.push(newRow.id)
+      nextSheetVisibleRows.splice(insertBeforeRowIdVisibleRowsIndex + i, 0, newRow.id)
+    }
     const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
-    batch(() => {
-      dispatch(setAllSheetRows(nextAllSheetRows))
-      dispatch(setAllSheetCells(nextAllSheetCells))
-      dispatch(updateSheetReducer(sheetId, {
-        rowLeaders: nextSheetRowLeaders,
-        rows: nextSheetRows,
-        visibleRows: nextSheetVisibleRows
-      }))
-    })
-    mutation.createSheetRow({
-      ...newRow,
-      cells: Object.keys(newRow.cells).map(columnId => nextAllSheetCells[newRow.cells[columnId]])
-    })
+    const actions = () => {
+      batch(() => {
+        dispatch(setAllSheetRows(nextAllSheetRows))
+        dispatch(setAllSheetCells(nextAllSheetCells))
+        dispatch(updateSheetReducer(sheetId, {
+          rowLeaders: nextSheetRowLeaders,
+          rows: nextSheetRows,
+          visibleRows: nextSheetVisibleRows
+        }))
+      })
+    }
+    const undoActions = () => {
+      batch(() => {
+        dispatch(setAllSheetRows(allSheetRows))
+        dispatch(setAllSheetCells(allSheetCells))
+        dispatch(updateSheetReducer(sheetId, {
+          rowLeaders: sheet.rowLeaders,
+          rows: sheet.rows,
+          visibleRows: sheet.visibleRows
+        }))
+      })
+    }
+    dispatch(createHistoryStep({ actions, undoActions }))
+    actions()
 	}
 }
 
