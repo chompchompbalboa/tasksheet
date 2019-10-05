@@ -48,12 +48,14 @@ class SheetController extends Controller
     // Create the rows and cells
     $newRows = [];
     $newCells = [];
-    for($rowNumber = 0; $rowNumber <= 5; $rowNumber++) {
+    $defaultVisibleRows = [];
+    for($rowNumber = 0; $rowNumber < 5; $rowNumber++) {
       $newRowId = Str::uuid()->toString();
       array_push($newRows, [ 
         'id' => $newRowId,
-        'sheetId' => $newSheet->id 
+        'sheetId' => $newSheet->id
       ]);
+      array_push($defaultVisibleRows, $newRowId);
       foreach($newColumns as $index => $column) {
         array_push($newCells, [
           'id' => Str::uuid()->toString(),
@@ -68,6 +70,7 @@ class SheetController extends Controller
     SheetRow::insert($newRows);
     SheetCell::insert($newCells);
     $newSheet->visibleColumns = $visibleColumns;
+    $newSheet->defaultVisibleRows = $defaultVisibleRows;
     $newSheet->save();
     return response()->json(null, 200);
   }
@@ -138,8 +141,10 @@ class SheetController extends Controller
       // Create the rows and cells
       $newSheetRows = [];
       $newSheetCells = [];
+      $defaultVisibleRows = [];
       foreach($arrayOfRows as $rowFromCsv) {
         $newRowId = Str::uuid()->toString();
+        array_push($defaultVisibleRows, $newRowId);
         array_push($newSheetRows, [ 
           'id' => $newRowId,
           'sheetId' => $newSheet->id 
@@ -162,6 +167,7 @@ class SheetController extends Controller
       // Insert into db
       $newSheetColumns = SheetColumn::insert($columns);
       $newSheet->visibleColumns = $visibleColumns;
+      $newSheet->defaultVisibleRows = $defaultVisibleRows;
       $newSheet->save();
       foreach (array_chunk($newSheetRows, 2500) as $chunk) {
         SheetRow::insert($chunk);

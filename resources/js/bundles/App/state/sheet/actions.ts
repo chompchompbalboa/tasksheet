@@ -448,12 +448,15 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
     const nextAllSheetRows = { ...allSheetRows }
     const nextSheetRows = [ ...sheet.rows ] 
     const nextSheetVisibleRows = [ ...sheet.visibleRows ]
+    const nextSheetDefaultVisibleRows = [ ...sheet.defaultVisibleRows ]
     const newRowsToDatabase: ISheetRowToDatabase[] = []
     const newRowIds: ISheetRow['id'][] = []
 
     const insertBeforeRowIdVisibleRowsIndex = nextSheetVisibleRows.indexOf(insertBeforeRowId)
+    const insertBeforeRowIdDefaultVisibleRowsIndex = nextSheetDefaultVisibleRows.indexOf(insertBeforeRowId)
+    console.log(insertBeforeRowIdDefaultVisibleRowsIndex)
     const newRowSheetId = sheet.sourceSheetId !== null ? sheet.sourceSheetId : sheetId
-
+          
     for(let i = 0; i < numberOfRowsToAdd; i++) {
       const newRow = defaultRow(newRowSheetId, createUuid(), sheet.columns)
       const newRowCellsToDatabase: ISheetCell[] = []
@@ -465,6 +468,7 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
       })
       nextAllSheetRows[newRow.id] = newRow
       nextSheetRows.push(newRow.id)
+      nextSheetDefaultVisibleRows.splice(insertBeforeRowIdDefaultVisibleRowsIndex + i, 0, newRow.id)
       nextSheetVisibleRows.splice(insertBeforeRowIdVisibleRowsIndex + i, 0, newRow.id)
       const newRowToDatabase = {
         ...newRow,
@@ -473,15 +477,17 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
       newRowsToDatabase.push(newRowToDatabase)
       newRowIds.push(newRow.id)
     }
+    
     const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
     const actions = () => {
       batch(() => {
         dispatch(setAllSheetRows(nextAllSheetRows))
         dispatch(setAllSheetCells(nextAllSheetCells))
-        dispatch(updateSheetReducer(sheetId, {
+        dispatch(updateSheet(sheetId, {
           rowLeaders: nextSheetRowLeaders,
           rows: nextSheetRows,
-          visibleRows: nextSheetVisibleRows
+          visibleRows: nextSheetVisibleRows,
+          defaultVisibleRows: nextSheetDefaultVisibleRows
         }))
         mutation.createSheetRows(newRowsToDatabase)
       })
@@ -490,10 +496,11 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
       batch(() => {
         dispatch(setAllSheetRows(allSheetRows))
         dispatch(setAllSheetCells(allSheetCells))
-        dispatch(updateSheetReducer(sheetId, {
+        dispatch(updateSheet(sheetId, {
           rowLeaders: sheet.rowLeaders,
           rows: sheet.rows,
-          visibleRows: sheet.visibleRows
+          visibleRows: sheet.visibleRows,
+          defaultVisibleRows: sheet.defaultVisibleRows
         }))
         mutation.deleteSheetRows(newRowIds)
       })
@@ -587,6 +594,7 @@ export const createSheetView = (sheetId: string, viewName: string): IThunkAction
       {
         id: newSheetViewId,
         sourceSheetId: sourceSheet.id,
+        defaultVisibleRows: sourceSheet.defaultVisibleRows,
         fileType: sourceSheet.fileType,
         columns: clone(sourceSheet.columns),
         filters: newSheetViewFilters,
@@ -874,11 +882,13 @@ export const deleteSheetRow = (sheetId: string, rowId: ISheetRow['id']): IThunkA
     const cellsForUndoActionsDatabaseUpdate = Object.keys(sheetRow.cells).map(columnId => allSheetCells[sheetRow.cells[columnId]])
     const nextSheetRows = sheet.rows.filter(sheetRowId => sheetRowId !== rowId)
     const nextSheetVisibleRows = sheet.visibleRows.filter(visibleRowId => visibleRowId !== rowId)
+    const nextSheetDefaultVisibleRows = sheet.defaultVisibleRows.filter(visibleRowId => visibleRowId !== rowId)
     
     const actions = () => {
       batch(() => {
-        dispatch(updateSheetReducer(sheetId, {
+        dispatch(updateSheet(sheetId, {
           rows: nextSheetRows,
+          defaultVisibleRows: nextSheetDefaultVisibleRows,
           visibleRows: nextSheetVisibleRows
         }))
       })
@@ -887,8 +897,9 @@ export const deleteSheetRow = (sheetId: string, rowId: ISheetRow['id']): IThunkA
     
     const undoActions = () => {
       batch(() => {
-        dispatch(updateSheetReducer(sheetId, {
+        dispatch(updateSheet(sheetId, {
           rows: sheet.rows,
+          defaultVisibleRows: sheet.defaultVisibleRows,
           visibleRows: sheet.visibleRows
         }))
         mutation.createSheetRows([{
@@ -942,6 +953,7 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
     // Rows and cells
     const normalizedRows: IAllSheetRows = {}
     const normalizedCells: IAllSheetCells = {}
+    const sheetRows: ISheetColumn['id'][] = []
     sheetFromDatabase.rows.forEach(row => { 
       let rowCells: { [columnId: string]: ISheetCell['id'] }  = {}
       row.cells.forEach(cell => {
@@ -953,6 +965,7 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         rowCells[cell.columnId] = cell.id
       })
       normalizedRows[row.id] = { id: row.id, sheetId: sheetFromDatabase.id, cells: rowCells}
+      sheetRows.push(row.id)
     })
     // Columns
     const normalizedColumns: IAllSheetColumns = {}
@@ -982,17 +995,17 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       normalizedSorts[sort.id] = sort 
       sheetSorts.push(sort.id)
     })
-    console.log(sheetFromDatabase.rows)
     // New Sheet
     const newSheet: ISheet = {
       id: sheetFromDatabase.id,
       sourceSheetId: sheetFromDatabase.sourceSheetId,
+      defaultVisibleRows: sheetFromDatabase.defaultVisibleRows.filter(visibleRowId => sheetRows.includes(visibleRowId)),
       fileType: sheetFromDatabase.fileType,
       columns: sheetColumns,
       filters: sheetFilters,
       groups: sheetGroups,
       rowLeaders: null,
-      rows: sheetFromDatabase.rows.map(row => row.id),
+      rows: sheetRows,
       sorts: sheetSorts,
       visibleColumns: sheetFromDatabase.visibleColumns !== null ? sheetFromDatabase.visibleColumns.filter(visibleColumnId => sheetColumns.includes(visibleColumnId) || visibleColumnId === 'COLUMN_BREAK') : sheetColumns,
       visibleRows: null,

@@ -16,7 +16,6 @@ class CreateSheetRow extends Migration
         Schema::create('sheetRows', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('sheetId')->nullable();
-            $table->float('width')->nullable();
             $table->timestamps();
 
             $table->foreign('sheetId')->references('id')->on('sheets');

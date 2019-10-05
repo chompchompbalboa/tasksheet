@@ -11,11 +11,12 @@ class Sheet extends Model
   /**
    * Define which attributes will be visible
    */
-  protected $visible = ['id', 'sourceSheetId', 'fileType', 'rows', 'columns', 'filters', 'groups', 'sorts', 'styles', 'visibleColumns'];
-  protected $fillable = ['id', 'sourceSheetId', 'visibleColumns'];
+  protected $visible = ['id', 'sourceSheetId', 'fileType', 'rows', 'columns', 'filters', 'groups', 'sorts', 'styles', 'visibleColumns', 'defaultVisibleRows'];
+  protected $fillable = ['id', 'sourceSheetId', 'visibleColumns', 'defaultVisibleRows'];
   protected $with = ['filters', 'groups', 'sorts'];
   protected $appends = ['columns', 'rows', 'fileType', 'styles'];
   protected $casts = [
+    'defaultVisibleRows' => 'array',
     'visibleColumns' => 'array'
   ];
   
@@ -52,8 +53,9 @@ class Sheet extends Model
    */
   public function getRowsAttribute() {
     $sheetId = is_null($this->sourceSheetId) ? $this->id : $this->sourceSheetId;
-    return SheetRow::where('sheetId', '=', $sheetId)
+    $rows = SheetRow::where('sheetId', '=', $sheetId)
     ->get();
+    return $rows;
   }
   
   /**

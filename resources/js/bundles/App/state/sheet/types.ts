@@ -36,6 +36,7 @@ export interface ISheetClipboardSelections {
 export interface ISheet {
   id: string
   sourceSheetId: ISheet['id']
+  defaultVisibleRows: ISheetRow['id'][]
   fileType: IFileType
 	rows: ISheetRow['id'][]
   visibleRows: ISheetRow['id'][]
@@ -49,6 +50,7 @@ export interface ISheet {
   selections: ISheetSelections
 }
 export interface ISheetUpdates {
+  defaultVisibleRows?: ISheetRow['id'][]
   rows?: ISheetRow['id'][]
   visibleRows?: ISheetRow['id'][]
   columns?: ISheetColumn['id'][]
@@ -100,6 +102,7 @@ export interface ISheetStylesDatabaseUpdates {
 export interface ISheetFromDatabase {
   id: string
   sourceSheetId: string
+  defaultVisibleRows: ISheetRow['id'][]
   fileType: IFileType
   columns: ISheetColumn[]
   visibleColumns: ISheetColumn['id'][]

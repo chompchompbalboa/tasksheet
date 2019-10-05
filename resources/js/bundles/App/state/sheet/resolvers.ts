@@ -58,6 +58,10 @@ export const resolveSheetVisibleRows = (sheet: ISheet, rows: IAllSheetRows, cell
   const filterIds: string[] = sheet.filters
   const groupIds: string[] = sheet.groups
   const sortIds: string[] = sheet.sorts
+  
+  if(filterIds.length === 0 && groupIds.length === 0 && sortIds.length === 0) {
+    return sheet.defaultVisibleRows
+  }
 
   // Filter
   const filteredRowIds: string[] = !filters ? rowIds : rowIds.map(rowId => {

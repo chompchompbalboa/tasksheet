@@ -12,7 +12,7 @@ class SheetRow extends Model
 
   protected $table = 'sheetRows';
 
-  protected $visible = ['id', 'cells', 'created_at'];
+  protected $visible = ['id', 'cells'];
   protected $fillable = ['id', 'sheetId'];
   protected $appends = ['cells'];
   
