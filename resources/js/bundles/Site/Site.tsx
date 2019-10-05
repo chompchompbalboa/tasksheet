@@ -73,7 +73,7 @@ const Site = () => {
       <Header>tracksheet</Header>
       <Content>
         <Name>tracksheet</Name>
-        <Motto>The spreadsheet built for keeping track of anything and everything</Motto>
+        <Motto>Keep track of anything and everything</Motto>
         <Divider />
         <LoginRegisterContainer>
           {isLoginOrRegister === 'REGISTER' && registerStatus !== 'REGISTERED' &&
