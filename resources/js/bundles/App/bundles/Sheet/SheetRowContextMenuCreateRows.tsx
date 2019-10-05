@@ -2,11 +2,13 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { IAppState } from '@app/state'
-import { ISheet } from '@app/state/sheet/types'
+import { 
+  ISheet, 
+  ISheetRow 
+} from '@app/state/sheet/types'
 import {  
   allowSelectedCellEditing,
   allowSelectedCellNavigation,
@@ -22,12 +24,11 @@ import AutosizeInput from 'react-input-autosize'
 //-----------------------------------------------------------------------------
 const SheetRowContextMenuCreateRows = ({
   sheetId,
+  sheetRowId,
   closeOnClick
 }: ISheetRowContextMenuCreateRowsProps) => {
 
   const dispatch = useDispatch()
-
-  const sheetVisibleRows = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleRows)
 
   const localStorageKey = 'tracksheet.SheetRowContextMenuCreateRows.inputValue'
   const [ inputValue, setInputValue ] = useState(Number(localStorage.getItem(localStorageKey)) || 1)
@@ -37,7 +38,7 @@ const SheetRowContextMenuCreateRows = ({
     closeOnClick(() => {
       dispatch(allowSelectedCellEditing(sheetId))
       dispatch(allowSelectedCellNavigation(sheetId))
-      dispatch(createSheetRows(sheetId, inputValue, sheetVisibleRows[0]))
+      dispatch(createSheetRows(sheetId, inputValue, sheetRowId))
     })
   }
   
@@ -86,6 +87,7 @@ const SheetRowContextMenuCreateRows = ({
 //-----------------------------------------------------------------------------
 interface ISheetRowContextMenuCreateRowsProps {
   sheetId: ISheet['id']
+  sheetRowId: ISheetRow['id']
   closeOnClick(...args: any): void
 }
 

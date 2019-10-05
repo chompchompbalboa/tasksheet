@@ -40,6 +40,7 @@ const SheetRowContextMenu = ({
       contextMenuLeft={contextMenuLeft}>
       <SheetRowContextMenuCreateRows
         sheetId={sheetId}
+        sheetRowId={rowId}
         closeOnClick={closeOnClick}/>
       <ContextMenuDivider />
       <ContextMenuItem 
