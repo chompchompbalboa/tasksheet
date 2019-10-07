@@ -2,55 +2,35 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { SAVE_SHEET_VIEW } from '@app/assets/icons' 
 
 import { IAppState } from '@app/state'
-import { IThunkDispatch } from '@app/state/types'
-import { 
-  updateIsSavingNewFile as updateIsSavingNewFileAction
- } from '@app/state/folder/actions'
- import { 
-   createSheetView as createSheetViewAction
-  } from '@app/state/sheet/actions'
-import { 
-  updateActiveTab as updateActiveTabAction
- } from '@app/state/tab/actions'
- import { selectUserColorPrimary } from '@app/state/user/selectors'
+import { updateIsSavingNewFile } from '@app/state/folder/actions'
+import { createSheetView } from '@app/state/sheet/actions'
+import { updateActiveTab } from '@app/state/tab/actions'
 
 import Icon from '@/components/Icon'
 
 //-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapStateToProps = (state: IAppState) => ({
-  userColorPrimary: selectUserColorPrimary(state)
-})
-
-const mapDispatchToProps = (dispatch: IThunkDispatch) => ({
-  createSheetView: (sheetId: string, newViewName: string) => dispatch(createSheetViewAction(sheetId, newViewName)),
-  updateIsSavingNewFile: (nextIsSavingNewFile: boolean, onFileSave: () => void) => dispatch(updateIsSavingNewFileAction(nextIsSavingNewFile, onFileSave)),
-  updateActiveTab: (nextActiveTabId: string) => dispatch(updateActiveTabAction(nextActiveTabId))
-})
-//-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetActionSaveView = ({
-  createSheetView,
-  sheetId,
-  updateIsSavingNewFile,
-  updateActiveTab,
-  userColorPrimary,
+  sheetId
 }: SheetActionSaveViewProps) => {
 
+  const dispatch = useDispatch()
+
+  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
+
   const handleClick = () => {
-    updateActiveTab('FOLDERS')
-    updateIsSavingNewFile(true, (newViewName: string) => {
-      createSheetView(sheetId, newViewName)
-      updateIsSavingNewFile(false, null)
-    })
+    dispatch(updateActiveTab('FOLDERS'))
+    dispatch(updateIsSavingNewFile(true, (newViewName: string) => {
+      dispatch(createSheetView(sheetId, newViewName))
+      dispatch(updateIsSavingNewFile(false, null))
+    }))
   }
 
   return (
@@ -69,10 +49,6 @@ const SheetActionSaveView = ({
 //-----------------------------------------------------------------------------
 interface SheetActionSaveViewProps {
   sheetId: string
-  createSheetView(sheetId: string, newViewName: string): void
-  updateIsSavingNewFile(nextIsSavingNewFile: boolean, onFileSave: (...args: any) => void): void
-  updateActiveTab(nextActiveTabId: string): void
-  userColorPrimary: string
 }
 
 //-----------------------------------------------------------------------------
@@ -100,7 +76,4 @@ interface ContainerProps {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SheetActionSaveView)
+export default SheetActionSaveView

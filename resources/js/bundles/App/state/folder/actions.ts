@@ -324,7 +324,7 @@ interface IUpdateIsSavingNewFile {
   onFileSave: () => void
 }
 
-export const updateIsSavingNewFile = (nextIsSavingNewFile: boolean, onFileSave: () => void): IFolderActions => {
+export const updateIsSavingNewFile = (nextIsSavingNewFile: boolean, onFileSave: (...args: any) => void): IFolderActions => {
 	return {
 		type: UPDATE_IS_SAVING_NEW_FILE,
     nextIsSavingNewFile,

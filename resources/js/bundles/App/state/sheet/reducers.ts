@@ -1,6 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
+import defaultInitialData from '@app/state/initialData'
 import { 
   IAllSheets, 
   IAllSheetColumns,
@@ -45,8 +46,14 @@ export interface ISheetState {
 //-----------------------------------------------------------------------------
 // Default State
 //-----------------------------------------------------------------------------
-const columnTypesFromServer = initialData && initialData.columnTypes ? initialData.columnTypes : {}
-export const defaultSheetState: ISheetState = {
+const columnTypesFromServer: IAllSheetColumnTypes = 
+  typeof initialData !== 'undefined'
+    ? initialData.columnTypes !== undefined
+      ? initialData.columnTypes
+      : {}
+    : defaultInitialData.columnTypes
+
+export const initialSheetState: ISheetState = {
   allSheets: null,
   allSheetColumns: null,
   allSheetCells: null,
@@ -124,7 +131,7 @@ export const defaultSheetState: ISheetState = {
 //-----------------------------------------------------------------------------
 // Reducers
 //-----------------------------------------------------------------------------
-export const userReducer = (state: ISheetState = defaultSheetState, action: ISheetActions): ISheetState => {
+export const userReducer = (state: ISheetState = initialSheetState, action: ISheetActions): ISheetState => {
 
 	switch (action.type) {
     

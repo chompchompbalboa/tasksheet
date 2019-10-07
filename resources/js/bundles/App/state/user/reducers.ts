@@ -12,7 +12,7 @@ import {
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
-export const initialUserState: IUser = initialData !== undefined ? initialData.user : defaultInitialData.user
+export const initialUserState: IUser = typeof initialData !== 'undefined' ? initialData.user : defaultInitialData.user
 
 //-----------------------------------------------------------------------------
 // Reducers

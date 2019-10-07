@@ -28,16 +28,16 @@ import SheetGrid from '@app/bundles/Sheet/SheetGrid'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetComponent = memo(({
+export const Sheet = memo(({
   fileId,
   id: sheetId,
-}: SheetComponentProps) => {
+}: ISheetProps) => {
 
   const dispatch = useDispatch()
 
   const activeTab = useSelector((state: IAppState) => state.tab.activeTab)
   const sourceSheetId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].sourceSheetId)
-  
+
   const isActiveFile = fileId === activeTab
 
   const [ hasLoaded, setHasLoaded ] = useState(false)
@@ -113,8 +113,10 @@ const SheetComponent = memo(({
   }
 
   return (
-    <Container>
-      <SheetContainer>
+    <Container
+      data-testid="container">
+      <SheetContainer
+        data-testid="sheetContainer">
         <SheetContextMenus
           sheetId={sheetId}
           isContextMenuVisible={isContextMenuVisible}
@@ -142,7 +144,7 @@ const SheetComponent = memo(({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetComponentProps {
+export interface ISheetProps {
   fileId: IFile['id']
   id: ISheet['id']
 }
@@ -166,4 +168,4 @@ const SheetContainer = styled.div`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetComponent
+export default Sheet

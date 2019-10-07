@@ -1,5 +1,5 @@
-import { IFile, IFolder } from '@app/state/folder/types'
 import { IUser, IUserActive, IUserColor } from '@app/state/user/types'
+import { IAllSheetColumnTypes } from './sheet/types'
 
 const initalData: IInitialData = {
 	user: <IUser>{
@@ -20,11 +20,11 @@ const initalData: IInitialData = {
 		{
 			id: 'uuid',
 			name: 'name',
-			folders: <IFolder[]>[],
-			files: <IFile[]>[],
+			folders: <string[]>[],
+			files: <string[]>[],
 		},
   ],
-  columnTypes: []
+  columnTypes: <IAllSheetColumnTypes>{}
 }
 
 export default initalData

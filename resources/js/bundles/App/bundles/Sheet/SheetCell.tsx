@@ -29,7 +29,7 @@ import SheetCellString from '@app/bundles/Sheet/SheetCellString'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetCell = memo(({
+export const SheetCell = memo(({
   sheetId,
   cellId,
   columnType,
@@ -93,6 +93,7 @@ const SheetCell = memo(({
   return (
     <>
       <Container
+        data-testid="Container"
         ref={cellContainer}
         cellId={cellId}
         highlightColor={userColorSecondary}
@@ -102,6 +103,7 @@ const SheetCell = memo(({
         sheetStyles={sheetStyles}
         style={style}>
         <SheetRange
+          data-testid="SheetRange"
           isCellInRange={isCellInRange}
           highlightColor={userColorSecondary}/>
         <SheetCellType
@@ -120,7 +122,7 @@ const SheetCell = memo(({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface ISheetCellProps {
+export interface ISheetCellProps {
   sheetId: string
   cellId: ISheetCell['id']
   columnType: ISheetColumnType

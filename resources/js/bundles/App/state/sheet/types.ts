@@ -82,6 +82,15 @@ export interface ISheetStyles {
   bold: Set<string>
   italic: Set<string>
 }
+export interface ISheetStylesFromDatabase {
+  id: string
+  backgroundColor: string[]
+  backgroundColorReference: { [cellId: string]: string }
+  color: string[]
+  colorReference: { [cellId: string]: string }
+  bold: string[]
+  italic: string[]
+}
 export interface ISheetStylesUpdates {
   backgroundColor?: Set<string>
   backgroundColorReference?: { [cellId: string]: string }
@@ -110,7 +119,7 @@ export interface ISheetFromDatabase {
   groups: ISheetGroup[]
   rows: ISheetFromDatabaseRow[]
   sorts: ISheetSort[]
-  styles: ISheetStyles
+  styles: ISheetStylesFromDatabase
 }
 export interface ISheetFromDatabaseRow {
 	id: string

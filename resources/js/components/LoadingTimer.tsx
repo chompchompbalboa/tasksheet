@@ -24,7 +24,8 @@ const LoadingTimer = ({
   }, 10)
   
   return (
-    <Container>
+    <Container
+      data-testid="loadingTimerContainer">
       <Time>{(time / 1000).toFixed(2)} seconds</Time>
     </Container>
   )

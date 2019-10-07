@@ -48,10 +48,10 @@ export const updateSheetSelectionFromCellClick = (sheetId: string, cellId: strin
       })
     }
 
-    if(!isShiftClicked) {
+    if(!isShiftClicked || selections.rangeStartCellId === null) {
       selectCell()
     }
-    else if(isShiftClicked) {
+    if(isShiftClicked) {
       // Range start and end column and row indexes
       const cellColumnIndex = visibleColumns.indexOf(cell.columnId)
       const cellRowIndex = visibleRows.indexOf(cell.rowId)

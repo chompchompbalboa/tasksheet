@@ -24,11 +24,10 @@ import {
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
-const normalizedFolders = normalizer(
-	typeof initialData !== 'undefined' ? initialData.folders : defaultInitialData.folders
-)
-export const initialFoldersState: IFolderState = {
-  activeFolderPath: [initialData.folders[0].id],
+const initialFolderData = typeof initialData !== 'undefined' ? initialData.folders : defaultInitialData.folders
+const normalizedFolders = normalizer(initialFolderData)
+export const initialFolderState: IFolderState = {
+  activeFolderPath: [initialFolderData[0].id],
   clipboard: { itemId: null, cutOrCopy: null, folderOrFile: null },
 	folders: <IFolders>normalizedFolders.entities.folder,
   files: <IFiles>normalizedFolders.entities.file,
@@ -49,7 +48,7 @@ export type IFolderState = {
 //-----------------------------------------------------------------------------
 // Reducers
 //-----------------------------------------------------------------------------
-export const folderReducer = (state = initialFoldersState, action: IFolderActions): IFolderState => {
+export const folderReducer = (state = initialFolderState, action: IFolderActions): IFolderState => {
 	switch (action.type) {
 
     case CREATE_FILE: {
