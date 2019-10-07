@@ -18,16 +18,16 @@ variables:
 #-------------------------------------------------------------------------------
 composer:
   stage: build
-  scripts:
+  script:
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
   artifacts:
     expire_in: 1 month
     paths:
       - vendor/
-    cache:
-      key: ${CI_COMMIT_REF_SLUG}-composer
-      paths:
-        - vendor/
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-composer
+    paths:
+      - vendor/
 
 npm:
   stage: build
