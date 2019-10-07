@@ -1,0 +1,53 @@
+#-------------------------------------------------------------------------------
+# Setup
+#-------------------------------------------------------------------------------
+# Reference article (last referenced 10/7/19):
+# https://lorisleiva.com/laravel-deployment-using-gitlab-pipelines/
+
+image: lorisleiva/laravel-docker:latest
+
+stages:
+    - build
+    - test
+    
+variables:
+  VAPOR_API_TOKEN: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMWM1NmJlZmJmOWEzOTk1OWI1ZTMyYjFlZjVmMTEyNTlmZjAwMDhjOWIxY2Q0ZTdhM2FlODBkNmY0MDAzZTQ2ZWMwYzk4ZjVhYzg0ZTc2YmQiLCJpYXQiOjE1NzA0NzkyNzQsIm5iZiI6MTU3MDQ3OTI3NCwiZXhwIjoxNjAyMTAxNjc0LCJzdWIiOiIyNTI4Iiwic2NvcGVzIjpbIioiXX0.Rgcj16cNEG5RU6771yYzOAmpubkew-zyfNbrION4vGByi340hdIKRwRR5dKpyS93KB0gQWapVw3Tm4I1WPB7fv8MbgjIH4FdNEqZVBaf-TxKUgX67H9DBSrqrcUei8jSCcuON1PImi_8qRkVegfI9a_t3DU0tYcj41GvUT2xZZW4xR5q18e9D2cZVL0Pd-WPo9RbXJILki3q_SWTqRskTwg3Ju1va5lIxhUXRpz7W1QMXAKLDscc0Bi6syrRBZgB4JdW4Y6lbmQ4ZDA6eBQ2xllfCRrVCX70yXqr2wPKcFuSy0Alt1l778kfSOnCsdpwueh266OWQHizNoIW_N-dmhmGA3mRAOtzjbw7nb81Bc1NLMWKp5cxHlHFT7VulDDcAnwkjMY8_KwbgpHGpzgM-_zuCXP-9ABjzARgxQiqCySZ3n9tI36nYBIAcvFQMHncNWFk_BSxuvh1v23zRrCld0roV1ZV0yQtILdXKOefh_-eOHAxR6Sx97ScbMTReZDvaFJnfhrPz2sY6_hcFV8zM1xM6e--HTb9GJGLoBiCwhQPUXtpraYw1PVfqMS6wEF_Cttwt76-RTCDL2ycPDBBFg9chHQrdFmlwcFFipQlUwXjv3OCoxJtYkz8gN1FE5NBuEJvbD6L6M7WkX7h5uZEMdK8EaQEJu_esKKVg5pEF-A"
+#-------------------------------------------------------------------------------
+# Build
+#-------------------------------------------------------------------------------
+npm:
+  stage: build
+  
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-npm
+    paths:
+      - node_modules/
+
+  script:
+      - npm install
+      - npm run production
+
+  artifacts:
+    expire_in: 1 month
+    paths:
+      - node_modules/
+      - public/css/
+      - public/js/
+
+#-------------------------------------------------------------------------------
+# Test
+#-------------------------------------------------------------------------------
+jest: 
+    stage: test
+    
+    script:
+        - npm test
+        
+#-------------------------------------------------------------------------------
+# Deploy
+#-------------------------------------------------------------------------------
+vapor:
+    stage: deploy
+
+    script:
+        - vapor deploy staging
