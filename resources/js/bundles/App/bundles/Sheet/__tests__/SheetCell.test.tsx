@@ -134,11 +134,8 @@ describe('SheetCell', () => {
     ,{ store: createMockStore(mockAppState) })
 
     const R1C2Container = getAllByTestId('Container')[0]
-    const R1C2SheetRange = getAllByTestId('SheetRange')[0]
     const R2C1Container = getAllByTestId('Container')[1]
-    const R2C1SheetRange = getAllByTestId('SheetRange')[1]
     const R2C2Container = getAllByTestId('Container')[2]
-    const R2C2SheetRange = getAllByTestId('SheetRange')[2]
 
     fireEvent.mouseDown(R2C2Container)
     expect(R2C2Container).toHaveStyleRule('box-shadow', cellIsSelectedBoxShadow)
