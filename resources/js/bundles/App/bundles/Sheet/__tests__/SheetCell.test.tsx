@@ -11,7 +11,7 @@ import { createMockStore, mockAppState } from '@app/testing/mocks'
 import { SheetCell, ISheetCellProps } from '@app/bundles/Sheet/SheetCell'
 
 //-----------------------------------------------------------------------------
-// Mocks / Setup
+// Setup
 //-----------------------------------------------------------------------------
 const {
   folder: {
@@ -61,7 +61,6 @@ const getCellAndCellPropsByRowAndColumn = (rowIndexPlusOne: number, columnIndexP
     columnType: columnType,
     style: {}
   }
-
   return {
     cell,
     props
@@ -93,6 +92,72 @@ describe('SheetCell', () => {
     expect(getByTestId('Container')).toHaveStyleRule('box-shadow', 'none')
     fireEvent.mouseDown(getByTestId('Container'))
     expect(getByTestId('Container')).toHaveStyleRule('box-shadow', cellIsSelectedBoxShadow)
+  })
+
+  it("when another cell is clicked, changes the selected cell to the clicked cell", async () => {
+    const { props: R1C1CellProps } = getCellAndCellPropsByRowAndColumn(1, 1)
+    const { props: R2C2CellProps } = getCellAndCellPropsByRowAndColumn(2, 2)
+
+    const { getAllByTestId } = renderWithRedux(
+      <>
+        <SheetCell {...R1C1CellProps}/>
+        <SheetCell {...R2C2CellProps}/>
+      </>
+    ,{ store: createMockStore(mockAppState) })
+
+    const R1C1Container = getAllByTestId('Container')[0]
+    const R2C2Container = getAllByTestId('Container')[1]
+    
+    expect(R1C1Container).toHaveStyleRule('box-shadow', 'none')
+    expect(R2C2Container).toHaveStyleRule('box-shadow', 'none')
+
+    fireEvent.mouseDown(R1C1Container)
+    expect(R1C1Container).toHaveStyleRule('box-shadow', cellIsSelectedBoxShadow)
+    expect(R2C2Container).toHaveStyleRule('box-shadow', 'none')
+    
+    fireEvent.mouseDown(R2C2Container)
+    expect(R1C1Container).toHaveStyleRule('box-shadow', 'none')
+    expect(R2C2Container).toHaveStyleRule('box-shadow', cellIsSelectedBoxShadow)
+  })
+
+  it("changes the selected cell in response to the arrow keys", async () => {
+    const { props: R1C2CellProps } = getCellAndCellPropsByRowAndColumn(1, 2)
+    const { props: R2C1CellProps } = getCellAndCellPropsByRowAndColumn(2, 1)
+    const { props: R2C2CellProps } = getCellAndCellPropsByRowAndColumn(2, 2)
+
+    const { getAllByTestId } = renderWithRedux(
+      <>
+        <SheetCell {...R1C2CellProps}/>
+        <SheetCell {...R2C1CellProps}/>
+        <SheetCell {...R2C2CellProps}/>
+      </>
+    ,{ store: createMockStore(mockAppState) })
+
+    const R1C2Container = getAllByTestId('Container')[0]
+    const R1C2SheetRange = getAllByTestId('SheetRange')[0]
+    const R2C1Container = getAllByTestId('Container')[1]
+    const R2C1SheetRange = getAllByTestId('SheetRange')[1]
+    const R2C2Container = getAllByTestId('Container')[2]
+    const R2C2SheetRange = getAllByTestId('SheetRange')[2]
+
+    fireEvent.mouseDown(R2C2Container)
+    expect(R2C2Container).toHaveStyleRule('box-shadow', cellIsSelectedBoxShadow)
+
+    fireEvent.keyDown(R2C2Container, { key: 'ArrowLeft'})
+    expect(R2C2Container).toHaveStyleRule('box-shadow', 'none')
+    expect(R2C1Container).toHaveStyleRule('box-shadow', cellIsSelectedBoxShadow)
+
+    fireEvent.keyDown(R2C1Container, { key: 'ArrowRight'})
+    expect(R2C1Container).toHaveStyleRule('box-shadow', 'none')
+    expect(R2C2Container).toHaveStyleRule('box-shadow', cellIsSelectedBoxShadow)
+
+    fireEvent.keyDown(R2C2Container, { key: 'ArrowUp'})
+    expect(R2C2Container).toHaveStyleRule('box-shadow', 'none')
+    expect(R1C2Container).toHaveStyleRule('box-shadow', cellIsSelectedBoxShadow)
+
+    fireEvent.keyDown(R1C2Container, { key: 'ArrowDown'})
+    expect(R1C2Container).toHaveStyleRule('box-shadow', 'none')
+    expect(R2C2Container).toHaveStyleRule('box-shadow', cellIsSelectedBoxShadow)
   })
 
   it("selects a range when shift-clicked", async () => {
