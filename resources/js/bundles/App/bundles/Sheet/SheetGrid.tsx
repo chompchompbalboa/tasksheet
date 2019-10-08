@@ -89,8 +89,7 @@ const SheetGrid = memo(({
   }
   
   return (
-    <Autosizer
-      data-testid="sheetGridContainer">
+    <Autosizer>
       {({ width, height }) => (
         <Grid
           ref={grid}

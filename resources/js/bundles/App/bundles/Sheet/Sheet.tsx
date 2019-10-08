@@ -52,7 +52,7 @@ export const Sheet = memo(({
   
   useEffect(() => {
     if(isActiveFile) { 
-      addEventListener('cut', handleCut) 
+      addEventListener('cut', handleCut)
       addEventListener('copy', handleCopy) 
       addEventListener('paste', handlePaste) 
     }
@@ -114,27 +114,34 @@ export const Sheet = memo(({
 
   return (
     <Container
-      data-testid="container">
+      data-testid="SheetContainer">
       <SheetContainer
-        data-testid="sheetContainer">
-        <SheetContextMenus
-          sheetId={sheetId}
-          isContextMenuVisible={isContextMenuVisible}
-          contextMenuType={contextMenuType}
-          contextMenuIndex={contextMenuIndex}
-          contextMenuId={contextMenuId}
-          contextMenuTop={contextMenuTop}
-          contextMenuLeft={contextMenuLeft}
-          contextMenuRight={contextMenuRight}
-          closeContextMenu={closeContextMenu}/>
-        <SheetActions
-          sheetId={sheetId}
-          sourceSheetId={sourceSheetId}/>
+        data-testid="SheetContainerContainer">
+        {false && 
+          <>
+            <SheetContextMenus
+              sheetId={sheetId}
+              isContextMenuVisible={isContextMenuVisible}
+              contextMenuType={contextMenuType}
+              contextMenuIndex={contextMenuIndex}
+              contextMenuId={contextMenuId}
+              contextMenuTop={contextMenuTop}
+              contextMenuLeft={contextMenuLeft}
+              contextMenuRight={contextMenuRight}
+              closeContextMenu={closeContextMenu}/>
+            <SheetActions
+              sheetId={sheetId}
+              sourceSheetId={sourceSheetId}/>
+          </>
+        }
         {!hasLoaded
           ? isActiveFile ? <LoadingTimer fromId={sheetId}/> : null
-          : <SheetGrid
-              sheetId={sheetId}
-              handleContextMenu={handleContextMenu}/>
+          : <SheetGridContainer
+              data-testid="SheetGridContainer">
+              <SheetGrid
+                  sheetId={sheetId}
+                  handleContextMenu={handleContextMenu}/>
+            </SheetGridContainer>
         }
         </SheetContainer>
     </Container>
@@ -161,8 +168,12 @@ const Container = styled.div`
 const SheetContainer = styled.div`
   position: relative;
   width: 100%;
-  height: 100%;
   height: calc(100% - 4.075rem);
+`
+
+const SheetGridContainer = styled.div`
+  width: 100%;
+  height: 100%;
 `
 
 //-----------------------------------------------------------------------------

@@ -71,7 +71,7 @@ class SheetCellController extends Controller
     public function update(Request $request, SheetCell $cell)
     {
       $cell->update($request->all());
-      return response()->json($cell, 200);
+      return response()->json(null, 200);
     }
 
     /**

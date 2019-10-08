@@ -93,7 +93,7 @@ export const SheetCell = memo(({
   return (
     <>
       <Container
-        data-testid="Container"
+        data-testid="SheetCellContainer"
         ref={cellContainer}
         cellId={cellId}
         highlightColor={userColorSecondary}
@@ -103,7 +103,7 @@ export const SheetCell = memo(({
         sheetStyles={sheetStyles}
         style={style}>
         <SheetRange
-          data-testid="SheetRange"
+          data-testid="SheetCellSheetRange"
           isCellInRange={isCellInRange}
           highlightColor={userColorSecondary}/>
         <SheetCellType

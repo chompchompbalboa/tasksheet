@@ -21,6 +21,8 @@ import { initialUserState } from '@app/state/user/reducers'
 
 import { defaultSheetSelections, defaultSheetStyles } from '@app/state/sheet/defaults'
 
+import { ISheetCellProps } from '@app/bundles/Sheet/SheetCell'
+
 //-----------------------------------------------------------------------------
 // Factory
 //-----------------------------------------------------------------------------
@@ -30,6 +32,7 @@ export interface IAppStateFactoryInput {
   numberOfRowsPerSheet: number
   numberOfColumnsPerSheet: number
 }
+
 export const appStateFactory = ({
   numberOfFolders = 1,
   numberOfFilesPerFolder = 3,
@@ -62,8 +65,8 @@ export const appStateFactory = ({
 
     for(let currentFileNumber = 1; currentFileNumber <= numberOfFilesPerFolder; currentFileNumber++) {
 
-      const fileSuffix = currentFolderNumber + '.' + currentFileNumber
-      const sheetSuffix = fileSuffix
+      const fileSuffix = 'Folder' + currentFolderNumber + '.File' + currentFileNumber
+      const sheetSuffix = fileSuffix + '.Sheet' + currentFileNumber
       const fileId = filePrefix + fileSuffix
       const sheetId = sheetPrefix + fileSuffix
 
@@ -94,7 +97,7 @@ export const appStateFactory = ({
 
       for(let currentColumnNumber = 1; currentColumnNumber <= numberOfColumnsPerSheet; currentColumnNumber++) {
 
-        const sheetColumnSuffix = sheetSuffix + '.' + currentColumnNumber
+        const sheetColumnSuffix = sheetSuffix + '.Column' + currentColumnNumber
         const sheetColumnId = sheetColumnPrefix + sheetColumnSuffix
 
         const newSheetColumn: ISheetColumn = {
@@ -113,15 +116,15 @@ export const appStateFactory = ({
 
       for(let currentRowNumber = 1; currentRowNumber <= numberOfRowsPerSheet; currentRowNumber++) {
 
-        const sheetRowSuffix = sheetSuffix + '.' + currentRowNumber
+        const sheetRowSuffix = sheetSuffix + '.Row' + currentRowNumber
         const sheetRowId = sheetRowPrefix + sheetRowSuffix
         const sheetRowCells: { [columnId: string]: ISheetCell['id'] } = {}
         const sheetRowFromDatabaseCells: ISheetCell[] = []
 
         newSheetColumns.forEach((newSheetColumnId, index) => {
           const newSheetColumn = allSheetColumns[newSheetColumnId]
-          const currentCellNumber = index + 1
-          const sheetCellSuffix = sheetRowSuffix + '.' + currentCellNumber
+          const currentColumnNumber = index + 1
+          const sheetCellSuffix = sheetRowSuffix + '.Column' + currentColumnNumber
           const sheetCellId = sheetCellPrefix + sheetCellSuffix
 
           const newSheetCell: ISheetCell = {
@@ -223,7 +226,7 @@ export const appStateFactory = ({
 }
 
 //-----------------------------------------------------------------------------
-// Export
+// Mock app state
 //-----------------------------------------------------------------------------
 const {
   allFiles,
@@ -261,5 +264,48 @@ export const appState: IAppState = {
       primary: 'userColorPrimary',
       secondary: 'userColorSecondary'
     }
+  }
+}
+
+//-----------------------------------------------------------------------------
+// Get cell and cell props
+//-----------------------------------------------------------------------------
+export interface IGetCellAndCellProps {
+  sheetId?: string,
+  row: number,
+  column: number,
+  columnTypeOverride?: ISheetColumnType['id']
+}
+export const getCellAndCellProps = ({
+  sheetId,
+  row: rowIndexPlusOne,
+  column: columnIndexPlusOne,
+  columnTypeOverride
+}) => {
+  const {
+    sheet: {
+      allSheets,
+      allSheetRows,
+      allSheetColumns,
+      allSheetColumnTypes,
+      allSheetCells
+    },
+  } = appState
+  const sheet = allSheets[sheetId || Object.keys(allSheets)[0]]
+  const columnId = sheet.visibleColumns[columnIndexPlusOne - 1]
+  const column = allSheetColumns[columnId]
+  const columnType = allSheetColumnTypes[columnTypeOverride || column.typeId]
+  const rowId = sheet.visibleRows[rowIndexPlusOne - 1]
+  const row = allSheetRows[rowId]
+  const cell = allSheetCells[row.cells[column.id]]
+  const props: ISheetCellProps = {
+    sheetId: sheetId,
+    cellId: cell.id,
+    columnType: columnType,
+    style: {}
+  }
+  return {
+    cell,
+    props
   }
 }
