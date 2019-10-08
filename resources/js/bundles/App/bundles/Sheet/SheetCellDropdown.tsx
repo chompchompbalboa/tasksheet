@@ -111,10 +111,12 @@ const SheetCellDropdown = ({
       value={safeValue}
       {...passThroughProps}>
       <StyledTextarea
+        data-testid="SheetCellDropdownTextarea"
         ref={textarea}
         onChange={(e: any) => handleUpdateCellValue(e.target.value)}
         value={safeValue}/>
       <Dropdown
+        data-testid="SheetCellDropdownDropdown"
         isDropdownVisible={isDropdownVisible}>
         {visibleDropdownOptionsIds && visibleDropdownOptionsIds.map(dropdownOptionId => {
           const dropdownOption = dropdownOptions[dropdownOptionId]

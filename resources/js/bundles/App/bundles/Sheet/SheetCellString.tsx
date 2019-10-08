@@ -39,6 +39,7 @@ const SheetCellString = ({
       value={safeValue}
       {...passThroughProps}>
       <StyledTextarea
+        data-testid="SheetCellStringTextarea"
         ref={textarea}
         onChange={(e: any) => updateCellValue(e.target.value)}
         value={safeValue}/>

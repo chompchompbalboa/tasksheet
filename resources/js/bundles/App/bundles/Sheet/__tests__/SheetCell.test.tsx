@@ -282,7 +282,7 @@ describe('SheetCell', () => {
     expect(R2C2SheetRange).toHaveStyleRule('background-color', userColorSecondary)
   })
 
-  it("deselects a range when a cell outside the range is clicked", async () => {
+  it("deselects the range when a cell outside the range is clicked", async () => {
     const { props: R1C1CellProps } = getCellAndCellPropsByRowAndColumn(1, 1)
     const { props: R2C2CellProps } = getCellAndCellPropsByRowAndColumn(2, 2)
     const { props: R3C3CellProps } = getCellAndCellPropsByRowAndColumn(3, 3)
@@ -314,5 +314,39 @@ describe('SheetCell', () => {
     expect(R2C2Container).toHaveStyleRule('box-shadow', 'none')
     expect(R2C2SheetRange).toHaveStyleRule('background-color', 'transparent')
     expect(R3C3Container).toHaveStyleRule('box-shadow', cellIsSelectedBoxShadow)
+  })
+
+  it("SheetCellString begins editing the cell when double clicked", async () => {
+    const { cell, props } = getCellAndCellPropsByRowAndColumn(1, 1, 'STRING')
+    const { getByText, getByTestId, queryByTestId } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
+    expect(queryByTestId('SheetCellStringTextarea')).toBeNull()
+    fireEvent.doubleClick(getByText(cell.value))
+    expect(getByTestId('SheetCellStringTextarea')).toBeTruthy()
+  })
+
+  it("SheetCellNumber begins editing the cell when double clicked", async () => {
+    const { cell, props } = getCellAndCellPropsByRowAndColumn(1, 1, 'NUMBER')
+    const { getByText, getByTestId, queryByTestId } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
+    expect(queryByTestId('SheetCellNumberInput')).toBeNull()
+    fireEvent.doubleClick(getByText(cell.value))
+    expect(getByTestId('SheetCellNumberInput')).toBeTruthy()
+  })
+
+  it("SheetCellDatetime begins editing the cell when double clicked", async () => {
+    const { cell, props } = getCellAndCellPropsByRowAndColumn(1, 1, 'DATETIME')
+    const { getByText, getByTestId, queryByTestId } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
+    expect(queryByTestId('SheetCellStringTextarea')).toBeNull()
+    fireEvent.doubleClick(getByText(cell.value))
+    expect(getByTestId('SheetCellStringTextarea')).toBeTruthy()
+  })
+
+  it("SheetCellDropdown begins editing the cell and displays the dropdown when double clicked", async () => {
+    const { cell, props } = getCellAndCellPropsByRowAndColumn(1, 1, 'DROPDOWN')
+    const { getByText, getByTestId, queryByTestId } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
+    expect(queryByTestId('SheetCellDropdownTextarea')).toBeNull()
+    expect(queryByTestId('SheetCellDropdownDropdown')).toBeNull()
+    fireEvent.doubleClick(getByText(cell.value))
+    expect(getByTestId('SheetCellDropdownTextarea')).toBeTruthy()
+    expect(getByTestId('SheetCellDropdownDropdown')).toBeTruthy()
   })
 })

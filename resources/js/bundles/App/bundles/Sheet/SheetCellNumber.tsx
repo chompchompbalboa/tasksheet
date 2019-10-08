@@ -33,6 +33,7 @@ const SheetCellNumber = ({
       value={safeValue}
       {...passThroughProps}>
       <StyledInput
+        data-testid="SheetCellNumberInput"
         ref={input}
         type="number"
         onChange={(e) => updateCellValue(e.target.value)}
