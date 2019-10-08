@@ -51,7 +51,8 @@ const SheetCellDatetime = ({
   }
 
   return (
-    <SheetCellString 
+    <SheetCellString
+      testId="SheetCellDatetime"
       value={localValue}
       updateCellValue={nextCellValue => handleUpdateCellValue(nextCellValue)}
       {...passThroughProps}/>

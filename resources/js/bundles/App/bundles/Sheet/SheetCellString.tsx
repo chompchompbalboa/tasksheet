@@ -13,6 +13,7 @@ import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellString = ({
+  testId,
   updateCellValue,
   value,
   ...passThroughProps
@@ -32,6 +33,7 @@ const SheetCellString = ({
 
   return (
     <SheetCellContainer
+      testId={testId || "SheetCellString"}
       focusCell={focusCell}
       updateCellValue={updateCellValue}
       value={safeValue}
@@ -54,6 +56,7 @@ interface SheetCellStringProps {
   cellId: string
   columnType: ISheetColumnType
   isCellSelected: boolean
+  testId?: string
   updateCellValue(nextCellValue: string): void
   value: string
 }

@@ -14,8 +14,7 @@ const mockStore = createMockStore(mockAppState)
 //-----------------------------------------------------------------------------
 export * from '@testing-library/react'
 
-export const renderWithRedux = ( ui: any, { store = mockStore } = {}
-) => {
+export const renderWithRedux = ( ui: any, { store = mockStore } = {} ) => {
   return {
     ...render(<ReduxProvider store={store}>{ui}</ReduxProvider>),
     store,

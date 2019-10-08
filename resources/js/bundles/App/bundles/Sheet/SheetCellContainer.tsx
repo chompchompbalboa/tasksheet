@@ -26,7 +26,8 @@ const SheetCellContainer = ({
   focusCell,
   onCloseCell,
   onlyRenderChildren,
-  value
+  value,
+  testId = null
 }: SheetCellContainerProps) => {
   
   const dispatch = useDispatch()
@@ -152,6 +153,7 @@ const SheetCellContainer = ({
 
   return (
     <Container
+      data-testid={testId}
       ref={container}
       cellId={cellId}
       isCellEditing={isCellEditing}
@@ -178,6 +180,7 @@ interface SheetCellContainerProps {
   isCellSelected: boolean
   onCloseCell?(...args: any): void
   onlyRenderChildren?: boolean
+  testId?: string
   updateCellValue(nextCellValue: string): void
   value: string
 }

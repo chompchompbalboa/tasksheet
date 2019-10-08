@@ -23,7 +23,7 @@ const SheetCellDropdown = ({
   const textarea = useRef(null)
 
   // Local Variables
-  const dropdownOptions = columnType.data.options
+  const dropdownOptions = columnType && columnType.data && columnType.data.options || {}
   const dropdownOptionsIds = Object.keys(dropdownOptions)
   const safeValue = value || ''
 
@@ -104,6 +104,7 @@ const SheetCellDropdown = ({
   // Render
   return (
     <SheetCellContainer
+      testId="SheetCellDropdown"
       focusCell={focusCell}
       onCloseCell={() => setTimeout(() => handleCellEditingComplete(), 10)}
       updateCellValue={(nextValue: string) => handleUpdateCellValue(nextValue)}

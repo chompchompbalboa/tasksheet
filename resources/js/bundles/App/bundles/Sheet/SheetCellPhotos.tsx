@@ -94,6 +94,7 @@ const SheetCellPhotos = ({
 
   return (
     <SheetCellContainer
+      testId="SheetCellPhotos"
       sheetId={sheetId}
       cellId={cellId}
       cell={cell}

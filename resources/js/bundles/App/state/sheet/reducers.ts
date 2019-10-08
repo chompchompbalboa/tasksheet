@@ -103,6 +103,17 @@ export const initialSheetState: ISheetState = {
       cellType: 'DATETIME',
       data: null
     },
+    DROPDOWN: {
+      id: 'DROPDOWN',
+      organizationId: null,
+      userId: null,
+      sheetId: null,
+      name: 'Dropdown',
+      cellType: 'DROPDOWN',
+      data: {
+        options: {}
+      }
+    },
     PHOTOS: {
       id: 'PHOTOS',
       organizationId: null,

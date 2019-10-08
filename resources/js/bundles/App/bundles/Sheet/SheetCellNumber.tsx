@@ -27,6 +27,7 @@ const SheetCellNumber = ({
 
   return (
     <SheetCellContainer
+      testId="SheetCellNumber"
       focusCell={focusCell}
       updateCellValue={updateCellValue}
       value={safeValue}

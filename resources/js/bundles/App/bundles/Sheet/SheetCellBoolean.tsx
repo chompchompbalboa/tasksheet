@@ -59,7 +59,8 @@ const SheetCellBoolean = ({
   }
   
   return (
-    <Container>
+    <Container
+      data-testid="SheetCellBoolean">
       <StyledInput 
         type="checkbox"
         checked={value && ['1', 'TRUE', 'true'].includes(value)}

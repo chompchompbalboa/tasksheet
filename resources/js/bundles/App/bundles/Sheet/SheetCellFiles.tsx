@@ -108,6 +108,7 @@ const SheetCellFiles = ({
 
   return (
     <SheetCellContainer
+      testId="SheetCellFiles"
       sheetId={sheetId}
       cellId={cellId}
       cell={cell}
