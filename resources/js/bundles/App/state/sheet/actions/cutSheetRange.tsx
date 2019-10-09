@@ -16,7 +16,15 @@ export const cutSheetRange = (sheetId: ISheet['id']): IThunkAction => {
     const {
       allSheets: {
         [sheetId]: {
-          selections,
+          selections: {
+            rangeCellIds,
+            rangeStartColumnId,
+            rangeStartRowId,
+            rangeStartCellId,
+            rangeEndColumnId,
+            rangeEndRowId,
+            rangeEndCellId,
+          },
           visibleColumns,
           visibleRows
         }
@@ -27,11 +35,17 @@ export const cutSheetRange = (sheetId: ISheet['id']): IThunkAction => {
       sheetId: sheetId,
       cutOrCopy: 'CUT',
       selections: {
-        ...selections,
+          rangeCellIds,
+          rangeStartColumnId,
+          rangeStartRowId,
+          rangeStartCellId,
+          rangeEndColumnId,
+          rangeEndRowId,
+          rangeEndCellId,
           visibleColumns,
           visibleRows
       }
     }))
-
+    
   }
 }

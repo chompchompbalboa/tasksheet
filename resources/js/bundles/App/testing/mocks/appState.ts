@@ -6,7 +6,7 @@ import { IFile, IFiles, IFolders, IFileType } from '@app/state/folder/types'
 import { 
   IAllSheets, ISheet, ISheetFromDatabase,
   IAllSheetCells, ISheetCell,
-  IAllSheetColumns, ISheetColumn,
+  IAllSheetColumns, ISheetColumn, ISheetColumnType, 
   ISheetFilter,
   ISheetGroup,
   IAllSheetRows, ISheetRow, ISheetFromDatabaseRow,
@@ -281,7 +281,7 @@ export const getCellAndCellProps = ({
   row: rowIndexPlusOne,
   column: columnIndexPlusOne,
   columnTypeOverride
-}) => {
+}: IGetCellAndCellProps) => {
   const {
     sheet: {
       allSheets,

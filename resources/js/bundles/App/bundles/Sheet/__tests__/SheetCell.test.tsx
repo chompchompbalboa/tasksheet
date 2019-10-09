@@ -12,8 +12,7 @@ import {
   mockAppState 
 } from '@app/testing/mocks'
 
-import { SheetCell, ISheetCellProps } from '@app/bundles/Sheet/SheetCell'
-import { ISheetColumnType } from '@/bundles/App/state/sheet/types'
+import { SheetCell } from '@app/bundles/Sheet/SheetCell'
 
 //-----------------------------------------------------------------------------
 // Setup
@@ -24,11 +23,7 @@ const {
     files
   },
   sheet: {
-    allSheets,
-    allSheetRows,
-    allSheetColumns,
-    allSheetColumnTypes,
-    allSheetCells
+    allSheets
   },
   user: {
     color: {

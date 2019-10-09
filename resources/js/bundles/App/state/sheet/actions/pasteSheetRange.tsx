@@ -25,6 +25,7 @@ export const pasteSheetRange = (sheetId: ISheet['id']): IThunkAction => {
       }
     } = getState().sheet
     const {
+      cutOrCopy,
       selections: {
         rangeEndColumnId: clipboardRangeEndColumnId,
         rangeEndRowId: clipboardRangeEndRowId,
@@ -55,14 +56,14 @@ export const pasteSheetRange = (sheetId: ISheet['id']): IThunkAction => {
     const clipboardRangeStartRowIndex = clipboardVisibleRows.indexOf(clipboardRangeStartRowId)
     const sheetRangeStartRowIndex = sheetVisibleRows.indexOf(sheetRangeStartRowId)
 
-    for(let clipboardRowIndex = clipboardVisibleRows.indexOf(clipboardRangeStartRowId); clipboardRowIndex <= clipboardVisibleRows.indexOf(clipboardRangeEndRowId); clipboardRowIndex++) {
+    for(let clipboardRowIndex = clipboardVisibleRows.indexOf(clipboardRangeStartRowId); clipboardRowIndex <= clipboardVisibleRows.indexOf(clipboardRangeEndRowId || clipboardRangeStartRowId); clipboardRowIndex++) {
       const clipboardRowId = clipboardVisibleRows[clipboardRowIndex]
       const sheetRowId = sheetVisibleRows[sheetRangeStartRowIndex + (clipboardRowIndex - clipboardRangeStartRowIndex)]
       const clipboardRow = allSheetRows[clipboardRowId]
       const sheetRow = allSheetRows[sheetRowId]
 
       if(clipboardRow && sheetRow) {
-        for(let clipboardColumnIndex = clipboardVisibleColumns.indexOf(clipboardRangeStartColumnId); clipboardColumnIndex <= clipboardVisibleColumns.indexOf(clipboardRangeEndColumnId); clipboardColumnIndex++) {
+        for(let clipboardColumnIndex = clipboardVisibleColumns.indexOf(clipboardRangeStartColumnId); clipboardColumnIndex <= clipboardVisibleColumns.indexOf(clipboardRangeEndColumnId || clipboardRangeStartColumnId); clipboardColumnIndex++) {
           const clipboardColumnId = clipboardVisibleColumns[clipboardColumnIndex]
           const sheetColumnId = sheetVisibleColumns[sheetRangeStartColumnIndex + (clipboardColumnIndex - clipboardRangeStartColumnIndex)]
           const clipboardCellId = clipboardRow.cells[clipboardColumnId]
@@ -71,6 +72,10 @@ export const pasteSheetRange = (sheetId: ISheet['id']): IThunkAction => {
           if(clipboardCell && sheetCellId) {
             nextAllSheetCells[sheetCellId].value = clipboardCell.value
             sheetCellUpdates.push({ id: sheetCellId, value: clipboardCell.value })
+            if(cutOrCopy === 'CUT') {
+              nextAllSheetCells[clipboardCellId].value = null
+              sheetCellUpdates.push({ id: clipboardCellId, value: null })
+            }
           }
         }
       }

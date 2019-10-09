@@ -117,23 +117,19 @@ export const Sheet = memo(({
       data-testid="SheetContainer">
       <SheetContainer
         data-testid="SheetContainerContainer">
-        {false && 
-          <>
-            <SheetContextMenus
-              sheetId={sheetId}
-              isContextMenuVisible={isContextMenuVisible}
-              contextMenuType={contextMenuType}
-              contextMenuIndex={contextMenuIndex}
-              contextMenuId={contextMenuId}
-              contextMenuTop={contextMenuTop}
-              contextMenuLeft={contextMenuLeft}
-              contextMenuRight={contextMenuRight}
-              closeContextMenu={closeContextMenu}/>
-            <SheetActions
-              sheetId={sheetId}
-              sourceSheetId={sourceSheetId}/>
-          </>
-        }
+        <SheetContextMenus
+          sheetId={sheetId}
+          isContextMenuVisible={isContextMenuVisible}
+          contextMenuType={contextMenuType}
+          contextMenuIndex={contextMenuIndex}
+          contextMenuId={contextMenuId}
+          contextMenuTop={contextMenuTop}
+          contextMenuLeft={contextMenuLeft}
+          contextMenuRight={contextMenuRight}
+          closeContextMenu={closeContextMenu}/>
+        <SheetActions
+          sheetId={sheetId}
+          sourceSheetId={sourceSheetId}/>
         {!hasLoaded
           ? isActiveFile ? <LoadingTimer fromId={sheetId}/> : null
           : <SheetGridContainer
