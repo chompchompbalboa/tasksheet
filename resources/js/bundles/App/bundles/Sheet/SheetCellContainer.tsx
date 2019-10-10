@@ -150,7 +150,7 @@ const SheetCellContainer = ({
       }
     }
   }
-
+  
   return (
     <Container
       data-testid={testId}
