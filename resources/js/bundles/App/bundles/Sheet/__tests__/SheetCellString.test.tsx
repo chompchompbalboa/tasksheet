@@ -22,9 +22,6 @@ const {
   folder: {
     folders,
     files
-  },
-  sheet: {
-    allSheets
   }
 } = mockAppState
 
@@ -32,7 +29,6 @@ const folderId = Object.keys(folders)[0]
 const fileId = folders[folderId].files[0]
 const file = files[fileId]
 const sheetId = file.typeId
-const sheet = allSheets[sheetId]
 
 console.warn = jest.fn()
 
@@ -68,7 +64,7 @@ describe('SheetCell', () => {
 
   it("begins editing the cell when selected and the user enters a character key", async () => {
     const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'STRING' })
-    const { getByText, getByTestId, queryByTestId, queryByText } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
+    const { getByTestId, queryByTestId, queryByText } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
     expect(queryByTestId('SheetCellStringTextarea')).toBeNull()
     const SheetCellString = getByTestId('SheetCellString')
     fireEvent.mouseDown(SheetCellString)
@@ -77,6 +73,21 @@ describe('SheetCell', () => {
     expect(SheetCellStringTextarea).toBeTruthy()
     expect(queryByText(cell.value)).toBeNull()
     expect(queryByText('a')).toBeTruthy()
+    expect(axiosMock.patch).toHaveBeenCalled()
+  })
+
+  it("correctly updates its value on user input", async () => {
+    const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'STRING' })
+    const { getByTestId, queryByTestId, queryByText } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
+    expect(queryByTestId('SheetCellStringTextarea')).toBeNull()
+    const SheetCellStringBefore = getByTestId('SheetCellString')
+    fireEvent.mouseDown(SheetCellStringBefore)
+    fireEvent.keyDown(SheetCellStringBefore, { key: 't' })
+    const SheetCellStringTextarea = await waitForElement(() => getByTestId('SheetCellStringTextarea'))
+    fireEvent.change(SheetCellStringTextarea, { target: { value: 'te' }})
+    fireEvent.change(SheetCellStringTextarea, { target: { value: 'tes' }})
+    fireEvent.change(SheetCellStringTextarea, { target: { value: 'test' }})
+    expect(queryByText('test')).toBeTruthy()
     expect(axiosMock.patch).toHaveBeenCalled()
   })
 })
