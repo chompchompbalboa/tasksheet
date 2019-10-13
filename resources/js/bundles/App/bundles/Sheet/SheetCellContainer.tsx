@@ -41,7 +41,7 @@ const SheetCellContainer = ({
 
   const isActiveSheet = sheetId === activeSheetId
   const isCellEditing = cell.isCellEditing && isActiveSheet
-  const isCellSelected = cell.isCellSelected && isActiveSheet
+  const isCellSelected = cell.isCellSelectedSheetIds.has(sheetId) && isActiveSheet
 
   
   useEffect(() => {

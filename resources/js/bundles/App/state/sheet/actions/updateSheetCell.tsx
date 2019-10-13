@@ -17,7 +17,7 @@ export const updateSheetCell = (cellId: string, updates: ISheetCellUpdates, undo
     const removeAppPropertiesFromCellUpdates = (updates: ISheetCellUpdates) => {
       const {
         isCellEditing,
-        isCellSelected,
+        isCellSelectedSheetIds,
         ...remainingUpdates
       } = updates
       return remainingUpdates

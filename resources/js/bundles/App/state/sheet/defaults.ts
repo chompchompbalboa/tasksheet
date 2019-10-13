@@ -34,7 +34,7 @@ export const defaultCell = (sheetId: string, rowId: ISheetRow['id'], columnId: s
     rowId: rowId,
     value: "",
     isCellEditing: false,
-    isCellSelected: false
+    isCellSelectedSheetIds: new Set() as Set<string>
   }
 }
 

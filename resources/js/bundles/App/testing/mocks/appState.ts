@@ -134,7 +134,7 @@ export const appStateFactory = ({
             rowId: sheetRowId,
             value: sheetCellId,
             isCellEditing: false,
-            isCellSelected: false
+            isCellSelectedSheetIds: new Set()
           }
           allSheetCells[newSheetCell.id] = newSheetCell
           sheetRowCells[newSheetColumn.id] = newSheetCell.id

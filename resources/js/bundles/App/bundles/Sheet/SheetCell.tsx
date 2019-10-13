@@ -86,7 +86,7 @@ export const SheetCell = memo(({
     }
   }
 
-  const isCellSelected = cell.isCellSelected
+  const isCellSelected = cell.isCellSelectedSheetIds.has(sheetId)
   const isCellInRange = sheetSelectionsRangeCellIds.has(cellId)
   const SheetCellType = sheetCellTypes[columnType.cellType]
   
@@ -111,7 +111,7 @@ export const SheetCell = memo(({
           cell={cell}
           cellId={cell.id}
           columnType={columnType}
-          isCellSelected={cell.isCellSelected}
+          isCellSelected={isCellSelected}
           updateCellValue={setCellValue}
           value={cellValue}/>
       </Container>

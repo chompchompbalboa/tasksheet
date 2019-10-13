@@ -2,6 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import { batch } from 'react-redux'
+
 import { IAppState } from '@app/state'
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import { 
@@ -90,12 +91,14 @@ export const updateSheetSelectionFromArrowKey = (sheetId: ISheet['id'], cellId: 
       if(nextSelectedCell !== null) {
         batch(() => {
           // Clear the current selections
-          selections.rangeStartCellId !== null && dispatch(updateSheetCellReducer(selections.rangeStartCellId, {
-            isCellSelected: false
-          }))
-          selections.rangeEndCellId !== null && dispatch(updateSheetCellReducer(selections.rangeEndCellId, {
-            isCellSelected: false
-          }))
+          if(selections.rangeStartCellId) {
+            const rangeStartCell = allSheetCells[selections.rangeStartCellId]
+            const nextIsCellSelectedSheetIds = new Set([ ...rangeStartCell.isCellSelectedSheetIds ])
+            nextIsCellSelectedSheetIds.delete(sheetId)
+            dispatch(updateSheetCellReducer(selections.rangeStartCellId, {
+              isCellSelectedSheetIds: nextIsCellSelectedSheetIds
+            }))
+          } 
           // Reset selection state
           dispatch(updateSheet(sheetId, {
             selections: {
@@ -107,7 +110,7 @@ export const updateSheetSelectionFromArrowKey = (sheetId: ISheet['id'], cellId: 
           }, true))
           // Update the next selected cell
           dispatch(updateSheetCellReducer(nextSelectedCell.id, {
-            isCellSelected: true
+            isCellSelectedSheetIds: new Set([ sheetId, ...nextSelectedCell.isCellSelectedSheetIds ])
           }))
         })
       }

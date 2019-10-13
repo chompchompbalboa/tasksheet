@@ -190,13 +190,13 @@ export interface ISheetCell {
 	rowId: string
 	value: string
   isCellEditing: boolean
-  isCellSelected: boolean
+  isCellSelectedSheetIds: Set<string>
 }
 export interface ISheetCellUpdates {
   id?: string
   value?: string
   isCellEditing?: boolean
-  isCellSelected?: boolean
+  isCellSelectedSheetIds?: Set<string>
 }
 export type ISheetCellType = 
 'STRING' |

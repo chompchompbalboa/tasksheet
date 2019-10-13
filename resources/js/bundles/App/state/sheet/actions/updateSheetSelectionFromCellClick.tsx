@@ -24,15 +24,26 @@ export const updateSheetSelectionFromCellClick = (sheetId: string, cellId: strin
         }
       }
     } = getState().sheet
+
     const cell = allSheetCells[cellId]
+
+    let nextRangeStartCellIsCellSelectedSheetIds: Set<string>
+    if(selections.rangeStartCellId) {
+      const rangeStartCell = allSheetCells[selections.rangeStartCellId]
+      nextRangeStartCellIsCellSelectedSheetIds = new Set([ ...rangeStartCell.isCellSelectedSheetIds ])
+      nextRangeStartCellIsCellSelectedSheetIds.delete(sheetId)
+    }
+    else {
+      nextRangeStartCellIsCellSelectedSheetIds = new Set()
+    }
 
     const selectCell = () => {
       batch(() => {
         const nextSelectionsRangeCellIds = selections.rangeCellIds.size > 0 ? new Set() as Set<ISheetCell['id']> : selections.rangeCellIds
         dispatch(updateSheetCellReducer(selections.rangeStartCellId, {
-          isCellSelected: false
+          isCellSelectedSheetIds: nextRangeStartCellIsCellSelectedSheetIds
         }))
-        dispatch(updateSheetCellReducer(cell.id, { isCellSelected: true }))
+        dispatch(updateSheetCellReducer(cell.id, { isCellSelectedSheetIds: new Set([ sheetId, ...cell.isCellSelectedSheetIds ]) }))
         dispatch(updateSheet(sheetId, {
           selections: {
             ...selections,

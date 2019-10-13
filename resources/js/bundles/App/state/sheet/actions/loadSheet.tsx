@@ -37,7 +37,7 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         normalizedCells[cell.id] = { 
           ...cell, 
           isCellEditing: false,
-          isCellSelected: false,
+          isCellSelectedSheetIds: new Set() as Set<string>,
         }
         rowCells[cell.columnId] = cell.id
       })

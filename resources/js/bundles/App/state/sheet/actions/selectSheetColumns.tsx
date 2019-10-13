@@ -16,6 +16,7 @@ import { updateSheet, updateSheetCell } from '@app/state/sheet/actions'
 export const selectSheetColumns = (sheetId: ISheet['id'], startColumnId: ISheetColumn['id'], endColumnId?: ISheetColumn['id']): IThunkAction => {
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
+      allSheetCells,
       allSheetRows,
       allSheets: { 
         [sheetId]: { 
@@ -51,8 +52,14 @@ export const selectSheetColumns = (sheetId: ISheet['id'], startColumnId: ISheetC
         })
       }
     }
-    dispatch(updateSheetCell(selections.rangeStartCellId, { isCellSelected: false }, null, true))
-    dispatch(updateSheetCell(nextRangeStartCellId, { isCellSelected: true }, null, true))
+
+    const nextRangeStartCell = allSheetCells[nextRangeStartCellId]
+    const rangeStartCell = allSheetCells[selections.rangeStartCellId]
+    const nextRangeStartCellIsCellSelectedSheetIds = rangeStartCell ? new Set([ ...rangeStartCell.isCellSelectedSheetIds ]) : new Set() as Set<string>
+    nextRangeStartCellIsCellSelectedSheetIds.delete(sheetId)
+
+    dispatch(updateSheetCell(selections.rangeStartCellId, { isCellSelectedSheetIds: nextRangeStartCellIsCellSelectedSheetIds }, null, true))
+    dispatch(updateSheetCell(nextRangeStartCellId, { isCellSelectedSheetIds: new Set([ sheetId, ...nextRangeStartCell.isCellSelectedSheetIds ]) }, null, true))
     dispatch(updateSheet(sheetId, { 
       selections: {
         ...selections,

@@ -1,5 +1,7 @@
+import _ from 'lodash'
+
 const clone = (itemToClone: any): any => {
-	return JSON.parse(JSON.stringify(itemToClone))
+	return _.cloneDeep(itemToClone)
 }
 
 export default clone
