@@ -56,7 +56,7 @@ describe('Sheet', () => {
 
   beforeAll(() => {
     Object.defineProperty(HTMLElement.prototype, 'offsetHeight', { configurable: true, value: 240 }) // 10 rows
-    Object.defineProperty(HTMLElement.prototype, 'offsetWidth', { configurable: true, value: 500 }) // 5 columns
+    Object.defineProperty(HTMLElement.prototype, 'offsetWidth', { configurable: true, value: 600 }) // 6 columns
   })
 
   afterAll(() => {

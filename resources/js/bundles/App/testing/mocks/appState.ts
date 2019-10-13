@@ -30,15 +30,27 @@ export interface IAppStateFactoryInput {
   numberOfFolders: number
   numberOfFilesPerFolder: number
   numberOfRowsPerSheet: number
-  numberOfColumnsPerSheet: number
+  columns: string[]
 }
+
+export const appStateFactoryColumns = [
+  'STRING',
+  'NUMBER',
+  'BOOLEAN',
+  'DATETIME',
+  'DROPDOWN',
+  'FILES',
+  'PHOTOS',
+]
 
 export const appStateFactory = ({
   numberOfFolders = 1,
   numberOfFilesPerFolder = 3,
   numberOfRowsPerSheet = 10,
-  numberOfColumnsPerSheet = 5
+  columns = appStateFactoryColumns
 }: IAppStateFactoryInput)  => {
+
+  const numberOfColumnsPerSheet = columns.length
 
   const allFolders: IFolders = {}
   const allFiles: IFiles = {}
