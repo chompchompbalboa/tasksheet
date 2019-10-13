@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
@@ -25,12 +25,20 @@ import AutosizeInput from 'react-input-autosize'
 const SheetRowContextMenuCreateRows = ({
   sheetId,
   sheetRowId,
+  aboveOrBelow,
   closeOnClick
 }: ISheetRowContextMenuCreateRowsProps) => {
 
+  useEffect(() => {
+    return () => {
+      dispatch(allowSelectedCellEditing(sheetId))
+      dispatch(allowSelectedCellNavigation(sheetId))
+    }
+  }, [])
+
   const dispatch = useDispatch()
 
-  const localStorageKey = 'tracksheet.SheetRowContextMenuCreateRows.inputValue'
+  const localStorageKey = 'tracksheet.SheetRowContextMenuCreateRows.inputValue.' + aboveOrBelow
   const [ inputValue, setInputValue ] = useState(Number(localStorage.getItem(localStorageKey)) || 1)
 
   const createRows = () => {
@@ -38,7 +46,7 @@ const SheetRowContextMenuCreateRows = ({
     closeOnClick(() => {
       dispatch(allowSelectedCellEditing(sheetId))
       dispatch(allowSelectedCellNavigation(sheetId))
-      dispatch(createSheetRows(sheetId, inputValue, sheetRowId))
+      dispatch(createSheetRows(sheetId, inputValue, sheetRowId, aboveOrBelow))
     })
   }
   
@@ -76,7 +84,7 @@ const SheetRowContextMenuCreateRows = ({
           fontSize: 'inherit',
           fontWeight: 'inherit'}}/>
       <TextContainer onClick={() => createRows()}>
-        row{inputValue > 1 ? 's' : ''} above
+        row{inputValue > 1 ? 's' : ''} {aboveOrBelow.toLowerCase()}
       </TextContainer>
     </Container>
   )
@@ -88,6 +96,7 @@ const SheetRowContextMenuCreateRows = ({
 interface ISheetRowContextMenuCreateRowsProps {
   sheetId: ISheet['id']
   sheetRowId: ISheetRow['id']
+  aboveOrBelow: 'ABOVE' | 'BELOW'
   closeOnClick(...args: any): void
 }
 
@@ -100,7 +109,7 @@ const Container = styled.div`
   width: 100%;
   padding: 0.55rem 0.75rem 0.425rem 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   transition: background-color 0.05s;
   border-radius: 3px 3px 0 0;

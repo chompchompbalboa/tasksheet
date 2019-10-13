@@ -28,7 +28,7 @@ import { resolveSheetRowLeaders } from '@app/state/sheet/resolvers'
 //-----------------------------------------------------------------------------
 // Create Sheet Row
 //-----------------------------------------------------------------------------
-export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, insertBeforeRowId: ISheetRow['id']): IThunkAction => {
+export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, insertBeforeRowId: ISheetRow['id'], aboveOrBelow: 'ABOVE' | 'BELOW' = 'ABOVE'): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
 
     dispatch(clearSheetSelection(sheetId))
@@ -51,7 +51,7 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
 
     const insertBeforeRowIdVisibleRowsIndex = nextSheetVisibleRows.indexOf(insertBeforeRowId)
     const insertBeforeRowIdDefaultVisibleRowsIndex = nextSheetDefaultVisibleRows.indexOf(insertBeforeRowId)
-    console.log(insertBeforeRowIdDefaultVisibleRowsIndex)
+
     const newRowSheetId = sheet.sourceSheetId !== null ? sheet.sourceSheetId : sheetId
           
     for(let i = 0; i < numberOfRowsToAdd; i++) {
@@ -65,8 +65,9 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
       })
       nextAllSheetRows[newRow.id] = newRow
       nextSheetRows.push(newRow.id)
-      nextSheetDefaultVisibleRows.splice(insertBeforeRowIdDefaultVisibleRowsIndex + i, 0, newRow.id)
-      nextSheetVisibleRows.splice(insertBeforeRowIdVisibleRowsIndex + i, 0, newRow.id)
+      const rowIndexModifier = aboveOrBelow === 'ABOVE' ? i : i + 1
+      nextSheetDefaultVisibleRows.splice(insertBeforeRowIdDefaultVisibleRowsIndex + rowIndexModifier, 0, newRow.id)
+      nextSheetVisibleRows.splice(insertBeforeRowIdVisibleRowsIndex + rowIndexModifier, 0, newRow.id)
       const newRowToDatabase = {
         ...newRow,
         cells: newRowCellsToDatabase

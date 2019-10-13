@@ -18,13 +18,13 @@ import SheetRowContextMenuCreateRows from '@app/bundles/Sheet/SheetRowContextMen
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetRowContextMenu = ({
+export const SheetRowContextMenu = ({
   sheetId,
   rowId,
   closeContextMenu,
   contextMenuLeft,
   contextMenuTop,
-}: SheetRowContextMenuProps) => {
+}: ISheetRowContextMenuProps) => {
   
   const dispatch = useDispatch()
 
@@ -42,6 +42,12 @@ const SheetRowContextMenu = ({
       <SheetRowContextMenuCreateRows
         sheetId={sheetId}
         sheetRowId={rowId}
+        aboveOrBelow='ABOVE'
+        closeOnClick={closeOnClick}/>
+      <SheetRowContextMenuCreateRows
+        sheetId={sheetId}
+        sheetRowId={rowId}
+        aboveOrBelow='BELOW'
         closeOnClick={closeOnClick}/>
       <ContextMenuDivider />
       <ContextMenuItem 
@@ -54,7 +60,7 @@ const SheetRowContextMenu = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetRowContextMenuProps {
+export interface ISheetRowContextMenuProps {
   sheetId: ISheet['id']
   rowId: ISheetRow['id']
   closeContextMenu(): void
