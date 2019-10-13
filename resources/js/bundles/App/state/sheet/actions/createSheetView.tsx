@@ -74,6 +74,7 @@ export const createSheetView = (sheetId: string, viewName: string): IThunkAction
       {
         id: newSheetViewId,
         sourceSheetId: sourceSheet.id,
+        sourceSheetDefaultVisibleRows: sourceSheet.defaultVisibleRows,
         defaultVisibleRows: sourceSheet.defaultVisibleRows,
         fileType: sourceSheet.fileType,
         columns: clone(sourceSheet.columns),
@@ -122,6 +123,7 @@ export const createSheetView = (sheetId: string, viewName: string): IThunkAction
     mutation.createSheetView({
       id: newSheetViewId,
       sourceSheetId: sourceSheet.id,
+      defaultVisibleRows: sourceSheet.defaultVisibleRows,
       visibleColumns: sourceSheet.visibleColumns,
       filters: newFilters,
       groups: newGroups,

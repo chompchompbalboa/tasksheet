@@ -11,10 +11,10 @@ class Sheet extends Model
   /**
    * Define which attributes will be visible
    */
-  protected $visible = ['id', 'sourceSheetId', 'fileType', 'rows', 'columns', 'filters', 'groups', 'sorts', 'styles', 'visibleColumns', 'defaultVisibleRows'];
+  protected $visible = ['id', 'sourceSheetId', 'fileType', 'rows', 'columns', 'filters', 'groups', 'sorts', 'styles', 'visibleColumns', 'defaultVisibleRows', 'sourceSheetDefaultVisibleRows'];
   protected $fillable = ['id', 'sourceSheetId', 'visibleColumns', 'defaultVisibleRows'];
   protected $with = ['filters', 'groups', 'sorts'];
-  protected $appends = ['columns', 'rows', 'fileType', 'styles'];
+  protected $appends = ['columns', 'rows', 'fileType', 'sourceSheetDefaultVisibleRows', 'styles'];
   protected $casts = [
     'defaultVisibleRows' => 'array',
     'visibleColumns' => 'array'
@@ -63,6 +63,15 @@ class Sheet extends Model
    */
   public function sorts() {
     return $this->hasMany('App\Models\SheetSort', 'sheetId')->orderBy('created_at');
+  }
+  
+  /**
+   * Get all the rows that belong to this table
+   */
+  public function getSourceSheetDefaultVisibleRowsAttribute() {
+    $sheetId = is_null($this->sourceSheetId) ? $this->id : $this->sourceSheetId;
+    $sheet = Sheet::find($sheetId);
+    return $sheet->defaultVisibleRows;
   }
   
   /**

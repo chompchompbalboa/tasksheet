@@ -10,6 +10,7 @@ use App\Models\Sheet;
 use App\Models\SheetFilter;
 use App\Models\SheetGroup;
 use App\Models\SheetSort;
+use App\Models\SheetStyles;
 
 class SheetViewController extends Controller
 {
@@ -26,7 +27,14 @@ class SheetViewController extends Controller
       $newSheetViewId = $request->input('id');
       $sourceSheetId = $request->input('sourceSheetId');
       $visibleColumns = $request->input('visibleColumns');
-      $newSheetView = Sheet::create([ 'id' => $newSheetViewId, 'sourceSheetId' => $sourceSheetId, 'visibleColumns' => $visibleColumns ]);
+      $defaultVisibleRows = $request->input('defaultVisibleRows');
+      $newSheetView = Sheet::create([ 
+        'id' => $newSheetViewId, 
+        'sourceSheetId' => $sourceSheetId, 
+        'defaultVisibleRows' => $defaultVisibleRows,
+        'visibleColumns' => $visibleColumns 
+      ]);
+      $newSheetStyles = SheetStyles::create([ 'id' => Str::uuid()->toString(), 'sheetId' => $newSheetViewId ]);
       // Filters
       $newSheetViewFilters = $request->input('filters');
       foreach($newSheetViewFilters as $sheetViewFilter) {
