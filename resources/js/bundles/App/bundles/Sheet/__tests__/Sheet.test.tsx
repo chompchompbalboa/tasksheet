@@ -7,7 +7,7 @@ import '@testing-library/jest-dom/extend-expect'
 import axiosMock from 'axios'
 
 import { fireEvent, renderWithRedux, waitForElement } from '@app/testing/library'
-import { appStateFactory, IAppStateFactoryInput, getCellAndCellProps } from '@app/testing/mocks/appState'
+import { appStateFactory, appStateFactoryColumns, IAppStateFactoryInput, getCellAndCellProps } from '@app/testing/mocks/appState'
 
 import { Sheet, ISheetProps } from '@app/bundles/Sheet/Sheet'
 
@@ -56,7 +56,7 @@ describe('Sheet', () => {
 
   beforeAll(() => {
     Object.defineProperty(HTMLElement.prototype, 'offsetHeight', { configurable: true, value: 240 }) // 10 rows
-    Object.defineProperty(HTMLElement.prototype, 'offsetWidth', { configurable: true, value: 600 }) // 6 columns
+    Object.defineProperty(HTMLElement.prototype, 'offsetWidth', { configurable: true, value: appStateFactoryColumns.length * 100 })
   })
 
   afterAll(() => {

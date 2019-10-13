@@ -35,12 +35,17 @@ export interface IAppStateFactoryInput {
 
 export const appStateFactoryColumns = [
   'STRING',
+  'STRING',
+  'STRING',
   'NUMBER',
-  'BOOLEAN',
   'DATETIME',
   'DROPDOWN',
   'FILES',
   'PHOTOS',
+  'BOOLEAN',
+  'STRING',
+  'STRING',
+  'STRING'
 ]
 
 export const appStateFactory = ({
@@ -117,7 +122,7 @@ export const appStateFactory = ({
           sheetId: sheetId,
           name: sheetColumnId,
           width: 100,
-          typeId: 'STRING'
+          typeId: columns[currentColumnNumber - 1]
         }
         
         allSheetColumns[newSheetColumn.id] = newSheetColumn

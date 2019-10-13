@@ -11,11 +11,11 @@ import SheetCellString from '@app/bundles/Sheet/SheetCellString'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetCellDatetime = ({
+export const SheetCellDatetime = ({
   updateCellValue,
   value,
   ...passThroughProps
-}: SheetCellDatetimeProps) => {
+}: ISheetCellDatetimeProps) => {
 
   const [ localValue, setLocalValue ] = useState(value)
 
@@ -62,7 +62,7 @@ const SheetCellDatetime = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetCellDatetimeProps {
+export interface ISheetCellDatetimeProps {
   sheetId: string
   cell: ISheetCell
   cellId: string
