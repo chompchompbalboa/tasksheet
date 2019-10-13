@@ -36,6 +36,8 @@ export const updateSheetSelectionFromCellClick = (sheetId: string, cellId: strin
         dispatch(updateSheet(sheetId, {
           selections: {
             ...selections,
+            isOneEntireColumnSelected: false,
+            isOneEntireRowSelected: false,
             rangeCellIds: nextSelectionsRangeCellIds,
             rangeStartCellId: cell.id,
             rangeStartColumnId: cell.columnId,
@@ -82,6 +84,8 @@ export const updateSheetSelectionFromCellClick = (sheetId: string, cellId: strin
         dispatch(updateSheet(sheetId, {
           selections: {
             ...selections,
+            isOneEntireColumnSelected: false,
+            isOneEntireRowSelected: false,
             rangeCellIds: nextSheetSelectionRangeCellIds,
             rangeEndCellId: cell.id,
             rangeEndColumnId: visibleColumns[rangeEndColumnIndex],

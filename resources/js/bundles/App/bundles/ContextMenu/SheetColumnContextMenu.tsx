@@ -74,6 +74,7 @@ const SheetColumnContextMenu = ({
 
   return (
     <ContextMenu
+      testId="SheetColumnContextMenu"
       closeContextMenu={closeContextMenu}
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}

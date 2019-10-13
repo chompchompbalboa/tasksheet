@@ -41,6 +41,7 @@ export const selectSheetRows = (sheetId: ISheet['id'], startRowId: ISheetRow['id
     const nextRangeEndRowIndex = visibleRows.indexOf(nextRangeEndRow.id)
     const nextRangeEndColumnId = visibleColumns[Math.max(0, visibleColumns.length - 1)]
     const nextRangeEndCellId = nextRangeEndRow.cells[nextRangeEndColumnId]
+    const nextIsOneEntireRowSelected = nextRangeStartRow.id === nextRangeEndRow.id
 
     const nextRangeCellIds = new Set() as Set<string>
     for(let rowIndex = nextRangeStartRowIndex; rowIndex <= nextRangeEndRowIndex; rowIndex++) {
@@ -59,6 +60,8 @@ export const selectSheetRows = (sheetId: ISheet['id'], startRowId: ISheetRow['id
     dispatch(updateSheet(sheetId, { 
       selections: {
         ...selections,
+        isOneEntireColumnSelected: false,
+        isOneEntireRowSelected: nextIsOneEntireRowSelected,
         rangeCellIds: nextRangeCellIds,
         rangeStartCellId: nextRangeStartCellId,
         rangeStartColumnId: nextRangeStartColumnId,

@@ -33,6 +33,7 @@ const FolderContextMenu = ({
 
   return (
     <ContextMenu
+      testId="FolderContextMenu"
       closeContextMenu={closeContextMenu}
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}>

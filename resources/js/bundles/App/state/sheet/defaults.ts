@@ -66,6 +66,8 @@ export const defaultColumn = (sheetId: string, newColumnIndex?: number): ISheetC
 // Default Sheet Selections
 //-----------------------------------------------------------------------------
 export const defaultSheetSelections: ISheetSelections = {
+  isOneEntireColumnSelected: false,
+  isOneEntireRowSelected: false,
   isSelectedCellEditingPrevented: false,
   isSelectedCellNavigationPrevented: false,
   rangeCellIds: new Set() as Set<ISheetCell['id']>,

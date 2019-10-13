@@ -21,7 +21,7 @@ const {
 } = appStateFactory({} as IAppStateFactoryInput)
 
 const fileId = allFileIds[0]
-const sheetId = allFiles[allFileIds[0]].typeId
+const sheetId = allFiles[fileId].typeId
 
 console.warn = jest.fn()
 console.error = jest.fn()

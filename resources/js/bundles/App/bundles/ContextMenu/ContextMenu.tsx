@@ -12,7 +12,8 @@ const ContextMenu = ({
   closeContextMenu,
   contextMenuLeft,
   contextMenuRight,
-  contextMenuTop
+  contextMenuTop,
+  testId
 }: ContextMenuProps) => {
 
   const container = useRef(null)
@@ -32,6 +33,7 @@ const ContextMenu = ({
 
   return (
     <Container
+      data-testid={testId}
       ref={container}
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}
@@ -50,6 +52,7 @@ interface ContextMenuProps {
   contextMenuTop: number
   contextMenuLeft?: number
   contextMenuRight?: number
+  testId: string
 }
 
 //-----------------------------------------------------------------------------

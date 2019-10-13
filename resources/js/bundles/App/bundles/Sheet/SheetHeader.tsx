@@ -25,14 +25,14 @@ import ResizeContainer from '@app/components/ResizeContainer'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetHeader = ({
+export const SheetHeader = ({
   sheetId,
   column,
   handleContextMenu,
   isLast,
   isNextColumnAColumnBreak,
   visibleColumnsIndex
-}: SheetHeaderProps) => {
+}: ISheetHeaderProps) => {
   
   const dispatch = useDispatch()
   const rangeStartColumnId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeStartColumnId)
@@ -97,6 +97,7 @@ const SheetHeader = ({
 
   return (
     <Container
+      data-testid="SheetHeader"
       containerWidth={column.width}
       isColumnBreak={isColumnBreak}
       isLast={isLast}
@@ -105,6 +106,7 @@ const SheetHeader = ({
       onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'COLUMN', column.id, visibleColumnsIndex)}>
       {!isRenaming
         ? <NameContainer
+            data-testid="SheetHeaderNameContainer"
             isColumnBreak={isColumnBreak}
             onMouseDown={(e: MouseEvent) => handleContainerMouseDown(e)}>
             {columnName}
@@ -142,7 +144,7 @@ const SheetHeader = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetHeaderProps {
+export interface ISheetHeaderProps {
   sheetId: ISheet['id']
   column: ISheetColumn
   handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void

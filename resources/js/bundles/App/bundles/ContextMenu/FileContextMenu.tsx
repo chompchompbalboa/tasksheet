@@ -29,6 +29,7 @@ const FileContextMenu = ({
 
   return (
     <ContextMenu
+      testId="FileContextMenu"
       closeContextMenu={closeContextMenu}
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}>

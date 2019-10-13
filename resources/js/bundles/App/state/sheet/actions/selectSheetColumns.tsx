@@ -30,6 +30,7 @@ export const selectSheetColumns = (sheetId: ISheet['id'], startColumnId: ISheetC
     const endColumnIndex = endColumnId ? visibleColumns.indexOf(endColumnId) : visibleColumns.indexOf(startColumnId)
     const nextRangeStartColumnId = visibleColumns[startColumnIndex]
     const nextRangeEndColumnId = visibleColumns[endColumnIndex]
+    const nextIsOneEntireColumnSelected = nextRangeStartColumnId === nextRangeEndColumnId
 
     const nextRangeStartRow = allSheetRows[visibleRows[0]]
     const nextRangeEndRowIndex = visibleRows[visibleRows.length - 1] === 'ROW_BREAK' ? visibleRows.length - 2 : visibleRows.length - 1
@@ -55,6 +56,8 @@ export const selectSheetColumns = (sheetId: ISheet['id'], startColumnId: ISheetC
     dispatch(updateSheet(sheetId, { 
       selections: {
         ...selections,
+        isOneEntireColumnSelected: nextIsOneEntireColumnSelected,
+        isOneEntireRowSelected: false,
         rangeCellIds: nextRangeCellIds,
         rangeStartCellId: nextRangeStartCellId,
         rangeStartColumnId: nextRangeStartColumnId,

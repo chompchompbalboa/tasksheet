@@ -15,14 +15,14 @@ import {
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetRowLeader = memo(({
+export const SheetRowLeader = memo(({
   sheetId,
   rowId,
   handleContextMenu,
   isRowBreak,
   style,
   text = null
-}: SheetRowLeaderProps) => {
+}: ISheetRowLeaderProps) => {
   
   const dispatch = useDispatch()
   const selectSheetRows = (startRowId: ISheetRow['id'], endRowId?: ISheetRow['id']) => dispatch(selectSheetRowsAction(sheetId, startRowId, endRowId))
@@ -41,6 +41,7 @@ const SheetRowLeader = memo(({
   
   return (
     <Container
+      data-testid="SheetRowLeader"
       onMouseDown={(e: MouseEvent) => handleMouseDown(e)}
       onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'ROW', rowId)}
       isRowBreak={isRowBreak}
@@ -56,7 +57,7 @@ const SheetRowLeader = memo(({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetRowLeaderProps {
+export interface ISheetRowLeaderProps {
   sheetId: ISheet['id']
   rowId: ISheetRow['id']
   handleContextMenu?(e: MouseEvent, type: string, id: string, index?: number): void

@@ -35,6 +35,7 @@ const SheetRowContextMenu = ({
 
   return (
     <ContextMenu
+      testId="SheetRowContextMenu"
       closeContextMenu={closeContextMenu}
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}>

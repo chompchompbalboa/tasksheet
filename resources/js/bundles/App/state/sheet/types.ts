@@ -63,6 +63,8 @@ export interface ISheetUpdates {
   selections?: ISheetSelections
 }
 export interface ISheetSelections {
+  isOneEntireColumnSelected: boolean
+  isOneEntireRowSelected: boolean
   isSelectedCellEditingPrevented: boolean
   isSelectedCellNavigationPrevented: boolean
   rangeCellIds: Set<ISheetCell['id']>
