@@ -10,8 +10,9 @@ import { IThunkAction, IThunkDispatch } from '@app/state/types'
 
 import { ISheetRow } from '@app/state/sheet/types'
 
-import { updateSheet } from '@app/state/sheet/actions'
 import { createHistoryStep } from '@app/state/history/actions'
+import { updateSheet } from '@app/state/sheet/actions'
+import { resolveSheetRowLeaders } from '@app/state/sheet/resolvers'
 
 //-----------------------------------------------------------------------------
 // Delete Sheet Row
@@ -30,13 +31,15 @@ export const deleteSheetRow = (sheetId: string, rowId: ISheetRow['id']): IThunkA
     const nextSheetRows = sheet.rows.filter(sheetRowId => sheetRowId !== rowId)
     const nextSheetVisibleRows = sheet.visibleRows.filter(visibleRowId => visibleRowId !== rowId)
     const nextSheetDefaultVisibleRows = sheet.defaultVisibleRows.filter(visibleRowId => visibleRowId !== rowId)
+    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
     
     const actions = () => {
       batch(() => {
         dispatch(updateSheet(sheetId, {
           rows: nextSheetRows,
           defaultVisibleRows: nextSheetDefaultVisibleRows,
-          visibleRows: nextSheetVisibleRows
+          rowLeaders: nextSheetRowLeaders,
+          visibleRows: nextSheetVisibleRows,
         }))
       })
       mutation.deleteSheetRow(rowId)
@@ -47,6 +50,7 @@ export const deleteSheetRow = (sheetId: string, rowId: ISheetRow['id']): IThunkA
         dispatch(updateSheet(sheetId, {
           rows: sheet.rows,
           defaultVisibleRows: sheet.defaultVisibleRows,
+          rowLeaders: sheet.rowLeaders,
           visibleRows: sheet.visibleRows
         }))
         mutation.createSheetRows([{

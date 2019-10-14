@@ -16,6 +16,7 @@ import SheetActionDownloadCsv from '@app/bundles/Sheet/SheetActionDownloadCsv'
 import SheetActionDownloadSheet from '@app/bundles/Sheet/SheetActionDownloadSheet'
 import SheetActionFilter from '@app/bundles/Sheet/SheetActionFilter'
 import SheetActionGroup from '@app/bundles/Sheet/SheetActionGroup'
+import SheetActionRefreshVisibleRows from '@app/bundles/Sheet/SheetActionRefreshVisibleRows'
 import SheetActionSaveView from '@app/bundles/Sheet/SheetActionSaveView'
 import SheetActionSort from '@app/bundles/Sheet/SheetActionSort'
 
@@ -31,6 +32,7 @@ const SheetActions = ({
       <SheetActionFilter sheetId={sheetId}/>
       <SheetActionGroup sheetId={sheetId}/>
       <SheetActionSort sheetId={sheetId}/>
+      <SheetActionRefreshVisibleRows sheetId={sheetId}/>
       <SheetActionSaveView sheetId={sheetId}/>
       <Divider />
       <SheetActionDownloadCsv sheetId={sheetId}/>

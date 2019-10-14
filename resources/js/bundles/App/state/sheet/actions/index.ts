@@ -43,6 +43,7 @@ export { updateSheetFilter } from '@app/state/sheet/actions/updateSheetFilter'
 export { updateSheetGroup } from '@app/state/sheet/actions/updateSheetGroup'
 export { updateSheetSort } from '@app/state/sheet/actions/updateSheetSort'
 export { updateSheetStyles } from '@app/state/sheet/actions/updateSheetStyles'
+export { refreshSheetVisibleRows } from '@app/state/sheet/actions/refreshSheetVisibleRows'
 
 export { copySheetRange } from '@app/state/sheet/actions/copySheetRange'
 export { cutSheetRange } from '@app/state/sheet/actions/cutSheetRange'
