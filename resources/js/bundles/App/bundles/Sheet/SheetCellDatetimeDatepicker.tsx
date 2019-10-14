@@ -69,6 +69,7 @@ export const SheetCellDatetime = ({
       <DropdownContainer>
         <DatepickerHeader>
           <GoToPreviousMonth
+            data-testid="SheetCellDatetimeDatepickerGoToPreviousMonth"
             onClick={() => handleChangeCurrentMonth(moment(currentMonth).subtract(1, 'M'))}>
             <Icon
               icon={ARROW_LEFT}/>
@@ -77,12 +78,14 @@ export const SheetCellDatetime = ({
             {currentMonth.format('MMMM YYYY')}
           </CurrentMonth>
           <GoToNextMonth
+            data-testid="SheetCellDatetimeDatepickerGoToNextMonth"
             onClick={() => handleChangeCurrentMonth(moment(currentMonth).add(1, 'M'))}>
             <Icon
               icon={ARROW_RIGHT}/>
           </GoToNextMonth>
         </DatepickerHeader>
-        <DatepickerDates>
+        <DatepickerDates
+          data-testid="SheetCellDatetimeDatepickerDates">
           {currentMonthDatesArray.map((currentDate, index) =>
             <DatepickerDate
               key={index}
