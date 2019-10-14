@@ -219,7 +219,7 @@ describe('SheetCellDatetime', () => {
   it("changes the input value from the datepicker", async () => {
     const currentDate = moment()
     const { cell: R1CDatetimeCell } = getCellAndCellProps({ row: 1, column: datetimeColumnIndex + 1 })
-    const { getAllByTestId, getByTestId, getByText } = renderWithRedux(<Sheet {...sheetProps}/>, { store: createMockStore(mockAppState) })
+    const { getAllByTestId, getByTestId } = renderWithRedux(<Sheet {...sheetProps}/>, { store: createMockStore(mockAppState) })
     const SheetCellDatetimes = await waitForElement(() => getAllByTestId('SheetCellDatetime'))
 
     const getSheetCellDatetime = (cell: ISheetCell) => {
