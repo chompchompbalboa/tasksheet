@@ -3,9 +3,9 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 
-import { TActiveSheetSetting } from '@app/bundles/Sheet/SheetSettings'
+import { ISheetSettingsActiveSheetSettings } from '@app/state/sheetSettings/types'
 
-import SheetSettingsContentColumnTypes from '@app/bundles/Sheet/SheetSettingsContentColumnTypes'
+import SheetSettingsContentColumnSettings from '@app/bundles/Sheet/SheetSettingsContentColumnSettings'
 
 //-----------------------------------------------------------------------------
 // Components
@@ -15,7 +15,7 @@ const SheetSettingsContent = ({
 }: SheetSettingsContentProps) => {
 
   const content = {
-    COLUMN_TYPES: SheetSettingsContentColumnTypes
+    COLUMN_SETTINGS: SheetSettingsContentColumnSettings
   }
 
   const ContentComponent = activeSheetSetting ? content[activeSheetSetting] : null
@@ -27,7 +27,7 @@ const SheetSettingsContent = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetSettingsContentProps {
-  activeSheetSetting: TActiveSheetSetting
+  activeSheetSetting: ISheetSettingsActiveSheetSettings
 }
 
 //-----------------------------------------------------------------------------

@@ -18,6 +18,7 @@ const ContextMenuItem = ({
   isLastItem = false,
   logo = null,
   onClick,
+  testId = 'ContextMenuItem',
   text
 }: ContextMenuItemProps) => {
   
@@ -25,6 +26,7 @@ const ContextMenuItem = ({
 
   return (
     <Container
+      data-testid={testId}
       isFirstItem={isFirstItem}
       isLastItem={isLastItem}
       onClick={onClick}
@@ -55,6 +57,7 @@ interface ContextMenuItemProps {
   logo?: string
   onClick?(...args: any): void
   text: string
+  testId?: string
 }
 
 //-----------------------------------------------------------------------------

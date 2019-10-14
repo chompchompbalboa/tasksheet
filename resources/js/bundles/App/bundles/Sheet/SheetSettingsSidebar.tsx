@@ -5,7 +5,7 @@ import React from 'react'
 
 import { SHEET_COLUMN } from '@app/assets/icons'
 
-import { TActiveSheetSetting } from '@app/bundles/Sheet/SheetSettings'
+import { ISheetSettingsActiveSheetSettings } from '@app/state/sheetSettings/types'
 
 import SheetSettingsSidebarItem from '@app/bundles/Sheet/SheetSettingsSidebarItem'
 
@@ -20,10 +20,10 @@ const SheetSettingsSidebar = ({
   return (
     <>
       <SheetSettingsSidebarItem 
-        text="Column Types"
+        text="Column Settings"
         icon={SHEET_COLUMN}
-        isActive={activeSheetSetting === 'COLUMN_TYPES'}
-        onClick={() => setActiveSheetSetting('COLUMN_TYPES')}/>
+        isActive={activeSheetSetting === 'COLUMN_SETTINGS'}
+        onClick={() => setActiveSheetSetting('COLUMN_SETTINGS')}/>
     </>
   )
 }
@@ -32,8 +32,8 @@ const SheetSettingsSidebar = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetSettingsSidebarProps {
-  activeSheetSetting: TActiveSheetSetting
-  setActiveSheetSetting(nextSheetSetting: TActiveSheetSetting): void
+  activeSheetSetting: ISheetSettingsActiveSheetSettings
+  setActiveSheetSetting(nextSheetSetting: ISheetSettingsActiveSheetSettings): void
 }
 
 //-----------------------------------------------------------------------------

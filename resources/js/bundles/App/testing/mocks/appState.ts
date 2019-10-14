@@ -272,6 +272,10 @@ export const appState: IAppState = {
     allSheetRows,
     allSheetCells
   },
+  sheetSettings: {
+    activeSheetSetting: 'COLUMN_SETTINGS',
+    activeSheetSettingColumnSetting: 'STRING',
+  },
   tab: {
     tabs: allFileIds.map(fileId => fileId),
     activeTab: allFileIds[0]

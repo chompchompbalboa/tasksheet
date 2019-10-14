@@ -10,10 +10,12 @@ import styled from 'styled-components'
 const ContentComponent = ({
   Sidebar = null,
   Header = null,
-  Content = null
+  Content = null,
+  testId = 'Content'
 }: ContentProps) => {
   return (
-    <Container>
+    <Container
+      data-testid={testId}>
       <SidebarContainer>
         {Sidebar && <Sidebar />}
       </SidebarContainer>
@@ -36,6 +38,7 @@ interface ContentProps {
   Sidebar?: any
   Header?: any
   Content?: any
+  testId?: string
 }
 
 //-----------------------------------------------------------------------------

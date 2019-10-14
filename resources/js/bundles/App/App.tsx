@@ -14,7 +14,7 @@ import Tabs from '@app/bundles/Tabs/Tabs'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const App = () => {
+export const App = () => {
 
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 

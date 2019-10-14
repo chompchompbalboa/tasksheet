@@ -6,6 +6,7 @@ import historyReducer from '@app/state/history/reducers'
 import folderReducer from '@app/state/folder/reducers'
 import modalReducer from '@app/state/modal/reducers'
 import sheetReducer from '@app/state/sheet/reducers'
+import sheetSettingsReducer from '@app/state/sheetSettings/reducers'
 import tabReducer from '@app/state/tab/reducers'
 import userReducer from '@app/state/user/reducers'
 
@@ -17,6 +18,7 @@ export const appReducer = combineReducers({
 	folder: folderReducer,
   modal: modalReducer,
 	sheet: sheetReducer,
+	sheetSettings: sheetSettingsReducer,
 	tab: tabReducer,
 	user: userReducer,
 })

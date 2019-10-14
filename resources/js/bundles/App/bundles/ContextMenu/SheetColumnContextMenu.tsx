@@ -23,6 +23,12 @@ import {
   updateSheetActive,
   updateSheetColumn
 } from '@app/state/sheet/actions'
+import {
+  updateSheetSettings
+} from '@app/state/sheetSettings/actions'
+import { 
+  updateActiveTab 
+} from '@app/state/tab/actions'
 
 import ContextMenu from '@app/bundles/ContextMenu/ContextMenu'
 import ContextMenuDivider from '@app/bundles/ContextMenu/ContextMenuDivider'
@@ -31,7 +37,7 @@ import ContextMenuItem from '@app/bundles/ContextMenu/ContextMenuItem'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetColumnContextMenu = ({
+export const SheetColumnContextMenu = ({
   sheetId,
   columnId,
   columnIndex,
@@ -39,7 +45,7 @@ const SheetColumnContextMenu = ({
   contextMenuLeft,
   contextMenuTop,
   contextMenuRight,
-}: SheetColumnContextMenuProps) => {
+}: ISheetColumnContextMenuProps) => {
   
   // Redux
   const dispatch = useDispatch()
@@ -129,10 +135,15 @@ const SheetColumnContextMenu = ({
                   logo={sheetColumnType.id === currentColumnType.id ? CHECKMARK : null}
                   onClick={() => closeContextMenuOnClick(() => dispatch(updateSheetColumn(columnId, { typeId: currentColumnType.id })))}
                   text={currentColumnType.name}
-                  />
-              )
-            })}
-          </ContextMenuItem>
+                  />)})}
+            </ContextMenuItem>
+            <ContextMenuItem
+              testId="SheetColumnContextMenuColumnSettings"
+              text="Column Settings" 
+              onClick={() => closeContextMenuOnClick(() => {
+                dispatch(updateActiveTab('SHEET_SETTINGS'))
+                dispatch(updateSheetSettings({ activeSheetSetting: 'COLUMN_SETTINGS', activeSheetSettingColumnSetting: sheetColumnType.id }))
+            })}/>
           <ContextMenuDivider />
         </>
       }
@@ -148,7 +159,7 @@ const SheetColumnContextMenu = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetColumnContextMenuProps {
+export interface ISheetColumnContextMenuProps {
   sheetId: ISheet['id']
   columnId: ISheetColumn['id']
   columnIndex: number

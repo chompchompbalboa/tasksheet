@@ -8,9 +8,11 @@ import styled from 'styled-components'
 // Components
 //-----------------------------------------------------------------------------
 const SheetSettingsContentContent = ({
-  children
+  children,
+  testId = 'SheetSettingsContentContent'
 }: SheetSettingsContentContentProps) => (
-  <Container>
+  <Container
+    data-testid={testId}>
     {children}
   </Container>
 )
@@ -20,6 +22,7 @@ const SheetSettingsContentContent = ({
 //-----------------------------------------------------------------------------
 interface SheetSettingsContentContentProps {
   children?: any
+  testId?: string
 }
 
 //-----------------------------------------------------------------------------
