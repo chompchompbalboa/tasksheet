@@ -311,9 +311,9 @@ describe('SheetCell', () => {
   it("SheetCellDatetime begins editing the cell when double clicked", async () => {
     const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'DATETIME' })
     const { getByText, getByTestId, queryByTestId } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
-    expect(queryByTestId('SheetCellStringTextarea')).toBeNull()
+    expect(queryByTestId('SheetCellDatetimeDatepickerInput')).toBeNull()
     fireEvent.doubleClick(getByText(cell.value))
-    expect(getByTestId('SheetCellStringTextarea')).toBeTruthy()
+    expect(getByTestId('SheetCellDatetimeDatepickerInput')).toBeTruthy()
   })
 
   it("SheetCellDropdown begins editing the cell and displays the dropdown when double clicked", async () => {

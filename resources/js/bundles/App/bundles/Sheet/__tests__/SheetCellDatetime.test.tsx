@@ -114,6 +114,27 @@ describe('SheetCellDatetime', () => {
     expect(getByTestId('SheetCellDatetime')).toHaveTextContent(sheetCell.value)
   })
 
+  it("opens the datepicker when the user is editing", async () => {
+    const { cell: R1CDatetimeCell } = getCellAndCellProps({ row: 1, column: datetimeColumnIndex + 1 })
+    const { getAllByTestId, getByTestId } = renderWithRedux(<Sheet {...sheetProps}/>, { store: createMockStore(mockAppState) })
+    const SheetCellDatetimes = await waitForElement(() => getAllByTestId('SheetCellDatetime'))
+
+    const getSheetCellDatetime = (cell: ISheetCell) => {
+      return SheetCellDatetimes.find(SheetCellDatetime => {
+        const { queryByText } = within(SheetCellDatetime)
+        return queryByText(cell.value)
+      })
+    }
+    const SheetCellDatetime = getSheetCellDatetime(R1CDatetimeCell)
+    expect(SheetCellDatetime).toBeTruthy()
+
+    fireEvent.doubleClick(SheetCellDatetime)
+
+    const SheetCellDatetimeDatepicker = await waitForElement(() => getByTestId('SheetCellDatetimeDatepicker'))
+    expect(SheetCellDatetimeDatepicker).toBeTruthy()
+  })
+
+
   it("updates its value on user input", async () => {
     const { cell: R1CDatetimeCell } = getCellAndCellProps({ row: 1, column: datetimeColumnIndex + 1 })
     const { getAllByTestId, getByTestId } = renderWithRedux(<Sheet {...sheetProps}/>, { store: createMockStore(mockAppState) })
@@ -132,14 +153,14 @@ describe('SheetCellDatetime', () => {
     fireEvent.keyDown(SheetCellDatetime, { key: testDate[0] })
     expect(SheetCellDatetime).toContainHTML(testDate[0])
 
-    const SheetCellDatetimeTextarea = await waitForElement(() => getByTestId('SheetCellStringTextarea'))
-    fireEvent.change(SheetCellDatetimeTextarea, { target: { value: testDate } })
-    expect(SheetCellDatetimeTextarea).toContainHTML(testDate)
+    const SheetCellDatetimeDatepickerInput = await waitForElement(() => getByTestId('SheetCellDatetimeDatepickerInput'))
+    fireEvent.change(SheetCellDatetimeDatepickerInput, { target: { value: testDate } })
+    expect(SheetCellDatetimeDatepickerInput).toContainHTML(testDate)
   })
 
-  it("updates the date format the cell is displayed in", async () => {
+  it("correctly formats the date and updates the app state after editing", async () => {
     const { cell: R1CDatetimeCell } = getCellAndCellProps({ row: 1, column: datetimeColumnIndex + 1 })
-    const { getAllByTestId, getByTestId, queryByText } = renderWithRedux(<Sheet {...sheetProps}/>, { store: createMockStore(mockAppState) })
+    const { getAllByTestId, getByTestId } = renderWithRedux(<Sheet {...sheetProps}/>, { store: createMockStore(mockAppState) })
     const SheetCellDatetimes = await waitForElement(() => getAllByTestId('SheetCellDatetime'))
 
     const getSheetCellDatetime = (cell: ISheetCell) => {
@@ -151,18 +172,14 @@ describe('SheetCellDatetime', () => {
     const SheetCellDatetime = getSheetCellDatetime(R1CDatetimeCell)
     expect(SheetCellDatetime).toBeTruthy()
 
-    fireEvent.mouseDown(SheetCellDatetime)
-    fireEvent.keyDown(SheetCellDatetime, { key: '1' })
-    expect(SheetCellDatetime).toContainHTML('1')
+    fireEvent.doubleClick(SheetCellDatetime)
 
-    const SheetCellDatetimeTextarea = await waitForElement(() => getByTestId('SheetCellStringTextarea'))
-    fireEvent.change(SheetCellDatetimeTextarea, { target: { value: '1/1/10' } })
-    expect(SheetCellDatetimeTextarea).toContainHTML('1/1/10')
+    const SheetCellDatetimeDatepickerInput = await waitForElement(() => getByTestId('SheetCellDatetimeDatepickerInput'))
+    fireEvent.change(SheetCellDatetimeDatepickerInput, { target: { value: '1/1/10' } })
+    expect(SheetCellDatetimeDatepickerInput).toHaveValue('1/1/10')
 
-    const UpdatedSheetCellDatetime = await waitForElement(() => queryByText('01/01/2010'))
-    expect(UpdatedSheetCellDatetime).toBeTruthy()
+    fireEvent.keyDown(SheetCellDatetime, { key: 'Enter' })
+    expect(SheetCellDatetime).toContainHTML('01/01/2010')
   })
-
-
 
 })

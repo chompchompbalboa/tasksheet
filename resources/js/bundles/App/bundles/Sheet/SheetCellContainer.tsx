@@ -58,7 +58,7 @@ const SheetCellContainer = ({
   
   useEffect(() => {
     if(isCellEditing) {
-      focusCell()
+      focusCell && focusCell()
       addEventListener('keydown', handleKeydownWhileCellIsEditing)
       addEventListener('click', handleClickWhileCellIsEditing)
     }
