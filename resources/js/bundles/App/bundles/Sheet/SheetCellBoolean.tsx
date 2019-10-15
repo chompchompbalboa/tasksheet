@@ -2,9 +2,10 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useCallback, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { IAppState } from '@app/state'
 import { ISheetCell, ISheetColumnType } from '@app/state/sheet/types'
 import {
   updateSheetSelectionFromArrowKey as updateSheetSelectionFromArrowKeyAction
@@ -23,6 +24,8 @@ const SheetCellBoolean = ({
 
   const dispatch = useDispatch()
   const updateSheetSelectionFromArrowKey = useCallback((cellId, moveSelectedCellDirection) => dispatch(updateSheetSelectionFromArrowKeyAction(sheetId, cellId, moveSelectedCellDirection)), [])
+  const isSelectedCellEditingPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellEditingPrevented)
+  const isSelectedCellNavigationPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellNavigationPrevented)
   
   useEffect(() => {
     if(isCellSelected) {
@@ -34,22 +37,27 @@ const SheetCellBoolean = ({
     return () => {
       window.removeEventListener('keydown', handleKeydownWhileCellIsSelected)
     }
-  }, [ isCellSelected ])
+  }, [ isCellSelected, isSelectedCellEditingPrevented, isSelectedCellNavigationPrevented ])
 
   const handleKeydownWhileCellIsSelected = (e: KeyboardEvent) => {
-    e.preventDefault()
-    // Otherwise, navigate to an adjacent cell on an arrow or enter press
-    if(e.key === 'Enter' || e.key === 'ArrowDown') {
-      updateSheetSelectionFromArrowKey(cellId, 'DOWN')
-    }
-    if(e.key === 'Tab' || e.key === 'ArrowRight') {
-      updateSheetSelectionFromArrowKey(cellId, 'RIGHT')
-    }
-    if(e.key === 'ArrowLeft') {
-      updateSheetSelectionFromArrowKey(cellId, 'LEFT')
-    }
-    if(e.key === 'ArrowUp') {
-      updateSheetSelectionFromArrowKey(cellId, 'UP')
+    if(!isSelectedCellEditingPrevented && !isSelectedCellNavigationPrevented) {
+      // Otherwise, navigate to an adjacent cell on an arrow or enter press
+      if(e.key === 'Enter' || e.key === 'ArrowDown') {
+        e.preventDefault()
+        updateSheetSelectionFromArrowKey(cellId, 'DOWN')
+      }
+      if(e.key === 'Tab' || e.key === 'ArrowRight') {
+        e.preventDefault()
+        updateSheetSelectionFromArrowKey(cellId, 'RIGHT')
+      }
+      if(e.key === 'ArrowLeft') {
+        e.preventDefault()
+        updateSheetSelectionFromArrowKey(cellId, 'LEFT')
+      }
+      if(e.key === 'ArrowUp') {
+        e.preventDefault()
+        updateSheetSelectionFromArrowKey(cellId, 'UP')
+      }
     }
   }
   
