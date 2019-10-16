@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -23,7 +23,6 @@ const SheetCellBoolean = ({
 }: SheetCellBooleanProps) => {
 
   const dispatch = useDispatch()
-  const updateSheetSelectionFromArrowKey = useCallback((cellId, moveSelectedCellDirection) => dispatch(updateSheetSelectionFromArrowKeyAction(sheetId, cellId, moveSelectedCellDirection)), [])
   const isSelectedCellEditingPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellEditingPrevented)
   const isSelectedCellNavigationPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellNavigationPrevented)
   
@@ -44,19 +43,19 @@ const SheetCellBoolean = ({
       // Otherwise, navigate to an adjacent cell on an arrow or enter press
       if(e.key === 'Enter' || e.key === 'ArrowDown') {
         e.preventDefault()
-        updateSheetSelectionFromArrowKey(cellId, 'DOWN')
+        dispatch(updateSheetSelectionFromArrowKeyAction(sheetId, cellId, 'DOWN', e.shiftKey))
       }
       if(e.key === 'Tab' || e.key === 'ArrowRight') {
         e.preventDefault()
-        updateSheetSelectionFromArrowKey(cellId, 'RIGHT')
+        dispatch(updateSheetSelectionFromArrowKeyAction(sheetId, cellId, 'RIGHT', e.shiftKey))
       }
       if(e.key === 'ArrowLeft') {
         e.preventDefault()
-        updateSheetSelectionFromArrowKey(cellId, 'LEFT')
+        dispatch(updateSheetSelectionFromArrowKeyAction(sheetId, cellId, 'LEFT', e.shiftKey))
       }
       if(e.key === 'ArrowUp') {
         e.preventDefault()
-        updateSheetSelectionFromArrowKey(cellId, 'UP')
+        dispatch(updateSheetSelectionFromArrowKeyAction(sheetId, cellId, 'UP', e.shiftKey))
       }
     }
   }

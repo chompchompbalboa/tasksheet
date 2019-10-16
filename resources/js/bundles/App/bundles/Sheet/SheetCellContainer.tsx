@@ -88,7 +88,7 @@ const SheetCellContainer = ({
     if(e.key === "Enter") {
       batch(() => {
         dispatch(updateSheetCell(cellId, { isCellEditing: false }, null, true))
-        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'DOWN'))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'DOWN', e.shiftKey))
       })
       onCloseCell && onCloseCell()
     }
@@ -96,22 +96,22 @@ const SheetCellContainer = ({
       if(e.key === 'Enter' || e.key === 'ArrowDown') {
         e.preventDefault()
         dispatch(updateSheetCell(cellId, { isCellEditing: false }, null, true))
-        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'DOWN'))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'DOWN', e.shiftKey))
       }
       if(e.key === 'Tab' || e.key === 'ArrowRight') {
         e.preventDefault()
         dispatch(updateSheetCell(cellId, { isCellEditing: false }, null, true))
-        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'RIGHT'))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'RIGHT', e.shiftKey))
       }
       if(e.key === 'ArrowLeft') {
         e.preventDefault()
         dispatch(updateSheetCell(cellId, { isCellEditing: false }, null, true))
-        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'LEFT'))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'LEFT', e.shiftKey))
       }
       if(e.key === 'ArrowUp') {
         e.preventDefault()
         dispatch(updateSheetCell(cellId, { isCellEditing: false }, null, true))
-        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'UP'))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'UP', e.shiftKey))
       }
     }
   }
@@ -128,19 +128,19 @@ const SheetCellContainer = ({
       // Otherwise, navigate to an adjacent cell on an arrow or enter press
       if(e.key === 'Enter' || e.key === 'ArrowDown') {
         e.preventDefault()
-        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'DOWN'))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'DOWN', e.shiftKey))
       }
       if(e.key === 'Tab' || e.key === 'ArrowRight') {
         e.preventDefault()
-        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'RIGHT'))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'RIGHT', e.shiftKey))
       }
       if(e.key === 'ArrowLeft') {
         e.preventDefault()
-        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'LEFT'))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'LEFT', e.shiftKey))
       }
       if(e.key === 'ArrowUp') {
         e.preventDefault()
-        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'UP'))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'UP', e.shiftKey))
       }
       if(e.key === 'Delete' || e.key === 'Backspace') {
         e.preventDefault()
