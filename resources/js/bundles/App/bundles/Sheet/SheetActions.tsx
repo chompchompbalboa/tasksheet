@@ -12,6 +12,7 @@ import SheetActionCellStyleBackgroundColor from '@app/bundles/Sheet/SheetActionC
 import SheetActionCellStyleBold from '@app/bundles/Sheet/SheetActionCellStyleBold'
 import SheetActionCellStyleColor from '@app/bundles/Sheet/SheetActionCellStyleColor'
 import SheetActionCellStyleItalic from '@app/bundles/Sheet/SheetActionCellStyleItalic'
+import SheetActionCreateRows from '@app/bundles/Sheet/SheetActionCreateRows'
 import SheetActionDownloadCsv from '@app/bundles/Sheet/SheetActionDownloadCsv'
 import SheetActionDownloadSheet from '@app/bundles/Sheet/SheetActionDownloadSheet'
 import SheetActionFilter from '@app/bundles/Sheet/SheetActionFilter'
@@ -34,6 +35,8 @@ const SheetActions = ({
       <SheetActionSort sheetId={sheetId}/>
       <SheetActionRefreshVisibleRows sheetId={sheetId}/>
       <SheetActionSaveView sheetId={sheetId}/>
+      <Divider />
+      <SheetActionCreateRows sheetId={sheetId}/>
       <Divider />
       <SheetActionDownloadCsv sheetId={sheetId}/>
       <SheetActionDownloadSheet sheetId={sheetId}/>

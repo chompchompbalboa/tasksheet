@@ -2,10 +2,10 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useState } from 'react'
-import { batch, useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { ARROW_RIGHT } from '@app/assets/icons'
+import { ARROW_DOWN, ARROW_UP } from '@app/assets/icons'
 
 import { IAppState } from '@app/state'
 import { ISheet } from '@app/state/sheet/types'
@@ -28,9 +28,14 @@ const SheetCreateRows = ({
 }: ISheetCreateRowsProps) => {
 
   const dispatch = useDispatch()
+  
+  const localStorageKey = 'tracksheet.SheetActionCreateRows.insertAtTopOrBottomOfSheet'
+  
+  const [ insertAtTopOrBottomOfSheet, setInsertAtTopOrBottomOfSheet ] = useState(localStorage.getItem(localStorageKey) || 'TOP')
 
   const sheetVisibleRows = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleRows)
-
+  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
+  
   const [ isEditingInputValue, setIsEditingInputValue ] = useState(false)
   const [ inputValue, setInputValue ] = useState(1)
   
@@ -38,12 +43,16 @@ const SheetCreateRows = ({
     if(isEditingInputValue) { window.addEventListener('keydown', createRowsOnKeydownEnter) }
     else { window.removeEventListener('keydown', createRowsOnKeydownEnter) }
     return () => window.removeEventListener('keydown', createRowsOnKeydownEnter)
-  }, [ inputValue ])
+  }, [ inputValue, isEditingInputValue ])
 
-  const createRows = () => {
-    batch(() => {
-        dispatch(createSheetRows(sheetId, inputValue, sheetVisibleRows[0]))
-    })}
+  const createRows = (topOrBottom: 'TOP' | 'BOTTOM') => {
+    localStorage.setItem(localStorageKey, topOrBottom)
+    setInsertAtTopOrBottomOfSheet(topOrBottom)
+    const createSheetRowIndex = topOrBottom === 'TOP' 
+      ? sheetVisibleRows[0] 
+      : sheetVisibleRows[sheetVisibleRows.length - 1] !== 'ROW_BREAK' ? sheetVisibleRows[sheetVisibleRows.length - 1] : sheetVisibleRows[sheetVisibleRows.length - 2]
+    dispatch(createSheetRows(sheetId, inputValue, createSheetRowIndex, topOrBottom === 'TOP' ? 'ABOVE' : 'BELOW'))
+  }
   
   const handleAutosizeInputFocus = () => {
     setIsEditingInputValue(true)
@@ -56,7 +65,9 @@ const SheetCreateRows = ({
     dispatch(allowSelectedCellNavigation(sheetId))
   }
   
-  const createRowsOnKeydownEnter = (e: KeyboardEvent) => { if(e.key === 'Enter') { createRows() } }
+  const createRowsOnKeydownEnter = (e: KeyboardEvent) => { 
+    if(e.key === 'Enter') { createRows(insertAtTopOrBottomOfSheet as 'TOP' | 'BOTTOM') } 
+  }
 
   return (
     <Container>
@@ -80,11 +91,20 @@ const SheetCreateRows = ({
           fontSize: 'inherit',
           fontWeight: 'inherit'}}/>
       row{inputValue > 1 ? 's' : ''}
-      <AddRowButton
-        onClick={() => createRows()}>
+      <TopOrBottomButton
+        isSelected={insertAtTopOrBottomOfSheet === 'TOP'}
+        onClick={() => createRows('TOP')}
+        userColorPrimary={userColorPrimary}>
         <Icon
-          icon={ARROW_RIGHT}/>
-      </AddRowButton>
+          icon={ARROW_UP}/>
+      </TopOrBottomButton>
+      <TopOrBottomButton
+        isSelected={insertAtTopOrBottomOfSheet === 'BOTTOM'}
+        onClick={() => createRows('BOTTOM')}
+        userColorPrimary={userColorPrimary}>
+        <Icon
+          icon={ARROW_DOWN}/>
+      </TopOrBottomButton>
     </Container>
   )
 }
@@ -94,7 +114,6 @@ const SheetCreateRows = ({
 //-----------------------------------------------------------------------------
 interface ISheetCreateRowsProps {
   sheetId: ISheet['id']
-  sourceSheetId: ISheet['id']
 }
 
 //-----------------------------------------------------------------------------
@@ -106,21 +125,26 @@ const Container = styled.div`
   align-items: center;
 `
 
-const AddRowButton = styled.div`
+const TopOrBottomButton = styled.div`
   margin-left: 0.375rem;
   cursor: pointer;  
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(210, 210, 210);
+  background-color: ${ ({ isSelected, userColorPrimary }: ITopOrBottomButton ) => isSelected ? userColorPrimary : 'rgb(210, 210, 210)' };
+  color: ${ ({ isSelected }: ITopOrBottomButton ) => isSelected ? 'rgb(240, 240, 240)' : 'inherit' };
   border-radius: 3px;
   padding: 0.25rem;
   transition: all 0.05s;
   &:hover {
-    background-color: rgb(0, 120, 0);
+    background-color: ${ ({ userColorPrimary }: ITopOrBottomButton ) => userColorPrimary };
     color: rgb(240, 240, 240);
   }
 `
+interface ITopOrBottomButton {
+  isSelected: boolean
+  userColorPrimary: string
+}
 
 //-----------------------------------------------------------------------------
 // Export

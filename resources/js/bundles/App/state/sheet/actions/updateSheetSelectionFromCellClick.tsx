@@ -4,7 +4,7 @@
 import { batch } from 'react-redux'
 import { IAppState } from '@app/state'
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
-import { ISheetCell } from '@app/state/sheet/types'
+import { ISheet, ISheetCell } from '@app/state/sheet/types'
 
 import { updateSheet, updateSheetCellReducer } from '@app/state/sheet/actions'
 
@@ -30,11 +30,16 @@ export const updateSheetSelectionFromCellClick = (sheetId: string, cellId: strin
     let nextRangeStartCellIsCellSelectedSheetIds: Set<string>
     if(selections.rangeStartCellId) {
       const rangeStartCell = allSheetCells[selections.rangeStartCellId]
-      nextRangeStartCellIsCellSelectedSheetIds = new Set([ ...rangeStartCell.isCellSelectedSheetIds ])
-      nextRangeStartCellIsCellSelectedSheetIds.delete(sheetId)
+      if(rangeStartCell) {
+        nextRangeStartCellIsCellSelectedSheetIds = new Set([ ...rangeStartCell.isCellSelectedSheetIds ])
+        nextRangeStartCellIsCellSelectedSheetIds.delete(sheetId)
+      }
+      else {
+        nextRangeStartCellIsCellSelectedSheetIds = new Set() as Set<ISheet['id']>
+      }
     }
     else {
-      nextRangeStartCellIsCellSelectedSheetIds = new Set()
+      nextRangeStartCellIsCellSelectedSheetIds = new Set() as Set<ISheet['id']>
     }
 
     const selectCell = () => {
