@@ -19,6 +19,7 @@ const SheetActionCellStyleColorPicker = ({
   sheetId,
   icon,
   initialColor,
+  isBeforeDivider = false,
   sheetStylesSet,
   sheetStylesColorReference,
   updateSheetStyles,
@@ -106,7 +107,8 @@ const SheetActionCellStyleColorPicker = ({
   ]
 
   return (
-    <Container>
+    <Container
+      isBeforeDivider={isBeforeDivider}>
       <CurrentColorContainer
         containerBackgroundColor={userColorPrimary}
         onClick={() => handleContainerClick()}>
@@ -157,6 +159,7 @@ interface SheetActionCellStyleColorPickerProps {
   sheetId: ISheet['id']
   icon: string
   initialColor?: string
+  isBeforeDivider?: boolean
   sheetStylesSet: Set<string>
   sheetStylesColorReference: { [cellId: string]: string }
   updateSheetStyles(nextSheetStylesSet: Set<string>, nextSheetStylesColorReference: { [cellId: string ]: string }): void
@@ -167,7 +170,7 @@ interface SheetActionCellStyleColorPickerProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   position: relative;
-  margin-right: 0.375rem;
+  margin-right: ${ ({ isBeforeDivider }: IContainer ) => isBeforeDivider ? '0' : '0.375rem' };
   cursor: pointer;  
   display: flex;
   justify-content: center;
@@ -177,6 +180,9 @@ const Container = styled.div`
   text-decoration: none;
   border-radius: 3px;
 `
+interface IContainer {
+  isBeforeDivider: boolean
+}
 
 const CurrentColorContainer = styled.div`
   display: flex;
@@ -188,11 +194,11 @@ const CurrentColorContainer = styled.div`
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
   &:hover {
-    background-color: ${ ({ containerBackgroundColor }: IContainer) => containerBackgroundColor};
+    background-color: ${ ({ containerBackgroundColor }: ICurrentColorContainer) => containerBackgroundColor};
     color: rgb(240, 240, 240);
   }
 `
-interface IContainer {
+interface ICurrentColorContainer {
   containerBackgroundColor: string
 }
 

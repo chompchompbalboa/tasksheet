@@ -37,6 +37,7 @@ const SheetActionCellStyleColor = ({
       sheetId={sheetId}
       icon={COLOR}
       initialColor='black'
+      isBeforeDivider={true}
       sheetStylesSet={sheetStyles && sheetStyles.color}
       sheetStylesColorReference={sheetStyles && sheetStyles.colorReference}
       updateSheetStyles={updateSheetStyles}/>

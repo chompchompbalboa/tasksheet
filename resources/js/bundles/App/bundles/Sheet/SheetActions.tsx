@@ -38,13 +38,13 @@ const SheetActions = ({
       <Divider />
       <SheetActionCreateRows sheetId={sheetId}/>
       <Divider />
-      <SheetActionDownloadCsv sheetId={sheetId}/>
-      <SheetActionDownloadSheet sheetId={sheetId}/>
-      <Divider />
       <SheetActionCellStyleBold sheetId={sheetId}/>
       <SheetActionCellStyleItalic sheetId={sheetId}/>
       <SheetActionCellStyleBackgroundColor sheetId={sheetId}/>
       <SheetActionCellStyleColor sheetId={sheetId}/>
+      <Divider />
+      <SheetActionDownloadCsv sheetId={sheetId}/>
+      <SheetActionDownloadSheet sheetId={sheetId}/>
     </Container>
   )
 }
