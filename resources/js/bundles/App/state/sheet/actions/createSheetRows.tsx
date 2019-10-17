@@ -8,7 +8,8 @@ import { mutation } from '@app/api'
 
 import { IAppState } from '@app/state'
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
-import { 
+import {
+  ISheet,
   ISheetCell,
   ISheetRow, ISheetRowToDatabase
 } from '@app/state/sheet/types'
@@ -48,6 +49,14 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
     const nextSheetDefaultVisibleRows = [ ...sheet.defaultVisibleRows ]
     const newRowsToDatabase: ISheetRowToDatabase[] = []
     const newRowIds: ISheetRow['id'][] = []
+    
+    // Get any open sheets this is a source sheet for
+    const childSheets: ISheet['id'][] = []
+    Object.keys(allSheets).forEach(currentSheetId => {
+      if(allSheets[currentSheetId].sourceSheetId === sheet.id || allSheets[currentSheetId].sourceSheetId === sheet.sourceSheetId) {
+        childSheets.push(currentSheetId)
+      }
+    })
 
     const insertBeforeRowIdVisibleRowsIndex = nextSheetVisibleRows.indexOf(insertBeforeRowId)
     const insertBeforeRowIdDefaultVisibleRowsIndex = nextSheetDefaultVisibleRows.indexOf(insertBeforeRowId)
@@ -87,6 +96,16 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
           visibleRows: nextSheetVisibleRows,
           defaultVisibleRows: nextSheetDefaultVisibleRows
         }))
+        sheet.sourceSheetId && dispatch(updateSheet(sheet.sourceSheetId, {
+          rows: nextSheetRows,
+          defaultVisibleRows: nextSheetDefaultVisibleRows
+        }))
+        childSheets && childSheets.forEach(childSheetId => {
+          dispatch(updateSheet(childSheetId, {
+            rows: nextSheetRows,
+            defaultVisibleRows: nextSheetDefaultVisibleRows
+          }))
+        })
         mutation.createSheetRows(newRowsToDatabase)
       })
     }
@@ -100,6 +119,16 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
           visibleRows: sheet.visibleRows,
           defaultVisibleRows: sheet.defaultVisibleRows
         }))
+        sheet.sourceSheetId && dispatch(updateSheet(sheet.sourceSheetId, {
+          rows: sheet.rows,
+          defaultVisibleRows: sheet.defaultVisibleRows
+        }))
+        childSheets && childSheets.forEach(childSheetId => {
+          dispatch(updateSheet(childSheetId, {
+            rows: sheet.rows,
+            defaultVisibleRows: sheet.defaultVisibleRows
+          }))
+        })
         mutation.deleteSheetRows(newRowIds)
       })
     }
