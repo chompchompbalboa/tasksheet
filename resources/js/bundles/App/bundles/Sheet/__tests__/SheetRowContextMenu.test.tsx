@@ -38,6 +38,8 @@ axiosMock.post.mockResolvedValue({ data: null })
 // @ts-ignore
 axiosMock.patch.mockResolvedValue({ data: null })
 
+jest.setTimeout(10000)
+
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------

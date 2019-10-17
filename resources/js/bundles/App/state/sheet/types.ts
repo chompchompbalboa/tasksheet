@@ -53,6 +53,7 @@ export interface ISheet {
 export interface ISheetUpdates {
   defaultVisibleRows?: ISheetRow['id'][]
   rows?: ISheetRow['id'][]
+  sourceSheetDefaultVisibleRows?: ISheetRow['id'][]
   visibleRows?: ISheetRow['id'][]
   columns?: ISheetColumn['id'][]
   visibleColumns?: ISheetColumn['id'][]

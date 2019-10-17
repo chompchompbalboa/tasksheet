@@ -94,7 +94,8 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
           rowLeaders: nextSheetRowLeaders,
           rows: nextSheetRows,
           visibleRows: nextSheetVisibleRows,
-          defaultVisibleRows: nextSheetDefaultVisibleRows
+          defaultVisibleRows: nextSheetDefaultVisibleRows,
+          sourceSheetDefaultVisibleRows: nextSheetDefaultVisibleRows
         }))
         sheet.sourceSheetId && dispatch(updateSheet(sheet.sourceSheetId, {
           rows: nextSheetRows,
@@ -103,7 +104,8 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
         childSheets && childSheets.forEach(childSheetId => {
           dispatch(updateSheet(childSheetId, {
             rows: nextSheetRows,
-            defaultVisibleRows: nextSheetDefaultVisibleRows
+            defaultVisibleRows: nextSheetDefaultVisibleRows,
+            sourceSheetDefaultVisibleRows: nextSheetDefaultVisibleRows
           }))
         })
         mutation.createSheetRows(newRowsToDatabase)
@@ -117,7 +119,8 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
           rowLeaders: sheet.rowLeaders,
           rows: sheet.rows,
           visibleRows: sheet.visibleRows,
-          defaultVisibleRows: sheet.defaultVisibleRows
+          defaultVisibleRows: sheet.defaultVisibleRows,
+          sourceSheetDefaultVisibleRows: sheet.defaultVisibleRows
         }))
         sheet.sourceSheetId && dispatch(updateSheet(sheet.sourceSheetId, {
           rows: sheet.rows,
@@ -126,7 +129,8 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
         childSheets && childSheets.forEach(childSheetId => {
           dispatch(updateSheet(childSheetId, {
             rows: sheet.rows,
-            defaultVisibleRows: sheet.defaultVisibleRows
+            defaultVisibleRows: sheet.defaultVisibleRows,
+            sourceSheetDefaultVisibleRows: sheet.defaultVisibleRows
           }))
         })
         mutation.deleteSheetRows(newRowIds)

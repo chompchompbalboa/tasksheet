@@ -34,6 +34,8 @@ axiosMock.get.mockResolvedValue({ data: sheetFromDatabase })
 // @ts-ignore
 axiosMock.patch.mockResolvedValue({ data: null })
 
+jest.setTimeout(10000)
+
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
