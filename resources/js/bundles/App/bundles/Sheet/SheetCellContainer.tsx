@@ -98,15 +98,10 @@ const SheetCellContainer = ({
         dispatch(updateSheetCell(cellId, { isCellEditing: false }, null, true))
         dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'DOWN', e.shiftKey))
       }
-      if(e.key === 'Tab' || e.key === 'ArrowRight') {
+      if(e.key === 'Tab') {
         e.preventDefault()
         dispatch(updateSheetCell(cellId, { isCellEditing: false }, null, true))
         dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'RIGHT', e.shiftKey))
-      }
-      if(e.key === 'ArrowLeft') {
-        e.preventDefault()
-        dispatch(updateSheetCell(cellId, { isCellEditing: false }, null, true))
-        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'LEFT', e.shiftKey))
       }
       if(e.key === 'ArrowUp') {
         e.preventDefault()
