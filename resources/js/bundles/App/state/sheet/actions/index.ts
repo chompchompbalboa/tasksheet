@@ -29,6 +29,7 @@ export { createSheetGroup } from '@app/state/sheet/actions/createSheetGroup'
 export { createSheetRows } from '@/bundles/App/state/sheet/actions/createSheetRows'
 export { createSheetSort } from '@app/state/sheet/actions/createSheetSort'
 export { createSheetView } from '@app/state/sheet/actions/createSheetView'
+export { createSheetViewPreset } from '@app/state/sheet/actions/createSheetViewPreset'
 
 export { deleteSheetColumn } from '@app/state/sheet/actions/deleteSheetColumn'
 export { deleteSheetColumnBreak } from '@app/state/sheet/actions/deleteSheetColumnBreak'

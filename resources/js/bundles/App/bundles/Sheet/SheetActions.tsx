@@ -13,12 +13,13 @@ import SheetActionCellStyleBold from '@app/bundles/Sheet/SheetActionCellStyleBol
 import SheetActionCellStyleColor from '@app/bundles/Sheet/SheetActionCellStyleColor'
 import SheetActionCellStyleItalic from '@app/bundles/Sheet/SheetActionCellStyleItalic'
 import SheetActionCreateRows from '@app/bundles/Sheet/SheetActionCreateRows'
+import SheetActionCreateSheetView from '@app/bundles/Sheet/SheetActionCreateSheetView'
+import SheetActionCreateSheetViewPreset from '@app/bundles/Sheet/SheetActionCreateSheetViewPreset'
 import SheetActionDownloadCsv from '@app/bundles/Sheet/SheetActionDownloadCsv'
 import SheetActionDownloadSheet from '@app/bundles/Sheet/SheetActionDownloadSheet'
 import SheetActionFilter from '@app/bundles/Sheet/SheetActionFilter'
 import SheetActionGroup from '@app/bundles/Sheet/SheetActionGroup'
 import SheetActionRefreshVisibleRows from '@app/bundles/Sheet/SheetActionRefreshVisibleRows'
-import SheetActionSaveView from '@app/bundles/Sheet/SheetActionSaveView'
 import SheetActionSort from '@app/bundles/Sheet/SheetActionSort'
 
 //-----------------------------------------------------------------------------
@@ -34,7 +35,8 @@ const SheetActions = ({
       <SheetActionGroup sheetId={sheetId}/>
       <SheetActionSort sheetId={sheetId}/>
       <SheetActionRefreshVisibleRows sheetId={sheetId}/>
-      <SheetActionSaveView sheetId={sheetId}/>
+      <SheetActionCreateSheetViewPreset sheetId={sheetId}/>
+      <SheetActionCreateSheetView sheetId={sheetId}/>
       <Divider />
       <SheetActionCreateRows sheetId={sheetId}/>
       <Divider />
