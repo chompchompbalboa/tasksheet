@@ -61,6 +61,7 @@ const Container = styled.div`
   cursor: ${ ({ isLocked }: ContainerProps ) => isLocked ? 'not-allowed' : 'pointer' };
   display: flex;
   align-items: center;
+  white-space: nowrap;
 `
 interface ContainerProps {
   isLocked: boolean

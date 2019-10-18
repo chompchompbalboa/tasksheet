@@ -55,6 +55,7 @@ interface ISheetActionFilterExistingFilterProps {
 const Container = styled.div`
   display: flex;
   align-items: center;
+  white-space: nowrap;
 `
 
 //-----------------------------------------------------------------------------

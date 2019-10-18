@@ -65,6 +65,7 @@ const Container = styled.div`
   font-size: 0.75rem;
   display: flex;
   align-items: center;
+  white-space: nowrap;
 `
 interface ContainerProps {
   isLocked: boolean

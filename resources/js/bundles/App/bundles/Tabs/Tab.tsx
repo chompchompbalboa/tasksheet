@@ -84,7 +84,7 @@ const Content = styled.div`
 const NameContainer = styled.div`
   overflow: hidden;
   height: 100%;
-  width: 90%;
+  width: 100%;
   padding: 0.275rem;
   padding-left: 0.5rem;
   display: flex;
@@ -108,7 +108,6 @@ const CloseTab = styled.div`
   cursor: pointer;
   padding-right: 0.2rem;
   height: 100%;
-  width: 10%;
   display: flex;
   justify-content: center;
   align-items: center;

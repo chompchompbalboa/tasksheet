@@ -54,6 +54,7 @@ interface ISheetActionGroupSelectedOptionProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   cursor: ${ ({ isLocked }: ContainerProps ) => isLocked ? 'not-allowed' : 'pointer' };
+  white-space: nowrap;
   display: flex;
   align-items: center;
 `
