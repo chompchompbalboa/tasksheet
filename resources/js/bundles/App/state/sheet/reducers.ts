@@ -11,6 +11,7 @@ import {
   IAllSheetFilters, 
   IAllSheetGroups, 
   IAllSheetSorts,
+  IAllSheetViews,
   ISheetActive,
   ISheetClipboard, 
 } from '@app/state/sheet/types'
@@ -24,7 +25,8 @@ import {
   UPDATE_SHEET_FILTER, SET_ALL_SHEET_FILTERS,
   UPDATE_SHEET_GROUP, SET_ALL_SHEET_GROUPS,
   UPDATE_SHEET_ROW, SET_ALL_SHEET_ROWS,
-  UPDATE_SHEET_SORT, SET_ALL_SHEET_SORTS
+  UPDATE_SHEET_SORT, SET_ALL_SHEET_SORTS,
+  UPDATE_SHEET_VIEW, SET_ALL_SHEET_VIEWS
 } from '@app/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
@@ -39,6 +41,7 @@ export interface ISheetState {
   allSheetFilters: IAllSheetFilters
   allSheetGroups: IAllSheetGroups
   allSheetSorts: IAllSheetSorts
+  allSheetViews: IAllSheetViews
   active: ISheetActive
   clipboard: ISheetClipboard
 }
@@ -136,7 +139,8 @@ export const initialSheetState: ISheetState = {
   },
   allSheetFilters: null,
   allSheetGroups: null,
-  allSheetSorts: null
+  allSheetSorts: null,
+  allSheetViews: null
 }
 
 //-----------------------------------------------------------------------------
@@ -154,7 +158,8 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
         cells, 
         filters, 
         groups,
-        sorts 
+        sorts,
+        views
       } = action
 			return {
         ...state,
@@ -164,7 +169,8 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
         allSheetCells: { ...state.allSheetCells, ...cells },
         allSheetFilters: { ...state.allSheetFilters, ...filters },
         allSheetGroups: { ...state.allSheetGroups, ...groups },
-        allSheetSorts: { ...state.allSheetSorts, ...sorts }
+        allSheetSorts: { ...state.allSheetSorts, ...sorts },
+        allSheetViews: { ...state.allSheetViews, ...views }
 			}
 		}
 
@@ -174,6 +180,7 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
 		case SET_ALL_SHEET_FILTERS: { return { ...state, allSheetFilters: action.nextAllSheetFilters } }
 		case SET_ALL_SHEET_GROUPS: { return { ...state, allSheetGroups: action.nextAllSheetGroups } }
 		case SET_ALL_SHEET_SORTS: { return { ...state, allSheetSorts: action.nextAllSheetSorts } }
+		case SET_ALL_SHEET_VIEWS: { return { ...state, allSheetViews: action.nextAllSheetViews } }
       
 		case UPDATE_SHEET: {
       const { sheetId, updates } = action
@@ -257,6 +264,16 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
         ...state,
         allSheetSorts: { ...state.allSheetSorts,
           [sortId]: { ...state.allSheetSorts[sortId], ...updates}
+        }
+      }
+		}
+
+		case UPDATE_SHEET_VIEW: {
+			const { sheetViewId, updates } = action
+			return {
+        ...state,
+        allSheetViews: { ...state.allSheetViews,
+          [sheetViewId]: { ...state.allSheetViews[sheetViewId], ...updates}
         }
       }
 		}

@@ -165,9 +165,10 @@ const SheetActionFilter = ({
         setFilterFilterType(null)
         setFilterValue(null)
         // New Filter
-        const newSheetFilter = {
+        const newSheetFilter: ISheetFilter = {
           id: createUuid(), 
           sheetId: sheetId,
+          sheetViewId: null,
           columnId: filterColumnId, 
           value: filterValue, 
           type: filterFilterType,

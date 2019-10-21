@@ -193,7 +193,8 @@ export const appStateFactory = ({
         rowLeaders: newSheetRowLeaders,
         sorts: newSheetSorts,
         styles: defaultSheetStyles,
-        selections: defaultSheetSelections
+        selections: defaultSheetSelections,
+        views: null
       }
 
       const newSheetFromDatabase: ISheetFromDatabase = {
@@ -214,7 +215,8 @@ export const appStateFactory = ({
           color: [],
           bold: [],
           italic: []
-        }
+        },
+        views: []
       }
 
       allFiles[newFile.id] = newFile

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSheetFilter extends Migration
+class CreateSheetSort extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,17 @@ class CreateSheetFilter extends Migration
      */
     public function up()
     {
-        Schema::create('sheetFilters', function (Blueprint $table) {
+        Schema::create('sheetSorts', function (Blueprint $table) {
           $table->uuid('id')->primary();
-          $table->uuid('sheetId');
+          $table->uuid('sheetId')->nullable();
+          $table->uuid('sheetViewId')->nullable();
           $table->uuid('columnId');
-          $table->string('type');
-          $table->string('value');
+          $table->string('order', 4);
           $table->boolean('isLocked');
           $table->timestamps();
 
           $table->foreign('sheetId')->references('id')->on('sheets');
+          $table->foreign('sheetViewId')->references('id')->on('sheetViews');
           $table->foreign('columnId')->references('id')->on('sheetColumns');
         });
     }
@@ -34,6 +35,6 @@ class CreateSheetFilter extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sheetFilters');
+        Schema::dropIfExists('sheetSorts');
     }
 }

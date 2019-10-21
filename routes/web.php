@@ -79,6 +79,7 @@ Route::group([
     'sheets/columns' => 'SheetColumnController',
     'sheets/filters' => 'SheetFilterController',
     'sheets/groups' => 'SheetGroupController',
+    'sheets/links' => 'SheetLinkController',
     'sheets/rows' => 'SheetRowController',
     'sheets/sorts' => 'SheetSortController',
     'sheets/styles' => 'SheetStylesController',

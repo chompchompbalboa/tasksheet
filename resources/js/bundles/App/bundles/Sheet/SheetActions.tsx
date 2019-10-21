@@ -13,8 +13,8 @@ import SheetActionCellStyleBold from '@app/bundles/Sheet/SheetActionCellStyleBol
 import SheetActionCellStyleColor from '@app/bundles/Sheet/SheetActionCellStyleColor'
 import SheetActionCellStyleItalic from '@app/bundles/Sheet/SheetActionCellStyleItalic'
 import SheetActionCreateRows from '@app/bundles/Sheet/SheetActionCreateRows'
-import SheetActionCreateSheetView from '@app/bundles/Sheet/SheetActionCreateSheetView'
-import SheetActionCreateSheetViewPreset from '@app/bundles/Sheet/SheetActionCreateSheetViewPreset'
+import SheetActionCreateSheetLink from '@/bundles/App/bundles/Sheet/SheetActionCreateSheetLink'
+import SheetActionCreateSheetView from '@/bundles/App/bundles/Sheet/SheetActionCreateSheetView'
 import SheetActionDownloadCsv from '@app/bundles/Sheet/SheetActionDownloadCsv'
 import SheetActionDownloadSheet from '@app/bundles/Sheet/SheetActionDownloadSheet'
 import SheetActionFilter from '@app/bundles/Sheet/SheetActionFilter'
@@ -27,16 +27,15 @@ import SheetActionSort from '@app/bundles/Sheet/SheetActionSort'
 //-----------------------------------------------------------------------------
 const SheetActions = ({
   sheetId,
-  sourceSheetId,
 }: ISheetActionsProps) => {
   return (
     <Container>
       <SheetActionFilter sheetId={sheetId}/>
       <SheetActionGroup sheetId={sheetId}/>
       <SheetActionSort sheetId={sheetId}/>
-      <SheetActionRefreshVisibleRows sheetId={sheetId}/>
-      <SheetActionCreateSheetViewPreset sheetId={sheetId}/>
       <SheetActionCreateSheetView sheetId={sheetId}/>
+      <SheetActionRefreshVisibleRows sheetId={sheetId}/>
+      <SheetActionCreateSheetLink sheetId={sheetId}/>
       <Divider />
       <SheetActionCreateRows sheetId={sheetId}/>
       <Divider />
@@ -56,7 +55,6 @@ const SheetActions = ({
 //-----------------------------------------------------------------------------
 interface ISheetActionsProps {
   sheetId: ISheet['id']
-  sourceSheetId: ISheet['id']
 }
 
 //-----------------------------------------------------------------------------

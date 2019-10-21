@@ -9,7 +9,8 @@ import {
   IAllSheetFilters, ISheetFilter,
   IAllSheetGroups, ISheetGroup,
   IAllSheetSorts, ISheetSort,
-  IAllSheetRows
+  IAllSheetRows,
+  IAllSheetViews, ISheetView, ISheetViewFromDatabase
 } from '@app/state/sheet/types'
 
 import { loadSheetReducer } from '@app/state/sheet/actions'
@@ -26,7 +27,7 @@ import {
 export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction => {
 
 	return async (dispatch: IThunkDispatch) => {
-
+    
     // Rows and cells
     const normalizedRows: IAllSheetRows = {}
     const normalizedCells: IAllSheetCells = {}
@@ -77,6 +78,33 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       sheetSorts.push(sort.id)
     })
 
+    // Sorts
+    const normalizedViews: IAllSheetViews = {}
+    const sheetViews: ISheetView['id'][] = []
+    sheetFromDatabase.views.forEach(sheetView => { 
+      const sheetViewFilterIds = sheetView.filters.map(filter => filter.id)
+      const sheetViewGroupIds = sheetView.groups.map(group => group.id)
+      const sheetViewSortIds = sheetView.sorts.map(sort => sort.id)
+      normalizedViews[sheetView.id] = {
+        ...sheetView,
+        filters: sheetViewFilterIds,
+        groups: sheetViewGroupIds,
+        sorts: sheetViewSortIds
+      }
+      sheetViews.push(sheetView.id)
+    })
+    sheetFromDatabase.views.forEach((sheetView: ISheetViewFromDatabase) => {
+      sheetView.filters.forEach((filter: ISheetFilter) => {
+        normalizedFilters[filter.id] = filter 
+      })
+      sheetView.groups.forEach((group: ISheetGroup) => {
+        normalizedGroups[group.id] = group 
+      })
+      sheetView.sorts.forEach((sort: ISheetSort) => {
+        normalizedSorts[sort.id] = sort 
+      })
+    })
+
     const defaultVisibleRows = sheetFromDatabase.sourceSheetId ? sheetFromDatabase.sourceSheetDefaultVisibleRows : sheetFromDatabase.defaultVisibleRows
     
     // New Sheet
@@ -103,7 +131,8 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         color: new Set(sheetFromDatabase.styles.color) as Set<string>,
         colorReference: sheetFromDatabase.styles.colorReference || {},
         italic: new Set(sheetFromDatabase.styles.italic) as Set<string>,
-      }
+      },
+      views: sheetViews
     }
 
     const nextSheetVisibleRows = resolveSheetVisibleRows(newSheet, normalizedRows, normalizedCells, normalizedFilters, normalizedGroups, normalizedSorts)
@@ -122,6 +151,7 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         normalizedGroups,
         normalizedRows,
         normalizedSorts,
+        normalizedViews
 			)
 		)
 	}

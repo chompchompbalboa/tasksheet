@@ -84,7 +84,7 @@ const Content = styled.div`
 const NameContainer = styled.div`
   overflow: hidden;
   height: 100%;
-  width: 100%;
+  width: calc(100% - 1.1rem);
   padding: 0.275rem;
   padding-left: 0.5rem;
   display: flex;
@@ -105,9 +105,9 @@ interface NameProps {
 }
 
 const CloseTab = styled.div`
+  width: 1.1rem;
   cursor: pointer;
   padding-right: 0.2rem;
-  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;

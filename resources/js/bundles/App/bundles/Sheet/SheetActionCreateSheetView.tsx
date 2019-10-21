@@ -1,79 +1,79 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { SAVE_SHEET_VIEW } from '@app/assets/icons' 
+import { STAR } from '@app/assets/icons' 
 
 import { IAppState } from '@app/state'
-import { updateIsSavingNewFile } from '@app/state/folder/actions'
 import { createSheetView } from '@app/state/sheet/actions'
-import { updateActiveTab } from '@app/state/tab/actions'
 
-import Icon from '@/components/Icon'
+import SheetActionButton from '@app/bundles/Sheet/SheetActionButton'
+import SheetView from '@app/bundles/Sheet/SheetActionCreateSheetViewSheetView'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetActionSaveView = ({
+const SheetActionCreateSheetView = ({
   sheetId
-}: SheetActionSaveViewProps) => {
+}: ISheetActionCreateSheetViewProps) => {
 
   const dispatch = useDispatch()
+  const sheetViews = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].views)
+  
+  const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
 
-  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
-
-  const handleClick = () => {
-    dispatch(updateActiveTab('FOLDERS'))
-    dispatch(updateIsSavingNewFile(true, (newViewName: string) => {
-      dispatch(createSheetView(sheetId, newViewName))
-      dispatch(updateIsSavingNewFile(false, null))
-    }))
+  const handleButtonClick = () => {
+    setIsDropdownVisible(true)
+    dispatch(createSheetView(sheetId))
   }
 
   return (
-    <Container
-      containerBackgroundColor={userColorPrimary}
-      onClick={() => handleClick()}>
-      <Icon
-        icon={SAVE_SHEET_VIEW}
-        size="1.1rem"/>
-    </Container>
+    <SheetActionButton
+      closeDropdown={() => setIsDropdownVisible(false)}
+      icon={STAR}
+      isDropdownVisible={isDropdownVisible}
+      onClick={() => handleButtonClick()}
+      openDropdown={() => setIsDropdownVisible(true)}>
+      {sheetViews && sheetViews.length > 0 
+        ? <SheetViews>
+            {sheetViews.map(sheetViewId => (
+              <SheetView
+                key={sheetViewId}
+                sheetId={sheetId}
+                sheetViewId={sheetViewId}
+                closeDropdown={() => setIsDropdownVisible(false)}
+                openDropdown={() => setIsDropdownVisible(true)}/>
+            ))}
+          </SheetViews>
+        : <NoSheetViewsMessage>
+            Click the star above to save the current filters, groups, and sorts for quick access later
+          </NoSheetViewsMessage>
+      }
+    </SheetActionButton>
   )
 }
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetActionSaveViewProps {
+interface ISheetActionCreateSheetViewProps {
   sheetId: string
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div`
-  cursor: pointer;  
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgb(210, 210, 210);
-  color: rgb(80, 80, 80);
-  border-radius: 3px;
-  padding: 0.4rem;
-  transition: all 0.05s;
-  &:hover {
-    background-color: ${ ({ containerBackgroundColor }: ContainerProps) => containerBackgroundColor};
-    color: rgb(240, 240, 240);
-  }
+const SheetViews = styled.div`
+  padding: 5px 0;
 `
-interface ContainerProps {
-  containerBackgroundColor: string
-}
 
+const NoSheetViewsMessage = styled.div`
+  padding: 0.625rem;
+`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetActionSaveView
+export default SheetActionCreateSheetView

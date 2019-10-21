@@ -15,13 +15,15 @@ class CreateSheetGroup extends Migration
     {
         Schema::create('sheetGroups', function (Blueprint $table) {
           $table->uuid('id')->primary();
-          $table->uuid('sheetId');
+          $table->uuid('sheetId')->nullable();
+          $table->uuid('sheetViewId')->nullable();
           $table->uuid('columnId');
           $table->string('order', 4);
           $table->boolean('isLocked');
           $table->timestamps();
 
           $table->foreign('sheetId')->references('id')->on('sheets');
+          $table->foreign('sheetViewId')->references('id')->on('sheetViews');
           $table->foreign('columnId')->references('id')->on('sheetColumns');
         });
     }

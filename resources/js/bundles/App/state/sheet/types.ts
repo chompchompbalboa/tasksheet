@@ -8,6 +8,7 @@ export interface IAllSheetColumnTypes { [cellId: string]: ISheetColumnType }
 export interface IAllSheetFilters { [filterId: string]: ISheetFilter }
 export interface IAllSheetGroups { [groupId: string]: ISheetGroup }
 export interface IAllSheetSorts { [sortId: string]: ISheetSort }
+export interface IAllSheetViews { [viewId: string]: ISheetView }
 
 export interface ISheetActive {
   columnRenamingId: ISheetColumn['id']
@@ -49,6 +50,7 @@ export interface ISheet {
   sorts: ISheetSort['id'][]
   styles: ISheetStyles
   selections: ISheetSelections
+  views: ISheetView['id'][]
 }
 export interface ISheetUpdates {
   defaultVisibleRows?: ISheetRow['id'][]
@@ -63,6 +65,7 @@ export interface ISheetUpdates {
   sorts?: ISheetSort['id'][]
   styles?: ISheetStyles
   selections?: ISheetSelections
+  views?: ISheetView['id'][]
 }
 export interface ISheetSelections {
   isOneEntireColumnSelected: boolean
@@ -125,6 +128,7 @@ export interface ISheetFromDatabase {
   rows: ISheetFromDatabaseRow[]
   sorts: ISheetSort[]
   styles: ISheetStylesFromDatabase
+  views: ISheetViewFromDatabase[]
 }
 export interface ISheetFromDatabaseRow {
 	id: string
@@ -211,6 +215,7 @@ export type ISheetCellType =
 export interface ISheetSort {
   id: string
   sheetId: string
+  sheetViewId: string
   columnId: string
   order: ISheetSortOrder
   isLocked: boolean
@@ -223,6 +228,7 @@ export type ISheetSortOrder = 'ASC' | 'DESC'
 export interface ISheetFilter {
   id: string
   sheetId: string
+  sheetViewId: string
   columnId: string
   type: ISheetFilterType
   value: string
@@ -234,6 +240,7 @@ export type ISheetFilterType = '=' | '!=' | '>' | '>=' | '<' | '<='
 export interface ISheetGroup {
   id: string
   sheetId: string
+  sheetViewId: string
   columnId: string
   order: ISheetGroupOrder
   isLocked: boolean
@@ -244,7 +251,7 @@ export interface ISheetGroupUpdates {
 
 export type ISheetGroupOrder = 'ASC' | 'DESC'
 
-export interface ISheetView {
+export interface ISheetLink {
   id: string
   sourceSheetId: string
   defaultVisibleRows: ISheetRow['id'][]
@@ -259,4 +266,35 @@ export interface ISheetDownloadOptions {
   includeColumnTypeInformation: boolean
   includeAssets: boolean
   visibleRows: ISheetRow['id'][]
+}
+
+export interface ISheetView {
+  id: string
+  sheetId: ISheet['id']
+  name: string
+  filters: ISheetFilter['id'][]
+  groups: ISheetGroup['id'][]
+  sorts: ISheetSort['id'][]
+}
+
+export interface ISheetViewFromDatabase {
+  id: string
+  sheetId: ISheet['id']
+  name: string
+  filters: ISheetFilter[]
+  groups: ISheetGroup[]
+  sorts: ISheetSort[]
+}
+
+export interface ISheetViewToDatabase {
+  id: string
+  sheetId: ISheet['id']
+  name: string
+  filters: IAllSheetFilters
+  groups: IAllSheetGroups
+  sorts: IAllSheetSorts
+}
+
+export interface ISheetViewUpdates {
+  name?: string
 }

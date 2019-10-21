@@ -13,12 +13,14 @@ import {
   IAllSheetFilters, ISheetFilterUpdates,
   IAllSheetGroups, ISheetGroupUpdates,
   IAllSheetSorts, ISheetSortUpdates,
+  IAllSheetViews, ISheetViewUpdates
 } from '@app/state/sheet/types'
 
 //-----------------------------------------------------------------------------
 // Thunk Actions
 //-----------------------------------------------------------------------------
 export { loadSheet } from '@app/state/sheet/actions/loadSheet'
+export { loadSheetView } from '@app/state/sheet/actions/loadSheetView'
 
 export { createSheet } from '@app/state/sheet/actions/createSheet'
 export { createSheetFromCsv } from '@app/state/sheet/actions/createSheetFromCsv'
@@ -28,8 +30,8 @@ export { createSheetFilter } from '@app/state/sheet/actions/createSheetFilter'
 export { createSheetGroup } from '@app/state/sheet/actions/createSheetGroup'
 export { createSheetRows } from '@/bundles/App/state/sheet/actions/createSheetRows'
 export { createSheetSort } from '@app/state/sheet/actions/createSheetSort'
+export { createSheetLink } from '@/bundles/App/state/sheet/actions/createSheetLink'
 export { createSheetView } from '@app/state/sheet/actions/createSheetView'
-export { createSheetViewPreset } from '@app/state/sheet/actions/createSheetViewPreset'
 
 export { deleteSheetColumn } from '@app/state/sheet/actions/deleteSheetColumn'
 export { deleteSheetColumnBreak } from '@app/state/sheet/actions/deleteSheetColumnBreak'
@@ -37,6 +39,7 @@ export { deleteSheetFilter } from '@app/state/sheet/actions/deleteSheetFilter'
 export { deleteSheetGroup } from '@app/state/sheet/actions/deleteSheetGroup'
 export { deleteSheetRow } from '@app/state/sheet/actions/deleteSheetRow'
 export { deleteSheetSort } from '@app/state/sheet/actions/deleteSheetSort'
+export { deleteSheetView } from '@app/state/sheet/actions/deleteSheetView'
 
 export { updateSheetCell } from '@app/state/sheet/actions/updateSheetCell'
 export { updateSheetColumn } from '@app/state/sheet/actions/updateSheetColumn'
@@ -44,6 +47,8 @@ export { updateSheetFilter } from '@app/state/sheet/actions/updateSheetFilter'
 export { updateSheetGroup } from '@app/state/sheet/actions/updateSheetGroup'
 export { updateSheetSort } from '@app/state/sheet/actions/updateSheetSort'
 export { updateSheetStyles } from '@app/state/sheet/actions/updateSheetStyles'
+export { updateSheetView } from '@app/state/sheet/actions/updateSheetView'
+
 export { refreshSheetVisibleRows } from '@app/state/sheet/actions/refreshSheetVisibleRows'
 
 export { copySheetRange } from '@app/state/sheet/actions/copySheetRange'
@@ -75,7 +80,8 @@ export type ISheetActions =
   IUpdateSheetFilter | ISetAllSheetFilters |
   IUpdateSheetGroup | ISetAllSheetGroups |
   IUpdateSheetRow | ISetAllSheetRows | 
-  IUpdateSheetSort | ISetAllSheetSorts
+  IUpdateSheetSort | ISetAllSheetSorts |
+  IUpdateSheetView | ISetAllSheetViews
 
 //-----------------------------------------------------------------------------
 // Load Sheet - Moved
@@ -90,9 +96,19 @@ interface ILoadSheet {
   groups: IAllSheetGroups
   rows: IAllSheetRows
   sorts: IAllSheetSorts
+  views: IAllSheetViews
 }
 
-export const loadSheetReducer = (sheet: ISheet, cells: IAllSheetCells, columns: IAllSheetColumns, filters: IAllSheetFilters, groups: IAllSheetGroups, rows: IAllSheetRows, sorts: IAllSheetSorts): ISheetActions => {
+export const loadSheetReducer = (
+  sheet: ISheet, 
+  cells: IAllSheetCells, 
+  columns: IAllSheetColumns, 
+  filters: IAllSheetFilters, 
+  groups: IAllSheetGroups, 
+  rows: IAllSheetRows, 
+  sorts: IAllSheetSorts, 
+  views: IAllSheetViews
+): ISheetActions => {
   return {
     type: LOAD_SHEET,
     columns,
@@ -102,6 +118,7 @@ export const loadSheetReducer = (sheet: ISheet, cells: IAllSheetCells, columns: 
     filters,
     groups,
     sorts,
+    views
   }
 }
 
@@ -198,6 +215,22 @@ export const setAllSheetSorts = (nextAllSheetSorts: IAllSheetSorts): ISheetActio
 	return {
 		type: SET_ALL_SHEET_SORTS,
     nextAllSheetSorts,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Set All Sheet Views
+//-----------------------------------------------------------------------------
+export const SET_ALL_SHEET_VIEWS = 'SET_ALL_SHEET_VIEWS'
+interface ISetAllSheetViews {
+  type: typeof SET_ALL_SHEET_VIEWS,
+  nextAllSheetViews: IAllSheetViews
+}
+
+export const setAllSheetViews = (nextAllSheetViews: IAllSheetViews): ISheetActions => {
+	return {
+		type: SET_ALL_SHEET_VIEWS,
+    nextAllSheetViews,
 	}
 }
 
@@ -355,6 +388,24 @@ export const updateSheetSortReducer = (sortId: string, updates: ISheetSortUpdate
 	return {
 		type: UPDATE_SHEET_SORT,
     sortId,
+		updates,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Sheet Sort - Moved
+//-----------------------------------------------------------------------------
+export const UPDATE_SHEET_VIEW = 'UPDATE_SHEET_VIEW'
+interface IUpdateSheetView {
+	type: typeof UPDATE_SHEET_VIEW
+  sheetViewId: string
+	updates: ISheetViewUpdates
+}
+
+export const updateSheetViewReducer = (sheetViewId: string, updates: ISheetViewUpdates): ISheetActions => {
+	return {
+		type: UPDATE_SHEET_VIEW,
+    sheetViewId,
 		updates,
 	}
 }

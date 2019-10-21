@@ -36,7 +36,6 @@ export const Sheet = memo(({
   const dispatch = useDispatch()
 
   const activeTab = useSelector((state: IAppState) => state.tab.activeTab)
-  const sourceSheetId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].sourceSheetId)
 
   const isActiveFile = fileId === activeTab
 
@@ -111,7 +110,7 @@ export const Sheet = memo(({
       setContextMenuRight(null)
     })
   }
-
+  
   return (
     <Container
       data-testid="SheetContainer">
@@ -128,8 +127,7 @@ export const Sheet = memo(({
           contextMenuRight={contextMenuRight}
           closeContextMenu={closeContextMenu}/>
         <SheetActions
-          sheetId={sheetId}
-          sourceSheetId={sourceSheetId}/>
+          sheetId={sheetId}/>
         {!hasLoaded
           ? isActiveFile ? <LoadingTimer fromId={sheetId}/> : null
           : <SheetGridContainer

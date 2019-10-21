@@ -13,10 +13,11 @@ import {
   ISheetColumn, ISheetColumnUpdates,
   ISheetFilter, 
   ISheetGroup, ISheetGroupUpdates, 
+  ISheetLink,
   ISheetRowToDatabase, 
   ISheetSort, ISheetSortUpdates, 
   ISheetStylesDatabaseUpdates,
-  ISheetView 
+  ISheetViewToDatabase, ISheetViewUpdates
 } from '@app/state/sheet/types'
 import { 
   IUserActiveUpdates, 
@@ -245,8 +246,27 @@ export const updateSheetStyles = async (id: string, updates: ISheetStylesDatabas
 	})
 }
 
-export const createSheetView = async (newSheetView: ISheetView) => {
+export const createSheetLink = async (newSheetLink: ISheetLink) => {
+	return axios.post('/app/sheets/links', newSheetLink).then(response => {
+		return response.data
+	})
+}
+
+export const createSheetView = async (newSheetView: ISheetViewToDatabase) => {
 	return axios.post('/app/sheets/views', newSheetView).then(response => {
 		return response.data
 	})
 }
+
+export const updateSheetView = async (id: string, updates: ISheetViewUpdates) => {
+	return axios.patch('/app/sheets/views/' + id, updates).then(response => {
+		return response.data
+	})
+}
+
+export const deleteSheetView = async (sheetViewId: string) => {
+	return axios.delete('/app/sheets/views/' + sheetViewId).then(response => {
+		return response.data
+	})
+}
+

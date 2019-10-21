@@ -3,131 +3,137 @@
 //-----------------------------------------------------------------------------
 import { v4 as createUuid } from 'uuid'
 
-import clone from '@/utils/clone'
-
 import { mutation } from '@app/api'
 
 import { IAppState } from '@app/state'
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
-import { IFileType } from '@app/state/folder/types'
 import { 
+  ISheet, 
   IAllSheetFilters, ISheetFilter,
   IAllSheetGroups, ISheetGroup,
-  IAllSheetSorts, ISheetSort
+  IAllSheetSorts, ISheetSort,
+  IAllSheetViews, ISheetView, ISheetViewToDatabase
 } from '@app/state/sheet/types'
 
-import { loadSheetReducer } from '@app/state/sheet/actions'
-import { updateFiles, updateFolders } from '@app/state/folder/actions'
-import { updateTabs } from '@app/state/tab/actions'
-
-import { defaultSheetSelections, defaultSheetStyles } from '@app/state/sheet/defaults'
+import { 
+  preventSelectedCellEditing,
+  preventSelectedCellNavigation,
+  setAllSheetFilters,
+  setAllSheetGroups,
+  setAllSheetSorts,
+  setAllSheetViews,
+  updateSheet 
+} from '@app/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
 // Create Sheet View
 //-----------------------------------------------------------------------------
-export const createSheetView = (sheetId: string, viewName: string): IThunkAction => {
+export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
-      folder: { 
-        activeFolderPath, 
-        files, 
-        folders 
+      allSheets: {
+        [sheetId]: {
+          filters: sheetFilters,
+          groups: sheetGroups,
+          sorts: sheetSorts,
+          views: sheetViews
+        }
       },
-      sheet: { 
-        allSheets, 
-        allSheetFilters, 
-        allSheetGroups, 
-        allSheetSorts 
-      },
-      tab: { 
-        tabs 
-      }
-    } = getState()
-    const sourceSheet = allSheets[sheetId]
-    const fileId = Object.keys(files).find(fileId => files[fileId].typeId === sheetId)
-    const folderId = activeFolderPath[activeFolderPath.length - 1]
-    const newFileId = createUuid()
-    const newSheetViewId = createUuid()
-    // Filters
-    const newFilters: IAllSheetFilters = {}
-    const newSheetViewFilters: ISheetFilter['id'][] = []
-    sourceSheet.filters.forEach(filterId => {
-      const newFilterId = createUuid()
-      newFilters[newFilterId] = { ...allSheetFilters[filterId], id: newFilterId, sheetId: newSheetViewId, isLocked: true }
-    })
-    // Groups
-    const newGroups: IAllSheetGroups = {}
-    const newSheetViewGroups: ISheetGroup['id'][] = []
-    sourceSheet.groups.forEach(groupId => {
-      const newGroupId = createUuid()
-      newGroups[newGroupId] = { ...allSheetGroups[groupId], id: newGroupId, sheetId: newSheetViewId, isLocked: true }
-    })
-    // Sorts
-    const newSorts: IAllSheetSorts = {}
-    const newSheetViewSorts: ISheetSort['id'][] = []
-    sourceSheet.sorts.forEach(sortId => {
-      const newSortId = createUuid()
-      newSorts[newSortId] = { ...allSheetSorts[sortId], id: newSortId, sheetId: newSheetViewId, isLocked: true }
-    })
-  // Update allSheets
-    dispatch(loadSheetReducer(
-      {
+      allSheetFilters,
+      allSheetGroups,
+      allSheetSorts,
+      allSheetViews
+    } = getState().sheet
+
+    if(sheetFilters.length > 0 || sheetGroups.length > 0 || sheetSorts.length > 0) {
+
+      const newSheetViewId = createUuid()
+      
+      const nextAllSheetFilters: IAllSheetFilters = { ...allSheetFilters }
+      const newSheetFilters: IAllSheetFilters = {}
+      const nextSheetFilters: ISheetFilter['id'][] = []
+      sheetFilters.forEach(sheetFilterId => {
+        const sheetFilter = allSheetFilters[sheetFilterId]
+        const sheetViewFilterId = createUuid()
+        const newSheetFilter: ISheetFilter = {
+          ...sheetFilter,
+          id: sheetViewFilterId,
+          sheetId: null,
+          sheetViewId: newSheetViewId
+        }
+        nextAllSheetFilters[sheetViewFilterId] = newSheetFilter
+        newSheetFilters[sheetViewFilterId] = newSheetFilter
+        nextSheetFilters.push(sheetViewFilterId)
+      })
+      
+      const nextAllSheetGroups: IAllSheetGroups = { ...allSheetGroups }
+      const newSheetGroups: IAllSheetGroups = {}
+      const nextSheetGroups: ISheetGroup['id'][] = []
+      sheetGroups.forEach(sheetGroupId => {
+        const sheetGroup = allSheetGroups[sheetGroupId]
+        const sheetViewGroupId = createUuid()
+        const newSheetGroup: ISheetGroup = {
+          ...sheetGroup,
+          id: sheetViewGroupId,
+          sheetId: null,
+          sheetViewId: newSheetViewId
+        }
+        nextAllSheetGroups[sheetViewGroupId] = newSheetGroup
+        newSheetGroups[sheetViewGroupId] = newSheetGroup
+        nextSheetGroups.push(sheetViewGroupId)
+      })
+      
+      const nextAllSheetSorts: IAllSheetSorts = { ...allSheetSorts }
+      const newSheetSorts: IAllSheetSorts = {}
+      const nextSheetSorts: ISheetSort['id'][] = [ ]
+      sheetSorts.forEach(sheetSortId => {
+        const sheetSort = allSheetSorts[sheetSortId]
+        const sheetViewSortId = createUuid()
+        const newSheetSort: ISheetSort = {
+          ...sheetSort,
+          id: sheetViewSortId,
+          sheetId: null,
+          sheetViewId: newSheetViewId
+        }
+        nextAllSheetSorts[sheetViewSortId] = newSheetSort
+        newSheetSorts[sheetViewSortId] = newSheetSort
+        nextSheetSorts.push(sheetViewSortId)
+      })
+  
+      const newSheetView: ISheetView = {
         id: newSheetViewId,
-        sourceSheetId: sourceSheet.id,
-        sourceSheetDefaultVisibleRows: sourceSheet.defaultVisibleRows,
-        defaultVisibleRows: sourceSheet.defaultVisibleRows,
-        fileType: sourceSheet.fileType,
-        columns: clone(sourceSheet.columns),
-        filters: newSheetViewFilters,
-        groups: newSheetViewGroups,
-        rows: clone(sourceSheet.rows),
-        rowLeaders: clone(sourceSheet.rowLeaders),
-        sorts: newSheetViewSorts,
-        visibleColumns: clone(sourceSheet.visibleColumns),
-        visibleRows: clone(sourceSheet.visibleRows),
-        selections: defaultSheetSelections,
-        styles: defaultSheetStyles
-      },
-      null, // Cells
-      null, // Columns
-      newFilters, // Filters
-      newGroups, // Groups
-      null, // Rows
-      newSorts, // Sorts
-    ))
-    // Update folders and files
-    const newFile = {
-      ...files[fileId],
-      id: newFileId,
-      folderId: folderId,
-      type: 'SHEET_VIEW' as IFileType, 
-      name: viewName,
-      typeId: newSheetViewId
-    }
-    dispatch(updateFiles({
-      ...files,
-      [newFileId]: newFile
-    }))
-    dispatch(updateFolders({
-      ...folders,
-      [folderId]: {
-        ...folders[folderId],
-        files: [ ...folders[folderId].files, newFileId ]
+        sheetId: sheetId,
+        name: null,
+        filters: nextSheetFilters,
+        groups: nextSheetGroups,
+        sorts: nextSheetSorts
       }
-    }))
-    // Update open tabs
-    dispatch(updateTabs([ ...tabs, newFileId]))
-    // Create the file on the server
-    mutation.createFile(newFile)
-    // Create the sheet view on the server
-    mutation.createSheetView({
-      id: newSheetViewId,
-      sourceSheetId: sourceSheet.id,
-      defaultVisibleRows: sourceSheet.defaultVisibleRows,
-      visibleColumns: sourceSheet.visibleColumns,
-      filters: newFilters,
-      groups: newGroups,
-      sorts: newSorts
-    })
-	}
+
+      const newSheetViewToDataBase: ISheetViewToDatabase = {
+        id: newSheetViewId,
+        sheetId: sheetId,
+        name: null,
+        filters: newSheetFilters,
+        groups: newSheetGroups,
+        sorts: newSheetSorts
+      }
+  
+      const nextAllSheetViews: IAllSheetViews = { [newSheetView.id]: newSheetView, ...allSheetViews }
+      const nextSheetViews = [ ...sheetViews, newSheetView.id ]
+  
+      dispatch(preventSelectedCellEditing(sheetId))
+      dispatch(preventSelectedCellNavigation(sheetId))
+      dispatch(updateSheet(sheetId, {
+        filters: nextSheetFilters,
+        groups: nextSheetGroups,
+        sorts: nextSheetSorts,
+        views: nextSheetViews
+      }, true))
+      dispatch(setAllSheetFilters(nextAllSheetFilters))
+      dispatch(setAllSheetGroups(nextAllSheetGroups))
+      dispatch(setAllSheetSorts(nextAllSheetSorts))
+      dispatch(setAllSheetViews(nextAllSheetViews))
+      mutation.createSheetView(newSheetViewToDataBase)
+    }
+  }
 }

@@ -51,7 +51,7 @@ const SheetActionGroup = ({
       <SheetActionDropdown
         sheetId={sheetId}
         onOptionDelete={(optionToDelete: SheetActionDropdownOption) => dispatch(deleteSheetGroup(sheetId, optionToDelete.value))}
-        onOptionSelect={(selectedOption: SheetActionDropdownOption) => dispatch(createSheetGroup(sheetId, { id: createUuid(), sheetId: sheetId, columnId: selectedOption.value, order: 'ASC', isLocked: false }))}
+        onOptionSelect={(selectedOption: SheetActionDropdownOption) => dispatch(createSheetGroup(sheetId, { id: createUuid(), sheetId: sheetId, sheetViewId: null, columnId: selectedOption.value, order: 'ASC', isLocked: false }))}
         onOptionUpdate={(groupId, updates) => dispatch(updateSheetGroup(sheetId, groupId, updates, true))}
         options={sheetColumnNames}
         placeholder={"Group By..."}

@@ -11,9 +11,9 @@ class Sheet extends Model
   /**
    * Define which attributes will be visible
    */
-  protected $visible = ['id', 'sourceSheetId', 'fileType', 'rows', 'columns', 'filters', 'groups', 'sorts', 'styles', 'visibleColumns', 'defaultVisibleRows', 'sourceSheetDefaultVisibleRows'];
+  protected $visible = ['id', 'sourceSheetId', 'fileType', 'rows', 'columns', 'filters', 'groups', 'sorts', 'views', 'styles', 'visibleColumns', 'defaultVisibleRows', 'sourceSheetDefaultVisibleRows'];
   protected $fillable = ['id', 'sourceSheetId', 'visibleColumns', 'defaultVisibleRows'];
-  protected $with = ['filters', 'groups', 'sorts'];
+  protected $with = ['filters', 'groups', 'sorts', 'views'];
   protected $appends = ['columns', 'rows', 'fileType', 'sourceSheetDefaultVisibleRows', 'styles'];
   protected $casts = [
     'defaultVisibleRows' => 'array',
@@ -85,6 +85,6 @@ class Sheet extends Model
    * Get all the views this sheet belongs to
    */
   public function views() {
-    return $this->belongsToMany('App\Models\SheetView', 'sheetViewSheets', 'sheetId', 'sheetViewId');
+    return $this->hasMany('App\Models\SheetView', 'sheetId');
   }
 }

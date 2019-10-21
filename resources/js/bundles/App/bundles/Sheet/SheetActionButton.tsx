@@ -1,62 +1,68 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { ARROW_DOWN, STAR } from '@app/assets/icons' 
+import { ARROW_DOWN } from '@app/assets/icons'
 
 import { IAppState } from '@app/state'
-import { createSheetViewPreset } from '@app/state/sheet/actions'
 
 import Icon from '@/components/Icon'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetActionLocalSheetViews = ({
-  sheetId
-}: ISheetActionLocalSheetViewsProps) => {
-
-  const dispatch = useDispatch()
+const SheetActionButton = ({
+  children,
+  closeDropdown,
+  icon,
+  isDropdownVisible,
+  onClick,
+  openDropdown
+}: SheetActionButtonProps) => {
+  
+  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   
   // Dropdown
-  const dropdown = useRef(null)
-  const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
+  const container = useRef(null)
   useEffect(() => {
-    if(isDropdownVisible) { addEventListener('click', closeOnClickOutside) }
-    else { removeEventListener('click', closeOnClickOutside) }
-    return () => removeEventListener('click', closeOnClickOutside)
-  })
+    if(isDropdownVisible) { setTimeout(() => addEventListener('click', e => closeOnClickOutside(e)), 10) }
+    else { removeEventListener('click', e => closeOnClickOutside(e)) }
+    return () => removeEventListener('click', e => closeOnClickOutside(e))
+  }, [ isDropdownVisible ])
+
   const closeOnClickOutside = (e: MouseEvent) => {
-    if(!dropdown.current.contains(e.target)) {
-      setIsDropdownVisible(false)
+    if(!container.current.contains(e.target)) {
+      closeDropdown()
     }
   }
 
-  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
-
   return (
-    <Container>
+    <Container
+      ref={container}>
       <IconContainer
         containerBackgroundColor={userColorPrimary}
-        onClick={() => dispatch(createSheetViewPreset(sheetId))}>
+        onClick={() => onClick()}>
         <Icon 
-          icon={STAR}
+          icon={icon}
           size="1.1rem"/>
       </IconContainer>
-      <DropdownToggle
-        dropdownToggleBackgroundColor={userColorPrimary}
-        onClick={() => setIsDropdownVisible(true)}>
-        <Icon 
-          icon={ARROW_DOWN}/>
-      </DropdownToggle>
-      <Dropdown
-        ref={dropdown}
-        isDropdownVisible={isDropdownVisible}>
-        Dropdown
-      </Dropdown>
+      {children && 
+        <>
+          <DropdownToggle
+            dropdownToggleBackgroundColor={userColorPrimary}
+            onClick={() => openDropdown()}>
+            <Icon 
+              icon={ARROW_DOWN}/>
+          </DropdownToggle>
+          <DropdownContainer
+            isDropdownVisible={isDropdownVisible}>
+            {children}
+          </DropdownContainer>
+        </>
+      }
     </Container>
   )
 }
@@ -64,8 +70,13 @@ const SheetActionLocalSheetViews = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface ISheetActionLocalSheetViewsProps {
-  sheetId: string
+interface SheetActionButtonProps {
+  children?: any // React Component,
+  closeDropdown(): void
+  icon: string
+  isDropdownVisible?: boolean
+  onClick?(): void
+  openDropdown(): void
 }
 
 //-----------------------------------------------------------------------------
@@ -73,9 +84,8 @@ interface ISheetActionLocalSheetViewsProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   position: relative;
-  margin-right: 0.375rem;
-  margin-left: 0.125rem;
-  cursor: pointer;  
+  margin-right: 0.25rem;
+  margin-left: 0.25rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -86,6 +96,7 @@ const Container = styled.div`
 `
 
 const IconContainer = styled.div`
+  cursor: pointer;  
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -124,15 +135,16 @@ interface IDropdownToggle {
   dropdownToggleBackgroundColor: string
 }
 
-const Dropdown = styled.div`
+const DropdownContainer = styled.div`
+  cursor: default;
   display: ${ ({ isDropdownVisible }: IDropdown) => isDropdownVisible ? 'block' : 'none' };
   position: absolute;
   left: 0;
   top: 100%;
-  padding: 0.625rem;
   border-radius: 5px;
   background-color: rgb(250, 250, 250);
   box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.5);
+  white-space: nowrap;
 `
 interface IDropdown {
   isDropdownVisible: boolean
@@ -140,4 +152,4 @@ interface IDropdown {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetActionLocalSheetViews
+export default SheetActionButton
