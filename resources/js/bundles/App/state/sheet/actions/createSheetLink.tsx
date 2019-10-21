@@ -74,6 +74,7 @@ export const createSheetLink = (sheetId: string, viewName: string): IThunkAction
       {
         id: newSheetViewId,
         sourceSheetId: sourceSheet.id,
+        activeSheetViewId: null,
         sourceSheetDefaultVisibleRows: sourceSheet.defaultVisibleRows,
         defaultVisibleRows: sourceSheet.defaultVisibleRows,
         fileType: sourceSheet.fileType,

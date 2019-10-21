@@ -135,7 +135,7 @@ export interface ISheetCellProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  z-index: ${ ({ isCellSelected, isCellInRange }: IContainer ) => isCellSelected || isCellInRange ? '10' : '5' };
+  z-index: 10;
   position: relative;
   cursor: default;
   font-size: 0.9rem;

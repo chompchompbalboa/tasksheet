@@ -41,10 +41,11 @@ export const deleteSheetGroup = (sheetId: string, groupId: string): IThunkAction
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
       dispatch(updateSheet(sheetId, {
+        activeSheetViewId: null,
         groups: nextSheetGroups,
         rowLeaders: nextSheetRowLeaders,
         visibleRows: nextSheetVisibleRows
-      }, true))
+      }))
     })
     if(sheetGroup.sheetViewId === null) {
       dispatch(setAllSheetGroups(nextAllSheetGroups))

@@ -60,15 +60,15 @@ const SheetCellContainer = ({
     if(isCellEditing) {
       focusCell && focusCell()
       addEventListener('keydown', handleKeydownWhileCellIsEditing)
-      addEventListener('click', handleClickWhileCellIsEditing)
+      addEventListener('mousedown', handleMousedownWhileCellIsEditing)
     }
     else {
       removeEventListener('keydown', handleKeydownWhileCellIsEditing)
-      removeEventListener('click', handleClickWhileCellIsEditing)
+      removeEventListener('mousedown', handleMousedownWhileCellIsEditing)
     }
     return () => {
       removeEventListener('keydown', handleKeydownWhileCellIsEditing)
-      removeEventListener('click', handleClickWhileCellIsEditing)
+      removeEventListener('mousedown', handleMousedownWhileCellIsEditing)
     }
   }, [ isCellEditing ])
 
@@ -77,7 +77,7 @@ const SheetCellContainer = ({
     dispatch(updateSheetCell(cellId, { isCellEditing: true }, null, true))
   }
   
-  const handleClickWhileCellIsEditing = (e: MouseEvent) => {
+  const handleMousedownWhileCellIsEditing = (e: MouseEvent) => {
     if(!container.current.contains(e.target)) {
       dispatch(updateSheetCell(cellId, { isCellEditing: false }, null, true))
       onCloseCell && onCloseCell()

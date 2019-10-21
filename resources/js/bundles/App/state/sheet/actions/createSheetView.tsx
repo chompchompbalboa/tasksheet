@@ -124,11 +124,12 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
       dispatch(preventSelectedCellEditing(sheetId))
       dispatch(preventSelectedCellNavigation(sheetId))
       dispatch(updateSheet(sheetId, {
+        activeSheetViewId: newSheetView.id,
         filters: nextSheetFilters,
         groups: nextSheetGroups,
         sorts: nextSheetSorts,
         views: nextSheetViews
-      }, true))
+      }))
       dispatch(setAllSheetFilters(nextAllSheetFilters))
       dispatch(setAllSheetGroups(nextAllSheetGroups))
       dispatch(setAllSheetSorts(nextAllSheetSorts))

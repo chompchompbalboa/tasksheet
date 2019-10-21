@@ -16,3 +16,8 @@ div {
   font-weight: 400;
   font-size: 0.8rem;
 }
+
+.input_placeholder_color_inherit input::placeholder {
+  color: inherit;
+  opacity: 1
+}

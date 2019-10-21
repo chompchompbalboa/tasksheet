@@ -31,6 +31,11 @@ class SheetViewController extends Controller
         'sheetId' => $request->input('sheetId'),
         'name' => $request->input('name'),
       ]);
+      // Delete the sheet's filters, groups and sorts - since they now
+      // belong to the sheet view instead
+      SheetFilter::where('sheetId', $sheetId)->delete();
+      SheetGroup::where('sheetId', $sheetId)->delete();
+      SheetSort::where('sheetId', $sheetId)->delete();
       // Filters
       $newSheetViewFilters = $request->input('filters');
       foreach($newSheetViewFilters as $sheetViewFilter) {

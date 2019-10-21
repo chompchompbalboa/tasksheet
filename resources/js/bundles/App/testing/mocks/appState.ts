@@ -181,6 +181,7 @@ export const appStateFactory = ({
       const newSheet: ISheet = {
         id: sheetId,
         sourceSheetId: newSheetSourceSheetId,
+        activeSheetViewId: null,
         fileType: 'SHEET' as IFileType,
         rows: newSheetRows,
         sourceSheetDefaultVisibleRows: newSheetVisibleRows,
@@ -200,6 +201,7 @@ export const appStateFactory = ({
       const newSheetFromDatabase: ISheetFromDatabase = {
         id: sheetId,
         sourceSheetId: newSheetSourceSheetId,
+        activeSheetViewId: null,
         fileType: 'SHEET' as IFileType,
         rows: newSheetFromDatabaseRows,
         sourceSheetDefaultVisibleRows: newSheetDefaultVisibleRows,

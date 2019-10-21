@@ -34,8 +34,11 @@ const SheetActionCreateSheetViewSheetView = ({
 
   const dispatch = useDispatch()
 
+  const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
   const sheetView = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetViewId])
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
+  
+  const isActiveSheetView = sheetView.id === sheetActiveSheetViewId
 
   const [ sheetViewName, setSheetViewName ] = useState(sheetView.name)
   useEffect(() => { 
@@ -73,6 +76,7 @@ const SheetActionCreateSheetViewSheetView = ({
 
   return (
     <Container
+      isActiveSheetView={isActiveSheetView}
       userColorPrimary={userColorPrimary}>
       {sheetView.name 
         ? <SheetViewName
@@ -81,6 +85,7 @@ const SheetActionCreateSheetViewSheetView = ({
           </SheetViewName>
         : <AutosizeInput
             ref={sheetViewNameInput}
+            className='input_placeholder_color_inherit'
             placeholder='Name...'
             value={sheetViewName || ''}
             onBlur={() => handleSheetViewNameInputBlur()}
@@ -95,7 +100,8 @@ const SheetActionCreateSheetViewSheetView = ({
               outline: 'none',
               fontFamily: 'inherit',
               fontSize: 'inherit',
-              fontWeight: 'inherit'}}/>
+              fontWeight: 'inherit'
+            }}/>
       }
       <SheetViewActions>
         <IconContainer
@@ -126,12 +132,14 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: ${ ({ isActiveSheetView, userColorPrimary }: IContainer ) =>  isActiveSheetView ? userColorPrimary : 'transparent' };
+  color: ${ ({ isActiveSheetView }: IContainer ) =>  isActiveSheetView ? 'white' : 'inherit' };
   &:hover {
-    background-color: ${ ({ userColorPrimary }: IContainer ) =>  userColorPrimary };
-    color: white;
+    background-color: ${ ({ isActiveSheetView, userColorPrimary }: IContainer ) =>  isActiveSheetView ? userColorPrimary : 'rgb(220, 220, 220)' };
   }
 `
 interface IContainer {
+  isActiveSheetView: boolean
   userColorPrimary: string
 }
 

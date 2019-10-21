@@ -16,6 +16,7 @@ class CreateSheet extends Migration
         Schema::create('sheets', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('sourceSheetId')->nullable();
+            $table->uuid('activeSheetViewId')->nullable();
             $table->json('visibleColumns')->nullable();
             $table->json('defaultVisibleRows')->nullable();
             $table->timestamps();

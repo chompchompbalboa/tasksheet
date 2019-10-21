@@ -41,10 +41,11 @@ export const deleteSheetSort = (sheetId: string, sortId: string): IThunkAction =
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
       dispatch(updateSheet(sheetId, {
+        activeSheetViewId: null,
         rowLeaders: nextSheetRowLeaders,
         sorts: nextSheetSorts,
         visibleRows: nextSheetVisibleRows
-      }, true))
+      }))
     })
     if(sheetSort.sheetViewId === null) {
       dispatch(setAllSheetSorts(nextAllSheetSorts))

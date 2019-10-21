@@ -94,14 +94,18 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       sheetViews.push(sheetView.id)
     })
     sheetFromDatabase.views.forEach((sheetView: ISheetViewFromDatabase) => {
+      const isActiveSheetView = sheetView.id === sheetFromDatabase.activeSheetViewId
       sheetView.filters.forEach((filter: ISheetFilter) => {
-        normalizedFilters[filter.id] = filter 
+        normalizedFilters[filter.id] = filter
+        isActiveSheetView && sheetFilters.push(filter.id)
       })
       sheetView.groups.forEach((group: ISheetGroup) => {
         normalizedGroups[group.id] = group 
+        isActiveSheetView && sheetGroups.push(group.id)
       })
       sheetView.sorts.forEach((sort: ISheetSort) => {
         normalizedSorts[sort.id] = sort 
+        isActiveSheetView && sheetSorts.push(sort.id)
       })
     })
 
@@ -111,6 +115,7 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
     const newSheet: ISheet = {
       id: sheetFromDatabase.id,
       sourceSheetId: sheetFromDatabase.sourceSheetId,
+      activeSheetViewId: sheetFromDatabase.activeSheetViewId,
       sourceSheetDefaultVisibleRows: sheetFromDatabase.sourceSheetDefaultVisibleRows.filter(visibleRowId => sheetRows.includes(visibleRowId)),
       defaultVisibleRows: defaultVisibleRows.filter(visibleRowId => sheetRows.includes(visibleRowId)),
       fileType: sheetFromDatabase.fileType,

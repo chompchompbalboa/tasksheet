@@ -46,10 +46,11 @@ export const deleteSheetFilter = (sheetId: string, filterId: string): IThunkActi
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
       dispatch(updateSheet(sheetId, {
+        activeSheetViewId: null,
         filters: nextSheetFilters,
         rowLeaders: nextSheetRowLeaders,
         visibleRows: nextSheetVisibleRows
-      }, true))
+      }))
     })
 
     if(sheetFilter.sheetViewId === null) {
