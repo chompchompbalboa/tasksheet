@@ -21,7 +21,7 @@ import SheetActionDropdownSelectedOption from '@app/bundles/Sheet/SheetActionDro
 //-----------------------------------------------------------------------------
 const SheetActionDropdown = ({
   sheetId,
-  isLast,
+  isLast = false,
   onInputChange,
   onOptionSelect,
   onOptionDelete,
@@ -205,7 +205,7 @@ const SheetActionDropdown = ({
 //-----------------------------------------------------------------------------
 interface SheetActionDropdownProps {
   sheetId: ISheet['id']
-  isLast: boolean
+  isLast?: boolean
   onInputChange?(nextValue: string): void
   onOptionDelete(optionToDelete: SheetActionDropdownOption): void
   onOptionSelect(selectedOption: SheetActionDropdownOption): void
