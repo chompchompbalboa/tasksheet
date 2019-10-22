@@ -55,9 +55,11 @@ const SheetActionButton = ({
         <Icon 
           icon={icon}
           size={text ? "1rem" : iconSize}/>
-        <IconText>
-          {text}
-        </IconText>
+        {text &&
+          <IconText>
+            {text}
+          </IconText>
+        }
       </IconContainer>
       {children && 
         <>
@@ -125,7 +127,7 @@ const IconContainer = styled.div`
   border-top-right-radius: ${ ({ hasDropdown }: IIconContainer) => hasDropdown ? '0' : '3px' };
   border-bottom-right-radius: ${ ({ hasDropdown }: IIconContainer) => hasDropdown ? '0' : '3px' };
   &:hover {
-    background-color: ${ ({ containerBackgroundColor }: IIconContainer) => containerBackgroundColor};
+    background-color: ${ ({ containerBackgroundColor }: IIconContainer) => containerBackgroundColor };
     color: rgb(240, 240, 240);
   }
 `
@@ -135,7 +137,7 @@ interface IIconContainer {
 }
 
 const IconText = styled.div`
-  margin-left: 0.125rem;
+  margin-left: 0.1875rem;
   white-space: nowrap;
 `
 

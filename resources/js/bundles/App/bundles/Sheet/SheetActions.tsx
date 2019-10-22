@@ -39,8 +39,7 @@ const SheetActions = ({
       <SheetActionRefreshVisibleRows sheetId={sheetId}/>
       <SheetActionButton
         icon={isFiltersSortsGroupsVisible ? VISIBLE : HIDDEN}
-        iconSize="1.15rem"
-        marginLeft="0.15rem"
+        marginLeft="0.375rem"
         marginRight={isFiltersSortsGroupsVisible ? "0.4125rem" : "0"}
         onClick={() => setIsFiltersGroupsSortsVisible(!isFiltersSortsGroupsVisible)}/>
       {isFiltersSortsGroupsVisible &&
@@ -86,6 +85,7 @@ const Container = styled.div`
   display: flex;
   flex-flow: row-wrap;
   align-items: center;
+  min-height: 2.625rem;
   background-color: rgb(250, 250, 250);
   border-bottom: 1px solid rgb(180, 180, 180);
 `

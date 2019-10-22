@@ -393,7 +393,7 @@ interface IContainer {
 }
 
 const Wrapper = styled.div`
-  padding: 0.25rem;
+  padding: 0.225rem 0.25rem;
   border: 0.5px solid rgb(180, 180, 180);
   display: flex;
   align-items: center;
