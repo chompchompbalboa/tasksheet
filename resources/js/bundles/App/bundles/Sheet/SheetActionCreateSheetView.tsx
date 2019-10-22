@@ -22,11 +22,13 @@ const SheetActionCreateSheetView = ({
 
   const dispatch = useDispatch()
   
+  const allSheetViews = useSelector((state: IAppState) => state.sheet.allSheetViews)
+  const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
   const sheetViews = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].views)
   
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
 
-  const handleButtonClick = () => {
+  const handleCreateSheetViewClick = () => {
     setIsDropdownVisible(true)
     dispatch(createSheetView(sheetId))
   }
@@ -41,27 +43,29 @@ const SheetActionCreateSheetView = ({
       closeDropdown={() => setIsDropdownVisible(false)}
       icon={LIGHTNING_BOLT}
       isDropdownVisible={isDropdownVisible}
-      onClick={() => handleButtonClick()}
-      openDropdown={() => setIsDropdownVisible(true)}>
-      {sheetViews && sheetViews.length > 0 
-        ? <SheetViews>
-            <ResetSheetView
-              onClick={() => handleResetSheetViewClick()}>
-              Clear all...
-            </ResetSheetView>
-            {sheetViews.map(sheetViewId => (
-              <SheetView
-                key={sheetViewId}
-                sheetId={sheetId}
-                sheetViewId={sheetViewId}
-                closeDropdown={() => setIsDropdownVisible(false)}
-                openDropdown={() => setIsDropdownVisible(true)}/>
-            ))}
-          </SheetViews>
-        : <NoSheetViewsMessage>
-            Click the lightning bolt to save the current filters, groups, and sorts for quick access later
-          </NoSheetViewsMessage>
-      }
+      marginLeft="0"
+      marginRight="0.375rem"
+      onClick={() => setIsDropdownVisible(true)}
+      openDropdown={() => setIsDropdownVisible(true)}
+      text={sheetActiveSheetViewId && allSheetViews[sheetActiveSheetViewId] && allSheetViews[sheetActiveSheetViewId].name ? allSheetViews[sheetActiveSheetViewId].name : 'Quick Views'}>
+      <SheetViews>
+        {sheetViews && sheetViews.map(sheetViewId => (
+          <SheetView
+            key={sheetViewId}
+            sheetId={sheetId}
+            sheetViewId={sheetViewId}
+            closeDropdown={() => setIsDropdownVisible(false)}
+            openDropdown={() => setIsDropdownVisible(true)}/>
+        ))}
+        <Action
+          onClick={() => handleCreateSheetViewClick()}>
+          New Quick View...
+        </Action>
+        <Action
+          onClick={() => handleResetSheetViewClick()}>
+          Clear...
+        </Action>
+      </SheetViews>
     </SheetActionButton>
   )
 }
@@ -80,7 +84,7 @@ const SheetViews = styled.div`
   padding: 5px 0;
 `
 
-const ResetSheetView = styled.div`
+const Action = styled.div`
   padding: 0.25rem 0.375rem 0.25rem 0.5rem;
   font-style: italic;
   font-size: inherit;
@@ -88,10 +92,6 @@ const ResetSheetView = styled.div`
   &:hover {
     background-color: rgb(220, 220, 220);
   }
-`
-
-const NoSheetViewsMessage = styled.div`
-  padding: 0.625rem;
 `
 //-----------------------------------------------------------------------------
 // Export

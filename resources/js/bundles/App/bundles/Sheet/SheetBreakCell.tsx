@@ -25,6 +25,7 @@ interface SheetGroupCellProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  z-index: 10;
   position: relative;
   cursor: default;
   padding: 0.15rem 0.25rem;

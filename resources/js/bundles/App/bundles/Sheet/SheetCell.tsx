@@ -9,6 +9,7 @@ import styled from 'styled-components'
 import { IAppState } from '@app/state'
 import { 
   ISheetCell, 
+  ISheetCellType,
   ISheetColumnType,
   ISheetStyles 
 } from '@app/state/sheet/types'
@@ -96,6 +97,7 @@ export const SheetCell = memo(({
         data-testid="SheetCellContainer"
         ref={cellContainer}
         cellId={cellId}
+        cellType={columnType.cellType}
         highlightColor={userColorSecondary}
         isCellSelected={isCellSelected}
         isCellInRange={isCellInRange}
@@ -135,7 +137,7 @@ export interface ISheetCellProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  z-index: 10;
+  z-index: ${ ({ cellType, isCellSelected }: IContainer ) => ['FILES', 'PHOTOS'].includes(cellType) && isCellSelected ? '20' : '10' };
   position: relative;
   cursor: default;
   font-size: 0.9rem;
@@ -162,6 +164,7 @@ const Container = styled.div`
 `
 interface IContainer {
   cellId: ISheetCell['id']
+  cellType: ISheetCellType
   isCellSelected: boolean
   isCellInRange: boolean
   highlightColor: string

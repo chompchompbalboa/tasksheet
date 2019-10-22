@@ -28,6 +28,7 @@ export const deleteSheetView = (sheetId: string, sheetViewId: string): IThunkAct
     batch(() => {
       dispatch(setAllSheetViews(nextAllSheetViews))
       dispatch(updateSheet(sheetId, {
+        activeSheetViewId: sheet.activeSheetViewId === sheetViewId ? null : sheet.activeSheetViewId,
         views: nextSheetViews
       }, true))
     })

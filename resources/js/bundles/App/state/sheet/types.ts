@@ -217,6 +217,7 @@ export type ISheetCellType =
 
 export interface ISheetSort {
   id: string
+  created_at?: string
   sheetId: string
   sheetViewId: string
   columnId: string
@@ -230,6 +231,7 @@ export type ISheetSortOrder = 'ASC' | 'DESC'
 
 export interface ISheetFilter {
   id: string
+  created_at?: string
   sheetId: string
   sheetViewId: string
   columnId: string
@@ -242,6 +244,7 @@ export type ISheetFilterType = '=' | '!=' | '>' | '>=' | '<' | '<='
 
 export interface ISheetGroup {
   id: string
+  created_at?: string
   sheetId: string
   sheetViewId: string
   columnId: string

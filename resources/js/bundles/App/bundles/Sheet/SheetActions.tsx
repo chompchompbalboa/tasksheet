@@ -30,10 +30,10 @@ const SheetActions = ({
 }: ISheetActionsProps) => {
   return (
     <Container>
+      <SheetActionCreateSheetView sheetId={sheetId}/>
       <SheetActionFilter sheetId={sheetId}/>
       <SheetActionGroup sheetId={sheetId}/>
       <SheetActionSort sheetId={sheetId}/>
-      <SheetActionCreateSheetView sheetId={sheetId}/>
       <SheetActionRefreshVisibleRows sheetId={sheetId}/>
       <SheetActionCreateSheetLink sheetId={sheetId}/>
       <Divider />

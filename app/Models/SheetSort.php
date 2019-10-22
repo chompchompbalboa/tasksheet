@@ -11,5 +11,5 @@ class SheetSort extends Model
   protected $table = 'sheetSorts';
 
   protected $visible = ['id', 'sheetId', 'sheetViewId', 'columnId', 'order', 'isLocked'];
-  protected $fillable = ['id', 'sheetId', 'sheetViewId', 'columnId', 'order', 'isLocked'];
+  protected $fillable = ['id', 'created_at', 'sheetId', 'sheetViewId', 'columnId', 'order', 'isLocked'];
 }

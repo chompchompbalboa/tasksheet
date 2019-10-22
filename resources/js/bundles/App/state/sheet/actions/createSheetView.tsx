@@ -1,6 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
+import moment from 'moment'
 import { v4 as createUuid } from 'uuid'
 
 import { mutation } from '@app/api'
@@ -45,6 +46,9 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
       allSheetViews
     } = getState().sheet
 
+    const startTime = moment()
+    let startTimeModifier = 0
+
     if(sheetFilters.length > 0 || sheetGroups.length > 0 || sheetSorts.length > 0) {
 
       const newSheetViewId = createUuid()
@@ -58,12 +62,14 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
         const newSheetFilter: ISheetFilter = {
           ...sheetFilter,
           id: sheetViewFilterId,
+          created_at: moment(startTime).add(startTimeModifier, 'second').format('YYYY-MM-DD HH:mm:ss'),
           sheetId: null,
           sheetViewId: newSheetViewId
         }
         nextAllSheetFilters[sheetViewFilterId] = newSheetFilter
         newSheetFilters[sheetViewFilterId] = newSheetFilter
         nextSheetFilters.push(sheetViewFilterId)
+        startTimeModifier++
       })
       
       const nextAllSheetGroups: IAllSheetGroups = { ...allSheetGroups }
@@ -75,12 +81,14 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
         const newSheetGroup: ISheetGroup = {
           ...sheetGroup,
           id: sheetViewGroupId,
+          created_at: moment(startTime).add(startTimeModifier, 'second').format('YYYY-MM-DD HH:mm:ss'),
           sheetId: null,
           sheetViewId: newSheetViewId
         }
         nextAllSheetGroups[sheetViewGroupId] = newSheetGroup
         newSheetGroups[sheetViewGroupId] = newSheetGroup
         nextSheetGroups.push(sheetViewGroupId)
+        startTimeModifier++
       })
       
       const nextAllSheetSorts: IAllSheetSorts = { ...allSheetSorts }
@@ -92,12 +100,14 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
         const newSheetSort: ISheetSort = {
           ...sheetSort,
           id: sheetViewSortId,
+          created_at: moment(startTime).add(startTimeModifier, 'second').format('YYYY-MM-DD HH:mm:ss'),
           sheetId: null,
           sheetViewId: newSheetViewId
         }
         nextAllSheetSorts[sheetViewSortId] = newSheetSort
         newSheetSorts[sheetViewSortId] = newSheetSort
         nextSheetSorts.push(sheetViewSortId)
+        startTimeModifier++
       })
   
       const newSheetView: ISheetView = {

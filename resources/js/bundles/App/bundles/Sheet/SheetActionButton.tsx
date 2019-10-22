@@ -19,8 +19,11 @@ const SheetActionButton = ({
   closeDropdown,
   icon,
   isDropdownVisible,
+  marginLeft = '0.25rem',
+  marginRight = '0.25rem',
   onClick,
-  openDropdown
+  openDropdown,
+  text
 }: SheetActionButtonProps) => {
   
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
@@ -41,13 +44,18 @@ const SheetActionButton = ({
 
   return (
     <Container
-      ref={container}>
+      ref={container}
+      containerMarginLeft={marginLeft}
+      containerMarginRight={marginRight}>
       <IconContainer
         containerBackgroundColor={userColorPrimary}
         onClick={() => onClick()}>
         <Icon 
           icon={icon}
-          size="1.1rem"/>
+          size={text ? "1rem" : "1.1rem"}/>
+        <IconText>
+          {text}
+        </IconText>
       </IconContainer>
       {children && 
         <>
@@ -75,8 +83,11 @@ interface SheetActionButtonProps {
   closeDropdown(): void
   icon: string
   isDropdownVisible?: boolean
+  marginLeft?: string
+  marginRight?: string
   onClick?(): void
-  openDropdown(): void
+  openDropdown(): void,
+  text?: string
 }
 
 //-----------------------------------------------------------------------------
@@ -84,8 +95,8 @@ interface SheetActionButtonProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   position: relative;
-  margin-right: 0.25rem;
-  margin-left: 0.25rem;
+  margin-right: ${ ({ containerMarginRight }: IContainer) => containerMarginRight};
+  margin-left: ${ ({ containerMarginLeft }: IContainer) => containerMarginLeft};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -94,11 +105,14 @@ const Container = styled.div`
   border-radius: 3px;
   transition: all 0.05s;
 `
+interface IContainer {
+  containerMarginLeft: string
+  containerMarginRight: string
+}
 
 const IconContainer = styled.div`
   cursor: pointer;  
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 0.325rem 0.4rem;
@@ -113,6 +127,11 @@ const IconContainer = styled.div`
 interface IIconContainer {
   containerBackgroundColor: string
 }
+
+const IconText = styled.div`
+  margin-left: 0.125rem;
+  white-space: nowrap;
+`
 
 const DropdownToggle = styled.div`
   cursor: pointer;
