@@ -1,13 +1,16 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
+
+import { HIDDEN, VISIBLE } from '@app/assets/icons'
 
 import { 
   ISheet
 } from '@app/state/sheet/types'
 
+import SheetActionButton from '@app/bundles/Sheet/SheetActionButton'
 import SheetActionCellStyleBackgroundColor from '@app/bundles/Sheet/SheetActionCellStyleBackgroundColor'
 import SheetActionCellStyleBold from '@app/bundles/Sheet/SheetActionCellStyleBold'
 import SheetActionCellStyleColor from '@app/bundles/Sheet/SheetActionCellStyleColor'
@@ -28,14 +31,25 @@ import SheetActionSort from '@app/bundles/Sheet/SheetActionSort'
 const SheetActions = ({
   sheetId,
 }: ISheetActionsProps) => {
+
+  const [ isFiltersSortsGroupsVisible, setIsFiltersGroupsSortsVisible ] = useState(true)
   return (
     <Container>
       <SheetActionCreateSheetView sheetId={sheetId}/>
-      <SheetActionFilter sheetId={sheetId}/>
-      <SheetActionGroup sheetId={sheetId}/>
-      <SheetActionSort sheetId={sheetId}/>
       <SheetActionRefreshVisibleRows sheetId={sheetId}/>
-      <SheetActionCreateSheetLink sheetId={sheetId}/>
+      <SheetActionButton
+        icon={isFiltersSortsGroupsVisible ? VISIBLE : HIDDEN}
+        iconSize="1.15rem"
+        marginLeft="0.15rem"
+        marginRight={isFiltersSortsGroupsVisible ? "0.4125rem" : "0"}
+        onClick={() => setIsFiltersGroupsSortsVisible(!isFiltersSortsGroupsVisible)}/>
+      {isFiltersSortsGroupsVisible &&
+        <>
+          <SheetActionFilter sheetId={sheetId}/>
+          <SheetActionGroup sheetId={sheetId}/>
+          <SheetActionSort sheetId={sheetId}/>
+        </>
+      }
       <Divider />
       <SheetActionCreateRows sheetId={sheetId}/>
       <Divider />
@@ -43,6 +57,8 @@ const SheetActions = ({
       <SheetActionCellStyleItalic sheetId={sheetId}/>
       <SheetActionCellStyleBackgroundColor sheetId={sheetId}/>
       <SheetActionCellStyleColor sheetId={sheetId}/>
+      <Divider />
+      <SheetActionCreateSheetLink sheetId={sheetId}/>
       <Divider />
       <SheetActionDownloadCsv sheetId={sheetId}/>
       <SheetActionDownloadSheet sheetId={sheetId}/>
@@ -68,6 +84,7 @@ const Container = styled.div`
   padding: 0.25rem 0.125rem;
   padding-left: 0.5rem;
   display: flex;
+  flex-flow: row-wrap;
   align-items: center;
   background-color: rgb(250, 250, 250);
   border-bottom: 1px solid rgb(180, 180, 180);
@@ -77,6 +94,7 @@ const Divider = styled.div`
   margin: 0 0.75rem;
   height: 1.5rem;
   width: 1px;
+  min-width: 1px;
   background-color: rgb(180, 180, 180)
 `
 

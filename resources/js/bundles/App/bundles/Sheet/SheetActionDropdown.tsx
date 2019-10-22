@@ -21,6 +21,7 @@ import SheetActionDropdownSelectedOption from '@app/bundles/Sheet/SheetActionDro
 //-----------------------------------------------------------------------------
 const SheetActionDropdown = ({
   sheetId,
+  isLast,
   onInputChange,
   onOptionSelect,
   onOptionDelete,
@@ -148,7 +149,8 @@ const SheetActionDropdown = ({
   return (
     <Container
       ref={container}
-      isDropdownVisible={isDropdownVisible}>
+      isDropdownVisible={isDropdownVisible}
+      isLast={isLast}>
       <Wrapper>
         <SelectedOptions>
           {visibleSelectedOptions && visibleSelectedOptions.map(option => (
@@ -203,6 +205,7 @@ const SheetActionDropdown = ({
 //-----------------------------------------------------------------------------
 interface SheetActionDropdownProps {
   sheetId: ISheet['id']
+  isLast: boolean
   onInputChange?(nextValue: string): void
   onOptionDelete(optionToDelete: SheetActionDropdownOption): void
   onOptionSelect(selectedOption: SheetActionDropdownOption): void
@@ -235,10 +238,11 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  margin-right: 0.25rem;
+  margin-right: ${ ({ isLast }: ContainerProps ) => isLast ? '0' : '0.25rem'};
 `
 interface ContainerProps {
   isDropdownVisible: boolean
+  isLast: boolean
 }
 
 const Wrapper = styled.div`

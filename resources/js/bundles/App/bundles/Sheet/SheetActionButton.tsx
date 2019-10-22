@@ -18,6 +18,7 @@ const SheetActionButton = ({
   children,
   closeDropdown,
   icon,
+  iconSize = '1.1rem',
   isDropdownVisible,
   marginLeft = '0.25rem',
   marginRight = '0.25rem',
@@ -49,10 +50,11 @@ const SheetActionButton = ({
       containerMarginRight={marginRight}>
       <IconContainer
         containerBackgroundColor={userColorPrimary}
+        hasDropdown={typeof(children) !== 'undefined'}
         onClick={() => onClick()}>
         <Icon 
           icon={icon}
-          size={text ? "1rem" : "1.1rem"}/>
+          size={text ? "1rem" : iconSize}/>
         <IconText>
           {text}
         </IconText>
@@ -80,13 +82,14 @@ const SheetActionButton = ({
 //-----------------------------------------------------------------------------
 interface SheetActionButtonProps {
   children?: any // React Component,
-  closeDropdown(): void
+  closeDropdown?(): void
   icon: string
+  iconSize?: string
   isDropdownVisible?: boolean
   marginLeft?: string
   marginRight?: string
   onClick?(): void
-  openDropdown(): void,
+  openDropdown?(): void,
   text?: string
 }
 
@@ -119,6 +122,8 @@ const IconContainer = styled.div`
   transition: all 0.05s;
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
+  border-top-right-radius: ${ ({ hasDropdown }: IIconContainer) => hasDropdown ? '0' : '3px' };
+  border-bottom-right-radius: ${ ({ hasDropdown }: IIconContainer) => hasDropdown ? '0' : '3px' };
   &:hover {
     background-color: ${ ({ containerBackgroundColor }: IIconContainer) => containerBackgroundColor};
     color: rgb(240, 240, 240);
@@ -126,6 +131,7 @@ const IconContainer = styled.div`
 `
 interface IIconContainer {
   containerBackgroundColor: string
+  hasDropdown: boolean
 }
 
 const IconText = styled.div`

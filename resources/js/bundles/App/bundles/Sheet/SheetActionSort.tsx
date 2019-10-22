@@ -53,6 +53,7 @@ const SheetActionSort = ({
     <SheetAction>
       <SheetActionDropdown
         sheetId={sheetId}
+        isLast
         onOptionDelete={(optionToDelete: SheetActionDropdownOption) => dispatch(deleteSheetSort(sheetId, optionToDelete.value))}
         onOptionSelect={(selectedOption: SheetActionDropdownOption) => dispatch(createSheetSort(sheetId, { id: createUuid(), sheetId: sheetId, sheetViewId: null, columnId: selectedOption.value, order: 'ASC', isLocked: false }))}
         onOptionUpdate={(sortId, updates) => dispatch(updateSheetSort(sheetId, sortId, updates, true))}
