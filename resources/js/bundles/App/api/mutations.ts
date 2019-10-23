@@ -270,3 +270,9 @@ export const deleteSheetView = async (sheetViewId: string) => {
 	})
 }
 
+export const resetSheetView = async (sheetId: string) => {
+	return axios.post('/app/sheets/views/reset/' + sheetId).then(response => {
+		return response.data
+	})
+}
+

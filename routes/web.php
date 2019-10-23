@@ -52,6 +52,9 @@ Route::group([
   Route::patch('/sheets/cells/batch/update', 'SheetCellController@batchUpdate');
   Route::post('/sheets/rows/batch/delete', 'SheetRowController@batchDestroy');
 
+  // Reset Sheet View
+  Route::post('/sheets/views/reset/{sheet}', 'SheetViewController@reset');
+
   /*
   // Copy
   Route::post('/calendars/copy', 'CalendarController@copyFromRequest');
