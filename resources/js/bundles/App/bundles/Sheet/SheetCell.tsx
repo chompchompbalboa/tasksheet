@@ -137,7 +137,7 @@ export interface ISheetCellProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  z-index: ${ ({ cellType, isCellSelected }: IContainer ) => ['FILES', 'PHOTOS'].includes(cellType) && isCellSelected ? '20' : '10' };
+  z-index: ${ ({ cellType, isCellSelected }: IContainer ) => ['DATETIME', 'FILES', 'PHOTOS'].includes(cellType) && isCellSelected ? '20' : '10' };
   position: relative;
   cursor: default;
   font-size: 0.9rem;
