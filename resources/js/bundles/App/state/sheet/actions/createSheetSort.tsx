@@ -11,7 +11,8 @@ import { ISheetSort } from '@app/state/sheet/types'
 import { 
   clearSheetSelection,
   setAllSheetSorts,
-  updateSheet
+  updateSheet,
+  updateSheetView
 } from '@app/state/sheet/actions'
 
 import { 
@@ -31,12 +32,19 @@ export const createSheetSort = (sheetId: string, newSort: ISheetSort): IThunkAct
       allSheetGroups,
       allSheetRows,
       allSheetSorts,
+      allSheetViews
     } = getState().sheet
     const sheet = allSheets[sheetId]
     const nextAllSheetSorts = { ...allSheetSorts, [newSort.id]: newSort }
     const nextSheetSorts = [ ...sheet.sorts, newSort.id ]
     const nextSheetVisibleRows = resolveSheetVisibleRows({ ...sheet, sorts: nextSheetSorts }, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, nextAllSheetSorts)
     const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
+    if(sheet.activeSheetViewId) {
+      const activeSheetView = allSheetViews[sheet.activeSheetViewId]
+      dispatch(updateSheetView(activeSheetView.id, {
+        sorts: [ ...activeSheetView.sorts, newSort.id ]
+      }))
+    }
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetSorts(nextAllSheetSorts))

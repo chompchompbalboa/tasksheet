@@ -11,7 +11,8 @@ import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import { 
   clearSheetSelection,
   setAllSheetFilters,
-  updateSheet
+  updateSheet,
+  updateSheetView
 } from '@app/state/sheet/actions'
 
 import { 
@@ -31,11 +32,11 @@ export const deleteSheetFilter = (sheetId: string, filterId: string): IThunkActi
       allSheetFilters,
       allSheetGroups,
       allSheetRows,
-      allSheetSorts
+      allSheetSorts,
+      allSheetViews
     } = getState().sheet
 
     const sheet = allSheets[sheetId]
-    const sheetFilter = allSheetFilters[filterId]
 
     const { [filterId]: deletedFilter, ...nextAllSheetFilters } = allSheetFilters
 
@@ -43,19 +44,22 @@ export const deleteSheetFilter = (sheetId: string, filterId: string): IThunkActi
     const nextSheetVisibleRows = resolveSheetVisibleRows({ ...sheet, filters: nextSheetFilters}, allSheetRows, allSheetCells, nextAllSheetFilters, allSheetGroups, allSheetSorts)
     const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
 
+    if(sheet.activeSheetViewId) {
+      const activeSheetView = allSheetViews[sheet.activeSheetViewId]
+      dispatch(updateSheetView(activeSheetView.id, {
+        filters: activeSheetView.filters.filter(activeSheetViewFilterId => activeSheetViewFilterId !== filterId)
+      }))
+    }
+
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
+      dispatch(setAllSheetFilters(nextAllSheetFilters))
       dispatch(updateSheet(sheetId, {
-        activeSheetViewId: null,
         filters: nextSheetFilters,
         rowLeaders: nextSheetRowLeaders,
         visibleRows: nextSheetVisibleRows
       }))
     })
-
-    if(sheetFilter.sheetViewId === null) {
-      dispatch(setAllSheetFilters(nextAllSheetFilters))
-      mutation.deleteSheetFilter(filterId)
-    }
+    mutation.deleteSheetFilter(filterId)
 	}
 }
