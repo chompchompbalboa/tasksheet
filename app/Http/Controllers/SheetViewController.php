@@ -81,4 +81,18 @@ class SheetViewController extends Controller
       $view->delete();
       return response()->json(null, 204);
     }
+
+    /**
+     * Reset a sheet's view
+     *
+     * @param  $sheetId
+     * @return \Illuminate\Http\Response
+     */
+    public function reset($sheetId)
+    {
+      SheetFilter::where('sheetId', $sheetId)->delete();
+      SheetGroup::where('sheetId', $sheetId)->delete();
+      SheetSort::where('sheetId', $sheetId)->delete();
+      return response()->json(null, 204);
+    }
 }

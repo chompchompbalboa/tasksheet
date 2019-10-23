@@ -303,4 +303,7 @@ export interface ISheetViewToDatabase {
 
 export interface ISheetViewUpdates {
   name?: string
+  filters?: ISheetFilter['id'][]
+  groups?: ISheetGroup['id'][]
+  sorts?: ISheetSort['id'][]
 }

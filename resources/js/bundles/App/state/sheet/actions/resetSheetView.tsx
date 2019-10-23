@@ -1,6 +1,8 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
+import { mutation } from '@app/api'
+
 import { IAppState } from '@app/state'
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import { 
@@ -53,5 +55,6 @@ export const resetSheetView = (sheetId: ISheet['id']): IThunkAction => {
       sorts: [],
       visibleRows: nextSheetVisibleRows
     }))
+    mutation.resetSheetView(sheetId)
   }
 }

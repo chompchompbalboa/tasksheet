@@ -11,7 +11,8 @@ import { ISheetGroup } from '@app/state/sheet/types'
 import { 
   clearSheetSelection,
   setAllSheetGroups,
-  updateSheet
+  updateSheet,
+  updateSheetView
 } from '@app/state/sheet/actions'
 
 import { 
@@ -31,12 +32,19 @@ export const createSheetGroup = (sheetId: string, newGroup: ISheetGroup): IThunk
       allSheetGroups,
       allSheetRows,
       allSheetSorts,
+      allSheetViews
     } = getState().sheet
     const sheet = allSheets[sheetId]
     const nextAllSheetGroups = { ...allSheetGroups, [newGroup.id]: newGroup }
     const nextSheetGroups = [ ...sheet.groups, newGroup.id ]
     const nextSheetVisibleRows = resolveSheetVisibleRows({ ...sheet, groups: nextSheetGroups }, allSheetRows, allSheetCells, allSheetFilters, nextAllSheetGroups, allSheetSorts)
     const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
+    if(sheet.activeSheetViewId) {
+      const activeSheetView = allSheetViews[sheet.activeSheetViewId]
+      dispatch(updateSheetView(activeSheetView.id, {
+        groups: [ ...activeSheetView.groups, newGroup.id ]
+      }))
+    }
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetGroups({ ...allSheetGroups, [newGroup.id]: newGroup }))

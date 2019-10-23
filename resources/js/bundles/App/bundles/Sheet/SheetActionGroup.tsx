@@ -30,6 +30,7 @@ const SheetActionGroup = ({
   const allSheetColumns = useSelector((state: IAppState) => state.sheet.allSheetColumns)
   const allSheetGroups = useSelector((state: IAppState) => state.sheet.allSheetGroups)
 
+  const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
   const sheetGroups = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].groups)
   const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleColumns)
 
@@ -46,12 +47,23 @@ const SheetActionGroup = ({
     return { label: allSheetColumns[group.columnId].name, value: group.id, isLocked: group.isLocked }
   })
 
+  const newSheetGroupFromSelectedOption = (selectedOption: SheetActionDropdownOption): ISheetGroup => {
+    return { 
+      id: createUuid(), 
+      sheetId: sheetActiveSheetViewId ? null : sheetId,
+      sheetViewId: sheetActiveSheetViewId, 
+      columnId: selectedOption.value, 
+      order: 'ASC', 
+      isLocked: false 
+    }
+  }
+
   return (
     <SheetAction>
       <SheetActionDropdown
         sheetId={sheetId}
         onOptionDelete={(optionToDelete: SheetActionDropdownOption) => dispatch(deleteSheetGroup(sheetId, optionToDelete.value))}
-        onOptionSelect={(selectedOption: SheetActionDropdownOption) => dispatch(createSheetGroup(sheetId, { id: createUuid(), sheetId: sheetId, sheetViewId: null, columnId: selectedOption.value, order: 'ASC', isLocked: false }))}
+        onOptionSelect={(selectedOption: SheetActionDropdownOption) => dispatch(createSheetGroup(sheetId, newSheetGroupFromSelectedOption(selectedOption)))}
         onOptionUpdate={(groupId, updates) => dispatch(updateSheetGroup(sheetId, groupId, updates, true))}
         options={sheetColumnNames}
         placeholder={"Group By..."}

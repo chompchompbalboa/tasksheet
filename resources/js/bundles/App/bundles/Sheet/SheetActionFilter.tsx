@@ -40,6 +40,7 @@ const SheetActionFilter = ({
   const allSheetColumns = useSelector((state: IAppState) => state.sheet.allSheetColumns)
   const allSheetFilters = useSelector((state: IAppState) => state.sheet.allSheetFilters)
 
+  const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
   const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleColumns)
   const sheetFilters = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].filters)
 
@@ -167,8 +168,8 @@ const SheetActionFilter = ({
         // New Filter
         const newSheetFilter: ISheetFilter = {
           id: createUuid(), 
-          sheetId: sheetId,
-          sheetViewId: null,
+          sheetId: sheetActiveSheetViewId ? null : sheetId,
+          sheetViewId: sheetActiveSheetViewId,
           columnId: filterColumnId, 
           value: filterValue, 
           type: filterFilterType,

@@ -33,6 +33,7 @@ const SheetActionSort = ({
   const allSheetColumns = useSelector((state: IAppState) => state.sheet.allSheetColumns)
   const allSheetSorts = useSelector((state: IAppState) => state.sheet.allSheetSorts)
   
+  const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
   const sheetSorts = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].sorts)
   const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleColumns)
 
@@ -49,13 +50,24 @@ const SheetActionSort = ({
     return { label: allSheetColumns[sort.columnId].name, value: sortId, isLocked: sort.isLocked }
   })
 
+  const newSheetSortFromSelectedOption = (selectedOption: SheetActionDropdownOption): ISheetSort => {
+    return { 
+      id: createUuid(), 
+      sheetId: sheetActiveSheetViewId ? null : sheetId,
+      sheetViewId: sheetActiveSheetViewId, 
+      columnId: selectedOption.value, 
+      order: 'ASC', 
+      isLocked: false 
+    }
+  }
+
   return (
     <SheetAction>
       <SheetActionDropdown
         sheetId={sheetId}
         isLast
         onOptionDelete={(optionToDelete: SheetActionDropdownOption) => dispatch(deleteSheetSort(sheetId, optionToDelete.value))}
-        onOptionSelect={(selectedOption: SheetActionDropdownOption) => dispatch(createSheetSort(sheetId, { id: createUuid(), sheetId: sheetId, sheetViewId: null, columnId: selectedOption.value, order: 'ASC', isLocked: false }))}
+        onOptionSelect={(selectedOption: SheetActionDropdownOption) => dispatch(createSheetSort(sheetId, newSheetSortFromSelectedOption(selectedOption)))}
         onOptionUpdate={(sortId, updates) => dispatch(updateSheetSort(sheetId, sortId, updates, true))}
         options={options}
         placeholder={"Sort By..."}

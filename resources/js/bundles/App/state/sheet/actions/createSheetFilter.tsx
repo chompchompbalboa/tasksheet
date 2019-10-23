@@ -11,7 +11,8 @@ import { ISheetFilter } from '@app/state/sheet/types'
 import { 
   clearSheetSelection,
   setAllSheetFilters,
-  updateSheet
+  updateSheet,
+  updateSheetView
 } from '@app/state/sheet/actions'
 
 import { 
@@ -31,7 +32,8 @@ export const createSheetFilter = (sheetId: string, newFilter: ISheetFilter): ITh
       allSheetCells,
       allSheetFilters,
       allSheetGroups,
-      allSheetSorts
+      allSheetSorts,
+      allSheetViews
     } = getState().sheet
     const sheet = allSheets[sheetId]
 
@@ -42,6 +44,13 @@ export const createSheetFilter = (sheetId: string, newFilter: ISheetFilter): ITh
       filters: nextSheetFilters 
     }, allSheetRows, allSheetCells, nextFilters, allSheetGroups, allSheetSorts)
     const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
+
+    if(sheet.activeSheetViewId) {
+      const activeSheetView = allSheetViews[sheet.activeSheetViewId]
+      dispatch(updateSheetView(activeSheetView.id, {
+        filters: [ ...activeSheetView.filters, newFilter.id ]
+      }))
+    }
 
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
