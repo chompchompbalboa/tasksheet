@@ -2,6 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import axios from '@/api/axios'
+import { IS3PresignedUrlData } from '@/api/vapor'
 
 import { 
   IFile, IFileUpdates, 
@@ -119,14 +120,13 @@ export const updateSheetCells = async (updates: ISheetCellUpdates[]) => {
 	})
 }
 
-export const createSheetCellFiles = async (sheetId: ISheet['id'], sheetCellId: ISheetCell['id'], filesToUpload: File[]) => {
-  const formData = new FormData()
-  formData.append('sheetId', sheetId)
-  formData.append('sheetCellId', sheetCellId)
-  filesToUpload.forEach(fileToUpload => {
-    formData.append('filesToUpload[]', fileToUpload)
-  })
-	return axios.post('/app/sheets/cells/files/upload', formData).then(response => {
+export const createSheetCellFiles = async (
+  sheetId: ISheet['id'], 
+  sheetCellId: ISheetCell['id'],
+  filename: string,
+  s3PresignedUrlData: IS3PresignedUrlData
+) => {
+	return axios.post('/app/sheets/cells/files/upload', {sheetId, sheetCellId, filename, s3PresignedUrlData}).then(response => {
 		return response.data
 	})
 }

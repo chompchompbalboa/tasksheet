@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import { DOWNLOAD, FILES, CLOSE } from '@app/assets/icons'
 
-import { storeToS3 } from '@/api/vapor'
+import { storeFileToS3 } from '@/api/vapor'
 import { mutation, query } from '@app/api'
 
 import { ISheetCell, ISheetColumnType } from '@app/state/sheet/types'
@@ -23,7 +23,7 @@ const SheetCellFiles = ({
   cell,
   updateCellValue,
   ...passThroughProps
-}: SheetCellFilesProps) => {
+}: ISheetCellFiles) => {
 
   // Refs
   const container = useRef(null)
@@ -72,20 +72,20 @@ const SheetCellFiles = ({
   const handleUploadInputSelect = (e: ChangeEvent<HTMLInputElement>) => {
     const filesList = e.target.files
     const filesIndexes = Object.keys(filesList)
+    const filesToUpload = filesIndexes.map((index: any) => filesList[index])
     if(filesIndexes.length > 0) {
+      const file = filesToUpload[0]
       setUploadStatus('UPLOADING')
-      const filesToUpload = filesIndexes.map((index: any) => filesList[index])
-      storeToS3(filesToUpload[0]).then(response => {
-        console.log(response)
+      setFiles([...files, { id: '', filename: file.name, isUploading: true }])
+      storeFileToS3(file).then(s3PresignedUrlData => {
+        setUploadStatus('SAVING_SHEET_CELL_FILE')
+        mutation.createSheetCellFiles(sheetId, cellId, file.name, s3PresignedUrlData).then(nextSheetCellFiles => {
+          setFiles(nextSheetCellFiles)
+          setUploadStatus('UPLOADED')
+          updateCellValue(nextSheetCellFiles.length)
+          setTimeout(() => setUploadStatus('READY'), 1000)
+        })
       })
-      /*
-      mutation.createSheetCellFiles(sheetId, cellId, filesToUpload).then(nextSheetCellFiles => {
-        setFiles(nextSheetCellFiles)
-        setUploadStatus('UPLOADED')
-        updateCellValue(nextSheetCellFiles.length)
-        setTimeout(() => setUploadStatus('READY'), 1000)
-      })
-      */
     }
   }
 
@@ -105,9 +105,10 @@ const SheetCellFiles = ({
   }
   
   const uploadStatusMessages = {
-    READY: 'Add files',
+    READY: 'Add File',
+    SAVING_SHEET_CELL_FILE: 'Saving File Data...',
     UPLOADING: 'Uploading...',
-    UPLOADED: 'Uploaded!',
+    UPLOADED: 'Added!',
     DELETING: 'Deleting...',
     DELETED: 'Deleted'
   }
@@ -148,16 +149,18 @@ const SheetCellFiles = ({
                   <File
                     key={index}>
                     <FileName>{file.filename}</FileName>
-                    <FileActions>
-                      <FileAction
-                        onClick={() => handleFileDownloadClick(file.id)}>
-                        <Icon icon={DOWNLOAD}/>
-                      </FileAction>
-                      <FileAction
-                        onClick={() => handleFileDeleteClick(file.id)}>
-                        <Icon icon={CLOSE}/>
-                      </FileAction>
-                    </FileActions>
+                    {!file.isUploading && 
+                      <FileActions>
+                        <FileAction
+                          onClick={() => handleFileDownloadClick(file.id)}>
+                          <Icon icon={DOWNLOAD}/>
+                        </FileAction>
+                        <FileAction
+                          onClick={() => handleFileDeleteClick(file.id)}>
+                          <Icon icon={CLOSE}/>
+                        </FileAction>
+                      </FileActions>
+                    }
                   </File>
                 ))
             }
@@ -168,7 +171,6 @@ const SheetCellFiles = ({
       <UploadInput
         ref={uploadInput}
         type="file"
-        multiple
         onChange={e => handleUploadInputSelect(e)}/>
     </SheetCellContainer>
   )
@@ -178,7 +180,7 @@ const SheetCellFiles = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetCellFilesProps {
+interface ISheetCellFiles {
   sheetId: string
   cell: ISheetCell
   cellId: string
@@ -188,7 +190,7 @@ interface SheetCellFilesProps {
   value: string
 }
 
-type TUploadStatus = 'READY' | 'UPLOADING' | 'UPLOADED' | 'DELETING' | 'DELETED'
+type TUploadStatus = 'READY' | 'SAVING_SHEET_CELL_FILE' | 'UPLOADING'| 'UPLOADED' | 'DELETING' | 'DELETED'
 
 //-----------------------------------------------------------------------------
 // Styled Components
@@ -276,10 +278,18 @@ const File = styled.div`
   }
 `
 
-const FileName = styled.div``
+const FileName = styled.div`
+  z-index: 1;
+  width: 75%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
 
 const FileActions = styled.div`
+  z-index: 2;
+  width: 25%;
   display: flex;
+  justify-content: flex-end;
   align-items: center;
 `
 

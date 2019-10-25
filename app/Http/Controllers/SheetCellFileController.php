@@ -40,26 +40,36 @@ class SheetCellFileController extends Controller
      */
     public function uploadFiles(Request $request)
     {
-      $formData = $request->all();
-      $sheetId = $formData['sheetId'];
-      $sheetCellId = $formData['sheetCellId'];
-      $filesToUpload = $formData['filesToUpload'];
+      // Variables
+      $sheetId = $request->input('sheetId');
+      $sheetCellId = $request->input('sheetCellId');
+      $filename = $request->input('filename');
+      $s3PresignedUrlData = $request->input('s3PresignedUrlData');
       $user = Auth::user();
-      foreach($filesToUpload as $fileToUpload) {
-        $newSheetFileName = $fileToUpload->getClientOriginalName();
-        $fileToUpload->storeAs('/public/files/', $newSheetFileName);
-        $newSheetFile = SheetFile::create([
-          'id' => Str::uuid()->toString(),
-          'sheetId' => $sheetId,
-          'cellId' => $sheetCellId,
-          'filename' => $newSheetFileName,
-          'uploadedBy' => $user->name,
-          'uploadedDate' => date('m-d-Y')
-        ]);
-      }
+      
+      // Move the file to permanent storage on S3
+      Storage::copy(
+        $s3PresignedUrlData['key'],
+        str_replace('tmp/', '', $s3PresignedUrlData['key'])
+      );
+      
+      // Create the new sheet cell file
+      $newSheetFile = SheetFile::create([
+        'id' => Str::uuid()->toString(),
+        'sheetId' => $sheetId,
+        'cellId' => $sheetCellId,
+        'filename' => $filename,
+        's3Uuid' => $s3PresignedUrlData['uuid'],
+        's3Bucket' => $s3PresignedUrlData['bucket'],
+        's3Key' => $s3PresignedUrlData['key'],
+        'uploadedBy' => $user->name,
+        'uploadedAt' => date("Y-m-d H:i:s")
+      ]);
+      
       $nextSheetCellFiles = SheetFile::where('cellId', $sheetCellId)->orderBy('created_at')->get();
       $sheetCell = SheetCell::find($sheetCellId);
       $sheetCell->update([ 'value' => count($nextSheetCellFiles) ]);
+      
       return response()->json($nextSheetCellFiles, 200);
     }
 
@@ -130,6 +140,6 @@ class SheetCellFileController extends Controller
     public function downloadFiles($sheetFileId)
     {
       $sheetFile = SheetFile::find($sheetFileId);
-      return Storage::download('/public/files/'.$sheetFile->filename);
+      return Storage::download($sheetFile->s3Key, $sheetFile->filename);
     }
 }

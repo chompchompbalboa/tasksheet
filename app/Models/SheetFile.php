@@ -13,8 +13,8 @@ class SheetFile extends Model
   /**
    * Define which attributes will be visible
    */
-  protected $visible = ['id', 'sheetId', 'cellId', 'filename', 'uploadedBy', 'uploadedDate'];
-  protected $fillable = ['id', 'sheetId', 'cellId', 'filename', 'uploadedBy', 'uploadedDate'];
+  protected $visible = ['id', 'sheetId', 'cellId', 'filename', 's3Uuid', 's3Bucket', 's3Key', 'uploadedBy', 'uploadedAt'];
+  protected $fillable = ['id', 'sheetId', 'cellId', 'filename', 's3Uuid', 's3Bucket', 's3Key', 'uploadedBy', 'uploadedAt'];
   
   public function cell() {
     return $this->belongsTo('App\Models\SheetCell', 'cellId');
