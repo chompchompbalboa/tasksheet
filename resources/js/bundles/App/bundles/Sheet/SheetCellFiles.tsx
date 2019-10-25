@@ -6,6 +6,7 @@ import styled from 'styled-components'
 
 import { DOWNLOAD, FILES, CLOSE } from '@app/assets/icons'
 
+import { storeToS3 } from '@/api/vapor'
 import { mutation, query } from '@app/api'
 
 import { ISheetCell, ISheetColumnType } from '@app/state/sheet/types'
@@ -74,12 +75,17 @@ const SheetCellFiles = ({
     if(filesIndexes.length > 0) {
       setUploadStatus('UPLOADING')
       const filesToUpload = filesIndexes.map((index: any) => filesList[index])
+      storeToS3(filesToUpload[0]).then(response => {
+        console.log(response)
+      })
+      /*
       mutation.createSheetCellFiles(sheetId, cellId, filesToUpload).then(nextSheetCellFiles => {
         setFiles(nextSheetCellFiles)
         setUploadStatus('UPLOADED')
         updateCellValue(nextSheetCellFiles.length)
         setTimeout(() => setUploadStatus('READY'), 1000)
       })
+      */
     }
   }
 
