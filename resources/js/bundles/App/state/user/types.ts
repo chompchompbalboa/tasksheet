@@ -9,6 +9,11 @@ export interface IUser {
 	color: IUserColor
 }
 
+export interface IUserUpdates {
+  name?: string
+  email?: string
+}
+
 export interface IUserActive {
 	id: string
 	tab: string

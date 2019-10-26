@@ -88,6 +88,7 @@ Route::group([
     'sheets/styles' => 'SheetStylesController',
     'sheets/views' => 'SheetViewController',
     // User
+    'user' => 'UserController',
     'user/active' => 'UserActiveController',
     'user/color' => 'UserColorController',
     'user/layout' => 'UserLayoutController',

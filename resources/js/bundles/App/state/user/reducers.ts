@@ -5,6 +5,7 @@ import defaultInitialData from '@app/state/initialData'
 import { IUser } from '@app/state/user/types'
 import { 
   IUserActions, 
+  UPDATE_USER,
   UPDATE_USER_ACTIVE, 
   UPDATE_USER_COLOR 
 } from '@app/state/user/actions'
@@ -19,6 +20,12 @@ export const initialUserState: IUser = typeof initialData !== 'undefined' ? init
 //-----------------------------------------------------------------------------
 export const userReducer = (state = initialUserState, action: IUserActions): IUser => {
 	switch (action.type) {
+    
+		case UPDATE_USER: {
+			const { updates } = action
+			return { ...state, ...updates }
+		}
+
 		case UPDATE_USER_ACTIVE: {
 			const { updates } = action
 			return { ...state, active: { ...state.active, ...updates } }

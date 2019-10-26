@@ -4,6 +4,8 @@
 import { IAppState } from '@app/state'
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import {
+  IUser,
+  IUserUpdates,
   IUserActiveUpdates,
   IUserColorUpdates
 } from './types'
@@ -13,7 +15,31 @@ import { mutation } from '@app/api'
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-export type IUserActions = IUpdateUserActive | IUpdateUserColor
+export type IUserActions = IUpdateUser | IUpdateUserActive | IUpdateUserColor
+
+//-----------------------------------------------------------------------------
+// Update User
+//-----------------------------------------------------------------------------
+export const UPDATE_USER = 'UPDATE_USER'
+interface IUpdateUser {
+	type: typeof UPDATE_USER
+	updates: IUserUpdates
+}
+
+
+export const updateUser = (userId: IUser['id'], updates: IUserUpdates): IThunkAction => {
+	return async (dispatch: IThunkDispatch) => {
+		dispatch(updateUserReducer(updates))
+		mutation.updateUser(userId, updates)
+	}
+}
+
+export const updateUserReducer = (updates: IUserUpdates): IUserActions => {
+	return {
+		type: UPDATE_USER,
+		updates: updates,
+	}
+}
 
 //-----------------------------------------------------------------------------
 // Update User Active

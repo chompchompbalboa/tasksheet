@@ -20,7 +20,7 @@ const SheetSettingsSidebar = ({
   return (
     <>
       <SheetSettingsSidebarItem 
-        text="Column Settings"
+        text="Columns"
         icon={SHEET_COLUMN}
         isActive={activeSheetSetting === 'COLUMN_SETTINGS'}
         onClick={() => setActiveSheetSetting('COLUMN_SETTINGS')}/>

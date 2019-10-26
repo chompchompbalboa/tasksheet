@@ -21,6 +21,7 @@ import {
   ISheetViewToDatabase, ISheetViewUpdates
 } from '@app/state/sheet/types'
 import { 
+  IUser, IUserUpdates,
   IUserActiveUpdates, 
   IUserColorUpdates
 } from '@app/state/user/types'
@@ -28,6 +29,11 @@ import {
 //-----------------------------------------------------------------------------
 // User
 //-----------------------------------------------------------------------------
+export const updateUser = async (userId: IUser['id'], updates: IUserUpdates) => {
+	return axios.patch('/app/user/' + userId, updates).then(response => {
+		return response.data
+	})
+}
 export const updateUserActive = async (id: string, updates: IUserActiveUpdates) => {
 	return axios.patch('/app/user/active/' + id, updates).then(response => {
 		return response.data

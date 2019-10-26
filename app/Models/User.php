@@ -12,9 +12,9 @@ class User extends Authenticatable
     use Notifiable;
     use Traits\UsesUuid;
   
-    protected $fillable = ['name', 'email', 'password', 'folderId'];
-    protected $visible = ['id', 'name', 'email', 'active', 'color'];
-    protected $with = ['active', 'color'];
+    protected $fillable = [ 'name', 'email', 'password', 'folderId' ];
+    protected $visible = [ 'id', 'name', 'email', 'active', 'color' ];
+    protected $with = [ 'active', 'color' ];
   
     public function active() {
       return $this->hasOne('App\Models\UserActive', 'userId');
