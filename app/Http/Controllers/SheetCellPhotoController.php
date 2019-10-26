@@ -40,24 +40,31 @@ class SheetCellPhotoController extends Controller
      */
     public function uploadPhotos(Request $request)
     {
-      $formData = $request->all();
-      $sheetId = $formData['sheetId'];
-      $sheetCellId = $formData['sheetCellId'];
-      $photosToUpload = $formData['photosToUpload'];
+      // Variables
+      $sheetId = $request->input('sheetId');
+      $sheetCellId = $request->input('sheetCellId');
+      $filename = $request->input('filename');
+      $s3PresignedUrlData = $request->input('s3PresignedUrlData');
       $user = Auth::user();
-      foreach($photosToUpload as $photoToUpload) {
-        $newPhotoId = Str::uuid()->toString();
-        $newPhotoFileName = $newPhotoId.'.'.$photoToUpload->extension();
-        $photoToUpload->storeAs('/public/photos/', $newPhotoFileName);
-        $newSheetPhoto = SheetPhoto::create([
-          'id' => $newPhotoId,
-          'sheetId' => $sheetId,
-          'cellId' => $sheetCellId,
-          'filename' => $newPhotoFileName,
-          'uploadedBy' => $user->name,
-          'uploadedDate' => date('m-d-Y')
-        ]);
-      }
+      
+      // Move the file to permanent storage on S3
+      $nextS3PresignedUrlDataKey = str_replace('tmp/', '', $s3PresignedUrlData['key']);
+      Storage::copy($s3PresignedUrlData['key'], $nextS3PresignedUrlDataKey);
+      Storage::setVisibility($nextS3PresignedUrlDataKey, 'public');
+      
+      // Create the new sheet cell photo
+      $newSheetPhoto = SheetPhoto::create([
+        'id' => Str::uuid()->toString(),
+        'sheetId' => $sheetId,
+        'cellId' => $sheetCellId,
+        'filename' => $filename,
+        's3Uuid' => $s3PresignedUrlData['uuid'],
+        's3Bucket' => $s3PresignedUrlData['bucket'],
+        's3Key' => $nextS3PresignedUrlDataKey,
+        'uploadedBy' => $user->name,
+        'uploadedAt' => date("Y-m-d H:i:s")
+      ]);
+
       $nextSheetCellPhotos = SheetPhoto::where('cellId', $sheetCellId)->orderBy('created_at')->get();
       $sheetCell = SheetCell::find($sheetCellId);
       $sheetCell->update([ 'value' => count($nextSheetCellPhotos) ]);

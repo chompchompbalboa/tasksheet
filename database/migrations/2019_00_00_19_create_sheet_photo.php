@@ -18,8 +18,11 @@ class CreateSheetPhoto extends Migration
           $table->uuid('sheetId');
           $table->uuid('cellId');
           $table->string('filename');
+          $table->uuid('s3Uuid');
+          $table->string('s3Bucket');
+          $table->string('s3Key');
           $table->string('uploadedBy');
-          $table->string('uploadedDate');
+          $table->datetime('uploadedAt');
           $table->timestamps();
 
           $table->foreign('sheetId')->references('id')->on('sheets');

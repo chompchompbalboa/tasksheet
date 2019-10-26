@@ -48,10 +48,8 @@ class SheetCellFileController extends Controller
       $user = Auth::user();
       
       // Move the file to permanent storage on S3
-      Storage::copy(
-        $s3PresignedUrlData['key'],
-        str_replace('tmp/', '', $s3PresignedUrlData['key'])
-      );
+      $nextS3PresignedUrlDataKey = str_replace('tmp/', '', $s3PresignedUrlData['key']);
+      Storage::copy($s3PresignedUrlData['key'], $nextS3PresignedUrlDataKey);
       
       // Create the new sheet cell file
       $newSheetFile = SheetFile::create([
@@ -61,7 +59,7 @@ class SheetCellFileController extends Controller
         'filename' => $filename,
         's3Uuid' => $s3PresignedUrlData['uuid'],
         's3Bucket' => $s3PresignedUrlData['bucket'],
-        's3Key' => $s3PresignedUrlData['key'],
+        's3Key' => $nextS3PresignedUrlDataKey,
         'uploadedBy' => $user->name,
         'uploadedAt' => date("Y-m-d H:i:s")
       ]);

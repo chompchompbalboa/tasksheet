@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import { ARROW_LEFT, ARROW_RIGHT, PHOTOS } from '@app/assets/icons'
 
 import { mutation, query } from '@app/api'
+import { storeFileToS3 } from '@/api/vapor'
 
 import { ISheetCell, ISheetColumnType } from '@app/state/sheet/types'
 
@@ -30,7 +31,7 @@ const SheetCellPhotos = ({
 
   // State
   const [ hasPhotosLoaded, setHasPhotosLoaded ] = useState(false)
-  const [ photos, setPhotos ] = useState([])
+  const [ photos, setPhotos ] = useState([] as IStatePhoto[])
   const [ isPhotosVisible, setIsPhotosVisible ] = useState(false)
   const [ uploadStatus, setUploadStatus ] = useState('READY' as TUploadStatus)
   const [ visiblePhotoIndex, setVisiblePhotoIndex ] = useState(0)
@@ -72,22 +73,25 @@ const SheetCellPhotos = ({
   const handleUploadInputSelect = (e: ChangeEvent<HTMLInputElement>) => {
     const photosList = e.target.files
     const photosIndexes = Object.keys(photosList)
-    const previousPhotosLength = photos.length || 0
+    const photosToUpload = photosIndexes.map((index: any) => photosList[index])
     if(photosIndexes.length > 0) {
+      const file = photosToUpload[0]
       setUploadStatus('UPLOADING')
-      const photosToUpload = photosIndexes.map((index: any) => photosList[index])
-      mutation.createSheetCellPhotos(sheetId, cellId, photosToUpload).then(nextSheetCellPhotos => {
-        setPhotos(nextSheetCellPhotos)
-        setUploadStatus('UPLOADED')
-        setVisiblePhotoIndex(previousPhotosLength)
-        updateCellValue(nextSheetCellPhotos.length)
-        setTimeout(() => setUploadStatus('READY'), 1000)
+      storeFileToS3(file).then(s3PresignedUrlData => {
+        setUploadStatus('SAVING_SHEET_CELL_PHOTO')
+        mutation.createSheetCellPhoto(sheetId, cellId, file.name, s3PresignedUrlData).then(nextSheetCellPhotos => {
+          setPhotos(nextSheetCellPhotos)
+          setUploadStatus('UPLOADED')
+          updateCellValue(nextSheetCellPhotos.length)
+          setTimeout(() => setUploadStatus('READY'), 1000)
+        })
       })
     }
   }
   
   const uploadStatusMessages = {
     READY: 'Add photos',
+    SAVING_SHEET_CELL_PHOTO: 'Saving File Data...',
     UPLOADING: 'Uploading...',
     UPLOADED: 'Uploaded!'
   }
@@ -125,7 +129,7 @@ const SheetCellPhotos = ({
               <PhotoHeader>
                 <PhotoLabel>
                   {hasPhotosLoaded && photos.length > 0 && photos[visiblePhotoIndex]
-                    ? photos[visiblePhotoIndex].uploadedBy + ' on ' + photos[visiblePhotoIndex].uploadedDate
+                    ? photos[visiblePhotoIndex].uploadedBy + ' on ' + photos[visiblePhotoIndex].uploadedAt
                     : ''
                   }
                 </PhotoLabel>
@@ -140,7 +144,7 @@ const SheetCellPhotos = ({
                       <Photo
                         key={index}
                         isVisible={index === visiblePhotoIndex}
-                        src={'/storage/photos/' + photo.filename}/>
+                        src={'https://tracksheet-staging.s3.amazonaws.com/' + photo.s3Key}/>
                     ))
                   : <NoPhotoMessage
                       hasPhotosLoaded={hasPhotosLoaded}>
@@ -180,7 +184,13 @@ interface SheetCellPhotosProps {
   value: string
 }
 
-type TUploadStatus = 'READY' | 'UPLOADING' | 'UPLOADED'
+interface IStatePhoto {
+  s3Key: string
+  uploadedAt: string
+  uploadedBy: string
+}
+
+type TUploadStatus = 'READY' | 'SAVING_SHEET_CELL_PHOTO' | 'UPLOADING' | 'UPLOADED'
 
 //-----------------------------------------------------------------------------
 // Styled Components

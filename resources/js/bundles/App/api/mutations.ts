@@ -120,7 +120,7 @@ export const updateSheetCells = async (updates: ISheetCellUpdates[]) => {
 	})
 }
 
-export const createSheetCellFiles = async (
+export const createSheetCellFile = async (
   sheetId: ISheet['id'], 
   sheetCellId: ISheetCell['id'],
   filename: string,
@@ -141,14 +141,13 @@ export const downloadSheetCellFile = async (sheetCellFileId: string) => {
 	return axios.post('/app/sheets/cells/files/download/' + sheetCellFileId)
 }
 
-export const createSheetCellPhotos = async (sheetId: ISheet['id'], sheetCellId: ISheetCell['id'], photosToUpload: File[]) => {
-  const formData = new FormData()
-  formData.append('sheetId', sheetId)
-  formData.append('sheetCellId', sheetCellId)
-  photosToUpload.forEach(photoToUpload => {
-    formData.append('photosToUpload[]', photoToUpload)
-  })
-	return axios.post('/app/sheets/cells/photos/upload', formData).then(response => {
+export const createSheetCellPhoto = async (
+  sheetId: ISheet['id'], 
+  sheetCellId: ISheetCell['id'],
+  filename: string,
+  s3PresignedUrlData: IS3PresignedUrlData
+) => {
+	return axios.post('/app/sheets/cells/photos/upload', {sheetId, sheetCellId, filename, s3PresignedUrlData}).then(response => {
 		return response.data
 	})
 }
