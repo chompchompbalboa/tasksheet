@@ -3,38 +3,38 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 
-import ContentSidebarItem from '@app/bundles/Content/ContentSidebarItem'
+import { IUserContent } from '@app/bundles/User/User'
+
+import UserBilling from '@app/bundles/User/UserBilling'
+import UserProfile from '@app/bundles/User/UserProfile'
+import UserSettings from '@app/bundles/User/UserSettings'
 
 //-----------------------------------------------------------------------------
 // Components
 //-----------------------------------------------------------------------------
-const SheetSettingsSidebarItem = ({
-  icon,
-  isActive,
-  onClick,
-  text,
-}: ISheetSettingsSidebarItem) => {
+const UserContent = ({
+  activeContent
+}: UserContentProps) => {
 
-  return (
-    <ContentSidebarItem 
-      icon={icon}
-      isActive={isActive}
-      onClick={onClick}
-      text={text}/> 
-  )
+  const content = {
+    USER_BILLING: UserBilling,
+    USER_PROFILE: UserProfile,
+    USER_SETTINGS: UserSettings,
+  }
+
+  const ContentComponent = activeContent ? content[activeContent] : null
+
+  return <ContentComponent />
 }
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface ISheetSettingsSidebarItem {
-  icon?: string
-  isActive: boolean
-  onClick(...args: any): void
-  text: string
+interface UserContentProps {
+  activeContent: IUserContent
 }
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetSettingsSidebarItem
+export default UserContent

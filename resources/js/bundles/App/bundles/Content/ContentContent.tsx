@@ -2,39 +2,33 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-
-import ContentSidebarItem from '@app/bundles/Content/ContentSidebarItem'
+import styled from 'styled-components'
 
 //-----------------------------------------------------------------------------
-// Components
+// Component
 //-----------------------------------------------------------------------------
-const SheetSettingsSidebarItem = ({
-  icon,
-  isActive,
-  onClick,
-  text,
-}: ISheetSettingsSidebarItem) => {
+const ContentContent = ({ children }: IContentContent) => {
 
   return (
-    <ContentSidebarItem 
-      icon={icon}
-      isActive={isActive}
-      onClick={onClick}
-      text={text}/> 
+    <Container>
+      {children}
+    </Container>
   )
 }
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface ISheetSettingsSidebarItem {
-  icon?: string
-  isActive: boolean
-  onClick(...args: any): void
-  text: string
+interface IContentContent {
+  children: any
 }
 
 //-----------------------------------------------------------------------------
-// Export
+// Styled Components
 //-----------------------------------------------------------------------------
-export default SheetSettingsSidebarItem
+const Container = styled.div`
+  width: 100%;
+`
+
+
+export default ContentContent

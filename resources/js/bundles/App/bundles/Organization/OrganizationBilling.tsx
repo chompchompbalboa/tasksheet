@@ -3,33 +3,21 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 
-import { action } from '@app/api'
-import { LOGOUT } from '@app/assets/icons'
-
-import ContentSidebarItem from '@app/bundles/Content/ContentSidebarItem'
+import ContentContent from '@app/bundles/Content/ContentContent'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const UserLogout = () => {
-
-  const handleLogoutButtonClick = () => {
-    action.userLogout().then(
-      success => { if(success) { window.location = window.location.href as any } },
-      err => { console.log(err) }
-    )
-  }
+const OrganizationBilling = () => {
 
   return (
-    <ContentSidebarItem
-      icon={LOGOUT}
-      isActive={false}
-      onClick={() => handleLogoutButtonClick()}
-      text="Logout"/>
+    <ContentContent>
+      OrganizationBilling
+    </ContentContent>
   )
 }
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default UserLogout
+export default OrganizationBilling

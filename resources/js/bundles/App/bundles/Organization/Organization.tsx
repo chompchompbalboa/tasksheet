@@ -1,54 +1,49 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import React, { useState } from 'react'
 
 import Content from '@app/bundles/Content/Content'
+import OrganizationContent from '@app/bundles/Organization/OrganizationContent'
+import OrganizationSidebar from '@app/bundles/Organization/OrganizationSidebar'
 
+export type IOrganizationContent = 
+  'ORGANIZATION_BILLING' |
+  'ORGANIZATION_PROFILE' | 
+  'ORGANIZATION_SETTINGS' | 
+  'ORGANIZATION_USERS'
 //-----------------------------------------------------------------------------
 // Components
 //-----------------------------------------------------------------------------
-const Organization = ({
-}: OrganizationProps) => {
+const Organization = () => {
+
+  const [ activeContent, setActiveContent ] = useState('ORGANIZATION_PROFILE' as IOrganizationContent)
+
+  const headers = {
+    ORGANIZATION_BILLING: 'Billing',
+    ORGANIZATION_PROFILE: 'Profile',
+    ORGANIZATION_SETTINGS: 'Settings',
+    ORGANIZATION_USERS: 'Users',
+  }
+  const OrganizationHeader = () => headers[activeContent]
+
+  const OrganizationSidebarComponent = () => (
+    <OrganizationSidebar
+     activeContent={activeContent}
+     setActiveContent={setActiveContent}/>
+  )
+
+  const OrganizationContentComponent = () => (
+    <OrganizationContent
+      activeContent={activeContent}/>
+  )
+
   return (
     <Content
-      Sidebar={OrganizationSidebar}
-      Content={OrganizationContent}
-      Header={OrganizationHeader}/>
+      Content={OrganizationContentComponent}
+      Header={OrganizationHeader}
+      Sidebar={OrganizationSidebarComponent}/>
   )
 }
 
-const OrganizationSidebar = () => {
-  return (
-    <>
-      Organization Sidebar
-    </>
-  )
-}
-
-const OrganizationHeader = () => {
-  return (
-    <>
-      Organization Header
-    </>
-  )
-}
-
-const OrganizationContent = () => {
-  return (
-    <>
-      Organization Content
-    </>
-  )
-}
-
-//-----------------------------------------------------------------------------
-// Props
-//-----------------------------------------------------------------------------
-interface OrganizationProps {
-}
-
-//-----------------------------------------------------------------------------
-// Export
-//-----------------------------------------------------------------------------
 export default Organization
