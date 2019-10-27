@@ -12,6 +12,9 @@ import {
 
 import { mutation } from '@app/api'
 
+import { IMessengerMessageKey } from '@app/state/messenger/types'
+import { createMessengerMessage } from '@app/state/messenger/actions'
+
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
@@ -27,10 +30,22 @@ interface IUpdateUser {
 }
 
 
-export const updateUser = (userId: IUser['id'], updates: IUserUpdates): IThunkAction => {
+export const updateUser = (
+  userId: IUser['id'], 
+  updates: IUserUpdates, 
+  successMessage?: IMessengerMessageKey, 
+  errorMessage?: IMessengerMessageKey
+): IThunkAction => {
 	return async (dispatch: IThunkDispatch) => {
 		dispatch(updateUserReducer(updates))
-		mutation.updateUser(userId, updates)
+		mutation.updateUser(userId, updates).then(
+      () => {
+        successMessage && dispatch(createMessengerMessage(successMessage))
+      },
+      () => {
+        errorMessage && dispatch(createMessengerMessage(successMessage))
+      }
+    )
 	}
 }
 

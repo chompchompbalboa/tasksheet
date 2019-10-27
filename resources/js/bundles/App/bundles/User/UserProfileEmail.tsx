@@ -22,10 +22,19 @@ const UserProfileEmail = () => {
 
   const [ localUserEmail, setLocalUserEmail ] = useState(userEmail)
 
+  const updateUserEmail = () => {
+    dispatch(updateUser(
+      userId, 
+      { email: localUserEmail },
+      'USER_UPDATE_USER_EMAIL_SUCCESS',
+      'USER_UPDATE_USER_EMAIL_ERROR'
+    ))
+  }
+
   return (
     <ContentLabelledInput
       label="Email:"
-      onBlur={() => dispatch(updateUser(userId, { email: localUserEmail }))}
+      onBlur={() => updateUserEmail()}
       onChange={nextUserEmail => setLocalUserEmail(nextUserEmail)}
       value={localUserEmail}/>
   )

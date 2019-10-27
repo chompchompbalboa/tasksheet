@@ -7,25 +7,23 @@ import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
 
-import History from '@app/bundles/History/History'
-import Messenger from '@app/bundles/Messenger/Messenger'
-import Modals from '@app/bundles/Modal/Modals'
-import Tabs from '@app/bundles/Tabs/Tabs'
+import MessengerMessage from '@app/bundles/Messenger/MessengerMessage'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-export const App = () => {
+const Messenger = () => {
 
-  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
+  const messages = useSelector((state: IAppState) => state.messenger.messages)
 
   return (
     <Container
-      containerBackgroundColor={userColorPrimary}>
-      <History />
-      <Messenger />
-      <Modals />
-      <Tabs />
+      isVisible={messages.length > 0}>
+      {messages.map((message, index) => (
+        <MessengerMessage
+          key={index}
+          message={message}/>
+      ))}
     </Container>
   )
 }
@@ -34,12 +32,18 @@ export const App = () => {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-	width: 100vw;
-  min-height: 100vh;
-  background-color: ${ ({ containerBackgroundColor }: ContainerProps) => containerBackgroundColor };
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: ${ ({ isVisible }: IContainer ) => isVisible ? 'flex' : 'none' };
+  z-index: 100;
+  width: 100vw;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `
-interface ContainerProps {
-  containerBackgroundColor: string
+interface IContainer {
+  isVisible: boolean
 }
 
-export default App
+export default Messenger

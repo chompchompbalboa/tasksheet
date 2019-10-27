@@ -22,10 +22,19 @@ const UserProfileName = () => {
 
   const [ localUserName, setLocalUserName ] = useState(userName)
 
+  const updateUserName = () => {
+    dispatch(updateUser(
+      userId, 
+      { name: localUserName },
+      'USER_UPDATE_USER_NAME_SUCCESS',
+      'USER_UPDATE_USER_NAME_ERROR'
+    ))
+  }
+
   return (
     <ContentLabelledInput
       label="Name:"
-      onBlur={() => dispatch(updateUser(userId, { name: localUserName }))}
+      onBlur={() => updateUserName()}
       onChange={nextUserName => setLocalUserName(nextUserName)}
       value={localUserName}/>
   )

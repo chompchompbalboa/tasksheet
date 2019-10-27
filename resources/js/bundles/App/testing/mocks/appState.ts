@@ -269,6 +269,9 @@ export const appState: IAppState = {
     folders: allFolders,
   },
   modal: initialModalState,
+  messenger: {
+    messages: []
+  },
   sheet: {
     ...initialSheetState,
     allSheets,
