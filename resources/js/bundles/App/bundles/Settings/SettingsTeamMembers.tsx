@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 import styled from 'styled-components'
-import { IOrganization } from '@app/state/organizations/types'
+import { ITeam } from '@app/state/team/types'
 
 import { TRASH_CAN } from '@app/assets/icons'
 
@@ -14,34 +14,34 @@ import SettingsListItem from '@app/bundles/Settings/SettingsListItem'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SettingsOrganizationUsers = ({
-  organization
-}: ISettingsOrganizationUsers) => {
+const SettingsTeamMembers = ({
+  team
+}: ISettingsTeamMembers) => {
 
   return (
     <Container>
       <SettingsList
-        name="Users"
+        name="Members"
         width="30%">
-        {organization.users && organization.users.map((user, index) => (
+        {team.members && team.members.map((member, index) => (
           <SettingsListItem
-            key={user.id}>
-            <User
+            key={member.id}>
+            <Member
               isFirst={index === 0}>
-              <UserName>{user.name}</UserName>
-              <UserActions>
-                <DeleteUserFromOrganization>
+              <MemberName>{member.name}</MemberName>
+              <MemberActions>
+                <DeleteMemberFromTeam>
                   <Icon
                     icon={TRASH_CAN}
                     size="0.8rem"/>
-                </DeleteUserFromOrganization>
-            </UserActions>
-            </User>
+                </DeleteMemberFromTeam>
+            </MemberActions>
+            </Member>
           </SettingsListItem>
         ))}
-        <AddUser>
-          Add User...
-        </AddUser>
+        <AddMember>
+          Add Member...
+        </AddMember>
       </SettingsList>
     </Container>
   )
@@ -50,8 +50,8 @@ const SettingsOrganizationUsers = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-export interface ISettingsOrganizationUsers {
-  organization: IOrganization
+export interface ISettingsTeamMembers {
+  team: ITeam
 }
 
 //-----------------------------------------------------------------------------
@@ -59,27 +59,27 @@ export interface ISettingsOrganizationUsers {
 //-----------------------------------------------------------------------------
 const Container = styled.div``
 
-const User = styled.div`
+const Member = styled.div`
   cursor: default;
   padding: 0.25rem 0.125rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: ${ ({ isFirst }: IUser ) => isFirst ? '1px dashed rgb(200, 200, 200)' : 'none' };
+  border-top: ${ ({ isFirst }: IMember ) => isFirst ? '1px dashed rgb(200, 200, 200)' : 'none' };
   border-bottom: 1px dashed rgb(200, 200, 200);
   &:hover {
     background-color: rgb(225, 225, 225);
   }
 `
-interface IUser {
+interface IMember {
   isFirst: boolean
 }
 
-const UserName = styled.div``
+const MemberName = styled.div``
 
-const UserActions = styled.div``
+const MemberActions = styled.div``
 
-const DeleteUserFromOrganization = styled.div`
+const DeleteMemberFromTeam = styled.div`
   cursor: pointer;
   opacity: 0.8;
   &:hover {
@@ -87,7 +87,7 @@ const DeleteUserFromOrganization = styled.div`
   }
 `
 
-const AddUser = styled.div`
+const AddMember = styled.div`
   cursor: pointer;
   padding: 0.25rem 0.125rem;
   border-bottom: 1px dashed rgb(200, 200, 200);
@@ -96,4 +96,4 @@ const AddUser = styled.div`
   }
 `
 
-export default SettingsOrganizationUsers
+export default SettingsTeamMembers

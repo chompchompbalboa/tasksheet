@@ -4,7 +4,7 @@
   <script>
     const initialData = {
       user: @json($user),
-      organizations: @json($organizations),
+      teams: @json($teams),
       folders: @json($folders),
       columnTypes: @json($columnTypes)
     }

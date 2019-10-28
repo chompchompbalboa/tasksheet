@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Organization;
+use App\Models\Team;
 use Illuminate\Http\Request;
 
-class OrganizationController extends Controller
+class TeamController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +41,10 @@ class OrganizationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Organization  $organization
+     * @param  \App\Team  $team
      * @return \Illuminate\Http\Response
      */
-    public function show(Organization $organization)
+    public function show(Team $team)
     {
         //
     }
@@ -52,10 +52,10 @@ class OrganizationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Organization  $organization
+     * @param  \App\Team  $team
      * @return \Illuminate\Http\Response
      */
-    public function edit(Organization $organization)
+    public function edit(Team $team)
     {
         //
     }
@@ -64,22 +64,22 @@ class OrganizationController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Model\Organization  $organization
+     * @param  \App\Model\Team  $team
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Organization $organization)
+    public function update(Request $request, Team $team)
     { 
-      $organization->update($request->all());
-      return response()->json($organization, 200);
+      $team->update($request->all());
+      return response()->json($team, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Organization  $organization
+     * @param  \App\Team  $team
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Organization $organization)
+    public function destroy(Team $team)
     {
         //
     }

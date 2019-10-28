@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 
-class Organization extends Model
+class Team extends Model
 {
   use Traits\UsesUuid;
 
-  protected $visible = [ 'id', 'name', 'users' ];
+  protected $visible = [ 'id', 'name', 'members' ];
   protected $fillable = [ 'name' ];
-  protected $with = [ 'users' ];
+  protected $with = [ 'members' ];
   
-  public function users() {
-    return $this->belongsToMany('App\Models\User', 'organizationUsers', 'organizationId', 'userId');
+  public function members() {
+    return $this->belongsToMany('App\Models\User', 'teamUsers', 'teamId', 'userId');
   }
   
   public function folder() {

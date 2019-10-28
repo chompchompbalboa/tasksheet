@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOrganizationUser extends Migration
+class CreateTeam extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateOrganizationUser extends Migration
      */
     public function up()
     {
-        Schema::create('organizationUsers', function (Blueprint $table) {
+        Schema::create('teams', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('organizationId');
-            $table->uuid('userId');
+            $table->string('name');
+            $table->uuid('folderId')->nullable();
             $table->timestamps();
 
-            $table->foreign('organizationId')->references('id')->on('organizations');
-            $table->foreign('userId')->references('id')->on('users');
+            $table->foreign('folderId')->references('id')->on('folders');
         });
     }
 
@@ -31,6 +30,6 @@ class CreateOrganizationUser extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('organizationUsers');
+        Schema::dropIfExists('teams');
     }
 }

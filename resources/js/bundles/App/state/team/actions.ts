@@ -3,9 +3,9 @@
 //-----------------------------------------------------------------------------
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import {
-  IOrganization,
-  IOrganizationUpdates
-} from './types'
+  ITeam,
+  ITeamUpdates
+} from '@app/state/team/types'
 
 import { mutation } from '@app/api'
 
@@ -15,27 +15,27 @@ import { createMessengerMessage } from '@app/state/messenger/actions'
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-export type IOrganizationActions = IUpdateOrganization
+export type ITeamActions = IUpdateTeam
 
 //-----------------------------------------------------------------------------
-// Update Organization
+// Update Team
 //-----------------------------------------------------------------------------
-export const UPDATE_ORGANIZATION = 'UPDATE_ORGANIZATION'
-interface IUpdateOrganization {
-  type: typeof UPDATE_ORGANIZATION
-  organizationId: IOrganization['id']
-	updates: IOrganizationUpdates
+export const UPDATE_TEAM = 'UPDATE_TEAM'
+interface IUpdateTeam {
+  type: typeof UPDATE_TEAM
+  teamId: ITeam['id']
+	updates: ITeamUpdates
 }
 
 
-export const updateOrganization = (
-  organizationId: IOrganization['id'], 
-  updates: IOrganizationUpdates, 
+export const updateTeam = (
+  teamId: ITeam['id'], 
+  updates: ITeamUpdates, 
   errorMessage?: IMessengerMessageKey
 ): IThunkAction => {
 	return async (dispatch: IThunkDispatch) => {
-		dispatch(updateOrganizationReducer(organizationId, updates))
-		mutation.updateOrganization(organizationId, updates).then(
+		dispatch(updateTeamReducer(teamId, updates))
+		mutation.updateTeam(teamId, updates).then(
       null,
       () => {
         errorMessage && dispatch(createMessengerMessage(errorMessage))
@@ -44,10 +44,10 @@ export const updateOrganization = (
 	}
 }
 
-export const updateOrganizationReducer = (organizationId: IOrganization['id'], updates: IOrganizationUpdates): IOrganizationActions => {
+export const updateTeamReducer = (teamId: ITeam['id'], updates: ITeamUpdates): ITeamActions => {
 	return {
-    type: UPDATE_ORGANIZATION,
-    organizationId,
+    type: UPDATE_TEAM,
+    teamId,
 		updates
 	}
 }

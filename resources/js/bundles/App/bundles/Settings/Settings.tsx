@@ -8,7 +8,7 @@ import SettingsContent from '@app/bundles/Settings/SettingsContent'
 import SettingsSidebar from '@app/bundles/Settings/SettingsSidebar'
 
 export type ISettingsContent = 
-  'ORGANIZATION' |
+  'TEAM' |
   'USER' |
   'BILLING' |
   'COLUMN_SETTINGS'
@@ -22,7 +22,7 @@ const Settings = () => {
   const headers = {
     BILLING: 'Billing',
     COLUMN_SETTINGS: 'Column Settings',
-    ORGANIZATION: 'Organizations',
+    TEAM: 'Teams',
     USER: 'User',
   }
   const SettingsHeader = () => headers[activeContent]

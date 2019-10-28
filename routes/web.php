@@ -21,13 +21,13 @@ Route::group([
   Route::get('/', function () {
     //$user = Auth::loginUsingId('75e3c4f9-b261-3343-a320-8ee9fb0c931e', true);
     $user = Auth::user();
-    $organizations = $user->organizations;
+    $teams = $user->teams;
 
     $folders = [];
-    foreach($organizations as $organization) {
-      $organizationFolders = $organization->folder()->get();
-      foreach($organizationFolders as $organizationFolder) {
-        array_push($folders, $organizationFolder);
+    foreach($teams as $team) {
+      $teamFolders = $team->folder()->get();
+      foreach($teamFolders as $teamFolder) {
+        array_push($folders, $teamFolder);
       }
     }
     foreach($user->folder()->get() as $userFolder) {
@@ -36,7 +36,7 @@ Route::group([
     
     return view('app')->with([
       'user' => $user,
-      'organizations' => $organizations,
+      'teams' => $teams,
       'folders' => $folders,
       'columnTypes' => $user->columnTypes()
     ]);
@@ -81,8 +81,8 @@ Route::group([
     // Notes
     'notes' => 'NoteController',
     */
-    'organization' => 'OrganizationController',
-    'organization/user' => 'OrganizationUserController',
+    'team' => 'TeamController',
+    'team/user' => 'TeamUserController',
     // Sheet
     'sheets' => 'SheetController',
     'sheets/cells' => 'SheetCellController',

@@ -1,17 +1,17 @@
 //-----------------------------------------------------------------------------
-// User
+// Teams
 //-----------------------------------------------------------------------------
-export interface IOrganization {
+export interface ITeam {
 	id: string
   name: string
-  users: IOrganizationUser[]
+  members: ITeamMember[]
 }
 
-export interface IOrganizationUpdates {
+export interface ITeamUpdates {
   name?: string
 }
 
-export interface IOrganizationUser {
+export interface ITeamMember {
   id: string
   name: string
   email: string

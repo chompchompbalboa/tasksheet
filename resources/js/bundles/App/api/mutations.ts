@@ -26,8 +26,8 @@ import {
   IUserColorUpdates
 } from '@app/state/user/types'
 import { 
-  IOrganization, IOrganizationUpdates
-} from '@app/state/organizations/types'
+  ITeam, ITeamUpdates
+} from '@app/state/team/types'
 
 //-----------------------------------------------------------------------------
 // User
@@ -50,10 +50,10 @@ export const updateUserColor = async (id: string, updates: IUserColorUpdates) =>
 }
 
 //-----------------------------------------------------------------------------
-// Organization
+// Team
 //-----------------------------------------------------------------------------
-export const updateOrganization = async (userId: IOrganization['id'], updates: IOrganizationUpdates) => {
-	return axios.patch('/app/organization/' + userId, updates).then(response => {
+export const updateTeam = async (userId: ITeam['id'], updates: ITeamUpdates) => {
+	return axios.patch('/app/team/' + userId, updates).then(response => {
 		return response.data
 	})
 }

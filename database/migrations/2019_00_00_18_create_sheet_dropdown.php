@@ -15,13 +15,13 @@ class CreateSheetDropdown extends Migration
     {
         Schema::create('sheetDropdowns', function (Blueprint $table) {
           $table->uuid('id')->primary();
-          $table->uuid('organizationId')->nullable();
+          $table->uuid('teamId')->nullable();
           $table->uuid('userId')->nullable();
           $table->uuid('sheetId')->nullable();
           $table->string('name');
           $table->timestamps();
 
-          $table->foreign('organizationId')->references('id')->on('organizations');
+          $table->foreign('teamId')->references('id')->on('teams');
           $table->foreign('userId')->references('id')->on('users');
           $table->foreign('sheetId')->references('id')->on('sheets');
         });

@@ -41,7 +41,7 @@ class User extends Authenticatable
       return $this->belongsTo('App\Models\Folder', 'folderId');
     }
   
-    public function organizations() {
-      return $this->belongsToMany('App\Models\Organization', 'organizationUsers', 'userId', 'organizationId');
+    public function teams() {
+      return $this->belongsToMany('App\Models\Team', 'teamUsers', 'userId', 'teamId');
     }
 }

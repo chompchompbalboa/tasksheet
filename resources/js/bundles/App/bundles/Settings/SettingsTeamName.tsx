@@ -3,30 +3,30 @@
 //-----------------------------------------------------------------------------
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { IOrganization } from '@app/state/organizations/types'
+import { ITeam } from '@app/state/team/types'
 
-import { updateOrganization } from '@app/state/organizations/actions'
+import { updateTeam } from '@app/state/team/actions'
 
 import SettingsLabelledInput from '@app/bundles/Settings/SettingsLabelledInput'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SettingsOrganizationName = ({
-  organization: {
-    id: organizationId,
-    name: organizationName
+const SettingsTeamName = ({
+  team: {
+    id: teamId,
+    name: teamName
   }
-}: ISettingsOrganizationName) => {
+}: ISettingsTeamName) => {
 
   const dispatch = useDispatch()
-  const [ localOrganizationName, setLocalOrganizationName ] = useState(organizationName)
+  const [ localTeamName, setLocalTeamName ] = useState(teamName)
 
-  const updateOrganizationName = () => {
-    if(organizationName !== localOrganizationName) {
-      dispatch(updateOrganization(
-        organizationId, 
-        { name: localOrganizationName },
+  const updateTeamName = () => {
+    if(teamName !== localTeamName) {
+      dispatch(updateTeam(
+        teamId, 
+        { name: localTeamName },
         'ORGANIZATION_UPDATE_ORGANIZATION_NAME_ERROR'
       ))
     }
@@ -35,17 +35,17 @@ const SettingsOrganizationName = ({
   return (
     <SettingsLabelledInput
       label="Name:"
-      onBlur={() => updateOrganizationName()}
-      onChange={nextOrganizationName => setLocalOrganizationName(nextOrganizationName)}
-      value={localOrganizationName}/>
+      onBlur={() => updateTeamName()}
+      onChange={nextTeamName => setLocalTeamName(nextTeamName)}
+      value={localTeamName}/>
   )
 }
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-export interface ISettingsOrganizationName {
-  organization: IOrganization
+export interface ISettingsTeamName {
+  team: ITeam
 }
 
-export default SettingsOrganizationName
+export default SettingsTeamName

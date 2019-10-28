@@ -6,10 +6,10 @@ import historyReducer from '@app/state/history/reducers'
 import folderReducer from '@app/state/folder/reducers'
 import messengerReducer from '@app/state/messenger/reducers'
 import modalReducer from '@app/state/modal/reducers'
-import organizationsReducer from '@app/state/organizations/reducers'
 import sheetReducer from '@app/state/sheet/reducers'
 import sheetSettingsReducer from '@app/state/sheetSettings/reducers'
 import tabReducer from '@app/state/tab/reducers'
+import teamsReducer from '@app/state/team/reducers'
 import userReducer from '@app/state/user/reducers'
 
 //-----------------------------------------------------------------------------
@@ -20,7 +20,7 @@ export const appReducer = combineReducers({
 	folder: folderReducer,
   messenger: messengerReducer,
   modal: modalReducer,
-  organizations: organizationsReducer,
+  teams: teamsReducer,
 	sheet: sheetReducer,
 	sheetSettings: sheetSettingsReducer,
 	tab: tabReducer,

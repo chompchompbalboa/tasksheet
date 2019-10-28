@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
-      // Organizations
-      $organizations = [
+      // Teams
+      $teams = [
         [
           // Details
           'name' => 'Tracksheet',
@@ -39,22 +39,22 @@ class DatabaseSeeder extends Seeder
 
 
 
-      // Seed each organization
-      foreach($organizations as $seedOrganization) {
+      // Seed each team
+      foreach($teams as $seedTeam) {
 
-        // Organization Root Folder
-        $organizationFolder = factory(App\Models\Folder::class)->create([ 
-          'name' => $seedOrganization['sourceFolder'] 
+        // Team Root Folder
+        $teamFolder = factory(App\Models\Folder::class)->create([ 
+          'name' => $seedTeam['sourceFolder'] 
         ]);
 
-        // Organization
-        $organization = factory(App\Models\Organization::class)->create([
-          'name' => $seedOrganization['name'],
-          'folderId' => $organizationFolder->id
+        // Team
+        $team = factory(App\Models\Team::class)->create([
+          'name' => $seedTeam['name'],
+          'folderId' => $teamFolder->id
         ]);
 
         // Seed each user
-        foreach($seedOrganization['users'] as $seedUser) {
+        foreach($seedTeam['users'] as $seedUser) {
 
           // User Root Folder
           $userFolder = factory(App\Models\Folder::class)->create([ 
@@ -70,7 +70,7 @@ class DatabaseSeeder extends Seeder
             'email' => $seedUser['email'],
           ]);
 
-          $user->organizations()->attach($organization->id, [
+          $user->teams()->attach($team->id, [
             'id' => Str::uuid()->toString()
           ]);
 
@@ -84,10 +84,10 @@ class DatabaseSeeder extends Seeder
         // Get all of the folders from the 'database/sources' directory
         $sourceFolders = Storage::disk('sources')->allDirectories();
         
-        // Filter that folder list so only the current organization's folders are included
+        // Filter that folder list so only the current team's folders are included
         $seedFolders = [];
         foreach($sourceFolders as $sourceFolder) {
-          if(Str::startsWith($sourceFolder, $seedOrganization['sourceFolder'])) {
+          if(Str::startsWith($sourceFolder, $seedTeam['sourceFolder'])) {
             array_push($seedFolders, $sourceFolder);
           }
         }
@@ -95,10 +95,10 @@ class DatabaseSeeder extends Seeder
         // Get all of the files from the 'database/sources' directory
         $sourceFiles = Storage::disk('sources')->allFiles();
         
-        // Filter that file list so only the current organization's files are included
+        // Filter that file list so only the current team's files are included
         $seedFiles = [];
         foreach($sourceFiles as $sourceFile) {
-          if(Str::startsWith($sourceFile, $seedOrganization['sourceFolder'])) {
+          if(Str::startsWith($sourceFile, $seedTeam['sourceFolder'])) {
             array_push($seedFiles, $sourceFile);
           }
         }
@@ -130,11 +130,11 @@ class DatabaseSeeder extends Seeder
         }
 
         // Recursively create the folders
-        $createFolders = function($level, $path, $parentFolderId, $folderItems) use(&$createFolders, $seedOrganization) {
+        $createFolders = function($level, $path, $parentFolderId, $folderItems) use(&$createFolders, $seedTeam) {
           
-          // Skip the root folder since we previously created it while creating the organization
+          // Skip the root folder since we previously created it while creating the team
           if($level === 0) {
-            $createFolders(1, $seedOrganization['sourceFolder'].'/', $parentFolderId, $folderItems[$seedOrganization['sourceFolder']]);
+            $createFolders(1, $seedTeam['sourceFolder'].'/', $parentFolderId, $folderItems[$seedTeam['sourceFolder']]);
           }
           
           else  {
@@ -202,7 +202,7 @@ class DatabaseSeeder extends Seeder
             } 
           }
         };
-        $createFolders(0, null, $organizationFolder->id, $structuredSeedFolders);
+        $createFolders(0, null, $teamFolder->id, $structuredSeedFolders);
       }
     }
 }

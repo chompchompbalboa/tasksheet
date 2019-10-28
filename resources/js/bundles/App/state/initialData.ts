@@ -1,5 +1,5 @@
 import { IUser, IUserActive, IUserColor } from '@app/state/user/types'
-import { IOrganization } from '@app/state/organizations/types'
+import { ITeam } from '@app/state/team/types'
 import { IAllSheetColumnTypes } from '@app/state/sheet/types'
 
 const initalData: IInitialData = {
@@ -17,10 +17,10 @@ const initalData: IInitialData = {
 			secondary: '',
 		}
   },
-  organizations: <IOrganization[]> [{
-    id: 'organization-uuid',
-    name: 'Organization',
-    users: []
+  teams: <ITeam[]> [{
+    id: 'team-uuid',
+    name: 'Team',
+    members: []
   }],
 	folders: [
 		{
