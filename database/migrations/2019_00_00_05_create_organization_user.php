@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUser extends Migration
+class CreateOrganizationUser extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,14 @@ class CreateUser extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('organizationUsers', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->uuid('folderId');
-            $table->rememberToken();
+            $table->uuid('organizationId');
+            $table->uuid('userId');
             $table->timestamps();
 
-            $table->foreign('folderId')->references('id')->on('folders');
+            $table->foreign('organizationId')->references('id')->on('organizations');
+            $table->foreign('userId')->references('id')->on('users');
         });
     }
 
@@ -33,6 +31,6 @@ class CreateUser extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('organizationUsers');
     }
 }

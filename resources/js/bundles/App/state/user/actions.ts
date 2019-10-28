@@ -33,17 +33,14 @@ interface IUpdateUser {
 export const updateUser = (
   userId: IUser['id'], 
   updates: IUserUpdates, 
-  successMessage?: IMessengerMessageKey, 
   errorMessage?: IMessengerMessageKey
 ): IThunkAction => {
 	return async (dispatch: IThunkDispatch) => {
 		dispatch(updateUserReducer(updates))
 		mutation.updateUser(userId, updates).then(
+      null,
       () => {
-        successMessage && dispatch(createMessengerMessage(successMessage))
-      },
-      () => {
-        errorMessage && dispatch(createMessengerMessage(successMessage))
+        errorMessage && dispatch(createMessengerMessage(errorMessage))
       }
     )
 	}

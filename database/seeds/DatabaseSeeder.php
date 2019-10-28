@@ -66,9 +66,12 @@ class DatabaseSeeder extends Seeder
           $user = factory(App\Models\User::class)->create([ 
             'id' => $userId,
             'folderId' => $userFolder->id,
-            'organizationId' => $organization->id,
             'name' => $seedUser['name'],
             'email' => $seedUser['email'],
+          ]);
+
+          $user->organization()->attach($organization->id, [
+            'id' => Str::uuid()->toString()
           ]);
 
           // UserActive

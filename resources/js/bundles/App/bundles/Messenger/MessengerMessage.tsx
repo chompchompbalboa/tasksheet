@@ -36,10 +36,10 @@ const Messenger = ({
   useEffect(() => {
     setTimeout(() => {
       setMessageOpacity('1')
-    }, 10)
+    }, 150)
     setTimeout(() => {
       dispatch(deleteMessengerMessage(message))
-    }, 2500)
+    }, 2250)
   })
 
   return (
@@ -73,7 +73,7 @@ const Container = styled.div`
   color: ${ ({ messageColor }: IContainer ) => messageColor };
   border-radius: 5px;
   box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.5);
-  transition: opacity 0.75s;
+  transition: opacity 0.5s;
 `
 interface IContainer {
   messageBackgroundColor: string

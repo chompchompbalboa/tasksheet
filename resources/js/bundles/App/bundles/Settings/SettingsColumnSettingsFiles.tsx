@@ -5,28 +5,29 @@ import React from 'react'
 import styled from 'styled-components'
 
 //-----------------------------------------------------------------------------
-// Component
+// Components
 //-----------------------------------------------------------------------------
-const SettingsTileItem = ({
-  children
-}: SettingsTileItemProps) => (
+const SheetSettingsContentColumnTypesFiles = ({
+}: SheetSettingsContentColumnTypesFilesProps) => (
   <Container>
-    {children}
+    Files
   </Container>
 )
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-export type SettingsTileItemProps = {
-  children?: any
+interface SheetSettingsContentColumnTypesFilesProps {
+  data: any
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  position: relative;
 `
 
-export default SettingsTileItem
+//-----------------------------------------------------------------------------
+// Export
+//-----------------------------------------------------------------------------
+export default SheetSettingsContentColumnTypesFiles

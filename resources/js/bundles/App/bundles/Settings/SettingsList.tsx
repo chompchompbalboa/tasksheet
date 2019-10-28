@@ -1,31 +1,23 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SettingsTile = ({
+const SettingsList = ({
   children,
-  header
-}: SettingsTileProps) => {
-
-  const [ isItemsVisible, setIsItemsVisible ] = useState(true)
+  name = 'List',
+  width = '100%'
+}: ISettingsList) => {
 
   return (
-    <Container>
-      <Header
-        data-testid="settingsTileHeader" 
-        onClick={() => setIsItemsVisible(!isItemsVisible)}>
-        {header}
-      </Header>
-      <Items 
-        data-testid="settingsTileItems"
-        isItemsVisible={isItemsVisible}>
-        {children}
-      </Items>
+    <Container
+      containerWidth={width}>
+      <Name>{name}</Name>
+      <List>{children}</List>
     </Container>
   )
 }
@@ -33,31 +25,26 @@ const SettingsTile = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-export type SettingsTileProps = {
+interface ISettingsList {
   children?: any
-  header: string
+  name?: string
+  width: string
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  width: ${ ({ containerWidth }: IContainer ) => containerWidth };
 `
-
-const Header = styled.h3`
-  margin-left: 0.25rem;
-  cursor: pointer;
-  width: 100%;
-  &:hover {
-    text-decoration: underline;
-  }
-`
-
-const Items = styled.div`
-  display: ${ ({ isItemsVisible }: ItemsProps) => isItemsVisible ? 'block' : 'none'};
-`
-type ItemsProps = {
-  isItemsVisible: boolean
+interface IContainer {
+  containerWidth: string
 }
 
-export default SettingsTile
+const Name = styled.h3`
+  padding: 0.25rem 0.125rem;
+`
+
+const List = styled.div``
+
+export default SettingsList

@@ -23,9 +23,6 @@ import {
   updateSheetActive,
   updateSheetColumn
 } from '@app/state/sheet/actions'
-import {
-  updateSheetSettings
-} from '@app/state/sheetSettings/actions'
 import { 
   updateActiveTab 
 } from '@app/state/tab/actions'
@@ -141,8 +138,7 @@ export const SheetColumnContextMenu = ({
               testId="SheetColumnContextMenuColumnSettings"
               text="Column Settings" 
               onClick={() => closeContextMenuOnClick(() => {
-                dispatch(updateActiveTab('SHEET_SETTINGS'))
-                dispatch(updateSheetSettings({ activeSheetSetting: 'COLUMN_SETTINGS', activeSheetSettingColumnSetting: sheetColumnType.id }))
+                dispatch(updateActiveTab('SETTINGS'))
             })}/>
           <ContextMenuDivider />
         </>

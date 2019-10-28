@@ -17,6 +17,7 @@ import { initialFolderState } from '@app/state/folder/reducers'
 import { initialHistoryState } from '@app/state/history/reducers'
 import { initialModalState } from '@app/state/modal/reducers'
 import { initialSheetState } from '@app/state/sheet/reducers'
+import { initialOrganizationState } from '@app/state/organizations/reducers'
 import { initialUserState } from '@app/state/user/reducers'
 
 import { defaultSheetSelections, defaultSheetStyles } from '@app/state/sheet/defaults'
@@ -272,6 +273,7 @@ export const appState: IAppState = {
   messenger: {
     messages: []
   },
+  organizations: initialOrganizationState,
   sheet: {
     ...initialSheetState,
     allSheets,

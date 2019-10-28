@@ -3,38 +3,38 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 
-import { IUserContent } from '@app/bundles/User/User'
+import { ISettingsContent } from '@app/bundles/Settings/Settings'
 
-import { BILLING, SETTINGS, USER } from '@app/assets/icons'
+import { SHEET_COLUMN, USER, ORGANIZATION } from '@app/assets/icons'
  
-import UserLogout from '@app/bundles/User/UserLogout'
+import Logout from '@app/bundles/Settings/SettingsLogout'
 import ContentSidebarItem from '@app/bundles/Content/ContentSidebarItem'
 
 //-----------------------------------------------------------------------------
 // Components
 //-----------------------------------------------------------------------------
-const UserSidebar = ({
+const SettingsSidebar = ({
   activeContent,
   setActiveContent
-}: IUserSidebar) => {
+}: ISettingsSidebar) => {
   return (
     <>
       <ContentSidebarItem
         icon={USER}
-        isActive={activeContent === 'USER_PROFILE'}
-        onClick={() => setActiveContent('USER_PROFILE')}
-        text="Profile"/>
+        isActive={activeContent === 'USER'}
+        onClick={() => setActiveContent('USER')}
+        text="User"/>
       <ContentSidebarItem
-        icon={SETTINGS}
-        isActive={activeContent === 'USER_SETTINGS'}
-        onClick={() => setActiveContent('USER_SETTINGS')}
-        text="Settings"/>
+        icon={ORGANIZATION}
+        isActive={activeContent === 'ORGANIZATION'}
+        onClick={() => setActiveContent('ORGANIZATION')}
+        text="Organizations"/>
       <ContentSidebarItem
-        icon={BILLING}
-        isActive={activeContent === 'USER_BILLING'}
-        onClick={() => setActiveContent('USER_BILLING')}
-        text="Billing"/>
-      <UserLogout />
+        icon={SHEET_COLUMN}
+        isActive={activeContent === 'COLUMN_SETTINGS'}
+        onClick={() => setActiveContent('COLUMN_SETTINGS')}
+        text="Column Settings"/>
+      <Logout />
     </>
   )
 }
@@ -42,12 +42,12 @@ const UserSidebar = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface IUserSidebar {
-  activeContent: IUserContent
-  setActiveContent(nextActiveContent: IUserContent): void
+interface ISettingsSidebar {
+  activeContent: ISettingsContent
+  setActiveContent(nextActiveContent: ISettingsContent): void
 }
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default UserSidebar
+export default SettingsSidebar

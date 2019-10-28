@@ -8,11 +8,11 @@ import ContentContent from '@app/bundles/Content/ContentContent'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const UserSettings = () => {
+const SettingsBilling = () => {
 
   return (
     <ContentContent>
-      UserSettings
+      SettingsBilling
     </ContentContent>
   )
 }
@@ -20,4 +20,4 @@ const UserSettings = () => {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default UserSettings
+export default SettingsBilling

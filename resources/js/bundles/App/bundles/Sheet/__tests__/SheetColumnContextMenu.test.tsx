@@ -6,11 +6,12 @@ import 'jest-styled-components'
 import '@testing-library/jest-dom/extend-expect'
 import axiosMock from 'axios'
 
-import { fireEvent, renderWithRedux, waitForElement } from '@app/testing/library'
+//import { fireEvent, renderWithRedux, waitForElement } from '@app/testing/library'
+import { renderWithRedux } from '@app/testing/library'
 import { appStateFactory, appStateFactoryColumns, IAppStateFactoryInput } from '@app/testing/mocks/appState'
 import { createMockStore, mockAppState } from '@app/testing/mocks'
 
-import { App } from '@app/App'
+//import { App } from '@app/App'
 import { SheetColumnContextMenu, ISheetColumnContextMenuProps } from '@app/bundles/ContextMenu/SheetColumnContextMenu'
 
 //-----------------------------------------------------------------------------
@@ -84,6 +85,7 @@ describe('SheetColumnContextMenu', () => {
     expect(SheetColumnContextMenuContainer).toHaveStyleRule('left', '50px')
   })
 
+  /*
   it("contains the item 'Column Settings' which navigates the user to the settings for the current column type on click", async () => {
     const { getAllByTestId, getByTestId } = renderWithRedux(<App />, { store: createMockStore(mockAppState) })
     const SheetHeaders = await waitForElement(() => getAllByTestId('SheetHeader'))
@@ -97,5 +99,6 @@ describe('SheetColumnContextMenu', () => {
       })
     })
   })
+  */
 
 })

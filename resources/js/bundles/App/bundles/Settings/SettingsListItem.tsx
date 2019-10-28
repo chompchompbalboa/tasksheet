@@ -2,22 +2,33 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-
-import ContentContent from '@app/bundles/Content/ContentContent'
+import styled from 'styled-components'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const OrganizationBilling = () => {
+const SettingsListItem = ({
+  children
+}: ISettingsListItem) => {
 
   return (
-    <ContentContent>
-      OrganizationBilling
-    </ContentContent>
+    <Container>
+      {children}
+    </Container>
   )
 }
 
 //-----------------------------------------------------------------------------
-// Export
+// Props
 //-----------------------------------------------------------------------------
-export default OrganizationBilling
+interface ISettingsListItem {
+  children?: any
+}
+
+//-----------------------------------------------------------------------------
+// Styled Components
+//-----------------------------------------------------------------------------
+const Container = styled.div`
+`
+
+export default SettingsListItem

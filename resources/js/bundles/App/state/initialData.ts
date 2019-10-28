@@ -1,21 +1,27 @@
 import { IUser, IUserActive, IUserColor } from '@app/state/user/types'
-import { IAllSheetColumnTypes } from './sheet/types'
+import { IOrganization } from '@app/state/organizations/types'
+import { IAllSheetColumnTypes } from '@app/state/sheet/types'
 
 const initalData: IInitialData = {
-	user: <IUser>{
+	user: <IUser> {
 		id: 'uuid',
 		name: '',
 		email: '',
-		active: <IUserActive>{
+		active: <IUserActive> {
 			id: 'uuid',
 			tabs: [],
 			tab: null,
 		},
-		color: <IUserColor>{
+		color: <IUserColor> {
 			primary: '',
 			secondary: '',
 		}
-	},
+  },
+  organizations: <IOrganization[]> [{
+    id: 'organization-uuid',
+    name: 'Organization',
+    users: []
+  }],
 	folders: [
 		{
 			id: 'uuid',
@@ -24,7 +30,7 @@ const initalData: IInitialData = {
 			files: <string[]>[],
 		},
   ],
-  columnTypes: <IAllSheetColumnTypes>{}
+  columnTypes: <IAllSheetColumnTypes> {}
 }
 
 export default initalData

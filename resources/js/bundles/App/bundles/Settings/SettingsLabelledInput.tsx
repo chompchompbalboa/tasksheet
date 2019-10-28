@@ -3,15 +3,16 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 import styled from 'styled-components'
+
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const ContentLabelledInput = ({
+const SettingsLabelledInput = ({
   label,
   onBlur,
   onChange,
   value
-}: IContentLabelledInput) => {
+}: ISettingsLabelledInput) => {
 
   return (
     <Container>
@@ -27,7 +28,7 @@ const ContentLabelledInput = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface IContentLabelledInput {
+interface ISettingsLabelledInput {
   label: string
   onBlur?(): void
   onChange(nextValue: string): void
@@ -40,7 +41,7 @@ interface IContentLabelledInput {
 const Container = styled.div`
   margin-bottom: 0.5rem;
   padding: 0.25rem 0.125rem;
-  width: 50%;
+  width: 30%;
   display: flex;
   justify-content: space-between;
   align-items: center;  
@@ -48,10 +49,9 @@ const Container = styled.div`
   border-bottom: 1px dashed rgb(200, 200, 200);
 `
 
-const Label = styled.div`
+const Label = styled.h3`
   display: inline;
   font-weight: bold;
-  font-weight: inherit;
   font-size: 1rem;
 `
 
@@ -65,4 +65,4 @@ const StyledInput = styled.input`
   font-size: inherit;
 `
 
-export default ContentLabelledInput
+export default SettingsLabelledInput

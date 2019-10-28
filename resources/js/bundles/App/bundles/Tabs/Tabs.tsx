@@ -5,7 +5,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { FOLDER, ORGANIZATION, SHEET, USER } from '@app/assets/icons'
+import { FOLDER, SETTINGS } from '@app/assets/icons'
 
 import { IAppState } from '@app/state'
 import { 
@@ -17,10 +17,8 @@ import {
 import File from '@app/bundles/File/File'
 import Folders from '@app/bundles/Folders/Folders'
 import Icon from '@/components/Icon'
-import Organization from '@app/bundles/Organization/Organization'
-import SheetSettings from '@app/bundles/Sheet/SheetSettings'
+import Settings from '@app/bundles/Settings/Settings'
 import Tab from '@app/bundles/Tabs/Tab'
-import User from '@app/bundles/User/User'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -51,7 +49,7 @@ const Tabs = () => {
     setLocalActiveTab(nextActiveTab)
     tabs.includes(nextActiveTab)
       ? setTimeout(() => dispatch(updateActiveTab(nextActiveTab)), 10)
-      : !['FOLDERS', 'USER', 'SHEET_SETTINGS', 'ORGANIZATION'].includes(nextActiveTab)
+      : !['FOLDERS', 'SETTINGS'].includes(nextActiveTab)
         ? (
             setLocalTabs([ ...localTabs, nextActiveTab]),
             setTimeout(() => dispatch(openFileInNewTab(nextActiveTab)), 10)
@@ -82,25 +80,11 @@ const Tabs = () => {
             size="1rem"/>
         </MiniTab>
         <MiniTab
-          isActiveTab={localActiveTab === 'SHEET_SETTINGS'}
-          onClick={() => handleFileOpen('SHEET_SETTINGS')}>
+          isActiveTab={localActiveTab === 'SETTINGS'}
+          onClick={() => handleFileOpen('SETTINGS')}>
           <Icon
-            icon={SHEET}
-            size="0.88rem"/>
-        </MiniTab>
-        <MiniTab
-          isActiveTab={localActiveTab === 'USER'}
-          onClick={() => handleFileOpen('USER')}>
-          <Icon
-            icon={USER}
-            size="1rem"/>
-        </MiniTab>
-        <MiniTab
-          isActiveTab={localActiveTab === 'ORGANIZATION'}
-          onClick={() => handleFileOpen('ORGANIZATION')}>
-          <Icon
-            icon={ORGANIZATION}
-            size="1rem"/>
+            icon={SETTINGS}
+            size="0.95rem"/>
         </MiniTab>
       </TabsContainer>
       <FilesContainer>
@@ -115,9 +99,7 @@ const Tabs = () => {
         <Folders
           handleFileOpen={handleFileOpen}
           isActiveTab={localActiveTab === 'FOLDERS'}/>
-        {localActiveTab === 'SHEET_SETTINGS' && <SheetSettings />}
-        {localActiveTab === 'USER' && <User />}
-        {localActiveTab === 'ORGANIZATION' && <Organization />}
+        {localActiveTab === 'SETTINGS' && <Settings />}
       </FilesContainer>
     </Container>
   )
@@ -147,7 +129,7 @@ const MiniTab = styled.div`
   cursor: default;
   margin-top: 0.2rem;
   height: 1.4rem;
-  padding: 0.4rem;
+  padding: 0.3rem;
   margin-right: 1px;
   background-color: rgb(240,240,240);
   color: rgb(80, 80, 80);

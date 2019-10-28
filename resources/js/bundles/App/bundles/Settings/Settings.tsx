@@ -1,46 +1,49 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
-import styled from 'styled-components'
+import React, { useState } from 'react'
 
-import SettingsUserColor from '@app/bundles/Settings/SettingsUserColor'
+import Content from '@app/bundles/Content/Content'
+import SettingsContent from '@app/bundles/Settings/SettingsContent'
+import SettingsSidebar from '@app/bundles/Settings/SettingsSidebar'
 
+export type ISettingsContent = 
+  'ORGANIZATION' |
+  'USER' |
+  'BILLING' |
+  'COLUMN_SETTINGS'
 //-----------------------------------------------------------------------------
-// Component
+// Components
 //-----------------------------------------------------------------------------
-const Settings = ({
-  isActiveTab
-}: SheetProps) => {
+const Settings = () => {
+
+  const [ activeContent, setActiveContent ] = useState('USER' as ISettingsContent)
+
+  const headers = {
+    BILLING: 'Billing',
+    COLUMN_SETTINGS: 'Column Settings',
+    ORGANIZATION: 'Organizations',
+    USER: 'User',
+  }
+  const SettingsHeader = () => headers[activeContent]
+
+  const SettingsSidebarComponent = () => (
+    <SettingsSidebar
+     activeContent={activeContent}
+     setActiveContent={setActiveContent}/>
+  )
+
+  const SettingsContentComponent = () => (
+    <SettingsContent
+      activeContent={activeContent}/>
+  )
+
   return (
-    <Container
-      isActiveTab={isActiveTab}>
-      <SettingsUserColor />
-    </Container>
+    <Content
+      Content={SettingsContentComponent}
+      Header={SettingsHeader}
+      Sidebar={SettingsSidebarComponent}/>
   )
 }
 
-//-----------------------------------------------------------------------------
-// Props
-//-----------------------------------------------------------------------------
-interface SheetProps {
-  isActiveTab: boolean
-}
-
-//-----------------------------------------------------------------------------
-// Styled Components
-//-----------------------------------------------------------------------------
-const Container = styled.div`
-  display: ${ ({ isActiveTab }: ContainerProps) => isActiveTab ? 'block' : 'none' };
-  position: relative;
-  width: 100%;
-  height: 100%;
-`
-interface ContainerProps {
-  isActiveTab: boolean
-}
-
-//-----------------------------------------------------------------------------
-// Export
-//-----------------------------------------------------------------------------
 export default Settings

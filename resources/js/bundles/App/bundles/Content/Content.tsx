@@ -53,7 +53,7 @@ const Container = styled.div`
 `
 
 const SidebarContainer = styled.div`
-  padding-top: 2.5rem;
+  padding-top: calc(2.5rem + 5px);
   min-width: 8rem;
 `
 
@@ -66,8 +66,12 @@ const ContentContainer = styled.div`
 
 const ContentHeader = styled.div`
   height: 2.5rem;
+  padding-left: 5px;
   display: flex;
   align-items: center;
+  font-size: 1rem;
+  font-weight: bold;
+  color: rgb(10, 10, 10);
 `
 
 const ContentItems = styled.div`
@@ -77,6 +81,7 @@ const ContentItems = styled.div`
   background-color: white;
   border-top: 1px solid rgb(220, 220, 220);
   border-left: 1px solid rgb(220, 220, 220);
+  border-top-left-radius: 5px;
   display: flex;
 `
 //-----------------------------------------------------------------------------

@@ -8,7 +8,7 @@ import { IAppState } from '@app/state'
 
 import { updateUser } from '@app/state/user/actions'
 
-import ContentLabelledInput from '@app/bundles/Content/ContentLabelledInput'
+import SettingsLabelledInput from '@app/bundles/Settings/SettingsLabelledInput'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -23,16 +23,17 @@ const UserProfileEmail = () => {
   const [ localUserEmail, setLocalUserEmail ] = useState(userEmail)
 
   const updateUserEmail = () => {
-    dispatch(updateUser(
-      userId, 
-      { email: localUserEmail },
-      'USER_UPDATE_USER_EMAIL_SUCCESS',
-      'USER_UPDATE_USER_EMAIL_ERROR'
-    ))
+    if(userEmail !== localUserEmail) {
+      dispatch(updateUser(
+        userId, 
+        { email: localUserEmail },
+        'USER_UPDATE_USER_EMAIL_ERROR'
+      ))
+    }
   }
 
   return (
-    <ContentLabelledInput
+    <SettingsLabelledInput
       label="Email:"
       onBlur={() => updateUserEmail()}
       onChange={nextUserEmail => setLocalUserEmail(nextUserEmail)}

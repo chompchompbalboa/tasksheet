@@ -4,15 +4,18 @@
 import React from 'react'
 
 import ContentContent from '@app/bundles/Content/ContentContent'
+import SettingsUserEmail from '@app/bundles/Settings/SettingsUserEmail'
+import SettingsUserName from '@app/bundles/Settings/SettingsUserName'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const OrganizationProfile = () => {
+const SettingsUser = () => {
 
   return (
     <ContentContent>
-      OrganizationProfile
+      <SettingsUserName />
+      <SettingsUserEmail />
     </ContentContent>
   )
 }
@@ -20,4 +23,4 @@ const OrganizationProfile = () => {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default OrganizationProfile
+export default SettingsUser
