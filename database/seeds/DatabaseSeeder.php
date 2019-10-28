@@ -70,7 +70,7 @@ class DatabaseSeeder extends Seeder
             'email' => $seedUser['email'],
           ]);
 
-          $user->organization()->attach($organization->id, [
+          $user->organizations()->attach($organization->id, [
             'id' => Str::uuid()->toString()
           ]);
 
