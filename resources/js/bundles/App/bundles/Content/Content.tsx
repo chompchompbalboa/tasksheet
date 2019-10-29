@@ -78,10 +78,10 @@ const ContentItems = styled.div`
   height: calc(100% - 2.5rem);
   width: 100%;
   overflow-y: scroll;
-  background-color: white;
+  background-color: rgb(254, 254, 254);
   border-top: 1px solid rgb(220, 220, 220);
   border-left: 1px solid rgb(220, 220, 220);
-  border-top-left-radius: 5px;
+  border-top-left-radius: 7px;
   display: flex;
 `
 //-----------------------------------------------------------------------------

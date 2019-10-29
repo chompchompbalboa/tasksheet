@@ -27,7 +27,6 @@ interface IUpdateTeam {
 	updates: ITeamUpdates
 }
 
-
 export const updateTeam = (
   teamId: ITeam['id'], 
   updates: ITeamUpdates, 

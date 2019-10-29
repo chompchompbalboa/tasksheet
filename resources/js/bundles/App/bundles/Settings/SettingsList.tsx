@@ -42,7 +42,8 @@ interface IContainer {
 }
 
 const Name = styled.h3`
-  padding: 0.25rem 0.125rem;
+  padding: 0.25rem 0.125rem 0.5rem 0.125rem;
+  font-size: 0.85rem;
 `
 
 const List = styled.div``

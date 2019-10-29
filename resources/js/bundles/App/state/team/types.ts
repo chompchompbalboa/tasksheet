@@ -9,6 +9,7 @@ export interface ITeam {
 
 export interface ITeamUpdates {
   name?: string
+  members?: ITeamMember[]
 }
 
 export interface ITeamMember {

@@ -26,7 +26,7 @@ import {
   IUserColorUpdates
 } from '@app/state/user/types'
 import { 
-  ITeam, ITeamUpdates
+  ITeam, ITeamMember, ITeamUpdates
 } from '@app/state/team/types'
 
 //-----------------------------------------------------------------------------
@@ -54,6 +54,12 @@ export const updateUserColor = async (id: string, updates: IUserColorUpdates) =>
 //-----------------------------------------------------------------------------
 export const updateTeam = async (userId: ITeam['id'], updates: ITeamUpdates) => {
 	return axios.patch('/app/team/' + userId, updates).then(response => {
+		return response.data
+	})
+}
+
+export const deleteTeamMember = async (teamId: ITeam['id'], teamMemberId: ITeamMember['id']) => {
+	return axios.post('/app/team/member/delete', { teamId, teamMemberId }).then(response => {
 		return response.data
 	})
 }

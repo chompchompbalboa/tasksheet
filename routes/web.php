@@ -61,6 +61,9 @@ Route::group([
 
   // Reset Sheet View
   Route::post('/sheets/views/reset/{sheet}', 'SheetViewController@reset');
+  
+  // Deletes
+  Route::post('/team/member/delete', 'TeamMemberController@destroy');
 
   /*
   // Copy
@@ -82,7 +85,6 @@ Route::group([
     'notes' => 'NoteController',
     */
     'team' => 'TeamController',
-    'team/user' => 'TeamUserController',
     // Sheet
     'sheets' => 'SheetController',
     'sheets/cells' => 'SheetCellController',

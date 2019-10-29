@@ -26,14 +26,14 @@ const SettingsSidebar = ({
         text="User"/>
       <ContentSidebarItem
         icon={TEAM}
-        isActive={activeContent === 'TEAM'}
-        onClick={() => setActiveContent('TEAM')}
+        isActive={activeContent === 'TEAMS'}
+        onClick={() => setActiveContent('TEAMS')}
         text="Teams"/>
       <ContentSidebarItem
         icon={SHEET_COLUMN}
         isActive={activeContent === 'COLUMN_SETTINGS'}
         onClick={() => setActiveContent('COLUMN_SETTINGS')}
-        text="Column Settings"/>
+        text="Columns"/>
       <Logout />
     </>
   )

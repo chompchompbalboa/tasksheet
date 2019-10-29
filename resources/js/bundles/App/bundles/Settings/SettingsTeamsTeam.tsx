@@ -3,28 +3,34 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 
-import ContentContent from '@app/bundles/Content/ContentContent'
+import { ITeam } from '@app/state/team/types'
+
 import SettingsGroup from '@app/bundles/Settings/SettingsGroup'
-import SettingsUserEmail from '@app/bundles/Settings/SettingsUserEmail'
-import SettingsUserName from '@app/bundles/Settings/SettingsUserName'
+import SettingsTeamsTeamName from '@app/bundles/Settings/SettingsTeamsTeamName'
+import SettingsTeamsTeamMembers from '@app/bundles/Settings/SettingsTeamsTeamMembers'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SettingsUser = () => {
-
+const SettingsTeamsTeam = ({
+  team
+}: ISettingsTeamsTeam) => {
   return (
-    <ContentContent>
-      <SettingsGroup
-        header="User Information">
-        <SettingsUserName />
-        <SettingsUserEmail />
-      </SettingsGroup>
-    </ContentContent>
+    <SettingsGroup
+      header={team.name}>
+      <SettingsTeamsTeamName
+        team={team}/>
+      <SettingsTeamsTeamMembers
+        team={team}/>
+    </SettingsGroup>
   )
 }
 
 //-----------------------------------------------------------------------------
-// Export
+// Props
 //-----------------------------------------------------------------------------
-export default SettingsUser
+export interface ISettingsTeamsTeam {
+  team: ITeam
+}
+
+export default SettingsTeamsTeam

@@ -14,7 +14,7 @@ class Team extends Model
   protected $with = [ 'members' ];
   
   public function members() {
-    return $this->belongsToMany('App\Models\User', 'teamUsers', 'teamId', 'userId');
+    return $this->belongsToMany('App\Models\User', 'teamUsers', 'teamId', 'userId')->orderBy('name');
   }
   
   public function folder() {

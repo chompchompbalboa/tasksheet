@@ -29,6 +29,7 @@ interface ISettingsListItem {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  font-size: 0.8rem;
 `
 
 export default SettingsListItem

@@ -37,7 +37,8 @@ const SettingsTeamName = ({
       label="Name:"
       onBlur={() => updateTeamName()}
       onChange={nextTeamName => setLocalTeamName(nextTeamName)}
-      value={localTeamName}/>
+      value={localTeamName}
+      width="20%"/>
   )
 }
 
