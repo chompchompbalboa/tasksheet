@@ -37,62 +37,63 @@ export const SheetCell = memo(({
   style
 }: ISheetCellProps) => {
 
+  const dispatch = useDispatch()
+
   // Redux
   const cell = useSelector((state: IAppState) => state.sheet.allSheetCells[cellId])
   const sheetSelectionsRangeCellIds = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.rangeCellIds)
   const sheetStyles = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].styles)
   const userColorSecondary = useSelector((state: IAppState) => state.user.color.secondary)
-
-  const dispatch = useDispatch()
-
-  // Refs
-  const cellContainer = useRef(null)
-
-  // Local State
-  const [ cellValue, setCellValue ] = useState(cell ? cell.value : null)
-
-  // Effects
-  useEffect(() => {
-    if(cellValue !== cell.value) {
-      setCellValue(cell.value)
-    }
-  }, [ cell && cell.value ])
-
-  useEffect(() => {
-    let updateSheetCellTimer: number = null
-    if(cell && cellValue !== cell.value) {
-      clearTimeout(updateSheetCellTimer)
-      updateSheetCellTimer = setTimeout(() => {
-        dispatch(updateSheetCell(cell.id, { value: cellValue }, { value: cell.value }))
-      }, 1000)
-    }
-    return () => clearTimeout(updateSheetCellTimer)
-  }, [ cellValue ])
-
-  // Cell types
-  const sheetCellTypes = {
-    STRING: SheetCellString,
-    NUMBER: SheetCellNumber,
-    BOOLEAN: SheetCellBoolean,
-    DATETIME: SheetCellDatetime,
-    DROPDOWN: SheetCellDropdown,
-    PHOTOS: SheetCellPhotos,
-    FILES: SheetCellFiles
-  }
-
-  // Update selection when cell is clicked
-  const handleMouseDown = (e: MouseEvent) => {
-    if(columnType.cellType !== 'BOOLEAN' || e.shiftKey) {
-      dispatch(updateSheetSelectionFromCellClick(sheetId, cell.id, e.shiftKey))
-    }
-  }
-
-  const isCellSelected = cell.isCellSelectedSheetIds.has(sheetId)
-  const isCellInRange = sheetSelectionsRangeCellIds.has(cellId)
-  const SheetCellType = sheetCellTypes[columnType.cellType]
   
-  return (
-    <>
+  if(cell) {
+
+    // Refs
+    const cellContainer = useRef(null)
+
+    // Local State
+    const [ cellValue, setCellValue ] = useState(cell ? cell.value : null)
+
+    // Effects
+    useEffect(() => {
+      if(cellValue !== cell.value) {
+        setCellValue(cell.value)
+      }
+    }, [ cell && cell.value ])
+
+    useEffect(() => {
+      let updateSheetCellTimer: number = null
+      if(cell && cellValue !== cell.value) {
+        clearTimeout(updateSheetCellTimer)
+        updateSheetCellTimer = setTimeout(() => {
+          dispatch(updateSheetCell(cell.id, { value: cellValue }, { value: cell.value }))
+        }, 1000)
+      }
+      return () => clearTimeout(updateSheetCellTimer)
+    }, [ cellValue ])
+
+    // Cell types
+    const sheetCellTypes = {
+      STRING: SheetCellString,
+      NUMBER: SheetCellNumber,
+      BOOLEAN: SheetCellBoolean,
+      DATETIME: SheetCellDatetime,
+      DROPDOWN: SheetCellDropdown,
+      PHOTOS: SheetCellPhotos,
+      FILES: SheetCellFiles
+    }
+
+    // Update selection when cell is clicked
+    const handleMouseDown = (e: MouseEvent) => {
+      if(columnType.cellType !== 'BOOLEAN' || e.shiftKey) {
+        dispatch(updateSheetSelectionFromCellClick(sheetId, cell.id, e.shiftKey))
+      }
+    }
+
+    const isCellSelected = cell.isCellSelectedSheetIds.has(sheetId)
+    const isCellInRange = sheetSelectionsRangeCellIds.has(cellId)
+    const SheetCellType = sheetCellTypes[columnType.cellType]
+
+    return (
       <Container
         data-testid="SheetCellContainer"
         ref={cellContainer}
@@ -117,7 +118,18 @@ export const SheetCell = memo(({
           updateCellValue={setCellValue}
           value={cellValue}/>
       </Container>
-    </>
+    )
+  }
+  return (
+    <Container
+      data-testid="SheetCellNotFoundContainer"
+      cellId={cellId}
+      cellType='STRING'
+      highlightColor={userColorSecondary}
+      isCellSelected={false}
+      isCellInRange={false}
+      sheetStyles={sheetStyles}
+      style={style}/>
   )
 }, areEqual)
 
