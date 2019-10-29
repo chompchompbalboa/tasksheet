@@ -79,7 +79,15 @@ const SheetActionDownloadCsv = ({
   const data = visibleRows ? visibleRows.map(rowId => {
     if(rowId !== 'ROW_BREAK') {
       const row = allSheetRows[rowId]
-      return visibleColumns.map(columnId => columnId !== 'COLUMN_BREAK' ? allSheetCells[row.cells[columnId]].value : null)
+      return visibleColumns.map(columnId => {
+        if(columnId !== 'COLUMN_BREAK') {
+          if(row.cells && row.cells[columnId] && allSheetCells[row.cells[columnId]]) {
+            return allSheetCells[row.cells[columnId]].value
+          }
+          return null
+        }
+        return null
+      })
     }
     return null
   }).filter(row => row !== null) : []
