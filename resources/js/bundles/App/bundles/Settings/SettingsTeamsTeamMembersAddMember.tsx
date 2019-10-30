@@ -137,7 +137,7 @@ type IStatus = 'READY' | 'INPUT_VISIBLE' | 'CHECKING_IF_NEW_MEMBER_IS_VALID' | '
 const Button = styled.div`
   cursor: pointer;
   padding: 0.25rem 0.5rem;
-  border-radius: 5px;
+  border-radius: 7px;
   color: white;
   white-space: nowrap;
 `

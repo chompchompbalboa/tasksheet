@@ -102,7 +102,7 @@ const MemberActions = styled.div``
 const DeleteMemberFromTeam = styled.div`
   cursor: ${ ({ isActive }: IDeleteMemberFromTeam ) => isActive ? 'pointer' : 'not-allowed' };
   padding: 0.25rem 0.5rem;
-  border-radius: 5px;
+  border-radius: 7px;
   background-color: rgb(150, 0, 0);
   color: white;
   &:hover {

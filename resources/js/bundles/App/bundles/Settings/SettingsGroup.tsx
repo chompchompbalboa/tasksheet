@@ -27,7 +27,7 @@ const SettingsGroup = ({
       <Header
         isContentVisible={isContentVisible}
         onClick={() => setIsContentVisible(!isContentVisible)}
-        userColorPrimary={userColorPrimary}>
+        userColorPrimary={'rgb(225, 225, 225)' || userColorPrimary}>
         <Icon
           icon={isContentVisible ? ARROW_DOWN : ARROW_RIGHT}/>
         &nbsp;&nbsp;{header}
@@ -60,7 +60,7 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   background-color: ${ ({ userColorPrimary }: IHeader ) => userColorPrimary };
-  color: white;
+  color: black;
   font-size: 0.9rem;
   border-top-left-radius: 7px;
   border-top-right-radius: 7px;
