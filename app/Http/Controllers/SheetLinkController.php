@@ -16,11 +16,9 @@ class SheetLinkController extends Controller
       $newSheetId = $request->input('id');
       $sourceSheetId = $request->input('sourceSheetId');
       $visibleColumns = $request->input('visibleColumns');
-      $defaultVisibleRows = $request->input('defaultVisibleRows');
       $newSheetView = Sheet::create([ 
         'id' => $newSheetId, 
         'sourceSheetId' => $sourceSheetId, 
-        'defaultVisibleRows' => $defaultVisibleRows,
         'visibleColumns' => $visibleColumns 
       ]);
 
