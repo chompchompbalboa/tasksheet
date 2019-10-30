@@ -62,7 +62,8 @@ Route::group([
   // Reset Sheet View
   Route::post('/sheets/views/reset/{sheet}', 'SheetViewController@reset');
   
-  // Deletes
+  // Team Members
+  Route::post('/team/member/create', 'TeamMemberController@store');
   Route::post('/team/member/delete', 'TeamMemberController@destroy');
 
   /*

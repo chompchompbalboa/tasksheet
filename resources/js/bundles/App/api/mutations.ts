@@ -58,6 +58,12 @@ export const updateTeam = async (userId: ITeam['id'], updates: ITeamUpdates) => 
 	})
 }
 
+export const createTeamMember = async (teamId: ITeam['id'], newMemberEmail: string) => {
+	return axios.post('/app/team/member/create', { teamId, newMemberEmail }).then(response => {
+		return response.data
+	})
+}
+
 export const deleteTeamMember = async (teamId: ITeam['id'], teamMemberId: ITeamMember['id']) => {
 	return axios.post('/app/team/member/delete', { teamId, teamMemberId }).then(response => {
 		return response.data

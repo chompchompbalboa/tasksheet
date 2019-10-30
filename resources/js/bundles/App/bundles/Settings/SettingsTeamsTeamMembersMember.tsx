@@ -37,7 +37,7 @@ const SettingsTeamsTeamMembersMember = ({
     setDeleteStatus('DELETING')
     mutation.deleteTeamMember(teamId, memberId).then(
       () => {
-        setTimeout(() => setDeleteStatus('DELETED'), 500)
+        setTimeout(() => setDeleteStatus('DELETED'), 400)
         setTimeout(() => {
           dispatch(updateTeam(teamId, {
             members: teamMembers.filter(teamMember => teamMember.id !== memberId)
@@ -85,7 +85,7 @@ type IDeleteStatus = 'READY' | 'DELETING' | 'DELETED'
 //-----------------------------------------------------------------------------
 const Member = styled.div`
   cursor: default;
-  padding: 0.25rem 0.25rem;
+  padding: 0.25rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
