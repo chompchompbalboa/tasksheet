@@ -19,7 +19,8 @@ class CreateSheetColumn extends Migration
             $table->string('name')->nullable();
             $table->string('typeId');
             $table->float('width');
-            $table->timestamps();
+            $table->timestamp('createdAt')->nullable();
+            $table->timestamp('updatedAt')->nullable();
 
             $table->foreign('sheetId')->references('id')->on('sheets');
         });

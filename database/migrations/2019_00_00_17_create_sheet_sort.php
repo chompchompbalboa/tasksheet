@@ -20,7 +20,8 @@ class CreateSheetSort extends Migration
           $table->uuid('columnId');
           $table->string('order', 4);
           $table->boolean('isLocked');
-          $table->timestamps();
+          $table->timestamp('createdAt')->nullable();
+          $table->timestamp('updatedAt')->nullable();
 
           $table->foreign('sheetId')->references('id')->on('sheets');
           $table->foreign('sheetViewId')->references('id')->on('sheetViews');

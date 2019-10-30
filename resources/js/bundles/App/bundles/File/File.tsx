@@ -19,8 +19,7 @@ const File = ({
   const file = useSelector((state: IAppState) => state.folder.files[fileId])
 
   const fileComponents = {
-    SHEET: Sheet,
-    SHEET_VIEW: Sheet
+    SHEET: Sheet
   }
   const FileComponent = file ? fileComponents[file.type] : null
 

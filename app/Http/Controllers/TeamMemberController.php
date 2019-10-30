@@ -9,13 +9,6 @@ use App\Models\User;
 
 class TeamMemberController extends Controller
 {
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
       $user = User::where('email', $request->input('newMemberEmail'))->firstOrFail();
@@ -23,12 +16,6 @@ class TeamMemberController extends Controller
       return $user->teams()->findOrFail($request->input('teamId'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
       $user = User::find($request->input('teamMemberId'));

@@ -17,7 +17,8 @@ class CreateSheetDropdownOption extends Migration
           $table->uuid('id')->primary();
           $table->uuid('sheetDropdownId');
           $table->string('value');
-          $table->timestamps();
+          $table->timestamp('createdAt')->nullable();
+          $table->timestamp('updatedAt')->nullable();
 
           $table->foreign('sheetDropdownId')->references('id')->on('sheetDropdowns');
         });

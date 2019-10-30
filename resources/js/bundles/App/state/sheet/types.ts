@@ -1,5 +1,3 @@
-import { IFileType } from '@app/state/folder/types'
-
 export interface IAllSheets { [sheetId: string]: ISheet }
 export interface IAllSheetColumns { [columnId: string]: ISheetColumn }
 export interface IAllSheetRows { [rowId: string]: ISheetRow }
@@ -38,9 +36,6 @@ export interface ISheet {
   id: string
   activeSheetViewId: ISheetView['id']
   sourceSheetId: ISheet['id']
-  sourceSheetDefaultVisibleRows: ISheetRow['id'][]
-  defaultVisibleRows: ISheetRow['id'][]
-  fileType: IFileType
 	rows: ISheetRow['id'][]
   visibleRows: ISheetRow['id'][]
   columns: ISheetColumn['id'][]
@@ -55,9 +50,7 @@ export interface ISheet {
 }
 export interface ISheetUpdates {
   activeSheetViewId?: ISheetView['id']
-  defaultVisibleRows?: ISheetRow['id'][]
   rows?: ISheetRow['id'][]
-  sourceSheetDefaultVisibleRows?: ISheetRow['id'][]
   visibleRows?: ISheetRow['id'][]
   columns?: ISheetColumn['id'][]
   visibleColumns?: ISheetColumn['id'][]
@@ -121,9 +114,6 @@ export interface ISheetFromDatabase {
   id: string
   sourceSheetId: string
   activeSheetViewId: ISheetView['id']
-  sourceSheetDefaultVisibleRows: ISheetRow['id'][]
-  defaultVisibleRows: ISheetRow['id'][]
-  fileType: IFileType
   columns: ISheetColumn[]
   visibleColumns: ISheetColumn['id'][]
   filters: ISheetFilter[]
@@ -217,7 +207,7 @@ export type ISheetCellType =
 
 export interface ISheetSort {
   id: string
-  created_at?: string
+  createdAt?: string
   sheetId: string
   sheetViewId: string
   columnId: string
@@ -231,7 +221,7 @@ export type ISheetSortOrder = 'ASC' | 'DESC'
 
 export interface ISheetFilter {
   id: string
-  created_at?: string
+  createdAt?: string
   sheetId: string
   sheetViewId: string
   columnId: string
@@ -244,7 +234,7 @@ export type ISheetFilterType = '=' | '!=' | '>' | '>=' | '<' | '<='
 
 export interface ISheetGroup {
   id: string
-  created_at?: string
+  createdAt?: string
   sheetId: string
   sheetViewId: string
   columnId: string
@@ -260,7 +250,6 @@ export type ISheetGroupOrder = 'ASC' | 'DESC'
 export interface ISheetLink {
   id: string
   sourceSheetId: string
-  defaultVisibleRows: ISheetRow['id'][]
   visibleColumns: ISheetColumn['id'][]
   filters: IAllSheetFilters
   groups: IAllSheetGroups

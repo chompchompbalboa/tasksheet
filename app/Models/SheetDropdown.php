@@ -9,6 +9,9 @@ class SheetDropdown extends Model
   use Traits\UsesUuid;
 
   protected $table = 'sheetDropdowns';
+  
+  const CREATED_AT = 'createdAt';
+  const UPDATED_AT = 'updatedAt';
 
   protected $visible = [ 'id', 'organizationId', 'userId', 'sheetId', 'name', 'cellType', 'data' ];
   protected $fillable = [ 'id', 'organizationId', 'userId', 'sheetId', 'name' ];

@@ -9,10 +9,10 @@ class SheetPhoto extends Model
   use Traits\UsesUuid;
 
   protected $table = 'sheetPhotos';
+  
+  const CREATED_AT = 'createdAt';
+  const UPDATED_AT = 'updatedAt';
 
-  /**
-   * Define which attributes will be visible
-   */
   protected $visible = ['id', 'sheetId', 'cellId', 'filename', 's3Uuid', 's3Bucket', 's3Key', 'uploadedBy', 'uploadedAt'];
   protected $fillable = ['id', 'sheetId', 'cellId', 'filename', 's3Uuid', 's3Bucket', 's3Key', 'uploadedBy', 'uploadedAt'];
   

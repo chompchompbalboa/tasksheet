@@ -46,7 +46,6 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
     const nextAllSheetRows = { ...allSheetRows }
     const nextSheetRows = [ ...sheet.rows ] 
     const nextSheetVisibleRows = [ ...sheet.visibleRows ]
-    const nextSheetDefaultVisibleRows = [ ...sheet.defaultVisibleRows ]
     const newRowsToDatabase: ISheetRowToDatabase[] = []
     const newRowIds: ISheetRow['id'][] = []
     
@@ -59,7 +58,6 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
     })
 
     const insertBeforeRowIdVisibleRowsIndex = nextSheetVisibleRows.indexOf(insertBeforeRowId)
-    const insertBeforeRowIdDefaultVisibleRowsIndex = nextSheetDefaultVisibleRows.indexOf(insertBeforeRowId)
 
     const newRowSheetId = sheet.sourceSheetId !== null ? sheet.sourceSheetId : sheetId
           
@@ -75,7 +73,6 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
       nextAllSheetRows[newRow.id] = newRow
       nextSheetRows.push(newRow.id)
       const rowIndexModifier = aboveOrBelow === 'ABOVE' ? i : i + 1
-      nextSheetDefaultVisibleRows.splice(insertBeforeRowIdDefaultVisibleRowsIndex + rowIndexModifier, 0, newRow.id)
       nextSheetVisibleRows.splice(insertBeforeRowIdVisibleRowsIndex + rowIndexModifier, 0, newRow.id)
       const newRowToDatabase = {
         ...newRow,
@@ -94,18 +91,13 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
           rowLeaders: nextSheetRowLeaders,
           rows: nextSheetRows,
           visibleRows: nextSheetVisibleRows,
-          defaultVisibleRows: nextSheetDefaultVisibleRows,
-          sourceSheetDefaultVisibleRows: nextSheetDefaultVisibleRows
         }))
         sheet.sourceSheetId && dispatch(updateSheet(sheet.sourceSheetId, {
-          rows: nextSheetRows,
-          defaultVisibleRows: nextSheetDefaultVisibleRows
+          rows: nextSheetRows
         }))
         childSheets && childSheets.forEach(childSheetId => {
           dispatch(updateSheet(childSheetId, {
-            rows: nextSheetRows,
-            defaultVisibleRows: nextSheetDefaultVisibleRows,
-            sourceSheetDefaultVisibleRows: nextSheetDefaultVisibleRows
+            rows: nextSheetRows
           }))
         })
         mutation.createSheetRows(newRowsToDatabase)
@@ -118,19 +110,14 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
         dispatch(updateSheet(sheetId, {
           rowLeaders: sheet.rowLeaders,
           rows: sheet.rows,
-          visibleRows: sheet.visibleRows,
-          defaultVisibleRows: sheet.defaultVisibleRows,
-          sourceSheetDefaultVisibleRows: sheet.defaultVisibleRows
+          visibleRows: sheet.visibleRows
         }))
         sheet.sourceSheetId && dispatch(updateSheet(sheet.sourceSheetId, {
-          rows: sheet.rows,
-          defaultVisibleRows: sheet.defaultVisibleRows
+          rows: sheet.rows
         }))
         childSheets && childSheets.forEach(childSheetId => {
           dispatch(updateSheet(childSheetId, {
-            rows: sheet.rows,
-            defaultVisibleRows: sheet.defaultVisibleRows,
-            sourceSheetDefaultVisibleRows: sheet.defaultVisibleRows
+            rows: sheet.rows
           }))
         })
         mutation.deleteSheetRows(newRowIds)

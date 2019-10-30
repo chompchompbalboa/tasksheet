@@ -60,7 +60,7 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
       const newSheetFilter: ISheetFilter = {
         ...sheetFilter,
         id: sheetViewFilterId,
-        created_at: moment(startTime).add(startTimeModifier, 'second').format('YYYY-MM-DD HH:mm:ss'),
+        createdAt: moment(startTime).add(startTimeModifier, 'second').format('YYYY-MM-DD HH:mm:ss'),
         sheetId: null,
         sheetViewId: newSheetViewId
       }
@@ -79,7 +79,7 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
       const newSheetGroup: ISheetGroup = {
         ...sheetGroup,
         id: sheetViewGroupId,
-        created_at: moment(startTime).add(startTimeModifier, 'second').format('YYYY-MM-DD HH:mm:ss'),
+        createdAt: moment(startTime).add(startTimeModifier, 'second').format('YYYY-MM-DD HH:mm:ss'),
         sheetId: null,
         sheetViewId: newSheetViewId
       }
@@ -98,7 +98,7 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
       const newSheetSort: ISheetSort = {
         ...sheetSort,
         id: sheetViewSortId,
-        created_at: moment(startTime).add(startTimeModifier, 'second').format('YYYY-MM-DD HH:mm:ss'),
+        createdAt: moment(startTime).add(startTimeModifier, 'second').format('YYYY-MM-DD HH:mm:ss'),
         sheetId: null,
         sheetViewId: newSheetViewId
       }

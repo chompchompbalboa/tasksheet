@@ -12,6 +12,9 @@ class User extends Authenticatable
     use Notifiable;
     use Traits\UsesUuid;
   
+    const CREATED_AT = 'createdAt';
+    const UPDATED_AT = 'updatedAt';
+  
     protected $fillable = [ 'name', 'email', 'password', 'folderId' ];
     protected $visible = [ 'id', 'name', 'email', 'active', 'color' ];
     protected $with = [ 'active', 'color' ];

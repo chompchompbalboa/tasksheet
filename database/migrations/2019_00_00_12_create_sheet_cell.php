@@ -19,7 +19,8 @@ class CreateSheetCell extends Migration
           $table->uuid('columnId')->nullable();
           $table->uuid('rowId')->nullable();
           $table->text('value')->nullable();
-          $table->timestamps();
+          $table->timestamp('createdAt')->nullable();
+          $table->timestamp('updatedAt')->nullable();
 
           $table->foreign('sheetId')->references('id')->on('sheets');
           $table->foreign('columnId')->references('id')->on('sheetColumns');

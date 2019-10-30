@@ -11,10 +11,10 @@ class SheetCell extends Model
   use Traits\UsesUuid;
 
   protected $table = 'sheetCells';
+  
+  const CREATED_AT = 'createdAt';
+  const UPDATED_AT = 'updatedAt';
 
-  /**
-   * Define which attributes will be visible
-   */
   protected $visible = ['id', 'columnId', 'rowId', 'value'];
   protected $fillable = ['id', 'sheetId', 'columnId', 'rowId', 'value'];
   

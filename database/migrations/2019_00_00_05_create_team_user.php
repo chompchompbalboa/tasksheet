@@ -17,7 +17,8 @@ class CreateTeamUser extends Migration
             $table->uuid('id')->primary();
             $table->uuid('teamId');
             $table->uuid('userId');
-            $table->timestamps();
+            $table->timestamp('createdAt')->nullable();
+            $table->timestamp('updatedAt')->nullable();
 
             $table->foreign('teamId')->references('id')->on('teams');
             $table->foreign('userId')->references('id')->on('users');

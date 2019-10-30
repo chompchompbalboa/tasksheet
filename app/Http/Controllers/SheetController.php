@@ -18,69 +18,76 @@ use App\Utils\SheetUtils;
 
 class SheetController extends Controller
 {
-
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @return \Illuminate\Http\Response
-   */
-  public function store(Request $request)
-  {
-    // Create the sheet
-    $newSheetId = $request->input('newSheetId');
-    $newSheet = Sheet::create([ 'id' => $newSheetId ]);
-    $newSheetStyles = SheetStyles::create([ 'id' => Str::uuid()->toString(), 'sheetId' => $newSheetId ]);
-    // Create the columns
-    $newColumns = [];
-    $visibleColumns = [];
-    foreach(explode(',', 'A,B,C,D,E,F,G,H') as $columnName) {
-      $newColumnId = Str::uuid()->toString();
-      array_push($visibleColumns, $newColumnId);
-      array_push($newColumns, [
-        'id' => $newColumnId,
-        'sheetId' => $newSheet->id,
-        'name' => $columnName,
-        'typeId' => 'STRING',
-        'width' => 100
-      ]);
+    public static function show(Sheet $sheet)
+    {
+      return response()->json($sheet, 200);
     }
-    // Create the rows and cells
-    $newRows = [];
-    $newCells = [];
-    $defaultVisibleRows = [];
-    for($rowNumber = 0; $rowNumber < 5; $rowNumber++) {
-      $newRowId = Str::uuid()->toString();
-      array_push($newRows, [ 
-        'id' => $newRowId,
-        'sheetId' => $newSheet->id
-      ]);
-      array_push($defaultVisibleRows, $newRowId);
-      foreach($newColumns as $index => $column) {
-        array_push($newCells, [
-          'id' => Str::uuid()->toString(),
+
+    public function store(Request $request)
+    {
+      // Create the sheet
+      $newSheetId = $request->input('newSheetId');
+      $newSheet = Sheet::create([ 'id' => $newSheetId ]);
+      $newSheetStyles = SheetStyles::create([ 'id' => Str::uuid()->toString(), 'sheetId' => $newSheetId ]);
+      // Create the columns
+      $newColumns = [];
+      $visibleColumns = [];
+      foreach(explode(',', 'A,B,C,D,E,F,G,H') as $columnName) {
+        $newColumnId = Str::uuid()->toString();
+        array_push($visibleColumns, $newColumnId);
+        array_push($newColumns, [
+          'id' => $newColumnId,
           'sheetId' => $newSheet->id,
-          'columnId' => $column['id'],
-          'rowId' => $newRowId,
-          'value' => null
+          'name' => $columnName,
+          'typeId' => 'STRING',
+          'width' => 100
         ]);
       }
-    }
-    SheetColumn::insert($newColumns);
-    SheetRow::insert($newRows);
-    SheetCell::insert($newCells);
-    $newSheet->visibleColumns = $visibleColumns;
-    $newSheet->defaultVisibleRows = $defaultVisibleRows;
-    $newSheet->save();
-    return response()->json(null, 200);
-  }
+      // Create the rows and cells
+      $newRows = [];
+      $newCells = [];
+      for($rowNumber = 0; $rowNumber < 5; $rowNumber++) {
+        $newRowId = Str::uuid()->toString();
+        array_push($newRows, [ 
+          'id' => $newRowId,
+          'sheetId' => $newSheet->id
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+        foreach($newColumns as $index => $column) {
+          array_push($newCells, [
+            'id' => Str::uuid()->toString(),
+            'sheetId' => $newSheet->id,
+            'columnId' => $column['id'],
+            'rowId' => $newRowId,
+            'value' => null
+          ]);
+        }
+      }
+      SheetColumn::insert($newColumns);
+      SheetRow::insert($newRows);
+      SheetCell::insert($newCells);
+      $newSheet->visibleColumns = $visibleColumns;
+      $newSheet->save();
+      return response()->json(null, 200);
+    }
+
+    public function update(Request $request, Sheet $sheet)
+    {
+      $sheet->update($request->all());
+      return response()->json(null, 200);
+    }
+    
+    public function destroy(Sheet $sheet)
+    {
+      $rowsToDelete = SheetRow::where('sheetId', $sheet->id)->get();
+      foreach($rowsToDelete as $rowToDelete) {
+        SheetCell::where('rowId', $rowToDelete->id)->delete();
+        SheetRow::destroy($rowToDelete->id);
+      }
+      SheetColumn::where('sheetId', $sheet->id)->delete();
+      return Sheet::destroy($sheet->id);
+    }
+
     public function createFromCsv(Request $request)
     {
       // Create the sheet
@@ -93,13 +100,6 @@ class SheetController extends Controller
       return response()->json(null, 200);
     }
 
-    /**
-     * Create a new sheet from an array of rows with the format:
-     * [ 'columnName' => 'cellValue', ... ]
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public static function createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $arrayOfRows) {
       $firstRow = $arrayOfRows[0];
       $firstRowFirstCellValue = $arrayOfRows[0][array_keys($arrayOfRows[0])[0]];
@@ -141,10 +141,8 @@ class SheetController extends Controller
       // Create the rows and cells
       $newSheetRows = [];
       $newSheetCells = [];
-      $defaultVisibleRows = [];
       foreach($arrayOfRows as $rowFromCsv) {
         $newRowId = Str::uuid()->toString();
-        array_push($defaultVisibleRows, $newRowId);
         array_push($newSheetRows, [ 
           'id' => $newRowId,
           'sheetId' => $newSheet->id 
@@ -167,7 +165,6 @@ class SheetController extends Controller
       // Insert into db
       $newSheetColumns = SheetColumn::insert($columns);
       $newSheet->visibleColumns = $visibleColumns;
-      $newSheet->defaultVisibleRows = $defaultVisibleRows;
       $newSheet->save();
       foreach (array_chunk($newSheetRows, 2500) as $chunk) {
         SheetRow::insert($chunk);
@@ -178,12 +175,6 @@ class SheetController extends Controller
       
     }
 
-    /**
-     * Prepare the sheet download
-     *
-     * @param  \App\Sheet  $sheet
-     * @return \Illuminate\Http\Response
-     */
     public static function prepareSheetDownload(Request $request, Sheet $sheet)
     {
       // Request inputs
@@ -203,12 +194,6 @@ class SheetController extends Controller
       return response()->json($downloadId, 200);
     }
 
-    /**
-     * Download the sheet
-     *
-     * @param  \App\Sheet  $sheet
-     * @return \Illuminate\Http\Response
-     */
     public static function downloadSheet($sheetDownloadId)
     {
 
@@ -226,57 +211,5 @@ class SheetController extends Controller
         }
         $zip->close();
         return response()->download($zipFile);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Sheet  $sheet
-     * @return \Illuminate\Http\Response
-     */
-    public static function show(Sheet $sheet)
-    {
-      return response()->json($sheet, 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Sheet  $sheet
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Sheet $sheet)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Sheet  $sheet
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Sheet $sheet)
-    {
-      $sheet->update($request->all());
-      return response()->json(null, 200);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Sheet  $sheet
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Sheet $sheet)
-    {
-      $rowsToDelete = SheetRow::where('sheetId', $sheet->id)->get();
-      foreach($rowsToDelete as $rowToDelete) {
-        SheetCell::where('rowId', $rowToDelete->id)->delete();
-        SheetRow::destroy($rowToDelete->id);
-      }
-      SheetColumn::where('sheetId', $sheet->id)->delete();
-      return Sheet::destroy($sheet->id);
     }
 }

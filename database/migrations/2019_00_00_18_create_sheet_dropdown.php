@@ -19,7 +19,8 @@ class CreateSheetDropdown extends Migration
           $table->uuid('userId')->nullable();
           $table->uuid('sheetId')->nullable();
           $table->string('name');
-          $table->timestamps();
+          $table->timestamp('createdAt')->nullable();
+          $table->timestamp('updatedAt')->nullable();
 
           $table->foreign('teamId')->references('id')->on('teams');
           $table->foreign('userId')->references('id')->on('users');

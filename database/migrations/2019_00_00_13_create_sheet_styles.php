@@ -22,7 +22,8 @@ class CreateSheetStyles extends Migration
           $table->json('color')->nullable();
           $table->json('colorReference')->nullable();
           $table->json('italic')->nullable();
-          $table->timestamps();
+          $table->timestamp('createdAt')->nullable();
+          $table->timestamp('updatedAt')->nullable();
 
           $table->foreign('sheetId')->references('id')->on('sheets');
         });

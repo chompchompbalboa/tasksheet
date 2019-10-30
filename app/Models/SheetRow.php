@@ -12,6 +12,9 @@ class SheetRow extends Model
 
   protected $table = 'sheetRows';
 
+  const CREATED_AT = 'createdAt';
+  const UPDATED_AT = 'updatedAt';
+
   protected $visible = ['id', 'cells'];
   protected $fillable = ['id', 'sheetId'];
   protected $appends = ['cells'];
@@ -19,7 +22,7 @@ class SheetRow extends Model
   public function getCellsAttribute() {
     $cells =  SheetCell::where('rowId', '=', $this->id)
     ->join('sheetColumns', 'sheetCells.columnId', '=', 'sheetColumns.id')
-    ->orderBy('sheetColumns.created_at', 'ASC')
+    ->orderBy('sheetColumns.createdAt', 'ASC')
     ->select('sheetCells.id', 'columnId', 'rowId', 'value')
     ->get();
     return $cells;

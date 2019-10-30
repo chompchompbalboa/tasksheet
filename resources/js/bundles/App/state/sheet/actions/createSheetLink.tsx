@@ -75,9 +75,6 @@ export const createSheetLink = (sheetId: string, viewName: string): IThunkAction
         id: newSheetViewId,
         sourceSheetId: sourceSheet.id,
         activeSheetViewId: null,
-        sourceSheetDefaultVisibleRows: sourceSheet.defaultVisibleRows,
-        defaultVisibleRows: sourceSheet.defaultVisibleRows,
-        fileType: sourceSheet.fileType,
         columns: clone(sourceSheet.columns),
         filters: newSheetViewFilters,
         groups: newSheetViewGroups,
@@ -126,7 +123,6 @@ export const createSheetLink = (sheetId: string, viewName: string): IThunkAction
     mutation.createSheetLink({
       id: newSheetViewId,
       sourceSheetId: sourceSheet.id,
-      defaultVisibleRows: sourceSheet.defaultVisibleRows,
       visibleColumns: sourceSheet.visibleColumns,
       filters: newFilters,
       groups: newGroups,

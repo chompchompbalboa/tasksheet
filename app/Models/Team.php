@@ -8,6 +8,9 @@ use App\Models\User;
 class Team extends Model
 {
   use Traits\UsesUuid;
+  
+  const CREATED_AT = 'createdAt';
+  const UPDATED_AT = 'updatedAt';
 
   protected $visible = [ 'id', 'name', 'members' ];
   protected $fillable = [ 'name' ];

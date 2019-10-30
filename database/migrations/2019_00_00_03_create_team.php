@@ -17,7 +17,8 @@ class CreateTeam extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->uuid('folderId')->nullable();
-            $table->timestamps();
+            $table->timestamp('createdAt')->nullable();
+            $table->timestamp('updatedAt')->nullable();
 
             $table->foreign('folderId')->references('id')->on('folders');
         });

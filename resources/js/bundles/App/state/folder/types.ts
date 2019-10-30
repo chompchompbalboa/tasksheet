@@ -35,7 +35,7 @@ export interface IFileUpdates {
   isPreventedFromSelecting?: boolean
 }
 
-export type IFileType = 'SHEET' | 'SHEET_VIEW'
+export type IFileType = 'SHEET'
 
 export interface IFolderClipboard {
   itemId: string

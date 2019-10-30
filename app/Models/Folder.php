@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Folder extends Model
 {
   use Traits\UsesUuid;
-  public $incrementing = false;
+  
+  const CREATED_AT = 'createdAt';
+  const UPDATED_AT = 'updatedAt';
 
   protected $appends = ['folders', 'files'];
   protected $fillable = ['id', 'name', 'folderId'];

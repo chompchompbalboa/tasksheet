@@ -60,7 +60,7 @@ export const resolveSheetVisibleRows = (sheet: ISheet, rows: IAllSheetRows, cell
   const sortIds: string[] = sheet.sorts
   
   if(filterIds.length === 0 && groupIds.length === 0 && sortIds.length === 0) {
-    return sheet.defaultVisibleRows
+    return rowIds
   }
 
   // Filter

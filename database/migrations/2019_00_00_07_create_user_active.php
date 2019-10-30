@@ -18,7 +18,8 @@ class CreateUserActive extends Migration
             $table->uuid('userId');
             $table->uuid('tab')->nullable();
             $table->json('tabs')->nullable();
-            $table->timestamps();
+            $table->timestamp('createdAt')->nullable();
+            $table->timestamp('updatedAt')->nullable();
 
             $table->foreign('userId')->references('id')->on('users');
         });

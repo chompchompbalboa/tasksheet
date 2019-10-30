@@ -9,6 +9,10 @@ class UserActive extends Model
   use Traits\UsesUuid;
 
   protected $table = 'userActive';
+  
+  const CREATED_AT = 'createdAt';
+  const UPDATED_AT = 'updatedAt';
+  
   protected $visible = ['id', 'tab', 'tabs'];
   protected $fillable = ['tab', 'tabs'];
   protected $casts = [

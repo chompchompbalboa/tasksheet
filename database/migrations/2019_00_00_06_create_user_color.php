@@ -18,7 +18,8 @@ class CreateUserColor extends Migration
             $table->uuid('userId');
             $table->string('primary')->nullable();
             $table->string('secondary')->nullable();
-            $table->timestamps();
+            $table->timestamp('createdAt')->nullable();
+            $table->timestamp('updatedAt')->nullable();
 
             $table->foreign('userId')->references('id')->on('users');
         });

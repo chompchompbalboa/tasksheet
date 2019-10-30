@@ -18,8 +18,8 @@ class CreateSheet extends Migration
             $table->uuid('sourceSheetId')->nullable();
             $table->uuid('activeSheetViewId')->nullable();
             $table->json('visibleColumns')->nullable();
-            $table->json('defaultVisibleRows')->nullable();
-            $table->timestamps();
+            $table->timestamp('createdAt')->nullable();
+            $table->timestamp('updatedAt')->nullable();
         });
 
         Schema::table('sheets', function (Blueprint $table) {

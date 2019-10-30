@@ -9,6 +9,9 @@ class SheetColumn extends Model
   use Traits\UsesUuid;
 
   protected $table = 'sheetColumns';
+  
+  const CREATED_AT = 'createdAt';
+  const UPDATED_AT = 'updatedAt';
 
   protected $visible = ['id', 'sheetId', 'name', 'width', 'typeId'];
   protected $fillable = ['id', 'sheetId', 'name', 'width', 'typeId'];

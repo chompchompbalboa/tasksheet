@@ -20,7 +20,8 @@ class CreateUser extends Migration
             $table->string('password');
             $table->uuid('folderId');
             $table->rememberToken();
-            $table->timestamps();
+            $table->timestamp('createdAt')->nullable();
+            $table->timestamp('updatedAt')->nullable();
 
             $table->foreign('folderId')->references('id')->on('folders');
         });

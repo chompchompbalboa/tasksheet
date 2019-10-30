@@ -23,7 +23,8 @@ class CreateSheetPhoto extends Migration
           $table->string('s3Key');
           $table->string('uploadedBy');
           $table->datetime('uploadedAt');
-          $table->timestamps();
+          $table->timestamp('createdAt')->nullable();
+          $table->timestamp('updatedAt')->nullable();
 
           $table->foreign('sheetId')->references('id')->on('sheets');
           $table->foreign('cellId')->references('id')->on('sheetCells');

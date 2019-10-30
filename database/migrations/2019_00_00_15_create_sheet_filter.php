@@ -21,7 +21,8 @@ class CreateSheetFilter extends Migration
           $table->string('type');
           $table->string('value');
           $table->boolean('isLocked');
-          $table->timestamps();
+          $table->timestamp('createdAt')->nullable();
+          $table->timestamp('updatedAt')->nullable();
 
           $table->foreign('sheetId')->references('id')->on('sheets');
           $table->foreign('sheetViewId')->references('id')->on('sheetViews');

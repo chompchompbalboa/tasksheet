@@ -17,7 +17,8 @@ class CreateFolder extends Migration
             $table->uuid('id')->primary();
             $table->uuid('folderId')->nullable();
             $table->string('name')->nullable();
-            $table->timestamps();
+            $table->timestamp('createdAt')->nullable();
+            $table->timestamp('updatedAt')->nullable();
         });
 
         Schema::table('folders', function (Blueprint $table) {

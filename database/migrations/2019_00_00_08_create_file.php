@@ -20,7 +20,8 @@ class CreateFile extends Migration
             $table->string('type');
             $table->uuid('typeId')->nullable();
             $table->softDeletes();
-            $table->timestamps();
+            $table->timestamp('createdAt')->nullable();
+            $table->timestamp('updatedAt')->nullable();
 
             $table->foreign('folderId')->references('id')->on('folders');
         });

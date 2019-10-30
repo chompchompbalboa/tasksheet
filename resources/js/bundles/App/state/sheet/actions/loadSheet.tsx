@@ -108,17 +108,12 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         isActiveSheetView && sheetSorts.push(sort.id)
       })
     })
-
-    const defaultVisibleRows = sheetFromDatabase.sourceSheetId ? sheetFromDatabase.sourceSheetDefaultVisibleRows : sheetFromDatabase.defaultVisibleRows
     
     // New Sheet
     const newSheet: ISheet = {
       id: sheetFromDatabase.id,
       sourceSheetId: sheetFromDatabase.sourceSheetId,
       activeSheetViewId: sheetFromDatabase.activeSheetViewId,
-      sourceSheetDefaultVisibleRows: sheetFromDatabase.sourceSheetDefaultVisibleRows.filter(visibleRowId => sheetRows.includes(visibleRowId)),
-      defaultVisibleRows: defaultVisibleRows.filter(visibleRowId => sheetRows.includes(visibleRowId)),
-      fileType: sheetFromDatabase.fileType,
       columns: sheetColumns,
       filters: sheetFilters,
       groups: sheetGroups,

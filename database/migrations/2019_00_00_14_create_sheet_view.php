@@ -17,7 +17,8 @@ class CreateSheetView extends Migration
           $table->uuid('id')->primary();
           $table->uuid('sheetId');
           $table->string('name')->nullable();
-          $table->timestamps();
+          $table->timestamp('createdAt')->nullable();
+          $table->timestamp('updatedAt')->nullable();
 
           $table->foreign('sheetId')->references('id')->on('sheets');
         });
