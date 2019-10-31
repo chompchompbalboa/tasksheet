@@ -1,3 +1,11 @@
+//-----------------------------------------------------------------------------
+// Imports
+//-----------------------------------------------------------------------------
+import { Moment } from 'moment'
+
+//-----------------------------------------------------------------------------
+// Types
+//-----------------------------------------------------------------------------
 export interface IAllSheets { [sheetId: string]: ISheet }
 export interface IAllSheetColumns { [columnId: string]: ISheetColumn }
 export interface IAllSheetRows { [rowId: string]: ISheetRow }
@@ -125,7 +133,8 @@ export interface ISheetFromDatabase {
 }
 export interface ISheetFromDatabaseRow {
 	id: string
-	sheetId: string
+  sheetId: string
+  createdAt: string
 	cells: ISheetCell[]
 }
 
@@ -168,7 +177,8 @@ export interface ISheetColumnTypeDropdownOption {
 
 export interface ISheetRow {
 	id: string
-	sheetId: string
+  sheetId: string
+  createdAt: Moment
 	cells: { [columnId: string]: ISheetCell['id'] }
 }
 export interface ISheetRowUpdates {

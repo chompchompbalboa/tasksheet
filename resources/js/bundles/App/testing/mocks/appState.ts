@@ -1,6 +1,8 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
+import moment from 'moment'
+
 import { IAppState } from '@app/state'
 import { IFile, IFiles, IFolders, IFileType } from '@app/state/folder/types'
 import { 
@@ -164,11 +166,13 @@ export const appStateFactory = ({
         const newSheetRow: ISheetRow = {
           id: sheetRowId,
           sheetId: sheetId,
+          createdAt: moment(),
           cells: sheetRowCells
         }
 
         const newSheetFromFromDatabaseRow: ISheetFromDatabaseRow = {
           ...newSheetRow,
+          createdAt: newSheetRow.createdAt.format('YYYY-MM-DD HH:mm:ss'),
           cells: sheetRowFromDatabaseCells
         }
 

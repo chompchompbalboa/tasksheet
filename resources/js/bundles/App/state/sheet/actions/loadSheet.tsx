@@ -1,6 +1,8 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
+import moment from 'moment'
+
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import { 
   ISheet, ISheetFromDatabase,
@@ -42,7 +44,12 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         }
         rowCells[cell.columnId] = cell.id
       })
-      normalizedRows[row.id] = { id: row.id, sheetId: sheetFromDatabase.id, cells: rowCells}
+      normalizedRows[row.id] = { 
+        id: row.id, 
+        sheetId: sheetFromDatabase.id, 
+        createdAt: moment(row.createdAt),
+        cells: rowCells
+      }
       sheetRows.push(row.id)
     })
 

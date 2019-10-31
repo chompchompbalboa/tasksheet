@@ -1,6 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
+import moment from 'moment'
 import { v4 as createUuid } from 'uuid'
 
 import { 
@@ -19,6 +20,7 @@ export const defaultRow = (sheetId: string, rowId: ISheetRow['id'], columns: ISh
   return {
     id: rowId,
     sheetId: sheetId,
+    createdAt: moment(),
     cells: newCells
   }
 }

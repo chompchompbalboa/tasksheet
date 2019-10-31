@@ -2,6 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import { groupBy, orderBy } from 'lodash'
+import moment from 'moment'
 
 import { 
   ISheet,
@@ -60,7 +61,9 @@ export const resolveSheetVisibleRows = (sheet: ISheet, rows: IAllSheetRows, cell
   const sortIds: string[] = sheet.sorts
   
   if(filterIds.length === 0 && groupIds.length === 0 && sortIds.length === 0) {
-    return rowIds
+    return rowIds.sort((rowIdOne, rowIdTwo) => {
+      return moment(rows[rowIdOne].createdAt).isAfter(moment(rows[rowIdTwo].createdAt)) ? 1 : 0
+    })
   }
 
   // Filter

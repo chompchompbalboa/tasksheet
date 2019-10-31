@@ -1,6 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
+import moment from 'moment'
 import { batch } from 'react-redux'
 import { v4 as createUuid } from 'uuid'
 
@@ -48,6 +49,7 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
     const nextSheetVisibleRows = [ ...sheet.visibleRows ]
     const newRowsToDatabase: ISheetRowToDatabase[] = []
     const newRowIds: ISheetRow['id'][] = []
+    const startTime = moment()
     
     // Get any open sheets this is a source sheet for
     const childSheets: ISheet['id'][] = []
@@ -76,6 +78,7 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
       nextSheetVisibleRows.splice(insertBeforeRowIdVisibleRowsIndex + rowIndexModifier, 0, newRow.id)
       const newRowToDatabase = {
         ...newRow,
+        createdAt: startTime.add(i, 'seconds').format('YYYY-MM-DD HH:mm:ss'),
         cells: newRowCellsToDatabase
       }
       newRowsToDatabase.push(newRowToDatabase)

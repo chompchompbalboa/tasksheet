@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -46,11 +48,13 @@ class SheetController extends Controller
       // Create the rows and cells
       $newRows = [];
       $newCells = [];
+      $startTime = new Carbon();
       for($rowNumber = 0; $rowNumber < 5; $rowNumber++) {
         $newRowId = Str::uuid()->toString();
         array_push($newRows, [ 
           'id' => $newRowId,
-          'sheetId' => $newSheet->id
+          'sheetId' => $newSheet->id,
+          'createdAt' => new Carbon($startTime->addSeconds($rowNumber))
         ]);
 
         foreach($newColumns as $index => $column) {
@@ -141,12 +145,16 @@ class SheetController extends Controller
       // Create the rows and cells
       $newSheetRows = [];
       $newSheetCells = [];
+      $startTime = new Carbon();
+      $rowCount = 0;
       foreach($arrayOfRows as $rowFromCsv) {
         $newRowId = Str::uuid()->toString();
         array_push($newSheetRows, [ 
           'id' => $newRowId,
-          'sheetId' => $newSheet->id 
+          'sheetId' => $newSheet->id,
+          'createdAt' => new Carbon($startTime->addSeconds($rowCount))
         ]);
+        $rowCount = $rowCount + 1;
         foreach($columns as $index => $column) {
           $cellValue = $rowFromCsv[$column['name']];
           $cellValueLength = strlen($cellValue);
