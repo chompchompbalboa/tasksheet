@@ -10,7 +10,7 @@ import {
 } from '@app/state/sheet/types'
 
 import { 
-  updateSheet 
+  updateSheetView
 } from '@app/state/sheet/actions'
 
 import {
@@ -29,31 +29,37 @@ export const resetSheetView = (sheetId: ISheet['id']): IThunkAction => {
       allSheetCells,
       allSheetFilters,
       allSheetGroups,
-      allSheetSorts
+      allSheetSorts,
+      allSheetViews
     } = getState().sheet
 
-    const nextSheetVisibleRows = resolveSheetVisibleRows(
-      {
-        ...sheet,
-        filters: [],
-        groups: [],
-        sorts: []
-      }, 
+    const activeSheetView = allSheetViews[sheet.activeSheetViewId]
+
+    const nextSheetViewVisibleRows = resolveSheetVisibleRows(
+      sheet, 
       allSheetRows, 
       allSheetCells, 
       allSheetFilters, 
       allSheetGroups, 
-      allSheetSorts
+      allSheetSorts,
+      {
+        ...allSheetViews,
+        [activeSheetView.id]: {
+          ...allSheetViews[activeSheetView.id],
+          filters: [],
+          groups: [],
+          sorts: []
+        }
+      }
     )
-    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
+    const nextSheetViewRowLeaders = resolveSheetRowLeaders(nextSheetViewVisibleRows)
   
-    dispatch(updateSheet(sheetId, {
-      activeSheetViewId: null,
+    dispatch(updateSheetView(activeSheetView.id, {
       filters: [],
       groups: [],
-      rowLeaders: nextSheetRowLeaders,
+      visibleRowLeaders: nextSheetViewRowLeaders,
       sorts: [],
-      visibleRows: nextSheetVisibleRows
+      visibleRows: nextSheetViewVisibleRows
     }))
     mutation.resetSheetView(sheetId)
   }

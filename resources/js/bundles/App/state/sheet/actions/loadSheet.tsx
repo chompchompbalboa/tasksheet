@@ -131,6 +131,7 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       normalizedSheetViews
     )
     const nextSheetViewRowLeaders = resolveSheetRowLeaders(nextSheetViewVisibleRows)
+    normalizedSheetViews[activeSheetViewId].visibleRows = nextSheetViewVisibleRows
     normalizedSheetViews[activeSheetViewId].visibleRowLeaders = nextSheetViewRowLeaders
     
 		dispatch(

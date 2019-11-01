@@ -103,6 +103,8 @@ export interface ISheetViewToDatabase {
 export interface ISheetViewUpdates {
   name?: string
   visibleColumns?: ISheetColumn['id'][]
+  visibleRows?: ISheetRow['id'][]
+  visibleRowLeaders?: ISheetRowLeader[]
   filters?: ISheetFilter['id'][]
   groups?: ISheetGroup['id'][]
   sorts?: ISheetSort['id'][]

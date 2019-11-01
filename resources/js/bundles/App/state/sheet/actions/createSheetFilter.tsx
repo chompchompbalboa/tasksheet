@@ -11,7 +11,6 @@ import { ISheetFilter } from '@app/state/sheet/types'
 import { 
   clearSheetSelection,
   setAllSheetFilters,
-  updateSheet,
   updateSheetView
 } from '@app/state/sheet/actions'
 
@@ -35,31 +34,37 @@ export const createSheetFilter = (sheetId: string, newFilter: ISheetFilter): ITh
       allSheetSorts,
       allSheetViews
     } = getState().sheet
+
     const sheet = allSheets[sheetId]
+    const activeSheetView = allSheetViews[sheet.activeSheetViewId]
 
     const nextFilters = { ...allSheetFilters, [newFilter.id]: newFilter }
-    const nextSheetFilters = [ ...sheet.filters, newFilter.id ]
-    const nextSheetVisibleRows = resolveSheetVisibleRows({ 
-      ...sheet, 
-      filters: nextSheetFilters 
-    }, allSheetRows, allSheetCells, nextFilters, allSheetGroups, allSheetSorts)
-    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
-
-    if(sheet.activeSheetViewId) {
-      const activeSheetView = allSheetViews[sheet.activeSheetViewId]
-      dispatch(updateSheetView(activeSheetView.id, {
-        filters: [ ...activeSheetView.filters, newFilter.id ]
-      }))
-    }
+    const nextSheetViewFilters = [ ...activeSheetView.filters, newFilter.id ]
+    const nextSheetVisibleRows = resolveSheetVisibleRows(
+      sheet, 
+      allSheetRows, 
+      allSheetCells, 
+      nextFilters, 
+      allSheetGroups, 
+      allSheetSorts, 
+      { 
+        ...allSheetViews, 
+        [activeSheetView.id]: {
+          ...allSheetViews[activeSheetView.id],
+          filters: nextSheetViewFilters,
+        }
+      }
+    )
+    const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
 
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetFilters({ ...allSheetFilters, [newFilter.id]: newFilter }))
-      dispatch(updateSheet(sheetId, {
-        filters: nextSheetFilters,
-        rowLeaders: nextSheetRowLeaders,
+      dispatch(updateSheetView(activeSheetView.id, {
+        filters: nextSheetViewFilters,
+        visibleRowLeaders: nextSheetVisibleRowLeaders,
         visibleRows: nextSheetVisibleRows
-      }, true))
+      }))
     })
 
     mutation.createSheetFilter(newFilter)

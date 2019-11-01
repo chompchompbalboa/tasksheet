@@ -11,8 +11,9 @@ import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import { ISheetRow } from '@app/state/sheet/types'
 
 import { createHistoryStep } from '@app/state/history/actions'
-import { updateSheet } from '@app/state/sheet/actions'
+import { updateSheet, updateSheetView } from '@app/state/sheet/actions'
 import { resolveSheetRowLeaders } from '@app/state/sheet/resolvers'
+
 
 //-----------------------------------------------------------------------------
 // Delete Sheet Row
@@ -23,21 +24,27 @@ export const deleteSheetRow = (sheetId: string, rowId: ISheetRow['id']): IThunkA
     const {
       allSheets,
       allSheetCells,
-      allSheetRows
+      allSheetRows,
+      allSheetViews
     } = getState().sheet
     const sheet = allSheets[sheetId]
+    const activeSheetView = allSheetViews[sheet.activeSheetViewId]
+
+
     const sheetRow = allSheetRows[rowId]
     const cellsForUndoActionsDatabaseUpdate = Object.keys(sheetRow.cells).map(columnId => allSheetCells[sheetRow.cells[columnId]])
     const nextSheetRows = sheet.rows.filter(sheetRowId => sheetRowId !== rowId)
-    const nextSheetVisibleRows = sheet.visibleRows.filter(visibleRowId => visibleRowId !== rowId)
-    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
+    const nextSheetViewVisibleRows = activeSheetView.visibleRows.filter(visibleRowId => visibleRowId !== rowId)
+    const nextSheetViewRowLeaders = resolveSheetRowLeaders(nextSheetViewVisibleRows)
     
     const actions = () => {
       batch(() => {
         dispatch(updateSheet(sheetId, {
           rows: nextSheetRows,
-          rowLeaders: nextSheetRowLeaders,
-          visibleRows: nextSheetVisibleRows,
+        }))
+        dispatch(updateSheetView(activeSheetView.id, {
+          visibleRowLeaders: nextSheetViewRowLeaders,
+          visibleRows: nextSheetViewVisibleRows,
         }))
       })
       mutation.deleteSheetRow(rowId)
@@ -46,9 +53,11 @@ export const deleteSheetRow = (sheetId: string, rowId: ISheetRow['id']): IThunkA
     const undoActions = () => {
       batch(() => {
         dispatch(updateSheet(sheetId, {
-          rows: sheet.rows,
-          rowLeaders: sheet.rowLeaders,
-          visibleRows: sheet.visibleRows
+          rows: sheet.rows
+        }))
+        dispatch(updateSheetView(activeSheetView.id, {
+          visibleRowLeaders: activeSheetView.visibleRowLeaders,
+          visibleRows: activeSheetView.visibleRows,
         }))
         mutation.createSheetRows([{
           ...sheetRow,

@@ -41,8 +41,8 @@ const SheetActionFilter = ({
   const allSheetFilters = useSelector((state: IAppState) => state.sheet.allSheetFilters)
 
   const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
-  const sheetViewVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheetViews[sheetActiveSheetViewId].visibleColumns)
-  const sheetViewFilters = useSelector((state: IAppState) => state.sheet.allSheetViews[sheetActiveSheetViewId].filters)
+  const sheetViewVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].visibleColumns)
+  const sheetViewFilters = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].filters)
 
   // Filter Types  
   const validFilterTypes: ISheetFilterType[] = ['!=', '>=', '<=', '=', '>', '<'] // The multicharacter items need to be before the single character items in this array for the validator to work correctly

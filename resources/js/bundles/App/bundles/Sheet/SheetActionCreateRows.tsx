@@ -34,7 +34,7 @@ const SheetCreateRows = ({
   const [ insertAtTopOrBottomOfSheet, setInsertAtTopOrBottomOfSheet ] = useState(localStorage.getItem(localStorageKey) || 'TOP')
 
   const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
-  const sheetViewVisibleRows = useSelector((state: IAppState) => state.sheet.allSheetViews[sheetActiveSheetViewId].visibleRows)
+  const sheetViewVisibleRows = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].visibleRows)
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   
   const [ isEditingInputValue, setIsEditingInputValue ] = useState(false)

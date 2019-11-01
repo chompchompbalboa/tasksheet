@@ -6,7 +6,7 @@ import { batch } from 'react-redux'
 import { IAppState } from '@app/state'
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
 
-import { updateSheet } from '@app/state/sheet/actions'
+import { updateSheetView } from '@app/state/sheet/actions'
 import { createHistoryStep } from '@app/state/history/actions'
 
 //-----------------------------------------------------------------------------
@@ -16,15 +16,18 @@ export const deleteSheetColumnBreak = (sheetId: string, columnBreakIndex: number
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     
     const {
-      allSheets
+      allSheets,
+      allSheetViews
     } = getState().sheet
+
     const sheet = allSheets[sheetId]
+    const activeSheetView = allSheetViews[sheet.activeSheetViewId]
     
-    const nextSheetVisibleColumns = sheet.visibleColumns.filter((_, index) => index !== columnBreakIndex)
+    const nextSheetVisibleColumns = activeSheetView.visibleColumns.filter((_, index) => index !== columnBreakIndex)
     
     const actions = () => {
       batch(() => {
-        dispatch(updateSheet(sheetId, {
+        dispatch(updateSheetView(activeSheetView.id, {
           visibleColumns: nextSheetVisibleColumns
         }))
       })
@@ -32,8 +35,8 @@ export const deleteSheetColumnBreak = (sheetId: string, columnBreakIndex: number
     
     const undoActions = () => {
       batch(() => {
-        dispatch(updateSheet(sheetId, {
-          visibleColumns: sheet.visibleColumns
+        dispatch(updateSheetView(activeSheetView.id, {
+          visibleColumns: activeSheetView.visibleColumns
         }))
       })
     }

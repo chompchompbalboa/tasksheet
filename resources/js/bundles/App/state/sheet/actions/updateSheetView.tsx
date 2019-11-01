@@ -13,9 +13,9 @@ import {
 //-----------------------------------------------------------------------------
 // Update Sheet Group
 //-----------------------------------------------------------------------------
-export const updateSheetView = (sheetViewId: string, updates: ISheetViewUpdates): IThunkAction => {
+export const updateSheetView = (sheetViewId: string, updates: ISheetViewUpdates, skipDatabaseUpdate: boolean = false): IThunkAction => {
 	return async (dispatch: IThunkDispatch) => {
     dispatch(updateSheetViewReducer(sheetViewId, updates))
-    mutation.updateSheetView(sheetViewId, updates)
+    !skipDatabaseUpdate && mutation.updateSheetView(sheetViewId, updates)
 	}
 }

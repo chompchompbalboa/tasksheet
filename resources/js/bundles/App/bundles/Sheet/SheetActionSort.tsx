@@ -34,8 +34,8 @@ const SheetActionSort = ({
   const allSheetSorts = useSelector((state: IAppState) => state.sheet.allSheetSorts)
   
   const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
-  const sheetSorts = useSelector((state: IAppState) => state.sheet.allSheetViews[sheetActiveSheetViewId].sorts)
-  const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheetViews[sheetActiveSheetViewId].visibleColumns)
+  const sheetSorts = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].sorts)
+  const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].visibleColumns)
 
   // Use the sheet column names to provide options for the dropdown
   const options = sheetVisibleColumns && sheetVisibleColumns.map((columnId: string) => {

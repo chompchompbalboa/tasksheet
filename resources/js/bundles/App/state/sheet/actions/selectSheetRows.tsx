@@ -20,12 +20,18 @@ export const selectSheetRows = (sheetId: ISheet['id'], startRowId: ISheetRow['id
       allSheetRows,
       allSheets: { 
         [sheetId]: { 
-          selections,
-          visibleColumns, 
-          visibleRows 
+          activeSheetViewId,
+          selections
         } 
-      }
+      },
+      allSheetViews
     } = getState().sheet
+
+    const activeSheetView = allSheetViews[activeSheetViewId]
+    const {
+      visibleColumns,
+      visibleRows
+    } = activeSheetView
     
     const startRowIdVisibleRowsIndex = visibleRows.indexOf(startRowId)
     const endRowIdVisibleRowsIndex = endRowId ? visibleRows.indexOf(endRowId) : visibleRows.indexOf(startRowId)

@@ -19,7 +19,8 @@ import {
   setAllSheetCells,
   setAllSheetColumns,
   setAllSheetRows,
-  updateSheet
+  updateSheet,
+  updateSheetView
 } from '@app/state/sheet/actions'
 import { createHistoryStep } from '@app/state/history/actions'
 
@@ -36,8 +37,11 @@ export const deleteSheetColumn = (sheetId: string, columnId: string): IThunkActi
       allSheetCells,
       allSheetColumns,
       allSheetRows,
+      allSheetViews
     } = getState().sheet
+
     const sheet = allSheets[sheetId]
+    const activeSheetView = allSheetViews[sheet.activeSheetViewId]
     
     // Columns
     const { [columnId]: deletedColumn, ...nextAllSheetColumns } = allSheetColumns
@@ -60,7 +64,7 @@ export const deleteSheetColumn = (sheetId: string, columnId: string): IThunkActi
     
     // Sheet Columns
     const nextSheetColumns = sheet.columns.filter(sheetColumnId => sheetColumnId !== columnId)
-    const nextSheetVisibleColumns = sheet.visibleColumns.filter(sheetColumnId => sheetColumnId !== columnId)
+    const nextSheetVisibleColumns = activeSheetView.visibleColumns.filter(sheetColumnId => sheetColumnId !== columnId)
     
     const actions = () => {
       batch(() => {
@@ -68,12 +72,13 @@ export const deleteSheetColumn = (sheetId: string, columnId: string): IThunkActi
         dispatch(setAllSheetColumns(nextAllSheetColumns))
         dispatch(setAllSheetRows(nextAllSheetRows))
         dispatch(updateSheet(sheetId, {
-          columns: nextSheetColumns,
-          visibleColumns: nextSheetVisibleColumns
+          columns: nextSheetColumns
         }, true))
+        dispatch(updateSheetView(activeSheetView.id, {
+          visibleColumns: nextSheetVisibleColumns
+        }))
       })
       mutation.deleteSheetColumn(columnId)
-      mutation.updateSheet(sheetId, { visibleColumns: nextSheetVisibleColumns })
     }
     
     const undoActions = () => {
@@ -82,12 +87,13 @@ export const deleteSheetColumn = (sheetId: string, columnId: string): IThunkActi
         dispatch(setAllSheetColumns(allSheetColumns))
         dispatch(setAllSheetRows(allSheetRows))
         dispatch(updateSheet(sheetId, {
-          columns: sheet.columns,
-          visibleColumns: sheet.visibleColumns
+          columns: sheet.columns
         }, true))
+        dispatch(updateSheetView(activeSheetView.id, {
+          visibleColumns: activeSheetView.visibleColumns
+        }))
       })
       mutation.createSheetColumn(deletedColumn, deletedSheetCells)
-      mutation.updateSheet(sheetId, { visibleColumns: sheet.visibleColumns })
     }
     
     dispatch(createHistoryStep({ actions, undoActions }))

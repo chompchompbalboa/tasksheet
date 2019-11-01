@@ -18,12 +18,18 @@ export const updateSheetSelectionFromCellClick = (sheetId: string, cellId: strin
       allSheetRows,
       allSheets: {
         [sheetId]: { 
+          activeSheetViewId,
           selections,
-          visibleColumns,
-          visibleRows,
         }
-      }
+      },
+      allSheetViews
     } = getState().sheet
+
+    const activeSheetView = allSheetViews[activeSheetViewId]
+    const {
+      visibleColumns,
+      visibleRows
+    } = activeSheetView
 
     const cell = allSheetCells[cellId]
 

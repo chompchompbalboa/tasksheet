@@ -16,6 +16,7 @@ export const cutSheetRange = (sheetId: ISheet['id']): IThunkAction => {
     const {
       allSheets: {
         [sheetId]: {
+          activeSheetViewId,
           selections: {
             rangeCellIds,
             rangeStartColumnId,
@@ -24,12 +25,16 @@ export const cutSheetRange = (sheetId: ISheet['id']): IThunkAction => {
             rangeEndColumnId,
             rangeEndRowId,
             rangeEndCellId,
-          },
-          visibleColumns,
-          visibleRows
+          }
         }
-      }
+      },
+      allSheetViews
     } = getState().sheet
+
+    const {
+      visibleColumns,
+      visibleRows
+    } = allSheetViews[activeSheetViewId]
 
     dispatch(updateSheetClipboard({
       sheetId: sheetId,

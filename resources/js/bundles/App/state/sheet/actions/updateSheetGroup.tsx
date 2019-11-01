@@ -9,7 +9,7 @@ import { ISheet, ISheetGroupUpdates } from '@app/state/sheet/types'
 
 import { 
   clearSheetSelection, 
-  updateSheet,
+  updateSheetView,
   updateSheetGroupReducer 
 } from '@app/state/sheet/actions'
 
@@ -37,15 +37,26 @@ export const updateSheetGroup = (sheetId: ISheet['id'], groupId: string, updates
           allSheetGroups,
           allSheetRows,
           allSheetSorts,
+          allSheetViews
         } = getState().sheet
 
         const sheet = allSheets[sheetId]
-        const nextSheetVisibleRows = resolveSheetVisibleRows(sheet, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, allSheetSorts)
+        const activeSheetView = allSheetViews[sheet.activeSheetViewId]
+
+        const nextSheetVisibleRows = resolveSheetVisibleRows(
+          sheet, 
+          allSheetRows, 
+          allSheetCells, 
+          allSheetFilters, 
+          allSheetGroups, 
+          allSheetSorts,
+          allSheetViews
+        )
         const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
 
         dispatch(clearSheetSelection(sheetId))
-        dispatch(updateSheet(sheetId, {
-          rowLeaders: nextSheetRowLeaders,
+        dispatch(updateSheetView(activeSheetView.id, {
+          visibleRowLeaders: nextSheetRowLeaders,
           visibleRows: nextSheetVisibleRows
         }))
 

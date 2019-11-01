@@ -6,7 +6,7 @@ import { IThunkAction, IThunkDispatch } from '@app/state/types'
 
 import { ISheet } from '@app/state/sheet/types'
 
-import { updateSheet } from '@app/state/sheet/actions'
+import { updateSheetView } from '@app/state/sheet/actions'
 import { createHistoryStep } from '@app/state/history/actions'
 
 //-----------------------------------------------------------------------------
@@ -16,17 +16,21 @@ export const hideSheetColumn = (sheetId: ISheet['id'], columnVisibleColumnsIndex
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
 
     const {
-      visibleColumns
-    } = getState().sheet.allSheets[sheetId]
+      allSheets,
+      allSheetViews
+    } = getState().sheet
 
-    const nextSheetVisibleColumns = visibleColumns.filter((_, index) => index !== columnVisibleColumnsIndex)
+    const activeSheetView = allSheetViews[allSheets[sheetId].activeSheetViewId]
+
+
+    const nextSheetViewVisibleColumns = activeSheetView.visibleColumns.filter((_, index) => index !== columnVisibleColumnsIndex)
 
     const actions = () => {
-      dispatch(updateSheet(sheetId, { visibleColumns: nextSheetVisibleColumns }))
+      dispatch(updateSheetView(activeSheetView.id, { visibleColumns: nextSheetViewVisibleColumns }))
     }
 
     const undoActions = () => {
-      dispatch(updateSheet(sheetId, { visibleColumns: visibleColumns }))
+      dispatch(updateSheetView(activeSheetView.id, { visibleColumns: activeSheetView.visibleColumns }))
     }
 
     dispatch(createHistoryStep({ actions, undoActions }))
