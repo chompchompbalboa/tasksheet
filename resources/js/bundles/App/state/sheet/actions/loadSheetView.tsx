@@ -5,13 +5,15 @@ import { IAppState } from '@app/state'
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import { 
   ISheet, 
+  ISheetFilter,
+  ISheetGroup,
+  ISheetSort,
   ISheetView
 } from '@app/state/sheet/types'
 
 import { 
   clearSheetSelection,
-  updateSheet,
-  updateSheetView
+  updateSheet 
 } from '@app/state/sheet/actions'
 
 import {
@@ -37,30 +39,34 @@ export const loadSheetView = (sheetId: ISheet['id'], sheetViewId: ISheetView['id
       allSheetViews
     } = getState().sheet
 
-    const activeSheetView = allSheetViews[sheet.activeSheetViewId]
-    const nextActiveSheetView = allSheetViews[sheetViewId]
+    const sheetView = allSheetViews[sheetViewId]
 
-    const nextSheetViewVisibleRows = resolveSheetVisibleRows(
-      sheet, 
+    const nextSheetFilters: ISheetFilter['id'][] = [ ...sheetView.filters ]
+    const nextSheetGroups: ISheetGroup['id'][] = [ ...sheetView.groups ]
+    const nextSheetSorts: ISheetSort['id'][] = [ ...sheetView.sorts ]
+
+    const nextSheetVisibleRows = resolveSheetVisibleRows(
+      {
+        ...sheet,
+        filters: nextSheetFilters,
+        groups: nextSheetGroups,
+        sorts: nextSheetSorts
+      }, 
       allSheetRows, 
       allSheetCells, 
       allSheetFilters, 
       allSheetGroups, 
-      allSheetSorts,
-      allSheetViews
+      allSheetSorts
     )
-    const nextSheetViewRowLeaders = resolveSheetRowLeaders(nextSheetViewVisibleRows)
+    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
   
     dispatch(updateSheet(sheetId, {
-      activeSheetViewId: nextActiveSheetView.id,
-    }))
-    dispatch(updateSheetView(activeSheetView.id, {
-      visibleRows: null,
-      visibleRowLeaders: null,
-    }))
-    dispatch(updateSheetView(nextActiveSheetView.id, {
-      visibleRows: nextSheetViewVisibleRows,
-      visibleRowLeaders: nextSheetViewRowLeaders,
+      activeSheetViewId: sheetView.id,
+      filters: nextSheetFilters,
+      groups: nextSheetGroups,
+      rowLeaders: nextSheetRowLeaders,
+      sorts: nextSheetSorts,
+      visibleRows: nextSheetVisibleRows
     }))
   }
 }

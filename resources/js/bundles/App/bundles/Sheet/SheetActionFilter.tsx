@@ -41,14 +41,14 @@ const SheetActionFilter = ({
   const allSheetFilters = useSelector((state: IAppState) => state.sheet.allSheetFilters)
 
   const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
-  const sheetViewVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].visibleColumns)
-  const sheetViewFilters = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].filters)
+  const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleColumns)
+  const sheetFilters = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].filters)
 
   // Filter Types  
   const validFilterTypes: ISheetFilterType[] = ['!=', '>=', '<=', '=', '>', '<'] // The multicharacter items need to be before the single character items in this array for the validator to work correctly
 
   // Column Names
-  const sheetColumnNames = sheetViewVisibleColumns && sheetViewVisibleColumns.map(columnId => {
+  const sheetColumnNames = sheetVisibleColumns && sheetVisibleColumns.map(columnId => {
     if(columnId !== 'COLUMN_BREAK' && allSheetColumns && allSheetColumns[columnId]) {
       return allSheetColumns[columnId].name
     }
@@ -57,7 +57,7 @@ const SheetActionFilter = ({
   // Get the dropdown options
   const getDropdownOptions = (nextAutosizeInputValue: string, isColumnNameValid: boolean, filterType: ISheetFilterType, isFilterValid: boolean) => {
     const options = !isColumnNameValid 
-      ? sheetViewVisibleColumns && sheetViewVisibleColumns.map(columnId => { 
+      ? sheetVisibleColumns && sheetVisibleColumns.map(columnId => { 
           if(columnId !== 'COLUMN_BREAK') {
             return { 
               id: columnId,
@@ -103,12 +103,12 @@ const SheetActionFilter = ({
   }
 
   // Set a local value for existing filters to allow for a quick ui update when the user presses enter
-  const [ localSheetFilters, setLocalSheetFilters ] = useState(sheetViewFilters)
+  const [ localSheetFilters, setLocalSheetFilters ] = useState(sheetFilters)
   const [ localAllSheetFilters, setLocalAllSheetFilters ] = useState(allSheetFilters)
   useEffect(() => {
     setLocalAllSheetFilters(allSheetFilters)
-    setLocalSheetFilters(sheetViewFilters)
-  }, [ allSheetFilters, sheetViewFilters ])
+    setLocalSheetFilters(sheetFilters)
+  }, [ allSheetFilters, sheetFilters ])
 
   // Refs
   const autosizeInput = useRef(null)
@@ -236,7 +236,7 @@ const SheetActionFilter = ({
               return isFirstLetterSame && isLastLetterSame
             })
     const isColumnNameValidated = columnIndicesIndex > -1
-    const columnId = isColumnNameValidated ? sheetViewVisibleColumns[columnIndices[columnIndicesIndex]] : null
+    const columnId = isColumnNameValidated ? sheetVisibleColumns[columnIndices[columnIndicesIndex]] : null
     return {
       isColumnNameValidated: isColumnNameValidated,
       columnId: columnId

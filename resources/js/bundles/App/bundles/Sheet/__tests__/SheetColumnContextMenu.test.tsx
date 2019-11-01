@@ -21,15 +21,13 @@ const {
   allFiles,
   allFileIds,
   allSheets,
-  allSheetsFromDatabase,
-  allSheetViews
+  allSheetsFromDatabase
 } = appStateFactory({} as IAppStateFactoryInput)
 
 const fileId = allFileIds[0]
 const sheetId = allFiles[fileId].typeId
 const sheet = allSheets[sheetId]
-const activeSheetView = allSheetViews[sheet.activeSheetViewId]
-const sheetColumnId = activeSheetView.visibleColumns[0]
+const sheetColumnId = sheet.visibleColumns[0]
 
 console.warn = jest.fn()
 

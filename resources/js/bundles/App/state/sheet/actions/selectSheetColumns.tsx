@@ -20,18 +20,12 @@ export const selectSheetColumns = (sheetId: ISheet['id'], startColumnId: ISheetC
       allSheetRows,
       allSheets: { 
         [sheetId]: { 
-          activeSheetViewId,
           selections,
+          visibleColumns, 
+          visibleRows 
         }
-      },
-      allSheetViews
+      }
     } = getState().sheet
-
-    const activeSheetView = allSheetViews[activeSheetViewId]
-    const {
-      visibleColumns,
-      visibleRows
-    } = activeSheetView
 
     if(startColumnId !== 'COLUMN_BREAK' && endColumnId !== 'COLUMN_BREAK') {
 

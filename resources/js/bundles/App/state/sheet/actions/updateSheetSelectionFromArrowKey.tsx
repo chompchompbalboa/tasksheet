@@ -33,18 +33,12 @@ export const updateSheetSelectionFromArrowKey = (
       allSheetRows,
       allSheets: { 
         [sheetId]: {
-          activeSheetViewId,
+          visibleColumns,
+          visibleRows,
           selections
         }
-      },
-      allSheetViews
+      }
     } = getState().sheet
-
-    const activeSheetView = allSheetViews[activeSheetViewId]
-    const {
-      visibleColumns,
-      visibleRows
-    } = activeSheetView
 
     // Cell
     const cell = allSheetCells[cellId]

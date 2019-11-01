@@ -15,9 +15,9 @@ class SheetRow extends Model
   const CREATED_AT = 'createdAt';
   const UPDATED_AT = 'updatedAt';
 
-  protected $visible = [ 'id', 'cells', 'createdAt' ];
-  protected $fillable = [ 'id', 'sheetId', 'createdAt' ];
-  protected $appends = [ 'cells' ];
+  protected $visible = ['id', 'cells'];
+  protected $fillable = ['id', 'sheetId'];
+  protected $appends = ['cells'];
   
   public function getCellsAttribute() {
     $cells =  SheetCell::where('rowId', '=', $this->id)

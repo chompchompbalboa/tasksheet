@@ -11,6 +11,7 @@ import { ISheetSort } from '@app/state/sheet/types'
 import { 
   clearSheetSelection,
   setAllSheetSorts,
+  updateSheet,
   updateSheetView
 } from '@app/state/sheet/actions'
 
@@ -34,32 +35,23 @@ export const createSheetSort = (sheetId: string, newSort: ISheetSort): IThunkAct
       allSheetViews
     } = getState().sheet
     const sheet = allSheets[sheetId]
-    const activeSheetView = allSheetViews[sheet.activeSheetViewId]
     const nextAllSheetSorts = { ...allSheetSorts, [newSort.id]: newSort }
-    const nextSheetViewSorts = [ ...activeSheetView.sorts, newSort.id ]
-    const nextSheetViewVisibleRows = resolveSheetVisibleRows(
-      sheet, 
-      allSheetRows, 
-      allSheetCells, 
-      allSheetFilters, 
-      allSheetGroups, 
-      nextAllSheetSorts, 
-      { 
-        ...allSheetViews, 
-        [activeSheetView.id]: {
-          ...allSheetViews[activeSheetView.id],
-          sorts: nextSheetViewSorts,
-        }
-      }
-    )
-    const nextSheetViewRowLeaders = resolveSheetRowLeaders(nextSheetViewVisibleRows)
+    const nextSheetSorts = [ ...sheet.sorts, newSort.id ]
+    const nextSheetVisibleRows = resolveSheetVisibleRows({ ...sheet, sorts: nextSheetSorts }, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, nextAllSheetSorts)
+    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
+    if(sheet.activeSheetViewId) {
+      const activeSheetView = allSheetViews[sheet.activeSheetViewId]
+      dispatch(updateSheetView(activeSheetView.id, {
+        sorts: [ ...activeSheetView.sorts, newSort.id ]
+      }))
+    }
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetSorts(nextAllSheetSorts))
-      dispatch(updateSheetView(sheetId, {
-        visibleRowLeaders: nextSheetViewRowLeaders,
-        sorts: nextSheetViewSorts,
-        visibleRows: nextSheetViewVisibleRows
+      dispatch(updateSheet(sheetId, {
+        rowLeaders: nextSheetRowLeaders,
+        sorts: nextSheetSorts,
+        visibleRows: nextSheetVisibleRows
       }, true))
     })
     mutation.createSheetSort(newSort)

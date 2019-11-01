@@ -12,7 +12,7 @@ import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import { ISheet } from '@app/state/sheet/types'
 
 import { createHistoryStep } from '@app/state/history/actions'
-import { updateSheetView } from '@app/state/sheet/actions'
+import { updateSheet } from '@app/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
 // Create Sheet Column Break
@@ -22,12 +22,10 @@ export const createSheetColumnBreak = (sheetId: ISheet['id'], newColumnVisibleCo
 
     const {
       allSheets,
-      allSheetViews
     } = getState().sheet
-
+    
     const sheet = allSheets[sheetId]
-    const activeSheetView = allSheetViews[sheet.activeSheetViewId]
-    const sheetVisibleColumns = activeSheetView.visibleColumns.length === 0 ? clone(sheet.columns) : clone(activeSheetView.visibleColumns)
+    const sheetVisibleColumns = sheet.visibleColumns.length === 0 ? clone(sheet.columns) : clone(sheet.visibleColumns)
 
     const nextSheetVisibleColumns = [
       ...sheetVisibleColumns.slice(0, newColumnVisibleColumnsIndex),
@@ -36,19 +34,19 @@ export const createSheetColumnBreak = (sheetId: ISheet['id'], newColumnVisibleCo
     ]
 
     const actions = () => {
-      const sheetViewUpdates = { visibleColumns: nextSheetVisibleColumns }
+      const sheetUpdates = { visibleColumns: nextSheetVisibleColumns }
       batch(() => {
-        dispatch(updateSheetView(activeSheetView.id, sheetViewUpdates))
+        dispatch(updateSheet(sheetId, sheetUpdates))
       })
-      mutation.updateSheetView(activeSheetView.id, sheetViewUpdates)
+      mutation.updateSheet(sheetId, sheetUpdates)
     }
 
     const undoActions = () => {
-      const sheetViewUpdates = { visibleColumns: sheetVisibleColumns }
+      const sheetUpdates = { visibleColumns: sheetVisibleColumns }
       batch(() => {
-        dispatch(updateSheetView(activeSheetView.id, sheetViewUpdates))
+        dispatch(updateSheet(sheetId, sheetUpdates))
       })
-      mutation.updateSheetView(activeSheetView.id, sheetViewUpdates)
+      mutation.updateSheet(sheetId, sheetUpdates)
     }
 
     dispatch(createHistoryStep({actions, undoActions}))

@@ -11,8 +11,8 @@ class Sheet extends Model
   const CREATED_AT = 'createdAt';
   const UPDATED_AT = 'updatedAt';
 
-  protected $visible = ['id', 'sourceSheetId', 'activeSheetViewId', 'defaultSheetViewId', 'rows', 'columns', 'filters', 'groups', 'sorts', 'views', 'styles', 'visibleColumns'];
-  protected $fillable = ['id', 'sourceSheetId', 'activeSheetViewId', 'defaultSheetViewId'];
+  protected $visible = ['id', 'sourceSheetId', 'activeSheetViewId', 'rows', 'columns', 'filters', 'groups', 'sorts', 'views', 'styles', 'visibleColumns'];
+  protected $fillable = ['id', 'sourceSheetId', 'activeSheetViewId', 'visibleColumns'];
   protected $with = ['filters', 'groups', 'sorts', 'views'];
   protected $appends = ['columns', 'rows', 'styles'];
   protected $casts = [

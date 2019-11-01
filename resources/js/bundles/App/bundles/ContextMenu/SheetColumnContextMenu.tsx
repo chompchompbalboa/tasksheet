@@ -19,9 +19,9 @@ import {
   deleteSheetColumnBreak,
   hideSheetColumn,
   showSheetColumn,
+  updateSheet,
   updateSheetActive,
-  updateSheetColumn,
-  updateSheetView,
+  updateSheetColumn
 } from '@app/state/sheet/actions'
 import { 
   updateActiveTab 
@@ -52,8 +52,7 @@ export const SheetColumnContextMenu = ({
   const allSheetColumnTypesIds = Object.keys(allSheetColumnTypes)
   
   const sheetColumns = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].columns)
-  const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].activeSheetViewId)
-  const sheetViewVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheetViews[sheetActiveSheetViewId].visibleColumns)
+  const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].visibleColumns)
   
   // Is this is a column break?
   const sheetColumnType = columnId === 'COLUMN_BREAK' ? 'COLUMN_BREAK' : allSheetColumnTypes[allSheetColumns[columnId].typeId]
@@ -69,10 +68,10 @@ export const SheetColumnContextMenu = ({
   
   // Handle moving a column
   const handleColumnMoveClick = (moveFromColumnId: ISheetColumn['id'], moveToIndex: number) => {
-    const moveFromIndex = sheetViewVisibleColumns.findIndex(sheetVisibleColumnId => sheetVisibleColumnId === moveFromColumnId)
-    const nextVisibleColumns = arrayMove(sheetViewVisibleColumns, moveFromIndex, (moveToIndex > moveFromIndex ? moveToIndex - 1 : moveToIndex))
+    const moveFromIndex = sheetVisibleColumns.findIndex(sheetVisibleColumnId => sheetVisibleColumnId === moveFromColumnId)
+    const nextVisibleColumns = arrayMove(sheetVisibleColumns, moveFromIndex, (moveToIndex > moveFromIndex ? moveToIndex - 1 : moveToIndex))
     closeContextMenuOnClick(() => {
-      dispatch(updateSheetView(sheetId, { visibleColumns: nextVisibleColumns }))
+      dispatch(updateSheet(sheetId, { visibleColumns: nextVisibleColumns }))
     })
   }
 
@@ -94,7 +93,7 @@ export const SheetColumnContextMenu = ({
             onClick={() => closeContextMenuOnClick(() => dispatch(createSheetColumnBreak(sheetId, columnIndex)))}/>
           <ContextMenuItem 
             text="Move Before">
-            {sheetViewVisibleColumns.map((sheetColumnId, index) => (
+            {sheetVisibleColumns.map((sheetColumnId, index) => (
               <ContextMenuItem 
                 key={sheetColumnId === 'COLUMN_BREAK' ? sheetColumnId + index : sheetColumnId}
                 text={sheetColumnId === 'COLUMN_BREAK' ? 'Column Break' : allSheetColumns[sheetColumnId].name} 
@@ -107,7 +106,7 @@ export const SheetColumnContextMenu = ({
             onClick={() => closeContextMenuOnClick(() => dispatch(hideSheetColumn(sheetId, columnIndex)))}/>
           <ContextMenuItem 
             text="Show">
-            {sheetColumns.filter(columnId => !sheetViewVisibleColumns.includes(columnId)).map(columnId => {
+            {sheetColumns.filter(columnId => !sheetVisibleColumns.includes(columnId)).map(columnId => {
               const column = allSheetColumns[columnId]
               return (
                 <ContextMenuItem

@@ -22,8 +22,7 @@ export const pasteSheetRange = (sheetId: ISheet['id']): IThunkAction => {
       allSheetRows,
       allSheets: {
         [sheetId]: sheet
-      },
-      allSheetViews
+      }
     } = getState().sheet
     const {
       cutOrCopy,
@@ -40,13 +39,10 @@ export const pasteSheetRange = (sheetId: ISheet['id']): IThunkAction => {
       selections: {
         rangeStartColumnId: sheetRangeStartColumnId,
         rangeStartRowId: sheetRangeStartRowId,
-      }
-    } = sheet
-    const activeSheetView = allSheetViews[sheet.activeSheetViewId]
-    const {
+      },
       visibleColumns: allSheetVisibleColumns,
       visibleRows: allSheetVisibleRows
-    } = activeSheetView
+    } = sheet
     const nextAllSheetCells = clone(allSheetCells)
     const sheetCellUpdates: ISheetCellUpdates[] = []
 

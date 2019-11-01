@@ -7,7 +7,7 @@ import { IAppState } from '@app/state'
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import { 
   clearSheetSelection,
-  updateSheetView
+  updateSheet
 } from '@app/state/sheet/actions'
 
 import { 
@@ -27,23 +27,14 @@ export const refreshSheetVisibleRows = (sheetId: string): IThunkAction => {
       allSheetGroups,
       allSheetRows,
       allSheetSorts,
-      allSheetViews
     } = getState().sheet
     const sheet = allSheets[sheetId]
-    const nextSheetVisibleRows = resolveSheetVisibleRows(
-      sheet, 
-      allSheetRows, 
-      allSheetCells, 
-      allSheetFilters, 
-      allSheetGroups, 
-      allSheetSorts,
-      allSheetViews
-    )
+    const nextSheetVisibleRows = resolveSheetVisibleRows(sheet, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, allSheetSorts)
     const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
-      dispatch(updateSheetView(sheet.activeSheetViewId, {
-        visibleRowLeaders: nextSheetRowLeaders,
+      dispatch(updateSheet(sheetId, {
+        rowLeaders: nextSheetRowLeaders,
         visibleRows: nextSheetVisibleRows
       }, true))
     })

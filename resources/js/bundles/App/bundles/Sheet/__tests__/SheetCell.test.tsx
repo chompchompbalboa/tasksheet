@@ -23,8 +23,7 @@ const {
     files
   },
   sheet: {
-    allSheets,
-    allSheetViews
+    allSheets
   },
   user: {
     color: {
@@ -38,7 +37,6 @@ const fileId = folders[folderId].files[0]
 const file = files[fileId]
 const sheetId = file.typeId
 const sheet = allSheets[sheetId]
-const sheetView = allSheetViews[sheet.activeSheetViewId]
 
 const cellIsSelectedBoxShadow = 'inset 0px 0px 0px 2px ' + userColorSecondary
 
@@ -182,9 +180,9 @@ describe('SheetCell', () => {
 
   it("doesn't change the selected cell in response to the arrow keys if the update would move the selection to a cell that doesn't exist", async () => {    
     const { props: RFirstCFirstCellProps } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1 })
-    const { props: RFirstCLastCellProps } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: sheetView.visibleColumns.length })
-    const { props: RLastCFirstCellProps } = getCellAndCellProps({ sheetId: sheetId, row: sheetView.visibleRows.length, column: 1 })
-    const { props: RLastCLastCellProps } = getCellAndCellProps({ sheetId: sheetId, row: sheetView.visibleRows.length, column: sheetView.visibleColumns.length })
+    const { props: RFirstCLastCellProps } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: sheet.visibleColumns.length })
+    const { props: RLastCFirstCellProps } = getCellAndCellProps({ sheetId: sheetId, row: sheet.visibleRows.length, column: 1 })
+    const { props: RLastCLastCellProps } = getCellAndCellProps({ sheetId: sheetId, row: sheet.visibleRows.length, column: sheet.visibleColumns.length })
 
     const { getAllByTestId } = renderWithRedux(
       <>

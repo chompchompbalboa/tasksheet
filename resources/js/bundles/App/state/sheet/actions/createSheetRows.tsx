@@ -1,7 +1,6 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import moment from 'moment'
 import { batch } from 'react-redux'
 import { v4 as createUuid } from 'uuid'
 
@@ -19,8 +18,7 @@ import {
   clearSheetSelection,
   setAllSheetCells,
   setAllSheetRows,
-  updateSheet,
-  updateSheetView
+  updateSheet
 } from '@app/state/sheet/actions'
 import { createHistoryStep } from '@app/state/history/actions'
 
@@ -40,19 +38,16 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
       allSheets,
       allSheetCells,
       allSheetRows,
-      allSheetViews
     } = getState().sheet
 
     // Get sheet
     const sheet = allSheets[sheetId]
-    const activeSheetView = allSheetViews[sheet.activeSheetViewId]
     const nextAllSheetCells = { ...allSheetCells }
     const nextAllSheetRows = { ...allSheetRows }
     const nextSheetRows = [ ...sheet.rows ] 
-    const nextSheetViewVisibleRows = [ ...activeSheetView.visibleRows ]
+    const nextSheetVisibleRows = [ ...sheet.visibleRows ]
     const newRowsToDatabase: ISheetRowToDatabase[] = []
     const newRowIds: ISheetRow['id'][] = []
-    const startTime = moment()
     
     // Get any open sheets this is a source sheet for
     const childSheets: ISheet['id'][] = []
@@ -62,7 +57,7 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
       }
     })
 
-    const insertBeforeRowIdVisibleRowsIndex = nextSheetViewVisibleRows.indexOf(insertBeforeRowId)
+    const insertBeforeRowIdVisibleRowsIndex = nextSheetVisibleRows.indexOf(insertBeforeRowId)
 
     const newRowSheetId = sheet.sourceSheetId !== null ? sheet.sourceSheetId : sheetId
           
@@ -78,27 +73,24 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
       nextAllSheetRows[newRow.id] = newRow
       nextSheetRows.push(newRow.id)
       const rowIndexModifier = aboveOrBelow === 'ABOVE' ? i : i + 1
-      nextSheetViewVisibleRows.splice(insertBeforeRowIdVisibleRowsIndex + rowIndexModifier, 0, newRow.id)
+      nextSheetVisibleRows.splice(insertBeforeRowIdVisibleRowsIndex + rowIndexModifier, 0, newRow.id)
       const newRowToDatabase = {
         ...newRow,
-        createdAt: startTime.add(i, 'seconds').format('YYYY-MM-DD HH:mm:ss'),
         cells: newRowCellsToDatabase
       }
       newRowsToDatabase.push(newRowToDatabase)
       newRowIds.push(newRow.id)
     }
     
-    const nextSheetViewRowLeaders = resolveSheetRowLeaders(nextSheetViewVisibleRows)
+    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
     const actions = () => {
       batch(() => {
         dispatch(setAllSheetRows(nextAllSheetRows))
         dispatch(setAllSheetCells(nextAllSheetCells))
         dispatch(updateSheet(sheetId, {
+          rowLeaders: nextSheetRowLeaders,
           rows: nextSheetRows,
-        }))
-        dispatch(updateSheetView(activeSheetView.id, {
-          visibleRows: nextSheetViewVisibleRows,
-          visibleRowLeaders: nextSheetViewRowLeaders,
+          visibleRows: nextSheetVisibleRows,
         }))
         sheet.sourceSheetId && dispatch(updateSheet(sheet.sourceSheetId, {
           rows: nextSheetRows
@@ -116,11 +108,9 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
         dispatch(setAllSheetRows(allSheetRows))
         dispatch(setAllSheetCells(allSheetCells))
         dispatch(updateSheet(sheetId, {
+          rowLeaders: sheet.rowLeaders,
           rows: sheet.rows,
-        }))
-        dispatch(updateSheetView(activeSheetView.id, {
-          visibleRows: activeSheetView.visibleRows,
-          visibleRowLeaders: activeSheetView.visibleRowLeaders,
+          visibleRows: sheet.visibleRows
         }))
         sheet.sourceSheetId && dispatch(updateSheet(sheet.sourceSheetId, {
           rows: sheet.rows

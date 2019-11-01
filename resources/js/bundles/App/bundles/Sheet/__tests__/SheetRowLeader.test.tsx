@@ -20,8 +20,7 @@ const {
   allFiles,
   allFileIds,
   allSheets,
-  allSheetsFromDatabase,
-  allSheetViews
+  allSheetsFromDatabase
 } = appStateFactory({} as IAppStateFactoryInput)
 
 const {
@@ -35,7 +34,6 @@ const {
 const fileId = allFileIds[0]
 const sheetId = allFiles[fileId].typeId
 const sheet = allSheets[sheetId]
-const activeSheetView = allSheetViews[sheet.activeSheetViewId]
 
 console.warn = jest.fn()
 console.error = jest.fn()
@@ -105,7 +103,7 @@ describe('SheetRowLeader', () => {
   
   it("selects the sheet row on click", async () => {
     const { cell: R1C1Cell } = getCellAndCellProps({ row: 1, column: 1 })
-    const { cell: R1CLastCell } = getCellAndCellProps({ row: 1, column: activeSheetView.visibleColumns.length })
+    const { cell: R1CLastCell } = getCellAndCellProps({ row: 1, column: sheet.visibleColumns.length })
     const { getAllByTestId } = renderWithRedux(<Sheet {...sheetProps}/>)
     const SheetCellContainers = await waitForElement(() => getAllByTestId('SheetCellContainer'))
 
@@ -129,11 +127,11 @@ describe('SheetRowLeader', () => {
   
   it("selects the next sheet row if an entire row is selected and the user keyDowns an up or down arrow", async () => {
     const { cell: R1C1Cell } = getCellAndCellProps({ row: 1, column: 1 })
-    const { cell: R1CLastCell } = getCellAndCellProps({ row: 1, column: activeSheetView.visibleColumns.length })
+    const { cell: R1CLastCell } = getCellAndCellProps({ row: 1, column: sheet.visibleColumns.length })
     const { cell: R2C1Cell } = getCellAndCellProps({ row: 2, column: 1 })
-    const { cell: R2CLastCell } = getCellAndCellProps({ row: 2, column: activeSheetView.visibleColumns.length })
+    const { cell: R2CLastCell } = getCellAndCellProps({ row: 2, column: sheet.visibleColumns.length })
     const { cell: R3C1Cell } = getCellAndCellProps({ row: 3, column: 1 })
-    const { cell: R3CLastCell } = getCellAndCellProps({ row: 3, column: activeSheetView.visibleColumns.length })
+    const { cell: R3CLastCell } = getCellAndCellProps({ row: 3, column: sheet.visibleColumns.length })
     const { getByTestId, getAllByTestId } = renderWithRedux(<Sheet {...sheetProps}/>)
     const SheetCellContainers = await waitForElement(() => getAllByTestId('SheetCellContainer'))
 

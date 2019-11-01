@@ -33,8 +33,7 @@ const SheetCreateRows = ({
   
   const [ insertAtTopOrBottomOfSheet, setInsertAtTopOrBottomOfSheet ] = useState(localStorage.getItem(localStorageKey) || 'TOP')
 
-  const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
-  const sheetViewVisibleRows = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].visibleRows)
+  const sheetVisibleRows = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleRows)
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   
   const [ isEditingInputValue, setIsEditingInputValue ] = useState(false)
@@ -50,8 +49,8 @@ const SheetCreateRows = ({
     localStorage.setItem(localStorageKey, topOrBottom)
     setInsertAtTopOrBottomOfSheet(topOrBottom)
     const createSheetRowIndex = topOrBottom === 'TOP' 
-      ? sheetViewVisibleRows[0] 
-      : sheetViewVisibleRows[sheetViewVisibleRows.length - 1] !== 'ROW_BREAK' ? sheetViewVisibleRows[sheetViewVisibleRows.length - 1] : sheetViewVisibleRows[sheetViewVisibleRows.length - 2]
+      ? sheetVisibleRows[0] 
+      : sheetVisibleRows[sheetVisibleRows.length - 1] !== 'ROW_BREAK' ? sheetVisibleRows[sheetVisibleRows.length - 1] : sheetVisibleRows[sheetVisibleRows.length - 2]
     dispatch(createSheetRows(sheetId, inputValue, createSheetRowIndex, topOrBottom === 'TOP' ? 'ABOVE' : 'BELOW'))
   }
   

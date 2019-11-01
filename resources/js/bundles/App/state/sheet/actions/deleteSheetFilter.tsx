@@ -11,6 +11,7 @@ import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import { 
   clearSheetSelection,
   setAllSheetFilters,
+  updateSheet,
   updateSheetView
 } from '@app/state/sheet/actions'
 
@@ -36,34 +37,26 @@ export const deleteSheetFilter = (sheetId: string, filterId: string): IThunkActi
     } = getState().sheet
 
     const sheet = allSheets[sheetId]
-    const activeSheetView = allSheetViews[sheet.activeSheetViewId]
 
     const { [filterId]: deletedFilter, ...nextAllSheetFilters } = allSheetFilters
 
-    const nextSheetViewFilters = activeSheetView.filters.filter(sheetFilterId => sheetFilterId !== filterId)
-    const nextSheetVisibleRows = resolveSheetVisibleRows(
-      sheet, 
-      allSheetRows, 
-      allSheetCells, 
-      nextAllSheetFilters, 
-      allSheetGroups, 
-      allSheetSorts,
-      {
-        ...allSheetViews,
-        [activeSheetView.id]: {
-          ...allSheetViews[activeSheetView.id],
-          filters: nextSheetViewFilters
-        }
-      }
-    )
+    const nextSheetFilters = sheet.filters.filter(sheetFilterId => sheetFilterId !== filterId)
+    const nextSheetVisibleRows = resolveSheetVisibleRows({ ...sheet, filters: nextSheetFilters}, allSheetRows, allSheetCells, nextAllSheetFilters, allSheetGroups, allSheetSorts)
     const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
+
+    if(sheet.activeSheetViewId) {
+      const activeSheetView = allSheetViews[sheet.activeSheetViewId]
+      dispatch(updateSheetView(activeSheetView.id, {
+        filters: activeSheetView.filters.filter(activeSheetViewFilterId => activeSheetViewFilterId !== filterId)
+      }))
+    }
 
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetFilters(nextAllSheetFilters))
-      dispatch(updateSheetView(activeSheetView.id, {
-        filters: nextSheetViewFilters,
-        visibleRowLeaders: nextSheetRowLeaders,
+      dispatch(updateSheet(sheetId, {
+        filters: nextSheetFilters,
+        rowLeaders: nextSheetRowLeaders,
         visibleRows: nextSheetVisibleRows
       }))
     })
