@@ -31,18 +31,18 @@ const SheetActionGroup = ({
   const allSheetGroups = useSelector((state: IAppState) => state.sheet.allSheetGroups)
 
   const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
-  const sheetGroups = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].groups)
-  const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleColumns)
+  const sheetViewGroups = useSelector((state: IAppState) => state.sheet.allSheetViews[sheetActiveSheetViewId].groups)
+  const sheetViewVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheetViews[sheetActiveSheetViewId].visibleColumns)
 
   // Use the sheet column names to provide options for the dropdown
-  const sheetColumnNames = sheetVisibleColumns && sheetVisibleColumns.map((columnId: string) => {
+  const sheetColumnNames = sheetViewVisibleColumns && sheetViewVisibleColumns.map((columnId: string) => {
     if(allSheetColumns && allSheetColumns[columnId]) {
       return { label: allSheetColumns[columnId].name, value: columnId }
     }
   }).filter(Boolean)
 
   // Display an existing sheet group
-  const sheetGroupSelectedOptions = sheetGroups && sheetGroups.map((groupId: ISheetGroup['id']) => { 
+  const sheetGroupSelectedOptions = sheetViewGroups && sheetViewGroups.map((groupId: ISheetGroup['id']) => { 
     const group = allSheetGroups[groupId]
     return { label: allSheetColumns[group.columnId].name, value: group.id, isLocked: group.isLocked }
   })

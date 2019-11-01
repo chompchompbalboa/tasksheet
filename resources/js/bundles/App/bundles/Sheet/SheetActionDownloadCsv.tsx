@@ -37,13 +37,14 @@ const SheetActionDownloadCsv = ({
     allSheetColumns, 
     allSheetColumnTypes, 
     allSheetRows, 
+    allSheetViews
   } = useSelector((state: IAppState) => state.sheet)
 
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   const activeFilename = useSelector((state: IAppState) => state.folder.files && state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].name)
   const sheet = allSheets && allSheets[sheetId]
-  const visibleColumns = sheet && sheet.visibleColumns
-  const visibleRows = sheet && sheet.visibleRows
+  const visibleColumns = sheet && allSheetViews[sheet.activeSheetViewId].visibleColumns
+  const visibleRows = sheet && allSheetViews[sheet.activeSheetViewId].visibleRows
 
   // Dropdown
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)

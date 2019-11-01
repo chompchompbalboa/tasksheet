@@ -5,9 +5,14 @@ import moment from 'moment'
 import { v4 as createUuid } from 'uuid'
 
 import { 
+  ISheet,
   ISheetCell, 
   ISheetColumn, 
   ISheetRow, 
+  ISheetRowLeader,
+  ISheetFilter,
+  ISheetGroup,
+  ISheetSort,
   ISheetSelections,
   ISheetStyles,
   ISheetView
@@ -99,12 +104,16 @@ export const defaultSheetStyles: ISheetStyles = {
 //-----------------------------------------------------------------------------
 // Default Sheet View
 //-----------------------------------------------------------------------------
-export const defaultSheetView = (sheetId: ISheet['id'], ) = {
-  id: createUuid(),
-  sheetId: sheetId,
-  name: null,
-  visibleColumns: ISheetColumn['id'][],
-  filters: [] as ISheetFilter['id'][],
-  groups: [] as ISheetGroup['id'][],
-  sorts: [] as ISheetSort['id'][]
+export const defaultSheetView = (sheetId: ISheet['id']): ISheetView => {
+  return {
+    id: createUuid(),
+    sheetId: sheetId,
+    name: null,
+    visibleColumns: [] as ISheetColumn['id'][],
+    visibleRows: [] as ISheetRow['id'][],
+    visibleRowLeaders: [] as ISheetRowLeader[],
+    filters: [] as ISheetFilter['id'][],
+    groups: [] as ISheetGroup['id'][],
+    sorts: [] as ISheetSort['id'][]
+  }
 }

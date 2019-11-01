@@ -19,13 +19,15 @@ const {
   allFiles,
   allFileIds,
   allSheets,
-  allSheetsFromDatabase
+  allSheetsFromDatabase,
+  allSheetViews
 } = appStateFactory({} as IAppStateFactoryInput)
 
 const fileId = allFileIds[0]
 const sheetId = allFiles[fileId].typeId
 const sheet = allSheets[sheetId]
-const sheetRowId = sheet.visibleRows[0]
+const activeSheetView = allSheetViews[sheet.activeSheetViewId]
+const sheetRowId = activeSheetView.visibleRows[0]
 
 console.warn = jest.fn()
 
@@ -100,13 +102,13 @@ describe('SheetRowContextMenu', () => {
 
     const SheetCellContainers = await waitForElement(() => getAllByTestId('SheetCellContainer'))
     const NewR1C1Cell = SheetCellContainers[0]
-    expect(store.getState().sheet.allSheets[sheetId].visibleRows.length).toEqual(sheet.visibleRows.length + 1)
+    expect(store.getState().sheet.allSheetViews[activeSheetView.id].visibleRows.length).toEqual(activeSheetView.visibleRows.length + 1)
     expect(within(NewR1C1Cell).queryByText(R1C1Cell.value)).not.toBeTruthy()
     expect(axiosMock.post).toHaveBeenCalled()
   })
 
   it("creates sheet rows below the current row", async () => {
-    const { cell: RLastCLastCell } = getCellAndCellProps({ row: sheet.visibleRows.length - 1, column: sheet.visibleColumns.length - 1 })
+    const { cell: RLastCLastCell } = getCellAndCellProps({ row: activeSheetView.visibleRows.length - 1, column: activeSheetView.visibleColumns.length - 1 })
     const { getAllByTestId, getByTestId, store } = renderWithRedux(<Sheet {...sheetProps}/>)
     const SheetRowLeaders = await waitForElement(() => getAllByTestId('SheetRowLeader'))
     const RLastSheetRowLeader = SheetRowLeaders[SheetRowLeaders.length - 1]
@@ -119,7 +121,7 @@ describe('SheetRowContextMenu', () => {
 
     const SheetCellContainers = await waitForElement(() => getAllByTestId('SheetCellContainer'))
     const NewRLastCLastCell = SheetCellContainers[SheetCellContainers.length - 1]
-    expect(store.getState().sheet.allSheets[sheetId].visibleRows.length).toEqual(sheet.visibleRows.length + 1)
+    expect(store.getState().sheet.allSheetViews[activeSheetView.id].visibleRows.length).toEqual(activeSheetView.visibleRows.length + 1)
     expect(within(NewRLastCLastCell).queryByText(RLastCLastCell.value)).not.toBeTruthy()
     expect(axiosMock.post).toHaveBeenCalled()
   })

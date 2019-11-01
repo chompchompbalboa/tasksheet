@@ -23,8 +23,10 @@ const SheetActionCellStyleButton = ({
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   const allSheetRows = useSelector((state: IAppState) => state.sheet.allSheetRows)
   const selections = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections)
-  const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleColumns)
-  const sheetVisibleRows = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleRows)
+
+  const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
+  const sheetViewVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheetViews[sheetActiveSheetViewId].visibleColumns)
+  const sheetViewVisibleRows = useSelector((state: IAppState) => state.sheet.allSheetViews[sheetActiveSheetViewId].visibleRows)
   
   const addOrDeleteFromSet = sheetStylesSet && sheetStylesSet.has(selections.rangeStartCellId) ? 'DELETE' : 'ADD'
 
@@ -40,18 +42,18 @@ const SheetActionCellStyleButton = ({
 
     // Range
     if(rangeEndCellId) {
-      const rangeStartColumnIndex = sheetVisibleColumns.findIndex(visibleColumnId => visibleColumnId === rangeStartColumnId)
-      const rangeStartRowIndex = sheetVisibleRows.findIndex(visibleRowId => visibleRowId === rangeStartRowId)
-      const rangeEndColumnIndex = sheetVisibleColumns.findIndex(visibleColumnId => visibleColumnId === rangeEndColumnId)
-      const rangeEndRowIndex = sheetVisibleRows.findIndex(visibleRowId => visibleRowId === rangeEndRowId)
+      const rangeStartColumnIndex = sheetViewVisibleColumns.findIndex(visibleColumnId => visibleColumnId === rangeStartColumnId)
+      const rangeStartRowIndex = sheetViewVisibleRows.findIndex(visibleRowId => visibleRowId === rangeStartRowId)
+      const rangeEndColumnIndex = sheetViewVisibleColumns.findIndex(visibleColumnId => visibleColumnId === rangeEndColumnId)
+      const rangeEndRowIndex = sheetViewVisibleRows.findIndex(visibleRowId => visibleRowId === rangeEndRowId)
       const nextSheetStylesSet = new Set([ ...sheetStylesSet ])
 
       for(let rowIndex = rangeStartRowIndex; rowIndex <= rangeEndRowIndex; rowIndex++) {
-        const rowId = sheetVisibleRows[rowIndex]
+        const rowId = sheetViewVisibleRows[rowIndex]
         if(rowId !== 'ROW_BREAK') {
           const row = allSheetRows[rowId]
           for(let columnIndex = rangeStartColumnIndex; columnIndex <= rangeEndColumnIndex; columnIndex++) {
-            const columnId = sheetVisibleColumns[columnIndex]
+            const columnId = sheetViewVisibleColumns[columnIndex]
             if(columnId !== 'COLUMN_BREAK') {
               const cellId = row.cells[columnId]
               addOrDeleteFromSet === 'ADD' ? nextSheetStylesSet.add(cellId) : nextSheetStylesSet.delete(cellId)

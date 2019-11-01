@@ -16,43 +16,16 @@ export interface IAllSheetGroups { [groupId: string]: ISheetGroup }
 export interface IAllSheetSorts { [sortId: string]: ISheetSort }
 export interface IAllSheetViews { [viewId: string]: ISheetView }
 
-export interface ISheetActive {
-  columnRenamingId: ISheetColumn['id']
-}
-export interface ISheetActiveUpdates {
-  columnRenamingId?: ISheetColumn['id']
-}
-
-export interface ISheetClipboard {
-  sheetId: ISheet['id']
-  cutOrCopy: 'CUT' | 'COPY'
-  selections: ISheetClipboardSelections
-}
-export interface ISheetClipboardSelections {
-  rangeCellIds: Set<ISheetCell['id']>
-  rangeStartColumnId: ISheetColumn['id']
-  rangeStartRowId: ISheetRow['id']
-  rangeStartCellId: ISheetCell['id']
-  rangeEndColumnId: ISheetColumn['id']
-  rangeEndRowId: ISheetRow['id']
-  rangeEndCellId: ISheetCell['id']
-  visibleColumns: ISheetColumn['id'][]
-  visibleRows: ISheetRow['id'][]
-}
-
+//-----------------------------------------------------------------------------
+// Sheet
+//-----------------------------------------------------------------------------
 export interface ISheet {
   id: string
   sourceSheetId: ISheet['id']
   defaultSheetViewId: ISheetView['id']
   activeSheetViewId: ISheetView['id']
 	rows: ISheetRow['id'][]
-  visibleRows: ISheetRow['id'][]
   columns: ISheetColumn['id'][]
-  visibleColumns: ISheetColumn['id'][]
-  filters: ISheetFilter['id'][]
-  groups: ISheetGroup['id'][]
-  rowLeaders: ISheetRowLeader[]
-  sorts: ISheetSort['id'][]
   styles: ISheetStyles
   selections: ISheetSelections
   views: ISheetView['id'][]
@@ -60,63 +33,10 @@ export interface ISheet {
 export interface ISheetUpdates {
   activeSheetViewId?: ISheetView['id']
   rows?: ISheetRow['id'][]
-  visibleRows?: ISheetRow['id'][]
   columns?: ISheetColumn['id'][]
-  visibleColumns?: ISheetColumn['id'][]
-  filters?: ISheetFilter['id'][]
-  groups?: ISheetGroup['id'][]
-  rowLeaders?: ISheetRowLeader[]
-  sorts?: ISheetSort['id'][]
   styles?: ISheetStyles
   selections?: ISheetSelections
   views?: ISheetView['id'][]
-}
-export interface ISheetSelections {
-  isOneEntireColumnSelected: boolean
-  isOneEntireRowSelected: boolean
-  isSelectedCellEditingPrevented: boolean
-  isSelectedCellNavigationPrevented: boolean
-  rangeCellIds: Set<ISheetCell['id']>
-  rangeStartColumnId: ISheetColumn['id']
-  rangeStartRowId: ISheetRow['id']
-  rangeStartCellId: ISheetCell['id']
-  rangeEndColumnId: ISheetColumn['id']
-  rangeEndRowId: ISheetRow['id']
-  rangeEndCellId: ISheetCell['id']
-}
-export interface ISheetStyles {
-  id: string
-  backgroundColor: Set<string>
-  backgroundColorReference: { [cellId: string]: string }
-  color: Set<string>
-  colorReference: { [cellId: string]: string }
-  bold: Set<string>
-  italic: Set<string>
-}
-export interface ISheetStylesFromDatabase {
-  id: string
-  backgroundColor: string[]
-  backgroundColorReference: { [cellId: string]: string }
-  color: string[]
-  colorReference: { [cellId: string]: string }
-  bold: string[]
-  italic: string[]
-}
-export interface ISheetStylesUpdates {
-  backgroundColor?: Set<string>
-  backgroundColorReference?: { [cellId: string]: string }
-  color?: Set<string>
-  colorReference?: { [cellId: string]: string }
-  bold?: Set<string>
-  italic?: Set<string>
-}
-export interface ISheetStylesDatabaseUpdates {
-  backgroundColor?: string[]
-  backgroundColorReference?: { [cellId: string]: string }
-  color?: string[]
-  colorReference?: { [cellId: string]: string }
-  bold?: string[]
-  italic?: string[]
 }
 
 export interface ISheetFromDatabase {
@@ -125,10 +45,7 @@ export interface ISheetFromDatabase {
   defaultSheetViewId: ISheetView['id']
   activeSheetViewId: ISheetView['id']
   columns: ISheetColumn[]
-  filters: ISheetFilter[]
-  groups: ISheetGroup[]
   rows: ISheetFromDatabaseRow[]
-  sorts: ISheetSort[]
   styles: ISheetStylesFromDatabase
   views: ISheetViewFromDatabase[]
 }
@@ -139,6 +56,61 @@ export interface ISheetFromDatabaseRow {
 	cells: ISheetCell[]
 }
 
+//-----------------------------------------------------------------------------
+// Sheet Link
+//-----------------------------------------------------------------------------
+export interface ISheetLink {
+  id: string
+  sourceSheetId: string
+  defaultSheetViewId: ISheetView['id']
+}
+
+//-----------------------------------------------------------------------------
+// Sheet Views
+//-----------------------------------------------------------------------------
+export interface ISheetView {
+  id: string
+  sheetId: ISheet['id']
+  name: string
+  filters: ISheetFilter['id'][]
+  groups: ISheetGroup['id'][]
+  sorts: ISheetSort['id'][]
+  visibleColumns: ISheetColumn['id'][]
+  visibleRows: ISheetRow['id'][]
+  visibleRowLeaders: ISheetRowLeader[]
+}
+
+export interface ISheetViewFromDatabase {
+  id: string
+  sheetId: ISheet['id']
+  name: string
+  visibleColumns: ISheetColumn['id'][]
+  filters: ISheetFilter[]
+  groups: ISheetGroup[]
+  sorts: ISheetSort[]
+}
+
+export interface ISheetViewToDatabase {
+  id: string
+  sheetId: ISheet['id']
+  name: string
+  visibleColumns: ISheetColumn['id'][]
+  filters: IAllSheetFilters
+  groups: IAllSheetGroups
+  sorts: IAllSheetSorts
+}
+
+export interface ISheetViewUpdates {
+  name?: string
+  visibleColumns?: ISheetColumn['id'][]
+  filters?: ISheetFilter['id'][]
+  groups?: ISheetGroup['id'][]
+  sorts?: ISheetSort['id'][]
+}
+
+//-----------------------------------------------------------------------------
+// Sheet Column
+//-----------------------------------------------------------------------------
 export interface ISheetColumn {
 	id: string
 	sheetId: string
@@ -176,6 +148,9 @@ export interface ISheetColumnTypeDropdownOption {
   value: string
 }
 
+//-----------------------------------------------------------------------------
+// Sheet Row
+//-----------------------------------------------------------------------------
 export interface ISheetRow {
 	id: string
   sheetId: string
@@ -192,6 +167,9 @@ export interface ISheetRowToDatabase {
 }
 export type ISheetRowLeader = string | number
 
+//-----------------------------------------------------------------------------
+// Sheet Cell
+//-----------------------------------------------------------------------------
 export interface ISheetCell {
 	id: string
 	sheetId: string
@@ -216,20 +194,9 @@ export type ISheetCellType =
 'PHOTOS' | 
 'FILES'
 
-export interface ISheetSort {
-  id: string
-  createdAt?: string
-  sheetId: string
-  sheetViewId: string
-  columnId: string
-  order: ISheetSortOrder
-  isLocked: boolean
-}
-export interface ISheetSortUpdates {
-  order?: ISheetSortOrder
-}
-export type ISheetSortOrder = 'ASC' | 'DESC'
-
+//-----------------------------------------------------------------------------
+// Sheet Filter
+//-----------------------------------------------------------------------------
 export interface ISheetFilter {
   id: string
   createdAt?: string
@@ -243,6 +210,9 @@ export interface ISheetFilter {
 export interface ISheetFilterUpdates {}
 export type ISheetFilterType = '=' | '!=' | '>' | '>=' | '<' | '<='
 
+//-----------------------------------------------------------------------------
+// Sheet Group
+//-----------------------------------------------------------------------------
 export interface ISheetGroup {
   id: string
   createdAt?: string
@@ -258,56 +228,114 @@ export interface ISheetGroupUpdates {
 
 export type ISheetGroupOrder = 'ASC' | 'DESC'
 
-export interface ISheetLink {
+//-----------------------------------------------------------------------------
+// Sheet Sort
+//-----------------------------------------------------------------------------
+export interface ISheetSort {
   id: string
-  sourceSheetId: string
-  visibleColumns: ISheetColumn['id'][]
-  filters: IAllSheetFilters
-  groups: IAllSheetGroups
-  sorts: IAllSheetSorts
+  createdAt?: string
+  sheetId: string
+  sheetViewId: string
+  columnId: string
+  order: ISheetSortOrder
+  isLocked: boolean
+}
+export interface ISheetSortUpdates {
+  order?: ISheetSortOrder
+}
+export type ISheetSortOrder = 'ASC' | 'DESC'
+
+//-----------------------------------------------------------------------------
+// Sheet Styles
+//-----------------------------------------------------------------------------
+export interface ISheetStyles {
+  id: string
+  backgroundColor: Set<string>
+  backgroundColorReference: { [cellId: string]: string }
+  color: Set<string>
+  colorReference: { [cellId: string]: string }
+  bold: Set<string>
+  italic: Set<string>
+}
+export interface ISheetStylesFromDatabase {
+  id: string
+  backgroundColor: string[]
+  backgroundColorReference: { [cellId: string]: string }
+  color: string[]
+  colorReference: { [cellId: string]: string }
+  bold: string[]
+  italic: string[]
+}
+export interface ISheetStylesUpdates {
+  backgroundColor?: Set<string>
+  backgroundColorReference?: { [cellId: string]: string }
+  color?: Set<string>
+  colorReference?: { [cellId: string]: string }
+  bold?: Set<string>
+  italic?: Set<string>
+}
+export interface ISheetStylesDatabaseUpdates {
+  backgroundColor?: string[]
+  backgroundColorReference?: { [cellId: string]: string }
+  color?: string[]
+  colorReference?: { [cellId: string]: string }
+  bold?: string[]
+  italic?: string[]
 }
 
+//-----------------------------------------------------------------------------
+// Sheet Active
+//-----------------------------------------------------------------------------
+export interface ISheetActive {
+  columnRenamingId: ISheetColumn['id']
+}
+export interface ISheetActiveUpdates {
+  columnRenamingId?: ISheetColumn['id']
+}
+
+//-----------------------------------------------------------------------------
+// Sheet Clipboard
+//-----------------------------------------------------------------------------
+export interface ISheetClipboard {
+  sheetId: ISheet['id']
+  cutOrCopy: 'CUT' | 'COPY'
+  selections: ISheetClipboardSelections
+}
+export interface ISheetClipboardSelections {
+  rangeCellIds: Set<ISheetCell['id']>
+  rangeStartColumnId: ISheetColumn['id']
+  rangeStartRowId: ISheetRow['id']
+  rangeStartCellId: ISheetCell['id']
+  rangeEndColumnId: ISheetColumn['id']
+  rangeEndRowId: ISheetRow['id']
+  rangeEndCellId: ISheetCell['id']
+  visibleColumns: ISheetColumn['id'][]
+  visibleRows: ISheetRow['id'][]
+}
+
+//-----------------------------------------------------------------------------
+// Sheet Selections
+//-----------------------------------------------------------------------------
+export interface ISheetSelections {
+  isOneEntireColumnSelected: boolean
+  isOneEntireRowSelected: boolean
+  isSelectedCellEditingPrevented: boolean
+  isSelectedCellNavigationPrevented: boolean
+  rangeCellIds: Set<ISheetCell['id']>
+  rangeStartColumnId: ISheetColumn['id']
+  rangeStartRowId: ISheetRow['id']
+  rangeStartCellId: ISheetCell['id']
+  rangeEndColumnId: ISheetColumn['id']
+  rangeEndRowId: ISheetRow['id']
+  rangeEndCellId: ISheetCell['id']
+}
+
+//-----------------------------------------------------------------------------
+// Sheet Download Options
+//-----------------------------------------------------------------------------
 export interface ISheetDownloadOptions {
   filename: string
   includeColumnTypeInformation: boolean
   includeAssets: boolean
   visibleRows: ISheetRow['id'][]
-}
-
-export interface ISheetView {
-  id: string
-  sheetId: ISheet['id']
-  name: string
-  visibleColumns: ISheetColumn['id'][]
-  filters: ISheetFilter['id'][]
-  groups: ISheetGroup['id'][]
-  sorts: ISheetSort['id'][]
-}
-
-export interface ISheetViewFromDatabase {
-  id: string
-  sheetId: ISheet['id']
-  name: string
-  visibleColumns: ISheetColumn['id'][]
-  filters: ISheetFilter[]
-  groups: ISheetGroup[]
-  sorts: ISheetSort[]
-}
-
-export interface ISheetViewToDatabase {
-  id: string
-  sheetId: ISheet['id']
-  name: string
-  visibleColumns: ISheetColumn['id'][]
-  filters: IAllSheetFilters
-  groups: IAllSheetGroups
-  sorts: IAllSheetSorts
-}
-
-export interface ISheetViewUpdates {
-  name?: string
-  visibleColumns?: ISheetColumn['id'][]
-  filters?: ISheetFilter['id'][]
-  groups?: ISheetGroup['id'][]
-  sorts?: ISheetSort['id'][]
 }

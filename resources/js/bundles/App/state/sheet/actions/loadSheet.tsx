@@ -61,64 +61,42 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       sheetColumns.push(column.id)
     })
 
-    // Filters
-    const normalizedFilters: IAllSheetFilters = {}
-    const sheetFilters: ISheetFilter['id'][] = []
-    sheetFromDatabase.filters.forEach((filter: ISheetFilter) => { 
-      normalizedFilters[filter.id] = filter 
-      sheetFilters.push(filter.id)
-    })
-
-    // Groups
-    const normalizedGroups: IAllSheetGroups = {}
-    const sheetGroups: ISheetGroup['id'][] = []
-    sheetFromDatabase.groups.forEach(group => { 
-      normalizedGroups[group.id] = group 
-      sheetGroups.push(group.id)
-    })
-
-    // Sorts
-    const normalizedSorts: IAllSheetSorts = {}
-    const sheetSorts: ISheetSort['id'][] = []
-    sheetFromDatabase.sorts.forEach(sort => { 
-      normalizedSorts[sort.id] = sort 
-      sheetSorts.push(sort.id)
-    })
-
-    // Sheet Views
-    const normalizedViews: IAllSheetViews = {}
+    // Views
+    const activeSheetViewId = sheetFromDatabase.activeSheetViewId || sheetFromDatabase.defaultSheetViewId
+    const normalizedSheetViews: IAllSheetViews = {}
     const sheetViews: ISheetView['id'][] = []
+    const normalizedFilters: IAllSheetFilters = {}
+    const normalizedGroups: IAllSheetGroups = {}
+    const normalizedSorts: IAllSheetSorts = {}
+
     sheetFromDatabase.views.forEach(sheetView => { 
-      const sheetViewFilterIds = sheetView.filters.map(filter => filter.id)
-      const sheetViewGroupIds = sheetView.groups.map(group => group.id)
-      const sheetViewSortIds = sheetView.sorts.map(sort => sort.id)
-      normalizedViews[sheetView.id] = {
+      const sheetViewFilters = sheetView.filters.map(filter => filter.id)
+      const sheetViewGroups = sheetView.groups.map(group => group.id)
+      const sheetViewSorts = sheetView.sorts.map(sort => sort.id)
+      normalizedSheetViews[sheetView.id] = {
         ...sheetView,
-        filters: sheetViewFilterIds,
-        groups: sheetViewGroupIds,
-        sorts: sheetViewSortIds
+        visibleRows: null,
+        visibleRowLeaders: null,
+        filters: sheetViewFilters,
+        groups: sheetViewGroups,
+        sorts: sheetViewSorts
       }
       sheetViews.push(sheetView.id)
     })
     sheetFromDatabase.views.forEach((sheetView: ISheetViewFromDatabase) => {
-      const isActiveSheetView = sheetView.id === sheetFromDatabase.activeSheetViewId
       sheetView.filters.forEach((filter: ISheetFilter) => {
         normalizedFilters[filter.id] = filter
-        isActiveSheetView && sheetFilters.push(filter.id)
       })
       sheetView.groups.forEach((group: ISheetGroup) => {
         normalizedGroups[group.id] = group 
-        isActiveSheetView && sheetGroups.push(group.id)
       })
       sheetView.sorts.forEach((sort: ISheetSort) => {
-        normalizedSorts[sort.id] = sort 
-        isActiveSheetView && sheetSorts.push(sort.id)
+        normalizedSorts[sort.id] = sort
       })
     })
     
-    const activeSheetViewId = sheetFromDatabase.activeSheetViewId || sheetFromDatabase.defaultSheetViewId
-    const activeSheetViewVisibleColumns = normalizedViews[activeSheetViewId] 
-      ? normalizedViews[activeSheetViewId].visibleColumns.filter(visibleColumnId => sheetColumns.includes(visibleColumnId) || visibleColumnId === 'COLUMN_BREAK')
+    const activeSheetViewVisibleColumns = normalizedSheetViews[activeSheetViewId] 
+      ? normalizedSheetViews[activeSheetViewId].visibleColumns.filter(visibleColumnId => sheetColumns.includes(visibleColumnId) || visibleColumnId === 'COLUMN_BREAK')
       : sheetColumns
     
     // New Sheet
@@ -128,13 +106,7 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       activeSheetViewId: activeSheetViewId,
       defaultSheetViewId: sheetFromDatabase.defaultSheetViewId,
       columns: sheetColumns,
-      filters: sheetFilters,
-      groups: sheetGroups,
-      rowLeaders: null,
       rows: sheetRows,
-      sorts: sheetSorts,
-      visibleColumns: activeSheetViewVisibleColumns,
-      visibleRows: null,
       selections: defaultSheetSelections,
       styles: {
         id: sheetFromDatabase.styles.id,
@@ -148,15 +120,23 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       views: sheetViews
     }
 
-    const nextSheetVisibleRows = resolveSheetVisibleRows(newSheet, normalizedRows, normalizedCells, normalizedFilters, normalizedGroups, normalizedSorts)
-    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
+    normalizedSheetViews[activeSheetViewId].visibleColumns = activeSheetViewVisibleColumns
+    const nextSheetViewVisibleRows = resolveSheetVisibleRows(
+      newSheet, 
+      normalizedRows, 
+      normalizedCells, 
+      normalizedFilters, 
+      normalizedGroups, 
+      normalizedSorts,
+      normalizedSheetViews
+    )
+    const nextSheetViewRowLeaders = resolveSheetRowLeaders(nextSheetViewVisibleRows)
+    normalizedSheetViews[activeSheetViewId].visibleRowLeaders = nextSheetViewRowLeaders
     
 		dispatch(
 			loadSheetReducer(
         {
-          ...newSheet,
-          visibleRows: nextSheetVisibleRows,
-          rowLeaders: nextSheetRowLeaders
+          ...newSheet
         },
         normalizedCells,
         normalizedColumns,
@@ -164,7 +144,7 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         normalizedGroups,
         normalizedRows,
         normalizedSorts,
-        normalizedViews
+        normalizedSheetViews
 			)
 		)
 	}
