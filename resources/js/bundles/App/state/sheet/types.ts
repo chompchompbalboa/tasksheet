@@ -42,8 +42,9 @@ export interface ISheetClipboardSelections {
 
 export interface ISheet {
   id: string
-  activeSheetViewId: ISheetView['id']
   sourceSheetId: ISheet['id']
+  defaultSheetViewId: ISheetView['id']
+  activeSheetViewId: ISheetView['id']
 	rows: ISheetRow['id'][]
   visibleRows: ISheetRow['id'][]
   columns: ISheetColumn['id'][]
@@ -121,9 +122,9 @@ export interface ISheetStylesDatabaseUpdates {
 export interface ISheetFromDatabase {
   id: string
   sourceSheetId: string
+  defaultSheetViewId: ISheetView['id']
   activeSheetViewId: ISheetView['id']
   columns: ISheetColumn[]
-  visibleColumns: ISheetColumn['id'][]
   filters: ISheetFilter[]
   groups: ISheetGroup[]
   rows: ISheetFromDatabaseRow[]
@@ -277,6 +278,7 @@ export interface ISheetView {
   id: string
   sheetId: ISheet['id']
   name: string
+  visibleColumns: ISheetColumn['id'][]
   filters: ISheetFilter['id'][]
   groups: ISheetGroup['id'][]
   sorts: ISheetSort['id'][]
@@ -286,6 +288,7 @@ export interface ISheetViewFromDatabase {
   id: string
   sheetId: ISheet['id']
   name: string
+  visibleColumns: ISheetColumn['id'][]
   filters: ISheetFilter[]
   groups: ISheetGroup[]
   sorts: ISheetSort[]
@@ -295,6 +298,7 @@ export interface ISheetViewToDatabase {
   id: string
   sheetId: ISheet['id']
   name: string
+  visibleColumns: ISheetColumn['id'][]
   filters: IAllSheetFilters
   groups: IAllSheetGroups
   sorts: IAllSheetSorts
@@ -302,6 +306,7 @@ export interface ISheetViewToDatabase {
 
 export interface ISheetViewUpdates {
   name?: string
+  visibleColumns?: ISheetColumn['id'][]
   filters?: ISheetFilter['id'][]
   groups?: ISheetGroup['id'][]
   sorts?: ISheetSort['id'][]

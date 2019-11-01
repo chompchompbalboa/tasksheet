@@ -8,7 +8,9 @@ import {
   ISheetCell, 
   ISheetColumn, 
   ISheetRow, 
-  ISheetSelections 
+  ISheetSelections,
+  ISheetStyles,
+  ISheetView
 } from '@app/state/sheet/types'
 
 //-----------------------------------------------------------------------------
@@ -84,7 +86,7 @@ export const defaultSheetSelections: ISheetSelections = {
 //-----------------------------------------------------------------------------
 // Default Sheet Styles
 //-----------------------------------------------------------------------------
-export const defaultSheetStyles = {
+export const defaultSheetStyles: ISheetStyles = {
   id: createUuid(),
   backgroundColor: new Set as Set<string>,
   backgroundColorReference: {},
@@ -92,4 +94,17 @@ export const defaultSheetStyles = {
   colorReference: {},
   bold: new Set as Set<string>,
   italic: new Set as Set<string>
+}
+
+//-----------------------------------------------------------------------------
+// Default Sheet View
+//-----------------------------------------------------------------------------
+export const defaultSheetView = (sheetId: ISheet['id'], ) = {
+  id: createUuid(),
+  sheetId: sheetId,
+  name: null,
+  visibleColumns: ISheetColumn['id'][],
+  filters: [] as ISheetFilter['id'][],
+  groups: [] as ISheetGroup['id'][],
+  sorts: [] as ISheetSort['id'][]
 }
