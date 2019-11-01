@@ -267,6 +267,7 @@ export interface ISheetView {
   id: string
   sheetId: ISheet['id']
   name: string
+  visibleColumns: ISheetColumn['id'][]
   filters: ISheetFilter['id'][]
   groups: ISheetGroup['id'][]
   sorts: ISheetSort['id'][]
@@ -276,6 +277,7 @@ export interface ISheetViewFromDatabase {
   id: string
   sheetId: ISheet['id']
   name: string
+  visibleColumns: ISheetColumn['id'][]
   filters: ISheetFilter[]
   groups: ISheetGroup[]
   sorts: ISheetSort[]
@@ -285,6 +287,7 @@ export interface ISheetViewToDatabase {
   id: string
   sheetId: ISheet['id']
   name: string
+  visibleColumns: ISheetColumn['id'][]
   filters: IAllSheetFilters
   groups: IAllSheetGroups
   sorts: IAllSheetSorts
@@ -292,6 +295,7 @@ export interface ISheetViewToDatabase {
 
 export interface ISheetViewUpdates {
   name?: string
+  visibleColumns?: ISheetColumn['id'][]
   filters?: ISheetFilter['id'][]
   groups?: ISheetGroup['id'][]
   sorts?: ISheetSort['id'][]

@@ -109,6 +109,12 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       })
     })
     
+    const newSheetVisibleColumns = sheetFromDatabase.activeSheetViewId && normalizedViews[sheetFromDatabase.activeSheetViewId] && normalizedViews[sheetFromDatabase.activeSheetViewId].visibleColumns
+      ? normalizedViews[sheetFromDatabase.activeSheetViewId].visibleColumns.filter(visibleColumnId => sheetColumns.includes(visibleColumnId) || visibleColumnId === 'COLUMN_BREAK')
+      : sheetFromDatabase.visibleColumns 
+        ? sheetFromDatabase.visibleColumns.filter(visibleColumnId => sheetColumns.includes(visibleColumnId) || visibleColumnId === 'COLUMN_BREAK')
+        : sheetColumns
+    
     // New Sheet
     const newSheet: ISheet = {
       id: sheetFromDatabase.id,
@@ -120,7 +126,7 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       rowLeaders: null,
       rows: sheetRows,
       sorts: sheetSorts,
-      visibleColumns: sheetFromDatabase.visibleColumns !== null ? sheetFromDatabase.visibleColumns.filter(visibleColumnId => sheetColumns.includes(visibleColumnId) || visibleColumnId === 'COLUMN_BREAK') : sheetColumns,
+      visibleColumns: newSheetVisibleColumns,
       visibleRows: null,
       selections: defaultSheetSelections,
       styles: {

@@ -37,7 +37,8 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
           filters: sheetFilters,
           groups: sheetGroups,
           sorts: sheetSorts,
-          views: sheetViews
+          views: sheetViews,
+          visibleColumns: sheetVisibleColumns
         }
       },
       allSheetFilters,
@@ -112,6 +113,7 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
       id: newSheetViewId,
       sheetId: sheetId,
       name: null,
+      visibleColumns: sheetVisibleColumns,
       filters: nextSheetFilters,
       groups: nextSheetGroups,
       sorts: nextSheetSorts
@@ -121,6 +123,7 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
       id: newSheetViewId,
       sheetId: sheetId,
       name: null,
+      visibleColumns: sheetVisibleColumns,
       filters: newSheetFilters,
       groups: newSheetGroups,
       sorts: newSheetSorts

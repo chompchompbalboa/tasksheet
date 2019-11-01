@@ -52,7 +52,9 @@ export const SheetColumnContextMenu = ({
   const allSheetColumnTypesIds = Object.keys(allSheetColumnTypes)
   
   const sheetColumns = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].columns)
+  const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].activeSheetViewId)
   const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].visibleColumns)
+  const sheetViewVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].visibleColumns)
   
   // Is this is a column break?
   const sheetColumnType = columnId === 'COLUMN_BREAK' ? 'COLUMN_BREAK' : allSheetColumnTypes[allSheetColumns[columnId].typeId]
@@ -106,7 +108,10 @@ export const SheetColumnContextMenu = ({
             onClick={() => closeContextMenuOnClick(() => dispatch(hideSheetColumn(sheetId, columnIndex)))}/>
           <ContextMenuItem 
             text="Show">
-            {sheetColumns.filter(columnId => !sheetVisibleColumns.includes(columnId)).map(columnId => {
+            {sheetColumns.filter(columnId => { sheetActiveSheetViewId 
+                ? !sheetViewVisibleColumns.includes(columnId) 
+                : !sheetVisibleColumns.includes(columnId)
+              }).map(columnId => {
               const column = allSheetColumns[columnId]
               return (
                 <ContextMenuItem

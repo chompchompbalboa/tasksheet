@@ -47,7 +47,7 @@ const SheetActionCreateSheetView = ({
       marginRight="0.375rem"
       onClick={() => setIsDropdownVisible(true)}
       openDropdown={() => setIsDropdownVisible(true)}
-      text={sheetActiveSheetViewId && allSheetViews[sheetActiveSheetViewId] && allSheetViews[sheetActiveSheetViewId].name ? allSheetViews[sheetActiveSheetViewId].name : 'Quick Views'}>
+      text={sheetActiveSheetViewId && allSheetViews[sheetActiveSheetViewId] && allSheetViews[sheetActiveSheetViewId].name ? allSheetViews[sheetActiveSheetViewId].name : 'Default Quick View'}>
       <SheetViews>
         {sheetViews && sheetViews.map(sheetViewId => (
           <SheetView

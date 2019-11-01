@@ -66,6 +66,7 @@ export const loadSheetView = (sheetId: ISheet['id'], sheetViewId: ISheetView['id
       groups: nextSheetGroups,
       rowLeaders: nextSheetRowLeaders,
       sorts: nextSheetSorts,
+      visibleColumns: sheetView.visibleColumns || sheet.visibleColumns,
       visibleRows: nextSheetVisibleRows
     }))
   }
