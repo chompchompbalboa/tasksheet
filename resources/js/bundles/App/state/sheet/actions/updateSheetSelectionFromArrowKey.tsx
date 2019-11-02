@@ -33,12 +33,15 @@ export const updateSheetSelectionFromArrowKey = (
       allSheetRows,
       allSheets: { 
         [sheetId]: {
-          visibleColumns,
+          activeSheetViewId,
           visibleRows,
           selections
         }
-      }
+      },
+      allSheetViews
     } = getState().sheet
+
+    const activeSheetView = allSheetViews[activeSheetViewId]
 
     // Cell
     const cell = allSheetCells[cellId]
@@ -54,27 +57,27 @@ export const updateSheetSelectionFromArrowKey = (
     else if(selections.isOneEntireColumnSelected && (moveDirection === 'RIGHT' || moveDirection === 'LEFT')) {
       const selectedColumnId = selections.rangeStartColumnId
       const moveDirectionModifier = moveDirection === 'LEFT' ? -1 : 1
-      const nextSelectedColumnIndex = Math.min(visibleColumns.length - 1, Math.max(0, visibleColumns.indexOf(selectedColumnId) + moveDirectionModifier))
-      const nextSelectedColumnId = visibleColumns[nextSelectedColumnIndex] !== 'COLUMN_BREAK' ? visibleColumns[nextSelectedColumnIndex] : visibleColumns[Math.min(visibleColumns.length - 1, Math.max(0, nextSelectedColumnIndex + moveDirectionModifier))]
+      const nextSelectedColumnIndex = Math.min(activeSheetView.visibleColumns.length - 1, Math.max(0, activeSheetView.visibleColumns.indexOf(selectedColumnId) + moveDirectionModifier))
+      const nextSelectedColumnId = activeSheetView.visibleColumns[nextSelectedColumnIndex] !== 'COLUMN_BREAK' ? activeSheetView.visibleColumns[nextSelectedColumnIndex] : activeSheetView.visibleColumns[Math.min(activeSheetView.visibleColumns.length - 1, Math.max(0, nextSelectedColumnIndex + moveDirectionModifier))]
       dispatch(selectSheetColumns(sheetId, nextSelectedColumnId))
     }
     
     else {
       // Column and row indexes
-      const selectedCellColumnIndex = visibleColumns.indexOf(cell.columnId)
+      const selectedCellColumnIndex = activeSheetView.visibleColumns.indexOf(cell.columnId)
       const selectedCellRowIndex = visibleRows.indexOf(cell.rowId)
       
-      const rangeStartColumnIndex = visibleColumns.indexOf(selections.rangeStartColumnId)
+      const rangeStartColumnIndex = activeSheetView.visibleColumns.indexOf(selections.rangeStartColumnId)
       const rangeStartRowIndex = visibleRows.indexOf(selections.rangeStartRowId)
-      const rangeEndColumnIndex = Math.max(visibleColumns.indexOf(cell.columnId), visibleColumns.indexOf(selections.rangeEndColumnId)) + (moveDirection === 'RIGHT' ? 1 : 0)
+      const rangeEndColumnIndex = Math.max(activeSheetView.visibleColumns.indexOf(cell.columnId), activeSheetView.visibleColumns.indexOf(selections.rangeEndColumnId)) + (moveDirection === 'RIGHT' ? 1 : 0)
       const rangeEndRowIndex = Math.max(visibleRows.indexOf(cell.rowId), visibleRows.indexOf(selections.rangeEndRowId)) + (moveDirection === 'DOWN' ? 1 : 0)
       let nextRangeEndColumnIndex = rangeEndColumnIndex
-      while(visibleColumns[nextRangeEndColumnIndex] === 'COLUMN_BREAK') { nextRangeEndColumnIndex++ }
+      while(activeSheetView.visibleColumns[nextRangeEndColumnIndex] === 'COLUMN_BREAK') { nextRangeEndColumnIndex++ }
       let nextRangeEndRowIndex = rangeEndRowIndex
       while(visibleRows[nextRangeEndRowIndex] === 'ROW_BREAK') { nextRangeEndRowIndex++ }
       
       // Next column and row indexes
-      let nextSelectedCellColumnIndex = Math.min(visibleColumns.length - 1, Math.max(0,
+      let nextSelectedCellColumnIndex = Math.min(activeSheetView.visibleColumns.length - 1, Math.max(0,
         !['RIGHT', 'LEFT'].includes(moveDirection) 
           ? selectedCellColumnIndex 
           : (moveDirection === 'RIGHT' ? selectedCellColumnIndex + 1 : selectedCellColumnIndex - 1)
@@ -91,10 +94,10 @@ export const updateSheetSelectionFromArrowKey = (
         nextSelectedCellRowIndex = Math.min(visibleRows.length, Math.max(0, (moveDirection === 'UP' ? nextSelectedCellRowIndex - 1 : nextSelectedCellRowIndex + 1)))
         nextSelectedCellRowId = visibleRows[nextSelectedCellRowIndex]
       }
-      let nextSelectedCellColumnId = visibleColumns[nextSelectedCellColumnIndex]
+      let nextSelectedCellColumnId = activeSheetView.visibleColumns[nextSelectedCellColumnIndex]
       while(nextSelectedCellColumnId === 'COLUMN_BREAK') { // Column breaks are not selectable, skip over them
-        nextSelectedCellColumnIndex = Math.min(visibleColumns.length - 1, Math.max(0, (moveDirection === 'RIGHT' ? nextSelectedCellColumnIndex + 1 : nextSelectedCellColumnIndex - 1)))
-        nextSelectedCellColumnId = visibleColumns[nextSelectedCellColumnIndex]
+        nextSelectedCellColumnIndex = Math.min(activeSheetView.visibleColumns.length - 1, Math.max(0, (moveDirection === 'RIGHT' ? nextSelectedCellColumnIndex + 1 : nextSelectedCellColumnIndex - 1)))
+        nextSelectedCellColumnId = activeSheetView.visibleColumns[nextSelectedCellColumnIndex]
       }
   
       // Next row and cell
@@ -137,7 +140,7 @@ export const updateSheetSelectionFromArrowKey = (
             if(rowId !== 'ROW_BREAK') {
               const row = allSheetRows[rowId]
               for(let columnIndex = rangeStartColumnIndex; columnIndex <= nextRangeEndColumnIndex; columnIndex++) {
-                const columnId = visibleColumns[columnIndex]
+                const columnId = activeSheetView.visibleColumns[columnIndex]
                 if(columnId !== 'COLUMN_BREAK') {
                   const cellId = row.cells[columnId]
                   nextSheetSelectionRangeCellIds.add(cellId)
@@ -153,7 +156,7 @@ export const updateSheetSelectionFromArrowKey = (
               isOneEntireRowSelected: false,
               rangeCellIds: nextSheetSelectionRangeCellIds,
               rangeEndCellId: cell.id,
-              rangeEndColumnId: visibleColumns[nextRangeEndColumnIndex],
+              rangeEndColumnId: activeSheetView.visibleColumns[nextRangeEndColumnIndex],
               rangeEndRowId: visibleRows[nextRangeEndRowIndex],
             }
           }, true))

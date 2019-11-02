@@ -17,7 +17,6 @@ class CreateSheet extends Migration
             $table->uuid('id')->primary();
             $table->uuid('sourceSheetId')->nullable();
             $table->uuid('activeSheetViewId')->nullable();
-            $table->json('visibleColumns')->nullable();
             $table->timestamp('createdAt')->nullable();
             $table->timestamp('updatedAt')->nullable();
         });

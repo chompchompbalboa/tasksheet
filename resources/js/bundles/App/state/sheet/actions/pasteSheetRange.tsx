@@ -18,37 +18,40 @@ export const pasteSheetRange = (sheetId: ISheet['id']): IThunkAction => {
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
       allSheetCells,
-      clipboard,
+      clipboard: {
+        cutOrCopy,
+        selections: {
+          rangeEndColumnId: clipboardRangeEndColumnId,
+          rangeEndRowId: clipboardRangeEndRowId,
+          rangeStartColumnId: clipboardRangeStartColumnId,
+          rangeStartRowId: clipboardRangeStartRowId,
+          visibleColumns: allClipboardVisibleColumns,
+          visibleRows: allClipboardVisibleRows
+        }
+      },
       allSheetRows,
       allSheets: {
         [sheetId]: sheet
-      }
+      },
+      allSheetViews
     } = getState().sheet
     const {
-      cutOrCopy,
-      selections: {
-        rangeEndColumnId: clipboardRangeEndColumnId,
-        rangeEndRowId: clipboardRangeEndRowId,
-        rangeStartColumnId: clipboardRangeStartColumnId,
-        rangeStartRowId: clipboardRangeStartRowId,
-        visibleColumns: allClipboardVisibleColumns,
-        visibleRows: allClipboardVisibleRows
-      }
-    } = clipboard
-    const {
+      activeSheetViewId,
       selections: {
         rangeStartColumnId: sheetRangeStartColumnId,
         rangeStartRowId: sheetRangeStartRowId,
       },
-      visibleColumns: allSheetVisibleColumns,
       visibleRows: allSheetVisibleRows
     } = sheet
+
+    const activeSheetView = allSheetViews[activeSheetViewId]
+
     const nextAllSheetCells = clone(allSheetCells)
     const sheetCellUpdates: ISheetCellUpdates[] = []
 
     const clipboardVisibleColumns = allClipboardVisibleColumns.filter(columnId => columnId !== 'COLUMN_BREAK')
     const clipboardVisibleRows = allClipboardVisibleRows.filter(rowId => rowId !== 'ROW_BREAK')
-    const sheetVisibleColumns = allSheetVisibleColumns.filter(columnId => columnId !== 'COLUMN_BREAK')
+    const sheetVisibleColumns = activeSheetView.visibleColumns.filter(columnId => columnId !== 'COLUMN_BREAK')
     const sheetVisibleRows = allSheetVisibleRows.filter(rowId => rowId !== 'COLUMN_BREAK')
 
     const clipboardRangeStartColumnIndex = clipboardVisibleColumns.indexOf(clipboardRangeStartColumnId)

@@ -30,14 +30,14 @@ export const deleteSheetRow = (sheetId: string, rowId: ISheetRow['id']): IThunkA
     const cellsForUndoActionsDatabaseUpdate = Object.keys(sheetRow.cells).map(columnId => allSheetCells[sheetRow.cells[columnId]])
     const nextSheetRows = sheet.rows.filter(sheetRowId => sheetRowId !== rowId)
     const nextSheetVisibleRows = sheet.visibleRows.filter(visibleRowId => visibleRowId !== rowId)
-    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
+    const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
     
     const actions = () => {
       batch(() => {
         dispatch(updateSheet(sheetId, {
           rows: nextSheetRows,
-          rowLeaders: nextSheetRowLeaders,
           visibleRows: nextSheetVisibleRows,
+          visibleRowLeaders: nextSheetVisibleRowLeaders,
         }))
       })
       mutation.deleteSheetRow(rowId)
@@ -47,8 +47,8 @@ export const deleteSheetRow = (sheetId: string, rowId: ISheetRow['id']): IThunkA
       batch(() => {
         dispatch(updateSheet(sheetId, {
           rows: sheet.rows,
-          rowLeaders: sheet.rowLeaders,
-          visibleRows: sheet.visibleRows
+          visibleRows: sheet.visibleRows,
+          visibleRowLeaders: sheet.visibleRowLeaders
         }))
         mutation.createSheetRows([{
           ...sheetRow,

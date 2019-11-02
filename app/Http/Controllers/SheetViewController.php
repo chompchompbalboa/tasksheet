@@ -23,13 +23,13 @@ class SheetViewController extends Controller
         'id' => $request->input('id'), 
         'sheetId' => $request->input('sheetId'),
         'name' => $request->input('name'),
+        'visibleColumns' => $request->input('visibleColumns'),
       ]);
 
-      // Delete the sheet's filters, groups and sorts - since they now
-      // belong to the sheet view instead
-      SheetFilter::where('sheetId', $sheetId)->delete();
-      SheetGroup::where('sheetId', $sheetId)->delete();
-      SheetSort::where('sheetId', $sheetId)->delete();
+      // Update the sheet's active sheet view id
+      $sheet = Sheet::find($sheetId);
+      $sheet->activeSheetViewId = $newSheetView->id;
+      $sheet->save();
 
       // Filters
       $newSheetViewFilters = $request->input('filters');

@@ -20,12 +20,15 @@ export const selectSheetRows = (sheetId: ISheet['id'], startRowId: ISheetRow['id
       allSheetRows,
       allSheets: { 
         [sheetId]: { 
-          selections,
-          visibleColumns, 
+          activeSheetViewId,
+          selections, 
           visibleRows 
         } 
-      }
+      },
+      allSheetViews
     } = getState().sheet
+
+    const activeSheetView = allSheetViews[activeSheetViewId]
     
     const startRowIdVisibleRowsIndex = visibleRows.indexOf(startRowId)
     const endRowIdVisibleRowsIndex = endRowId ? visibleRows.indexOf(endRowId) : visibleRows.indexOf(startRowId)
@@ -36,11 +39,11 @@ export const selectSheetRows = (sheetId: ISheet['id'], startRowId: ISheetRow['id
     
     const nextRangeStartRow = allSheetRows[nextRangeStartRowId]
     const nextRangeStartRowIndex = visibleRows.indexOf(nextRangeStartRow.id)
-    const nextRangeStartColumnId = visibleColumns[0]
+    const nextRangeStartColumnId = activeSheetView.visibleColumns[0]
     const nextRangeStartCellId = nextRangeStartRow.cells[nextRangeStartColumnId]
     const nextRangeEndRow = allSheetRows[nextRangeEndRowId]
     const nextRangeEndRowIndex = visibleRows.indexOf(nextRangeEndRow.id)
-    const nextRangeEndColumnId = visibleColumns[Math.max(0, visibleColumns.length - 1)]
+    const nextRangeEndColumnId = activeSheetView.visibleColumns[Math.max(0, activeSheetView.visibleColumns.length - 1)]
     const nextRangeEndCellId = nextRangeEndRow.cells[nextRangeEndColumnId]
     const nextIsOneEntireRowSelected = nextRangeStartRow.id === nextRangeEndRow.id
 
@@ -48,7 +51,7 @@ export const selectSheetRows = (sheetId: ISheet['id'], startRowId: ISheetRow['id
     for(let rowIndex = nextRangeStartRowIndex; rowIndex <= nextRangeEndRowIndex; rowIndex++) {
       const rowId = visibleRows[rowIndex]
       if(rowId && rowId !== 'ROW_BREAK') {
-        visibleColumns.forEach(columnId => {
+        activeSheetView.visibleColumns.forEach(columnId => {
           if(columnId && columnId !== 'COLUMN_BREAK') {
             const cellId = allSheetRows[rowId].cells[columnId]
             nextRangeCellIds.add(cellId)

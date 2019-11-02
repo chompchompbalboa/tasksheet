@@ -40,7 +40,8 @@ const {
     allSheets,
     allSheetRows,
     allSheetCells,
-    allSheetColumnTypes
+    allSheetColumnTypes,
+    allSheetViews
   }
 } = mockAppState
 
@@ -51,8 +52,9 @@ const fileId = folders[folderId].files[0]
 const file = files[fileId]
 const sheetId = file.typeId
 const sheet = allSheets[sheetId]
+const activeSheetView = allSheetViews[sheet.activeSheetViewId]
 const sheetRowId = sheet.visibleRows[0]
-const sheetColumnId = sheet.visibleColumns[datetimeColumnIndex]
+const sheetColumnId = activeSheetView.visibleColumns[datetimeColumnIndex]
 const sheetCellId = allSheetRows[sheetRowId].cells[sheetColumnId]
 const sheetCell = allSheetCells[sheetCellId]
 const sheetCellColumnType = allSheetColumnTypes['DATETIME']

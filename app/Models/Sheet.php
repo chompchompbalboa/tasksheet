@@ -11,13 +11,10 @@ class Sheet extends Model
   const CREATED_AT = 'createdAt';
   const UPDATED_AT = 'updatedAt';
 
-  protected $visible = ['id', 'sourceSheetId', 'activeSheetViewId', 'rows', 'columns', 'filters', 'groups', 'sorts', 'views', 'styles', 'visibleColumns'];
-  protected $fillable = ['id', 'sourceSheetId', 'activeSheetViewId', 'visibleColumns'];
-  protected $with = ['filters', 'groups', 'sorts', 'views'];
+  protected $visible = ['id', 'sourceSheetId', 'defaultSheetViewId', 'activeSheetViewId', 'rows', 'columns', 'views', 'styles'];
+  protected $fillable = ['id', 'sourceSheetId', 'defaultSheetViewId', 'activeSheetViewId'];
+  protected $with = ['views'];
   protected $appends = ['columns', 'rows', 'styles'];
-  protected $casts = [
-    'visibleColumns' => 'array'
-  ];
   
   public function getColumnsAttribute() {
     $sheetId = is_null($this->sourceSheetId) ? $this->id : $this->sourceSheetId;
@@ -32,18 +29,6 @@ class Sheet extends Model
     ->orderBy('createdAt', 'ASC')
     ->get();
     return $rows;
-  }
-  
-  public function filters() {
-    return $this->hasMany('App\Models\SheetFilter', 'sheetId')->orderBy('createdAt');
-  }
-  
-  public function groups() {
-    return $this->hasMany('App\Models\SheetGroup', 'sheetId')->orderBy('createdAt');
-  }
-
-  public function sorts() {
-    return $this->hasMany('App\Models\SheetSort', 'sheetId')->orderBy('createdAt');
   }
 
   public function getStylesAttribute() {

@@ -19,14 +19,14 @@ import {
 } from '@app/state/sheet/resolvers'
 
 //-----------------------------------------------------------------------------
-// Update Sheet Group
+// Update Sheet Sort
 //-----------------------------------------------------------------------------
-export const updateSheetSort = (sheetId: ISheet['id'], sortId: string, updates: ISheetSortUpdates, skipVisibleRowsUpdate?: boolean): IThunkAction => {
+export const updateSheetSort = (sheetId: ISheet['id'], groupId: string, updates: ISheetSortUpdates, skipVisibleRowsUpdate?: boolean): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
 
-    dispatch(updateSheetSortReducer(sortId, updates))
+    dispatch(updateSheetSortReducer(groupId, updates))
 
-    mutation.updateSheetSort(sortId, updates)
+    mutation.updateSheetSort(groupId, updates)
     
     if(!skipVisibleRowsUpdate) {
       setTimeout(() => {
@@ -37,18 +37,27 @@ export const updateSheetSort = (sheetId: ISheet['id'], sortId: string, updates: 
           allSheetGroups,
           allSheetRows,
           allSheetSorts,
+          allSheetViews
         } = getState().sheet
 
         const sheet = allSheets[sheetId]
-        const nextSheetVisibleRows = resolveSheetVisibleRows(sheet, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, allSheetSorts)
+        const nextSheetVisibleRows = resolveSheetVisibleRows(
+          sheet, 
+          allSheetRows, 
+          allSheetCells, 
+          allSheetFilters, 
+          allSheetGroups, 
+          allSheetSorts,
+          allSheetViews
+        )
         const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
 
         dispatch(clearSheetSelection(sheetId))
         dispatch(updateSheet(sheetId, {
-          rowLeaders: nextSheetRowLeaders,
-          visibleRows: nextSheetVisibleRows
+          visibleRows: nextSheetVisibleRows,
+          visibleRowLeaders: nextSheetRowLeaders
         }))
-        
+
       }, 10)
     }
 	}

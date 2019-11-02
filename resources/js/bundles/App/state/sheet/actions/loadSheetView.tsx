@@ -5,9 +5,6 @@ import { IAppState } from '@app/state'
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import { 
   ISheet, 
-  ISheetFilter,
-  ISheetGroup,
-  ISheetSort,
   ISheetView
 } from '@app/state/sheet/types'
 
@@ -41,33 +38,21 @@ export const loadSheetView = (sheetId: ISheet['id'], sheetViewId: ISheetView['id
 
     const sheetView = allSheetViews[sheetViewId]
 
-    const nextSheetFilters: ISheetFilter['id'][] = [ ...sheetView.filters ]
-    const nextSheetGroups: ISheetGroup['id'][] = [ ...sheetView.groups ]
-    const nextSheetSorts: ISheetSort['id'][] = [ ...sheetView.sorts ]
-
     const nextSheetVisibleRows = resolveSheetVisibleRows(
-      {
-        ...sheet,
-        filters: nextSheetFilters,
-        groups: nextSheetGroups,
-        sorts: nextSheetSorts
-      }, 
+      sheet, 
       allSheetRows, 
       allSheetCells, 
       allSheetFilters, 
       allSheetGroups, 
-      allSheetSorts
+      allSheetSorts,
+      allSheetViews
     )
     const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
   
     dispatch(updateSheet(sheetId, {
       activeSheetViewId: sheetView.id,
-      filters: nextSheetFilters,
-      groups: nextSheetGroups,
-      rowLeaders: nextSheetRowLeaders,
-      sorts: nextSheetSorts,
-      visibleColumns: sheetView.visibleColumns || sheet.visibleColumns,
-      visibleRows: nextSheetVisibleRows
+      visibleRows: nextSheetVisibleRows,
+      visibleRowLeaders: nextSheetRowLeaders,
     }))
   }
 }

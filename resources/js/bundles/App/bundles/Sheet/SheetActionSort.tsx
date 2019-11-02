@@ -34,18 +34,18 @@ const SheetActionSort = ({
   const allSheetSorts = useSelector((state: IAppState) => state.sheet.allSheetSorts)
   
   const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
-  const sheetSorts = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].sorts)
-  const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleColumns)
+  const activeSheetViewVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].visibleColumns)
+  const activeSheetViewSorts = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].sorts)
 
   // Use the sheet column names to provide options for the dropdown
-  const options = sheetVisibleColumns && sheetVisibleColumns.map((columnId: string) => {
+  const options = activeSheetViewVisibleColumns && activeSheetViewVisibleColumns.map((columnId: string) => {
     if(allSheetColumns && allSheetColumns[columnId]) {
       return { label: allSheetColumns[columnId].name, value: columnId }
     }
   }).filter(Boolean)
   
   // Display an existing sheet sort
-  const selectedOptions = sheetSorts && sheetSorts.map((sortId: ISheetSort['id']) => { 
+  const selectedOptions = activeSheetViewSorts && activeSheetViewSorts.map((sortId: ISheetSort['id']) => { 
     const sort = allSheetSorts[sortId]
     return { label: allSheetColumns[sort.columnId].name, value: sortId, isLocked: sort.isLocked }
   })

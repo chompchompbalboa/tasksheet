@@ -19,12 +19,14 @@ const {
   allFiles,
   allFileIds,
   allSheets,
-  allSheetsFromDatabase
+  allSheetsFromDatabase,
+  allSheetViews
 } = appStateFactory({} as IAppStateFactoryInput)
 
 const fileId = allFileIds[0]
 const sheetId = allFiles[fileId].typeId
 const sheet = allSheets[sheetId]
+const activeSheetView = allSheetViews[sheet.activeSheetViewId]
 const sheetRowId = sheet.visibleRows[0]
 
 console.warn = jest.fn()
@@ -106,7 +108,7 @@ describe('SheetRowContextMenu', () => {
   })
 
   it("creates sheet rows below the current row", async () => {
-    const { cell: RLastCLastCell } = getCellAndCellProps({ row: sheet.visibleRows.length - 1, column: sheet.visibleColumns.length - 1 })
+    const { cell: RLastCLastCell } = getCellAndCellProps({ row: sheet.visibleRows.length - 1, column: activeSheetView.visibleColumns.length - 1 })
     const { getAllByTestId, getByTestId, store } = renderWithRedux(<Sheet {...sheetProps}/>)
     const SheetRowLeaders = await waitForElement(() => getAllByTestId('SheetRowLeader'))
     const RLastSheetRowLeader = SheetRowLeaders[SheetRowLeaders.length - 1]

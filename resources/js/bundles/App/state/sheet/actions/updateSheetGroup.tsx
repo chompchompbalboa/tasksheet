@@ -37,16 +37,25 @@ export const updateSheetGroup = (sheetId: ISheet['id'], groupId: string, updates
           allSheetGroups,
           allSheetRows,
           allSheetSorts,
+          allSheetViews
         } = getState().sheet
 
         const sheet = allSheets[sheetId]
-        const nextSheetVisibleRows = resolveSheetVisibleRows(sheet, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, allSheetSorts)
+        const nextSheetVisibleRows = resolveSheetVisibleRows(
+          sheet, 
+          allSheetRows, 
+          allSheetCells, 
+          allSheetFilters, 
+          allSheetGroups, 
+          allSheetSorts,
+          allSheetViews
+        )
         const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
 
         dispatch(clearSheetSelection(sheetId))
         dispatch(updateSheet(sheetId, {
-          rowLeaders: nextSheetRowLeaders,
-          visibleRows: nextSheetVisibleRows
+          visibleRows: nextSheetVisibleRows,
+          visibleRowLeaders: nextSheetRowLeaders
         }))
 
       }, 10)

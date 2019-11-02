@@ -18,12 +18,15 @@ export const updateSheetSelectionFromCellClick = (sheetId: string, cellId: strin
       allSheetRows,
       allSheets: {
         [sheetId]: { 
+          activeSheetViewId,
           selections,
-          visibleColumns,
           visibleRows,
         }
-      }
+      },
+      allSheetViews
     } = getState().sheet
+
+    const activeSheetView = allSheetViews[activeSheetViewId]
 
     const cell = allSheetCells[cellId]
 
@@ -71,11 +74,11 @@ export const updateSheetSelectionFromCellClick = (sheetId: string, cellId: strin
     }
     if(isShiftClicked) {
       // Range start and end column and row indexes
-      const cellColumnIndex = visibleColumns.indexOf(cell.columnId)
+      const cellColumnIndex = activeSheetView.visibleColumns.indexOf(cell.columnId)
       const cellRowIndex = visibleRows.indexOf(cell.rowId)
-      const rangeStartColumnIndex = visibleColumns.indexOf(selections.rangeStartColumnId)
+      const rangeStartColumnIndex = activeSheetView.visibleColumns.indexOf(selections.rangeStartColumnId)
       const rangeStartRowIndex = visibleRows.indexOf(selections.rangeStartRowId)
-      const rangeEndColumnIndex = Math.max(...[cellColumnIndex, visibleColumns.indexOf(selections.rangeEndColumnId)].filter(value => value !== null))
+      const rangeEndColumnIndex = Math.max(...[cellColumnIndex, activeSheetView.visibleColumns.indexOf(selections.rangeEndColumnId)].filter(value => value !== null))
       const rangeEndRowIndex = Math.max(...[cellRowIndex, visibleRows.indexOf(selections.rangeEndRowId)].filter(value => value !== null))
       if(cellColumnIndex < rangeStartColumnIndex || cellRowIndex < rangeStartRowIndex) {
         selectCell()
@@ -88,7 +91,7 @@ export const updateSheetSelectionFromCellClick = (sheetId: string, cellId: strin
           if(rowId !== 'ROW_BREAK') {
             const row = allSheetRows[rowId]
             for(let columnIndex = rangeStartColumnIndex; columnIndex <= rangeEndColumnIndex; columnIndex++) {
-              const columnId = visibleColumns[columnIndex]
+              const columnId = activeSheetView.visibleColumns[columnIndex]
               if(columnId !== 'COLUMN_BREAK') {
                 const cellId = row.cells[columnId]
                 nextSheetSelectionRangeCellIds.add(cellId)
@@ -104,7 +107,7 @@ export const updateSheetSelectionFromCellClick = (sheetId: string, cellId: strin
             isOneEntireRowSelected: false,
             rangeCellIds: nextSheetSelectionRangeCellIds,
             rangeEndCellId: cell.id,
-            rangeEndColumnId: visibleColumns[rangeEndColumnIndex],
+            rangeEndColumnId: activeSheetView.visibleColumns[rangeEndColumnIndex],
             rangeEndRowId: visibleRows[rangeEndRowIndex],
           }
         }, true))

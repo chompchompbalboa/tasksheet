@@ -34,11 +34,8 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
     const {
       allSheets: {
         [sheetId]: {
-          filters: sheetFilters,
-          groups: sheetGroups,
-          sorts: sheetSorts,
-          views: sheetViews,
-          visibleColumns: sheetVisibleColumns
+          activeSheetViewId: sheetActiveSheetViewId,
+          views: sheetViews
         }
       },
       allSheetFilters,
@@ -46,6 +43,8 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
       allSheetSorts,
       allSheetViews
     } = getState().sheet
+
+    const activeSheetView = allSheetViews[sheetActiveSheetViewId]
 
     const startTime = moment()
     let startTimeModifier = 0
@@ -55,7 +54,7 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
     const nextAllSheetFilters: IAllSheetFilters = { ...allSheetFilters }
     const newSheetFilters: IAllSheetFilters = {}
     const nextSheetFilters: ISheetFilter['id'][] = []
-    sheetFilters.forEach(sheetFilterId => {
+    activeSheetView.filters.forEach(sheetFilterId => {
       const sheetFilter = allSheetFilters[sheetFilterId]
       const sheetViewFilterId = createUuid()
       const newSheetFilter: ISheetFilter = {
@@ -74,7 +73,7 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
     const nextAllSheetGroups: IAllSheetGroups = { ...allSheetGroups }
     const newSheetGroups: IAllSheetGroups = {}
     const nextSheetGroups: ISheetGroup['id'][] = []
-    sheetGroups.forEach(sheetGroupId => {
+    activeSheetView.groups.forEach(sheetGroupId => {
       const sheetGroup = allSheetGroups[sheetGroupId]
       const sheetViewGroupId = createUuid()
       const newSheetGroup: ISheetGroup = {
@@ -93,7 +92,7 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
     const nextAllSheetSorts: IAllSheetSorts = { ...allSheetSorts }
     const newSheetSorts: IAllSheetSorts = {}
     const nextSheetSorts: ISheetSort['id'][] = [ ]
-    sheetSorts.forEach(sheetSortId => {
+    activeSheetView.sorts.forEach(sheetSortId => {
       const sheetSort = allSheetSorts[sheetSortId]
       const sheetViewSortId = createUuid()
       const newSheetSort: ISheetSort = {
@@ -113,7 +112,7 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
       id: newSheetViewId,
       sheetId: sheetId,
       name: null,
-      visibleColumns: sheetVisibleColumns,
+      visibleColumns: activeSheetView.visibleColumns,
       filters: nextSheetFilters,
       groups: nextSheetGroups,
       sorts: nextSheetSorts
@@ -123,7 +122,7 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
       id: newSheetViewId,
       sheetId: sheetId,
       name: null,
-      visibleColumns: sheetVisibleColumns,
+      visibleColumns: activeSheetView.visibleColumns,
       filters: newSheetFilters,
       groups: newSheetGroups,
       sorts: newSheetSorts
@@ -136,11 +135,8 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
     dispatch(preventSelectedCellNavigation(sheetId))
     dispatch(updateSheet(sheetId, {
       activeSheetViewId: newSheetView.id,
-      filters: nextSheetFilters,
-      groups: nextSheetGroups,
-      sorts: nextSheetSorts,
       views: nextSheetViews
-    }))
+    }, true))
     dispatch(setAllSheetFilters(nextAllSheetFilters))
     dispatch(setAllSheetGroups(nextAllSheetGroups))
     dispatch(setAllSheetSorts(nextAllSheetSorts))

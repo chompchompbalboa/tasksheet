@@ -10,7 +10,8 @@ import {
   ISheetFilter,
   ISheetGroup,
   IAllSheetRows, ISheetRow, ISheetFromDatabaseRow,
-  ISheetSort
+  ISheetSort,
+  IAllSheetViews, ISheetView, ISheetViewFromDatabase
 } from '@app/state/sheet/types'
 
 import { initialFolderState } from '@app/state/folder/reducers'
@@ -67,6 +68,7 @@ export const appStateFactory = ({
   const allSheetRows: IAllSheetRows = {}
   const allSheetColumns: IAllSheetColumns = {}
   const allSheetCells: IAllSheetCells = {}
+  const allSheetViews: IAllSheetViews = {}
 
   for(let currentFolderNumber = 1; currentFolderNumber <= numberOfFolders; currentFolderNumber++) {
 
@@ -87,6 +89,7 @@ export const appStateFactory = ({
       const sheetSuffix = fileSuffix + '.Sheet' + currentFileNumber
       const fileId = filePrefix + fileSuffix
       const sheetId = sheetPrefix + fileSuffix
+      const activeSheetViewId = sheetId + '.activeSheetViewId'
 
       const newFile = {
         id: fileId,
@@ -99,12 +102,9 @@ export const appStateFactory = ({
       const newSheetSourceSheetId: ISheet['id'] = null
       const newSheetColumns: ISheetColumn['id'][] = []
       const newSheetRows: ISheetRow['id'][] = []
-      const newSheetVisibleColumns: ISheetColumn['id'][] = []
+      const newSheetViewVisibleColumns: ISheetColumn['id'][] = []
       const newSheetDefaultVisibleRows: ISheetRow['id'][] = []
       const newSheetVisibleRows: ISheetRow['id'][] = []
-      const newSheetFilters: ISheetFilter['id'][] = []
-      const newSheetGroups: ISheetGroup['id'][] = []
-      const newSheetSorts: ISheetSort['id'][] = []
       const newSheetRowLeaders: string[] = []
 
       const newSheetFromDatabaseRows: ISheetFromDatabaseRow[] = []
@@ -112,6 +112,7 @@ export const appStateFactory = ({
       const newSheetFromDatabaseFilters: ISheetFilter[] = []
       const newSheetFromDatabaseGroups: ISheetGroup[] = []
       const newSheetFromDatabaseSorts: ISheetSort[] = []
+      const newSheetFromDatabaseViews: ISheetViewFromDatabase[] = []
 
       for(let currentColumnNumber = 1; currentColumnNumber <= numberOfColumnsPerSheet; currentColumnNumber++) {
 
@@ -128,7 +129,7 @@ export const appStateFactory = ({
         
         allSheetColumns[newSheetColumn.id] = newSheetColumn
         newSheetColumns.push(newSheetColumn.id)
-        newSheetVisibleColumns.push(newSheetColumn.id)
+        newSheetViewVisibleColumns.push(newSheetColumn.id)
         newSheetFromDatabaseColumns.push(newSheetColumn)
       }
 
@@ -159,8 +160,6 @@ export const appStateFactory = ({
           sheetRowFromDatabaseCells.push(newSheetCell)
         })
 
-        
-
         const newSheetRow: ISheetRow = {
           id: sheetRowId,
           sheetId: sheetId,
@@ -179,33 +178,41 @@ export const appStateFactory = ({
         newSheetFromDatabaseRows.push(newSheetFromFromDatabaseRow)
       }
 
+      const activeSheetView: ISheetView = {
+        id: activeSheetViewId,
+        sheetId: sheetId,
+        name: 'Active Sheet View',
+        visibleColumns: newSheetViewVisibleColumns,
+        filters: newSheetFromDatabaseFilters.map(filter => filter.id),
+        groups: newSheetFromDatabaseGroups.map(group => group.id),
+        sorts: newSheetFromDatabaseSorts.map(sort => sort.id),
+      }
+      newSheetFromDatabaseViews.push({
+        ...activeSheetView,
+        filters: newSheetFromDatabaseFilters,
+        groups: newSheetFromDatabaseGroups,
+        sorts: newSheetFromDatabaseSorts,
+      })
+
       const newSheet: ISheet = {
         id: sheetId,
         sourceSheetId: newSheetSourceSheetId,
-        activeSheetViewId: null,
+        activeSheetViewId: activeSheetViewId,
         rows: newSheetRows,
-        visibleRows: newSheetVisibleRows,
         columns: newSheetColumns,
-        visibleColumns: newSheetVisibleColumns,
-        filters: newSheetFilters,
-        groups: newSheetGroups,
-        rowLeaders: newSheetRowLeaders,
-        sorts: newSheetSorts,
+        visibleRows: newSheetVisibleRows,
+        visibleRowLeaders: newSheetRowLeaders,
         styles: defaultSheetStyles,
         selections: defaultSheetSelections,
-        views: null
+        views: newSheetFromDatabaseViews.map(view => view.id)
       }
 
       const newSheetFromDatabase: ISheetFromDatabase = {
         id: sheetId,
         sourceSheetId: newSheetSourceSheetId,
-        activeSheetViewId: null,
+        activeSheetViewId: activeSheetViewId,
         rows: newSheetFromDatabaseRows,
         columns: newSheetFromDatabaseColumns,
-        visibleColumns: newSheetVisibleColumns,
-        filters: newSheetFromDatabaseFilters,
-        groups: newSheetFromDatabaseGroups,
-        sorts: newSheetFromDatabaseSorts,
         styles: {
           ...defaultSheetStyles,
           backgroundColor: [],
@@ -213,12 +220,13 @@ export const appStateFactory = ({
           bold: [],
           italic: []
         },
-        views: []
+        views: newSheetFromDatabaseViews
       }
 
       allFiles[newFile.id] = newFile
       allFileIds.push(newFile.id)
       allSheets[newSheet.id] = newSheet
+      allSheetViews[activeSheetView.id] = activeSheetView
       folderFiles.push(newFile.id)
       allSheetsFromDatabase[newSheetFromDatabase.id] = newSheetFromDatabase
     }
@@ -239,7 +247,8 @@ export const appStateFactory = ({
     allSheetsFromDatabase,
     allSheetRows,
     allSheetColumns,
-    allSheetCells
+    allSheetCells,
+    allSheetViews
   }
 }
 
@@ -253,7 +262,8 @@ const {
   allSheets,
   allSheetColumns,
   allSheetRows,
-  allSheetCells
+  allSheetCells,
+  allSheetViews
 } = appStateFactory({} as IAppStateFactoryInput)
 
 export const appState: IAppState = {
@@ -273,7 +283,8 @@ export const appState: IAppState = {
     allSheets,
     allSheetColumns,
     allSheetRows,
-    allSheetCells
+    allSheetCells,
+    allSheetViews
   },
   sheetSettings: {
     activeSheetSetting: 'COLUMN_SETTINGS',
@@ -314,11 +325,12 @@ export const getCellAndCellProps = ({
       allSheetRows,
       allSheetColumns,
       allSheetColumnTypes,
-      allSheetCells
+      allSheetCells,
+      allSheetViews
     },
   } = appState
   const sheet = allSheets[sheetId || Object.keys(allSheets)[0]]
-  const columnId = sheet.visibleColumns[columnIndexPlusOne - 1]
+  const columnId = allSheetViews[sheet.activeSheetViewId].visibleColumns[columnIndexPlusOne - 1]
   const column = allSheetColumns[columnId]
   const columnType = allSheetColumnTypes[columnTypeOverride || column.typeId]
   const rowId = sheet.visibleRows[rowIndexPlusOne - 1]

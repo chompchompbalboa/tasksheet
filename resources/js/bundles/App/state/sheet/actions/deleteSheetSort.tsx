@@ -25,6 +25,7 @@ import {
 //-----------------------------------------------------------------------------
 export const deleteSheetSort = (sheetId: string, sortId: string): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
+
     const {
       allSheets,
       allSheetCells,
@@ -34,24 +35,39 @@ export const deleteSheetSort = (sheetId: string, sortId: string): IThunkAction =
       allSheetSorts,
       allSheetViews
     } = getState().sheet
+
     const sheet = allSheets[sheetId]
+    const activeSheetView = allSheetViews[sheet.activeSheetViewId]
+
     const { [sortId]: deletedSort, ...nextAllSheetSorts } = allSheetSorts
-    const nextSheetSorts = sheet.sorts.filter(sheetSortId => sheetSortId !== sortId)
-    const nextSheetVisibleRows = resolveSheetVisibleRows({ ...sheet, sorts: nextSheetSorts}, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, nextAllSheetSorts)
-    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
-    if(sheet.activeSheetViewId) {
-      const activeSheetView = allSheetViews[sheet.activeSheetViewId]
-      dispatch(updateSheetView(activeSheetView.id, {
-        sorts: activeSheetView.sorts.filter(activeSheetViewSortId => activeSheetViewSortId !== sortId)
-      }))
-    }
+
+    const nextSheetViewSorts = activeSheetView.sorts.filter(sheetSortId => sheetSortId !== sortId)
+    const nextSheetVisibleRows = resolveSheetVisibleRows(
+      sheet, 
+      allSheetRows, 
+      allSheetCells, 
+      allSheetFilters, 
+      allSheetGroups, 
+      nextAllSheetSorts,
+      {
+        ...allSheetViews,
+        [activeSheetView.id]: {
+          ...allSheetViews[activeSheetView.id],
+          sorts: nextSheetViewSorts
+        }
+      }
+      )
+    const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
+
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetSorts(nextAllSheetSorts))
       dispatch(updateSheet(sheetId, {
-        rowLeaders: nextSheetRowLeaders,
-        sorts: nextSheetSorts,
-        visibleRows: nextSheetVisibleRows
+        visibleRows: nextSheetVisibleRows,
+        visibleRowLeaders: nextSheetVisibleRowLeaders
+      }))
+      dispatch(updateSheetView(activeSheetView.id, {
+        sorts: nextSheetViewSorts
       }))
     })
     mutation.deleteSheetSort(sortId)

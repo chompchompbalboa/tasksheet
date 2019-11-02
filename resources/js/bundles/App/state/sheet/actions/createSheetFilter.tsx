@@ -35,31 +35,39 @@ export const createSheetFilter = (sheetId: string, newFilter: ISheetFilter): ITh
       allSheetSorts,
       allSheetViews
     } = getState().sheet
+
     const sheet = allSheets[sheetId]
+    const activeSheetView = allSheetViews[sheet.activeSheetViewId]
 
-    const nextFilters = { ...allSheetFilters, [newFilter.id]: newFilter }
-    const nextSheetFilters = [ ...sheet.filters, newFilter.id ]
-    const nextSheetVisibleRows = resolveSheetVisibleRows({ 
-      ...sheet, 
-      filters: nextSheetFilters 
-    }, allSheetRows, allSheetCells, nextFilters, allSheetGroups, allSheetSorts)
-    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
-
-    if(sheet.activeSheetViewId) {
-      const activeSheetView = allSheetViews[sheet.activeSheetViewId]
-      dispatch(updateSheetView(activeSheetView.id, {
-        filters: [ ...activeSheetView.filters, newFilter.id ]
-      }))
-    }
+    const nextAllSheetFilters = { ...allSheetFilters, [newFilter.id]: newFilter }
+    const nextSheetViewFilters = [ ...activeSheetView.filters, newFilter.id ]
+    const nextSheetVisibleRows = resolveSheetVisibleRows(
+      sheet, 
+      allSheetRows, 
+      allSheetCells, 
+      nextAllSheetFilters, 
+      allSheetGroups, 
+      allSheetSorts, 
+      {
+        ...allSheetViews,
+        [activeSheetView.id]: {
+          ...allSheetViews[activeSheetView.id],
+          filters: nextSheetViewFilters
+        }
+      }
+    )
+    const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
 
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
-      dispatch(setAllSheetFilters({ ...allSheetFilters, [newFilter.id]: newFilter }))
+      dispatch(setAllSheetFilters(nextAllSheetFilters))
       dispatch(updateSheet(sheetId, {
-        filters: nextSheetFilters,
-        rowLeaders: nextSheetRowLeaders,
-        visibleRows: nextSheetVisibleRows
+        visibleRows: nextSheetVisibleRows,
+        visibleRowLeaders: nextSheetVisibleRowLeaders,
       }, true))
+      dispatch(updateSheetView(activeSheetView.id, {
+        filters: nextSheetViewFilters
+      }))
     })
 
     mutation.createSheetFilter(newFilter)

@@ -88,7 +88,7 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
         dispatch(setAllSheetRows(nextAllSheetRows))
         dispatch(setAllSheetCells(nextAllSheetCells))
         dispatch(updateSheet(sheetId, {
-          rowLeaders: nextSheetRowLeaders,
+          visibleRowLeaders: nextSheetRowLeaders,
           rows: nextSheetRows,
           visibleRows: nextSheetVisibleRows,
         }))
@@ -108,7 +108,7 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
         dispatch(setAllSheetRows(allSheetRows))
         dispatch(setAllSheetCells(allSheetCells))
         dispatch(updateSheet(sheetId, {
-          rowLeaders: sheet.rowLeaders,
+          visibleRowLeaders: sheet.visibleRowLeaders,
           rows: sheet.rows,
           visibleRows: sheet.visibleRows
         }))

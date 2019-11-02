@@ -16,7 +16,7 @@ const SheetHeaders = ({
   sheetId,
   columns,
   handleContextMenu,
-  sheetVisibleColumns
+  sheetViewVisibleColumns
 }: SheetHeadersProps) => {
   
   const columnBreakHeader: ISheetColumn = {
@@ -28,7 +28,7 @@ const SheetHeaders = ({
   }
   
   const isNextColumnAColumnBreak = (index: number) => {
-    return sheetVisibleColumns[index + 1] && sheetVisibleColumns[index + 1] === 'COLUMN_BREAK'
+    return sheetViewVisibleColumns[index + 1] && sheetViewVisibleColumns[index + 1] === 'COLUMN_BREAK'
   } 
 
   return (
@@ -38,14 +38,14 @@ const SheetHeaders = ({
         rowId={'SHEET_HEADER'}
         isRowBreak={false}
         style={{ width: '35px' }}/>
-      {sheetVisibleColumns.map((columnId: string, index: number) => (
+      {sheetViewVisibleColumns.map((columnId: string, index: number) => (
         <SheetHeader
           key={index}
           sheetId={sheetId}
           column={columnId !== 'COLUMN_BREAK' ? columns[columnId] : columnBreakHeader}
           visibleColumnsIndex={index}
           handleContextMenu={handleContextMenu}
-          isLast={index === sheetVisibleColumns.length - 1}
+          isLast={index === sheetViewVisibleColumns.length - 1}
           isNextColumnAColumnBreak={isNextColumnAColumnBreak(index)}/>))}
     </Container>
   )
@@ -58,7 +58,7 @@ interface SheetHeadersProps {
   sheetId: ISheet['id']
   columns: IAllSheetColumns
   handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void
-  sheetVisibleColumns: ISheetColumn['id'][]
+  sheetViewVisibleColumns: ISheetColumn['id'][]
 }
 
 //-----------------------------------------------------------------------------

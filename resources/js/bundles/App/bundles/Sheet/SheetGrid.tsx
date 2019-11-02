@@ -26,9 +26,10 @@ const SheetGrid = memo(({
   const allSheetColumnTypes = useSelector((state: IAppState) => state.sheet.allSheetColumnTypes)
   const allSheetRows = useSelector((state: IAppState) => state.sheet.allSheetRows)
 
-  const sheetVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleColumns)
+  const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
+  const sheetViewVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].visibleColumns)
   const sheetVisibleRows = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleRows)
-  const sheetRowLeaders = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].rowLeaders)
+  const sheetVisibleRowLeaders = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleRowLeaders)
 
   const grid = useRef()
   useLayoutEffect(() => {
@@ -38,7 +39,7 @@ const SheetGrid = memo(({
     // @ts-ignore
       grid.current.resetAfterRowIndex(0)
     }
-  }, [ allSheetColumns, sheetVisibleColumns ])
+  }, [ allSheetColumns, sheetViewVisibleColumns ])
 
   const GridWrapper = forwardRef(({ children, ...rest }, ref) => (
     <GridContainer
@@ -48,7 +49,7 @@ const SheetGrid = memo(({
         sheetId={sheetId}
         columns={allSheetColumns}
         handleContextMenu={handleContextMenu}
-        sheetVisibleColumns={sheetVisibleColumns}/>
+        sheetViewVisibleColumns={sheetViewVisibleColumns}/>
       <GridItems>
         {children}
       </GridItems>
@@ -60,7 +61,7 @@ const SheetGrid = memo(({
     rowIndex, 
     style
   }: CellProps) => {
-    const columnId = sheetVisibleColumns[columnIndex - 1]
+    const columnId = sheetViewVisibleColumns[columnIndex - 1]
     const rowId = sheetVisibleRows[rowIndex]
     if(columnIndex !== 0 && columnId !== 'COLUMN_BREAK' && rowId !== 'ROW_BREAK') {
       return (
@@ -79,7 +80,7 @@ const SheetGrid = memo(({
           handleContextMenu={handleContextMenu}
           isRowBreak={rowId === 'ROW_BREAK'}
           style={style}
-          text={sheetRowLeaders[rowIndex]}/>
+          text={sheetVisibleRowLeaders[rowIndex]}/>
       )
     }
     return (
@@ -96,11 +97,11 @@ const SheetGrid = memo(({
           innerElementType={GridWrapper}
           width={width}
           height={height}
-          columnWidth={columnIndex => columnIndex === 0 ? 35 : (sheetVisibleColumns[columnIndex - 1] === 'COLUMN_BREAK' ? 10 : allSheetColumns[sheetVisibleColumns[columnIndex - 1]].width)}
-          columnCount={sheetVisibleColumns.length + 1}
+          columnWidth={columnIndex => columnIndex === 0 ? 35 : (sheetViewVisibleColumns[columnIndex - 1] === 'COLUMN_BREAK' ? 10 : allSheetColumns[sheetViewVisibleColumns[columnIndex - 1]].width)}
+          columnCount={sheetViewVisibleColumns.length + 1}
           rowHeight={rowIndex => 24}
           rowCount={sheetVisibleRows.length}
-          overscanColumnCount={sheetVisibleColumns.length}
+          overscanColumnCount={sheetViewVisibleColumns.length}
           overscanRowCount={3}>
           {Cell}
         </Grid>

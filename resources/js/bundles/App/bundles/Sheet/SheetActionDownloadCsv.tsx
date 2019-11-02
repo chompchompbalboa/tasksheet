@@ -26,24 +26,23 @@ const SheetActionDownloadCsv = ({
   sheetId
 }: SheetActionDownloadCsvProps) => {
 
-  // Refs
-  const dropdown = useRef(null)
-
   // Redux
   const dispatch = useDispatch()
+
   const { 
     allSheets,
     allSheetCells, 
     allSheetColumns, 
     allSheetColumnTypes, 
     allSheetRows, 
+    allSheetViews
   } = useSelector((state: IAppState) => state.sheet)
-
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   const activeFilename = useSelector((state: IAppState) => state.folder.files && state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].name)
   const sheet = allSheets && allSheets[sheetId]
-  const visibleColumns = sheet && sheet.visibleColumns
-  const visibleRows = sheet && sheet.visibleRows
+
+  // Refs
+  const dropdown = useRef(null)
 
   // Dropdown
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
@@ -63,83 +62,92 @@ const SheetActionDownloadCsv = ({
   useEffect(() => {
     setFilename(activeFilename)
   }, [ activeFilename ])
-  const handleFilenameInputBlur = () => {
-    dispatch(allowSelectedCellEditing(sheetId))
-    dispatch(allowSelectedCellNavigation(sheetId))
-  }
-  const handleFilenameInputFocus = () => {
-    dispatch(preventSelectedCellEditing(sheetId))
-    dispatch(preventSelectedCellNavigation(sheetId))
-  }
-
+  
   // CSV data
   const [ isIncludeColumnTypeInformation, setIsIncludeColumnTypeInformation ] = useState(true)
-  const headers = visibleColumns ? visibleColumns.map(columnId => columnId !== 'COLUMN_BREAK' ? allSheetColumns[columnId].name : null) : []
 
-  const data = visibleRows ? visibleRows.map(rowId => {
-    if(rowId !== 'ROW_BREAK') {
-      const row = allSheetRows[rowId]
-      return visibleColumns.map(columnId => {
-        if(columnId !== 'COLUMN_BREAK') {
-          if(row.cells && row.cells[columnId] && allSheetCells[row.cells[columnId]]) {
-            return allSheetCells[row.cells[columnId]].value
+  if (sheet) {
+
+    const activeSheetView = allSheetViews[sheet.activeSheetViewId]
+    const visibleColumns = activeSheetView.visibleColumns
+    const visibleRows = sheet.visibleRows
+
+    const handleFilenameInputBlur = () => {
+      dispatch(allowSelectedCellEditing(sheetId))
+      dispatch(allowSelectedCellNavigation(sheetId))
+    }
+    const handleFilenameInputFocus = () => {
+      dispatch(preventSelectedCellEditing(sheetId))
+      dispatch(preventSelectedCellNavigation(sheetId))
+    }
+    const headers = visibleColumns ? visibleColumns.map(columnId => columnId !== 'COLUMN_BREAK' ? allSheetColumns[columnId].name : null) : []
+  
+    const data = visibleRows ? visibleRows.map(rowId => {
+      if(rowId !== 'ROW_BREAK') {
+        const row = allSheetRows[rowId]
+        return visibleColumns.map(columnId => {
+          if(columnId !== 'COLUMN_BREAK') {
+            if(row.cells && row.cells[columnId] && allSheetCells[row.cells[columnId]]) {
+              return allSheetCells[row.cells[columnId]].value
+            }
+            return null
           }
           return null
-        }
-        return null
-      })
-    }
-    return null
-  }).filter(row => row !== null) : []
-
-  const columnTypeInformation = data && data.length > 0 ? visibleColumns.map(columnId => {
-    const column = allSheetColumns[columnId]
-    const columnType = columnId === 'COLUMN_BREAK' ? columnId : allSheetColumnTypes[column.typeId].cellType
-    return '[TS][' + columnType + ']'
-  }) : []
+        })
+      }
+      return null
+    }).filter(row => row !== null) : []
   
-  const csvData = isIncludeColumnTypeInformation ? [ headers, columnTypeInformation, ...data ]  : [ headers, ...data ] 
-
-  // Render
-  return (
-    <Container>
-      <DownloadContainer
-        data={csvData}
-        filename={filename + '.csv'}
-        containerBackgroundColor={userColorPrimary}>
-        <Icon icon={DOWNLOAD}/>&nbsp;CSV
-      </DownloadContainer>
-      <DropdownToggle
-        dropdownToggleBackgroundColor={userColorPrimary}
-        onClick={() => setIsDropdownVisible(true)}>
-        <Icon 
-          icon={ARROW_DOWN}/>
-      </DropdownToggle>
-      <Dropdown
-        ref={dropdown}
-        isDropdownVisible={isDropdownVisible}>
-        <DownloadOptions>
-          <DownloadOption>
-            Filename&nbsp;&nbsp;
-            <StyledInput
-              value={filename || ''}
-              onBlur={() => handleFilenameInputBlur()}
-              onChange={e => setFilename(e.target.value)}
-              onFocus={() => handleFilenameInputFocus()}/>
-          </DownloadOption>
-          <DownloadOption>
-            <DownloadOptionCheckbox
-              type="checkbox"
-              checked={isIncludeColumnTypeInformation}
-              onChange={() => setIsIncludeColumnTypeInformation(!isIncludeColumnTypeInformation)}/>
-            <DownloadOptionText>
-              Include Column Type Information
-            </DownloadOptionText>
-          </DownloadOption>
-        </DownloadOptions>
-      </Dropdown>
-    </Container>
-  )
+    const columnTypeInformation = data && data.length > 0 ? visibleColumns.map(columnId => {
+      const column = allSheetColumns[columnId]
+      const columnType = columnId === 'COLUMN_BREAK' ? columnId : allSheetColumnTypes[column.typeId].cellType
+      return '[TS][' + columnType + ']'
+    }) : []
+    
+    const csvData = isIncludeColumnTypeInformation ? [ headers, columnTypeInformation, ...data ]  : [ headers, ...data ] 
+  
+    // Render
+    return (
+      <Container>
+        <DownloadContainer
+          data={csvData}
+          filename={filename + '.csv'}
+          containerBackgroundColor={userColorPrimary}>
+          <Icon icon={DOWNLOAD}/>&nbsp;CSV
+        </DownloadContainer>
+        <DropdownToggle
+          dropdownToggleBackgroundColor={userColorPrimary}
+          onClick={() => setIsDropdownVisible(true)}>
+          <Icon 
+            icon={ARROW_DOWN}/>
+        </DropdownToggle>
+        <Dropdown
+          ref={dropdown}
+          isDropdownVisible={isDropdownVisible}>
+          <DownloadOptions>
+            <DownloadOption>
+              Filename&nbsp;&nbsp;
+              <StyledInput
+                value={filename || ''}
+                onBlur={() => handleFilenameInputBlur()}
+                onChange={e => setFilename(e.target.value)}
+                onFocus={() => handleFilenameInputFocus()}/>
+            </DownloadOption>
+            <DownloadOption>
+              <DownloadOptionCheckbox
+                type="checkbox"
+                checked={isIncludeColumnTypeInformation}
+                onChange={() => setIsIncludeColumnTypeInformation(!isIncludeColumnTypeInformation)}/>
+              <DownloadOptionText>
+                Include Column Type Information
+              </DownloadOptionText>
+            </DownloadOption>
+          </DownloadOptions>
+        </Dropdown>
+      </Container>
+    )
+  }
+  return <Container />
 }
 
 //-----------------------------------------------------------------------------

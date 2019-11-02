@@ -27,15 +27,24 @@ export const refreshSheetVisibleRows = (sheetId: string): IThunkAction => {
       allSheetGroups,
       allSheetRows,
       allSheetSorts,
+      allSheetViews
     } = getState().sheet
     const sheet = allSheets[sheetId]
-    const nextSheetVisibleRows = resolveSheetVisibleRows(sheet, allSheetRows, allSheetCells, allSheetFilters, allSheetGroups, allSheetSorts)
-    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
+    const nextSheetVisibleRows = resolveSheetVisibleRows(
+      sheet, 
+      allSheetRows, 
+      allSheetCells, 
+      allSheetFilters, 
+      allSheetGroups,
+      allSheetSorts,
+      allSheetViews
+    )
+    const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
       dispatch(updateSheet(sheetId, {
-        rowLeaders: nextSheetRowLeaders,
-        visibleRows: nextSheetVisibleRows
+        visibleRows: nextSheetVisibleRows,
+        visibleRowLeaders: nextSheetVisibleRowLeaders,
       }, true))
     })
 	}

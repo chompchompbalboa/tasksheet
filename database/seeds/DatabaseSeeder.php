@@ -191,13 +191,23 @@ class DatabaseSeeder extends Seeder
                   'id' => Str::uuid()->toString(),
                   'sheetId' => $newSheetId
                 ]);
+
+                // Create a sheet view
+                $newSheetView = factory(App\Models\SheetView::class)->create([
+                  'id' => Str::uuid()->toString(),
+                  'sheetId' => $newSheetId,
+                  'name' => $newFileName,
+                  'visibleColumns' => []
+                ]);
+                $newSheet->activeSheetViewId = $newSheetView->id;
+                $newSheet->save();
                 
                 // Load the CSV we'll create the sheet from
                 $sourceCsv = Storage::disk('sources')->get($path.$folderItem);
                 $sourceCsvRows = Csv::toArray('database/sources/'.$path.$folderItem);
                 
                 // Create the sheet columns, rows and cells
-                SheetController::createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $sourceCsvRows);
+                SheetController::createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $newSheetView, $sourceCsvRows);
               }
             } 
           }

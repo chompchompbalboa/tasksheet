@@ -17,11 +17,16 @@ class CreateSheetView extends Migration
           $table->uuid('id')->primary();
           $table->uuid('sheetId');
           $table->string('name')->nullable();
+          $table->json('visibleColumns');
           $table->timestamp('createdAt')->nullable();
           $table->timestamp('updatedAt')->nullable();
 
           $table->foreign('sheetId')->references('id')->on('sheets');
         });
+
+        Schema::table('sheets', function (Blueprint $table) {
+          $table->foreign('activeSheetViewId')->references('id')->on('sheetViews');
+      });
     }
 
     /**

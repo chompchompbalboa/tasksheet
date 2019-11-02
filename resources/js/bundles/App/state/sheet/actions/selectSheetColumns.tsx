@@ -19,20 +19,23 @@ export const selectSheetColumns = (sheetId: ISheet['id'], startColumnId: ISheetC
       allSheetCells,
       allSheetRows,
       allSheets: { 
-        [sheetId]: { 
+        [sheetId]: {
+          activeSheetViewId,
           selections,
-          visibleColumns, 
           visibleRows 
         }
-      }
+      },
+      allSheetViews
     } = getState().sheet
+
+    const activeSheetView = allSheetViews[activeSheetViewId]
 
     if(startColumnId !== 'COLUMN_BREAK' && endColumnId !== 'COLUMN_BREAK') {
 
-      const startColumnIndex = visibleColumns.indexOf(startColumnId)
-      const endColumnIndex = endColumnId ? visibleColumns.indexOf(endColumnId) : visibleColumns.indexOf(startColumnId)
-      const nextRangeStartColumnId = visibleColumns[startColumnIndex]
-      const nextRangeEndColumnId = visibleColumns[endColumnIndex]
+      const startColumnIndex = activeSheetView.visibleColumns.indexOf(startColumnId)
+      const endColumnIndex = endColumnId ? activeSheetView.visibleColumns.indexOf(endColumnId) : activeSheetView.visibleColumns.indexOf(startColumnId)
+      const nextRangeStartColumnId = activeSheetView.visibleColumns[startColumnIndex]
+      const nextRangeEndColumnId = activeSheetView.visibleColumns[endColumnIndex]
       const nextIsOneEntireColumnSelected = nextRangeStartColumnId === nextRangeEndColumnId
   
       const nextRangeStartRow = allSheetRows[visibleRows[0]]
@@ -44,7 +47,7 @@ export const selectSheetColumns = (sheetId: ISheet['id'], startColumnId: ISheetC
   
       const nextRangeCellIds = new Set() as Set<string>
       for(let columnIndex = startColumnIndex; columnIndex <= endColumnIndex; columnIndex++) {
-        const columnId = visibleColumns[columnIndex]
+        const columnId = activeSheetView.visibleColumns[columnIndex]
         if(columnId && columnId !== 'COLUMN_BREAK') {
           visibleRows.forEach(rowId => {
             if(rowId && rowId !== 'ROW_BREAK') {

@@ -24,36 +24,53 @@ import {
 // Create Sheet Group
 //-----------------------------------------------------------------------------
 export const createSheetGroup = (sheetId: string, newGroup: ISheetGroup): IThunkAction => {
-	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
+  return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
+
     const {
       allSheets,
+      allSheetRows,
       allSheetCells,
       allSheetFilters,
       allSheetGroups,
-      allSheetRows,
       allSheetSorts,
       allSheetViews
     } = getState().sheet
+
     const sheet = allSheets[sheetId]
+    const activeSheetView = allSheetViews[sheet.activeSheetViewId]
+
     const nextAllSheetGroups = { ...allSheetGroups, [newGroup.id]: newGroup }
-    const nextSheetGroups = [ ...sheet.groups, newGroup.id ]
-    const nextSheetVisibleRows = resolveSheetVisibleRows({ ...sheet, groups: nextSheetGroups }, allSheetRows, allSheetCells, allSheetFilters, nextAllSheetGroups, allSheetSorts)
-    const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
-    if(sheet.activeSheetViewId) {
-      const activeSheetView = allSheetViews[sheet.activeSheetViewId]
-      dispatch(updateSheetView(activeSheetView.id, {
-        groups: [ ...activeSheetView.groups, newGroup.id ]
-      }))
-    }
+    const nextSheetViewGroups = [ ...activeSheetView.groups, newGroup.id ]
+    const nextSheetVisibleRows = resolveSheetVisibleRows(
+      sheet, 
+      allSheetRows, 
+      allSheetCells, 
+      allSheetFilters, 
+      nextAllSheetGroups, 
+      allSheetSorts, 
+      {
+        ...allSheetViews,
+        [activeSheetView.id]: {
+          ...allSheetViews[activeSheetView.id],
+          groups: nextSheetViewGroups
+        }
+      }
+    )
+    const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
+
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
-      dispatch(setAllSheetGroups({ ...allSheetGroups, [newGroup.id]: newGroup }))
+      dispatch(setAllSheetGroups(nextAllSheetGroups))
       dispatch(updateSheet(sheetId, {
-        groups: nextSheetGroups,
-        rowLeaders: nextSheetRowLeaders,
-        visibleRows: nextSheetVisibleRows
+        visibleRows: nextSheetVisibleRows,
+        visibleRowLeaders: nextSheetVisibleRowLeaders,
       }, true))
+      dispatch(updateSheetView(activeSheetView.id, {
+        groups: nextSheetViewGroups
+      }))
     })
+
     mutation.createSheetGroup(newGroup)
-	}
+
+  }
 }

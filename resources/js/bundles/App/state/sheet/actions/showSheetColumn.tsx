@@ -6,7 +6,7 @@ import { IThunkAction, IThunkDispatch } from '@app/state/types'
 
 import { ISheet, ISheetColumn } from '@app/state/sheet/types'
 
-import { updateSheet, updateSheetView } from '@app/state/sheet/actions'
+import { updateSheetView } from '@app/state/sheet/actions'
 import { createHistoryStep } from '@app/state/history/actions'
 
 //-----------------------------------------------------------------------------
@@ -22,7 +22,7 @@ export const showSheetColumn = (sheetId: ISheet['id'], columnVisibleColumnsIndex
     
     const sheet = allSheets[sheetId]
     const activeSheetView = allSheetViews[sheet.activeSheetViewId]
-    const visibleColumns = activeSheetView.visibleColumns || sheet.visibleColumns
+    const visibleColumns = activeSheetView.visibleColumns
     
     const nextSheetViewVisibleColumns = [
       ...visibleColumns.slice(0, columnVisibleColumnsIndex),
@@ -31,12 +31,10 @@ export const showSheetColumn = (sheetId: ISheet['id'], columnVisibleColumnsIndex
     ]
     
     const actions = () => {
-      dispatch(updateSheet(sheetId, { visibleColumns: nextSheetViewVisibleColumns }, true))
       dispatch(updateSheetView(activeSheetView.id, { visibleColumns: nextSheetViewVisibleColumns }))
     }
     
     const undoActions = () => {
-      dispatch(updateSheet(sheetId, { visibleColumns: visibleColumns }, true))
       dispatch(updateSheetView(activeSheetView.id, { visibleColumns: visibleColumns }))
     }
     

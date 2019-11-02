@@ -10,6 +10,7 @@ import {
   IAllSheetFilters, ISheetFilterType,
   ISheetGroup, IAllSheetGroups, 
   IAllSheetSorts, 
+  IAllSheetViews
 } from '@app/state/sheet/types'
 
 //-----------------------------------------------------------------------------
@@ -52,12 +53,22 @@ export const resolveSheetCellValue = (value: string) => {
 //-----------------------------------------------------------------------------
 // Resolve Visible Rows
 //-----------------------------------------------------------------------------
-export const resolveSheetVisibleRows = (sheet: ISheet, rows: IAllSheetRows, cells: IAllSheetCells, filters: IAllSheetFilters, groups: IAllSheetGroups, sorts: IAllSheetSorts) => {
+export const resolveSheetVisibleRows = (
+  sheet: ISheet, 
+  rows: IAllSheetRows, 
+  cells: IAllSheetCells, 
+  filters: IAllSheetFilters, 
+  groups: IAllSheetGroups, 
+  sorts: IAllSheetSorts,
+  views: IAllSheetViews
+) => {
   
   const rowIds: string[] = sheet.rows
-  const filterIds: string[] = sheet.filters
-  const groupIds: string[] = sheet.groups
-  const sortIds: string[] = sheet.sorts
+
+  const activeSheetView = views[sheet.activeSheetViewId]
+  const filterIds: string[] = activeSheetView.filters
+  const groupIds: string[] = activeSheetView.groups
+  const sortIds: string[] = activeSheetView.sorts
   
   if(filterIds.length === 0 && groupIds.length === 0 && sortIds.length === 0) {
     return rowIds
