@@ -35,6 +35,7 @@ const SheetActionCreateSheetViewSheetView = ({
   const dispatch = useDispatch()
 
   const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
+  const sheetViews = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].views)
   const sheetView = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetViewId])
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   
@@ -105,7 +106,8 @@ const SheetActionCreateSheetViewSheetView = ({
       }
       <SheetViewActions>
         <IconContainer
-          onClick={() => dispatch(deleteSheetView(sheetId, sheetViewId))}>
+          isActive={sheetViews.length > 1 && !isActiveSheetView}
+          onClick={(sheetViews.length > 1 && !isActiveSheetView) ? () => dispatch(deleteSheetView(sheetId, sheetViewId)) : () => null}>
           <Icon icon={CLOSE} size="0.88rem"/>
         </IconContainer>
       </SheetViewActions>
@@ -156,7 +158,7 @@ const SheetViewActions = styled.div`
 `
 
 const IconContainer = styled.div`
-  cursor: pointer;
+  cursor: ${ ({ isActive }: IIconContainer ) => isActive ? 'pointer' : 'not-allowed' };
   padding: 0 0.125rem;
   display: flex;
   align-items: center;
@@ -165,6 +167,9 @@ const IconContainer = styled.div`
     opacity: 0.85;
   }
 `
+interface IIconContainer {
+  isActive: boolean
+}
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------

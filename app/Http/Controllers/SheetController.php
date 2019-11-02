@@ -108,6 +108,7 @@ class SheetController extends Controller
       $newSheetView = SheetView::create([ 
         'id' => Str::uuid()->toString(), 
         'sheetId' => $newSheetId,
+        'name' => 'New Quick View',
         'visibleColumns' => []
       ]);
       $newSheet->activeSheetViewId = $newSheetView->id;

@@ -22,13 +22,18 @@ export const deleteSheetView = (sheetId: string, sheetViewId: string): IThunkAct
       allSheets,
       allSheetViews,
     } = getState().sheet
+
     const sheet = allSheets[sheetId]
+
     const { [sheetViewId]: deletedView, ...nextAllSheetViews } = allSheetViews
     const nextSheetViews = sheet.views.filter(currentSheetViewId => currentSheetViewId !== sheetViewId)
+    
+    const nextActiveSheetViewId = sheet.activeSheetViewId === sheetViewId ? sheet.views[Math.max(0, sheet.views.indexOf(sheetViewId) - 1)] : sheet.activeSheetViewId
+
     batch(() => {
       dispatch(setAllSheetViews(nextAllSheetViews))
       dispatch(updateSheet(sheetId, {
-        activeSheetViewId: sheet.activeSheetViewId === sheetViewId ? null : sheet.activeSheetViewId,
+        activeSheetViewId: nextActiveSheetViewId,
         views: nextSheetViews
       }, true))
     })
