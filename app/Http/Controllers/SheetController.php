@@ -12,6 +12,7 @@ use App\Models\SheetColumn;
 use App\Models\SheetRow;
 use App\Models\Sheet;
 use App\Models\SheetStyles;
+use App\Models\SheetView;
 
 use App\Utils\Csv;
 use App\Utils\SheetUtils;
@@ -106,8 +107,11 @@ class SheetController extends Controller
       // Create the first sheet view
       $newSheetView = SheetView::create([ 
         'id' => Str::uuid()->toString(), 
-        'sheetId' => $newSheetId 
+        'sheetId' => $newSheetId,
+        'visibleColumns' => []
       ]);
+      $newSheet->activeSheetViewId = $newSheetView->id;
+      $newSheet->save();
 
       // Create the sheet styles
       $newSheetStyles = SheetStyles::create([ 
