@@ -107,10 +107,7 @@ export const SheetColumnContextMenu = ({
             onClick={() => closeContextMenuOnClick(() => dispatch(hideSheetColumn(sheetId, columnIndex)))}/>
           <ContextMenuItem 
             text="Show">
-            {sheetColumns.filter(columnId => { sheetActiveSheetViewId 
-                ? !sheetViewVisibleColumns.includes(columnId) 
-                : !sheetViewVisibleColumns.includes(columnId)
-              }).map(columnId => {
+            {sheetColumns.filter(columnId => !sheetViewVisibleColumns.includes(columnId)).map(columnId => {
               const column = allSheetColumns[columnId]
               return (
                 <ContextMenuItem

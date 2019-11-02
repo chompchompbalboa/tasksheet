@@ -66,6 +66,7 @@ export const resolveSheetVisibleRows = (
   const rowIds: string[] = sheet.rows
 
   const activeSheetView = views[sheet.activeSheetViewId]
+
   const filterIds: string[] = activeSheetView.filters
   const groupIds: string[] = activeSheetView.groups
   const sortIds: string[] = activeSheetView.sorts

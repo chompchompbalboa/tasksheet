@@ -18,7 +18,8 @@ import AutosizeInput from 'react-input-autosize'
 //-----------------------------------------------------------------------------
 const SettingsTeamsTeamMembersAddMember = ({
   team: {
-    id: teamId
+    id: teamId,
+    members: teamMembers
   }
 }: ISettingsTeamsTeamMembersAddMember) => {
   
@@ -34,7 +35,9 @@ const SettingsTeamsTeamMembersAddMember = ({
       addMemberEmailInput.current.focus()
       addEventListener('keypress', handleKeyPressWhileInputVisible)
     }
-    if(status === 'EMAIL_IS_INVALID') { setTimeout(() => setStatus('INPUT_VISIBLE'), 2000) }
+    if([ 'EMAIL_IS_INVALID', 'MEMBER_IS_ALREADY_ON_TEAM' ].includes(status)) { 
+      setTimeout(() => setStatus('INPUT_VISIBLE'), 2000) 
+    }
     return () => {
       removeEventListener('keypress', handleKeyPressWhileInputVisible)
     }
@@ -43,6 +46,9 @@ const SettingsTeamsTeamMembersAddMember = ({
   const handleAddMember = () => {
     if(!isEmail(addMemberEmailInputValue)) {
       setStatus('EMAIL_IS_INVALID')
+    }
+    else if (teamMembers.map(teamMember => teamMember.email).includes(addMemberEmailInputValue)) {
+      setStatus('MEMBER_IS_ALREADY_ON_TEAM')
     }
     else {
       setStatus('CHECKING_IF_NEW_MEMBER_IS_VALID')
@@ -82,6 +88,7 @@ const SettingsTeamsTeamMembersAddMember = ({
     INPUT_VISIBLE: 'Add member',
     CHECKING_IF_NEW_MEMBER_IS_VALID: 'Adding...',
     EMAIL_IS_INVALID: 'That is not a valid email address',
+    MEMBER_IS_ALREADY_ON_TEAM: 'That user is already on the team',
     NEW_MEMBER_IS_INVALID: 'That user does not exist',
     ADDED: 'Added!'
   }
@@ -114,7 +121,7 @@ const SettingsTeamsTeamMembersAddMember = ({
             fontSize: 'inherit',
             fontWeight: 'inherit'}}/>
       <AddMemberButton
-        isError={['EMAIL_IS_INVALID', 'NEW_MEMBER_IS_INVALID'].includes(status)}
+        isError={['EMAIL_IS_INVALID', 'NEW_MEMBER_IS_INVALID', 'MEMBER_IS_ALREADY_ON_TEAM'].includes(status)}
         onClick={() => handleAddMember()}>
         {buttonMessage}
       </AddMemberButton>
@@ -129,7 +136,13 @@ export interface ISettingsTeamsTeamMembersAddMember {
   team: ITeam
 }
 
-type IStatus = 'READY' | 'INPUT_VISIBLE' | 'CHECKING_IF_NEW_MEMBER_IS_VALID' | 'EMAIL_IS_INVALID' | 'NEW_MEMBER_IS_INVALID' | 'ADDED'
+type IStatus = 'READY' 
+  | 'INPUT_VISIBLE' 
+  | 'CHECKING_IF_NEW_MEMBER_IS_VALID' 
+  | 'EMAIL_IS_INVALID' 
+  | 'NEW_MEMBER_IS_INVALID' 
+  | 'ADDED'
+  | 'MEMBER_IS_ALREADY_ON_TEAM'
 
 //-----------------------------------------------------------------------------
 // Styled Components

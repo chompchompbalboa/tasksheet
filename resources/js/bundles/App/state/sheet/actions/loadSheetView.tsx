@@ -39,7 +39,10 @@ export const loadSheetView = (sheetId: ISheet['id'], sheetViewId: ISheetView['id
     const sheetView = allSheetViews[sheetViewId]
 
     const nextSheetVisibleRows = resolveSheetVisibleRows(
-      sheet, 
+      {
+        ...sheet,
+        activeSheetViewId: sheetViewId
+      }, 
       allSheetRows, 
       allSheetCells, 
       allSheetFilters, 
