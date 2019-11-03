@@ -189,6 +189,7 @@ const Content = styled.div`
 const Name = styled.div`
   font-size: 3rem;
   font-weight: bold;
+  margin-top: 10%;
   margin-bottom: 0.625rem;
   display: flex;
   align-items: flex-start;
