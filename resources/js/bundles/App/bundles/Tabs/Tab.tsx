@@ -69,6 +69,9 @@ const Container = styled.div`
   border-left: none;
   border-bottom: none;
   border-radius: 4px 4px 0 0;
+  @media (max-width: 480px) {
+    width: 25%;
+  }
 `
 interface ContainerProps {
   isActiveTab: boolean

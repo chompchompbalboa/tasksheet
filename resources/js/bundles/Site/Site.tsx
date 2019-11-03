@@ -78,7 +78,7 @@ const Site = () => {
         <Divider />
         <LoginRegisterContainer>
           {isLoginOrRegister === 'REGISTER' && registerStatus !== 'REGISTERED' &&
-            <form onSubmit={e => handleRegisterAttempt(e)}>
+            <LoginRegisterForm onSubmit={e => handleRegisterAttempt(e)}>
               <StyledInput
                 placeholder="Email"
                 value={emailInputValue}
@@ -101,10 +101,10 @@ const Site = () => {
                 isSubmitting={registerStatus === 'REGISTERING'}>
                 {!['REGISTERING'].includes(registerStatus) ? 'Sign Up' : 'Signing Up...'}
               </SubmitButton>
-            </form>
+            </LoginRegisterForm>
           }
           {isLoginOrRegister === 'LOGIN' && registerStatus !== 'REGISTERED' &&
-            <form onSubmit={e => handleLoginAttempt(e)}>
+            <LoginRegisterForm onSubmit={e => handleLoginAttempt(e)}>
               <StyledInput
                 placeholder="Email"
                 value={emailInputValue}
@@ -122,7 +122,7 @@ const Site = () => {
                 isSubmitting={loginStatus === 'LOGGING_IN'}>
                 {!['LOGGING_IN'].includes(loginStatus) ? 'Log In' : 'Logging In...'}
               </SubmitButton>
-            </form>
+            </LoginRegisterForm>
           }
         </LoginRegisterContainer>
         <CurrentStatus>
@@ -198,6 +198,8 @@ const Name = styled.div`
 const Motto = styled.div`
   font-size: 1.125rem;
   opacity: 0.85;
+  width: 80%;
+  text-align: center;
 `
 
 const CurrentStatus = styled.div`
@@ -217,6 +219,18 @@ const LoginRegisterContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: 1rem;
+  @media (max-width: 480px) {
+    width: 80%;
+  }
+`
+
+const LoginRegisterForm = styled.form`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @media (max-width: 480px) {
+    flex-direction: column;
+  }
 `
 
 const Divider = styled.div`
@@ -234,6 +248,10 @@ const StyledInput = styled.input`
   border-radius: 4px;
   outline: none;
   font-size: 0.9rem;
+  @media (max-width: 480px) {
+    width: 100%;
+    margin: 0.375rem;
+  }
 `
 interface StyledInputProps {
   isInputValueValid: boolean
@@ -252,6 +270,10 @@ const SubmitButton = styled.button`
   &:hover {
     background-color: white;
     color: black;
+  }
+  @media (max-width: 480px) {
+    width: 100%;
+    margin: 0.375rem;
   }
 `
 interface SubmitButtonProps {

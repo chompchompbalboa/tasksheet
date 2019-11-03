@@ -94,6 +94,9 @@ const Container = styled.div`
   min-height: 2.75rem;
   background-color: rgb(250, 250, 250);
   border-bottom: 1px solid rgb(180, 180, 180);
+  @media (max-width: 480px) {
+    overflow: scroll;
+  }
 `
 
 const Divider = styled.div`
