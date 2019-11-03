@@ -68,7 +68,7 @@ const Container = styled.div`
   background-color: rgb(250, 250, 250);
   border-left: none;
   border-bottom: none;
-  border-radius: 4px 8px 0 0;
+  border-radius: 4px 4px 0 0;
 `
 interface ContainerProps {
   isActiveTab: boolean
