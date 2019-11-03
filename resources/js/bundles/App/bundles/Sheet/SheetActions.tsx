@@ -19,7 +19,6 @@ import SheetActionCreateRows from '@app/bundles/Sheet/SheetActionCreateRows'
 import SheetActionCreateSheetLink from '@/bundles/App/bundles/Sheet/SheetActionCreateSheetLink'
 import SheetActionCreateSheetView from '@/bundles/App/bundles/Sheet/SheetActionCreateSheetView'
 import SheetActionDownloadCsv from '@app/bundles/Sheet/SheetActionDownloadCsv'
-import SheetActionDownloadSheet from '@app/bundles/Sheet/SheetActionDownloadSheet'
 import SheetActionFilter from '@app/bundles/Sheet/SheetActionFilter'
 import SheetActionGroup from '@app/bundles/Sheet/SheetActionGroup'
 import SheetActionRefreshVisibleRows from '@app/bundles/Sheet/SheetActionRefreshVisibleRows'
@@ -32,16 +31,24 @@ const SheetActions = ({
   sheetId,
 }: ISheetActionsProps) => {
 
-  const [ isFiltersSortsGroupsVisible, setIsFiltersGroupsSortsVisible ] = useState(true)
+  const localStorageKey = 'tracksheet.SheetActions.isFiltersGroupsSortVisible'
+
+  const [ isFiltersSortsGroupsVisible, setIsFiltersGroupsSortsVisible ] = useState(localStorage.getItem(localStorageKey) !== null && localStorage.getItem(localStorageKey) === 'true')
+
+  const handleIsFiltersGroupsSortsToggle = () => {
+    localStorage.setItem(localStorageKey, !isFiltersSortsGroupsVisible + '')
+    setIsFiltersGroupsSortsVisible(!isFiltersSortsGroupsVisible)
+  }
+
   return (
     <Container>
       <SheetActionCreateSheetView sheetId={sheetId}/>
       <SheetActionRefreshVisibleRows sheetId={sheetId}/>
       <SheetActionButton
-        icon={isFiltersSortsGroupsVisible ? VISIBLE : HIDDEN}
+        icon={isFiltersSortsGroupsVisible ? HIDDEN : VISIBLE}
         marginLeft="0.375rem"
         marginRight={isFiltersSortsGroupsVisible ? "0.4125rem" : "0"}
-        onClick={() => setIsFiltersGroupsSortsVisible(!isFiltersSortsGroupsVisible)}/>
+        onClick={() => handleIsFiltersGroupsSortsToggle()}/>
       {isFiltersSortsGroupsVisible &&
         <>
           <SheetActionFilter sheetId={sheetId}/>
@@ -60,7 +67,6 @@ const SheetActions = ({
       <SheetActionCreateSheetLink sheetId={sheetId}/>
       <Divider />
       <SheetActionDownloadCsv sheetId={sheetId}/>
-      <SheetActionDownloadSheet sheetId={sheetId}/>
     </Container>
   )
 }
@@ -85,7 +91,7 @@ const Container = styled.div`
   display: flex;
   flex-flow: row-wrap;
   align-items: center;
-  min-height: 2.625rem;
+  min-height: 2.75rem;
   background-color: rgb(250, 250, 250);
   border-bottom: 1px solid rgb(180, 180, 180);
 `

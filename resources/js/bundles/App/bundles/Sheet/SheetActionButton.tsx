@@ -18,7 +18,9 @@ const SheetActionButton = ({
   children,
   closeDropdown,
   icon,
+  iconPadding = '0.35rem 0.4rem',
   iconSize = '1.1rem',
+  iconTextSize = '0.75rem',
   isDropdownVisible,
   marginLeft = '0.25rem',
   marginRight = '0.25rem',
@@ -51,12 +53,14 @@ const SheetActionButton = ({
       <IconContainer
         containerBackgroundColor={userColorPrimary}
         hasDropdown={typeof(children) !== 'undefined'}
+        iconPadding={iconPadding}
         onClick={() => onClick()}>
         <Icon 
           icon={icon}
           size={text ? "1rem" : iconSize}/>
         {text &&
-          <IconText>
+          <IconText
+            iconTextSize={iconTextSize}>
             {text}
           </IconText>
         }
@@ -86,7 +90,9 @@ interface SheetActionButtonProps {
   children?: any // React Component,
   closeDropdown?(): void
   icon: string
+  iconPadding?: string
   iconSize?: string
+  iconTextSize?: string
   isDropdownVisible?: boolean
   marginLeft?: string
   marginRight?: string
@@ -105,10 +111,11 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(210, 210, 210);
+  background-color: rgb(220, 220, 220);
   color: rgb(80, 80, 80);
   border-radius: 3px;
   transition: all 0.05s;
+  border: 1px solid rgb(200, 200, 200);
 `
 interface IContainer {
   containerMarginLeft: string
@@ -120,7 +127,7 @@ const IconContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0.325rem 0.4rem;
+  padding: ${ ({ iconPadding }: IIconContainer ) => iconPadding };
   transition: all 0.05s;
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
@@ -134,12 +141,17 @@ const IconContainer = styled.div`
 interface IIconContainer {
   containerBackgroundColor: string
   hasDropdown: boolean
+  iconPadding: string
 }
 
 const IconText = styled.div`
-  margin-left: 0.1875rem;
   white-space: nowrap;
+  margin-left: 0.25rem;
+  font-size: ${ ({ iconTextSize }: IIconText ) => iconTextSize };
 `
+interface IIconText {
+  iconTextSize: string
+}
 
 const DropdownToggle = styled.div`
   cursor: pointer;
@@ -168,10 +180,12 @@ const DropdownContainer = styled.div`
   position: absolute;
   left: 0;
   top: 100%;
+  min-width: 100%;
   border-radius: 5px;
   background-color: rgb(250, 250, 250);
-  box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.5);
+  box-shadow: 2px 2px 15px 0px rgba(0,0,0,0.3);
   white-space: nowrap;
+  border: 1px solid rgb(200, 200, 200);
 `
 interface IDropdown {
   isDropdownVisible: boolean

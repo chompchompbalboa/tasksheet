@@ -69,11 +69,12 @@ const Site = () => {
   }
   
   return (
-    <Container>
-      <Header>tracksheet</Header>
+    <Container
+      className="site_background_image">
+      <Header>tracksheet<HeaderBetaTag>beta</HeaderBetaTag></Header>
       <Content>
-        <Name>tracksheet</Name>
-        <Motto>Keep track of anything and everything</Motto>
+        <Name>tracksheet<NameBetaTag>beta</NameBetaTag></Name>
+        <Motto>The spreadsheet that makes it easy to keep track of anything and everything</Motto>
         <Divider />
         <LoginRegisterContainer>
           {isLoginOrRegister === 'REGISTER' && registerStatus !== 'REGISTERED' &&
@@ -119,7 +120,7 @@ const Site = () => {
                 isInputValueValid={true}/>
               <SubmitButton
                 isSubmitting={loginStatus === 'LOGGING_IN'}>
-                {!['LOGGING_IN'].includes(loginStatus) ? 'Login' : 'Logging In...'}
+                {!['LOGGING_IN'].includes(loginStatus) ? 'Log In' : 'Logging In...'}
               </SubmitButton>
             </form>
           }
@@ -154,15 +155,26 @@ const Container = styled.div`
 	height: 100vh;
 	display: flex;
   flex-direction: column;
-  background-color: #088E72;
   color: white;
 `
 
 const Header = styled.div`
   width: 100%;
-  padding: 2rem;
+  margin: 2rem;
   font-size: 1.5rem;
   font-weight: bold;
+  display: flex;
+  align-items: flex-start;
+`
+
+const HeaderBetaTag = styled.span`
+  font-size: 0.5rem;
+  opacity: 0.75;
+`
+
+const NameBetaTag = styled.span`
+  font-size: 0.85rem;
+  opacity: 0.75;
 `
 
 const Content = styled.div`
@@ -177,11 +189,14 @@ const Content = styled.div`
 const Name = styled.div`
   font-size: 3rem;
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.625rem;
+  display: flex;
+  align-items: flex-start;
 `
 
 const Motto = styled.div`
-  font-size: 1.25rem;
+  font-size: 1.125rem;
+  opacity: 0.85;
 `
 
 const CurrentStatus = styled.div`
@@ -226,12 +241,12 @@ interface StyledInputProps {
 const SubmitButton = styled.button`
   margin-left: 0.375rem;
   cursor: pointer;
-  padding: 0.25rem 1rem;
+  padding: 0.5rem 1.25rem;
   border: 1px solid white;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 0.9rem;
-  background-color: ${ ({ isSubmitting }: SubmitButtonProps ) => isSubmitting ? 'white' : '#088E72'};
-  color: ${ ({ isSubmitting }: SubmitButtonProps ) => isSubmitting ? 'black' : 'white'};
+  background-color: ${ ({ isSubmitting }: SubmitButtonProps ) => isSubmitting ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.9)'};
+  color: ${ ({ isSubmitting }: SubmitButtonProps ) => isSubmitting ? 'rgb(25, 25, 25)' : 'rgb(25, 25, 25)'};
   outline: none;
   &:hover {
     background-color: white;

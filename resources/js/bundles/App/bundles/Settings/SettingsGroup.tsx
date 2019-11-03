@@ -51,7 +51,8 @@ export interface ISettingsGroup {
 const Container = styled.div`
   width: 100%;
   background-color: rgb(245, 245, 245);
-  border-radius: 7px;
+  border: 1px solid rgb(220, 220, 220);
+  border-radius: 4px;
 `
 
 const Header = styled.div`
@@ -62,10 +63,10 @@ const Header = styled.div`
   background-color: ${ ({ userColorPrimary }: IHeader ) => userColorPrimary };
   color: black;
   font-size: 0.9rem;
-  border-top-left-radius: 7px;
-  border-top-right-radius: 7px;
-  border-bottom-left-radius: ${ ({ isContentVisible }: IHeader ) => isContentVisible ? '0' : '7px' };
-  border-bottom-right-radius: ${ ({ isContentVisible }: IHeader ) => isContentVisible ? '0' : '7px' };
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-left-radius: ${ ({ isContentVisible }: IHeader ) => isContentVisible ? '0' : '4px' };
+  border-bottom-right-radius: ${ ({ isContentVisible }: IHeader ) => isContentVisible ? '0' : '4px' };
 `
 interface IHeader {
   isContentVisible: boolean
@@ -75,8 +76,8 @@ interface IHeader {
 const Content = styled.div`
   padding: 0.5rem;
   display: ${ ({ isContentVisible }: IContent ) => isContentVisible ? 'block' : 'none' };
-  border-bottom-left-radius: 7px;
-  border-bottom-right-radius: 7px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
 `
 interface IContent {
   isContentVisible: boolean

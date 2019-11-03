@@ -29,6 +29,7 @@ const Tab = ({
       <Content>
         <NameContainer>
           <Name
+            isActiveTab={isActiveTab}
             isVisible={typeof file !== 'undefined'}
             onClick={() => handleTabClick(fileId)}>
             {file ? file.name : 'Loading...'}
@@ -67,7 +68,7 @@ const Container = styled.div`
   background-color: rgb(250, 250, 250);
   border-left: none;
   border-bottom: none;
-  border-radius: 6px 6px 0 0;
+  border-radius: 4px 8px 0 0;
 `
 interface ContainerProps {
   isActiveTab: boolean
@@ -85,7 +86,7 @@ const NameContainer = styled.div`
   overflow: hidden;
   height: 100%;
   width: calc(100% - 1.1rem);
-  padding: 0.275rem;
+  padding: 0.265rem;
   padding-left: 0.5rem;
   display: flex;
   align-items: center;
@@ -96,11 +97,13 @@ const Name = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
+  color: rgb(75, 75, 75);
   transition: opacity 0.25s;
   opacity: ${ ({ isVisible }: NameProps) => isVisible ? '1' : '0'};
 `
 interface NameProps {
+  isActiveTab: boolean
   isVisible: boolean
 }
 

@@ -32,10 +32,12 @@ const SheetActionCreateSheetLink = ({
   return (
     <SheetActionButton
       icon={SHEET_LINK}
+      iconPadding="0.2rem 0.4rem"
+      iconTextSize="1rem"
       marginLeft="0"
       marginRight="0"
       onClick={() => handleClick()}
-      text="New Linked Sheet"/>
+      text="+"/>
   )
 }
 

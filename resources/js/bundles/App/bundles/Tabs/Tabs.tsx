@@ -77,14 +77,14 @@ const Tabs = () => {
           onClick={() => handleFileOpen('FOLDERS')}>
           <Icon
             icon={FOLDER}
-            size="1rem"/>
+            size="0.9rem"/>
         </MiniTab>
         <MiniTab
           isActiveTab={localActiveTab === 'SETTINGS'}
           onClick={() => handleFileOpen('SETTINGS')}>
           <Icon
             icon={SETTINGS}
-            size="0.95rem"/>
+            size="0.85rem"/>
         </MiniTab>
       </TabsContainer>
       <FilesContainer>
@@ -128,8 +128,8 @@ const TabsContainer = styled.div`
 const MiniTab = styled.div`
   cursor: default;
   margin-top: 0.2rem;
-  height: 1.4rem;
-  padding: 0.3rem;
+  height: 1.3rem;
+  padding: 0.25rem;
   margin-right: 1px;
   background-color: rgb(240,240,240);
   color: rgb(80, 80, 80);

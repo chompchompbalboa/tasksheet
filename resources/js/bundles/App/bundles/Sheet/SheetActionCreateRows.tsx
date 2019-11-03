@@ -29,11 +29,9 @@ const SheetCreateRows = ({
 
   const dispatch = useDispatch()
   
-  const localStorageKey = 'tracksheet.SheetActionCreateRows.insertAtTopOrBottomOfSheet'
-  
-  const [ insertAtTopOrBottomOfSheet, setInsertAtTopOrBottomOfSheet ] = useState(localStorage.getItem(localStorageKey) || 'TOP')
+  const [ insertAboveOrBelowSelectedRow, setInsertAboveOrBelowSelectedRow ] = useState('ABOVE')
 
-  const sheetVisibleRows = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleRows)
+  const sheetSelections = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections)
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   
   const [ isEditingInputValue, setIsEditingInputValue ] = useState(false)
@@ -45,13 +43,15 @@ const SheetCreateRows = ({
     return () => window.removeEventListener('keydown', createRowsOnKeydownEnter)
   }, [ inputValue, isEditingInputValue ])
 
-  const createRows = (topOrBottom: 'TOP' | 'BOTTOM') => {
-    localStorage.setItem(localStorageKey, topOrBottom)
-    setInsertAtTopOrBottomOfSheet(topOrBottom)
-    const createSheetRowIndex = topOrBottom === 'TOP' 
-      ? sheetVisibleRows[0] 
-      : sheetVisibleRows[sheetVisibleRows.length - 1] !== 'ROW_BREAK' ? sheetVisibleRows[sheetVisibleRows.length - 1] : sheetVisibleRows[sheetVisibleRows.length - 2]
-    dispatch(createSheetRows(sheetId, inputValue, createSheetRowIndex, topOrBottom === 'TOP' ? 'ABOVE' : 'BELOW'))
+  const createRows = (aboveOrBelow: 'ABOVE' | 'BELOW') => {
+    setInsertAboveOrBelowSelectedRow(aboveOrBelow)
+    dispatch(createSheetRows(
+      sheetId, 
+      inputValue, 
+      sheetSelections.rangeStartRowId, 
+      aboveOrBelow === 'ABOVE' ? 'ABOVE' : 'BELOW',
+      true
+    ))
   }
   
   const handleAutosizeInputFocus = () => {
@@ -66,45 +66,49 @@ const SheetCreateRows = ({
   }
   
   const createRowsOnKeydownEnter = (e: KeyboardEvent) => { 
-    if(e.key === 'Enter') { createRows(insertAtTopOrBottomOfSheet as 'TOP' | 'BOTTOM') } 
+    if(e.key === 'Enter') { createRows(insertAboveOrBelowSelectedRow as 'ABOVE' | 'BELOW') } 
   }
 
   return (
     <Container>
-      Add
-      <AutosizeInput
-        value={inputValue === 0 ? '' : inputValue}
-        onBlur={() => handleAutosizeInputBlur()}
-        onChange={e => setInputValue(Math.min(Number(e.target.value), 25))}
-        onFocus={() => handleAutosizeInputFocus()}
-        inputStyle={{
-          margin: '0 0.25rem',
-          padding: '0.125rem 0.125rem 0.125rem 0.25rem',
-          height: '100%',
-          minWidth: '0.5rem',
-          border: '0.5px solid rgb(180, 180, 180)',
-          borderRadius: '3px',
-          color: 'rgb(110, 110, 110)',
-          backgroundColor: 'transparent',
-          outline: 'none',
-          fontFamily: 'inherit',
-          fontSize: 'inherit',
-          fontWeight: 'inherit'}}/>
-      row{inputValue > 1 ? 's' : ''}
-      <TopOrBottomButton
-        isSelected={insertAtTopOrBottomOfSheet === 'TOP'}
-        onClick={() => createRows('TOP')}
+      <AboveOrBelowButton
+        isSelected={insertAboveOrBelowSelectedRow === 'ABOVE'}
+        isInsertAboveOrBelow="ABOVE"
+        onClick={() => createRows('ABOVE')}
         userColorPrimary={userColorPrimary}>
         <Icon
           icon={ARROW_UP}/>
-      </TopOrBottomButton>
-      <TopOrBottomButton
-        isSelected={insertAtTopOrBottomOfSheet === 'BOTTOM'}
-        onClick={() => createRows('BOTTOM')}
+      </AboveOrBelowButton>
+      <AddContainer>
+        Add
+        <AutosizeInput
+          value={inputValue === 0 ? '' : inputValue}
+          onBlur={() => handleAutosizeInputBlur()}
+          onChange={e => setInputValue(Math.min(Number(e.target.value), 25))}
+          onFocus={() => handleAutosizeInputFocus()}
+          inputStyle={{
+            margin: '0 0.25rem',
+            padding: '0.125rem 0.125rem 0.125rem 0.25rem',
+            height: '100%',
+            minWidth: '0.5rem',
+            border: '0.5px solid rgb(180, 180, 180)',
+            borderRadius: '3px',
+            color: 'rgb(110, 110, 110)',
+            backgroundColor: 'transparent',
+            outline: 'none',
+            fontFamily: 'inherit',
+            fontSize: 'inherit',
+            fontWeight: 'inherit'}}/>
+        row{inputValue > 1 ? 's' : ''}
+      </AddContainer>
+      <AboveOrBelowButton
+        isSelected={insertAboveOrBelowSelectedRow === 'BELOW'}
+        isInsertAboveOrBelow="BELOW"
+        onClick={() => createRows('BELOW')}
         userColorPrimary={userColorPrimary}>
         <Icon
           icon={ARROW_DOWN}/>
-      </TopOrBottomButton>
+      </AboveOrBelowButton>
     </Container>
   )
 }
@@ -122,29 +126,38 @@ interface ISheetCreateRowsProps {
 const Container = styled.div`
   height: 100%;
   display: flex;
+  justify-content: space-between;
   align-items: center;
 `
 
-const TopOrBottomButton = styled.div`
-  margin-left: 0.375rem;
+const AboveOrBelowButton = styled.div`
+  margin-right: ${ ({ isInsertAboveOrBelow }: IAboveOrBelowButton ) => isInsertAboveOrBelow === 'ABOVE' ? '0.5rem' : '0' };
+  margin-left: ${ ({ isInsertAboveOrBelow }: IAboveOrBelowButton ) => isInsertAboveOrBelow === 'BELOW' ? '0.5rem' : '0' };
   cursor: pointer;  
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  background-color: ${ ({ isSelected, userColorPrimary }: ITopOrBottomButton ) => isSelected ? userColorPrimary : 'rgb(210, 210, 210)' };
-  color: ${ ({ isSelected }: ITopOrBottomButton ) => isSelected ? 'rgb(240, 240, 240)' : 'inherit' };
+  background-color: ${ ({ isSelected, userColorPrimary }: IAboveOrBelowButton ) => isSelected ? userColorPrimary : 'rgb(220, 220, 220)' };
+  color: ${ ({ isSelected }: IAboveOrBelowButton ) => isSelected ? 'rgb(240, 240, 240)' : 'inherit' };
   border-radius: 3px;
-  padding: 0.25rem;
+  border: 1px solid rgb(200, 200, 200);
+  padding: 0.35rem;
   transition: all 0.05s;
   &:hover {
-    background-color: ${ ({ userColorPrimary }: ITopOrBottomButton ) => userColorPrimary };
+    background-color: ${ ({ userColorPrimary }: IAboveOrBelowButton ) => userColorPrimary };
     color: rgb(240, 240, 240);
   }
 `
-interface ITopOrBottomButton {
+interface IAboveOrBelowButton {
   isSelected: boolean
+  isInsertAboveOrBelow: 'ABOVE' | 'BELOW'
   userColorPrimary: string
 }
+
+const AddContainer = styled.div`
+  display: flex;
+  align-items: center;
+`
 
 //-----------------------------------------------------------------------------
 // Export

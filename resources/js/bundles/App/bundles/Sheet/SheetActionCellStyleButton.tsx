@@ -3,12 +3,11 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 import { useSelector } from 'react-redux'
-import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
 import { ISheet } from '@app/state/sheet/types'
 
-import Icon from '@/components/Icon'
+import SheetActionButton from '@app/bundles/Sheet/SheetActionButton'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -20,7 +19,6 @@ const SheetActionCellStyleButton = ({
   updateSheetStylesSet
 }: SheetActionCellStyleButtonProps) => {
   
-  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   const allSheetRows = useSelector((state: IAppState) => state.sheet.allSheetRows)
   const selections = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections)
   const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
@@ -71,12 +69,9 @@ const SheetActionCellStyleButton = ({
   }
 
   return (
-    <Container
-      containerBackgroundColor={userColorPrimary}
-      onClick={handleContainerClick}>
-      <Icon 
-        icon={icon}/>
-    </Container>
+    <SheetActionButton 
+      icon={icon}
+      onClick={handleContainerClick}/>
   )
 }
 
@@ -88,30 +83,6 @@ interface SheetActionCellStyleButtonProps {
   icon: string
   sheetStylesSet: Set<string>
   updateSheetStylesSet(nextSheetStylesSet: Set<string>): void
-}
-
-//-----------------------------------------------------------------------------
-// Styled Components
-//-----------------------------------------------------------------------------
-const Container = styled.div`
-  margin-right: 0.375rem;
-  cursor: pointer;  
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgb(210, 210, 210);
-  color: rgb(80, 80, 80);
-  text-decoration: none;
-  border-radius: 3px;
-  padding: 0.4rem;
-  transition: all 0.05s;
-  &:hover {
-    background-color: ${ ({ containerBackgroundColor }: IContainer) => containerBackgroundColor};
-    color: rgb(240, 240, 240);
-  }
-`
-interface IContainer {
-  containerBackgroundColor: string
 }
 
 //-----------------------------------------------------------------------------

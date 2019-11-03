@@ -13,7 +13,10 @@ import {
   IAllSheetViews, ISheetView, ISheetViewFromDatabase
 } from '@app/state/sheet/types'
 
-import { loadSheetReducer } from '@app/state/sheet/actions'
+import { 
+  loadSheetReducer,
+  updateSheetSelectionFromCellClick
+} from '@app/state/sheet/actions'
 
 import { defaultSheetSelections } from '@app/state/sheet/defaults'
 
@@ -21,6 +24,7 @@ import {
   resolveSheetRowLeaders,
   resolveSheetVisibleRows
  } from '@app/state/sheet/resolvers'
+import {  } from './updateSheetSelectionFromCellClick'
 //-----------------------------------------------------------------------------
 // Action
 //-----------------------------------------------------------------------------
@@ -137,6 +141,10 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       normalizedSheetViews
     )
     const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
+
+    const sheetFirstVisibleRow = normalizedSheetRows[nextSheetVisibleRows[0]]
+    const sheetFirstVisibleColumnId = newSheetViewVisibleColumns[0]
+    const sheetFirstCell = normalizedSheetCells[sheetFirstVisibleRow.cells[sheetFirstVisibleColumnId]]
     
     // Dispatch the state change
 		dispatch(
@@ -154,6 +162,8 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         normalizedSheetSorts,
         normalizedSheetViews
 			)
-		)
+    )
+    
+    dispatch(updateSheetSelectionFromCellClick(newSheet.id, sheetFirstCell.id, false))
 	}
 }

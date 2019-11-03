@@ -21,3 +21,9 @@ div {
   color: inherit;
   opacity: 1
 }
+
+.site_background_image {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: linear-gradient(rgba(1, 21, 65, 0.93),rgba(1, 21, 65, 0.93)), url('/images/background.png');
+}

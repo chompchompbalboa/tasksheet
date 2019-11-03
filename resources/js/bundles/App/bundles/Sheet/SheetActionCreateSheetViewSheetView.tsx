@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { CLOSE } from '@app/assets/icons'
+import { TRASH_CAN } from '@app/assets/icons'
 
 import { IAppState } from '@app/state'
 import { ISheet, ISheetView } from '@app/state/sheet/types'
@@ -53,7 +53,7 @@ const SheetActionCreateSheetViewSheetView = ({
     }
   }, [ sheetView.name ])
 
-  const handleNameContainerClick = () => {
+  const handleSheetViewNameClick = () => {
     closeDropdown()
     dispatch(loadSheetView(sheetId, sheetView.id))
   }
@@ -81,7 +81,7 @@ const SheetActionCreateSheetViewSheetView = ({
       userColorPrimary={userColorPrimary}>
       {sheetView.name 
         ? <SheetViewName
-            onClick={() => handleNameContainerClick()}>
+            onClick={() => handleSheetViewNameClick()}>
             {sheetView.name}
           </SheetViewName>
         : <AutosizeInput
@@ -105,11 +105,13 @@ const SheetActionCreateSheetViewSheetView = ({
             }}/>
       }
       <SheetViewActions>
-        <IconContainer
-          isActive={sheetViews.length > 1 && !isActiveSheetView}
-          onClick={(sheetViews.length > 1 && !isActiveSheetView) ? () => dispatch(deleteSheetView(sheetId, sheetViewId)) : () => null}>
-          <Icon icon={CLOSE} size="0.88rem"/>
-        </IconContainer>
+        {sheetViews.length > 1 && !isActiveSheetView &&
+          <IconContainer
+            isActive
+            onClick={() => dispatch(deleteSheetView(sheetId, sheetViewId))}>
+            <Icon icon={TRASH_CAN} size="0.88rem"/>
+          </IconContainer>
+        }
       </SheetViewActions>
     </Container>
   )
@@ -149,6 +151,7 @@ const SheetViewName = styled.div`
   padding-right: 1.25rem;
   font-size: inherit;
   color: inherit;
+  width: 100%;
 `
 
 const SheetViewActions = styled.div`

@@ -81,7 +81,7 @@ const ContentItems = styled.div`
   background-color: rgb(254, 254, 254);
   border-top: 1px solid rgb(220, 220, 220);
   border-left: 1px solid rgb(220, 220, 220);
-  border-top-left-radius: 7px;
+  border-top-left-radius: 4px;
   display: flex;
 `
 //-----------------------------------------------------------------------------

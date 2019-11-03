@@ -7,6 +7,7 @@ import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
 
+import ErrorBoundary from '@/components/ErrorBoundary'
 import Sheet from '@app/bundles/Sheet/Sheet'
 
 //-----------------------------------------------------------------------------
@@ -24,13 +25,13 @@ const File = ({
   const FileComponent = file ? fileComponents[file.type] : null
 
   return (
-    <Container>
+    <StyledErrorBoundary>
       {file 
         ? <FileComponent 
             fileId={file.id}
             id={file.typeId}/>
         : 'Please select a sheet to get started'}
-    </Container>
+    </StyledErrorBoundary>
   )
 }
 
@@ -44,7 +45,7 @@ interface FileProps {
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div`
+const StyledErrorBoundary = styled(ErrorBoundary)`
   position: relative;
   width: 100%;
   height: 100%;

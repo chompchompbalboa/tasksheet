@@ -88,7 +88,7 @@ const SheetActionDownloadCsv = ({
         return visibleColumns.map(columnId => {
           if(columnId !== 'COLUMN_BREAK') {
             if(row.cells && row.cells[columnId] && allSheetCells[row.cells[columnId]]) {
-              return allSheetCells[row.cells[columnId]].value
+              return allSheetCells[row.cells[columnId]].value ? allSheetCells[row.cells[columnId]].value.replace(',', '').replace('"', '') : null
             }
             return null
           }
@@ -113,7 +113,7 @@ const SheetActionDownloadCsv = ({
           data={csvData}
           filename={filename + '.csv'}
           containerBackgroundColor={userColorPrimary}>
-          <Icon icon={DOWNLOAD}/>&nbsp;CSV
+          <Icon icon={DOWNLOAD}/>&nbsp;.csv
         </DownloadContainer>
         <DropdownToggle
           dropdownToggleBackgroundColor={userColorPrimary}
@@ -165,10 +165,11 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(210, 210, 210);
+  background-color: rgb(220, 220, 220);
   border-radius: 3px;
   transition: all 0.05s;
   margin-right: 0.375rem;
+  border: 1px solid rgb(200, 200, 200);
 `
 
 const DownloadContainer = styled(({ containerBackgroundColor, ...rest }) => <CSVLink {...rest}/>)`
@@ -220,7 +221,7 @@ const Dropdown = styled.div`
   padding: 0.125rem 0.625rem;
   border-radius: 5px;
   background-color: rgb(250, 250, 250);
-  box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.5);
+  box-shadow: 2px 2px 15px 0px rgba(0,0,0,0.3);
 `
 interface IDropdown {
   isDropdownVisible: boolean

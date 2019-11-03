@@ -29,10 +29,16 @@ import { resolveSheetRowLeaders } from '@app/state/sheet/resolvers'
 //-----------------------------------------------------------------------------
 // Create Sheet Row
 //-----------------------------------------------------------------------------
-export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, insertBeforeRowId: ISheetRow['id'], aboveOrBelow: 'ABOVE' | 'BELOW' = 'ABOVE'): IThunkAction => {
+export const createSheetRows = (
+  sheetId: string, 
+  numberOfRowsToAdd: number, 
+  insertBeforeRowId: ISheetRow['id'], 
+  aboveOrBelow: 'ABOVE' | 'BELOW' = 'ABOVE',
+  keepSheetSelection: boolean = false
+): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
 
-    dispatch(clearSheetSelection(sheetId))
+    !keepSheetSelection && dispatch(clearSheetSelection(sheetId))
     
     const {
       allSheets,
@@ -57,7 +63,7 @@ export const createSheetRows = (sheetId: string, numberOfRowsToAdd: number, inse
       }
     })
 
-    const insertBeforeRowIdVisibleRowsIndex = nextSheetVisibleRows.indexOf(insertBeforeRowId)
+    const insertBeforeRowIdVisibleRowsIndex = nextSheetVisibleRows.indexOf(insertBeforeRowId) > -1 ? nextSheetVisibleRows.indexOf(insertBeforeRowId) : 0
 
     const newRowSheetId = sheet.sourceSheetId !== null ? sheet.sourceSheetId : sheetId
           

@@ -175,10 +175,11 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(210, 210, 210);
+  background-color: rgb(220, 220, 220);
   color: rgb(80, 80, 80);
   text-decoration: none;
   border-radius: 3px;
+  border: 1px solid rgb(200, 200, 200);
 `
 interface IContainer {
   isBeforeDivider: boolean
@@ -239,7 +240,7 @@ const Dropdown = styled.div`
   padding: 0.625rem;
   border-radius: 5px;
   background-color: rgb(250, 250, 250);
-  box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.5);
+  box-shadow: 2px 2px 15px 0px rgba(0,0,0,0.3);
 `
 interface IDropdown {
   isDropdownVisible: boolean

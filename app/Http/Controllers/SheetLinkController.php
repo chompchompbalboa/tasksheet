@@ -8,37 +8,34 @@ use Illuminate\Support\Str;
 
 use App\Models\Sheet;
 use App\Models\SheetStyles;
+use App\Models\SheetView;
 
 class SheetLinkController extends Controller
 {
     public function store(Request $request)
     {
       $newSheetId = $request->input('id');
+      $newActiveSheetViewId = $request->input('activeSheetViewId');
+      $newActiveSheetViewName = $request->input('activeSheetViewName');
+      $newActiveSheetViewVisibleColumns = $request->input('activeSheetViewVisibleColumns');
       $sourceSheetId = $request->input('sourceSheetId');
-      $visibleColumns = $request->input('visibleColumns');
-      $newSheetView = Sheet::create([ 
+
+      $newSheet = Sheet::create([ 
         'id' => $newSheetId, 
-        'sourceSheetId' => $sourceSheetId, 
-        'visibleColumns' => $visibleColumns 
+        'sourceSheetId' => $sourceSheetId
       ]);
+
+      $newSheetView = SheetView::create([
+        'id' => $newActiveSheetViewId,
+        'sheetId' => $newSheetId,
+        'name' => $newActiveSheetViewName,
+        'visibleColumns' => $newActiveSheetViewVisibleColumns 
+      ]);
+      $newSheet->activeSheetViewId = $newActiveSheetViewId;
+      $newSheet->save();
 
       $newSheetStyles = SheetStyles::create([ 'id' => Str::uuid()->toString(), 'sheetId' => $newSheetId ]);
 
-      $newSheetViewFilters = $request->input('filters');
-      foreach($newSheetViewFilters as $sheetViewFilter) {
-        $newSheetView->filters()->create($sheetViewFilter);
-      }
-
-      $newSheetViewGroups = $request->input('groups');
-      foreach($newSheetViewGroups as $sheetViewGroup) {
-        $newSheetView->groups()->create($sheetViewGroup);
-      }
-
-      $newSheetViewSorts = $request->input('sorts');
-      foreach($newSheetViewSorts as $sheetViewSort) {
-        $newSheetView->sorts()->create($sheetViewSort);
-      }
-
-      return response()->json($newSheetView, 200);
+      return response()->json(null, 200);
     }
 }

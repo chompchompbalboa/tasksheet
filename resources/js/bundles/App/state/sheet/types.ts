@@ -59,10 +59,16 @@ export interface ISheetFromDatabaseRow {
 //-----------------------------------------------------------------------------
 export interface ISheetLink {
   id: string
-  sourceSheetId: string
-  filters: IAllSheetFilters
-  groups: IAllSheetGroups
-  sorts: IAllSheetSorts
+  sourceSheetId: ISheet['id']
+  activeSheetViewId: ISheetView['id']
+}
+
+export interface ISheetLinkToDatabase {
+  id: string
+  sourceSheetId: ISheet['id']
+  activeSheetViewId: ISheetView['id']
+  activeSheetViewName: string
+  activeSheetViewVisibleColumns: ISheetColumn['id'][]
 }
 
 //-----------------------------------------------------------------------------

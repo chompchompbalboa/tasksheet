@@ -11,9 +11,7 @@ import { IAppState } from '@app/state'
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import { IFileType } from '@app/state/folder/types'
 import { 
-  IAllSheetFilters,
-  IAllSheetGroups,
-  IAllSheetSorts
+  ISheetView
 } from '@app/state/sheet/types'
 
 import { loadSheetReducer } from '@app/state/sheet/actions'
@@ -25,7 +23,7 @@ import { defaultSheetSelections, defaultSheetStyles } from '@app/state/sheet/def
 //-----------------------------------------------------------------------------
 // Create Sheet Link
 //-----------------------------------------------------------------------------
-export const createSheetLink = (sheetId: string, viewName: string): IThunkAction => {
+export const createSheetLink = (sheetId: string, newSheetLinkName: string): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
       folder: { 
@@ -34,27 +32,35 @@ export const createSheetLink = (sheetId: string, viewName: string): IThunkAction
         folders 
       },
       sheet: { 
-        allSheets
+        allSheets,
+        allSheetViews
       },
       tab: { 
         tabs 
       }
     } = getState()
     const sourceSheet = allSheets[sheetId]
+    const sourceSheetActiveSheetView = allSheetViews[sourceSheet.activeSheetViewId]
+
     const fileId = Object.keys(files).find(fileId => files[fileId].typeId === sheetId)
     const folderId = activeFolderPath[activeFolderPath.length - 1]
     const newFileId = createUuid()
-    const newSheetViewId = createUuid()
-    const newFilters: IAllSheetFilters = {}
-    const newGroups: IAllSheetGroups = {}
-    const newSorts: IAllSheetSorts = {}
+
+    const newLinkedSheetId = createUuid()
+    const newLinkedSheetActiveSheetView: ISheetView = {
+      ...sourceSheetActiveSheetView,
+      id: createUuid(),
+      filters: [],
+      groups: [],
+      sorts: []
+    }
 
   // Update allSheets
     dispatch(loadSheetReducer(
       {
-        id: newSheetViewId,
-        sourceSheetId: sourceSheet.id,
-        activeSheetViewId: null,
+        id: newLinkedSheetId,
+        sourceSheetId: sourceSheet.sourceSheetId || sourceSheet.id,
+        activeSheetViewId: newLinkedSheetActiveSheetView.id,
         columns: clone(sourceSheet.columns),
         rows: clone(sourceSheet.rows),
         visibleRowLeaders: clone(sourceSheet.visibleRowLeaders),
@@ -65,20 +71,23 @@ export const createSheetLink = (sheetId: string, viewName: string): IThunkAction
       },
       null, // Cells
       null, // Columns
-      newFilters, // Filters
-      newGroups, // Groups
+      null, // Filters
+      null, // Groups
       null, // Rows
-      newSorts, // Sorts
-      null // Views
+      null, // Sorts
+      {
+        ...allSheetViews,
+        [newLinkedSheetActiveSheetView.id]: newLinkedSheetActiveSheetView
+      }
     ))
     // Update folders and files
     const newFile = {
       ...files[fileId],
       id: newFileId,
       folderId: folderId,
-      type: 'SHEET_VIEW' as IFileType, 
-      name: viewName,
-      typeId: newSheetViewId
+      type: 'SHEET' as IFileType, 
+      name: newSheetLinkName,
+      typeId: newLinkedSheetId
     }
     dispatch(updateFiles({
       ...files,
@@ -92,16 +101,16 @@ export const createSheetLink = (sheetId: string, viewName: string): IThunkAction
       }
     }))
     // Update open tabs
-    dispatch(updateTabs([ ...tabs, newFileId]))
+    dispatch(updateTabs([ ...tabs, newFileId ]))
     // Create the file on the server
     mutation.createFile(newFile)
     // Create the sheet view on the server
     mutation.createSheetLink({
-      id: newSheetViewId,
-      sourceSheetId: sourceSheet.id,
-      filters: newFilters,
-      groups: newGroups,
-      sorts: newSorts
+      id: newLinkedSheetId,
+      sourceSheetId: sourceSheet.sourceSheetId || sourceSheet.id,
+      activeSheetViewId: newLinkedSheetActiveSheetView.id,
+      activeSheetViewName: newSheetLinkName,
+      activeSheetViewVisibleColumns: newLinkedSheetActiveSheetView.visibleColumns,
     })
 	}
 }

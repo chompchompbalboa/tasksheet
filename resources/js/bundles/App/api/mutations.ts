@@ -10,11 +10,11 @@ import {
 } from '@app/state/folder/types'
 import { 
   ISheet, ISheetUpdates,
+  ISheetLinkToDatabase,
   ISheetCell, ISheetCellUpdates,
   ISheetColumn, ISheetColumnUpdates,
   ISheetFilter, 
   ISheetGroup, ISheetGroupUpdates, 
-  ISheetLink,
   ISheetRowToDatabase, 
   ISheetSort, ISheetSortUpdates, 
   ISheetStylesDatabaseUpdates,
@@ -275,7 +275,7 @@ export const updateSheetStyles = async (id: string, updates: ISheetStylesDatabas
 	})
 }
 
-export const createSheetLink = async (newSheetLink: ISheetLink) => {
+export const createSheetLink = async (newSheetLink: ISheetLinkToDatabase) => {
 	return axios.post('/app/sheets/links', newSheetLink).then(response => {
 		return response.data
 	})
