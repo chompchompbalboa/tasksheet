@@ -228,6 +228,7 @@ const LoginRegisterContainer = styled.div`
 `
 
 const LoginRegisterForm = styled.form`
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -253,7 +254,7 @@ const StyledInput = styled.input`
   font-size: 0.9rem;
   @media (max-width: 480px) {
     width: 100%;
-    margin: 0.375rem;
+    margin: 0.375rem 0;
   }
 `
 interface StyledInputProps {
