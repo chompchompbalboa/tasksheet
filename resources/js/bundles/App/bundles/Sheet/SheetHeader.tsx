@@ -174,8 +174,6 @@ const Container = styled.div`
         ? '1px solid rgb(180, 180, 180)' 
         : '1px solid rgb(230, 230, 230)'
   };
-  font-size: 0.875rem;
-  font-weight: bold;
   &:hover {
     background-color: ${({ isColumnBreak }: ContainerProps ) => isColumnBreak ? 'rgb(190, 190, 190)' : 'rgb(243, 243, 243)'};
   }
@@ -196,7 +194,9 @@ const NameContainer = styled.div`
   white-space: nowrap;
   display: flex;
   align-items: center;
-  color: ${({ isColumnBreak }: NameContainerProps ) => isColumnBreak ? 'transparent' : 'inherit'};
+  font-size: 0.78rem;
+  font-weight: bold;
+  color: ${({ isColumnBreak }: NameContainerProps ) => isColumnBreak ? 'transparent' : 'rgb(50, 50, 50)'};
 `
 interface NameContainerProps {
   isColumnBreak: boolean

@@ -193,6 +193,9 @@ const Name = styled.div`
   margin-bottom: 0.625rem;
   display: flex;
   align-items: flex-start;
+  @media (max-width: 480px) {
+  margin-top: -10%;
+  }
 `
 
 const Motto = styled.div`

@@ -120,7 +120,7 @@ describe('SheetRowLeader', () => {
     const R1CLastSheetCellSheetRange = getSheetRange(R1CLastCell)
 
     const SheetRowLeaders = await waitForElement(() => getAllByTestId('SheetRowLeader'))
-    const R1SheetRowLeader = SheetRowLeaders[1]
+    const R1SheetRowLeader = SheetRowLeaders[0]
     fireEvent.mouseDown(R1SheetRowLeader)
 
     expect(R1C1SheetCellSheetRange).toHaveStyleRule('background-color', userColorSecondary)
@@ -152,7 +152,7 @@ describe('SheetRowLeader', () => {
     const R3CLastSheetCellSheetRange = getSheetRange(R3CLastCell)
 
     const SheetRowLeaders = await waitForElement(() => getAllByTestId('SheetRowLeader'))
-    const R2SheetRowLeader = SheetRowLeaders[2]
+    const R2SheetRowLeader = SheetRowLeaders[1]
     fireEvent.mouseDown(R2SheetRowLeader)
     expect(R2C1SheetCellSheetRange).toHaveStyleRule('background-color', userColorSecondary)
     expect(R2CLastSheetCellSheetRange).toHaveStyleRule('background-color', userColorSecondary)

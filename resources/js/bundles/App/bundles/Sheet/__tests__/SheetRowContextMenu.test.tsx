@@ -92,7 +92,7 @@ describe('SheetRowContextMenu', () => {
     const { cell: R1C1Cell } = getCellAndCellProps({ row: 1, column: 1 })
     const { getAllByTestId, getByTestId, store } = renderWithRedux(<Sheet {...sheetProps}/>)
     const SheetRowLeaders = await waitForElement(() => getAllByTestId('SheetRowLeader'))
-    const R1SheetRowLeader = SheetRowLeaders[1]
+    const R1SheetRowLeader = SheetRowLeaders[0]
 
     fireEvent.contextMenu(R1SheetRowLeader)
 
