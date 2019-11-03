@@ -15,6 +15,8 @@ import SheetActionButton from '@app/bundles/Sheet/SheetActionButton'
 const SheetActionCellStyleButton = ({
   sheetId,
   icon,
+  marginLeft,
+  marginRight,
   sheetStylesSet,
   updateSheetStylesSet
 }: SheetActionCellStyleButtonProps) => {
@@ -71,6 +73,8 @@ const SheetActionCellStyleButton = ({
   return (
     <SheetActionButton 
       icon={icon}
+      marginLeft={marginLeft}
+      marginRight={marginRight}
       onClick={handleContainerClick}/>
   )
 }
@@ -81,6 +85,8 @@ const SheetActionCellStyleButton = ({
 interface SheetActionCellStyleButtonProps {
   sheetId: ISheet['id']
   icon: string
+  marginLeft?: string
+  marginRight?: string
   sheetStylesSet: Set<string>
   updateSheetStylesSet(nextSheetStylesSet: Set<string>): void
 }
