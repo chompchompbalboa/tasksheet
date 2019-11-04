@@ -20,6 +20,7 @@ import {
   ISheet
 } from '@app/state/sheet/types'
 
+import ErrorBoundary from '@/components/ErrorBoundary'
 import LoadingTimer from '@/components/LoadingTimer'
 import SheetActions from '@app/bundles/Sheet/SheetActions'
 import SheetContextMenus from '@app/bundles/Sheet/SheetContextMenus'
@@ -165,7 +166,7 @@ const SheetContainer = styled.div`
   height: calc(100% - 4.075rem);
 `
 
-const SheetGridContainer = styled.div`
+const SheetGridContainer = styled(ErrorBoundary)`
   width: 100%;
   height: 100%;
 `

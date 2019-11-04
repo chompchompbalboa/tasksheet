@@ -13,6 +13,7 @@ import SettingsColumnSettingsBoolean from '@/bundles/App/bundles/Settings/Settin
 import SettingsColumnSettingsDatetime from '@/bundles/App/bundles/Settings/SettingsColumnSettingsDatetime'
 import SettingsColumnSettingsDropdown from '@/bundles/App/bundles/Settings/SettingsColumnSettingsDropdown'
 import SettingsColumnSettingsPhotos from '@/bundles/App/bundles/Settings/SettingsColumnSettingsPhotos'
+import SettingsColumnSettingsNotes from '@/bundles/App/bundles/Settings/SettingsColumnSettingsNotes'
 import SettingsColumnSettingsFiles from '@/bundles/App/bundles/Settings/SettingsColumnSettingsFiles'
 import SettingsContentVerticalList from '@/bundles/App/bundles/Settings/SettingsContentVerticalList'
 import SettingsContentVerticalListItem from '@/bundles/App/bundles/Settings/SettingsContentVerticalListItem'
@@ -40,6 +41,7 @@ const SettingsColumnSettings = ({
     DROPDOWN: SettingsColumnSettingsDropdown,
     PHOTOS: SettingsColumnSettingsPhotos,
     FILES: SettingsColumnSettingsFiles,
+    NOTES: SettingsColumnSettingsNotes,
   }
 
   const ColumnTypeSettingsComponent = columnTypeSettingsComponents[activeColumnType.cellType]

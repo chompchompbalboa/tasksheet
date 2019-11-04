@@ -205,7 +205,8 @@ export type ISheetCellType =
 'NUMBER' | 
 'DROPDOWN' |
 'PHOTOS' | 
-'FILES'
+'FILES' |
+'NOTES'
 
 //-----------------------------------------------------------------------------
 // Sheet Sort

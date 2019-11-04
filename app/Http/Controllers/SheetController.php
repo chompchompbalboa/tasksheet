@@ -46,18 +46,35 @@ class SheetController extends Controller
 
     public function store(Request $request)
     {
-      // Create the sheet
+      // Get the request inputs
       $newSheetId = $request->input('newSheetId');
-      $newSheet = Sheet::create([ 'id' => $newSheetId ]);
-      $newSheetStyles = SheetStyles::create([ 'id' => Str::uuid()->toString(), 'sheetId' => $newSheetId ]);
 
-      // Create the columns
-      $newColumns = [];
-      $visibleColumns = [];
+      // Create the sheet
+      $newSheet = Sheet::create([ 'id' => $newSheetId ]);
+
+      // Create the sheet view
+      $newSheetView = SheetView::create([ 
+        'id' => Str::uuid()->toString(), 
+        'sheetId' => $newSheetId,
+        'name' => 'New Quick View',
+        'visibleColumns' => []
+      ]);
+      $newSheet->activeSheetViewId = $newSheetView->id;
+      $newSheet->save();
+      
+      // Create the sheet styles
+      $newSheetStyles = SheetStyles::create([ 
+        'id' => Str::uuid()->toString(), 
+        'sheetId' => $newSheetId 
+      ]);
+
+      // Create the sheet columns
+      $newSheetColumns = [];
+      $newSheetViewVisibleColumns = [];
       foreach(explode(',', 'A,B,C,D,E,F,G,H') as $columnName) {
         $newColumnId = Str::uuid()->toString();
-        array_push($visibleColumns, $newColumnId);
-        array_push($newColumns, [
+        array_push($newSheetViewVisibleColumns, $newColumnId);
+        array_push($newSheetColumns, [
           'id' => $newColumnId,
           'sheetId' => $newSheet->id,
           'name' => $columnName,
@@ -65,18 +82,19 @@ class SheetController extends Controller
           'width' => 100
         ]);
       }
-      // Create the rows and cells
-      $newRows = [];
-      $newCells = [];
+
+      // Create the sheet rows and cells
+      $newSheetRows = [];
+      $newSheetCells = [];
       for($rowNumber = 0; $rowNumber < 5; $rowNumber++) {
         $newRowId = Str::uuid()->toString();
-        array_push($newRows, [ 
+        array_push($newSheetRows, [ 
           'id' => $newRowId,
           'sheetId' => $newSheet->id
         ]);
 
-        foreach($newColumns as $index => $column) {
-          array_push($newCells, [
+        foreach($newSheetColumns as $index => $column) {
+          array_push($newSheetCells, [
             'id' => Str::uuid()->toString(),
             'sheetId' => $newSheet->id,
             'columnId' => $column['id'],
@@ -85,11 +103,16 @@ class SheetController extends Controller
           ]);
         }
       }
-      SheetColumn::insert($newColumns);
-      SheetRow::insert($newRows);
-      SheetCell::insert($newCells);
-      $newSheet->visibleColumns = $visibleColumns;
-      $newSheet->save();
+
+      // Save the columns, rows, and cells to the database
+      SheetColumn::insert($newSheetColumns);
+      SheetRow::insert($newSheetRows);
+      SheetCell::insert($newSheetCells);
+
+      // Save the sheet view's visibleColumns
+      $newSheetView->visibleColumns = $newSheetViewVisibleColumns;
+      $newSheetView->save();
+
       return response()->json(null, 200);
     }
 

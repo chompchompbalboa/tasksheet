@@ -23,6 +23,7 @@ import SheetCellDatetime from '@app/bundles/Sheet/SheetCellDatetime'
 import SheetCellDropdown from '@app/bundles/Sheet/SheetCellDropdown'
 import SheetCellFiles from '@app/bundles/Sheet/SheetCellFiles'
 import SheetCellNumber from '@app/bundles/Sheet/SheetCellNumber'
+import SheetCellNotes from '@app/bundles/Sheet/SheetCellNotes'
 import SheetCellPhotos from '@app/bundles/Sheet/SheetCellPhotos'
 import SheetCellString from '@app/bundles/Sheet/SheetCellString'
 
@@ -79,7 +80,8 @@ export const SheetCell = memo(({
       DATETIME: SheetCellDatetime,
       DROPDOWN: SheetCellDropdown,
       PHOTOS: SheetCellPhotos,
-      FILES: SheetCellFiles
+      FILES: SheetCellFiles,
+      NOTES: SheetCellNotes
     }
 
     // Update selection when cell is clicked
@@ -149,7 +151,7 @@ export interface ISheetCellProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  z-index: ${ ({ cellType, isCellSelected }: IContainer ) => ['DATETIME', 'FILES', 'PHOTOS'].includes(cellType) && isCellSelected ? '20' : '10' };
+  z-index: ${ ({ cellType, isCellSelected }: IContainer ) => ['DATETIME', 'FILES', 'PHOTOS', 'NOTES'].includes(cellType) && isCellSelected ? '20' : '10' };
   position: relative;
   cursor: default;
   font-size: 0.9rem;

@@ -135,6 +135,15 @@ export const initialSheetState: ISheetState = {
       cellType: 'FILES',
       data: null
     },
+    NOTES: {
+      id: 'NOTES',
+      organizationId: null,
+      userId: null,
+      sheetId: null,
+      name: 'Notes',
+      cellType: 'NOTES',
+      data: null
+    },
     ...columnTypesFromServer
   },
   allSheetFilters: null,
