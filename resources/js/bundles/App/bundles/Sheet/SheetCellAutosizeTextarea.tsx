@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { FormEvent } from 'react'
+import React, { FormEvent, forwardRef } from 'react'
 import styled from 'styled-components'
 
 
@@ -10,24 +10,22 @@ import AutosizeTextArea from 'react-autosize-textarea'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetCellString = ({
-  ref,
+const SheetCellString = forwardRef(({
   onChange,
   value,
   testId
-}: SheetCellStringProps) => (
+}: SheetCellStringProps, ref: any) => (
     <StyledTextarea
       data-testid={testId}
       ref={ref}
       onChange={onChange}
       value={value || ''}/>
-)
+))
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
 interface SheetCellStringProps {
-  ref?: any
   onChange(e: FormEvent): void
   value: string
   testId?: string

@@ -13,7 +13,8 @@ import {
   IAllSheetFilters, ISheetFilterUpdates,
   IAllSheetGroups, ISheetGroupUpdates,
   IAllSheetSorts, ISheetSortUpdates,
-  IAllSheetViews, ISheetViewUpdates
+  IAllSheetViews, ISheetViewUpdates,
+  IAllSheetNotes, IAllSheetCellNotes
 } from '@app/state/sheet/types'
 
 //-----------------------------------------------------------------------------
@@ -32,6 +33,7 @@ export { createSheetRows } from '@/bundles/App/state/sheet/actions/createSheetRo
 export { createSheetSort } from '@app/state/sheet/actions/createSheetSort'
 export { createSheetLink } from '@/bundles/App/state/sheet/actions/createSheetLink'
 export { createSheetView } from '@app/state/sheet/actions/createSheetView'
+export { createSheetCellNote } from '@app/state/sheet/actions/createSheetCellNote'
 
 export { deleteSheetColumn } from '@app/state/sheet/actions/deleteSheetColumn'
 export { deleteSheetColumnBreak } from '@app/state/sheet/actions/deleteSheetColumnBreak'
@@ -99,6 +101,8 @@ interface ILoadSheet {
   rows: IAllSheetRows
   sorts: IAllSheetSorts
   views: IAllSheetViews
+  cellNotes: IAllSheetCellNotes
+  notes: IAllSheetNotes
 }
 
 export const loadSheetReducer = (
@@ -109,7 +113,9 @@ export const loadSheetReducer = (
   groups: IAllSheetGroups, 
   rows: IAllSheetRows, 
   sorts: IAllSheetSorts, 
-  views: IAllSheetViews
+  views: IAllSheetViews,
+  cellNotes: IAllSheetCellNotes,
+  notes: IAllSheetNotes,
 ): ISheetActions => {
   return {
     type: LOAD_SHEET,
@@ -120,7 +126,9 @@ export const loadSheetReducer = (
     filters,
     groups,
     sorts,
-    views
+    views,
+    cellNotes,
+    notes
   }
 }
 

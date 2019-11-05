@@ -220,7 +220,8 @@ export const appStateFactory = ({
           bold: [],
           italic: []
         },
-        views: newSheetFromDatabaseViews
+        views: newSheetFromDatabaseViews,
+        notes: []
       }
 
       allFiles[newFile.id] = newFile

@@ -12,6 +12,7 @@ import {
   IAllSheetGroups, 
   IAllSheetSorts,
   IAllSheetViews,
+  IAllSheetCellNotes, IAllSheetNotes,
   ISheetActive,
   ISheetClipboard, 
 } from '@app/state/sheet/types'
@@ -42,6 +43,8 @@ export interface ISheetState {
   allSheetGroups: IAllSheetGroups
   allSheetSorts: IAllSheetSorts
   allSheetViews: IAllSheetViews
+  allSheetNotes: IAllSheetNotes
+  allSheetCellNotes: IAllSheetCellNotes
   active: ISheetActive
   clipboard: ISheetClipboard
 }
@@ -149,7 +152,9 @@ export const initialSheetState: ISheetState = {
   allSheetFilters: null,
   allSheetGroups: null,
   allSheetSorts: null,
-  allSheetViews: null
+  allSheetViews: null,
+  allSheetNotes: null,
+  allSheetCellNotes: null
 }
 
 //-----------------------------------------------------------------------------
@@ -165,10 +170,12 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
         columns,  
         rows,  
         cells, 
+        views,
         filters, 
         groups,
         sorts,
-        views
+        cellNotes,
+        notes,
       } = action
 			return {
         ...state,
@@ -176,10 +183,12 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
         allSheetColumns: { ...state.allSheetColumns, ...columns },
         allSheetRows: { ...state.allSheetRows, ...rows },
         allSheetCells: { ...state.allSheetCells, ...cells },
+        allSheetViews: { ...state.allSheetViews, ...views },
         allSheetFilters: { ...state.allSheetFilters, ...filters },
         allSheetGroups: { ...state.allSheetGroups, ...groups },
         allSheetSorts: { ...state.allSheetSorts, ...sorts },
-        allSheetViews: { ...state.allSheetViews, ...views }
+        allSheetCellNotes: { ...state.allSheetCellNotes, ...cellNotes },
+        allSheetNotes: { ...state.allSheetNotes, ...notes },
 			}
 		}
 

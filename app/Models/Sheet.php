@@ -11,9 +11,9 @@ class Sheet extends Model
   const CREATED_AT = 'createdAt';
   const UPDATED_AT = 'updatedAt';
 
-  protected $visible = ['id', 'sourceSheetId', 'defaultSheetViewId', 'activeSheetViewId', 'rows', 'columns', 'views', 'styles'];
+  protected $visible = ['id', 'sourceSheetId', 'defaultSheetViewId', 'activeSheetViewId', 'rows', 'columns', 'views', 'styles', 'notes'];
   protected $fillable = ['id', 'sourceSheetId', 'defaultSheetViewId', 'activeSheetViewId'];
-  protected $with = ['views'];
+  protected $with = ['notes', 'views'];
   protected $appends = ['columns', 'rows', 'styles'];
   
   public function getColumnsAttribute() {
@@ -37,5 +37,9 @@ class Sheet extends Model
   
   public function views() {
     return $this->hasMany('App\Models\SheetView', 'sheetId')->orderBy('createdAt');
+  }
+  
+  public function notes() {
+    return $this->hasMany('App\Models\SheetNote', 'sheetId')->orderBy('createdAt');
   }
 }

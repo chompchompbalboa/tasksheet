@@ -6,11 +6,12 @@ import {
   ISheet, ISheetFromDatabase,
   IAllSheetCells, ISheetCell,
   IAllSheetColumns, ISheetColumn,
+  IAllSheetViews, ISheetView, ISheetViewFromDatabase,
   IAllSheetFilters, ISheetFilter,
   IAllSheetGroups, ISheetGroup,
   IAllSheetSorts, ISheetSort,
   IAllSheetRows, ISheetRow,
-  IAllSheetViews, ISheetView, ISheetViewFromDatabase
+  IAllSheetCellNotes, IAllSheetNotes
 } from '@app/state/sheet/types'
 
 import { 
@@ -39,6 +40,8 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
     const normalizedSheetGroups: IAllSheetGroups = {}
     const normalizedSheetSorts: IAllSheetSorts = {}
     const normalizedSheetViews: IAllSheetViews = {}
+    const normalizedSheetCellNotes: IAllSheetCellNotes = {}
+    const normalizedSheetNotes: IAllSheetNotes = {}
 
     const sheetColumns: ISheetColumn['id'][] = []
     const sheetRows: ISheetRow['id'][] = []
@@ -71,6 +74,15 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
     sheetFromDatabase.columns.forEach(sheetColumn => { 
       normalizedSheetColumns[sheetColumn.id] = sheetColumn
       sheetColumns.push(sheetColumn.id)
+    })
+
+    // Sheet Notes
+    sheetFromDatabase.notes.forEach(sheetNote => { 
+      normalizedSheetNotes[sheetNote.id] = sheetNote
+      normalizedSheetCellNotes[sheetNote.cellId] = [
+        ...normalizedSheetCellNotes[sheetNote.cellId],
+        sheetNote.id
+      ]
     })
 
     // Sheet Views
@@ -160,7 +172,9 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         normalizedSheetGroups,
         normalizedSheetRows,
         normalizedSheetSorts,
-        normalizedSheetViews
+        normalizedSheetViews,
+        normalizedSheetCellNotes,
+        normalizedSheetNotes
 			)
     )
     

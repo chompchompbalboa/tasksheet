@@ -10,6 +10,8 @@ export interface IAllSheetFilters { [filterId: string]: ISheetFilter }
 export interface IAllSheetGroups { [groupId: string]: ISheetGroup }
 export interface IAllSheetSorts { [sortId: string]: ISheetSort }
 export interface IAllSheetViews { [viewId: string]: ISheetView }
+export interface IAllSheetNotes { [noteId: string]: ISheetNote }
+export interface IAllSheetCellNotes { [cellId: string]: ISheetNote['id'][] }
 
 //-----------------------------------------------------------------------------
 // Sheet
@@ -46,6 +48,7 @@ export interface ISheetFromDatabase {
   rows: ISheetFromDatabaseRow[]
   styles: ISheetStylesFromDatabase
   views: ISheetViewFromDatabase[]
+  notes: ISheetNote[]
 }
 
 export interface ISheetFromDatabaseRow {
@@ -209,10 +212,6 @@ export type ISheetCellType =
 'NOTES'
 
 //-----------------------------------------------------------------------------
-// Sheet Sort
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
 // Sheet Filter
 //-----------------------------------------------------------------------------
 export interface ISheetFilter {
@@ -268,6 +267,17 @@ export interface ISheetSortUpdates {
 
 export type ISheetSortOrder = 'ASC' | 'DESC'
 
+//-----------------------------------------------------------------------------
+// Sheet Note
+//-----------------------------------------------------------------------------
+export interface ISheetNote {
+  id: string
+  sheetId: ISheet['id']
+  cellId: ISheetCell['id']
+  value: string
+  createdAt: string
+  createdBy: string
+}
 
 //-----------------------------------------------------------------------------
 // Sheet Styles
