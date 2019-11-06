@@ -71,10 +71,10 @@ const Site = () => {
   return (
     <Container
       className="site_background_image">
-      <Header>tracksheet<HeaderBetaTag>beta</HeaderBetaTag></Header>
+      <Header>tasksheet<HeaderBetaTag>beta</HeaderBetaTag></Header>
       <Content>
-        <Name>tracksheet<NameBetaTag>beta</NameBetaTag></Name>
-        <Motto>The spreadsheet that makes it easy to keep track of anything and everything</Motto>
+        <Name>tasksheet<NameBetaTag>beta</NameBetaTag></Name>
+        <Motto>The spreadsheet that makes it easy to manage tasks across teams</Motto>
         <Divider />
         <LoginRegisterContainer>
           {isLoginOrRegister === 'REGISTER' && registerStatus !== 'REGISTERED' &&
