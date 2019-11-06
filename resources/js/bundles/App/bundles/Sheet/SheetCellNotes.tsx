@@ -109,7 +109,8 @@ export const SheetCellNotes = ({
               <NoteDetailsAndActions>
                 <NoteDetails>
                   {sheetCellNote.createdBy}<br/>
-                  {moment(sheetCellNote.createdAt).format('LLL')}
+                  {moment(sheetCellNote.createdAt).format('MMMM Do, YYYY')}<br/>
+                  {moment(sheetCellNote.createdAt).format('hh:mm a')}
                 </NoteDetails>
                 <NoteActions>
                   <DeleteNote
@@ -148,6 +149,7 @@ const CurrentNoteContainer = styled.div`
   width: 100%;
   height: 100%;
   padding: 0.15rem 0.25rem;
+  overflow: hidden;
 `
 
 const CurrentNote = styled.div`
@@ -157,7 +159,7 @@ const NotesContainer = styled.div`
   position: absolute;
   top: 100%;
   left: 0;
-  min-width: 100%;
+  width: 100%;
   padding: 0.25rem 0.5rem;
   border: 1px solid rgb(200, 200, 200);
   border-radius: 3px;
@@ -165,9 +167,9 @@ const NotesContainer = styled.div`
 `
 
 const Note = styled.div`
+  width: 100%;
   margin: 0.25rem 0;
   padding: 0.5rem;
-  min-width: 15rem;
   background-color: white;
   border-radius: 3px;
   display: flex;
@@ -179,13 +181,14 @@ const Note = styled.div`
 `
 
 const NoteValue = styled.div`
-  max-width: 25rem;
+  white-space: normal;
 `
 
 const NoteDetailsAndActions = styled.div`
+  width: 33%;
   margin-left: 1rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
 `
 
@@ -193,13 +196,14 @@ const NoteDetails = styled.div`
   font-size: 0.7rem;
   font-style: italic;
   text-align: right;
+  white-space: nowrap;
 `
 
 const NoteActions = styled.div`
   margin-left: 0.375rem;
   padding: 0 0.375rem;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
 `
 
