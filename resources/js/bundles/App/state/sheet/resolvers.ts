@@ -46,7 +46,7 @@ export const resolveSheetFilter = (cellValue: string, filterValue: string, type:
 // Resolve Value
 //-----------------------------------------------------------------------------
 export const resolveSheetCellValue = (value: string) => {
-  const filteredValue = value !== null ? value.replace('%', '') : ""
+  const filteredValue = value !== null ? value.replace(new RegExp('%', 'g'), '').replace(new RegExp('/', 'g'), '') : ""
   return isNaN(Number(filteredValue)) ? filteredValue : Number(filteredValue)
 }
 
