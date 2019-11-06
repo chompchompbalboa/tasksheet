@@ -42,6 +42,7 @@ export { deleteSheetGroup } from '@app/state/sheet/actions/deleteSheetGroup'
 export { deleteSheetRow } from '@app/state/sheet/actions/deleteSheetRow'
 export { deleteSheetSort } from '@app/state/sheet/actions/deleteSheetSort'
 export { deleteSheetView } from '@app/state/sheet/actions/deleteSheetView'
+export { deleteSheetCellNote } from '@app/state/sheet/actions/deleteSheetCellNote'
 
 export { updateSheetCell } from '@app/state/sheet/actions/updateSheetCell'
 export { updateSheetColumn } from '@app/state/sheet/actions/updateSheetColumn'
@@ -85,7 +86,8 @@ export type ISheetActions =
   IUpdateSheetGroup | ISetAllSheetGroups |
   IUpdateSheetRow | ISetAllSheetRows | 
   IUpdateSheetSort | ISetAllSheetSorts |
-  IUpdateSheetView | ISetAllSheetViews
+  IUpdateSheetView | ISetAllSheetViews |
+  ISetAllSheetCellNotes | ISetAllSheetNotes
 
 //-----------------------------------------------------------------------------
 // Load Sheet - Moved
@@ -241,6 +243,38 @@ export const setAllSheetViews = (nextAllSheetViews: IAllSheetViews): ISheetActio
 	return {
 		type: SET_ALL_SHEET_VIEWS,
     nextAllSheetViews,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Set All Sheet Cell Notes
+//-----------------------------------------------------------------------------
+export const SET_ALL_SHEET_CELL_NOTES = 'SET_ALL_SHEET_CELL_NOTES'
+interface ISetAllSheetCellNotes {
+  type: typeof SET_ALL_SHEET_CELL_NOTES,
+  nextAllSheetCellNotes: IAllSheetCellNotes
+}
+
+export const setAllSheetCellNotes = (nextAllSheetCellNotes: IAllSheetCellNotes): ISheetActions => {
+	return {
+		type: SET_ALL_SHEET_CELL_NOTES,
+    nextAllSheetCellNotes,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Set All Sheet Notes
+//-----------------------------------------------------------------------------
+export const SET_ALL_SHEET_NOTES = 'SET_ALL_SHEET_NOTES'
+interface ISetAllSheetNotes {
+  type: typeof SET_ALL_SHEET_NOTES,
+  nextAllSheetNotes: IAllSheetNotes
+}
+
+export const setAllSheetNotes = (nextAllSheetNotes: IAllSheetNotes): ISheetActions => {
+	return {
+		type: SET_ALL_SHEET_NOTES,
+    nextAllSheetNotes,
 	}
 }
 

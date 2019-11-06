@@ -40,6 +40,6 @@ class Sheet extends Model
   }
   
   public function notes() {
-    return $this->hasMany('App\Models\SheetNote', 'sheetId')->orderBy('createdAt');
+    return $this->hasMany('App\Models\SheetNote', 'sheetId')->orderBy('createdAt', 'desc');
   }
 }

@@ -18,7 +18,8 @@ import {
   ISheetRowToDatabase, 
   ISheetSort, ISheetSortUpdates, 
   ISheetStylesDatabaseUpdates,
-  ISheetViewToDatabase, ISheetViewUpdates
+  ISheetViewToDatabase, ISheetViewUpdates,
+  ISheetNote
 } from '@app/state/sheet/types'
 import { 
   IUser, IUserUpdates,
@@ -178,6 +179,18 @@ export const createSheetCellPhoto = async (
   s3PresignedUrlData: IS3PresignedUrlData
 ) => {
 	return axios.post('/app/sheets/cells/photos/upload', {sheetId, sheetCellId, filename, s3PresignedUrlData}).then(response => {
+		return response.data
+	})
+}
+
+export const createSheetCellNote = async (newSheetNote: ISheetNote) => {
+	return axios.post('/app/sheets/cells/notes', newSheetNote).then(response => {
+		return response.data
+	})
+}
+
+export const deleteSheetCellNote = async (sheetCellNoteId: string) => {
+	return axios.delete('/app/sheets/cells/notes/' + sheetCellNoteId).then(response => {
 		return response.data
 	})
 }

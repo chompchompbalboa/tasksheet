@@ -91,6 +91,7 @@ Route::group([
     'sheets/cells' => 'SheetCellController',
     'sheets/cells/photos' => 'SheetCellPhotoController',
     'sheets/cells/files' => 'SheetCellFileController',
+    'sheets/cells/notes' => 'SheetCellNoteController',
     'sheets/columns' => 'SheetColumnController',
     'sheets/filters' => 'SheetFilterController',
     'sheets/groups' => 'SheetGroupController',

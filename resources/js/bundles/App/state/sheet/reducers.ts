@@ -27,7 +27,8 @@ import {
   UPDATE_SHEET_GROUP, SET_ALL_SHEET_GROUPS,
   UPDATE_SHEET_ROW, SET_ALL_SHEET_ROWS,
   UPDATE_SHEET_SORT, SET_ALL_SHEET_SORTS,
-  UPDATE_SHEET_VIEW, SET_ALL_SHEET_VIEWS
+  UPDATE_SHEET_VIEW, SET_ALL_SHEET_VIEWS,
+  SET_ALL_SHEET_CELL_NOTES, SET_ALL_SHEET_NOTES
 } from '@app/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
@@ -199,6 +200,8 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
 		case SET_ALL_SHEET_GROUPS: { return { ...state, allSheetGroups: action.nextAllSheetGroups } }
 		case SET_ALL_SHEET_SORTS: { return { ...state, allSheetSorts: action.nextAllSheetSorts } }
 		case SET_ALL_SHEET_VIEWS: { return { ...state, allSheetViews: action.nextAllSheetViews } }
+		case SET_ALL_SHEET_CELL_NOTES: { return { ...state, allSheetCellNotes: action.nextAllSheetCellNotes } }
+		case SET_ALL_SHEET_NOTES: { return { ...state, allSheetNotes: action.nextAllSheetNotes } }
       
 		case UPDATE_SHEET: {
       const { sheetId, updates } = action

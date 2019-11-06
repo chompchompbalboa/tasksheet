@@ -2,8 +2,11 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import moment from 'moment'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
+
+import { TRASH_CAN } from '@app/assets/icons'
 
 import { IAppState } from '@app/state'
 import { 
@@ -11,7 +14,12 @@ import {
   ISheetColumnType,
   ISheetNote
 } from '@app/state/sheet/types'
+import {
+  createSheetCellNote,
+  deleteSheetCellNote
+} from '@app/state/sheet/actions'
 
+import Icon from '@/components/Icon'
 import SheetCellAutosizeTextarea from '@app/bundles/Sheet/SheetCellAutosizeTextarea'
 import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 
@@ -19,14 +27,21 @@ import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 // Component
 //-----------------------------------------------------------------------------
 export const SheetCellNotes = ({
+  sheetId,
   cellId,
   isCellSelected,
   updateCellValue,
   value,
   ...passThroughProps
 }: ISheetCellNotesProps) => {
-
+  
   const autosizeTextarea = useRef(null)
+
+  const dispatch = useDispatch()
+  const sheetCellNotes = useSelector((state: IAppState) => state.sheet.allSheetCellNotes[cellId] && state.sheet.allSheetCellNotes[cellId].map((sheetNoteId: ISheetNote['id']) => {
+    return state.sheet.allSheetNotes[sheetNoteId]
+  }))
+  
   const [ localIsCellEditing, setLocalIsCellEditing ] = useState(false)
   
   useEffect(() => {
@@ -37,12 +52,11 @@ export const SheetCellNotes = ({
     }
   }, [ localIsCellEditing ])
   
-  const sheetCellNotes = useSelector((state: IAppState) => state.sheet.allSheetCellNotes[cellId] && state.sheet.allSheetCellNotes[cellId].map((sheetNoteId: ISheetNote['id']) => {
-    return state.sheet.allSheetNotes[sheetNoteId]
-  }))
-  
   const handleCellEditingStart = () => {
     setLocalIsCellEditing(true)
+    if(![null, ''].includes(value)) {
+      dispatch(createSheetCellNote(sheetId, cellId, value))
+    }
   }
   
   const handleCellEditingEnd = () => {
@@ -56,6 +70,7 @@ export const SheetCellNotes = ({
   return (
     <SheetCellContainer
       testId="SheetCellNotes"
+      sheetId={sheetId}
       cellId={cellId}
       focusCell={() => handleCellEditingStart()}
       isCellSelected={isCellSelected}
@@ -75,9 +90,30 @@ export const SheetCellNotes = ({
             </CurrentNote>
         }
       </CurrentNoteContainer>
-      {sheetCellNotes && sheetCellNotes.length >1 &&
+      {sheetCellNotes && sheetCellNotes.length > 0 &&
         <NotesContainer>
-          Notes
+          {sheetCellNotes.map(sheetCellNote => (
+            <Note
+              key={sheetCellNote.id}>
+              <NoteValue>
+                {sheetCellNote.value}
+              </NoteValue>
+              <NoteDetailsAndActions>
+                <NoteDetails>
+                  {sheetCellNote.createdBy}<br/>
+                  {moment(sheetCellNote.createdAt).format('LLL')}
+                </NoteDetails>
+                <NoteActions>
+                  <DeleteNote
+                    onClick={() => dispatch(deleteSheetCellNote(cellId, sheetCellNote.id))}>
+                    <Icon
+                      icon={TRASH_CAN}
+                      size="0.85rem"/>
+                  </DeleteNote>
+                </NoteActions>
+              </NoteDetailsAndActions>
+            </Note>
+          ))}
         </NotesContainer>
       }
     </SheetCellContainer>
@@ -115,8 +151,55 @@ const NotesContainer = styled.div`
   left: 0;
   min-width: 100%;
   padding: 0.25rem 0.5rem;
-  border-radius: 5px;
+  border: 1px solid rgb(200, 200, 200);
+  border-radius: 3px;
   background-color: rgb(245, 245, 245);
+`
+
+const Note = styled.div`
+  margin: 0.25rem 0;
+  padding: 0.5rem;
+  min-width: 15rem;
+  background-color: white;
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  &:hover {
+    background-color: rgb(253, 253, 253);
+  }
+`
+
+const NoteValue = styled.div`
+  max-width: 25rem;
+`
+
+const NoteDetailsAndActions = styled.div`
+  margin-left: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const NoteDetails = styled.div`
+  font-size: 0.7rem;
+  font-style: italic;
+  text-align: right;
+`
+
+const NoteActions = styled.div`
+  margin-left: 0.375rem;
+  padding: 0 0.375rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const DeleteNote = styled.div`
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 //-----------------------------------------------------------------------------

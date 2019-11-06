@@ -80,7 +80,7 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
     sheetFromDatabase.notes.forEach(sheetNote => { 
       normalizedSheetNotes[sheetNote.id] = sheetNote
       normalizedSheetCellNotes[sheetNote.cellId] = [
-        ...normalizedSheetCellNotes[sheetNote.cellId],
+        ...(normalizedSheetCellNotes[sheetNote.cellId] || []),
         sheetNote.id
       ]
     })
