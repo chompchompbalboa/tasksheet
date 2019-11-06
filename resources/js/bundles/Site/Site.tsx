@@ -74,7 +74,7 @@ const Site = () => {
       <Header>tasksheet<HeaderBetaTag>beta</HeaderBetaTag></Header>
       <Content>
         <Name>tasksheet<NameBetaTag>beta</NameBetaTag></Name>
-        <Motto>The spreadsheet that makes it easy to manage tasks across teams</Motto>
+        <Motto>Simplified task management for teams</Motto>
         <Divider />
         <LoginRegisterContainer>
           {isLoginOrRegister === 'REGISTER' && registerStatus !== 'REGISTERED' &&
