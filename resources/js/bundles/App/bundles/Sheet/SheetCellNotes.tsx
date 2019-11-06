@@ -43,6 +43,7 @@ export const SheetCellNotes = ({
   }))
   
   const [ localIsCellEditing, setLocalIsCellEditing ] = useState(false)
+  const [ localValue, setLocalValue ] = useState(null)
   
   useEffect(() => {
     if(localIsCellEditing) {
@@ -52,11 +53,17 @@ export const SheetCellNotes = ({
     }
   }, [ localIsCellEditing ])
   
+  useEffect(() => {
+    if(!localIsCellEditing && localValue !== null) {
+      if(![null, ''].includes(value)) {
+        dispatch(createSheetCellNote(sheetId, cellId, value))
+        setLocalValue(null)
+      }
+    }
+  }, [ localIsCellEditing, value, localValue ])
+  
   const handleCellEditingStart = () => {
     setLocalIsCellEditing(true)
-    if(![null, ''].includes(value)) {
-      dispatch(createSheetCellNote(sheetId, cellId, value))
-    }
   }
   
   const handleCellEditingEnd = () => {
@@ -64,6 +71,7 @@ export const SheetCellNotes = ({
   }
 
   const handleCurrentNoteValueChange = (nextCellValue: string) => {
+    setLocalValue(nextCellValue)
     updateCellValue(nextCellValue)
   }
 
@@ -72,9 +80,9 @@ export const SheetCellNotes = ({
       testId="SheetCellNotes"
       sheetId={sheetId}
       cellId={cellId}
-      focusCell={() => handleCellEditingStart()}
+      focusCell={handleCellEditingStart}
       isCellSelected={isCellSelected}
-      onCloseCell={() => handleCellEditingEnd()}
+      onCloseCell={handleCellEditingEnd}
       onlyRenderChildren
       updateCellValue={updateCellValue}
       value={value}

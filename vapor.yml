@@ -2,19 +2,23 @@ id: 2412
 name: tracksheet
 environments:
     production:
+        domain: tasksheet.app
         memory: 1024
         cli-memory: 512
-        storage: tracksheet-production
+        database: tasksheet-production
+        storage: tasksheet-production
         build:
             - 'composer install --no-dev --classmap-authoritative'
             - 'php artisan event:cache'
             - 'npm ci && npm run prod && rm -rf node_modules'
+        deploy:
+            - 'php artisan migrate --force'
     staging:
         domain: tracksheet.co
         memory: 1024
         cli-memory: 512
-        database: tracksheet-staging
-        storage: tracksheet-staging
+        database: tasksheet-staging
+        storage: tasksheet-staging
         build:
             - 'composer install --no-dev --classmap-authoritative'
             - 'php artisan event:cache'
