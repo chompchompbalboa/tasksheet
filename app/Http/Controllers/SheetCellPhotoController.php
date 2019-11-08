@@ -16,7 +16,7 @@ class SheetCellPhotoController extends Controller
     {
       return response()->json(
         SheetPhoto::where('cellId', $cellId)
-        ->orderBy('created_at')
+        ->orderBy('createdAt')
         ->get()
       , 200);
     }
@@ -54,7 +54,7 @@ class SheetCellPhotoController extends Controller
         'uploadedAt' => date("Y-m-d H:i:s")
       ]);
 
-      $nextSheetCellPhotos = SheetPhoto::where('cellId', $sheetCellId)->orderBy('created_at')->get();
+      $nextSheetCellPhotos = SheetPhoto::where('cellId', $sheetCellId)->orderBy('createdAt')->get();
       $sheetCell = SheetCell::find($sheetCellId);
       $sheetCell->update([ 'value' => count($nextSheetCellPhotos) ]);
       return response()->json($nextSheetCellPhotos, 200);

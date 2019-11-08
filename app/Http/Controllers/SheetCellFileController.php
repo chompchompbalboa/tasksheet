@@ -16,7 +16,7 @@ class SheetCellFileController extends Controller
     {
       return response()->json(
         SheetFile::where('cellId', $cellId)
-        ->orderBy('created_at')
+        ->orderBy('createdAt')
         ->get()
       , 200);
     }
@@ -35,7 +35,7 @@ class SheetCellFileController extends Controller
       $sheetFile->delete();
       return response()->json(
         SheetFile::where('cellId', $cellId)
-        ->orderBy('created_at')
+        ->orderBy('createdAt')
         ->get()
       , 200);
     }
@@ -66,7 +66,7 @@ class SheetCellFileController extends Controller
         'uploadedAt' => date("Y-m-d H:i:s")
       ]);
       
-      $nextSheetCellFiles = SheetFile::where('cellId', $sheetCellId)->orderBy('created_at')->get();
+      $nextSheetCellFiles = SheetFile::where('cellId', $sheetCellId)->orderBy('createdAt')->get();
       $sheetCell = SheetCell::find($sheetCellId);
       $sheetCell->update([ 'value' => count($nextSheetCellFiles) ]);
       

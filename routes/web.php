@@ -19,7 +19,6 @@ Route::group([
 ], function () {
   // Initial load
   Route::get('/', function () {
-    //$user = Auth::loginUsingId('75e3c4f9-b261-3343-a320-8ee9fb0c931e', true);
     $user = Auth::user();
     $teams = $user->teams;
 
@@ -65,14 +64,7 @@ Route::group([
   // Team Members
   Route::post('/team/member/create', 'TeamMemberController@store');
   Route::post('/team/member/delete', 'TeamMemberController@destroy');
-
-  /*
-  // Copy
-  Route::post('/calendars/copy', 'CalendarController@copyFromRequest');
-  Route::post('/folders/copy', 'FolderController@copyFromRequest');
-  Route::post('/notes/copy', 'NoteController@copyFromRequest');
-  Route::post('/sheets/copy', 'SheetController@copyFromRequest');
-  */
+  
   // Resource Controllers
   Route::resources([
     
