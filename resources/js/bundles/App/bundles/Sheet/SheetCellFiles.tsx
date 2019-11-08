@@ -82,7 +82,7 @@ const SheetCellFiles = ({
         mutation.createSheetCellFile(sheetId, cellId, file.name, s3PresignedUrlData).then(nextSheetCellFiles => {
           setFiles(nextSheetCellFiles)
           setUploadStatus('UPLOADED')
-          updateCellValue(nextSheetCellFiles.length)
+          updateCellValue(nextSheetCellFiles.length + '')
           setTimeout(() => setUploadStatus('READY'), 1000)
         })
       })
