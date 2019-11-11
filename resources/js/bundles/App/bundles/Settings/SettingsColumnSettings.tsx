@@ -42,6 +42,7 @@ const SettingsColumnSettings = ({
     PHOTOS: SettingsColumnSettingsPhotos,
     FILES: SettingsColumnSettingsFiles,
     NOTES: SettingsColumnSettingsNotes,
+    TEAM_MEMBERS: SettingsColumnSettingsNotes
   }
 
   const ColumnTypeSettingsComponent = columnTypeSettingsComponents[activeColumnType.cellType]

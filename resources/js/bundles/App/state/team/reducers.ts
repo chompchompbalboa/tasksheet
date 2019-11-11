@@ -2,7 +2,10 @@
 // Initial
 //-----------------------------------------------------------------------------
 import defaultInitialData from '@app/state/initialData'
-import { ITeam } from '@app/state/team/types'
+import { 
+  ITeam,
+  ITeamMember
+} from '@app/state/team/types'
 import { 
   ITeamActions, 
   UPDATE_TEAM,
@@ -11,21 +14,35 @@ import {
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
-export const initialTeamState: ITeamState = {}
-
-if(typeof initialData !== 'undefined') {
-  initialData.teams.forEach(team => {
-    initialTeamState[team.id] = team
-  })
-}
-else {
-  defaultInitialData.teams.forEach(team => {
-    initialTeamState[team.id] = team
-  })
+export const initialTeamState: ITeamState = {
+  allTeams: {},
+  allTeamMembers: {}
 }
 
-export interface ITeamState { 
-  [teamId: string]: ITeam 
+const teamInitialData = typeof initialData !== 'undefined' ? initialData : defaultInitialData
+
+teamInitialData.teams.forEach(team => {
+  initialTeamState.allTeams[team.id] = {
+    id: team.id,
+    name: team.name,
+    members: team.members.map(teamMember => teamMember.id)
+  }
+  team.members.forEach(teamMember => {
+    initialTeamState.allTeamMembers[teamMember.id] = {
+      id: teamMember.id,
+      name: teamMember.name,
+      email: teamMember.email
+    }
+  })
+})
+
+export interface ITeamState {
+  allTeams: {
+    [teamId: string]: ITeam 
+  },
+  allTeamMembers: {
+    [teamMemberId: string]: ITeamMember
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -38,9 +55,12 @@ export const teamReducer = (state = initialTeamState, action: ITeamActions): ITe
 			const { teamId, updates } = action
 			return { 
         ...state,
-        [teamId]: {
-          ...state[teamId], ...updates
-        } 
+        allTeams: {
+          ...state.allTeams,
+          [teamId]: {
+            ...state.allTeams[teamId], ...updates
+          } 
+        }
       }
 		}
 

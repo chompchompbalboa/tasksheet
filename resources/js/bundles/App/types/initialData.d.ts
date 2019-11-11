@@ -4,7 +4,7 @@
 import { IFolder } from '@app/state/folder/types'
 import { IAllSheetColumnTypes } from '@app/state/sheet/types'
 import { IUser } from '@app/state/user/types'
-import { ITeam } from '@app/state/team/types'
+import { ITeamFromDatabase } from '@app/state/team/types'
 
 //-----------------------------------------------------------------------------
 // Initial Data
@@ -13,7 +13,7 @@ declare global {
 	const initialData: IInitialData
 	interface IInitialData {
     user: IUser
-    teams: ITeam[]
+    teams: ITeamFromDatabase[]
     folders: IFolder[]
     columnTypes: IAllSheetColumnTypes
 	}

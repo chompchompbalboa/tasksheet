@@ -13,15 +13,15 @@ import SettingsTeamsTeam from '@app/bundles/Settings/SettingsTeamsTeam'
 //-----------------------------------------------------------------------------
 const SettingsTeams = () => {
 
-  const teams = useSelector((state: IAppState) => state.teams)
-  const teamIds = Object.keys(teams)
+  const allTeams = useSelector((state: IAppState) => state.teams.allTeams)
+  const allTeamIds = Object.keys(allTeams)
 
   return (
     <ContentContent>
-      {teamIds.map(teamId => (
+      {allTeamIds.map(teamId => (
         <SettingsTeamsTeam
           key={teamId}
-          team={teams[teamId]}/>
+          team={allTeams[teamId]}/>
       ))}
     </ContentContent>
   )

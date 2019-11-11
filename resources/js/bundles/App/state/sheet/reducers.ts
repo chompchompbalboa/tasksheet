@@ -148,6 +148,15 @@ export const initialSheetState: ISheetState = {
       cellType: 'NOTES',
       data: null
     },
+    TEAM_MEMBERS: {
+      id: 'TEAM_MEMBERS',
+      organizationId: null,
+      userId: null,
+      sheetId: null,
+      name: 'Team Members',
+      cellType: 'TEAM_MEMBERS',
+      data: null
+    },
     ...columnTypesFromServer
   },
   allSheetFilters: null,

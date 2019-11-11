@@ -2,13 +2,14 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { isEmail } from 'validator'
 
 import { mutation } from '@app/api'
 
-import { ITeam } from '@app/state/team/types'
+import { IAppState } from '@app/state'
+import { ITeam, ITeamMember } from '@app/state/team/types'
 import { updateTeam } from '@app/state/team/actions'
 
 import AutosizeInput from 'react-input-autosize'
@@ -19,11 +20,12 @@ import AutosizeInput from 'react-input-autosize'
 const SettingsTeamsTeamMembersAddMember = ({
   team: {
     id: teamId,
-    members: teamMembers
+    members: teamMemberIds
   }
 }: ISettingsTeamsTeamMembersAddMember) => {
   
   const dispatch = useDispatch()
+  const allTeamMembers = useSelector((state: IAppState) => state.teams.allTeamMembers)
   
   const addMemberEmailInput = useRef(null)
   
@@ -47,7 +49,7 @@ const SettingsTeamsTeamMembersAddMember = ({
     if(!isEmail(addMemberEmailInputValue)) {
       setStatus('EMAIL_IS_INVALID')
     }
-    else if (teamMembers.map(teamMember => teamMember.email).includes(addMemberEmailInputValue)) {
+    else if (teamMemberIds.map(teamMemberId => allTeamMembers[teamMemberId].email).includes(addMemberEmailInputValue)) {
       setStatus('MEMBER_IS_ALREADY_ON_TEAM')
     }
     else {
@@ -61,7 +63,7 @@ const SettingsTeamsTeamMembersAddMember = ({
             setStatus('READY')
             setAddMemberEmailInputValue(null)
             dispatch(updateTeam(teamId, {
-              members: updatedTeam.members
+              members: updatedTeam.members.map((teamMember: ITeamMember) => teamMember.id)
             }))
           }, 1500)
         },

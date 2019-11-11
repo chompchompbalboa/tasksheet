@@ -209,7 +209,8 @@ export type ISheetCellType =
 'DROPDOWN' |
 'PHOTOS' | 
 'FILES' |
-'NOTES'
+'NOTES' |
+'TEAM_MEMBERS'
 
 //-----------------------------------------------------------------------------
 // Sheet Filter

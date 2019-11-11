@@ -2,7 +2,10 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
+
+import { IAppState } from '@app/state'
 import { ITeam } from '@app/state/team/types'
 
 import SettingsList from '@app/bundles/Settings/SettingsList'
@@ -16,15 +19,17 @@ const SettingsTeamMembers = ({
   team
 }: ISettingsTeamMembers) => {
 
+  const allTeamMembers = useSelector((state: IAppState) => state.teams.allTeamMembers)
+
   return (
     <Container>
       <SettingsList
         name="Members:"
         width="100%">
-        {team.members && team.members.map((member, index) => (
+        {team.members && team.members.map(teamMemberId => (
           <SettingsTeamsTeamMembersMember
-            key={member.id}
-            member={member}
+            key={teamMemberId}
+            member={allTeamMembers[teamMemberId]}
             team={team}/>
         ))}
         <ActionsContainer>

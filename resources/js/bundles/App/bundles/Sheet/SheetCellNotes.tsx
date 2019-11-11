@@ -29,7 +29,6 @@ import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 export const SheetCellNotes = ({
   sheetId,
   cellId,
-  isCellSelected,
   updateCellValue,
   value,
   ...passThroughProps
@@ -81,7 +80,6 @@ export const SheetCellNotes = ({
       sheetId={sheetId}
       cellId={cellId}
       focusCell={handleCellEditingStart}
-      isCellSelected={isCellSelected}
       onCloseCell={handleCellEditingEnd}
       onlyRenderChildren
       updateCellValue={updateCellValue}

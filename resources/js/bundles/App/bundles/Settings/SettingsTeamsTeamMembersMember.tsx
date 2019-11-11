@@ -24,7 +24,7 @@ const SettingsTeamsTeamMembersMember = ({
   },
   team: {
     id: teamId,
-    members: teamMembers
+    members: teamMemberIds
   }
 }: ISettingsTeamsTeamMembersMember) => {
   
@@ -40,7 +40,7 @@ const SettingsTeamsTeamMembersMember = ({
         setTimeout(() => setDeleteStatus('DELETED'), 400)
         setTimeout(() => {
           dispatch(updateTeam(teamId, {
-            members: teamMembers.filter(teamMember => teamMember.id !== memberId)
+            members: teamMemberIds.filter(teamMemberId => teamMemberId !== memberId)
           }))
         }, 1500)
       },
