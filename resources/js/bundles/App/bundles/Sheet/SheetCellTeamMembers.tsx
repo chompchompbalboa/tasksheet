@@ -3,13 +3,20 @@
 //-----------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from 'react'
 import _ from 'lodash'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
 import { ISheetCell, ISheetColumnType } from '@app/state/sheet/types'
+import { ITeamMember } from '@app/state/team/types'
 
-import SheetCellAutosizeTextarea from '@app/bundles/Sheet/SheetCellAutosizeTextarea'
+import {
+  allowSelectedCellNavigation,
+  preventSelectedCellNavigation,
+  updateSheetCell
+} from '@app/state/sheet/actions'
+
+import SheetCellInput from '@app/bundles/Sheet/SheetCellInput'
 import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 
 //-----------------------------------------------------------------------------
@@ -17,56 +24,100 @@ import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 //-----------------------------------------------------------------------------
 const SheetCellString = ({
   testId,
+  sheetId,
+  cellId,
   updateCellValue,
   value,
   ...passThroughProps
 }: SheetCellStringProps) => {
   
-  const autosizeTextarea = useRef(null)
+  const autosizeInput = useRef(null)
   
   const [ localIsCellEditing, setLocalIsCellEditing ] = useState(false)
+  const [ highlightedTeamMemberIndex, setHighlightedTeamMemberIndex ] = useState(null)
+  const [ isValueStale, setIsValueStale ] = useState(true)
 
+  const dispatch = useDispatch()
   const allTeamMembers = useSelector((state: IAppState) => state.teams.allTeamMembers)
   const alphabetizedTeamMembers = _.sortBy(allTeamMembers, [ 'name' ])
-  const filteredAlphabetizedTeamMembers = ![null, ''].includes(value)
+  const filteredAlphabetizedTeamMembers = ![null, ''].includes(value) && !isValueStale
     ? alphabetizedTeamMembers.filter(teamMember => teamMember.name.includes(value))
     : alphabetizedTeamMembers
   
   useEffect(() => {
     if(localIsCellEditing) {
-      const autosizeTextareaLength = autosizeTextarea.current.value && autosizeTextarea.current.value.length || 0
-      autosizeTextarea.current.focus()
-      autosizeTextarea.current.setSelectionRange(autosizeTextareaLength,autosizeTextareaLength)
+      if(autosizeInput && autosizeInput.current) {
+        autosizeInput && autosizeInput.current && autosizeInput.current.focus()
+     }
+      addEventListener('keydown', handleKeydownWhileCellIsEditing)
     }
-  }, [ localIsCellEditing ])
-  
+    return () => {
+      removeEventListener('keydown', handleKeydownWhileCellIsEditing)
+    }
+  }, [ localIsCellEditing, highlightedTeamMemberIndex, value ])
+
   const handleCellEditingStart = () => {
+    dispatch(preventSelectedCellNavigation(sheetId))
     setLocalIsCellEditing(true)
   }
   
   const handleCellEditingEnd = () => {
+    dispatch(allowSelectedCellNavigation(sheetId))
     setLocalIsCellEditing(false)
+    setIsValueStale(true)
+    setHighlightedTeamMemberIndex(null)
+  }
+
+  const handleKeydownWhileCellIsEditing = (e: KeyboardEvent) => {
+    if(e.key === "Enter" && filteredAlphabetizedTeamMembers.length > 0) {
+      const nextTeamMember = highlightedTeamMemberIndex && filteredAlphabetizedTeamMembers[highlightedTeamMemberIndex]
+        ? filteredAlphabetizedTeamMembers[highlightedTeamMemberIndex]
+        : filteredAlphabetizedTeamMembers[0]
+      dispatch(updateSheetCell(cellId, { isCellEditing: false, value: nextTeamMember.name }))
+      handleCellEditingEnd()
+    }
+    if(e.key === "ArrowUp") {
+      setHighlightedTeamMemberIndex(Math.max(0, highlightedTeamMemberIndex - 1))
+    }
+    if(e.key === "ArrowDown") {
+      setHighlightedTeamMemberIndex(Math.min(filteredAlphabetizedTeamMembers.length - 1, highlightedTeamMemberIndex + 1))
+    }
+  }
+  
+  const handleTeamMemberClick = (teamMember: ITeamMember) => {
+    dispatch(updateSheetCell(cellId, { isCellEditing: false, value: teamMember.name }))
+    handleCellEditingEnd()
+  }
+  
+  const handleValueChange = (nextValue: string) => {
+    setIsValueStale(false)
+    updateCellValue(nextValue)
   }
 
   return (
     <SheetCellContainer
       testId={"SheetCellTeamMembers"}
+      sheetId={sheetId}
+      cellId={cellId}
       updateCellValue={updateCellValue}
       focusCell={handleCellEditingStart}
       onCloseCell={handleCellEditingEnd}
       value={value}
       {...passThroughProps}>
-      <AutosizeTextareaContainer>
-        <SheetCellAutosizeTextarea
-          ref={autosizeTextarea}
-          onChange={(e: any) => updateCellValue(e.target.value)}
+      <InputContainer>
+        <SheetCellInput
+          ref={autosizeInput}
+          onChange={(e: any) => handleValueChange(e.target.value)}
           value={value}/>
-      </AutosizeTextareaContainer>
+      </InputContainer>
       {localIsCellEditing &&
         <TeamMembersContainer>
-          {filteredAlphabetizedTeamMembers.map(teamMember => (
+          {filteredAlphabetizedTeamMembers.map((teamMember, index) => (
             <TeamMember
-              key={teamMember.id}>
+              key={teamMember.id}
+              isHighlighted={index === highlightedTeamMemberIndex}
+              onClick={() => handleTeamMemberClick(teamMember)}
+              onMouseEnter={() => setHighlightedTeamMemberIndex(index)}>
               {teamMember.name}
             </TeamMember>
           ))}
@@ -94,14 +145,13 @@ interface SheetCellStringProps {
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const AutosizeTextareaContainer = styled.div`
+const InputContainer = styled.div`
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   padding: 0.15rem 0.25rem;
-  overflow: hidden;
 `
 
 const TeamMembersContainer = styled.div`
@@ -112,14 +162,16 @@ const TeamMembersContainer = styled.div`
   border: 1px solid rgb(200, 200, 200);
   border-radius: 3px;
   background-color: rgb(253, 253, 253);
+  overflow: hidden;
 `
 
 const TeamMember = styled.div`
-  padding: 0.25rem 0.5rem;
-  &:hover {
-    background-color: rgb(245, 245, 245);
-  }
+  padding: 0.15rem 0.25rem;
+  background-color: ${ ({ isHighlighted }: ITeamMemberProps ) => isHighlighted ? 'rgb(245, 245, 245)' : 'transparent' };
 `
+interface ITeamMemberProps {
+  isHighlighted: boolean
+}
 
 //-----------------------------------------------------------------------------
 // Export

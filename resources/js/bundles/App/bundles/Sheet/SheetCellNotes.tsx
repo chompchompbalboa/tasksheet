@@ -20,7 +20,7 @@ import {
 } from '@app/state/sheet/actions'
 
 import Icon from '@/components/Icon'
-import SheetCellAutosizeTextarea from '@app/bundles/Sheet/SheetCellAutosizeTextarea'
+import SheetCellInput from '@app/bundles/Sheet/SheetCellInput'
 import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 
 //-----------------------------------------------------------------------------
@@ -87,7 +87,7 @@ export const SheetCellNotes = ({
       {...passThroughProps}>
       <CurrentNoteContainer>
         {localIsCellEditing
-          ? <SheetCellAutosizeTextarea
+          ? <SheetCellInput
               ref={autosizeTextarea}
               onChange={(e: any) => handleCurrentNoteValueChange(e.target.value)}
               value={value}/>

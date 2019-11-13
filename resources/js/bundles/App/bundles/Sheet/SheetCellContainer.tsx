@@ -42,7 +42,6 @@ const SheetCellContainer = ({
   const isActiveSheet = sheetId === activeSheetId
   const isCellEditing = cell.isCellEditing && isActiveSheet
   const isCellSelected = cell.isCellSelectedSheetIds.has(sheetId) && isActiveSheet
-
   
   useEffect(() => {
     if(isCellSelected && !isCellEditing) {
@@ -70,7 +69,7 @@ const SheetCellContainer = ({
       removeEventListener('keydown', handleKeydownWhileCellIsEditing)
       removeEventListener('mousedown', handleMousedownWhileCellIsEditing)
     }
-  }, [ isCellEditing ])
+  }, [ isCellEditing, isSelectedCellNavigationPrevented ])
 
   const openOnDoubleClick = (e: any) => {
     e.preventDefault()
@@ -85,7 +84,7 @@ const SheetCellContainer = ({
   }
 
   const handleKeydownWhileCellIsEditing = (e: KeyboardEvent) => {
-    if(e.key === "Enter") {
+    if(e.key === "Enter" && !isSelectedCellNavigationPrevented) {
       batch(() => {
         dispatch(updateSheetCell(cellId, { isCellEditing: false }, null, true))
         dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'DOWN', e.shiftKey))
