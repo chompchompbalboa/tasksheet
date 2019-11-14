@@ -3,8 +3,6 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 
-import backgroundImage from '@site/assets/images/background.png'
-
 import SiteFeaturesFeature from '@site/SiteFeaturesFeature'
 import SiteFeaturesList from '@site/SiteFeaturesList'
 import SiteFeaturesListItem from '@site/SiteFeaturesListItem'
@@ -17,26 +15,26 @@ const SiteFeaturesOnboarding = () => {
   return (
     <>
     <SiteFeaturesFeature
-      image={backgroundImage}>
+      image={(process.env.ASSET_PATH || '') + '/images/background.png'}>
       <SiteFeaturesList
         header="A format you're already familiar with...">
         <SiteFeaturesListItem>
-          Tasksheet was built to be a spreadsheet at heart, so anyone familiar with Excel, Google Sheets or other spreadsheet apps can jump right in - no training required.
+          Anyone familiar with Microsoft Excel, Google Sheets or any other spreadsheet app can jump right in - no training required.
         </SiteFeaturesListItem>
       </SiteFeaturesList>
     </SiteFeaturesFeature>
     <SiteFeaturesFeature
       backgroundColor="rgb(240, 240, 240)"
-      image="/images/background.png"
+      image={(process.env.ASSET_PATH || '') + '/images/background.png'}
       imageFirst>
       <SiteFeaturesList
         header="...with powerful new features to make your team more efficient">
         <SiteFeaturesListItem>
           Save photos and files to cells, or take notes over time. 
           <br/><br/>
-          Add dates and create Gantt charts from your sheets.
+          Add dates and create Gantt charts from your Tasksheets.
           <br/><br/>
-          Save custom views for quick access later and create linked sheets to share tasks across teams.
+          Filter, group and sort your tasks, and save custom views for quick access later.
         </SiteFeaturesListItem>
       </SiteFeaturesList>
     </SiteFeaturesFeature>

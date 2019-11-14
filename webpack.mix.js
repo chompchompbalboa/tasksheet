@@ -19,7 +19,7 @@ mix.ts('resources/js/bundles/Site.tsx', 'public/js/site.js').sourceMaps()
 
 
 if (mix.inProduction()) {
-  const ASSET_URL = process.env.ASSET_URL + "/";
+  const ASSET_URL = process.env.ASSET_URL;
 
   mix.webpackConfig(webpack => {
       return {
