@@ -51,7 +51,7 @@ class RegisterController extends Controller
     protected function register(Request $request)
     {
       $accessCode = $request->input('accessCode');
-      if($accessCode === 'TRACKSHEET') {
+      if($accessCode === 'TASKSHEET') {
         $newUser = $request->validate([
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],

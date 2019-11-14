@@ -1,28 +1,17 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-
-import SiteFeatures from '@site/SiteFeatures'
-import SiteFooter from '@site/SiteFooter'
-import SiteSplash from '@site/SiteSplash'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Site = () => {
-  
-  const [ isLoginOrRegister, setIsLoginOrRegister ] = useState('LOGIN' as 'LOGIN' | 'REGISTER')
+const SiteFooter = () => {
   
   return (
     <Container>
-      <SiteSplash
-        isLoginOrRegister={isLoginOrRegister}
-        setIsLoginOrRegister={setIsLoginOrRegister}/>
-      <SiteFeatures 
-        setIsLoginOrRegister={setIsLoginOrRegister}/>
-      <SiteFooter />
+      ©Tasksheet
     </Container>
   )
 }
@@ -30,6 +19,15 @@ const Site = () => {
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div``
+const Container = styled.div`
+  padding: 3rem;
+  font-size: 0.9rem;
+  color: white;
+  display: flex;
+  align-items: center;
+  @media (max-width: 480px) {
+    padding: 1.25rem 1.5rem;
+  }
+`
 
-export default Site
+export default SiteFooter

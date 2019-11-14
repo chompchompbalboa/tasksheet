@@ -10,9 +10,10 @@ import { action } from '@app/api'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Site = () => {
-  
-  const [ isLoginOrRegister, setIsLoginOrRegister ] = useState('LOGIN')
+const SiteSplash = ({
+  isLoginOrRegister,
+  setIsLoginOrRegister
+}: ISiteSplash) => {
   
   const [ activeInput, setActiveInput ] = useState(null)
   const [ accessCodeInputValue, setAccessCodeInputValue ] = useState('')
@@ -142,6 +143,14 @@ const Site = () => {
       </Splash>
     </Container>
   )
+}
+
+//-----------------------------------------------------------------------------
+// Props
+//-----------------------------------------------------------------------------
+export interface ISiteSplash {
+  isLoginOrRegister: 'LOGIN' | 'REGISTER'
+  setIsLoginOrRegister(nextLoginOrRegister: 'LOGIN' | 'REGISTER'): void
 }
 
 //-----------------------------------------------------------------------------
@@ -283,4 +292,4 @@ interface SubmitButtonProps {
   isSubmitting: boolean
 }
 
-export default Site
+export default SiteSplash
