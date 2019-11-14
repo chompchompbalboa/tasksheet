@@ -15,7 +15,7 @@ const SiteFeaturesOnboarding = () => {
   return (
     <>
     <SiteFeaturesFeature
-      image={(process.env.ASSET_PATH || '') + '/images/background.png'}>
+      image='/images/background.png'>
       <SiteFeaturesList
         header="A format you're already familiar with...">
         <SiteFeaturesListItem>
@@ -25,16 +25,14 @@ const SiteFeaturesOnboarding = () => {
     </SiteFeaturesFeature>
     <SiteFeaturesFeature
       backgroundColor="rgb(240, 240, 240)"
-      image={(process.env.ASSET_PATH || '') + '/images/background.png'}
+      image='/images/background.png'
       imageFirst>
       <SiteFeaturesList
         header="...with powerful new features to make your team more efficient">
         <SiteFeaturesListItem>
-          Save photos and files to cells, or take notes over time. 
+          Save photos and files to cells. Take notes inside of cells. Add dates and create Gantt charts from your Tasksheets. Save custom views for quick access later. And much, much more.
           <br/><br/>
-          Add dates and create Gantt charts from your Tasksheets.
-          <br/><br/>
-          Filter, group and sort your tasks, and save custom views for quick access later.
+          We've built Tasksheet and its features with the specific purpose of saving you time and money.
         </SiteFeaturesListItem>
       </SiteFeaturesList>
     </SiteFeaturesFeature>
