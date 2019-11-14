@@ -4,18 +4,16 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import SiteFeatures from '@site/SiteFeatures'
-import SiteSplash from '@site/SiteSplash'
+import SiteFeaturesOnboarding from '@site/SiteFeaturesOnboarding'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Site = () => {
+const SiteFeatures = () => {
   
   return (
     <Container>
-      <SiteSplash />
-      <SiteFeatures />
+      <SiteFeaturesOnboarding />
     </Container>
   )
 }
@@ -25,4 +23,4 @@ const Site = () => {
 //-----------------------------------------------------------------------------
 const Container = styled.div``
 
-export default Site
+export default SiteFeatures

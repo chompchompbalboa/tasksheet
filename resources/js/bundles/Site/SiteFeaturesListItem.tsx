@@ -4,25 +4,31 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import SiteFeatures from '@site/SiteFeatures'
-import SiteSplash from '@site/SiteSplash'
-
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Site = () => {
-  
-  return (
-    <Container>
-      <SiteSplash />
-      <SiteFeatures />
-    </Container>
-  )
+const SiteFeaturesList = ({
+  children
+}: ISiteFeaturesList) => (
+  <Container>
+    {children}
+  </Container>
+)
+
+//-----------------------------------------------------------------------------
+// Props
+//-----------------------------------------------------------------------------
+export interface ISiteFeaturesList {
+  children?: any
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div``
+const Container = styled.div`
+  padding: 0.25rem 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+`
 
-export default Site
+export default SiteFeaturesList
