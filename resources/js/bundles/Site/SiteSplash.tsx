@@ -148,7 +148,11 @@ const Site = () => {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-	width: 100vw;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+	width: 100%;
 	height: 100vh;
 	display: flex;
   flex-direction: column;
@@ -156,7 +160,6 @@ const Container = styled.div`
 `
 
 const Header = styled.div`
-  width: 100%;
   padding: 2rem;
   font-size: 1.5rem;
   font-weight: bold;
@@ -176,7 +179,6 @@ const NameBetaTag = styled.span`
 
 const Splash = styled.div`
   height: calc(100% - 5.5rem);
-  width: 100%;
 	display: flex;
   flex-direction: column;
   justify-content: center;

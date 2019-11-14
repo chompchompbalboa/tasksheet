@@ -19,7 +19,7 @@ const SiteFeaturesOnboarding = () => {
       <SiteFeaturesList
         header="A format you're already familiar with...">
         <SiteFeaturesListItem>
-          Anyone familiar with Microsoft Excel, Google Sheets or any other spreadsheet app can jump right in - no training required.
+          Anyone familiar with Microsoft Excel, Google Sheets or any other spreadsheet app can jump right in to using Tasksheet - no training required.
         </SiteFeaturesListItem>
       </SiteFeaturesList>
     </SiteFeaturesFeature>
@@ -28,9 +28,9 @@ const SiteFeaturesOnboarding = () => {
       image='/images/background.png'
       imageFirst>
       <SiteFeaturesList
-        header="...with powerful new features to make your team more efficient">
+        header="...with powerful new features that make managing your teams a breeze">
         <SiteFeaturesListItem>
-          Save photos and files to cells. Take notes inside of cells. Add dates and create Gantt charts from your Tasksheets. Save custom views for quick access later. And much, much more.
+          Save photos and files. Take notes and track changes to your sheet over time. Add dates and create Gantt charts. Save custom views for quick access later. And much, much more.
           <br/><br/>
           We've built Tasksheet and its features with the specific purpose of saving you time and money.
         </SiteFeaturesListItem>
