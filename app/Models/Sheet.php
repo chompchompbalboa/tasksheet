@@ -11,9 +11,9 @@ class Sheet extends Model
   const CREATED_AT = 'createdAt';
   const UPDATED_AT = 'updatedAt';
 
-  protected $visible = ['id', 'sourceSheetId', 'defaultSheetViewId', 'activeSheetViewId', 'rows', 'columns', 'views', 'styles', 'notes'];
+  protected $visible = ['id', 'sourceSheetId', 'defaultSheetViewId', 'activeSheetViewId', 'rows', 'columns', 'views', 'styles', 'notes', 'priorities'];
   protected $fillable = ['id', 'sourceSheetId', 'defaultSheetViewId', 'activeSheetViewId'];
-  protected $with = ['notes', 'views'];
+  protected $with = ['notes', 'priorities', 'views'];
   protected $appends = ['columns', 'rows', 'styles'];
   
   public function getColumnsAttribute() {
@@ -35,11 +35,15 @@ class Sheet extends Model
     return SheetStyles::where('sheetId', '=', $this->id)->first();
   }
   
-  public function views() {
-    return $this->hasMany('App\Models\SheetView', 'sheetId')->orderBy('createdAt');
-  }
-  
   public function notes() {
     return $this->hasMany('App\Models\SheetNote', 'sheetId')->orderBy('createdAt', 'desc');
+  }
+  
+  public function priorities() {
+    return $this->hasMany('App\Models\SheetPriority', 'sheetId')->orderBy('order', 'asc');
+  }
+  
+  public function views() {
+    return $this->hasMany('App\Models\SheetView', 'sheetId')->orderBy('createdAt');
   }
 }

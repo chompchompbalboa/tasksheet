@@ -20,7 +20,7 @@ const SheetActionButton = ({
   icon,
   iconPadding = '0.35rem 0.4rem',
   iconSize = '1.1rem',
-  iconTextSize = '0.75rem',
+  iconTextSize = '0.8rem',
   isDropdownVisible,
   marginLeft = '0.25rem',
   marginRight = '0.25rem',
@@ -55,9 +55,11 @@ const SheetActionButton = ({
         hasDropdown={typeof(children) !== 'undefined'}
         iconPadding={iconPadding}
         onClick={() => onClick()}>
-        <Icon 
-          icon={icon}
-          size={text ? "1rem" : iconSize}/>
+        {icon &&
+          <Icon 
+            icon={icon}
+            size={text ? "1rem" : iconSize}/>
+        }
         {text &&
           <IconText
             iconTextSize={iconTextSize}>
@@ -89,7 +91,7 @@ const SheetActionButton = ({
 interface SheetActionButtonProps {
   children?: any // React Component,
   closeDropdown?(): void
-  icon: string
+  icon?: string
   iconPadding?: string
   iconSize?: string
   iconTextSize?: string
