@@ -2,9 +2,11 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useState } from 'react'
-import styled from 'styled-components'
+//import styled from 'styled-components'
 
 import SheetActionButton from '@app/bundles/Sheet/SheetActionButton'
+import SheetActionButtonDropdown from '@app/bundles/Sheet/SheetActionButtonDropdown'
+import SheetActionSheetCellPrioritiesCreatePriority from '@app/bundles/Sheet/SheetActionSheetCellPrioritiesCreatePriority'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -23,9 +25,10 @@ const SheetActionSheetCellPriorities = ({
       marginRight="0"
       openDropdown={() => setIsDropdownVisible(true)}
       text="Priorities">
-      <Priorities>
-        Priorities
-      </Priorities>
+      <SheetActionButtonDropdown>
+        <SheetActionSheetCellPrioritiesCreatePriority
+          sheetId={sheetId}/>
+      </SheetActionButtonDropdown>
     </SheetActionButton>
   )
 }
@@ -37,7 +40,9 @@ interface ISheetActionSheetCellPriorities {
   sheetId: string
 }
 
-const Priorities = styled.div``
+//-----------------------------------------------------------------------------
+// Styled Components
+//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 // Export

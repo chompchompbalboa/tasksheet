@@ -3,7 +3,6 @@
 //-----------------------------------------------------------------------------
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
 
 import { LIGHTNING_BOLT } from '@app/assets/icons' 
 
@@ -11,6 +10,8 @@ import { IAppState } from '@app/state'
 import { createSheetView, resetSheetView } from '@app/state/sheet/actions'
 
 import SheetActionButton from '@app/bundles/Sheet/SheetActionButton'
+import SheetActionButtonDropdown from '@app/bundles/Sheet/SheetActionButtonDropdown'
+import SheetActionButtonDropdownItem from '@app/bundles/Sheet/SheetActionButtonDropdownItem'
 import SheetView from '@app/bundles/Sheet/SheetActionCreateSheetViewSheetView'
 
 //-----------------------------------------------------------------------------
@@ -48,7 +49,7 @@ const SheetActionCreateSheetView = ({
       onClick={() => setIsDropdownVisible(true)}
       openDropdown={() => setIsDropdownVisible(true)}
       text={sheetActiveSheetViewId && allSheetViews[sheetActiveSheetViewId] && allSheetViews[sheetActiveSheetViewId].name ? allSheetViews[sheetActiveSheetViewId].name : 'Quick Views'}>
-      <SheetViews>
+      <SheetActionButtonDropdown>
         {sheetViews && sheetViews.map(sheetViewId => (
           <SheetView
             key={sheetViewId}
@@ -57,15 +58,15 @@ const SheetActionCreateSheetView = ({
             closeDropdown={() => setIsDropdownVisible(false)}
             openDropdown={() => setIsDropdownVisible(true)}/>
         ))}
-        <Action
+        <SheetActionButtonDropdownItem
           onClick={() => handleCreateSheetViewClick()}>
           New Quick View...
-        </Action>
-        <Action
+        </SheetActionButtonDropdownItem>
+        <SheetActionButtonDropdownItem
           onClick={() => handleResetSheetViewClick()}>
           Clear...
-        </Action>
-      </SheetViews>
+        </SheetActionButtonDropdownItem>
+      </SheetActionButtonDropdown>
     </SheetActionButton>
   )
 }
@@ -77,22 +78,6 @@ interface ISheetActionCreateSheetViewProps {
   sheetId: string
 }
 
-//-----------------------------------------------------------------------------
-// Styled Components
-//-----------------------------------------------------------------------------
-const SheetViews = styled.div`
-  padding: 5px 0;
-`
-
-const Action = styled.div`
-  padding: 0.25rem 0.375rem 0.25rem 0.5rem;
-  font-style: italic;
-  font-size: inherit;
-  color: inherit;
-  &:hover {
-    background-color: rgb(220, 220, 220);
-  }
-`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------

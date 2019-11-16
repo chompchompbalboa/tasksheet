@@ -73,7 +73,8 @@ const SheetActionButton = ({
             dropdownToggleBackgroundColor={userColorPrimary}
             onClick={() => openDropdown()}>
             <Icon 
-              icon={ARROW_DOWN}/>
+              icon={ARROW_DOWN}
+              size={text ? "1rem" : iconSize}/>
           </DropdownToggle>
           <DropdownContainer
             isDropdownVisible={isDropdownVisible}>
@@ -157,7 +158,7 @@ interface IIconText {
 
 const DropdownToggle = styled.div`
   cursor: pointer;
-  padding: 0.4rem 0.1rem;
+  padding: 0.45rem 0.1rem;
   border-left: 1px solid rgb(170, 170, 170);
   display: flex;
   flex-direction: column;
