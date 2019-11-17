@@ -48,7 +48,7 @@ const SheetActionButton = ({
       closeDropdown()
     }
   }
-console.log(containerBackgroundColor)
+  
   return (
     <Container
       ref={container}

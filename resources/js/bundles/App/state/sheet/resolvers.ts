@@ -65,8 +65,16 @@ export const resolveSheetVisibleRows = (
   priorities: IAllSheetPriorities
 ) => {
   
+  // Row Ids
   const rowIds: string[] = sheet.rows
 
+  // Active sheet view
+  const activeSheetView = views[sheet.activeSheetViewId]
+  const filterIds: string[] = activeSheetView.filters
+  const groupIds: string[] = activeSheetView.groups
+  const sortIds: string[] = activeSheetView.sorts
+
+  // Priorities
   const sheetCellPrioritiesLength = Object.keys(sheet.cellPriorities).length
   const rowIdsWithPriority = new Set()
   const rowIdPriorities: { [sheetRowId: string]: number } = {}
@@ -77,15 +85,25 @@ export const resolveSheetVisibleRows = (
     rowIdsWithPriority.add(sheetCell.rowId)
     rowIdPriorities[sheetCell.rowId] = sheetPriority.order
   })
-
-  const activeSheetView = views[sheet.activeSheetViewId]
-
-  const filterIds: string[] = activeSheetView.filters
-  const groupIds: string[] = activeSheetView.groups
-  const sortIds: string[] = activeSheetView.sorts
+  const sortByPriority = (firstRowId: string, secondRowId: string) => {
+    const firstRowHasPriority = rowIdsWithPriority.has(firstRowId)
+    const secondRowHasPriority = rowIdsWithPriority.has(secondRowId)
+    const firstRowPriority = firstRowHasPriority
+      ? rowIdPriorities[firstRowId]
+      : sheetCellPrioritiesLength + 100
+    const secondRowPriority = secondRowHasPriority
+      ? rowIdPriorities[secondRowId]
+      : sheetCellPrioritiesLength + 100
+    return (firstRowHasPriority || secondRowHasPriority)
+      ? firstRowPriority > secondRowPriority 
+        ? 0 
+        : -1
+      : -2
+  }
   
+  // Bail out if there aren't any filters, groups or sorts
   if(filterIds.length === 0 && groupIds.length === 0 && sortIds.length === 0) {
-    return rowIds
+    return rowIds.sort(sortByPriority)
   }
 
   // Filter
@@ -111,7 +129,7 @@ export const resolveSheetVisibleRows = (
   
   // Group
   if(groupIds.length === 0) {
-    return filteredSortedRowIds
+    return filteredSortedRowIds.sort(sortByPriority)
   }
   else {
     const groupedRowIds = groupBy(filteredSortedRowIds, (rowId: string) => {
@@ -125,15 +143,7 @@ export const resolveSheetVisibleRows = (
     const orderedGroups = groups[groupIds[0]].order === 'ASC' ? Object.keys(groupedRowIds).sort() : Object.keys(groupedRowIds).sort().reverse()
     orderedGroups.forEach(groupValue => {
       const group = groupedRowIds[groupValue]
-      const prioritizedGroup = group.sort((firstRowId: string, secondRowId: string) => {
-        const firstRowPriority = rowIdsWithPriority.has(firstRowId)
-          ? rowIdPriorities[firstRowId]
-          : sheetCellPrioritiesLength + 100
-        const secondRowPriority = rowIdsWithPriority.has(secondRowId)
-          ? rowIdPriorities[secondRowId]
-          : sheetCellPrioritiesLength + 100
-        return firstRowPriority > secondRowPriority ? 0 : -1
-      })
+      const prioritizedGroup = group.sort(sortByPriority)
       filteredSortedGroupedRowIds.push(...prioritizedGroup)
       filteredSortedGroupedRowIds.push('ROW_BREAK')
     })

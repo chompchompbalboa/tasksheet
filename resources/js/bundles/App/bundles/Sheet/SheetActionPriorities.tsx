@@ -67,7 +67,7 @@ const SheetActionSheetCellPriorities = ({
             priority={allSheetPriorities[sheetPriorityId]}
             setActiveSheetPriorityId={setActiveSheetPriorityId}/>
         ))}
-        {sheetPriorities && sheetPriorities.length > 1 &&
+        {sheetPriorities && sheetPriorities.length > 0 &&
           <SheetActionButtonDropdownItem
             sheetId={sheetId}
             containerBackgroundColor="transparent"
