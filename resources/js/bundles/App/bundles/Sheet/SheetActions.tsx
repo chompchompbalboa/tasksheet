@@ -22,7 +22,7 @@ import SheetActionDownloadCsv from '@app/bundles/Sheet/SheetActionDownloadCsv'
 import SheetActionFilter from '@app/bundles/Sheet/SheetActionFilter'
 import SheetActionGroup from '@app/bundles/Sheet/SheetActionGroup'
 import SheetActionRefreshVisibleRows from '@app/bundles/Sheet/SheetActionRefreshVisibleRows'
-import SheetActionSheetCellPriorities from '@app/bundles/Sheet/SheetActionSheetCellPriorities'
+import SheetActionPriorities from '@app/bundles/Sheet/SheetActionPriorities'
 import SheetActionSort from '@app/bundles/Sheet/SheetActionSort'
 
 //-----------------------------------------------------------------------------
@@ -58,14 +58,14 @@ const SheetActions = ({
         </>
       }
       <Divider />
+      <SheetActionPriorities sheetId={sheetId}/>
+      <Divider />
       <SheetActionCreateRows sheetId={sheetId}/>
       <Divider />
       <SheetActionCellStyleBold sheetId={sheetId}/>
       <SheetActionCellStyleItalic sheetId={sheetId}/>
       <SheetActionCellStyleBackgroundColor sheetId={sheetId}/>
       <SheetActionCellStyleColor sheetId={sheetId}/>
-      <Divider />
-      <SheetActionSheetCellPriorities sheetId={sheetId}/>
       <Divider />
       <SheetActionCreateSheetLink sheetId={sheetId}/>
       <Divider />

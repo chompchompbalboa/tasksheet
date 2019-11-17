@@ -67,7 +67,8 @@ export const createSheetLink = (sheetId: string, newSheetLinkName: string): IThu
         visibleRows: clone(sourceSheet.visibleRows),
         selections: defaultSheetSelections,
         styles: defaultSheetStyles,
-        views: []
+        views: [],
+        priorities: []
       },
       null, // Cells
       null, // Columns
@@ -81,6 +82,7 @@ export const createSheetLink = (sheetId: string, newSheetLinkName: string): IThu
       },
       null, // Cell Notes
       null, // Notes
+      null, // Priorities
     ))
     // Update folders and files
     const newFile = {

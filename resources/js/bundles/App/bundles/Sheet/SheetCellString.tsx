@@ -71,6 +71,7 @@ const StyledTextarea = styled(AutosizeTextArea)`
   font-size: inherit;
   font-weight: inherit;
   font-family: inherit;
+  color: inherit;
   letter-spacing: inherit;
   border: none;
   outline: none;

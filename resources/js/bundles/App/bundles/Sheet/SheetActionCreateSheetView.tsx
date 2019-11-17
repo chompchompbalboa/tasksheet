@@ -59,13 +59,15 @@ const SheetActionCreateSheetView = ({
             openDropdown={() => setIsDropdownVisible(true)}/>
         ))}
         <SheetActionButtonDropdownItem
-          onClick={() => handleCreateSheetViewClick()}>
-          New Quick View...
-        </SheetActionButtonDropdownItem>
+          sheetId={sheetId}
+          onClick={() => handleCreateSheetViewClick()}
+          text="Create New Quick View..."
+          textFontStyle="italic"/>
         <SheetActionButtonDropdownItem
-          onClick={() => handleResetSheetViewClick()}>
-          Clear...
-        </SheetActionButtonDropdownItem>
+          sheetId={sheetId}
+          onClick={() => handleResetSheetViewClick()}
+          text="Reset Current Quick View..."
+          textFontStyle="italic"/>
       </SheetActionButtonDropdown>
     </SheetActionButton>
   )

@@ -17,6 +17,10 @@ import Icon from '@/components/Icon'
 const SheetActionButton = ({
   children,
   closeDropdown,
+  containerBackgroundColor = 'rgb(220, 220, 220)',
+  containerColor = 'rgb(80, 80, 80)',
+  containerHoverBackgroundColor,
+  containerHoverColor = 'rgb(240, 240, 240)',
   icon,
   iconPadding = '0.35rem 0.4rem',
   iconSize = '1.1rem',
@@ -24,7 +28,7 @@ const SheetActionButton = ({
   isDropdownVisible,
   marginLeft = '0.25rem',
   marginRight = '0.25rem',
-  onClick,
+  onClick = () =>  null,
   openDropdown,
   text
 }: SheetActionButtonProps) => {
@@ -51,7 +55,10 @@ const SheetActionButton = ({
       containerMarginLeft={marginLeft}
       containerMarginRight={marginRight}>
       <IconContainer
-        containerBackgroundColor={userColorPrimary}
+        containerBackgroundColor={containerBackgroundColor}
+        containerColor={containerColor}
+        containerHoverBackgroundColor={containerHoverBackgroundColor || userColorPrimary}
+        containerHoverColor={containerHoverColor}
         hasDropdown={typeof(children) !== 'undefined'}
         iconPadding={iconPadding}
         onClick={() => onClick()}>
@@ -91,6 +98,10 @@ const SheetActionButton = ({
 //-----------------------------------------------------------------------------
 interface SheetActionButtonProps {
   children?: any // React Component,
+  containerBackgroundColor?: string
+  containerColor?: string
+  containerHoverBackgroundColor?: string
+  containerHoverColor?: string
   closeDropdown?(): void
   icon?: string
   iconPadding?: string
@@ -136,13 +147,18 @@ const IconContainer = styled.div`
   border-bottom-left-radius: 3px;
   border-top-right-radius: ${ ({ hasDropdown }: IIconContainer) => hasDropdown ? '0' : '3px' };
   border-bottom-right-radius: ${ ({ hasDropdown }: IIconContainer) => hasDropdown ? '0' : '3px' };
+  background-color: ${ ({ containerBackgroundColor }: IIconContainer) => containerBackgroundColor };
+  color: ${ ({ containerColor }: IIconContainer) => containerColor };
   &:hover {
-    background-color: ${ ({ containerBackgroundColor }: IIconContainer) => containerBackgroundColor };
-    color: rgb(240, 240, 240);
+    background-color: ${ ({ containerHoverBackgroundColor }: IIconContainer) => containerHoverBackgroundColor };
+    color: ${ ({ containerHoverColor }: IIconContainer) => containerHoverColor };
   }
 `
 interface IIconContainer {
   containerBackgroundColor: string
+  containerColor: string
+  containerHoverBackgroundColor: string
+  containerHoverColor: string
   hasDropdown: boolean
   iconPadding: string
 }
@@ -181,7 +197,7 @@ const DropdownContainer = styled.div`
   cursor: default;
   display: ${ ({ isDropdownVisible }: IDropdown) => isDropdownVisible ? 'block' : 'none' };
   position: absolute;
-  left: 0;
+  left: -1px;
   top: 100%;
   min-width: 100%;
   border-radius: 5px;

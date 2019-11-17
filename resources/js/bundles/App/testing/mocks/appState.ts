@@ -11,7 +11,8 @@ import {
   ISheetGroup,
   IAllSheetRows, ISheetRow, ISheetFromDatabaseRow,
   ISheetSort,
-  IAllSheetViews, ISheetView, ISheetViewFromDatabase
+  IAllSheetViews, ISheetView, ISheetViewFromDatabase,
+  ISheetPriority
 } from '@app/state/sheet/types'
 
 import { initialFolderState } from '@app/state/folder/reducers'
@@ -113,6 +114,7 @@ export const appStateFactory = ({
       const newSheetFromDatabaseGroups: ISheetGroup[] = []
       const newSheetFromDatabaseSorts: ISheetSort[] = []
       const newSheetFromDatabaseViews: ISheetViewFromDatabase[] = []
+      const newSheetFromDatabasePriorities: ISheetPriority[] = []
 
       for(let currentColumnNumber = 1; currentColumnNumber <= numberOfColumnsPerSheet; currentColumnNumber++) {
 
@@ -204,7 +206,8 @@ export const appStateFactory = ({
         visibleRowLeaders: newSheetRowLeaders,
         styles: defaultSheetStyles,
         selections: defaultSheetSelections,
-        views: newSheetFromDatabaseViews.map(view => view.id)
+        views: newSheetFromDatabaseViews.map(view => view.id),
+        priorities: newSheetFromDatabasePriorities.map(priority => priority.id)
       }
 
       const newSheetFromDatabase: ISheetFromDatabase = {
@@ -221,6 +224,7 @@ export const appStateFactory = ({
           italic: []
         },
         views: newSheetFromDatabaseViews,
+        priorities: newSheetFromDatabasePriorities,
         notes: []
       }
 

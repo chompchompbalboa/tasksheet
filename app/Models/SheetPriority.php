@@ -13,15 +13,11 @@ class SheetPriority extends Model
   const CREATED_AT = 'createdAt';
   const UPDATED_AT = 'updatedAt';
 
-  protected $visible = ['id', 'sheetId', 'cellId', 'name', 'backgroundColor', 'color', 'order', 'createdBy', 'createdAt'];
-  protected $fillable = ['id', 'sheetId', 'cellId', 'name', 'backgroundColor', 'color', 'order', 'createdBy', 'createdAt'];
+  protected $visible = ['id', 'sheetId', 'name', 'backgroundColor', 'color', 'order', 'createdBy', 'createdAt'];
+  protected $fillable = ['id', 'sheetId', 'name', 'backgroundColor', 'color', 'order', 'createdBy', 'createdAt'];
   
   public function sheet() {
     return $this->belongsTo('App\Models\Sheet', 'sheetId');
-  }
-  
-  public function cell() {
-    return $this->belongsTo('App\Models\SheetCell', 'cellId');
   }
 
 }

@@ -11,7 +11,8 @@ import {
   IAllSheetGroups, ISheetGroup,
   IAllSheetSorts, ISheetSort,
   IAllSheetRows, ISheetRow,
-  IAllSheetCellNotes, IAllSheetNotes
+  IAllSheetCellNotes, IAllSheetNotes,
+  IAllSheetPriorities, ISheetPriority
 } from '@app/state/sheet/types'
 
 import { 
@@ -42,10 +43,12 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
     const normalizedSheetViews: IAllSheetViews = {}
     const normalizedSheetCellNotes: IAllSheetCellNotes = {}
     const normalizedSheetNotes: IAllSheetNotes = {}
+    const normalizedSheetPriorities: IAllSheetPriorities = {}
 
     const sheetColumns: ISheetColumn['id'][] = []
     const sheetRows: ISheetRow['id'][] = []
     const sheetViews: ISheetView['id'][] = []
+    const sheetPriorities: ISheetPriority['id'][] = []
 
     const activeSheetViewId = sheetFromDatabase.activeSheetViewId
 
@@ -101,6 +104,12 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       sheetViews.push(sheetView.id)
     })
 
+    // Sheet Priorities
+    sheetFromDatabase.priorities.forEach(sheetPriority => { 
+      normalizedSheetPriorities[sheetPriority.id] = sheetPriority
+      sheetPriorities.push(sheetPriority.id)
+    })
+
     // Sheet Views Fiters, Sorts and Groups
     sheetFromDatabase.views.forEach((sheetView: ISheetViewFromDatabase) => {
       sheetView.filters.forEach((filter: ISheetFilter) => {
@@ -139,7 +148,8 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         colorReference: sheetFromDatabase.styles.colorReference || {},
         italic: new Set(sheetFromDatabase.styles.italic) as Set<string>,
       },
-      views: sheetViews
+      views: sheetViews,
+      priorities: sheetPriorities
     }
 
     // Sheet's Visible Rows and Row Leaders
@@ -174,7 +184,8 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         normalizedSheetSorts,
         normalizedSheetViews,
         normalizedSheetCellNotes,
-        normalizedSheetNotes
+        normalizedSheetNotes,
+        normalizedSheetPriorities
 			)
     )
     

@@ -19,7 +19,8 @@ import {
   ISheetSort, ISheetSortUpdates, 
   ISheetStylesDatabaseUpdates,
   ISheetViewToDatabase, ISheetViewUpdates,
-  ISheetNote
+  ISheetNote,
+  ISheetPriority, ISheetPriorityUpdates
 } from '@app/state/sheet/types'
 import { 
   IUser, IUserUpdates,
@@ -314,6 +315,24 @@ export const deleteSheetView = async (sheetViewId: string) => {
 
 export const resetSheetView = async (sheetId: string) => {
 	return axios.post('/app/sheets/views/reset/' + sheetId).then(response => {
+		return response.data
+	})
+}
+
+export const createSheetPriority = async (priority: ISheetPriority) => {
+	return axios.post('/app/sheets/priorities', priority).then(response => {
+		return response.data
+	})
+}
+
+export const deleteSheetPriority = async (sheetPriorityId: string) => {
+	return axios.delete('/app/sheets/priorities/' + sheetPriorityId).then(response => {
+		return response.data
+	})
+}
+
+export const updateSheetPriority = async (id: string, updates: ISheetPriorityUpdates) => {
+	return axios.patch('/app/sheets/priorities/' + id, updates).then(response => {
 		return response.data
 	})
 }

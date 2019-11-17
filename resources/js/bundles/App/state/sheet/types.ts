@@ -12,6 +12,7 @@ export interface IAllSheetSorts { [sortId: string]: ISheetSort }
 export interface IAllSheetViews { [viewId: string]: ISheetView }
 export interface IAllSheetNotes { [noteId: string]: ISheetNote }
 export interface IAllSheetCellNotes { [cellId: string]: ISheetNote['id'][] }
+export interface IAllSheetPriorities { [priorityId: string]: ISheetPriority }
 
 //-----------------------------------------------------------------------------
 // Sheet
@@ -22,6 +23,7 @@ export interface ISheet {
   activeSheetViewId: ISheetView['id']
   columns: ISheetColumn['id'][]
 	rows: ISheetRow['id'][]
+  priorities: ISheetPriority['id'][]
   styles: ISheetStyles
   selections: ISheetSelections
   views: ISheetView['id'][]
@@ -33,6 +35,7 @@ export interface ISheetUpdates {
   activeSheetViewId?: ISheetView['id']
   columns?: ISheetColumn['id'][]
   rows?: ISheetRow['id'][]
+  priorities?: ISheetPriority['id'][]
   styles?: ISheetStyles
   selections?: ISheetSelections
   views?: ISheetView['id'][]
@@ -46,6 +49,7 @@ export interface ISheetFromDatabase {
   activeSheetViewId: ISheetView['id']
   columns: ISheetColumn[]
   rows: ISheetFromDatabaseRow[]
+  priorities: ISheetPriority[]
   styles: ISheetStylesFromDatabase
   views: ISheetViewFromDatabase[]
   notes: ISheetNote[]
@@ -278,6 +282,25 @@ export interface ISheetNote {
   value: string
   createdAt: string
   createdBy: string
+}
+
+//-----------------------------------------------------------------------------
+// Sheet Priority
+//-----------------------------------------------------------------------------
+export interface ISheetPriority {
+  id: string
+  sheetId: ISheet['id']
+  name: string
+  backgroundColor: string
+  color: string
+  order: number
+}
+
+export interface ISheetPriorityUpdates {
+  name?: string
+  backgroundColor?: string
+  color?: string
+  order?: number
 }
 
 //-----------------------------------------------------------------------------

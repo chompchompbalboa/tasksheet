@@ -14,7 +14,8 @@ import {
   IAllSheetGroups, ISheetGroupUpdates,
   IAllSheetSorts, ISheetSortUpdates,
   IAllSheetViews, ISheetViewUpdates,
-  IAllSheetNotes, IAllSheetCellNotes
+  IAllSheetNotes, IAllSheetCellNotes,
+  IAllSheetPriorities, ISheetPriorityUpdates
 } from '@app/state/sheet/types'
 
 //-----------------------------------------------------------------------------
@@ -34,6 +35,7 @@ export { createSheetSort } from '@app/state/sheet/actions/createSheetSort'
 export { createSheetLink } from '@/bundles/App/state/sheet/actions/createSheetLink'
 export { createSheetView } from '@app/state/sheet/actions/createSheetView'
 export { createSheetCellNote } from '@app/state/sheet/actions/createSheetCellNote'
+export { createSheetPriority } from '@app/state/sheet/actions/createSheetPriority'
 
 export { deleteSheetColumn } from '@app/state/sheet/actions/deleteSheetColumn'
 export { deleteSheetColumnBreak } from '@app/state/sheet/actions/deleteSheetColumnBreak'
@@ -43,11 +45,15 @@ export { deleteSheetRow } from '@app/state/sheet/actions/deleteSheetRow'
 export { deleteSheetSort } from '@app/state/sheet/actions/deleteSheetSort'
 export { deleteSheetView } from '@app/state/sheet/actions/deleteSheetView'
 export { deleteSheetCellNote } from '@app/state/sheet/actions/deleteSheetCellNote'
+export { deleteSheetPriority } from '@app/state/sheet/actions/deleteSheetPriority'
 
 export { updateSheetCell } from '@app/state/sheet/actions/updateSheetCell'
 export { updateSheetColumn } from '@app/state/sheet/actions/updateSheetColumn'
 export { updateSheetFilter } from '@app/state/sheet/actions/updateSheetFilter'
 export { updateSheetGroup } from '@app/state/sheet/actions/updateSheetGroup'
+export { updateSheetCellPriorities } from '@app/state/sheet/actions/updateSheetCellPriorities'
+export { updateSheetPriority } from '@app/state/sheet/actions/updateSheetPriority'
+export { updateSheetPriorityStyle } from '@app/state/sheet/actions/updateSheetPriorityStyle'
 export { updateSheetSort } from '@app/state/sheet/actions/updateSheetSort'
 export { updateSheetStyles } from '@app/state/sheet/actions/updateSheetStyles'
 export { updateSheetView } from '@app/state/sheet/actions/updateSheetView'
@@ -87,7 +93,8 @@ export type ISheetActions =
   IUpdateSheetRow | ISetAllSheetRows | 
   IUpdateSheetSort | ISetAllSheetSorts |
   IUpdateSheetView | ISetAllSheetViews |
-  ISetAllSheetCellNotes | ISetAllSheetNotes
+  ISetAllSheetCellNotes | ISetAllSheetNotes |
+  IUpdateSheetPriority | ISetAllSheetPriorities
 
 //-----------------------------------------------------------------------------
 // Load Sheet - Moved
@@ -105,6 +112,7 @@ interface ILoadSheet {
   views: IAllSheetViews
   cellNotes: IAllSheetCellNotes
   notes: IAllSheetNotes
+  priorities: IAllSheetPriorities
 }
 
 export const loadSheetReducer = (
@@ -118,6 +126,7 @@ export const loadSheetReducer = (
   views: IAllSheetViews,
   cellNotes: IAllSheetCellNotes,
   notes: IAllSheetNotes,
+  priorities: IAllSheetPriorities
 ): ISheetActions => {
   return {
     type: LOAD_SHEET,
@@ -130,7 +139,8 @@ export const loadSheetReducer = (
     sorts,
     views,
     cellNotes,
-    notes
+    notes,
+    priorities
   }
 }
 
@@ -275,6 +285,22 @@ export const setAllSheetNotes = (nextAllSheetNotes: IAllSheetNotes): ISheetActio
 	return {
 		type: SET_ALL_SHEET_NOTES,
     nextAllSheetNotes,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Set All Sheet Views
+//-----------------------------------------------------------------------------
+export const SET_ALL_SHEET_PRIORITIES = 'SET_ALL_SHEET_PRIORITIES'
+interface ISetAllSheetPriorities {
+  type: typeof SET_ALL_SHEET_PRIORITIES,
+  nextAllSheetPriorities: IAllSheetPriorities
+}
+
+export const setAllSheetPriorities = (nextAllSheetPriorities: IAllSheetPriorities): ISheetActions => {
+	return {
+		type: SET_ALL_SHEET_PRIORITIES,
+    nextAllSheetPriorities,
 	}
 }
 
@@ -450,6 +476,24 @@ export const updateSheetViewReducer = (sheetViewId: string, updates: ISheetViewU
 	return {
 		type: UPDATE_SHEET_VIEW,
     sheetViewId,
+		updates,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Sheet Priority
+//-----------------------------------------------------------------------------
+export const UPDATE_SHEET_PRIORITY = 'UPDATE_SHEET_PRIORITY'
+interface IUpdateSheetPriority {
+	type: typeof UPDATE_SHEET_PRIORITY
+  sheetPriorityId: string
+	updates: ISheetPriorityUpdates
+}
+
+export const updateSheetPriorityReducer = (sheetPriorityId: string, updates: ISheetPriorityUpdates): ISheetActions => {
+	return {
+		type: UPDATE_SHEET_PRIORITY,
+    sheetPriorityId,
 		updates,
 	}
 }

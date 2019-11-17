@@ -89,6 +89,7 @@ Route::group([
     'sheets/groups' => 'SheetGroupController',
     'sheets/links' => 'SheetLinkController',
     'sheets/rows' => 'SheetRowController',
+    'sheets/priorities' => 'SheetPriorityController',
     'sheets/sorts' => 'SheetSortController',
     'sheets/styles' => 'SheetStylesController',
     'sheets/views' => 'SheetViewController',

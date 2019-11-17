@@ -168,6 +168,7 @@ const TeamMembersContainer = styled.div`
 const TeamMember = styled.div`
   padding: 0.15rem 0.25rem;
   background-color: ${ ({ isHighlighted }: ITeamMemberProps ) => isHighlighted ? 'rgb(245, 245, 245)' : 'transparent' };
+  color: black;
 `
 interface ITeamMemberProps {
   isHighlighted: boolean
