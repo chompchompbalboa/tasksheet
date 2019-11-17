@@ -33,7 +33,8 @@ export const deleteSheetGroup = (sheetId: string, groupId: string): IThunkAction
       allSheetGroups,
       allSheetRows,
       allSheetSorts,
-      allSheetViews
+      allSheetViews,
+      allSheetPriorities
     } = getState().sheet
 
     const sheet = allSheets[sheetId]
@@ -55,7 +56,8 @@ export const deleteSheetGroup = (sheetId: string, groupId: string): IThunkAction
           ...allSheetViews[activeSheetView.id],
           groups: nextSheetViewGroups
         }
-      }
+      },
+      allSheetPriorities
       )
     const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
 

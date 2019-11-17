@@ -12,7 +12,7 @@ import {
   IAllSheetSorts, ISheetSort,
   IAllSheetRows, ISheetRow,
   IAllSheetCellNotes, IAllSheetNotes,
-  IAllSheetPriorities, ISheetPriority
+  IAllSheetPriorities, ISheetPriority, ISheetCellPriority
 } from '@app/state/sheet/types'
 
 import { 
@@ -49,6 +49,7 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
     const sheetRows: ISheetRow['id'][] = []
     const sheetViews: ISheetView['id'][] = []
     const sheetPriorities: ISheetPriority['id'][] = []
+    const sheetCellPriorities: { [cellId: string]: ISheetCellPriority } = {}
 
     const activeSheetViewId = sheetFromDatabase.activeSheetViewId
 
@@ -110,6 +111,11 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       sheetPriorities.push(sheetPriority.id)
     })
 
+    // Sheet Cell Priorities
+    sheetFromDatabase.cellPriorities.forEach(sheetCellPriority => {
+      sheetCellPriorities[sheetCellPriority.cellId] = sheetCellPriority
+    })
+
     // Sheet Views Fiters, Sorts and Groups
     sheetFromDatabase.views.forEach((sheetView: ISheetViewFromDatabase) => {
       sheetView.filters.forEach((filter: ISheetFilter) => {
@@ -149,7 +155,8 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         italic: new Set(sheetFromDatabase.styles.italic) as Set<string>,
       },
       views: sheetViews,
-      priorities: sheetPriorities
+      priorities: sheetPriorities,
+      cellPriorities: sheetCellPriorities
     }
 
     // Sheet's Visible Rows and Row Leaders
@@ -160,7 +167,8 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       normalizedSheetFilters, 
       normalizedSheetGroups, 
       normalizedSheetSorts,
-      normalizedSheetViews
+      normalizedSheetViews,
+      normalizedSheetPriorities
     )
     const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
 

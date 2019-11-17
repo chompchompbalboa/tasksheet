@@ -33,7 +33,8 @@ export const createSheetSort = (sheetId: string, newSort: ISheetSort): IThunkAct
       allSheetFilters,
       allSheetGroups,
       allSheetSorts,
-      allSheetViews
+      allSheetViews,
+      allSheetPriorities
     } = getState().sheet
 
     const sheet = allSheets[sheetId]
@@ -54,7 +55,8 @@ export const createSheetSort = (sheetId: string, newSort: ISheetSort): IThunkAct
           ...allSheetViews[activeSheetView.id],
           sorts: nextSheetViewSorts
         }
-      }
+      },
+      allSheetPriorities
     )
     const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
 

@@ -33,7 +33,8 @@ export const loadSheetView = (sheetId: ISheet['id'], sheetViewId: ISheetView['id
       allSheetFilters,
       allSheetGroups,
       allSheetSorts,
-      allSheetViews
+      allSheetViews,
+      allSheetPriorities
     } = getState().sheet
 
     const sheetView = allSheetViews[sheetViewId]
@@ -48,7 +49,8 @@ export const loadSheetView = (sheetId: ISheet['id'], sheetViewId: ISheetView['id
       allSheetFilters, 
       allSheetGroups, 
       allSheetSorts,
-      allSheetViews
+      allSheetViews,
+      allSheetPriorities
     )
     const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
   

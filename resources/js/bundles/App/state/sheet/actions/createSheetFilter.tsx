@@ -33,7 +33,8 @@ export const createSheetFilter = (sheetId: string, newFilter: ISheetFilter): ITh
       allSheetFilters,
       allSheetGroups,
       allSheetSorts,
-      allSheetViews
+      allSheetViews,
+      allSheetPriorities
     } = getState().sheet
 
     const sheet = allSheets[sheetId]
@@ -54,7 +55,8 @@ export const createSheetFilter = (sheetId: string, newFilter: ISheetFilter): ITh
           ...allSheetViews[activeSheetView.id],
           filters: nextSheetViewFilters
         }
-      }
+      },
+      allSheetPriorities
     )
     const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
 

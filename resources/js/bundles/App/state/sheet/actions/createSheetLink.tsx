@@ -68,7 +68,8 @@ export const createSheetLink = (sheetId: string, newSheetLinkName: string): IThu
         selections: defaultSheetSelections,
         styles: defaultSheetStyles,
         views: [],
-        priorities: []
+        priorities: [],
+        cellPriorities: {}
       },
       null, // Cells
       null, // Columns

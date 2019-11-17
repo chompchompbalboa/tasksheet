@@ -31,7 +31,8 @@ export const resetSheetView = (sheetId: ISheet['id']): IThunkAction => {
       allSheetFilters,
       allSheetGroups,
       allSheetSorts,
-      allSheetViews
+      allSheetViews,
+      allSheetPriorities
     } = getState().sheet
 
     const activeSheetView = allSheetViews[sheet.activeSheetViewId]
@@ -52,7 +53,8 @@ export const resetSheetView = (sheetId: ISheet['id']): IThunkAction => {
       {
         ...allSheetViews,
         [nextActiveSheetView.id]: nextActiveSheetView
-      }
+      },
+      allSheetPriorities
     )
     const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
   

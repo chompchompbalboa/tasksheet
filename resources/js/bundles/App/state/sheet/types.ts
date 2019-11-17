@@ -24,6 +24,7 @@ export interface ISheet {
   columns: ISheetColumn['id'][]
 	rows: ISheetRow['id'][]
   priorities: ISheetPriority['id'][]
+  cellPriorities: { [cellId: string]: ISheetCellPriority }
   styles: ISheetStyles
   selections: ISheetSelections
   views: ISheetView['id'][]
@@ -36,6 +37,7 @@ export interface ISheetUpdates {
   columns?: ISheetColumn['id'][]
   rows?: ISheetRow['id'][]
   priorities?: ISheetPriority['id'][]
+  cellPriorities?: { [cellId: string]: ISheetCellPriority }
   styles?: ISheetStyles
   selections?: ISheetSelections
   views?: ISheetView['id'][]
@@ -50,6 +52,7 @@ export interface ISheetFromDatabase {
   columns: ISheetColumn[]
   rows: ISheetFromDatabaseRow[]
   priorities: ISheetPriority[]
+  cellPriorities: ISheetCellPriority[]
   styles: ISheetStylesFromDatabase
   views: ISheetViewFromDatabase[]
   notes: ISheetNote[]
@@ -301,6 +304,13 @@ export interface ISheetPriorityUpdates {
   backgroundColor?: string
   color?: string
   order?: number
+}
+
+export interface ISheetCellPriority {
+  id: string
+  sheetId: ISheet['id']
+  cellId: ISheetCell['id']
+  priorityId: ISheetPriority['id']
 }
 
 //-----------------------------------------------------------------------------

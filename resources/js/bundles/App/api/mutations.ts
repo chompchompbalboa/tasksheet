@@ -20,7 +20,7 @@ import {
   ISheetStylesDatabaseUpdates,
   ISheetViewToDatabase, ISheetViewUpdates,
   ISheetNote,
-  ISheetPriority, ISheetPriorityUpdates
+  ISheetPriority, ISheetPriorityUpdates, ISheetCellPriority
 } from '@app/state/sheet/types'
 import { 
   IUser, IUserUpdates,
@@ -333,6 +333,18 @@ export const deleteSheetPriority = async (sheetPriorityId: string) => {
 
 export const updateSheetPriority = async (id: string, updates: ISheetPriorityUpdates) => {
 	return axios.patch('/app/sheets/priorities/' + id, updates).then(response => {
+		return response.data
+	})
+}
+
+export const createSheetCellPriorities = async (sheetCellPriorities: ISheetCellPriority[]) => {
+	return axios.post('/app/sheets/cells/priorities', sheetCellPriorities).then(response => {
+		return response.data
+	})
+}
+
+export const deleteSheetCellPriorities = async (sheetCellPriorityIdsToDelete: ISheetCellPriority['id'][]) => {
+	return axios.post('/app/sheets/cells/priorities/delete', sheetCellPriorityIdsToDelete).then(response => {
 		return response.data
 	})
 }

@@ -49,10 +49,10 @@ const SheetActionSheetCellPriorities = ({
       onClick={() => dispatch(updateSheetCellPriorities(sheetId, activeSheetPriorityId))}
       openDropdown={() => setIsDropdownVisible(true)}
       text={activeSheetPriorityId 
-        ? sheetPriorities && allSheetPriorities[activeSheetPriorityId]
+        ? sheetPriorities && allSheetPriorities[activeSheetPriorityId].name
           ? sheetPriorities.indexOf(activeSheetPriorityId) + 1 + '. ' + allSheetPriorities[activeSheetPriorityId].name 
           : 'Priorities'
-        : sheetPriorities
+        : sheetPriorities && sheetPriorities.length > 0
           ? sheetPriorities.length + 1 + '. No Priority' 
           : 'Priorities'
       }>
@@ -74,7 +74,6 @@ const SheetActionSheetCellPriorities = ({
             containerColor="black"
             isLast
             onClick={() => {
-              setActiveSheetPriorityId(null)
               setIsDropdownVisible(false)
               dispatch(updateSheetCellPriorities(sheetId, null))
             }}

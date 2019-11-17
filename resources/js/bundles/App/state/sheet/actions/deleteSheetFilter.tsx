@@ -33,7 +33,8 @@ export const deleteSheetFilter = (sheetId: string, filterId: string): IThunkActi
       allSheetGroups,
       allSheetRows,
       allSheetSorts,
-      allSheetViews
+      allSheetViews,
+      allSheetPriorities
     } = getState().sheet
 
     const sheet = allSheets[sheetId]
@@ -55,7 +56,8 @@ export const deleteSheetFilter = (sheetId: string, filterId: string): IThunkActi
           ...allSheetViews[activeSheetView.id],
           filters: nextSheetViewFilters
         }
-      }
+      },
+      allSheetPriorities
       )
     const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
 

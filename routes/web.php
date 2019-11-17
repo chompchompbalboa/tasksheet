@@ -56,6 +56,8 @@ Route::group([
 
   // Batch actions
   Route::patch('/sheets/cells/batch/update', 'SheetCellController@batchUpdate');
+  Route::post('/sheets/cells/priorities', 'SheetCellPriorityController@batchCreate');
+  Route::post('/sheets/cells/priorities/delete', 'SheetCellPriorityController@batchDelete');
   Route::post('/sheets/rows/batch/delete', 'SheetRowController@batchDestroy');
 
   // Reset Sheet View

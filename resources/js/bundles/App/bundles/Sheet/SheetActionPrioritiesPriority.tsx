@@ -62,7 +62,10 @@ const SheetActionPrioritiesPriority = ({
       <SheetActionButtonDropdownItemAction
         icon={BACKGROUND_COLOR}
         iconSize="1.125rem"
-        onClick={() => dispatch(updateSheetPriorityStyle(sheetId, sheetPriority.id))}/>
+        onClick={() => {
+          setActiveSheetPriorityId(sheetPriority.id)
+          dispatch(updateSheetPriorityStyle(sheetId, sheetPriority.id))
+        }}/>
       <SheetActionButtonDropdownItemAction
         icon={EDIT}
         onClick={() => setIsSheetPriorityRenaming(true)}/>

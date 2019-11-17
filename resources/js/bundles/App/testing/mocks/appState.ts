@@ -107,6 +107,7 @@ export const appStateFactory = ({
       const newSheetDefaultVisibleRows: ISheetRow['id'][] = []
       const newSheetVisibleRows: ISheetRow['id'][] = []
       const newSheetRowLeaders: string[] = []
+      const newSheetCellPriorities = {}
 
       const newSheetFromDatabaseRows: ISheetFromDatabaseRow[] = []
       const newSheetFromDatabaseColumns: ISheetColumn[] = []
@@ -207,7 +208,8 @@ export const appStateFactory = ({
         styles: defaultSheetStyles,
         selections: defaultSheetSelections,
         views: newSheetFromDatabaseViews.map(view => view.id),
-        priorities: newSheetFromDatabasePriorities.map(priority => priority.id)
+        priorities: newSheetFromDatabasePriorities.map(priority => priority.id),
+        cellPriorities: newSheetCellPriorities
       }
 
       const newSheetFromDatabase: ISheetFromDatabase = {
@@ -225,6 +227,7 @@ export const appStateFactory = ({
         },
         views: newSheetFromDatabaseViews,
         priorities: newSheetFromDatabasePriorities,
+        cellPriorities: [],
         notes: []
       }
 

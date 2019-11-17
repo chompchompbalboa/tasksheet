@@ -10,7 +10,8 @@ import {
   IAllSheetFilters, ISheetFilterType,
   ISheetGroup, IAllSheetGroups, 
   IAllSheetSorts, 
-  IAllSheetViews
+  IAllSheetViews,
+  IAllSheetPriorities
 } from '@app/state/sheet/types'
 
 //-----------------------------------------------------------------------------
@@ -60,7 +61,8 @@ export const resolveSheetVisibleRows = (
   filters: IAllSheetFilters, 
   groups: IAllSheetGroups, 
   sorts: IAllSheetSorts,
-  views: IAllSheetViews
+  views: IAllSheetViews,
+  priorities: IAllSheetPriorities
 ) => {
   
   const rowIds: string[] = sheet.rows
@@ -85,7 +87,7 @@ export const resolveSheetVisibleRows = (
     }) ? row.id : undefined
   }).filter(Boolean)
 
-  // Sort
+  // Initial sort by value
   const sortBy = sortIds && sortIds.map(sortId => {
     const sort = sorts[sortId]
     return (rowId: string) => {
@@ -95,6 +97,9 @@ export const resolveSheetVisibleRows = (
   })
   const sortOrder = sortIds && sortIds.map(sortId => sorts[sortId].order === 'ASC' ? 'asc' : 'desc')
   const filteredSortedRowIds = orderBy(filteredRowIds, sortBy, sortOrder)
+
+  // Sort again to resolve the priorities
+  false && console.log(priorities)
   
   // Group
   if(groupIds.length === 0) {

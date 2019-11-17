@@ -33,7 +33,8 @@ export const createSheetGroup = (sheetId: string, newGroup: ISheetGroup): IThunk
       allSheetFilters,
       allSheetGroups,
       allSheetSorts,
-      allSheetViews
+      allSheetViews,
+      allSheetPriorities
     } = getState().sheet
 
     const sheet = allSheets[sheetId]
@@ -54,7 +55,8 @@ export const createSheetGroup = (sheetId: string, newGroup: ISheetGroup): IThunk
           ...allSheetViews[activeSheetView.id],
           groups: nextSheetViewGroups
         }
-      }
+      },
+      allSheetPriorities
     )
     const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
 

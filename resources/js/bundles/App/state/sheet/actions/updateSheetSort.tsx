@@ -37,7 +37,8 @@ export const updateSheetSort = (sheetId: ISheet['id'], groupId: string, updates:
           allSheetGroups,
           allSheetRows,
           allSheetSorts,
-          allSheetViews
+          allSheetViews,
+          allSheetPriorities
         } = getState().sheet
 
         const sheet = allSheets[sheetId]
@@ -48,7 +49,8 @@ export const updateSheetSort = (sheetId: ISheet['id'], groupId: string, updates:
           allSheetFilters, 
           allSheetGroups, 
           allSheetSorts,
-          allSheetViews
+          allSheetViews,
+          allSheetPriorities
         )
         const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
 

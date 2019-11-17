@@ -11,10 +11,10 @@ class Sheet extends Model
   const CREATED_AT = 'createdAt';
   const UPDATED_AT = 'updatedAt';
 
-  protected $visible = ['id', 'sourceSheetId', 'defaultSheetViewId', 'activeSheetViewId', 'rows', 'columns', 'views', 'styles', 'notes', 'priorities'];
+  protected $visible = ['id', 'sourceSheetId', 'defaultSheetViewId', 'activeSheetViewId', 'rows', 'columns', 'views', 'styles', 'notes', 'priorities', 'cellPriorities'];
   protected $fillable = ['id', 'sourceSheetId', 'defaultSheetViewId', 'activeSheetViewId'];
   protected $with = ['notes', 'priorities', 'views'];
-  protected $appends = ['columns', 'rows', 'styles'];
+  protected $appends = ['columns', 'rows', 'styles', 'cellPriorities'];
   
   public function getColumnsAttribute() {
     $sheetId = is_null($this->sourceSheetId) ? $this->id : $this->sourceSheetId;
@@ -33,6 +33,10 @@ class Sheet extends Model
 
   public function getStylesAttribute() {
     return SheetStyles::where('sheetId', '=', $this->id)->first();
+  }
+  
+  public function getCellPrioritiesAttribute() {
+    return $this->hasMany('App\Models\SheetCellPriority', 'sheetId')->get();
   }
   
   public function notes() {
