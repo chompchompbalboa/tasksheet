@@ -49,8 +49,8 @@ const SheetActionPrioritiesPriority = ({
   return (
     <SheetActionButtonDropdownItem
       sheetId={sheetId}
-      containerBackgroundColor={sheetPriority.backgroundColor}
-      containerColor={sheetPriority.color}
+      containerBackgroundColor={sheetPriority && sheetPriority.backgroundColor}
+      containerColor={sheetPriority && sheetPriority.color}
       isFirst={sheetPriorityOrder === 1}
       isTextUpdating={isSheetPriorityRenaming}
       onClick={() => handleSheetPriorityClick()}

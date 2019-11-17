@@ -21,6 +21,7 @@ const SheetActionButton = ({
   containerColor = 'rgb(80, 80, 80)',
   containerHoverBackgroundColor,
   containerHoverColor = 'rgb(240, 240, 240)',
+  dropdownToggleBackgroundColor = 'rgb(220, 220, 220)',
   icon,
   iconPadding = '0.35rem 0.4rem',
   iconSize = '1.1rem',
@@ -32,7 +33,6 @@ const SheetActionButton = ({
   openDropdown,
   text
 }: SheetActionButtonProps) => {
-  
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   
   // Dropdown
@@ -48,7 +48,7 @@ const SheetActionButton = ({
       closeDropdown()
     }
   }
-
+console.log(containerBackgroundColor)
   return (
     <Container
       ref={container}
@@ -77,7 +77,8 @@ const SheetActionButton = ({
       {children && 
         <>
           <DropdownToggle
-            dropdownToggleBackgroundColor={userColorPrimary}
+            dropdownToggleBackgroundColor={dropdownToggleBackgroundColor}
+            dropdownToggleHoverBackgroundColor={userColorPrimary}
             onClick={() => openDropdown()}>
             <Icon 
               icon={ARROW_DOWN}
@@ -103,6 +104,7 @@ interface SheetActionButtonProps {
   containerHoverBackgroundColor?: string
   containerHoverColor?: string
   closeDropdown?(): void
+  dropdownToggleBackgroundColor?: string
   icon?: string
   iconPadding?: string
   iconSize?: string
@@ -125,7 +127,6 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(220, 220, 220);
   color: rgb(80, 80, 80);
   border-radius: 3px;
   transition: all 0.05s;
@@ -183,14 +184,16 @@ const DropdownToggle = styled.div`
   transition: all 0.05s;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
-  &:hover {
     background-color: ${ ({ dropdownToggleBackgroundColor }: IDropdownToggle) => dropdownToggleBackgroundColor};
+  &:hover {
+    background-color: ${ ({ dropdownToggleHoverBackgroundColor }: IDropdownToggle) => dropdownToggleHoverBackgroundColor};
     color: rgb(240, 240, 240);
   }
 `
 
 interface IDropdownToggle {
   dropdownToggleBackgroundColor: string
+  dropdownToggleHoverBackgroundColor: string
 }
 
 const DropdownContainer = styled.div`
