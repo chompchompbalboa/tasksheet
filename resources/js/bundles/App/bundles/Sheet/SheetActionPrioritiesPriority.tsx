@@ -9,7 +9,6 @@ import { BACKGROUND_COLOR, EDIT, TRASH_CAN } from '@app/assets/icons'
 import { ISheet, ISheetPriority } from '@app/state/sheet/types'
 
 import {
-  updateSheetCellPriorities,
   deleteSheetPriority,
   updateSheetPriority,
   updateSheetPriorityStyle
@@ -36,7 +35,6 @@ const SheetActionPrioritiesPriority = ({
   const handleSheetPriorityClick = () => {
     setActiveSheetPriorityId(sheetPriority.id)
     closeDropdown()
-    dispatch(updateSheetCellPriorities(sheetId, sheetPriority.id))
   }
 
   const onSheetPriorityRenamingEnd = () => {

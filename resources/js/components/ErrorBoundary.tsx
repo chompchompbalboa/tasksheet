@@ -36,7 +36,7 @@ export default class ErrorBoundary extends Component {
                   size="4rem"/>
               </ErrorIconContainer>
               <ErrorMessage>
-                Something has gone horribly wrong. Please refresh the page.<br/><br/>
+                Something has gone wrong. Please refresh the page.<br/><br/>
                 If you continue to see this error, please reach out to our customer support team.
               </ErrorMessage>
             </ErrorContainer>
