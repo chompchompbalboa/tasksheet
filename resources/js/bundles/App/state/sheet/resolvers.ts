@@ -103,8 +103,7 @@ export const resolveSheetVisibleRows = (
     const sort = sorts[sortId]
     return (rowId: string) => {
       const cell = cells[rows[rowId].cells[sort.columnId]]
-      const cellPriorityOrder = sheet.cellPriorities[cell.id] ? priorities[sheet.cellPriorities[cell.id].priorityId].order : sheetCellPrioritiesLength + 1
-      return cellPriorityOrder + '-' + resolveSheetCellValue(cell.value)
+      return resolveSheetCellValue(cell.value)
     }
   })
   const sortOrder = sortIds && sortIds.map(sortId => sorts[sortId].order === 'ASC' ? 'asc' : 'desc')
@@ -129,10 +128,10 @@ export const resolveSheetVisibleRows = (
       const prioritizedGroup = group.sort((firstRowId: string, secondRowId: string) => {
         const firstRowPriority = rowIdsWithPriority.has(firstRowId)
           ? rowIdPriorities[firstRowId]
-          : sheetCellPrioritiesLength + 1
+          : sheetCellPrioritiesLength + 100
         const secondRowPriority = rowIdsWithPriority.has(secondRowId)
           ? rowIdPriorities[secondRowId]
-          : sheetCellPrioritiesLength + 1
+          : sheetCellPrioritiesLength + 100
         return firstRowPriority > secondRowPriority ? 0 : -1
       })
       filteredSortedGroupedRowIds.push(...prioritizedGroup)

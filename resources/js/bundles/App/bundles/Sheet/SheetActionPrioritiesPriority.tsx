@@ -11,6 +11,7 @@ import { ISheet, ISheetPriority } from '@app/state/sheet/types'
 import {
   deleteSheetPriority,
   updateSheetPriority,
+  updateSheetCellPriorities,
   updateSheetPriorityStyle
 } from '@app/state/sheet/actions'
 
@@ -35,6 +36,7 @@ const SheetActionPrioritiesPriority = ({
   const handleSheetPriorityClick = () => {
     setActiveSheetPriorityId(sheetPriority.id)
     closeDropdown()
+    dispatch(updateSheetCellPriorities(sheetId, sheetPriority.id))
   }
 
   const onSheetPriorityRenamingEnd = () => {
