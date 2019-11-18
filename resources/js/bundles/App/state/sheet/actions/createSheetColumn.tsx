@@ -22,6 +22,7 @@ import {
   setAllSheetCells,
   setAllSheetColumns,
   setAllSheetRows,
+  updateSheet,
   updateSheetView
 } from '@app/state/sheet/actions'
 
@@ -47,13 +48,17 @@ export const createSheetColumn = (sheetId: ISheet['id'], newColumnVisibleColumns
     const activeSheetView = allSheetViews[sheet.activeSheetViewId]
     const sheetViewVisibleColumns = activeSheetView.visibleColumns.length === 0 ? clone(sheet.columns) : clone(activeSheetView.visibleColumns)
 
-    const newColumn = defaultColumn(sheetId, newColumnVisibleColumnsIndex)
+    const newColumn = defaultColumn(sheetId)
     const newCells: ISheetCell[] = []
 
     const nextSheetVisibleColumns = [
       ...sheetViewVisibleColumns.slice(0, newColumnVisibleColumnsIndex),
       newColumn.id,
       ...sheetViewVisibleColumns.slice(newColumnVisibleColumnsIndex)
+    ]
+    const nextSheetColumns = [
+      ...sheet.columns,
+      newColumn.id
     ]
     const nextAllSheetCells: IAllSheetCells = clone(allSheetCells)
     const nextAllSheetRows: IAllSheetRows = clone(allSheetRows)
@@ -71,6 +76,9 @@ export const createSheetColumn = (sheetId: ISheet['id'], newColumnVisibleColumns
           ...allSheetColumns,
           [newColumn.id]: newColumn
         }))
+        dispatch(updateSheet(sheetId, {
+          columns: nextSheetColumns
+        }))
         dispatch(updateSheetView(activeSheetView.id, {
           visibleColumns: nextSheetVisibleColumns
         }))
@@ -83,6 +91,9 @@ export const createSheetColumn = (sheetId: ISheet['id'], newColumnVisibleColumns
     const undoActions = () => {
       batch(() => {
         dispatch(setAllSheetColumns(allSheetColumns))
+        dispatch(updateSheet(sheetId, {
+          columns: sheet.columns
+        }))
         dispatch(updateSheetView(activeSheetView.id, {
           visibleColumns: sheetViewVisibleColumns
         }))

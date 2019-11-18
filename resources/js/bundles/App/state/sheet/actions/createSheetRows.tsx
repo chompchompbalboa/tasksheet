@@ -32,7 +32,7 @@ import { resolveSheetRowLeaders } from '@app/state/sheet/resolvers'
 export const createSheetRows = (
   sheetId: string, 
   numberOfRowsToAdd: number, 
-  insertBeforeRowId: ISheetRow['id'], 
+  insertAtRowId: ISheetRow['id'], 
   aboveOrBelow: 'ABOVE' | 'BELOW' = 'ABOVE',
   keepSheetSelection: boolean = false
 ): IThunkAction => {
@@ -58,28 +58,33 @@ export const createSheetRows = (
     // Get any open sheets this is a source sheet for
     const childSheets: ISheet['id'][] = []
     Object.keys(allSheets).forEach(currentSheetId => {
-      if(allSheets[currentSheetId].sourceSheetId === sheet.id || allSheets[currentSheetId].sourceSheetId === sheet.sourceSheetId) {
+      if([ sheet.id, sheet.sourceSheetId ].includes(allSheets[currentSheetId].sourceSheetId)){ 
         childSheets.push(currentSheetId)
       }
     })
 
-    const insertBeforeRowIdVisibleRowsIndex = nextSheetVisibleRows.indexOf(insertBeforeRowId) > -1 ? nextSheetVisibleRows.indexOf(insertBeforeRowId) : 0
+    // Get the index to insert the rows at
+    const insertAtRowIdVisibleRowsIndex = nextSheetVisibleRows.indexOf(insertAtRowId) > -1 
+      ? nextSheetVisibleRows.indexOf(insertAtRowId) 
+      : 0
 
+    // Get the correct sheetId for the new rows
     const newRowSheetId = sheet.sourceSheetId !== null ? sheet.sourceSheetId : sheetId
-          
+    
+    // Create the rows
     for(let i = 0; i < numberOfRowsToAdd; i++) {
       const newRow = defaultRow(newRowSheetId, createUuid(), sheet.columns)
       const newRowCellsToDatabase: ISheetCell[] = []
-      Object.keys(newRow.cells).forEach((columnId: string, index: number) => {
+      Object.keys(newRow.cells).forEach((columnId: string) => {
         const cellId = newRow.cells[columnId]
-        const newCell = defaultCell(sheetId, newRow.id, sheet.columns[index], cellId)
+        const newCell = defaultCell(sheetId, newRow.id, columnId, cellId)
         nextAllSheetCells[cellId] = newCell
         newRowCellsToDatabase.push(newCell)
       })
       nextAllSheetRows[newRow.id] = newRow
       nextSheetRows.push(newRow.id)
       const rowIndexModifier = aboveOrBelow === 'ABOVE' ? i : i + 1
-      nextSheetVisibleRows.splice(insertBeforeRowIdVisibleRowsIndex + rowIndexModifier, 0, newRow.id)
+      nextSheetVisibleRows.splice(insertAtRowIdVisibleRowsIndex + rowIndexModifier, 0, newRow.id)
       const newRowToDatabase = {
         ...newRow,
         cells: newRowCellsToDatabase
@@ -88,7 +93,10 @@ export const createSheetRows = (
       newRowIds.push(newRow.id)
     }
     
+    // Get the next row leaders
     const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
+
+    // Actions
     const actions = () => {
       batch(() => {
         dispatch(setAllSheetRows(nextAllSheetRows))
@@ -109,6 +117,8 @@ export const createSheetRows = (
         mutation.createSheetRows(newRowsToDatabase)
       })
     }
+
+    // Undo actions
     const undoActions = () => {
       batch(() => {
         dispatch(setAllSheetRows(allSheetRows))
@@ -129,7 +139,11 @@ export const createSheetRows = (
         mutation.deleteSheetRows(newRowIds)
       })
     }
+
+    // Create the history step
     dispatch(createHistoryStep({ actions, undoActions }))
+
+    // Call the actions
     actions()
 	}
 }

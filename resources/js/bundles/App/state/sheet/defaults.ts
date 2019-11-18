@@ -41,22 +41,11 @@ export const defaultCell = (sheetId: string, rowId: ISheetRow['id'], columnId: s
 //-----------------------------------------------------------------------------
 // Default Cell
 //-----------------------------------------------------------------------------
-export const defaultColumn = (sheetId: string, newColumnIndex?: number): ISheetColumn => {
-
-  const alphabetString = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-
-  const columnName = [
-    newColumnIndex < 26 ? alphabetString.split('')[newColumnIndex] : 'A',
-    newColumnIndex >= 26 ? alphabetString.split('')[newColumnIndex % 26] : '',
-    newColumnIndex >= 52 ? alphabetString.split('')[newColumnIndex % 52] : '',
-    newColumnIndex >= 78 ? alphabetString.split('')[newColumnIndex % 78] : '',
-    newColumnIndex >= 104 ? alphabetString.split('')[newColumnIndex % 104] : ''
-  ].join('')
-
+export const defaultColumn = (sheetId: string): ISheetColumn => {
   return {
     id: createUuid(),
     sheetId: sheetId, 
-    name: columnName,
+    name: 'Column',
     typeId: 'STRING',
     width: 100
   }
