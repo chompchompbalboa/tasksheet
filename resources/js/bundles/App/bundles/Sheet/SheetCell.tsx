@@ -70,7 +70,6 @@ export const SheetCell = memo(({
           dispatch(updateSheetCell(cell.id, { value: cellValue }, { value: cell.value }))
         }, 1000)
       }
-      return () => clearTimeout(updateSheetCellTimer)
     }, [ cellValue ])
 
     // Cell types
