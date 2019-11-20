@@ -7,7 +7,7 @@
 }
 
 body {
-  background-color: rgb(1, 21, 65)
+  background-color: rgb(52, 12, 107)
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -29,5 +29,5 @@ div {
 .site_splash_image {
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: linear-gradient(rgba(1, 21, 65, 0.85),rgba(1, 21, 65, 0.95)), url('/images/background.png');
+  background-image: linear-gradient(rgba(52, 12, 107, 0.9),rgba(52, 12, 107, 0.93)), url('/images/background.png');
 }

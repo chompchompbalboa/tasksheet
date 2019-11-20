@@ -16,7 +16,6 @@ import SheetActionCellStyleBold from '@app/bundles/Sheet/SheetActionCellStyleBol
 import SheetActionCellStyleColor from '@app/bundles/Sheet/SheetActionCellStyleColor'
 import SheetActionCellStyleItalic from '@app/bundles/Sheet/SheetActionCellStyleItalic'
 import SheetActionCreateRows from '@app/bundles/Sheet/SheetActionCreateRows'
-import SheetActionCreateSheetLink from '@/bundles/App/bundles/Sheet/SheetActionCreateSheetLink'
 import SheetActionCreateSheetView from '@/bundles/App/bundles/Sheet/SheetActionCreateSheetView'
 import SheetActionDownloadCsv from '@app/bundles/Sheet/SheetActionDownloadCsv'
 import SheetActionFilter from '@app/bundles/Sheet/SheetActionFilter'
@@ -66,8 +65,6 @@ const SheetActions = ({
       <SheetActionCellStyleItalic sheetId={sheetId}/>
       <SheetActionCellStyleBackgroundColor sheetId={sheetId}/>
       <SheetActionCellStyleColor sheetId={sheetId}/>
-      <Divider />
-      <SheetActionCreateSheetLink sheetId={sheetId}/>
       <Divider />
       <SheetActionDownloadCsv sheetId={sheetId}/>
     </Container>

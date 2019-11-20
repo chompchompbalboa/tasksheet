@@ -26,9 +26,11 @@ const SiteFeatures = ({
       <SiteFeaturesFeature
         image={tasksheet.assetUrl + 'images/background.png'}>
         <SiteFeaturesList
-          header="A format you're already familiar with...">
+          header="A familiar format with a simple twist">
           <SiteFeaturesListItem>
-            Anyone familiar with Microsoft Excel, Google Sheets or any other spreadsheet app can jump right in to using Tasksheet - with little or no training needed.
+            Sortsheet is a spreadsheet at heart.
+            <br/><br/>
+            But we stripped it down to essential features only and made powerful sorting, grouping and filtering capabilities its core feature.
           </SiteFeaturesListItem>
           <SiteFeaturesListItem>
             <SiteFeaturesActionButton
@@ -41,11 +43,11 @@ const SiteFeatures = ({
         image={tasksheet.assetUrl + 'images/background.png'}
         imageFirst>
         <SiteFeaturesList
-          header="...with powerful new features that make managing your teams a breeze">
+          header="With a modern twist">
           <SiteFeaturesListItem>
-            Save photos and files. Take notes and track changes to your sheet over time. Add dates and create Gantt charts. Save custom views for quick access later. And much, much more.
+            Save photos and files. Take notes and track changes to your sheet over time. Create Gantt charts. Save custom views for quick access later. And much, much more.
             <br/><br/>
-            We've built Tasksheet and its features to be quick and easy to use, so you can spend your time focusing on doing your work, not organizing your work.
+            We've built Sortsheet and its features to be quick and easy to use.
           </SiteFeaturesListItem>
           <SiteFeaturesListItem>
             <SiteFeaturesActionButton
@@ -57,9 +59,9 @@ const SiteFeatures = ({
       <SiteFeaturesFeature
         image={tasksheet.assetUrl + 'images/background.png'}>
         <SiteFeaturesList
-          header="Empower your team">
+          header="See exactly what you need">
           <SiteFeaturesListItem>
-            With the ability to save custom views for quick access, every member of your team can see the exact level of detail they need - no matter their role or their current task at hand.
+            With the ability to save custom views for quick access, you can see the exact level of detail you need for every situation.
           </SiteFeaturesListItem>
           <SiteFeaturesListItem>
             <SiteFeaturesActionButton
@@ -75,7 +77,7 @@ const SiteFeatures = ({
         <SiteFeaturesList
           header="Endlessly customizable">
           <SiteFeaturesListItem>
-            Don't modify your existing workflow to fit your task management app. Instead, Tasksheet is designed to fit your needs, no matter what they are. With an exhaustive library of cell types and powerful customization built into all of them, Tasksheet can be molded to fit any workflow.
+            An exhaustive library of cell types power Sortsheet and with powerful customization options built into all of them, Sortsheet can be molded to fit any workflow.
           </SiteFeaturesListItem>
           <SiteFeaturesListItem>
             <SiteFeaturesActionButton
@@ -87,9 +89,9 @@ const SiteFeatures = ({
       <SiteFeaturesFeature
         image={tasksheet.assetUrl + 'images/background.png'}>
         <SiteFeaturesList
-          header="More than just tasks">
+          header="It's just useful">
           <SiteFeaturesListItem>
-            We built Tasksheet with tasks in mind, but we think it's pretty darn useful for just about anything else as well. We've seen it used to manage inventory, track files through approval processes, review analytics and much, much more.
+            We built Sortsheet to make your life easier and we're excited to see how you put it to use! We've seen it used to manage inventory, track files through approval processes, review analytics and much, much more.
           </SiteFeaturesListItem>
           <SiteFeaturesListItem>
             <SiteFeaturesActionButton

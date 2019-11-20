@@ -13,7 +13,7 @@ const SiteFeaturesFeature = ({
   children,
   image,
   imageFirst = false,
-  imageWidth = '55%'
+  imageWidth = '50%'
 }: ISiteFeaturesFeature) => (
   <Container
     containerBackgroundColor={backgroundColor}
@@ -22,12 +22,14 @@ const SiteFeaturesFeature = ({
       imageWidth={imageWidth}>
       {children}
     </TextContainer>
-    <ImageContainer
+    <Laptop
       imageWidth={imageWidth}
       isImageFirst={imageFirst}>
-      <Image
-        src={image}/>
-    </ImageContainer>
+      <LaptopScreen>
+        <Image
+          src={image}/>
+      </LaptopScreen>
+    </Laptop>
   </Container>
 )
 
@@ -47,13 +49,13 @@ export interface ISiteFeaturesFeature {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  padding: 0 2.5rem;
+  padding: 2.5rem;
   background-color: ${ ({ containerBackgroundColor }: IContainer ) => containerBackgroundColor };
   color: ${ ({ containerColor }: IContainer ) => containerColor };
   display: flex;
   @media (max-width: 480px) {
     flex-direction: column;
-    padding: 0 1.25rem;
+    padding:  1.25rem;
   }
 `
 interface IContainer {
@@ -74,25 +76,32 @@ const TextContainer = styled.div`
     padding: 1rem;
   }
 `
+
 interface ITextContainer {
   imageWidth: string
 }
 
-const ImageContainer = styled.div`
-  order: ${ ({ isImageFirst }: IImageContainer ) => isImageFirst ? '1' : '3' };
-  width: ${ ({ imageWidth }: IImageContainer ) => imageWidth };
-  padding: 2.5rem 1.5rem;
+const Laptop = styled.div`
+  order: ${ ({ isImageFirst }: ILaptop ) => isImageFirst ? '1' : '3' };
+  width: ${ ({ imageWidth }: ILaptop ) => imageWidth };
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+interface ILaptop {
+  imageWidth: string
+  isImageFirst: boolean
+}
+
+const LaptopScreen = styled.div`
+  border: 2.5rem solid rgb(195, 195, 195);
+  border-radius: 1rem;
   @media (max-width: 480px) {
-    order: 1;
     width: 100%;
     padding: 1.5rem 0.5rem;
     padding-top: 2.5rem;
   }
 `
-interface IImageContainer {
-  imageWidth: string
-  isImageFirst: boolean
-}
 
 const Image = styled.img`
   width: 100%;

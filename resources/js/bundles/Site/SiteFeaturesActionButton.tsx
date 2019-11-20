@@ -62,9 +62,14 @@ const ButtonContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   font-size: 0.9rem;
-  background-color: rgb(1, 21, 65);
+  background-color: rgb(52, 12, 107);
+  opacity: 0.85;
   color: white;
   border-radius: 0.5rem;
+  transition: opacity 0.15s;
+  &:hover {
+    opacity: 1;
+  }
   @media (max-width: 480px) {
     margin: 1.5rem 0 0.5rem 0;
     max-width: 75%;

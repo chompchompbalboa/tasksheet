@@ -72,10 +72,10 @@ const SiteSplash = ({
   return (
     <Container
       className="site_splash_image">
-      <Header>tasksheet<HeaderBetaTag>beta</HeaderBetaTag></Header>
+      <Header>sortsheet</Header>
       <Splash>
-        <Name>tasksheet<NameBetaTag>beta</NameBetaTag></Name>
-        <Motto>Fast and easy-to-use task management for teams of any size</Motto>
+        <Name>sortsheet</Name>
+        <Motto>The spreadsheet that makes it easy to organize anything and everything</Motto>
         <Divider />
         <LoginRegisterContainer>
           {isLoginOrRegister === 'REGISTER' && registerStatus !== 'REGISTERED' &&
@@ -174,16 +174,6 @@ const Header = styled.div`
   font-weight: bold;
   display: flex;
   align-items: flex-start;
-`
-
-const HeaderBetaTag = styled.span`
-  font-size: 0.5rem;
-  opacity: 0.75;
-`
-
-const NameBetaTag = styled.span`
-  font-size: 0.85rem;
-  opacity: 0.75;
 `
 
 const Splash = styled.div`
