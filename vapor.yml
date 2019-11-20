@@ -2,14 +2,15 @@ id: 2412
 name: tracksheet
 environments:
     production:
-        domain: sortsheet.com
+        domain: simplesheet.io
         memory: 1024
         cli-memory: 512
-        database: tasksheet-production
-        storage: tasksheet-production
+        database: simplesheet-production
+        storage: simplesheet-production
         build:
             - 'composer install --no-dev --classmap-authoritative'
             - 'php artisan event:cache'
             - 'npm ci && npm run prod && rm -rf node_modules'
         deploy:
-            - 'php artisan migrate --force'
+            - 'php artisan migrate:fresh --seed --force'
+

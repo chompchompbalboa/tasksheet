@@ -72,10 +72,17 @@ const SiteSplash = ({
   return (
     <Container
       className="site_splash_image">
-      <Header>sortsheet</Header>
+      <Header>
+        <HeaderName>
+          simplesheet
+        </HeaderName>
+        <HeaderLinks>
+          <HeaderLink>30 day free trial. $5 a month or $100 forever</HeaderLink>
+        </HeaderLinks>
+      </Header>
       <Splash>
-        <Name>sortsheet</Name>
-        <Motto>The spreadsheet that makes it easy to organize anything and everything</Motto>
+        <Name>simplesheet</Name>
+        <Motto>The easy-to-use spreadsheet</Motto>
         <Divider />
         <LoginRegisterContainer>
           {isLoginOrRegister === 'REGISTER' && registerStatus !== 'REGISTERED' &&
@@ -98,8 +105,7 @@ const SiteSplash = ({
                 value={accessCodeInputValue}
                 onChange={e => setAccessCodeInputValue(e.target.value)}
                 isInputValueValid={true}/>
-              <SubmitButton
-                isSubmitting={registerStatus === 'REGISTERING'}>
+              <SubmitButton>
                 {!['REGISTERING'].includes(registerStatus) ? 'Sign Up' : 'Signing Up...'}
               </SubmitButton>
             </LoginRegisterForm>
@@ -119,8 +125,7 @@ const SiteSplash = ({
                 value={passwordInputValue}
                 onChange={e => setPasswordInputValue(e.target.value)}
                 isInputValueValid={true}/>
-              <SubmitButton
-                isSubmitting={loginStatus === 'LOGGING_IN'}>
+              <SubmitButton>
                 {!['LOGGING_IN'].includes(loginStatus) ? 'Log In' : 'Logging In...'}
               </SubmitButton>
             </LoginRegisterForm>
@@ -130,13 +135,13 @@ const SiteSplash = ({
           {isLoginOrRegister === 'REGISTER' &&
             <LoginLink onClick={() => handleFormVisibilityChange('LOGIN')}>
               {registerStatus !== 'ERROR' 
-                ? 'Already registered? Click here to login'
+                ? 'Click here to log in'
                 : 'There was a problem registering, please try again or click here to login instead'}
             </LoginLink>}
           {isLoginOrRegister === 'LOGIN' &&
             <LoginLink onClick={() => handleFormVisibilityChange('REGISTER')}>
               {loginStatus !== 'ERROR' 
-                ? 'Have an access code? Click here to sign up'
+                ? 'Click here to sign up'
                 : 'There was a problem logging in, please try again or click here to register instead'}
           </LoginLink>}
         </CurrentStatus>
@@ -157,6 +162,8 @@ export interface ISiteSplash {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  position: absolute;
+  z-index: 10000;
   top: 0;
   left: 0;
   margin: 0;
@@ -169,14 +176,25 @@ const Container = styled.div`
 `
 
 const Header = styled.div`
+  width: 100%;
   padding: 2rem;
-  font-size: 1.5rem;
-  font-weight: bold;
   display: flex;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
 `
 
+const HeaderName = styled.div`
+  font-size: 1.5rem;
+  font-weight: bold;
+`
+
+const HeaderLinks = styled.div`
+`
+
+const HeaderLink = styled.div``
+
 const Splash = styled.div`
+  margin-top: 2rem;
   height: calc(100% - 5.5rem);
 	display: flex;
   flex-direction: column;
@@ -198,7 +216,6 @@ const Name = styled.div`
 
 const Motto = styled.div`
   font-size: 1.125rem;
-  opacity: 0.85;
   width: 80%;
   text-align: center;
 `
@@ -210,6 +227,7 @@ const CurrentStatus = styled.div`
 
 const LoginLink = styled.span`
   cursor: pointer;
+  transition: text-decoration 0.1s;
   &:hover {
     text-decoration: underline;
   }
@@ -266,9 +284,10 @@ const SubmitButton = styled.button`
   border: 1px solid white;
   border-radius: 5px;
   font-size: 0.9rem;
-  background-color: ${ ({ isSubmitting }: SubmitButtonProps ) => isSubmitting ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.9)'};
-  color: ${ ({ isSubmitting }: SubmitButtonProps ) => isSubmitting ? 'rgb(25, 25, 25)' : 'rgb(25, 25, 25)'};
+  background-color: rgba(220, 220, 220, 1);
+  color: black;
   outline: none;
+  transition: background-color 0.1s;
   &:hover {
     background-color: white;
     color: black;
@@ -278,8 +297,5 @@ const SubmitButton = styled.button`
     margin: 0.375rem;
   }
 `
-interface SubmitButtonProps {
-  isSubmitting: boolean
-}
 
 export default SiteSplash

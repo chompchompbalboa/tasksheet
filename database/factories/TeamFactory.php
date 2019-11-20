@@ -15,7 +15,6 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Models\Team::class, function (Faker $faker) {
     return [
-        'id' => '36faa7b2-79d3-11e9-8f9e-2a86e4085a59',
         'name' => $faker->company
     ];
 });

@@ -20,21 +20,19 @@ class DatabaseSeeder extends Seeder
 
       // Teams
       $teams = [
-        [
-          // Details
-          'name' => 'Tracksheet',
-
-          // Users
+        [ 'name' => 'Simplesheet',
+          'sourceFolder' => 'Simplesheet',
+          'users' => [
+            [ 'id' => '9f73d72f-a614-47fc-81a4-b14b99b82991', 'name' => 'Simplesheet', 'email' => 'demo@simplesheet.io' ],
+        ]],
+        [ 'name' => 'Tracksheet',
+          'sourceFolder' => 'Tracksheet',
           'users' => [
             [ 'name' => 'Rocky Eastman', 'email' => 'eastmanrjr@gmail.com' ],
             [ 'name' => 'Jake Carlson', 'email' => 'jakecarlson88@gmail.com' ],
             [ 'name' => 'Josh Hutchinson', 'email' => 'jghtch@gmail.com' ],
             [ 'name' => 'Justin Bren', 'email' => 'justin.bren47@gmail.com' ],
-          ],
-
-          // Source Folder
-          'sourceFolder' => 'Tracksheet'
-        ]
+        ]],
       ];
 
 
@@ -49,6 +47,7 @@ class DatabaseSeeder extends Seeder
 
         // Team
         $team = factory(App\Models\Team::class)->create([
+          'id' => Str::uuid()->toString(),
           'name' => $seedTeam['name'],
           'folderId' => $teamFolder->id
         ]);
@@ -62,7 +61,7 @@ class DatabaseSeeder extends Seeder
           ]);
 
           // User
-          $userId = Str::uuid()->toString();
+          $userId = isset($seedUser['id']) ? $seedUser['id'] : Str::uuid()->toString();
           $user = factory(App\Models\User::class)->create([ 
             'id' => $userId,
             'folderId' => $userFolder->id,

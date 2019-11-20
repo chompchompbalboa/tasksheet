@@ -24,7 +24,7 @@ const SiteFeatures = ({
   return (
     <Container>
       <SiteFeaturesFeature
-        image={tasksheet.assetUrl + 'images/background.png'}>
+        image={simplesheet.assetUrl + 'images/background.png'}>
         <SiteFeaturesList
           header="A familiar format with a simple twist">
           <SiteFeaturesListItem>
@@ -40,7 +40,7 @@ const SiteFeatures = ({
       </SiteFeaturesFeature>
       <SiteFeaturesFeature
         backgroundColor="rgb(240, 240, 240)"
-        image={tasksheet.assetUrl + 'images/background.png'}
+        image={simplesheet.assetUrl + 'images/background.png'}
         imageFirst>
         <SiteFeaturesList
           header="With a modern twist">
@@ -57,7 +57,7 @@ const SiteFeatures = ({
         </SiteFeaturesList>
       </SiteFeaturesFeature>
       <SiteFeaturesFeature
-        image={tasksheet.assetUrl + 'images/background.png'}>
+        image={simplesheet.assetUrl + 'images/background.png'}>
         <SiteFeaturesList
           header="See exactly what you need">
           <SiteFeaturesListItem>
@@ -72,7 +72,7 @@ const SiteFeatures = ({
       </SiteFeaturesFeature>
       <SiteFeaturesFeature
         backgroundColor="rgb(240, 240, 240)"
-        image={tasksheet.assetUrl + 'images/background.png'}
+        image={simplesheet.assetUrl + 'images/background.png'}
         imageFirst>
         <SiteFeaturesList
           header="Endlessly customizable">
@@ -87,7 +87,7 @@ const SiteFeatures = ({
         </SiteFeaturesList>
       </SiteFeaturesFeature>
       <SiteFeaturesFeature
-        image={tasksheet.assetUrl + 'images/background.png'}>
+        image={simplesheet.assetUrl + 'images/background.png'}>
         <SiteFeaturesList
           header="It's just useful">
           <SiteFeaturesListItem>

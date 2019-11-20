@@ -20,24 +20,24 @@ composer:
   stage: build
   script:
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
-  artifacts:
-    expire_in: 1 month
-    paths:
-      - vendor/
   cache:
     key: ${CI_COMMIT_REF_SLUG}-composer
+    paths:
+      - vendor/
+  artifacts:
+    expire_in: 1 month
     paths:
       - vendor/
 
 npm:
   stage: build
+  script:
+    - npm install
+    - npm run production
   cache:
     key: ${CI_COMMIT_REF_SLUG}-npm
     paths:
       - node_modules/
-  script:
-    - npm install
-    - npm run production
   artifacts:
     expire_in: 1 month
     paths:
@@ -59,4 +59,4 @@ jest:
 vapor:
   stage: deploy
   script:
-    - vapor deploy production
+    - vapor deploy simplesheet

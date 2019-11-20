@@ -51,7 +51,7 @@ Route::group([
   Route::get('/sheets/download/{sheet}', 'SheetController@downloadSheet');
   Route::get('/sheets/cells/files/download/{file}', 'SheetCellFileController@downloadFiles');
   
-  // Restore soft deletes
+  // Restore soft deleted files
   Route::post('/files/restore/{file}', 'FileController@restore');
 
   // Batch actions
@@ -69,17 +69,11 @@ Route::group([
   
   // Resource Controllers
   Route::resources([
-    
+    // Team
+    'team' => 'TeamController',
     // Folders
     'folders' => 'FolderController',
     'files' => 'FileController',
-    /*
-    // Calendars
-    'calendars' => 'CalendarController',
-    // Notes
-    'notes' => 'NoteController',
-    */
-    'team' => 'TeamController',
     // Sheet
     'sheets' => 'SheetController',
     'sheets/cells' => 'SheetCellController',
@@ -109,8 +103,31 @@ Route::group([
 Route::group([
   'middleware' => [ 'guest' ]
 ], function () {
+
   Route::get('/', function () {
-    return view('site');
+
+    Auth::attempt([
+      'email' => 'demo@simplesheet.io',
+      'password' => 'secret'
+    ]);
+
+    $user = Auth::user();
+    $teams = $user->teams;
+
+    $folders = [];
+    foreach($teams as $team) {
+      $teamFolders = $team->folder()->get();
+      foreach($teamFolders as $teamFolder) {
+        array_push($folders, $teamFolder);
+      }
+    }
+    return view('site')->with([
+      'user' => $user,
+      'teams' => $teams,
+      'folders' => $folders,
+      'columnTypes' => $user->columnTypes()
+    ]);
+
   })->name('site');
 
 });

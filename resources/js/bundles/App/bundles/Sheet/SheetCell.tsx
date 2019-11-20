@@ -193,7 +193,7 @@ const SheetRange = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.25;
+  opacity: 0.13;
   background-color: ${ ({ isCellInRange, highlightColor }: ISheetRange ) => isCellInRange ? highlightColor : 'transparent'};
   pointer-events: none;
 `
