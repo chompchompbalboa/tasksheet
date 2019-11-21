@@ -14,7 +14,7 @@ import SiteSplash from '@site/SiteSplash'
 //-----------------------------------------------------------------------------
 const Site = () => {
   
-  const [ isLoginOrRegister, setIsLoginOrRegister ] = useState('LOGIN' as 'LOGIN' | 'REGISTER')
+  const [ isLoginOrRegister, setIsLoginOrRegister ] = useState('REGISTER' as 'LOGIN' | 'REGISTER')
 
   // Log a guest user out when they leave the page
   useEffect(() => {
@@ -46,14 +46,14 @@ const Container = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 200vh;
 `
 
 const SiteContainer = styled.div`
   z-index: 1000;
   position: absolute;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   top: 0;
   left: 0;
@@ -70,6 +70,10 @@ const SpreadsheetIcon = styled.img`
   background-repeat: no-repeat;
   background-size: cover;
   background-image: url('/images/spreadsheet.png');
+  @media (max-width: 480px) {
+    height: 100%;
+    width: auto;
+  }
 `
 
 const DemoContainer = styled.div`
@@ -77,7 +81,7 @@ const DemoContainer = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
 `
 

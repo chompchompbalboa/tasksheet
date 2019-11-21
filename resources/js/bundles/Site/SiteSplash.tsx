@@ -16,7 +16,6 @@ const SiteSplash = ({
 }: ISiteSplash) => {
   
   const [ activeInput, setActiveInput ] = useState(null)
-  const [ accessCodeInputValue, setAccessCodeInputValue ] = useState('')
   const [ emailInputValue, setEmailInputValue ] = useState('')
   const [ passwordInputValue, setPasswordInputValue ] = useState('')
   
@@ -46,7 +45,7 @@ const SiteSplash = ({
     if(isEmail(emailInputValue)) {
       setRegisterStatus('REGISTERING')
       try {
-        action.userRegister(emailInputValue, passwordInputValue, accessCodeInputValue).then(
+        action.userRegister(emailInputValue, passwordInputValue).then(
           success => {
             if(success) { window.location = window.location.href + 'app' as any }
             else { setRegisterStatus('ERROR') }
@@ -77,12 +76,12 @@ const SiteSplash = ({
           simplesheet
         </HeaderName>
         <HeaderLinks>
-          <HeaderLink>30 day free trial. $5 a month or $100 forever</HeaderLink>
+          <HeaderLink>30 day free trial.<br/>$5 per month or $100 lifetime.</HeaderLink>
         </HeaderLinks>
       </Header>
       <Splash>
         <Name>simplesheet</Name>
-        <Motto>The easy-to-use spreadsheet</Motto>
+        <Motto>The simple spreadsheet optimized for everyday use</Motto>
         <Divider />
         <LoginRegisterContainer>
           {isLoginOrRegister === 'REGISTER' && registerStatus !== 'REGISTERED' &&
@@ -99,11 +98,6 @@ const SiteSplash = ({
                 placeholder="Password"
                 value={passwordInputValue}
                 onChange={e => setPasswordInputValue(e.target.value)}
-                isInputValueValid={true}/>
-              <StyledInput
-                placeholder="Access Code"
-                value={accessCodeInputValue}
-                onChange={e => setAccessCodeInputValue(e.target.value)}
                 isInputValueValid={true}/>
               <SubmitButton>
                 {!['REGISTERING'].includes(registerStatus) ? 'Sign Up' : 'Signing Up...'}
@@ -186,12 +180,22 @@ const Header = styled.div`
 const HeaderName = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
+  @media (max-width: 480px) {
+    opacity: 0;
+  }
 `
 
 const HeaderLinks = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
 `
 
-const HeaderLink = styled.div``
+const HeaderLink = styled.div`
+  text-align: right;
+  white-space: nowrap;
+`
 
 const Splash = styled.div`
   margin-top: 2rem;

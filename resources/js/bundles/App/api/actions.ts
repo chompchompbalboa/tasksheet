@@ -20,9 +20,9 @@ export const userLogout = async () => {
 	})
 }
 
-export const userRegister = async (email: string, password: string, accessCode: string) => {
+export const userRegister = async (email: string, password: string) => {
 	return axios.post('/user/register', {
-    email, password, accessCode
+    email, password
   }).then(response => {
 		return response.data
 	})

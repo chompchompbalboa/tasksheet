@@ -59,4 +59,4 @@ jest:
 vapor:
   stage: deploy
   script:
-    - vapor deploy simplesheet
+    - vapor deploy production
