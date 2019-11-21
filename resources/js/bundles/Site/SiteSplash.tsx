@@ -76,7 +76,7 @@ const SiteSplash = ({
           simplesheet
         </HeaderName>
         <HeaderLinks>
-          <HeaderLink>30 day free trial.<br/>$5 per month or $100 lifetime.</HeaderLink>
+          <HeaderLink>30 day free trial.<br/>$5 per month or $100 for lifetime access.</HeaderLink>
         </HeaderLinks>
       </Header>
       <Splash>

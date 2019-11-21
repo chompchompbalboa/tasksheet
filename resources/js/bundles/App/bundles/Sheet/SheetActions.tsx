@@ -4,7 +4,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import { HIDDEN, VISIBLE } from '@app/assets/icons'
+import { LOCK_OPEN, LOCK_CLOSED } from '@app/assets/icons'
 
 import { 
   ISheet
@@ -45,7 +45,7 @@ const SheetActions = ({
       <SheetActionCreateSheetView sheetId={sheetId}/>
       <SheetActionRefreshVisibleRows sheetId={sheetId}/>
       <SheetActionButton
-        icon={isFiltersSortsGroupsVisible ? HIDDEN : VISIBLE}
+        icon={isFiltersSortsGroupsVisible ? LOCK_CLOSED : LOCK_OPEN}
         marginLeft="0.375rem"
         marginRight={isFiltersSortsGroupsVisible ? "0.4125rem" : "0"}
         onClick={() => handleIsFiltersGroupsSortsToggle()}/>

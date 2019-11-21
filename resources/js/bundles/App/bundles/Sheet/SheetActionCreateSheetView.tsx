@@ -4,8 +4,6 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { LIGHTNING_BOLT } from '@app/assets/icons' 
-
 import { IAppState } from '@app/state'
 import { createSheetView, resetSheetView } from '@app/state/sheet/actions'
 
@@ -42,13 +40,10 @@ const SheetActionCreateSheetView = ({
   return (
     <SheetActionButton
       closeDropdown={() => setIsDropdownVisible(false)}
-      icon={LIGHTNING_BOLT}
       isDropdownVisible={isDropdownVisible}
-      marginLeft="0"
-      marginRight="0.375rem"
       onClick={() => setIsDropdownVisible(true)}
       openDropdown={() => setIsDropdownVisible(true)}
-      text={sheetActiveSheetViewId && allSheetViews[sheetActiveSheetViewId] && allSheetViews[sheetActiveSheetViewId].name ? allSheetViews[sheetActiveSheetViewId].name : 'Quick Views'}>
+      text={sheetActiveSheetViewId && allSheetViews[sheetActiveSheetViewId] && allSheetViews[sheetActiveSheetViewId].name ? allSheetViews[sheetActiveSheetViewId].name : 'Views'}>
       <SheetActionButtonDropdown>
         {sheetViews && sheetViews.map(sheetViewId => (
           <SheetView
@@ -61,12 +56,12 @@ const SheetActionCreateSheetView = ({
         <SheetActionButtonDropdownItem
           sheetId={sheetId}
           onClick={() => handleCreateSheetViewClick()}
-          text="Create New Quick View..."
+          text="Create New View..."
           textFontStyle="italic"/>
         <SheetActionButtonDropdownItem
           sheetId={sheetId}
           onClick={() => handleResetSheetViewClick()}
-          text="Reset Current Quick View..."
+          text="Reset Current View..."
           textFontStyle="italic"/>
       </SheetActionButtonDropdown>
     </SheetActionButton>

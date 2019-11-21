@@ -112,7 +112,7 @@ export const SheetCell = memo(({
         <SheetRange
           data-testid="SheetCellSheetRange"
           isCellInRange={isCellInRange}
-          highlightColor='rgb(0, 20, 50)'/>
+          highlightColor={userColorSecondary}/>
         <SheetCellType
           sheetId={sheetId}
           cell={cell}

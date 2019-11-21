@@ -67,6 +67,7 @@ const SheetCreateRows = ({
     setIsEditingInputValue(false)
     dispatch(allowSelectedCellEditing(sheetId))
     dispatch(allowSelectedCellNavigation(sheetId))
+    setTimeout(() => setInputValue(1), 10)
   }
   
   const createRowsOnKeydownEnter = (e: KeyboardEvent) => { 
@@ -87,8 +88,7 @@ const SheetCreateRows = ({
           onChange={e => setInputValue(Math.min(Number(e.target.value), 25))}
           onFocus={() => handleAutosizeInputFocus()}
           inputStyle={{
-            padding: '0.3rem',
-            paddingLeft: '0.5rem',
+            padding: '0.3rem 0.5rem',
             minWidth: '0.5rem',
             border: 'none',
             borderTop: '0.5px solid rgb(200, 200, 200)',
@@ -110,7 +110,7 @@ const SheetCreateRows = ({
           userColorPrimary={userColorPrimary}>
           <Icon
             icon={ARROW_UP}
-            size="0.6rem"/>
+            size="1.05rem"/>
         </AboveButton>
         <BelowButton
           isSelected={insertAboveOrBelowSelectedRow === 'BELOW'}
@@ -118,7 +118,7 @@ const SheetCreateRows = ({
           userColorPrimary={userColorPrimary}>
           <Icon
             icon={ARROW_DOWN}
-            size="0.6rem"/>
+            size="1.05rem"/>
         </BelowButton>
       </AboveOrBelowButtons>
     </Container>
@@ -144,7 +144,6 @@ const Container = styled.div`
 
 const AboveOrBelowButtons = styled.div`
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: flex-start;
 `
@@ -156,7 +155,7 @@ const AboveOrBelowButton = styled.div`
   align-items: center;
   background-color: ${ ({ isSelected, userColorPrimary }: IAboveOrBelowButton ) => isSelected ? userColorPrimary : 'rgb(220, 220, 220)' };
   color: ${ ({ isSelected }: IAboveOrBelowButton ) => isSelected ? 'rgb(240, 240, 240)' : 'inherit' };
-  padding: 0.125rem 0.1875rem;
+  padding: 0.350rem;
   transition: all 0.05s;
   &:hover {
     background-color: ${ ({ userColorPrimary }: IAboveOrBelowButton ) => userColorPrimary };
@@ -170,13 +169,14 @@ interface IAboveOrBelowButton {
 
 const AboveButton = styled(AboveOrBelowButton)`
   border-top: 1px solid rgb(200, 200, 200);
-  border-right: 1px solid rgb(200, 200, 200);
-  border-top-right-radius: 3px;
+  border-bottom: 1px solid rgb(200, 200, 200);
 `
 
 const BelowButton = styled(AboveOrBelowButton)`
+  border-top: 1px solid rgb(200, 200, 200);
   border-bottom: 1px solid rgb(200, 200, 200);
   border-right: 1px solid rgb(200, 200, 200);
+  border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
 `
 
