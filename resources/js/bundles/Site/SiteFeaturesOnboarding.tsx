@@ -15,7 +15,7 @@ const SiteFeaturesOnboarding = () => {
   return (
     <>
     <SiteFeaturesFeature
-      image={simplesheet.assetUrl + 'images/background.png'}>
+      image={environment.assetUrl + 'images/background.png'}>
       <SiteFeaturesList
         header="A format you're already familiar with...">
         <SiteFeaturesListItem>
@@ -25,7 +25,7 @@ const SiteFeaturesOnboarding = () => {
     </SiteFeaturesFeature>
     <SiteFeaturesFeature
       backgroundColor="rgb(240, 240, 240)"
-      image={simplesheet.assetUrl + 'images/background.png'}
+      image={environment.assetUrl + 'images/background.png'}
       imageFirst>
       <SiteFeaturesList
         header="...with powerful new features that make managing your teams a breeze">

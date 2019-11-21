@@ -69,19 +69,18 @@ const SiteSplash = ({
   }
   
   return (
-    <Container
-      className="site_splash_image">
+    <Container>
       <Header>
         <HeaderName>
-          simplesheet
+          sortsheet
         </HeaderName>
         <HeaderLinks>
           <HeaderLink>30 day free trial.<br/>$5 per month or $100 for lifetime access.</HeaderLink>
         </HeaderLinks>
       </Header>
       <Splash>
-        <Name>simplesheet</Name>
-        <Motto>The simple spreadsheet optimized for everyday use</Motto>
+        <Name>sortsheet</Name>
+        <Motto>The spreadsheet that makes it easy to organize your data</Motto>
         <Divider />
         <LoginRegisterContainer>
           {isLoginOrRegister === 'REGISTER' && registerStatus !== 'REGISTERED' &&
@@ -175,13 +174,16 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media (max-width: 480px) {
+    justify-content: flex-end;
+  }
 `
 
 const HeaderName = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
   @media (max-width: 480px) {
-    opacity: 0;
+    display: none;
   }
 `
 

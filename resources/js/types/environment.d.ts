@@ -1,6 +1,6 @@
 declare global {
-	const simplesheet: ISimplesheet
-	interface ISimplesheet {
+	const environment: IEnvironment
+	interface IEnvironment {
     assetUrl: string
 	}
 }

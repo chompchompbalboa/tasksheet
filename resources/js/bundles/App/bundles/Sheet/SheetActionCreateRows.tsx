@@ -67,7 +67,6 @@ const SheetCreateRows = ({
     setIsEditingInputValue(false)
     dispatch(allowSelectedCellEditing(sheetId))
     dispatch(allowSelectedCellNavigation(sheetId))
-    setTimeout(() => setInputValue(1), 10)
   }
   
   const createRowsOnKeydownEnter = (e: KeyboardEvent) => { 

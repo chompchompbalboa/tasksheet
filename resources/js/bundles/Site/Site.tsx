@@ -21,6 +21,7 @@ const Site = () => {
     window.addEventListener('beforeunload', () => {
       action.userLogout()
     })
+    return () => action.userLogout()
   }, [])
   
   return (
@@ -30,7 +31,7 @@ const Site = () => {
           isLoginOrRegister={isLoginOrRegister}
           setIsLoginOrRegister={setIsLoginOrRegister}/>
         <SpreadsheetIcon
-          src={simplesheet.assetUrl + 'images/spreadsheet.png'}/>
+          src={environment.assetUrl + 'images/spreadsheet.png'}/>
       </SiteContainer>
       <DemoContainer>
         <SiteDemo />
