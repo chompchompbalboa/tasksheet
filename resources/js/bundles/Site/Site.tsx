@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 import SiteDemo from '@site/SiteDemo'
@@ -10,16 +10,11 @@ import SiteSplash from '@site/SiteSplash'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Site = () => {
-  
-  const [ isLoginOrRegister, setIsLoginOrRegister ] = useState('REGISTER' as 'LOGIN' | 'REGISTER')
-  
+const Site = () => {  
   return (
     <Container>
       <SiteContainer>
-        <SiteSplash
-          isLoginOrRegister={isLoginOrRegister}
-          setIsLoginOrRegister={setIsLoginOrRegister}/>
+        <SiteSplash/>
         <SpreadsheetIcon
           src={environment.assetUrl + 'images/spreadsheet.png'}/>
       </SiteContainer>

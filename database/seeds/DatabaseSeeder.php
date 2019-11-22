@@ -20,18 +20,16 @@ class DatabaseSeeder extends Seeder
 
       // Teams
       $teams = [
-        [ 'name' => 'Simplesheet',
-          'sourceFolder' => 'Simplesheet',
+        [ 'name' => 'Sortsheet',
+          'sourceFolder' => 'Sortsheet',
           'users' => [
-            [ 'id' => '9f73d72f-a614-47fc-81a4-b14b99b82991', 'name' => 'Simplesheet', 'email' => 'demo@simplesheet.io' ],
+            [ 'name' => 'Your Files', 'email' => 'demo@sortsheet.com' ],
+            [ 'name' => 'Rocky Eastman', 'email' => 'rocky@sortsheet.com' ],
         ]],
-        [ 'name' => 'Tracksheet',
-          'sourceFolder' => 'Tracksheet',
+        [ 'name' => 'Dillon Works',
+          'sourceFolder' => 'Dillon Works',
           'users' => [
-            [ 'name' => 'Rocky Eastman', 'email' => 'eastmanrjr@gmail.com' ],
-            [ 'name' => 'Jake Carlson', 'email' => 'jakecarlson88@gmail.com' ],
-            [ 'name' => 'Josh Hutchinson', 'email' => 'jghtch@gmail.com' ],
-            [ 'name' => 'Justin Bren', 'email' => 'justin.bren47@gmail.com' ],
+            [ 'name' => 'Rocky Eastman', 'email' => 'rockye@dillonworks.com' ],
         ]],
       ];
 
@@ -57,7 +55,7 @@ class DatabaseSeeder extends Seeder
 
           // User Root Folder
           $userFolder = factory(App\Models\Folder::class)->create([ 
-            'name' => explode(' ', $seedUser['name'])[0] 
+            'name' => 'Your Files'
           ]);
 
           // User
@@ -67,6 +65,7 @@ class DatabaseSeeder extends Seeder
             'folderId' => $userFolder->id,
             'name' => $seedUser['name'],
             'email' => $seedUser['email'],
+            'isDemoUser' => $seedUser['email'] === 'demo@sortsheet.com'
           ]);
 
           $user->teams()->attach($team->id, [

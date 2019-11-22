@@ -2,24 +2,39 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { FormEvent, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { isEmail } from 'validator'
 
 import { action } from '@app/api'
 
+import { IAppState } from '@app/state'
+import {
+  allowSelectedCellEditing,
+  allowSelectedCellNavigation,
+  preventSelectedCellEditing,
+  preventSelectedCellNavigation
+} from '@app/state/sheet/actions'
+
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SiteSplash = ({
-  isLoginOrRegister,
-  setIsLoginOrRegister
-}: ISiteSplash) => {
+const SiteSplash = () => {
+  
+  const dispatch = useDispatch()
+  const activeSheetId = useSelector((state: IAppState) => {
+    if(state.tab.activeTab && state.folder.files[state.tab.activeTab]) {
+      return state.folder.files[state.tab.activeTab].typeId
+    }
+    return null
+  })
   
   const [ activeInput, setActiveInput ] = useState(null)
   const [ emailInputValue, setEmailInputValue ] = useState('')
   const [ passwordInputValue, setPasswordInputValue ] = useState('')
-  
+  const [ isLoginOrRegister, setIsLoginOrRegister ] = useState('REGISTER' as 'LOGIN' | 'REGISTER')
   const [ loginStatus, setLoginStatus ] = useState('READY')
+  
   const handleLoginAttempt = (e: FormEvent) => {
     e.preventDefault()
     if(isEmail(emailInputValue)) {
@@ -27,7 +42,7 @@ const SiteSplash = ({
       try {
         action.userLogin(emailInputValue, passwordInputValue).then(
           success => {
-            if(success) { window.location = window.location.href + 'app' as any }
+            if(success) { window.location = window.location.href as any}
             else { setLoginStatus('ERROR') }
           },
           err => { setLoginStatus('ERROR') }
@@ -68,6 +83,20 @@ const SiteSplash = ({
     }
   }
   
+  const handleInputBlur = () => {
+    if(activeSheetId) {
+      dispatch(allowSelectedCellEditing(activeSheetId))
+      dispatch(allowSelectedCellNavigation(activeSheetId))
+    }
+  }
+  
+  const handleInputFocus = () => {
+    if(activeSheetId) {
+      dispatch(preventSelectedCellEditing(activeSheetId))
+      dispatch(preventSelectedCellNavigation(activeSheetId))
+    }
+  }
+  
   return (
     <Container>
       <Header>
@@ -89,14 +118,22 @@ const SiteSplash = ({
                 placeholder="Email"
                 value={emailInputValue}
                 onChange={e => setEmailInputValue(e.target.value)}
-                onFocus={() => setActiveInput('REGISTER_EMAIL')}
-                onBlur={() => setActiveInput(null)}
+                onFocus={() => {
+                  handleInputFocus()
+                  setActiveInput('REGISTER_EMAIL')
+                }}
+                onBlur={() => {
+                  handleInputBlur()
+                  setActiveInput(null)
+                }}
                 isInputValueValid={activeInput === 'REGISTER_EMAIL' || emailInputValue === '' || isEmail(emailInputValue)}/>
               <StyledInput
                 type="password"
                 placeholder="Password"
                 value={passwordInputValue}
+                onBlur={() =>  handleInputBlur()}
                 onChange={e => setPasswordInputValue(e.target.value)}
+                onFocus={() =>  handleInputFocus()}
                 isInputValueValid={true}/>
               <SubmitButton>
                 {!['REGISTERING'].includes(registerStatus) ? 'Sign Up' : 'Signing Up...'}
@@ -109,14 +146,22 @@ const SiteSplash = ({
                 placeholder="Email"
                 value={emailInputValue}
                 onChange={e => setEmailInputValue(e.target.value)}
-                onFocus={() => setActiveInput('LOGIN_EMAIL')}
-                onBlur={() => setActiveInput(null)}
+                onFocus={() => {
+                  handleInputFocus()
+                  setActiveInput('LOGIN_EMAIL')
+                }}
+                onBlur={() => {
+                  handleInputBlur()
+                  setActiveInput(null)
+                }}
                 isInputValueValid={activeInput === 'LOGIN_EMAIL' || emailInputValue === '' || isEmail(emailInputValue)}/>
               <StyledInput
                 type="password"
                 placeholder="Password"
                 value={passwordInputValue}
+                onBlur={() =>  handleInputBlur()}
                 onChange={e => setPasswordInputValue(e.target.value)}
+                onFocus={() =>  handleInputFocus()}
                 isInputValueValid={true}/>
               <SubmitButton>
                 {!['LOGGING_IN'].includes(loginStatus) ? 'Log In' : 'Logging In...'}
@@ -141,14 +186,6 @@ const SiteSplash = ({
       </Splash>
     </Container>
   )
-}
-
-//-----------------------------------------------------------------------------
-// Props
-//-----------------------------------------------------------------------------
-export interface ISiteSplash {
-  isLoginOrRegister: 'LOGIN' | 'REGISTER'
-  setIsLoginOrRegister(nextLoginOrRegister: 'LOGIN' | 'REGISTER'): void
 }
 
 //-----------------------------------------------------------------------------

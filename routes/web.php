@@ -11,15 +11,24 @@ use App\Models\Container;
 use App\Models\View;
 
 //-----------------------------------------------------------------------------
-// App
+// Site
 //-----------------------------------------------------------------------------
 Route::group([
-  'prefix' => 'app',
-  'middleware' => [ 'auth' ]
+  'middleware' => [ 'guest' ]
 ], function () {
-  // Initial load
   Route::get('/', function () {
-    $user = Auth::user();
+    
+    if(Auth::check()) {
+      $user = Auth::user();
+    }
+    else {
+      Auth::attempt([
+        'email' => 'demo@sortsheet.com',
+        'password' => 'secret'
+      ]);
+      $user = Auth::user();
+    }
+    
     $teams = $user->teams;
 
     $folders = [];
@@ -39,8 +48,16 @@ Route::group([
       'folders' => $folders,
       'columnTypes' => $user->columnTypes()
     ]);
-  })->name('app');
+  })->name('site');
+});
 
+//-----------------------------------------------------------------------------
+// App
+//-----------------------------------------------------------------------------
+Route::group([
+  'prefix' => 'app',
+  'middleware' => [ 'auth' ]
+], function () {
   // Uploads
   Route::post('/sheets/upload/csv', 'SheetController@createFromCsv');
   Route::post('/sheets/cells/photos/upload', 'SheetCellPhotoController@uploadPhotos');
@@ -95,41 +112,6 @@ Route::group([
     'user/color' => 'UserColorController',
     'user/layout' => 'UserLayoutController',
   ]);
-});
-
-//-----------------------------------------------------------------------------
-// Site
-//-----------------------------------------------------------------------------
-Route::group([
-  'middleware' => [ 'guest' ]
-], function () {
-
-  Route::get('/', function () {
-
-    Auth::attempt([
-      'email' => 'demo@simplesheet.io',
-      'password' => 'secret'
-    ]);
-
-    $user = Auth::user();
-    $teams = $user->teams;
-
-    $folders = [];
-    foreach($teams as $team) {
-      $teamFolders = $team->folder()->get();
-      foreach($teamFolders as $teamFolder) {
-        array_push($folders, $teamFolder);
-      }
-    }
-    return view('site')->with([
-      'user' => $user,
-      'teams' => $teams,
-      'folders' => $folders,
-      'columnTypes' => $user->columnTypes()
-    ]);
-
-  })->name('site');
-
 });
 
 //-----------------------------------------------------------------------------

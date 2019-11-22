@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------
 export interface IUser {
 	id: string
+  isDemoUser: boolean
 	name: string
 	email: string
 	active: IUserActive
