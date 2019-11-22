@@ -1,10 +1,8 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-
-import { action } from '@app/api'
 
 import SiteDemo from '@site/SiteDemo'
 import SiteSplash from '@site/SiteSplash'
@@ -15,14 +13,6 @@ import SiteSplash from '@site/SiteSplash'
 const Site = () => {
   
   const [ isLoginOrRegister, setIsLoginOrRegister ] = useState('REGISTER' as 'LOGIN' | 'REGISTER')
-
-  // Log a guest user out when they leave the page
-  useEffect(() => {
-    window.addEventListener('beforeunload', () => {
-      action.userLogout()
-    })
-    return () => action.userLogout()
-  }, [])
   
   return (
     <Container>

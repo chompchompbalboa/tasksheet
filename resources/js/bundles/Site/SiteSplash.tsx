@@ -175,6 +175,7 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   @media (max-width: 480px) {
+    padding: 1rem;
     justify-content: flex-end;
   }
 `
