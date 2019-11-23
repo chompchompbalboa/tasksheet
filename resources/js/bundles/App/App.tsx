@@ -20,7 +20,7 @@ export const App = () => {
 
   const isDemoUser = useSelector((state: IAppState) => state.user.isDemoUser)
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
-  console.log(isDemoUser)
+
   if(isDemoUser) {
     return (
       <Container
