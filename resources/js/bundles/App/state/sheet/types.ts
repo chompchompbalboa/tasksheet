@@ -88,6 +88,7 @@ export interface ISheetView {
   id: string
   sheetId: ISheet['id']
   name: string
+  isLocked: boolean
   visibleColumns: ISheetColumn['id'][]
   filters: ISheetFilter['id'][]
   groups: ISheetGroup['id'][]
@@ -98,6 +99,7 @@ export interface ISheetViewFromDatabase {
   id: string
   sheetId: ISheet['id']
   name: string
+  isLocked: boolean
   visibleColumns: ISheetColumn['id'][]
   filters: ISheetFilter[]
   groups: ISheetGroup[]
@@ -108,6 +110,7 @@ export interface ISheetViewToDatabase {
   id: string
   sheetId: ISheet['id']
   name: string
+  isLocked: boolean
   visibleColumns: ISheetColumn['id'][]
   filters: IAllSheetFilters
   groups: IAllSheetGroups
@@ -116,6 +119,7 @@ export interface ISheetViewToDatabase {
 
 export interface ISheetViewUpdates {
   name?: string
+  isLocked?: boolean
   visibleColumns?: ISheetColumn['id'][]
   filters?: ISheetFilter['id'][]
   groups?: ISheetGroup['id'][]

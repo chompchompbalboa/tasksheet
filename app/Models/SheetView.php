@@ -14,8 +14,8 @@ class SheetView extends Model
   const CREATED_AT = 'createdAt';
   const UPDATED_AT = 'updatedAt';
 
-  protected $visible = [ 'id', 'sheetId', 'name', 'visibleColumns', 'filters', 'groups', 'sorts' ];
-  protected $fillable = [ 'id', 'sheetId', 'name', 'visibleColumns' ];
+  protected $visible = [ 'id', 'sheetId', 'name', 'isLocked', 'visibleColumns', 'filters', 'groups', 'sorts' ];
+  protected $fillable = [ 'id', 'sheetId', 'name', 'isLocked', 'visibleColumns' ];
   protected $with = [ 'filters', 'groups', 'sorts' ];
   protected $casts = [
     'visibleColumns' => 'array'

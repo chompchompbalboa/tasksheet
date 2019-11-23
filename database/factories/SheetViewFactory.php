@@ -15,6 +15,7 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Models\SheetView::class, function (Faker $faker) {
     return [
+        'isLocked' => false,
         'visibleColumns' => null,
     ];
 });

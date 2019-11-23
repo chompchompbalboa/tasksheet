@@ -23,6 +23,7 @@ class SheetViewController extends Controller
         'id' => $request->input('id'), 
         'sheetId' => $request->input('sheetId'),
         'name' => $request->input('name'),
+        'isLocked' => $request->input('isLocked'),
         'visibleColumns' => $request->input('visibleColumns'),
       ]);
 

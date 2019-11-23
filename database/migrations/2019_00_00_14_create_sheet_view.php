@@ -17,6 +17,7 @@ class CreateSheetView extends Migration
           $table->uuid('id')->primary();
           $table->uuid('sheetId');
           $table->string('name')->nullable();
+          $table->boolean('isLocked');
           $table->json('visibleColumns');
           $table->timestamp('createdAt')->nullable();
           $table->timestamp('updatedAt')->nullable();

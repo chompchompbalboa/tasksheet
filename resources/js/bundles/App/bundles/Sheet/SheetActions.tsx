@@ -1,14 +1,17 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { LOCK_OPEN, LOCK_CLOSED } from '@app/assets/icons'
 
-import { 
-  ISheet
-} from '@app/state/sheet/types'
+import { IAppState } from '@app/state'
+import { ISheet } from '@app/state/sheet/types'
+import {
+  updateSheetView
+} from '@app/state/sheet/actions'
 
 import SheetActionButton from '@app/bundles/Sheet/SheetActionButton'
 import SheetActionCellStyleBackgroundColor from '@app/bundles/Sheet/SheetActionCellStyleBackgroundColor'
@@ -31,13 +34,27 @@ const SheetActions = ({
   sheetId,
 }: ISheetActionsProps) => {
 
-  const localStorageKey = 'tracksheet.SheetActions.isFiltersGroupsSortVisible'
+  const dispatch = useDispatch()
+  const activeSheetView = useSelector((state: IAppState) => {
+    const activeSheetViewId = state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId
+    if(activeSheetViewId && state.sheet.allSheetViews && state.sheet.allSheetViews[activeSheetViewId]) {
+      return state.sheet.allSheetViews[activeSheetViewId]
+  }})
 
-  const [ isFiltersSortsGroupsVisible, setIsFiltersGroupsSortsVisible ] = useState(localStorage.getItem(localStorageKey) !== null && localStorage.getItem(localStorageKey) === 'true')
+  const [ isSheetViewLocked, setIsSheetViewLocked ] = useState((activeSheetView && activeSheetView.isLocked) || true)
+
+  useEffect(() => {
+    if(activeSheetView) {
+      setIsSheetViewLocked(activeSheetView.isLocked)
+    }
+  })
 
   const handleIsFiltersGroupsSortsToggle = () => {
-    localStorage.setItem(localStorageKey, !isFiltersSortsGroupsVisible + '')
-    setIsFiltersGroupsSortsVisible(!isFiltersSortsGroupsVisible)
+    const nextIsSheetViewLocked = !isSheetViewLocked
+    setIsSheetViewLocked(nextIsSheetViewLocked)
+    dispatch(updateSheetView(activeSheetView.id, {
+      isLocked: nextIsSheetViewLocked
+    }))
   }
 
   return (
@@ -45,11 +62,11 @@ const SheetActions = ({
       <SheetActionCreateSheetView sheetId={sheetId}/>
       <SheetActionRefreshVisibleRows sheetId={sheetId}/>
       <SheetActionButton
-        icon={isFiltersSortsGroupsVisible ? LOCK_CLOSED : LOCK_OPEN}
+        icon={!isSheetViewLocked ? LOCK_CLOSED : LOCK_OPEN}
         marginLeft="0.375rem"
-        marginRight={isFiltersSortsGroupsVisible ? "0.4125rem" : "0"}
+        marginRight={!isSheetViewLocked ? "0.4125rem" : "0"}
         onClick={() => handleIsFiltersGroupsSortsToggle()}/>
-      {isFiltersSortsGroupsVisible &&
+      {!isSheetViewLocked &&
         <>
           <SheetActionFilter sheetId={sheetId}/>
           <SheetActionGroup sheetId={sheetId}/>

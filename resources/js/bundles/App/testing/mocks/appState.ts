@@ -185,6 +185,7 @@ export const appStateFactory = ({
         id: activeSheetViewId,
         sheetId: sheetId,
         name: 'Active Sheet View',
+        isLocked: false,
         visibleColumns: newSheetViewVisibleColumns,
         filters: newSheetFromDatabaseFilters.map(filter => filter.id),
         groups: newSheetFromDatabaseGroups.map(group => group.id),
