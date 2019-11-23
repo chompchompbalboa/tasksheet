@@ -26,9 +26,11 @@ export const App = () => {
       <Container
         containerBackgroundColor={userColorPrimary}>
         <SiteContainer>
-          <SiteSplash/>
-          <SpreadsheetIcon
-            src={environment.assetUrl + 'images/spreadsheet.png'}/>
+          <SiteContent>
+            <SiteSplash/>
+            <SpreadsheetIcon
+              src={environment.assetUrl + 'images/spreadsheet.png'}/>
+          </SiteContent>
         </SiteContainer>
         <AppContainer>
           <AppContent>
@@ -72,16 +74,25 @@ const SiteContainer = styled.div`
   z-index: 1000;
   position: absolute;
   width: 100%;
-  height: 100vh;
-  top: 0;
+  height: 200vh;
+  top: -100vh;
   left: 0;
   overflow: hidden;
-  background-color: rgba(52, 12, 107, 1);
+  background-color: rgb(23, 50, 110);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+`
+
+const SiteContent = styled.div`
+  width: 100%;
+  height: 100vh;
 `
 
 const SpreadsheetIcon = styled.img`
   position: absolute;
-  top: 0;
+  top: 100vh;
   left: 0;
   width: 100%;
   opacity: 0.1;
