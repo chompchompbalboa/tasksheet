@@ -104,7 +104,7 @@ const SiteSplash = () => {
           sortsheet
         </HeaderName>
         <HeaderLinks>
-          <HeaderLink>30 day free trial.<br/>$5 per month or $100 for lifetime access.</HeaderLink>
+          <HeaderLink>30 day free trial<br/>$5 per month or $100 for lifetime access</HeaderLink>
         </HeaderLinks>
       </Header>
       <Splash>
@@ -230,6 +230,8 @@ const HeaderLinks = styled.div`
 `
 
 const HeaderLink = styled.div`
+  font-size: 0.9rem;
+  line-height: 1.3rem;
   text-align: right;
   white-space: nowrap;
 `
