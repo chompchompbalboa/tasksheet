@@ -57,7 +57,8 @@ class SheetController extends Controller
         'id' => Str::uuid()->toString(), 
         'sheetId' => $newSheetId,
         'name' => 'New Quick View',
-        'visibleColumns' => []
+        'visibleColumns' => [],
+        'isLocked' => false
       ]);
       $newSheet->activeSheetViewId = $newSheetView->id;
       $newSheet->save();
@@ -132,6 +133,7 @@ class SheetController extends Controller
         'id' => Str::uuid()->toString(), 
         'sheetId' => $newSheetId,
         'name' => 'New Quick View',
+        'isLocked' => false,
         'visibleColumns' => []
       ]);
       $newSheet->activeSheetViewId = $newSheetView->id;
@@ -159,21 +161,21 @@ class SheetController extends Controller
       // Count the number of rows
       $arrayOfRowsCount = count($arrayOfRows);
 
-      // Tracksheet gives users the option to store configuration data about
+      // Sortsheet gives users the option to store configuration data about
       // the sheet when downloading. If they choose to include that data, it is
       // saved to the first row of the downloaded sheet. Here, we're checking
       // the first row to see if the configuration data exists and if it does,
       // setting it up for use during sheet creation
       $arrayFirstRowCells = $arrayOfRows[0];
       $arrayFirstRowFirstCellValue = $arrayOfRows[0][array_keys($arrayOfRows[0])[0]];
-      $isTracksheetConfigurationDataIncluded = Str::contains($arrayFirstRowFirstCellValue, '[TS]');
+      $isSortsheetConfigurationDataIncluded = Str::contains($arrayFirstRowFirstCellValue, '[TS]');
       $cellTypes = [];
-      if($isTracksheetConfigurationDataIncluded) {
+      if($isSortsheetConfigurationDataIncluded) {
         foreach($arrayFirstRowCells as $currentCell) {
           // Load the configuration data into an array by using the end bracket as a delimiter
-          $currentCellsTracksheetConfigurationData = explode(']', $currentCell);
+          $currentCellsSortsheetConfigurationData = explode(']', $currentCell);
            // The first configuration data point is always the cell type
-          $currentCellType = str_replace('[', '', $currentCellsTracksheetConfigurationData[1]);
+          $currentCellType = str_replace('[', '', $currentCellsSortsheetConfigurationData[1]);
           array_push($cellTypes, $currentCellType);
         }
         // Remove the row containing the configuration data from the input array
@@ -197,7 +199,7 @@ class SheetController extends Controller
             'id' => $newColumnId,
             'sheetId' => $newSheet->id,
             'name' => $columnName,
-            'typeId' => $isTracksheetConfigurationDataIncluded 
+            'typeId' => $isSortsheetConfigurationDataIncluded 
               ? $cellTypes[$currentColumnIndex] 
               : SheetUtils::getColumnType($cellValue),
             'width' => $nextColumnWidth
