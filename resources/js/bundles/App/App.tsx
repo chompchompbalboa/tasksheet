@@ -96,9 +96,6 @@ const SpreadsheetIcon = styled.img`
   left: 0;
   width: 100%;
   opacity: 0.1;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-image: url('/images/spreadsheet.png');
   @media (max-width: 480px) {
     height: 100%;
     width: auto;
