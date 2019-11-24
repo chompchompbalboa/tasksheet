@@ -18,6 +18,7 @@ import SheetActionCellStyleBackgroundColor from '@app/bundles/Sheet/SheetActionC
 import SheetActionCellStyleBold from '@app/bundles/Sheet/SheetActionCellStyleBold'
 import SheetActionCellStyleColor from '@app/bundles/Sheet/SheetActionCellStyleColor'
 import SheetActionCellStyleItalic from '@app/bundles/Sheet/SheetActionCellStyleItalic'
+import SheetActionCreateSheet from '@app/bundles/Sheet/SheetActionCreateSheet'
 import SheetActionCreateRows from '@app/bundles/Sheet/SheetActionCreateRows'
 import SheetActionCreateSheetView from '@/bundles/App/bundles/Sheet/SheetActionCreateSheetView'
 import SheetActionDownloadCsv from '@app/bundles/Sheet/SheetActionDownloadCsv'
@@ -26,6 +27,7 @@ import SheetActionGroup from '@app/bundles/Sheet/SheetActionGroup'
 import SheetActionRefreshVisibleRows from '@app/bundles/Sheet/SheetActionRefreshVisibleRows'
 import SheetActionPriorities from '@app/bundles/Sheet/SheetActionPriorities'
 import SheetActionSort from '@app/bundles/Sheet/SheetActionSort'
+import SheetActionUploadCsv from '@app/bundles/Sheet/SheetActionUploadCsv'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -65,7 +67,8 @@ const SheetActions = ({
         icon={!isSheetViewLocked ? LOCK_CLOSED : LOCK_OPEN}
         marginLeft="0.375rem"
         marginRight={!isSheetViewLocked ? "0.4125rem" : "0"}
-        onClick={() => handleIsFiltersGroupsSortsToggle()}/>
+        onClick={() => handleIsFiltersGroupsSortsToggle()}
+        tooltip={!isSheetViewLocked ? 'Lock the view' : 'Unlock the view'}/>
       {!isSheetViewLocked &&
         <>
           <SheetActionFilter sheetId={sheetId}/>
@@ -82,6 +85,9 @@ const SheetActions = ({
       <SheetActionCellStyleItalic sheetId={sheetId}/>
       <SheetActionCellStyleBackgroundColor sheetId={sheetId}/>
       <SheetActionCellStyleColor sheetId={sheetId}/>
+      <Divider />
+      <SheetActionCreateSheet sheetId={sheetId}/>
+      <SheetActionUploadCsv sheetId={sheetId}/>
       <Divider />
       <SheetActionDownloadCsv sheetId={sheetId}/>
     </Container>

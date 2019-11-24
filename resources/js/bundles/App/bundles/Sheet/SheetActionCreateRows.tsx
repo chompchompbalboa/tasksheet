@@ -38,6 +38,17 @@ const SheetCreateRows = ({
   
   const [ isEditingInputValue, setIsEditingInputValue ] = useState(false)
   const [ inputValue, setInputValue ] = useState(1)
+
+  // Tooltip
+  const [ isTooltipVisible, setIsTooltipVisible ] = useState(false)
+  const tooltipTimer = useRef(null)
+  const handleMouseEnter = () => {
+    tooltipTimer.current = setTimeout(() => setIsTooltipVisible(true), 600)
+  }
+  const handleMouseLeave = () => {
+    clearTimeout(tooltipTimer.current)
+    setIsTooltipVisible(false)
+  }
   
   useEffect(() => {
     if(isEditingInputValue) { window.addEventListener('keydown', createRowsOnKeydownEnter) }
@@ -78,7 +89,9 @@ const SheetCreateRows = ({
   }
 
   return (
-    <Container>
+    <Container
+      onMouseEnter={() => handleMouseEnter()}
+      onMouseLeave={() => handleMouseLeave()}>
       <AddContainer>
         <AutosizeInput
           ref={autosizeInput}
@@ -87,7 +100,7 @@ const SheetCreateRows = ({
           onChange={e => setInputValue(Math.min(Number(e.target.value), 25))}
           onFocus={() => handleAutosizeInputFocus()}
           inputStyle={{
-            padding: '0.3rem 0.5rem',
+            padding: '0.4rem 0.5rem',
             minWidth: '0.5rem',
             border: 'none',
             borderTop: '0.5px solid rgb(200, 200, 200)',
@@ -109,7 +122,7 @@ const SheetCreateRows = ({
           userColorPrimary={userColorPrimary}>
           <Icon
             icon={ARROW_UP}
-            size="1.05rem"/>
+            size="0.95rem"/>
         </AboveButton>
         <BelowButton
           isSelected={insertAboveOrBelowSelectedRow === 'BELOW'}
@@ -117,9 +130,13 @@ const SheetCreateRows = ({
           userColorPrimary={userColorPrimary}>
           <Icon
             icon={ARROW_DOWN}
-            size="1.05rem"/>
+            size="0.95rem"/>
         </BelowButton>
       </AboveOrBelowButtons>
+      <Tooltip
+        isTooltipVisible={isTooltipVisible}>
+        Insert rows above or below the selected cell
+      </Tooltip>
     </Container>
   )
 }
@@ -135,6 +152,7 @@ interface ISheetCreateRowsProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  position: relative;
   height: 100%;
   display: flex;
   justify-content: space-between;
@@ -154,7 +172,7 @@ const AboveOrBelowButton = styled.div`
   align-items: center;
   background-color: ${ ({ isSelected, userColorPrimary }: IAboveOrBelowButton ) => isSelected ? userColorPrimary : 'rgb(220, 220, 220)' };
   color: ${ ({ isSelected }: IAboveOrBelowButton ) => isSelected ? 'rgb(240, 240, 240)' : 'inherit' };
-  padding: 0.350rem;
+  padding: 0.45rem 0.3rem;
   transition: all 0.05s;
   &:hover {
     background-color: ${ ({ userColorPrimary }: IAboveOrBelowButton ) => userColorPrimary };
@@ -183,6 +201,23 @@ const AddContainer = styled.div`
   display: flex;
   align-items: center;
 `
+
+const Tooltip = styled.div`
+  cursor: default;
+  display: ${ ({ isTooltipVisible }: ITooltip) => isTooltipVisible ? 'block' : 'none' };
+  position: absolute;
+  left: -1px;
+  top: 100%;
+  padding: 0.25rem;
+  background-color: rgb(250, 250, 250);
+  border: 1px solid rgb(200, 200, 200);
+  border-radius: 3px;
+  box-shadow: 2px 2px 15px 0px rgba(0,0,0,0.3);
+  white-space: nowrap;
+`
+interface ITooltip {
+  isTooltipVisible: boolean
+}
 
 //-----------------------------------------------------------------------------
 // Export

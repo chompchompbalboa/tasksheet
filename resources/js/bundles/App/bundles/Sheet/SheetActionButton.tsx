@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -10,6 +10,7 @@ import { ARROW_DOWN } from '@app/assets/icons'
 import { IAppState } from '@app/state'
 
 import Icon from '@/components/Icon'
+import SheetActionTooltip from '@app/bundles/Sheet/SheetActionTooltip'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -23,22 +24,30 @@ const SheetActionButton = ({
   containerHoverColor = 'rgb(240, 240, 240)',
   dropdownToggleBackgroundColor = 'rgb(220, 220, 220)',
   icon,
-  iconPadding = '0.35rem 0.4rem',
+  iconPadding = '0.4rem 0.4rem',
   iconSize = '1.1rem',
-  iconTextSize = '0.8rem',
+  iconTextSize = '0.78rem',
   isDropdownVisible,
   marginLeft = '0.25rem',
   marginRight = '0.25rem',
   onClick = () =>  null,
   openDropdown,
-  text
+  text,
+  tooltip
 }: SheetActionButtonProps) => {
+
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
-  
-  // Dropdown
+
+  const tooltipTimer = useRef(null)
   const container = useRef(null)
+
+  const [ isTooltipVisible, setIsTooltipVisible ] = useState(false)
+
   useEffect(() => {
-    if(isDropdownVisible) { setTimeout(() => addEventListener('click', e => closeOnClickOutside(e)), 10) }
+    if(isDropdownVisible) { 
+      clearTimeout(tooltipTimer.current)
+      setTimeout(() => addEventListener('click', e => closeOnClickOutside(e)), 10) 
+    }
     else { removeEventListener('click', e => closeOnClickOutside(e)) }
     return () => removeEventListener('click', e => closeOnClickOutside(e))
   }, [ isDropdownVisible ])
@@ -48,12 +57,24 @@ const SheetActionButton = ({
       closeDropdown()
     }
   }
-  
+
+  const handleMouseEnter = () => {
+    if(!isDropdownVisible) {
+      tooltipTimer.current = setTimeout(() => setIsTooltipVisible(true), 600)
+    }
+  }
+  const handleMouseLeave = () => {
+    clearTimeout(tooltipTimer.current)
+    setIsTooltipVisible(false)
+  }
+
   return (
     <Container
       ref={container}
       containerMarginLeft={marginLeft}
-      containerMarginRight={marginRight}>
+      containerMarginRight={marginRight}
+      onMouseEnter={() => handleMouseEnter()}
+      onMouseLeave={() => handleMouseLeave()}>
       <IconContainer
         containerBackgroundColor={containerBackgroundColor}
         containerColor={containerColor}
@@ -61,7 +82,11 @@ const SheetActionButton = ({
         containerHoverColor={containerHoverColor}
         hasDropdown={typeof(children) !== 'undefined'}
         iconPadding={iconPadding}
-        onClick={() => onClick()}>
+        onClick={() => {
+          clearTimeout(tooltipTimer.current)
+          setIsTooltipVisible(false)
+          onClick()
+        }}>
         {icon &&
           <Icon 
             icon={icon}
@@ -79,7 +104,11 @@ const SheetActionButton = ({
           <DropdownToggle
             dropdownToggleBackgroundColor={dropdownToggleBackgroundColor}
             dropdownToggleHoverBackgroundColor={userColorPrimary}
-            onClick={() => openDropdown()}>
+            onClick={() => {
+              clearTimeout(tooltipTimer.current)
+              setIsTooltipVisible(false)
+              openDropdown()
+            }}>
             <Icon 
               icon={ARROW_DOWN}
               size={text ? "1rem" : iconSize}/>
@@ -89,6 +118,12 @@ const SheetActionButton = ({
             {children}
           </DropdownContainer>
         </>
+      }
+      {tooltip && 
+        <SheetActionTooltip
+          isTooltipVisible={isTooltipVisible}>
+          {tooltip}
+        </SheetActionTooltip>
       }
     </Container>
   )
@@ -115,6 +150,7 @@ interface SheetActionButtonProps {
   onClick?(): void
   openDropdown?(): void,
   text?: string
+  tooltip?: string
 }
 
 //-----------------------------------------------------------------------------
@@ -212,6 +248,7 @@ const DropdownContainer = styled.div`
 interface IDropdown {
   isDropdownVisible: boolean
 }
+
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------

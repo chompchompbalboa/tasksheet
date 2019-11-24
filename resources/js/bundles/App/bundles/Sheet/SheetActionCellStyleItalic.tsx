@@ -38,7 +38,8 @@ const SheetActionCellStyleItalic = ({
       marginLeft="0.1875rem"
       marginRight="0.375rem"
       sheetStylesSet={sheetStyles && sheetStyles.italic}
-      updateSheetStylesSet={updateSheetStylesSet}/>
+      updateSheetStylesSet={updateSheetStylesSet}
+      tooltip="Italic"/>
   )
 }
 

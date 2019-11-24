@@ -1,12 +1,11 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useRef, useState } from 'react'
-import { CSVLink } from 'react-csv'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { ARROW_DOWN, DOWNLOAD } from '@app/assets/icons'
+import { DOWNLOAD } from '@app/assets/icons'
 
 import { IAppState } from '@app/state'
 import { ISheet } from '@app/state/sheet/types'
@@ -17,7 +16,8 @@ import {
   preventSelectedCellNavigation
 } from '@app/state/sheet/actions'
 
-import Icon from '@/components/Icon'
+import SheetActionButton from '@app/bundles/Sheet/SheetActionButton'
+import SheetActionButtonDropdown from '@app/bundles/Sheet/SheetActionButtonDropdown'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -26,9 +26,7 @@ const SheetActionDownloadCsv = ({
   sheetId
 }: SheetActionDownloadCsvProps) => {
 
-  // Redux
   const dispatch = useDispatch()
-
   const { 
     allSheets,
     allSheetCells, 
@@ -37,49 +35,31 @@ const SheetActionDownloadCsv = ({
     allSheetRows, 
     allSheetViews
   } = useSelector((state: IAppState) => state.sheet)
-  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   const activeFilename = useSelector((state: IAppState) => state.folder.files && state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].name)
   const sheet = allSheets && allSheets[sheetId]
 
-  // Refs
-  const dropdown = useRef(null)
-
-  // Dropdown
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
-  useEffect(() => {
-    if(isDropdownVisible) { addEventListener('mousedown', closeOnClickOutside) }
-    else { removeEventListener('mousedown', closeOnClickOutside) }
-    return () => removeEventListener('mousedown', closeOnClickOutside)
-  })
-  const closeOnClickOutside = (e: MouseEvent) => {
-    if(!dropdown.current.contains(e.target)) {
-      setIsDropdownVisible(false)
-    }
-  }
-  
-  // Filename
   const [ filename, setFilename ] = useState(activeFilename)
+  const [ isIncludeColumnTypeInformation, setIsIncludeColumnTypeInformation ] = useState(true)
+
   useEffect(() => {
     setFilename(activeFilename)
   }, [ activeFilename ])
-  
-  // CSV data
-  const [ isIncludeColumnTypeInformation, setIsIncludeColumnTypeInformation ] = useState(true)
 
-  if (sheet) {
+  const handleFilenameInputBlur = () => {
+    dispatch(allowSelectedCellEditing(sheetId))
+    dispatch(allowSelectedCellNavigation(sheetId))
+  }
+  const handleFilenameInputFocus = () => {
+    dispatch(preventSelectedCellEditing(sheetId))
+    dispatch(preventSelectedCellNavigation(sheetId))
+  }
 
+  const downloadCsv = () => {
     const activeSheetView = allSheetViews[sheet.activeSheetViewId]
     const visibleColumns = activeSheetView.visibleColumns
     const visibleRows = sheet.visibleRows
 
-    const handleFilenameInputBlur = () => {
-      dispatch(allowSelectedCellEditing(sheetId))
-      dispatch(allowSelectedCellNavigation(sheetId))
-    }
-    const handleFilenameInputFocus = () => {
-      dispatch(preventSelectedCellEditing(sheetId))
-      dispatch(preventSelectedCellNavigation(sheetId))
-    }
     const headers = visibleColumns ? visibleColumns.map(columnId => columnId !== 'COLUMN_BREAK' ? allSheetColumns[columnId].name : null) : []
   
     const data = visibleRows ? visibleRows.map(rowId => {
@@ -105,49 +85,43 @@ const SheetActionDownloadCsv = ({
     }) : []
     
     const csvData = isIncludeColumnTypeInformation ? [ headers, columnTypeInformation, ...data ]  : [ headers, ...data ] 
-  
-    // Render
-    return (
-      <Container>
-        <DownloadContainer
-          data={csvData}
-          filename={filename + '.csv'}
-          containerBackgroundColor={userColorPrimary}>
-          <Icon icon={DOWNLOAD}/>&nbsp;.csv
-        </DownloadContainer>
-        <DropdownToggle
-          dropdownToggleBackgroundColor={userColorPrimary}
-          onClick={() => setIsDropdownVisible(true)}>
-          <Icon 
-            icon={ARROW_DOWN}/>
-        </DropdownToggle>
-        <Dropdown
-          ref={dropdown}
-          isDropdownVisible={isDropdownVisible}>
-          <DownloadOptions>
-            <DownloadOption>
-              Filename&nbsp;&nbsp;
-              <StyledInput
-                value={filename || ''}
-                onBlur={() => handleFilenameInputBlur()}
-                onChange={e => setFilename(e.target.value)}
-                onFocus={() => handleFilenameInputFocus()}/>
-            </DownloadOption>
-            <DownloadOption>
-              <DownloadOptionCheckbox
-                type="checkbox"
-                checked={isIncludeColumnTypeInformation}
-                onChange={() => setIsIncludeColumnTypeInformation(!isIncludeColumnTypeInformation)}/>
-              <DownloadOptionText>
-                Include Column Type Information
-              </DownloadOptionText>
-            </DownloadOption>
-          </DownloadOptions>
-        </Dropdown>
-      </Container>
-    )
+    console.log(csvData)
   }
-  return <Container />
+
+  return (
+    <SheetActionButton
+      closeDropdown={() => setIsDropdownVisible(false)}
+      onClick={() => downloadCsv()}
+      icon={DOWNLOAD}
+      iconSize="0.85rem"
+      isDropdownVisible={isDropdownVisible}
+      marginLeft="0"
+      openDropdown={() => setIsDropdownVisible(true)}
+      text='.csv'
+      tooltip='Download this sheet as a .csv file'>
+      <SheetActionButtonDropdown>
+        <DownloadOptions>
+          <DownloadOption>
+            Filename&nbsp;&nbsp;
+            <StyledInput
+              value={filename || ''}
+              onBlur={() => handleFilenameInputBlur()}
+              onChange={e => setFilename(e.target.value)}
+              onFocus={() => handleFilenameInputFocus()}/>
+          </DownloadOption>
+          <DownloadOption>
+            <DownloadOptionCheckbox
+              type="checkbox"
+              checked={isIncludeColumnTypeInformation}
+              onChange={() => setIsIncludeColumnTypeInformation(!isIncludeColumnTypeInformation)}/>
+            <DownloadOptionText>
+              Include Column Type Information
+            </DownloadOptionText>
+          </DownloadOption>
+        </DownloadOptions>
+      </SheetActionButtonDropdown>
+    </SheetActionButton>
+  )
 }
 
 //-----------------------------------------------------------------------------
@@ -160,73 +134,6 @@ interface SheetActionDownloadCsvProps {
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgb(220, 220, 220);
-  border-radius: 3px;
-  transition: all 0.05s;
-  margin-right: 0.375rem;
-  border: 1px solid rgb(200, 200, 200);
-`
-
-const DownloadContainer = styled(({ containerBackgroundColor, ...rest }) => <CSVLink {...rest}/>)`
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0.325rem 0.4rem;
-  color: rgb(80, 80, 80);
-  text-decoration: none;
-  border-top-left-radius: 3px;
-  border-bottom-left-radius: 3px;
-  transition: all 0.05s;
-  &:hover {
-    background-color: ${ ({ containerBackgroundColor }: IDownloadContainer) => containerBackgroundColor};
-    color: rgb(240, 240, 240);
-  }
-`
-interface IDownloadContainer {
-  containerBackgroundColor: string
-}
-
-const DropdownToggle = styled.div`
-  cursor: pointer;
-  padding: 0.4rem 0.1rem;
-  color: rgb(80, 80, 80);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-left: 1px solid rgb(170, 170, 170);
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
-  transition: all 0.05s;
-  &:hover {
-    background-color: ${ ({ dropdownToggleBackgroundColor }: IDropdownToggle) => dropdownToggleBackgroundColor};
-    color: rgb(240, 240, 240);
-  }
-`
-interface IDropdownToggle {
-  dropdownToggleBackgroundColor: string
-}
-
-const Dropdown = styled.div`
-  display: ${ ({ isDropdownVisible }: IDropdown) => isDropdownVisible ? 'block' : 'none' };
-  position: absolute;
-  left: 0;
-  top: 100%;
-  padding: 0.125rem 0.625rem;
-  border-radius: 5px;
-  background-color: rgb(250, 250, 250);
-  box-shadow: 2px 2px 15px 0px rgba(0,0,0,0.3);
-`
-interface IDropdown {
-  isDropdownVisible: boolean
-}
-
 const DownloadOptions = styled.div`
 `
 

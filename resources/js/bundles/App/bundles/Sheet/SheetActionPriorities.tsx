@@ -55,7 +55,8 @@ const SheetActionSheetCellPriorities = ({
         : sheetPriorities && sheetPriorities.length > 0
           ? sheetPriorities.length + 1 + '. No Priority' 
           : 'Priorities'
-      }>
+      }
+      tooltip='Assign priority to a cell'>
       <SheetActionButtonDropdown>
         {sheetPriorities && sheetPriorities.map((sheetPriorityId, index) => (
           <SheetActionPrioritiesPriority

@@ -43,7 +43,8 @@ const SheetActionCreateSheetView = ({
       isDropdownVisible={isDropdownVisible}
       onClick={() => setIsDropdownVisible(true)}
       openDropdown={() => setIsDropdownVisible(true)}
-      text={sheetActiveSheetViewId && allSheetViews[sheetActiveSheetViewId] && allSheetViews[sheetActiveSheetViewId].name ? allSheetViews[sheetActiveSheetViewId].name : 'Views'}>
+      text={sheetActiveSheetViewId && allSheetViews[sheetActiveSheetViewId] && allSheetViews[sheetActiveSheetViewId].name ? allSheetViews[sheetActiveSheetViewId].name : 'Views'}
+      tooltip="Create new views and switch between your existing views">
       <SheetActionButtonDropdown>
         {sheetViews && sheetViews.map(sheetViewId => (
           <SheetView

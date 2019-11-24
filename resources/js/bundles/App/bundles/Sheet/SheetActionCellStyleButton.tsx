@@ -18,7 +18,8 @@ const SheetActionCellStyleButton = ({
   marginLeft,
   marginRight,
   sheetStylesSet,
-  updateSheetStylesSet
+  updateSheetStylesSet,
+  tooltip
 }: SheetActionCellStyleButtonProps) => {
   
   const allSheetRows = useSelector((state: IAppState) => state.sheet.allSheetRows)
@@ -75,7 +76,8 @@ const SheetActionCellStyleButton = ({
       icon={icon}
       marginLeft={marginLeft}
       marginRight={marginRight}
-      onClick={handleContainerClick}/>
+      onClick={handleContainerClick}
+      tooltip={tooltip}/>
   )
 }
 
@@ -87,6 +89,7 @@ interface SheetActionCellStyleButtonProps {
   icon: string
   marginLeft?: string
   marginRight?: string
+  tooltip: string
   sheetStylesSet: Set<string>
   updateSheetStylesSet(nextSheetStylesSet: Set<string>): void
 }

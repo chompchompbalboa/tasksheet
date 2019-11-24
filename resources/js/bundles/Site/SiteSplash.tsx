@@ -136,7 +136,7 @@ const SiteSplash = () => {
                 onFocus={() =>  handleInputFocus()}
                 isInputValueValid={true}/>
               <SubmitButton>
-                {!['REGISTERING'].includes(registerStatus) ? 'Sign Up' : 'Signing Up...'}
+                {!['REGISTERING'].includes(registerStatus) ? 'Login / Sign Up' : 'Sending...'}
               </SubmitButton>
             </LoginRegisterForm>
           }
