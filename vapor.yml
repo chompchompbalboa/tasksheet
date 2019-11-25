@@ -2,11 +2,11 @@ id: 2412
 name: tracksheet
 environments:
     production:
-        domain: sortsheet.com
+        domain: tasksheet.app
         memory: 1024
         cli-memory: 512
-        database: sortsheet-production
-        storage: sortsheet-production
+        database: tasksheet-production
+        storage: tasksheet-production
         build:
             - 'composer install --no-dev --classmap-authoritative'
             - 'php artisan event:cache'

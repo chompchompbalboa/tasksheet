@@ -23,7 +23,7 @@ Route::group([
     }
     else {
       Auth::attempt([
-        'email' => 'demo@sortsheet.com',
+        'email' => 'demo@tasksheet.com',
         'password' => 'secret'
       ]);
       $user = Auth::user();

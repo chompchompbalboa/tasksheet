@@ -21,22 +21,22 @@ class DatabaseSeeder extends Seeder
 
       // Teams
       $teams = [
-        [ 'name' => 'Sortsheet',
-          'sourceFolder' => 'Sortsheet',
+        [ 'name' => 'Tasksheet',
+          'sourceFolder' => 'Tasksheet',
           'users' => [
-            [ 'name' => 'Rocky Eastman', 'email' => 'rocky@sortsheet.com' ],
+            [ 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.com' ],
         ]],
         [ 'name' => 'Demos',
           'sourceFolder' => 'Demos',
           'users' => [
-            [ 'name' => 'Demo', 'email' => 'demo@sortsheet.com' ],
-            [ 'name' => 'Rocky Eastman', 'email' => 'rocky@sortsheet.com' ],
+            [ 'name' => 'Demo', 'email' => 'demo@tasksheet.com' ],
+            [ 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.com' ],
         ]],
         [ 'name' => 'Dillon Works',
           'sourceFolder' => 'Dillon Works',
           'users' => [
             [ 'name' => 'Rocky Eastman', 'email' => 'rockye@dillonworks.com' ],
-            [ 'name' => 'Rocky Eastman', 'email' => 'rocky@sortsheet.com' ],
+            [ 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.com' ],
         ]],
       ];
 
@@ -86,7 +86,7 @@ class DatabaseSeeder extends Seeder
 
             // UserSubscription
             $user->subscription()->save(factory(App\Models\UserSubscription::class)->make([
-              'type' => $seedUser['email'] === 'demo@sortsheet.com' ? 'DEMO' : 'LIFETIME'
+              'type' => $seedUser['email'] === 'demo@tasksheet.com' ? 'DEMO' : 'LIFETIME'
             ]));
 
             // Add email to newUsers

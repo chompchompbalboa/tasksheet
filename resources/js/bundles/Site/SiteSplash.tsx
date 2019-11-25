@@ -119,15 +119,15 @@ const SiteSplash = () => {
     <Container>
       <Header>
         <HeaderName>
-          sortsheet
+          tasksheet
         </HeaderName>
         <HeaderLinks>
           <HeaderLink>30 day free trial<br/>$5 per month or $100 for lifetime access</HeaderLink>
         </HeaderLinks>
       </Header>
       <Splash>
-        <Name>sortsheet</Name>
-        <Motto>The spreadsheet that makes it easy to organize your data</Motto>
+        <Name>tasksheet</Name>
+        <Motto>The spreadsheet that makes it easy to manage your to-dos</Motto>
         <Divider />
         <LoginRegisterContainer>
           {activeSiteSplashForm === 'REGISTER' &&
