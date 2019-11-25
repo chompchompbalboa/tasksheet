@@ -36,6 +36,7 @@ const SiteSplash = () => {
   const activeSiteSplashFormMessage = useSelector((state: IAppState) => state.active.SITE_SPLASH_FORM_MESSAGE)
   
   const [ activeInput, setActiveInput ] = useState(null)
+  const [ nameInputValue, setNameInputValue ] = useState('')
   const [ emailInputValue, setEmailInputValue ] = useState('')
   const [ passwordInputValue, setPasswordInputValue ] = useState('')
   const [ loginStatus, setLoginStatus ] = useState('READY')
@@ -64,18 +65,16 @@ const SiteSplash = () => {
     e.preventDefault()
     if(isEmail(emailInputValue)) {
       setRegisterStatus('REGISTERING')
-      try {
-        action.userRegister(emailInputValue, passwordInputValue).then(
-          success => {
-            if(success) { window.location = window.location.href + 'app' as any }
-            else { setRegisterStatus('ERROR') }
-          },
-          err => { setRegisterStatus('ERROR') }
-        )
-      }
-      catch(e) {
-        setRegisterStatus('ERROR')
-      }
+      action.userRegister(nameInputValue, emailInputValue, passwordInputValue).then(
+        response => {
+          if(response.status === 200) {
+            window.location = window.location.href as any
+          }
+          else {
+            dispatch(updateActiveSiteSplashFormMessage('ERROR_DURING_REGISTRATION'))
+            setRegisterStatus('ERROR')
+          }
+      })
     }
   }
   
@@ -95,19 +94,25 @@ const SiteSplash = () => {
 
   const siteSplashFormMessages = {
     ACCOUNT_NEEDED_TO_CREATE_SHEET: 
-      <i>
+      <>
         You need to create an account or sign in to an existing account to create a new sheet.
         <br/>
         If you have an exisiting account, click here to login.
-      </i>,
+      </>,
     ACCOUNT_NEEDED_TO_UPLOAD_CSV: 
-      <i>
+      <>
         You need to create an account or sign in to an existing account to upload a .csv file.
         <br/>
         If you have an exisiting account, click here to login.
-      </i>,
+      </>,
     CLICK_TO_LOGIN_INSTEAD: 'Click here to login',
     CLICK_TO_REGISTER_INSTEAD: 'Click here to sign up',
+    ERROR_DURING_REGISTRATION: 
+      <>
+        We were unable to create your account.
+        <br/>
+        Please verify that you have correctly entered your name, email address and password and try again.
+      </>
   }
   
   return (
@@ -125,8 +130,15 @@ const SiteSplash = () => {
         <Motto>The spreadsheet that makes it easy to organize your data</Motto>
         <Divider />
         <LoginRegisterContainer>
-          {activeSiteSplashForm === 'REGISTER' && registerStatus !== 'REGISTERED' &&
+          {activeSiteSplashForm === 'REGISTER' &&
             <LoginRegisterForm onSubmit={e => handleRegisterAttempt(e)}>
+              <StyledInput
+                placeholder="Name"
+                value={nameInputValue}
+                onBlur={() =>  handleInputBlur()}
+                onChange={e => setNameInputValue(e.target.value)}
+                onFocus={() =>  handleInputFocus()}
+                isInputValueValid={true}/>
               <StyledInput
                 placeholder="Email"
                 value={emailInputValue}
@@ -153,7 +165,7 @@ const SiteSplash = () => {
               </SubmitButton>
             </LoginRegisterForm>
           }
-          {activeSiteSplashForm === 'LOGIN' && registerStatus !== 'REGISTERED' &&
+          {activeSiteSplashForm === 'LOGIN' &&
             <LoginRegisterForm onSubmit={e => handleLoginAttempt(e)}>
               <StyledInput
                 placeholder="Email"

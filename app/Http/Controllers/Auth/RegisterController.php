@@ -38,7 +38,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8'],
+            'password' => ['required', 'string'],
         ]);
     }
 
@@ -50,30 +50,37 @@ class RegisterController extends Controller
      */
     protected function register(Request $request)
     {
-      $accessCode = $request->input('accessCode');
-      if($accessCode === 'TASKSHEET') {
+      // Log an existing user in
+      if(Auth::attempt([
+        'email' => $request->input('email'),
+        'password' => $request->input('password')
+      ])) {
+        return response()->json(true, 200);
+      }
+      else {
         $newUser = $request->validate([
+            'name' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8'],
+            'password' => ['required', 'string'],
         ]);
         // Create the user folder
         $newUserFolder = Folder::create([
           'id' => Str::uuid()->toString(),
-          'name' => 'My Folders'
+          'name' => 'Your First Folder'
         ]);
         $newUser = User::create([
-            'name' => '',
+            'name' => $newUser['name'],
             'email' => $newUser['email'],
             'password' => Hash::make($newUser['password']),
             'folderId' => $newUserFolder->id
         ]);
         $newUser->active()->save(factory(\App\Models\UserActive::class)->make());
         $newUser->color()->save(factory(\App\Models\UserColor::class)->make());
+        $newUser->subscription()->save(factory(\App\Models\UserSubscription::class)->make([
+          'type' => 'TRIAL'
+        ]));
         Auth::loginUsingId($newUser->id, true);
         return response()->json(true, 200);
-      }
-      else {
-        return response()->json(false, 200);
       }
     }
 }

@@ -72,7 +72,7 @@ class SheetController extends Controller
       // Create the sheet columns
       $newSheetColumns = [];
       $newSheetViewVisibleColumns = [];
-      foreach(explode(',', 'A,B,C,D,E,F,G,H') as $columnName) {
+      foreach(explode(',', 'A,B,C,D,E') as $columnName) {
         $newColumnId = Str::uuid()->toString();
         array_push($newSheetViewVisibleColumns, $newColumnId);
         array_push($newSheetColumns, [
