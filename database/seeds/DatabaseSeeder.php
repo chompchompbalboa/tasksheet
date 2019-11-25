@@ -61,6 +61,7 @@ class DatabaseSeeder extends Seeder
         // Seed each user
         foreach($seedTeam['users'] as $seedUser) {
 
+          // Make sure we haven't already seeded the user
           if(!$newUsers->contains('email', $seedUser['email'])) {
 
             // User Root Folder
@@ -74,8 +75,7 @@ class DatabaseSeeder extends Seeder
               'id' => $userId,
               'folderId' => $userFolder->id,
               'name' => $seedUser['name'],
-              'email' => $seedUser['email'],
-              'isDemoUser' => $seedUser['email'] === 'demo@sortsheet.com'
+              'email' => $seedUser['email']
             ]);
 
             // UserActive
@@ -84,11 +84,16 @@ class DatabaseSeeder extends Seeder
             // UserColor
             $user->color()->save(factory(App\Models\UserColor::class)->make());
 
+            // UserSubscription
+            $user->subscription()->save(factory(App\Models\UserSubscription::class)->make([
+              'type' => $seedUser['email'] === 'demo@sortsheet.com' ? 'DEMO' : 'LIFETIME'
+            ]));
+
             // Add email to newUsers
             $newUsers->push($user);
           }
+          // If we have already seeded the user, get the user
           else {
-            // Get the user if it already exists
             $user = $newUsers->firstWhere('email', $seedUser['email']);
           }
 
@@ -173,7 +178,7 @@ class DatabaseSeeder extends Seeder
                   'folderId' => $parentFolderId
                 ]);
 
-                // Recursively create the subfolders
+                // Create the subfolders
                 $createFolders($level + 1, $path.$folderName.'/', $newFolder->id, $folderItem);
               }
 

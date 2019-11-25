@@ -18,7 +18,7 @@ import SiteSplash from '@site/SiteSplash'
 //-----------------------------------------------------------------------------
 export const App = () => {
 
-  const isDemoUser = useSelector((state: IAppState) => state.user.isDemoUser)
+  const isDemoUser = useSelector((state: IAppState) => state.user.subscription.type === 'DEMO')
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 
   if(isDemoUser) {

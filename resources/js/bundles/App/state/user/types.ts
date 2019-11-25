@@ -3,16 +3,21 @@
 //-----------------------------------------------------------------------------
 export interface IUser {
 	id: string
-  isDemoUser: boolean
 	name: string
 	email: string
 	active: IUserActive
 	color: IUserColor
+  subscription: IUserSubscription
 }
 
 export interface IUserUpdates {
   name?: string
   email?: string
+}
+
+export interface IUserSubscription {
+  id: string
+  type: 'DEMO' | 'TRIAL' | 'MONTHLY' | 'LIFETIME'
 }
 
 export interface IUserActive {

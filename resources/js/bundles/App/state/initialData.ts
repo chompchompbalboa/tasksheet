@@ -1,4 +1,4 @@
-import { IUser, IUserActive, IUserColor } from '@app/state/user/types'
+import { IUser, IUserActive, IUserColor, IUserSubscription } from '@app/state/user/types'
 import { ITeamFromDatabase } from '@app/state/team/types'
 import { IAllSheetColumnTypes } from '@app/state/sheet/types'
 
@@ -15,7 +15,11 @@ const initalData: IInitialData = {
 		color: <IUserColor> {
 			primary: '',
 			secondary: '',
-		}
+    },
+    subscription: <IUserSubscription> {
+      id: 'userSubscriptionId',
+      type: 'LIFETIME'
+    }
   },
   teams: <ITeamFromDatabase[]> [{
     id: 'team-uuid',

@@ -17,7 +17,7 @@ const SheetActionCreateSheet = ({
   sheetId
 }: ISheetActionCreateSheet) => {
 
-  const isDemoUser = useSelector((state: IAppState) => state.user.isDemoUser)
+  const isDemoUser = useSelector((state: IAppState) => state.user.subscription.type === 'DEMO')
 
   const handleButtonClick = () => {
     if(isDemoUser) {

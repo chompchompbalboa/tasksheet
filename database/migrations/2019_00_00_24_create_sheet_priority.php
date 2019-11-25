@@ -16,7 +16,6 @@ class CreateSheetPriority extends Migration
         Schema::create('sheetPriorities', function (Blueprint $table) {
           $table->uuid('id')->primary();
           $table->uuid('sheetId');
-          $table->uuid('cellId');
           $table->string('name');
           $table->string('backgroundColor');
           $table->string('color');
@@ -25,7 +24,6 @@ class CreateSheetPriority extends Migration
           $table->timestamp('updatedAt')->nullable();
 
           $table->foreign('sheetId')->references('id')->on('sheets');
-          $table->foreign('cellId')->references('id')->on('sheetCells');
         });
     }
 

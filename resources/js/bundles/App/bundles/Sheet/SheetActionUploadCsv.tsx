@@ -22,7 +22,7 @@ const SheetActionUploadCsv = ({
 }: ISheetActionUploadCsv) => {
 
   const dispatch = useDispatch()
-  const isDemoUser = useSelector((state: IAppState) => state.user.isDemoUser)
+  const isDemoUser = useSelector((state: IAppState) => state.user.subscription.type === 'DEMO')
 
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
 

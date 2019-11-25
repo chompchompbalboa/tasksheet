@@ -15,9 +15,9 @@ class User extends Authenticatable
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
   
-    protected $visible = [ 'id', 'isDemoUser', 'name', 'email', 'active', 'color' ];
-    protected $fillable = [ 'isDemoUser', 'name', 'email', 'password', 'folderId' ];
-    protected $with = [ 'active', 'color' ];
+    protected $visible = [ 'id', 'name', 'email', 'active', 'color', 'subscription' ];
+    protected $fillable = [ 'name', 'email', 'password', 'folderId' ];
+    protected $with = [ 'active', 'color', 'subscription' ];
   
     public function active() {
       return $this->hasOne('App\Models\UserActive', 'userId');
@@ -42,6 +42,10 @@ class User extends Authenticatable
     
     public function folder() {
       return $this->belongsTo('App\Models\Folder', 'folderId');
+    }
+  
+    public function subscription() {
+      return $this->hasOne('App\Models\UserSubscription', 'userId');
     }
   
     public function teams() {
