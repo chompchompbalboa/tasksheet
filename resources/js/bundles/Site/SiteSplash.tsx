@@ -10,6 +10,10 @@ import { action } from '@app/api'
 
 import { IAppState } from '@app/state'
 import {
+  updateActiveSiteSplashForm,
+  updateActiveSiteSplashFormMessage
+} from '@app/state/active/actions'
+import {
   allowSelectedCellEditing,
   allowSelectedCellNavigation,
   preventSelectedCellEditing,
@@ -28,11 +32,12 @@ const SiteSplash = () => {
     }
     return null
   })
+  const activeSiteSplashForm = useSelector((state: IAppState) => state.active.SITE_SPLASH_FORM)
+  const activeSiteSplashFormMessage = useSelector((state: IAppState) => state.active.SITE_SPLASH_FORM_MESSAGE)
   
   const [ activeInput, setActiveInput ] = useState(null)
   const [ emailInputValue, setEmailInputValue ] = useState('')
   const [ passwordInputValue, setPasswordInputValue ] = useState('')
-  const [ isLoginOrRegister, setIsLoginOrRegister ] = useState('REGISTER' as 'LOGIN' | 'REGISTER')
   const [ loginStatus, setLoginStatus ] = useState('READY')
   
   const handleLoginAttempt = (e: FormEvent) => {
@@ -74,15 +79,6 @@ const SiteSplash = () => {
     }
   }
   
-  const handleFormVisibilityChange = (nextForm: 'LOGIN' | 'REGISTER') => {
-    if (nextForm === 'LOGIN') {
-      setIsLoginOrRegister('LOGIN')
-    }
-    if (nextForm === 'REGISTER') {
-      setIsLoginOrRegister('REGISTER')
-    }
-  }
-  
   const handleInputBlur = () => {
     if(activeSheetId) {
       dispatch(allowSelectedCellEditing(activeSheetId))
@@ -95,6 +91,23 @@ const SiteSplash = () => {
       dispatch(preventSelectedCellEditing(activeSheetId))
       dispatch(preventSelectedCellNavigation(activeSheetId))
     }
+  }
+
+  const siteSplashFormMessages = {
+    ACCOUNT_NEEDED_TO_CREATE_SHEET: 
+      <i>
+        You need to create an account or sign in to an existing account to create a new sheet.
+        <br/>
+        If you have an exisiting account, click here to login.
+      </i>,
+    ACCOUNT_NEEDED_TO_UPLOAD_CSV: 
+      <i>
+        You need to create an account or sign in to an existing account to upload a .csv file.
+        <br/>
+        If you have an exisiting account, click here to login.
+      </i>,
+    CLICK_TO_LOGIN_INSTEAD: 'Click here to login',
+    CLICK_TO_REGISTER_INSTEAD: 'Click here to sign up',
   }
   
   return (
@@ -112,7 +125,7 @@ const SiteSplash = () => {
         <Motto>The spreadsheet that makes it easy to organize your data</Motto>
         <Divider />
         <LoginRegisterContainer>
-          {isLoginOrRegister === 'REGISTER' && registerStatus !== 'REGISTERED' &&
+          {activeSiteSplashForm === 'REGISTER' && registerStatus !== 'REGISTERED' &&
             <LoginRegisterForm onSubmit={e => handleRegisterAttempt(e)}>
               <StyledInput
                 placeholder="Email"
@@ -136,11 +149,11 @@ const SiteSplash = () => {
                 onFocus={() =>  handleInputFocus()}
                 isInputValueValid={true}/>
               <SubmitButton>
-                {!['REGISTERING'].includes(registerStatus) ? 'Login / Sign Up' : 'Sending...'}
+                {!['REGISTERING'].includes(registerStatus) ? 'Sign Up' : 'Sending...'}
               </SubmitButton>
             </LoginRegisterForm>
           }
-          {isLoginOrRegister === 'LOGIN' && registerStatus !== 'REGISTERED' &&
+          {activeSiteSplashForm === 'LOGIN' && registerStatus !== 'REGISTERED' &&
             <LoginRegisterForm onSubmit={e => handleLoginAttempt(e)}>
               <StyledInput
                 placeholder="Email"
@@ -170,18 +183,17 @@ const SiteSplash = () => {
           }
         </LoginRegisterContainer>
         <CurrentStatus>
-          {isLoginOrRegister === 'REGISTER' &&
-            <LoginLink onClick={() => handleFormVisibilityChange('LOGIN')}>
-              {registerStatus !== 'ERROR' 
-                ? 'Click here to log in'
-                : 'There was a problem registering, please try again or click here to login instead'}
-            </LoginLink>}
-          {isLoginOrRegister === 'LOGIN' &&
-            <LoginLink onClick={() => handleFormVisibilityChange('REGISTER')}>
-              {loginStatus !== 'ERROR' 
-                ? 'Click here to sign up'
-                : 'There was a problem logging in, please try again or click here to register instead'}
-          </LoginLink>}
+          <CurrentStatusLink
+            onClick={activeSiteSplashForm === 'LOGIN' 
+              ? () => {
+                  dispatch(updateActiveSiteSplashForm('REGISTER'))
+                  dispatch(updateActiveSiteSplashFormMessage('CLICK_TO_LOGIN_INSTEAD'))}
+              : () => {
+                  dispatch(updateActiveSiteSplashForm('LOGIN'))
+                  dispatch(updateActiveSiteSplashFormMessage('CLICK_TO_REGISTER_INSTEAD'))}
+              }>
+            {siteSplashFormMessages[activeSiteSplashFormMessage]}
+          </CurrentStatusLink>
         </CurrentStatus>
       </Splash>
     </Container>
@@ -264,15 +276,20 @@ const Motto = styled.div`
 `
 
 const CurrentStatus = styled.div`
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  line-height: 1.25rem;
   text-align: center;
 `
 
-const LoginLink = styled.span`
+const CurrentStatusLink = styled.span`
   cursor: pointer;
   transition: text-decoration 0.1s;
+  text-align: center;
   &:hover {
     text-decoration: underline;
+  }
+  @media (max-width: 480px) {
+    max-width: 90%;
   }
 `
 

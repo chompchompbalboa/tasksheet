@@ -86,8 +86,8 @@ const SheetActions = ({
       <SheetActionCellStyleBackgroundColor sheetId={sheetId}/>
       <SheetActionCellStyleColor sheetId={sheetId}/>
       <Divider />
-      <SheetActionCreateSheet sheetId={sheetId}/>
-      <SheetActionUploadCsv sheetId={sheetId}/>
+      <SheetActionCreateSheet/>
+      <SheetActionUploadCsv/>
       <Divider />
       <SheetActionDownloadCsv sheetId={sheetId}/>
     </Container>

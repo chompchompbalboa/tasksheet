@@ -2,6 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import { combineReducers } from 'redux'
+import activeReducer from '@app/state/active/reducers'
 import historyReducer from '@app/state/history/reducers'
 import folderReducer from '@app/state/folder/reducers'
 import messengerReducer from '@app/state/messenger/reducers'
@@ -16,6 +17,7 @@ import userReducer from '@app/state/user/reducers'
 // Combine Reducers
 //-----------------------------------------------------------------------------
 export const appReducer = combineReducers({
+  active: activeReducer,
   history: historyReducer,
 	folder: folderReducer,
   messenger: messengerReducer,

@@ -8,6 +8,10 @@ import { UPLOAD } from '@app/assets/icons'
 
 import { IAppState } from '@app/state'
 import {
+  updateActiveSiteSplashForm,
+  updateActiveSiteSplashFormMessage
+} from '@app/state/active/actions'
+import {
   updateModal
 } from '@app/state/modal/actions'
 
@@ -17,9 +21,7 @@ import SheetActionButtonDropdown from '@app/bundles/Sheet/SheetActionButtonDropd
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetActionUploadCsv = ({
-  sheetId
-}: ISheetActionUploadCsv) => {
+const SheetActionUploadCsv = () => {
 
   const dispatch = useDispatch()
   const isDemoUser = useSelector((state: IAppState) => state.user.subscription.type === 'DEMO')
@@ -28,6 +30,8 @@ const SheetActionUploadCsv = ({
 
   const handleButtonClick = () => {
     if(isDemoUser) {
+      dispatch(updateActiveSiteSplashForm('REGISTER'))
+      dispatch(updateActiveSiteSplashFormMessage('ACCOUNT_NEEDED_TO_UPLOAD_CSV'))
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth'})
     }
     else {
@@ -52,17 +56,6 @@ const SheetActionUploadCsv = ({
     </SheetActionButton>
   )
 }
-
-//-----------------------------------------------------------------------------
-// Props
-//-----------------------------------------------------------------------------
-interface ISheetActionUploadCsv {
-  sheetId: string
-}
-
-//-----------------------------------------------------------------------------
-// Styled Components
-//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 // Export

@@ -15,6 +15,7 @@ import {
   ISheetPriority
 } from '@app/state/sheet/types'
 
+import { initialActiveState } from '@app/state/active/reducers'
 import { initialFolderState } from '@app/state/folder/reducers'
 import { initialHistoryState } from '@app/state/history/reducers'
 import { initialModalState } from '@app/state/modal/reducers'
@@ -276,6 +277,7 @@ const {
 } = appStateFactory({} as IAppStateFactoryInput)
 
 export const appState: IAppState = {
+  active: initialActiveState,
   history: initialHistoryState,
   folder: {
     ...initialFolderState,
