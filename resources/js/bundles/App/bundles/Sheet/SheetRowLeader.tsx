@@ -29,14 +29,16 @@ export const SheetRowLeader = memo(({
   const rangeStartRowId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeStartRowId)
   
   const handleMouseDown = (e: MouseEvent) => {
-    if(rowId !== 'ROW_BREAK') {
-      if(e.shiftKey) {
-        const nextRangeStartRowId = rangeStartRowId || rowId
-        const nextRangeEndRowId = rowId
-        selectSheetRows(nextRangeStartRowId, nextRangeEndRowId)
-      }
-      else {
-        selectSheetRows(rowId)
+    if(e.button !== 2) {
+      if(rowId !== 'ROW_BREAK') {
+        if(e.shiftKey) {
+          const nextRangeStartRowId = rangeStartRowId || rowId
+          const nextRangeEndRowId = rowId
+          selectSheetRows(nextRangeStartRowId, nextRangeEndRowId)
+        }
+        else {
+          selectSheetRows(rowId)
+        }
       }
     }
   }
