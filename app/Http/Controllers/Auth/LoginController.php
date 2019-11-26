@@ -33,7 +33,7 @@ class LoginController extends Controller
             return response()->json(true, 200);
         }
         else {
-          return response()->json(false, 200);
+          return response()->json(false, 404);
         }
     }
 

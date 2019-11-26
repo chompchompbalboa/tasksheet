@@ -9,9 +9,11 @@ import axios from '@/api/axios'
 export const userLogin = async (email: string, password: string) => {
 	return axios.post('/user/login', {
     email, password
-  }).then(response => {
-		return response.data
-	})
+  }).then(
+    response => response
+  ).catch(
+    error => error.response
+  )
 }
 
 export const userLogout = async () => {

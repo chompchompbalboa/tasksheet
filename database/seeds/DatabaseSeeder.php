@@ -24,19 +24,19 @@ class DatabaseSeeder extends Seeder
         [ 'name' => 'Tasksheet',
           'sourceFolder' => 'Tasksheet',
           'users' => [
-            [ 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.com' ],
+            [ 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.app' ],
         ]],
         [ 'name' => 'Demos',
           'sourceFolder' => 'Demos',
           'users' => [
-            [ 'name' => 'Demo', 'email' => 'demo@tasksheet.com' ],
-            [ 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.com' ],
+            [ 'name' => 'Demo', 'email' => 'demo@tasksheet.app' ],
+            [ 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.app' ],
         ]],
         [ 'name' => 'Dillon Works',
           'sourceFolder' => 'Dillon Works',
           'users' => [
             [ 'name' => 'Rocky Eastman', 'email' => 'rockye@dillonworks.com' ],
-            [ 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.com' ],
+            [ 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.app' ],
         ]],
       ];
 
@@ -86,7 +86,7 @@ class DatabaseSeeder extends Seeder
 
             // UserSubscription
             $user->subscription()->save(factory(App\Models\UserSubscription::class)->make([
-              'type' => $seedUser['email'] === 'demo@tasksheet.com' ? 'DEMO' : 'LIFETIME'
+              'type' => $seedUser['email'] === 'demo@tasksheet.app' ? 'DEMO' : 'LIFETIME'
             ]));
 
             // Add email to newUsers

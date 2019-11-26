@@ -55,7 +55,7 @@ class RegisterController extends Controller
         'email' => $request->input('email'),
         'password' => $request->input('password')
       ])) {
-        return response()->json(true, 200);
+        return response()->json(null, 200);
       }
       else {
         $newUser = $request->validate([
@@ -80,7 +80,7 @@ class RegisterController extends Controller
           'type' => 'TRIAL'
         ]));
         Auth::loginUsingId($newUser->id, true);
-        return response()->json(true, 200);
+        return response()->json(null, 200);
       }
     }
 }

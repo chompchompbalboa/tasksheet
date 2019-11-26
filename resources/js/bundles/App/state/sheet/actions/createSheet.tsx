@@ -29,9 +29,9 @@ export const createSheet = (folderId: IFolder['id']): IThunkAction => {
 
     dispatch(createFile(folderId, newFile))
     
-    mutation.createSheet(newSheetId).then(() => {
-      dispatch(updateFile(newFile.id, { isPreventedFromSelecting: false }, true))
-    })
+    await mutation.createSheet(newSheetId)
+    
+    dispatch(updateFile(newFile.id, { isPreventedFromSelecting: false }, true))
     
   }
 }
