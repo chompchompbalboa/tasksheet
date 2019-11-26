@@ -2,6 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useState } from 'react'
+import { ExportToCsv } from 'export-to-csv'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -68,11 +69,11 @@ const SheetActionDownloadCsv = ({
         return visibleColumns.map(columnId => {
           if(columnId !== 'COLUMN_BREAK') {
             if(row.cells && row.cells[columnId] && allSheetCells[row.cells[columnId]]) {
-              return allSheetCells[row.cells[columnId]].value ? allSheetCells[row.cells[columnId]].value.replace(',', '').replace('"', '') : null
+              return allSheetCells[row.cells[columnId]].value ? allSheetCells[row.cells[columnId]].value.replace(',', '').replace('"', '') : ''
             }
-            return null
+            return ''
           }
-          return null
+          return ''
         })
       }
       return null
@@ -85,7 +86,11 @@ const SheetActionDownloadCsv = ({
     }) : []
     
     const csvData = isIncludeColumnTypeInformation ? [ headers, columnTypeInformation, ...data ]  : [ headers, ...data ] 
-    console.log(csvData)
+    
+    const csvExporter = new ExportToCsv({
+      filename: activeFilename
+    })
+    csvExporter.generateCsv(csvData)
   }
 
   return (
@@ -115,7 +120,7 @@ const SheetActionDownloadCsv = ({
               checked={isIncludeColumnTypeInformation}
               onChange={() => setIsIncludeColumnTypeInformation(!isIncludeColumnTypeInformation)}/>
             <DownloadOptionText>
-              Include Column Type Information
+              Include column settings
             </DownloadOptionText>
           </DownloadOption>
         </DownloadOptions>
@@ -135,6 +140,7 @@ interface SheetActionDownloadCsvProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const DownloadOptions = styled.div`
+  padding: 0.375rem 0.75rem;
 `
 
 const DownloadOption = styled.div`
