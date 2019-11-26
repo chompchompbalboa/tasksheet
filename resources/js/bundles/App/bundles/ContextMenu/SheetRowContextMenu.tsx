@@ -57,7 +57,7 @@ export const SheetRowContextMenu = ({
       <ContextMenuDivider />
       <ContextMenuItem 
         text={"Delete " + (isMultipleRowsSelected ? "rows" : "row")}
-        onClick={() => closeOnClick(() => dispatch(deleteSheetRows(sheetId)))}/>
+        onClick={() => closeOnClick(() => dispatch(deleteSheetRows(sheetId, rowId)))}/>
     </ContextMenu>
   )
 }

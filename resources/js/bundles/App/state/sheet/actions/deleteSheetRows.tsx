@@ -8,7 +8,7 @@ import { mutation } from '@app/api'
 import { IAppState } from '@app/state'
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
 
-import { ISheetCell, ISheetRow, ISheetRowToDatabase } from '@app/state/sheet/types'
+import { ISheet, ISheetCell, ISheetRow, ISheetRowToDatabase } from '@app/state/sheet/types'
 
 import { createHistoryStep } from '@app/state/history/actions'
 import { updateSheet } from '@app/state/sheet/actions'
@@ -17,7 +17,7 @@ import { resolveSheetRowLeaders } from '@app/state/sheet/resolvers'
 //-----------------------------------------------------------------------------
 // Delete Sheet Row
 //-----------------------------------------------------------------------------
-export const deleteSheetRows = (sheetId: string): IThunkAction => {
+export const deleteSheetRows = (sheetId: ISheet['id'], rowId: ISheetRow['id']): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     
     const {
@@ -47,7 +47,7 @@ export const deleteSheetRows = (sheetId: string): IThunkAction => {
       }
     }
     else {
-      rowIdsToDelete.push(sheetSelections.rangeStartRowId)
+      rowIdsToDelete.push(rowId)
     }
     
     rowIdsToDelete.forEach(rangeRowId => {
