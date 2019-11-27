@@ -41,7 +41,7 @@ const SheetActionDownloadCsv = ({
 
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
   const [ filename, setFilename ] = useState(activeFilename)
-  const [ isIncludeColumnTypeInformation, setIsIncludeColumnTypeInformation ] = useState(true)
+  const [ isIncludeColumnSettings, setIsIncludeColumnSettings ] = useState(true)
 
   useEffect(() => {
     setFilename(activeFilename)
@@ -79,13 +79,16 @@ const SheetActionDownloadCsv = ({
       return null
     }).filter(row => row !== null) : []
   
-    const columnTypeInformation = data && data.length > 0 ? visibleColumns.map(columnId => {
+    const columnSettingsToInclude = data && data.length > 0 ? visibleColumns.map(columnId => {
       const column = allSheetColumns[columnId]
-      const columnType = columnId === 'COLUMN_BREAK' ? columnId : allSheetColumnTypes[column.typeId].cellType
-      return '[TS][' + columnType + ']'
+      const columnCellType = columnId === 'COLUMN_BREAK' ? 'COLUMN_BREAK' : allSheetColumnTypes[column.typeId].cellType
+      const columnWidth = columnId === 'COLUMN_BREAK' ? 10 : column.width
+      return '[TS]' + 
+        '[CELL_TYPE=' + columnCellType + ']' +
+        '[WIDTH=' + columnWidth + ']'
     }) : []
     
-    const csvData = isIncludeColumnTypeInformation ? [ headers, columnTypeInformation, ...data ]  : [ headers, ...data ] 
+    const csvData = isIncludeColumnSettings ? [ headers, columnSettingsToInclude, ...data ]  : [ headers, ...data ] 
     
     const csvExporter = new ExportToCsv({
       filename: activeFilename
@@ -117,8 +120,8 @@ const SheetActionDownloadCsv = ({
           <DownloadOption>
             <DownloadOptionCheckbox
               type="checkbox"
-              checked={isIncludeColumnTypeInformation}
-              onChange={() => setIsIncludeColumnTypeInformation(!isIncludeColumnTypeInformation)}/>
+              checked={isIncludeColumnSettings}
+              onChange={() => setIsIncludeColumnSettings(!isIncludeColumnSettings)}/>
             <DownloadOptionText>
               Include column settings
             </DownloadOptionText>
