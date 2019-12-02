@@ -229,7 +229,11 @@ class DatabaseSeeder extends Seeder
                 $sourceCsvRows = Csv::toArray('database/sources/'.$path.$folderItem);
                 
                 // Create the sheet columns, rows and cells
-                SheetController::createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $newSheetView, $sourceCsvRows);
+                $sheetViewVisibleColumns = SheetController::createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $sourceCsvRows);
+
+                // Save the sheet view's visibleColumns
+                $newSheetView->visibleColumns = $sheetViewVisibleColumns;
+                $newSheetView->save();
               }
             } 
           }

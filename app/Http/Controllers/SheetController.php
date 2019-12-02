@@ -123,12 +123,35 @@ class SheetController extends Controller
       // Get the request inputs
       $newSheetId = $request->input('newSheetId');
 
+      // Build the array we'll use to insert the columns, rows, and cells
+      $arrayOfRows = Csv::toArray($request->file('fileToUpload')->path());
+
       // Create the sheet
+      /*
       $newSheet = Sheet::create([ 
         'id' => $newSheetId 
       ]);
+      */
 
-      // Create the first sheet view
+      // Create the sheet views
+      $currentRowIndex = 0;
+      $currentRowContainsConfigurationData = true;
+      $configurationData = [];
+      while($currentRowContainsConfigurationData) {
+        $currentRow = $arrayOfRows[$currentRowIndex];
+        $currentRowFirstCellValue = $currentRow[array_keys($currentRow)[0]];
+        if(Str::contains($currentRowFirstCellValue, '[TS]')) {
+          $currentRowConfigurationData = [];
+          foreach($currentRow as $currentRowCurrentCellValue) {
+            array_push($currentRowConfigurationData, $currentRowCurrentCellValue);
+          }
+          array_push($configurationData, $currentRowConfigurationData);
+          $currentRowIndex++;
+        }
+        else {
+          $currentRowContainsConfigurationData = false;
+        }
+      }
       $newSheetView = SheetView::create([ 
         'id' => Str::uuid()->toString(), 
         'sheetId' => $newSheetId,
@@ -145,23 +168,20 @@ class SheetController extends Controller
         'sheetId' => $newSheetId 
       ]);
 
-      // Build the array we'll use to insert the columns, rows, and cells
-      $arrayOfRows = Csv::toArray($request->file('fileToUpload')->path());
-
       // Create the sheet columns, rows and cells
-      $this->createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $newSheetView, $arrayOfRows);
+      $columnIds = $this->createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $arrayOfRows);
 
       // Return the response
       return response()->json(null, 200);
     }
 
 
-    public static function createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $newSheetView, $arrayOfRows) {
+    public static function createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $arrayOfRows) {
 
       // Count the number of rows
       $arrayOfRowsCount = count($arrayOfRows);
 
-      // Sortsheet gives users the option to store configuration data about
+      // Tasksheet gives users the option to store configuration data about
       // the sheet when downloading. If they choose to include that data, it is
       // saved to the first row of the downloaded sheet. Here, we're checking
       // the first row to see if the configuration data exists and if it does,
@@ -186,7 +206,7 @@ class SheetController extends Controller
       // inserted into the database. During column creation, we also build 
       // the sheet view's visible columns
       $newSheetColumns = [];
-      $sheetViewVisibleColumns = [];
+      $columnIds = [];
       $currentColumnIndex = 0;
       foreach($arrayOfRows[0] as $columnName => $cellValue) {
         // Bail out if the current column is a column break
@@ -206,11 +226,11 @@ class SheetController extends Controller
           ]);
 
           // Add the new column id to the sheet view's visible columns
-          $sheetViewVisibleColumns[$currentColumnIndex] = $newColumnId;
+          $columnIds[$currentColumnIndex] = $newColumnId;
         }
         else {
           // If it is a column break, add it to the sheet view's visible columns
-          $sheetViewVisibleColumns[$currentColumnIndex] = 'COLUMN_BREAK';
+          $columnIds[$currentColumnIndex] = 'COLUMN_BREAK';
         }
         $currentColumnIndex++;
       }
@@ -221,27 +241,32 @@ class SheetController extends Controller
       $newSheetCells = [];
       foreach($arrayOfRows as $rowFromCsv) {
 
-        // Create the new row
-        $newRowId = Str::uuid()->toString();
-        array_push($newSheetRows, [ 
-          'id' => $newRowId,
-          'sheetId' => $newSheet->id 
-        ]);
+        // Bail out if this row contains configuration data
+        $firstCellValue = $rowFromCsv[array_keys($rowFromCsv)[0]];
+        if(!Str::contains($firstCellValue, '[TS]')) {
 
-        // Create the new cells
-        foreach($newSheetColumns as $index => $column) {
-          $cellValue = $rowFromCsv[$column['name']];
-          array_push($newSheetCells, [
-            'id' => Str::uuid()->toString(),
-            'sheetId' => $newSheet->id,
-            'columnId' => $column['id'],
-            'rowId' => $newRowId,
-            'value' => $cellValue
+          // Create the new row
+          $newRowId = Str::uuid()->toString();
+          array_push($newSheetRows, [ 
+            'id' => $newRowId,
+            'sheetId' => $newSheet->id 
           ]);
-          $cellValueLength = strlen($cellValue);
-          $defaultColumnWidth = $newSheetColumns[$index]['width'];
-          $newColumnWidth = min(300, max($cellValueLength * 8, $defaultColumnWidth));
-          $newSheetColumns[$index]['width'] = $newColumnWidth;
+  
+          // Create the new cells
+          foreach($newSheetColumns as $index => $column) {
+            $cellValue = $rowFromCsv[$column['name']];
+            array_push($newSheetCells, [
+              'id' => Str::uuid()->toString(),
+              'sheetId' => $newSheet->id,
+              'columnId' => $column['id'],
+              'rowId' => $newRowId,
+              'value' => $cellValue
+            ]);
+            $cellValueLength = strlen($cellValue);
+            $defaultColumnWidth = $newSheetColumns[$index]['width'];
+            $newColumnWidth = min(300, max($cellValueLength * 8, $defaultColumnWidth));
+            $newSheetColumns[$index]['width'] = $newColumnWidth;
+          }
         }
       }
 
@@ -258,9 +283,7 @@ class SheetController extends Controller
         SheetCell::insert($chunk);
       }  
 
-      // Save the sheet view's visible columns
-      $newSheetView->visibleColumns = $sheetViewVisibleColumns;
-      $newSheetView->save();
+      return $columnIds;
     }
 
     public static function prepareSheetDownload(Request $request, Sheet $sheet)
