@@ -2,6 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from 'react'
+import moment from 'moment'
 import { batch, useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { v4 as createUuid } from 'uuid'
@@ -168,6 +169,7 @@ const SheetActionFilter = ({
         // New Filter
         const newSheetFilter: ISheetFilter = {
           id: createUuid(), 
+          createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
           sheetId: sheetActiveSheetViewId ? null : sheetId,
           sheetViewId: sheetActiveSheetViewId,
           columnId: filterColumnId, 

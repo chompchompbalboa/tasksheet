@@ -2,6 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
+import moment from 'moment'
 import { useDispatch, useSelector } from 'react-redux'
 import { v4 as createUuid } from 'uuid'
 
@@ -50,6 +51,7 @@ const SheetActionGroup = ({
   const newSheetGroupFromSelectedOption = (selectedOption: SheetActionDropdownOption): ISheetGroup => {
     return { 
       id: createUuid(), 
+      createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
       sheetId: sheetActiveSheetViewId ? null : sheetId,
       sheetViewId: sheetActiveSheetViewId, 
       columnId: selectedOption.value, 

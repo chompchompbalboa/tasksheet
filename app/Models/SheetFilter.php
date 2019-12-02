@@ -13,6 +13,6 @@ class SheetFilter extends Model
 
   protected $table = 'sheetFilters';
 
-  protected $visible = ['id', 'sheetId', 'sheetViewId', 'columnId', 'type', 'value', 'isLocked'];
-  protected $fillable = ['id', 'created_at', 'sheetId', 'sheetViewId', 'columnId', 'type', 'value', 'isLocked'];
+  protected $visible = ['id', 'sheetId', 'sheetViewId', 'columnId', 'type', 'value', 'isLocked', 'createdAt'];
+  protected $fillable = ['id', 'sheetId', 'sheetViewId', 'columnId', 'type', 'value', 'isLocked', 'createdAt'];
 }

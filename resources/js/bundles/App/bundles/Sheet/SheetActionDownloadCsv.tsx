@@ -30,18 +30,23 @@ const SheetActionDownloadCsv = ({
   const dispatch = useDispatch()
   const { 
     allSheets,
-    allSheetCells, 
+    allSheetViews,
     allSheetColumns, 
-    allSheetColumnTypes, 
     allSheetRows, 
-    allSheetViews
+    allSheetCells, 
+    allSheetFilters,
+    allSheetGroups,
+    allSheetSorts,
+    allSheetColumnTypes, 
   } = useSelector((state: IAppState) => state.sheet)
+
   const activeFilename = useSelector((state: IAppState) => state.folder.files && state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].name)
   const sheet = allSheets && allSheets[sheetId]
 
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
   const [ filename, setFilename ] = useState(activeFilename)
   const [ isIncludeColumnSettings, setIsIncludeColumnSettings ] = useState(true)
+  const [ isIncludeSheetViews, setIsIncludeSheetViews ] = useState(true)
 
   useEffect(() => {
     setFilename(activeFilename)
@@ -57,12 +62,14 @@ const SheetActionDownloadCsv = ({
   }
 
   const downloadCsv = () => {
+    let csvData = []
     const activeSheetView = allSheetViews[sheet.activeSheetViewId]
     const visibleColumns = activeSheetView.visibleColumns
     const visibleRows = sheet.visibleRows
 
-    const headers = visibleColumns ? visibleColumns.map(columnId => columnId !== 'COLUMN_BREAK' ? allSheetColumns[columnId].name : null) : []
-  
+    const headers = visibleColumns ? visibleColumns.map(columnId => columnId !== 'COLUMN_BREAK' ? allSheetColumns[columnId].name : '') : []
+    csvData.push(headers)
+
     const data = visibleRows ? visibleRows.map(rowId => {
       if(rowId !== 'ROW_BREAK') {
         const row = allSheetRows[rowId]
@@ -87,13 +94,57 @@ const SheetActionDownloadCsv = ({
         '[CELL_TYPE=' + columnCellType + ']' +
         '[WIDTH=' + columnWidth + ']'
     }) : []
-    
-    const csvData = isIncludeColumnSettings ? [ headers, columnSettingsToInclude, ...data ]  : [ headers, ...data ] 
+    isIncludeColumnSettings && csvData.push(columnSettingsToInclude)
+
+    isIncludeSheetViews && sheet.views.forEach(sheetViewId => {
+      const currentSheetView = allSheetViews[sheetViewId]
+      const currentSheetViewConfiguration = visibleColumns.map((columnId, index) => {
+
+        const currentColumnFilters = currentSheetView.filters.filter(filterId => allSheetFilters[filterId].columnId === columnId)
+        const currentColumnGroups = currentSheetView.groups.filter(groupId => allSheetGroups[groupId].columnId === columnId)
+        const currentColumnSorts = currentSheetView.sorts.filter(sortId => allSheetSorts[sortId].columnId === columnId)
+
+        const currentColumnFiltersString = currentColumnFilters.map(filterId => {
+          const sheetFilter = allSheetFilters[filterId]
+          return '[FILTER;' + 
+          'VALUE=' + sheetFilter.value + ';' +
+          'TYPE=' + sheetFilter.type + ';' + 
+          'CREATED_AT=' + sheetFilter.createdAt + 
+          ']'
+        })
+
+        const currentColumnGroupsString = currentColumnGroups.map(filterId => {
+          const sheetGroup = allSheetGroups[filterId]
+          return '[GROUP;' + 
+          'ORDER=' + sheetGroup.order + 
+          ']'
+        })
+
+        const currentColumnSortsString = currentColumnSorts.map(filterId => {
+          const sheetSort = allSheetSorts[filterId]
+          return '[SORT;' + 
+          'ORDER=' + sheetSort.order +
+          ']'
+        })
+
+        if(currentColumnFiltersString.length > 0 || currentColumnGroupsString.length > 0 || currentColumnSortsString.length > 0) {
+          return '[TS]' + 
+          (index === 0 ? '[SHEET_VIEW=' + currentSheetView.name + ']' : '') +
+          currentColumnFiltersString +
+          currentColumnGroupsString +
+          currentColumnSortsString
+        }
+
+        return (index === 0 ? '[TS][SHEET_VIEW=' + currentSheetView.name + ']' : '')
+      })
+      csvData.push(currentSheetViewConfiguration)
+    })
     
     const csvExporter = new ExportToCsv({
       filename: activeFilename
     })
-    csvExporter.generateCsv(csvData)
+
+    csvExporter.generateCsv([...csvData, ...data].filter(Boolean))
   }
 
   return (
@@ -124,6 +175,15 @@ const SheetActionDownloadCsv = ({
               onChange={() => setIsIncludeColumnSettings(!isIncludeColumnSettings)}/>
             <DownloadOptionText>
               Include column settings
+            </DownloadOptionText>
+          </DownloadOption>
+          <DownloadOption>
+            <DownloadOptionCheckbox
+              type="checkbox"
+              checked={isIncludeSheetViews}
+              onChange={() => setIsIncludeSheetViews(!isIncludeSheetViews)}/>
+            <DownloadOptionText>
+              Include views
             </DownloadOptionText>
           </DownloadOption>
         </DownloadOptions>

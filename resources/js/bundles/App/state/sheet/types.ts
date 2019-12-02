@@ -228,7 +228,7 @@ export type ISheetCellType =
 //-----------------------------------------------------------------------------
 export interface ISheetFilter {
   id: string
-  createdAt?: string
+  createdAt: string
   sheetId: string
   sheetViewId: string
   columnId: string
@@ -246,7 +246,7 @@ export type ISheetFilterType = '=' | '!=' | '>' | '>=' | '<' | '<='
 //-----------------------------------------------------------------------------
 export interface ISheetGroup {
   id: string
-  createdAt?: string
+  createdAt: string
   sheetId: string
   sheetViewId: string
   columnId: string
@@ -265,7 +265,7 @@ export type ISheetGroupOrder = 'ASC' | 'DESC'
 //-----------------------------------------------------------------------------
 export interface ISheetSort {
   id: string
-  createdAt?: string
+  createdAt: string
   sheetId: string
   sheetViewId: string
   columnId: string
