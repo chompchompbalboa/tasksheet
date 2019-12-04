@@ -42,12 +42,14 @@ const SheetActionDownloadCsv = ({
 
   const activeFilename = useSelector((state: IAppState) => state.folder.files && state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].name)
   const sheet = allSheets && allSheets[sheetId]
+  
+  const activeSheetView = allSheetViews[sheet.activeSheetViewId]
 
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
   const [ filename, setFilename ] = useState(activeFilename)
-  const [ isIncludeColumnSettings, setIsIncludeColumnSettings ] = useState(true)
-  const [ isIncludeSheetViews, setIsIncludeSheetViews ] = useState(true)
-  const [ isIncludeAllSheetRows, setIsIncludeAllSheetRows ] = useState(true)
+  const [ isIncludeColumnSettings, setIsIncludeColumnSettings ] = useState(false)
+  const [ isIncludeSheetViews, setIsIncludeSheetViews ] = useState(false)
+  const [ isIncludeAllSheetRows, setIsIncludeAllSheetRows ] = useState(false)
 
   useEffect(() => {
     setFilename(activeFilename)
@@ -64,7 +66,6 @@ const SheetActionDownloadCsv = ({
 
   const downloadCsv = () => {
     let csvData = []
-    const activeSheetView = allSheetViews[sheet.activeSheetViewId]
     const visibleColumns = activeSheetView.visibleColumns
     const visibleRows = sheet.visibleRows
     const sheetRows = sheet.rows
@@ -194,7 +195,7 @@ const SheetActionDownloadCsv = ({
               checked={!isIncludeAllSheetRows}
               onChange={() => setIsIncludeAllSheetRows(!isIncludeAllSheetRows)}/>
             <DownloadOptionText>
-              Only include currently visible rows
+              Only include rows from "{activeSheetView.name}"
             </DownloadOptionText>
           </DownloadOption>
         </DownloadOptions>

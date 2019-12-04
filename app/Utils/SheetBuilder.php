@@ -9,6 +9,9 @@ use App\Models\SheetColumn;
 use App\Models\SheetRow;
 use App\Models\SheetCell;
 use App\Models\SheetView;
+use App\Models\SheetFilter;
+use App\Models\SheetSort;
+use App\Models\SheetGroup;
 
 class SheetBuilder
 {
@@ -29,14 +32,14 @@ class SheetBuilder
   }
 
 
-  public static function createSheetColumnsRowsAndCellsFromCsvRows($newSheet, $arrayOfRows) {
+  public static function createSheetColumnsRowsAndCellsFromCsvRows($newSheet, $csvRows) {
     // Create the sheet's columns by building an array that will be bulk 
     // inserted into the database. During column creation, we also build 
     // the sheet view's visible columns
     $newSheetColumns = [];
     $columnIds = [];
     $currentColumnIndex = 0;
-    foreach($arrayOfRows[0] as $columnName => $cellValue) {
+    foreach($csvRows[0] as $columnName => $cellValue) {
       // Bail out if the current column is a column break
       if(!Str::contains($columnName, 'COLUMN_BREAK')) {
         // Create the new column.
@@ -64,7 +67,7 @@ class SheetBuilder
     // bulk inserted into the database. 
     $newSheetRows = [];
     $newSheetCells = [];
-    foreach($arrayOfRows as $rowFromCsv) {
+    foreach($csvRows as $rowFromCsv) {
 
       // Bail out if this row contains configuration data
       $firstCellValue = $rowFromCsv[array_keys($rowFromCsv)[0]];
@@ -110,6 +113,49 @@ class SheetBuilder
 
     return $columnIds;
   }
+  
+  
+  private function createSheetFilter(string $sheetId, string $sheetViewId, string $sheetColumnId, string $sheetViewSettingValue) {
+    $sheetFilterSettings = $this->getSheetViewSetting($sheetViewSettingValue);
+    SheetFilter::create([
+      'id' => Str::uuid()->toString(), 
+      'sheetId' => $sheetId,
+      'sheetViewId' => $sheetViewId,
+      'columnId' => $sheetColumnId,
+      'value' => $sheetFilterSettings['VALUE'],
+      'type' => str_replace('**', '', $sheetFilterSettings['TYPE']),
+      'isLocked' => false,
+      'createdAt' => $sheetFilterSettings['CREATED_AT']
+    ]);
+  }
+  
+  
+  private function createSheetGroup(string $sheetId, string $sheetViewId, string $sheetColumnId, string $sheetViewSettingValue) {
+    $sheetGroupSettings = $this->getSheetViewSetting($sheetViewSettingValue);
+    SheetGroup::create([
+      'id' => Str::uuid()->toString(), 
+      'sheetId' => $sheetId,
+      'sheetViewId' => $sheetViewId,
+      'columnId' => $sheetColumnId,
+      'order' => $sheetGroupSettings['ORDER'],
+      'isLocked' => false,
+      'createdAt' => $sheetGroupSettings['CREATED_AT']
+    ]);
+  }
+  
+  
+  private function createSheetSort(string $sheetId, string $sheetViewId, string $sheetColumnId, string $sheetViewSettingValue) {
+    $sheetSortSettings = $this->getSheetViewSetting($sheetViewSettingValue);
+    SheetSort::create([
+      'id' => Str::uuid()->toString(), 
+      'sheetId' => $sheetId,
+      'sheetViewId' => $sheetViewId,
+      'columnId' => $sheetColumnId,
+      'order' => $sheetSortSettings['ORDER'],
+      'isLocked' => false,
+      'createdAt' => $sheetSortSettings['CREATED_AT']
+    ]);
+  }
 
   
   public function createSheetViews(string $sheetId, array $visibleColumns, array $sheetViewsSettings) {
@@ -125,6 +171,23 @@ class SheetBuilder
         'visibleColumns' => $visibleColumns
       ]);
       array_push($newSheetViewIds, $newSheetView->id);
+      foreach($sheetViewSettings as $index => $sheetViewSettingsColumn) {
+        $sheetColumnId = $visibleColumns[$index];
+        foreach($sheetViewSettingsColumn as $sheetViewSettingKey => $sheetViewSettingValue) {
+          switch($sheetViewSettingKey) {
+            case 'FILTER':
+              $this->createSheetFilter($sheetId, $newSheetView->id, $sheetColumnId, $sheetViewSettingValue);
+            break;
+            case 'GROUP':
+              $this->createSheetGroup($sheetId, $newSheetView->id, $sheetColumnId, $sheetViewSettingValue);
+            break;
+            case 'SORT':
+              $this->createSheetSort($sheetId, $newSheetView->id, $sheetColumnId, $sheetViewSettingValue);
+            break;
+            default:
+          }
+        }
+      }
     }
     return $newSheetViewIds;
   }
@@ -188,6 +251,25 @@ class SheetBuilder
     }
     
     return count($sheetViewsSettings) > 0 ? $sheetViewsSettings : null;
+  }
+  
+  
+  private function getSheetViewSetting(string $sheetViewSettingValue) {
+    $sheetViewSetting = [];
+    $sheetViewSettingValueArray = explode(';', str_replace(['{', '}'], '', $sheetViewSettingValue));
+    foreach($sheetViewSettingValueArray as $sheetViewSettingValueString) {
+      $sheetViewSettingArray = explode('=', $sheetViewSettingValueString);
+      $sheetViewSettingKey = $sheetViewSettingArray[0];
+      if(count($sheetViewSettingArray) > 2) {
+        array_shift($sheetViewSettingArray);
+        $sheetViewSettingValue = implode('=', $sheetViewSettingArray);
+      }
+      else {
+        $sheetViewSettingValue = $sheetViewSettingArray[1];
+      }
+      $sheetViewSetting[$sheetViewSettingKey] = $sheetViewSettingValue;
+    }
+    return $sheetViewSetting;
   }
   
 
