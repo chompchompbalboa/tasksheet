@@ -9,11 +9,12 @@ import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import { IFile, IFolder } from '@app/state/folder/types'
 
 import { createFile, updateFile } from '@app/state/folder/actions'
+import { openFileInNewTab } from '@app/state/tab/actions'
 
 //-----------------------------------------------------------------------------
 // Create Sheet
 //-----------------------------------------------------------------------------
-export const createSheet = (folderId: IFolder['id']): IThunkAction => {
+export const createSheet = (folderId: IFolder['id'], newFileName?: string, openSheetAfterCreate: boolean = false): IThunkAction => {
   return async (dispatch: IThunkDispatch) => {
 
     const newSheetId = createUuid()
@@ -21,7 +22,7 @@ export const createSheet = (folderId: IFolder['id']): IThunkAction => {
     const newFile: IFile = {
       id: createUuid(),
       folderId: folderId,
-      name: null,
+      name: newFileName || null,
       type: 'SHEET',
       typeId: newSheetId,
       isPreventedFromSelecting: true
@@ -32,6 +33,7 @@ export const createSheet = (folderId: IFolder['id']): IThunkAction => {
     await mutation.createSheet(newSheetId)
     
     dispatch(updateFile(newFile.id, { isPreventedFromSelecting: false }, true))
+    openSheetAfterCreate && dispatch(openFileInNewTab(newFile.id))
     
   }
 }

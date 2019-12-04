@@ -12,11 +12,13 @@ import {
 //-----------------------------------------------------------------------------
 export const initialModalState: IModalState = {
 	activeModal: null,
-  createSheetFolderId: null
+  createSheetFolderId: null,
+  openSheetAfterCreate: false
 }
 export type IModalState = {
 	activeModal: IModal,
-  createSheetFolderId: string
+  createSheetFolderId: string,
+  openSheetAfterCreate: boolean
 }
 
 //-----------------------------------------------------------------------------

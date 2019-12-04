@@ -25,6 +25,7 @@ const SheetActionUploadCsv = () => {
 
   const dispatch = useDispatch()
   const isDemoUser = useSelector((state: IAppState) => state.user.subscription.type === 'DEMO')
+  const userFolderId = useSelector((state: IAppState) => state.user.folderId)
 
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
 
@@ -35,7 +36,7 @@ const SheetActionUploadCsv = () => {
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth'})
     }
     else {
-      dispatch(updateModal({ activeModal: 'CREATE_SHEET_FROM_CSV' }))
+      dispatch(updateModal({ activeModal: 'CREATE_SHEET_FROM_CSV', createSheetFolderId: userFolderId, openSheetAfterCreate: true }))
     }
   }
 

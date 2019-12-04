@@ -25,6 +25,7 @@ const FoldersSidebar = ({
   // State
   const activeFolderPath = useSelector((state: IAppState) => selectActiveFolderPath(state))
   const rootFolderIds = useSelector((state: IAppState) => selectRootFolderIds(state))
+  
   // Dispatch
   const dispatch = useDispatch()
   const createSheet = useCallback((folderId: IFolder['id']) => dispatch(createSheetAction(folderId)), [])

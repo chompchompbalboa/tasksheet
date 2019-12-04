@@ -9,11 +9,12 @@ import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import { IFile, IFolder } from '@app/state/folder/types'
 
 import { createFile, updateFile } from '@app/state/folder/actions'
+import { openFileInNewTab } from '@app/state/tab/actions'
 
 //-----------------------------------------------------------------------------
 // Create Sheet From Csv
 //-----------------------------------------------------------------------------
-export const createSheetFromCsv = (folderId: IFolder['id'], fileToUpload: File): IThunkAction => {
+export const createSheetFromCsv = (folderId: IFolder['id'], fileToUpload: File, openSheetAfterCreate: boolean = false): IThunkAction => {
   return async (dispatch: IThunkDispatch) => {
 
     const newSheetId = createUuid()
@@ -31,6 +32,7 @@ export const createSheetFromCsv = (folderId: IFolder['id'], fileToUpload: File):
 
     mutation.createSheetFromCsv(newSheetId, fileToUpload).then(() => {
       dispatch(updateFile(newFile.id, { isPreventedFromSelecting: false }, true))
+      openSheetAfterCreate && dispatch(openFileInNewTab(newFile.id))
     })
 
   }

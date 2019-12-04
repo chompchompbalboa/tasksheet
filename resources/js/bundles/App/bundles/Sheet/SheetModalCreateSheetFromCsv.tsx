@@ -2,7 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { ChangeEvent, useEffect, useRef } from 'react'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
@@ -25,7 +25,7 @@ const mapStateToProps = (state: IAppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: IThunkDispatch) => ({
-  createSheetFromCsv: (folderId: IFolder['id'], fileToCsv: File) => dispatch(createSheetFromCsvAction(folderId, fileToCsv)),
+  createSheetFromCsv: (folderId: IFolder['id'], fileToCsv: File, openSheetAfterCreate: boolean) => dispatch(createSheetFromCsvAction(folderId, fileToCsv, openSheetAfterCreate)),
   updateModal: (updates: IModalUpdates) => dispatch(updateModalAction(updates))
 })
 
@@ -39,6 +39,8 @@ const SheetModalCreateSheetFromCsv = ({
 }: SheetModalCreateSheetFromCsvProps) => {
   
   const input = useRef(null)
+  
+  const openSheetAfterCreate = useSelector((state: IAppState) => state.modal.openSheetAfterCreate)
 
   useEffect(() => {
     input.current.click()
@@ -48,13 +50,13 @@ const SheetModalCreateSheetFromCsv = ({
   // This fires when a file is selected or the user hits cancel
   const handleFileDialogClose = (e: Event) => {
     removeEventListener('focus', handleFileDialogClose)
-    setTimeout(() => updateModal({ activeModal: null, createSheetFolderId: null }), 500)
+    setTimeout(() => updateModal({ activeModal: null, createSheetFolderId: null, openSheetAfterCreate: false }), 500)
   }
   
   // This only fires when a file is selected
   const handleFileDialogSelect = (e: ChangeEvent<HTMLInputElement>) => {
     const fileToCsv = e.target.files[0]
-    createSheetFromCsv(folderId, fileToCsv)
+    createSheetFromCsv(folderId, fileToCsv, openSheetAfterCreate)
   }
 
   return (
@@ -70,7 +72,7 @@ const SheetModalCreateSheetFromCsv = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetModalCreateSheetFromCsvProps {
-  createSheetFromCsv?(folderId: IFolder['id'], fileToCsv: File): void
+  createSheetFromCsv?(folderId: IFolder['id'], fileToCsv: File, openSheetAfterCreate: boolean): void
   folderId: IFolder['id']
   updateModal?(updates: IModalUpdates): void
 }

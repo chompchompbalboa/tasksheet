@@ -63,7 +63,7 @@ class SheetController extends Controller
       $newSheetView = SheetView::create([ 
         'id' => Str::uuid()->toString(), 
         'sheetId' => $newSheetId,
-        'name' => 'New Quick View',
+        'name' => 'Default View',
         'visibleColumns' => [],
         'isLocked' => false
       ]);
@@ -150,13 +150,28 @@ class SheetController extends Controller
       
       // Get and apply the column settings from the csv
       $columnSettings = $this->sheetBuilder->getColumnSettings($csvRows);
-      $this->sheetBuilder->applyColumnSettings($columnIds, $columnSettings);
+      if(!is_null($columnSettings)) { 
+        $this->sheetBuilder->applyColumnSettings($columnIds, $columnSettings);
+      }
 
       // Get sheet views from the csv
       $sheetViewsSettings = $this->sheetBuilder->getSheetViewsSettings($csvRows);
-      $newSheetViewIds = $this->sheetBuilder->createSheetViews($newSheet->id, $columnIds, $sheetViewsSettings);
-      $newSheet->activeSheetViewId = $newSheetViewIds[0];
-      $newSheet->save();
+      if(!is_null($sheetViewsSettings)) {
+        $newSheetViewIds = $this->sheetBuilder->createSheetViews($newSheet->id, $columnIds, $sheetViewsSettings);
+        $newSheet->activeSheetViewId = $newSheetViewIds[0];
+        $newSheet->save();
+      }
+      else {
+        $newSheetView = SheetView::create([ 
+          'id' => Str::uuid()->toString(), 
+          'sheetId' => $newSheetId,
+          'name' => 'Default View',
+          'isLocked' => false,
+          'visibleColumns' => $columnIds
+        ]);
+        $newSheet->activeSheetViewId = $newSheetView->id;
+        $newSheet->save();
+      }
 
       // Return the response
       return response()->json(null, 200);

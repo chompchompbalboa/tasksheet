@@ -15,7 +15,7 @@ class User extends Authenticatable
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
   
-    protected $visible = [ 'id', 'name', 'email', 'active', 'color', 'subscription' ];
+    protected $visible = [ 'id', 'name', 'email', 'folderId', 'active', 'color', 'subscription' ];
     protected $fillable = [ 'name', 'email', 'password', 'folderId' ];
     protected $with = [ 'active', 'color', 'subscription' ];
   

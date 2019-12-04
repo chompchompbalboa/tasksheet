@@ -5,6 +5,7 @@ export interface IUser {
 	id: string
 	name: string
 	email: string
+  folderId: string
 	active: IUserActive
 	color: IUserColor
   subscription: IUserSubscription
