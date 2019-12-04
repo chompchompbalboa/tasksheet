@@ -47,6 +47,7 @@ const SheetActionDownloadCsv = ({
   const [ filename, setFilename ] = useState(activeFilename)
   const [ isIncludeColumnSettings, setIsIncludeColumnSettings ] = useState(true)
   const [ isIncludeSheetViews, setIsIncludeSheetViews ] = useState(true)
+  const [ isIncludeAllSheetRows, setIsIncludeAllSheetRows ] = useState(true)
 
   useEffect(() => {
     setFilename(activeFilename)
@@ -66,11 +67,13 @@ const SheetActionDownloadCsv = ({
     const activeSheetView = allSheetViews[sheet.activeSheetViewId]
     const visibleColumns = activeSheetView.visibleColumns
     const visibleRows = sheet.visibleRows
+    const sheetRows = sheet.rows
 
     const headers = visibleColumns ? visibleColumns.map(columnId => columnId !== 'COLUMN_BREAK' ? allSheetColumns[columnId].name : '') : []
     csvData.push(headers)
 
-    const data = visibleRows ? visibleRows.map(rowId => {
+    const dataRows = isIncludeAllSheetRows ? sheetRows : visibleRows
+    const data = dataRows ? dataRows.map(rowId => {
       if(rowId !== 'ROW_BREAK') {
         const row = allSheetRows[rowId]
         return visibleColumns.map(columnId => {
@@ -183,6 +186,15 @@ const SheetActionDownloadCsv = ({
               onChange={() => setIsIncludeSheetViews(!isIncludeSheetViews)}/>
             <DownloadOptionText>
               Include views
+            </DownloadOptionText>
+          </DownloadOption>
+          <DownloadOption>
+            <DownloadOptionCheckbox
+              type="checkbox"
+              checked={!isIncludeAllSheetRows}
+              onChange={() => setIsIncludeAllSheetRows(!isIncludeAllSheetRows)}/>
+            <DownloadOptionText>
+              Only include currently visible rows
             </DownloadOptionText>
           </DownloadOption>
         </DownloadOptions>

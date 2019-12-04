@@ -131,50 +131,10 @@ class SheetController extends Controller
       $newSheetId = $request->input('newSheetId');
       $csvFile = $request->file('fileToUpload')->path();
 
-      // Build the array we'll use to create the sheet
-      $csvRows = $this->sheetBuilder->getCsvRows($csvFile);
-      
-      // Get column settings from the csv
-      $columnSettings = $this->sheetBuilder->getColumnSettings($csvRows);
-      
-      // Get sheet views from the csv
-      $sheetViewsSettings = $this->sheetBuilder->getSheetViewsSettings($csvRows);
-      dd($sheetViewsSettings);
       // Create the sheet
-      /*
       $newSheet = Sheet::create([ 
         'id' => $newSheetId 
       ]);
-      */
-
-      // Create the sheet views
-      $currentRowIndex = 0;
-      $currentRowContainsConfigurationData = true;
-      $configurationData = [];
-      while($currentRowContainsConfigurationData) {
-        $currentRow = $arrayOfRowsFromCsv[$currentRowIndex];
-        $currentRowFirstCellValue = $currentRow[array_keys($currentRow)[0]];
-        if(Str::contains($currentRowFirstCellValue, '[TS]')) {
-          $currentRowConfigurationData = [];
-          foreach($currentRow as $currentRowCurrentCellValue) {
-            array_push($currentRowConfigurationData, $currentRowCurrentCellValue);
-          }
-          array_push($configurationData, $currentRowConfigurationData);
-          $currentRowIndex++;
-        }
-        else {
-          $currentRowContainsConfigurationData = false;
-        }
-      }
-      $newSheetView = SheetView::create([ 
-        'id' => Str::uuid()->toString(), 
-        'sheetId' => $newSheetId,
-        'name' => 'New Quick View',
-        'isLocked' => false,
-        'visibleColumns' => []
-      ]);
-      $newSheet->activeSheetViewId = $newSheetView->id;
-      $newSheet->save();
 
       // Create the sheet styles
       $newSheetStyles = SheetStyles::create([ 
@@ -182,8 +142,21 @@ class SheetController extends Controller
         'sheetId' => $newSheetId 
       ]);
 
+      // Get rows from the csv
+      $csvRows = $this->sheetBuilder->getCsvRows($csvFile);
+
       // Create the sheet columns, rows and cells
-      $columnIds = $this->createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $arrayOfRowsFromCsv);
+      $columnIds = $this->sheetBuilder->createSheetColumnsRowsAndCellsFromCsvRows($newSheet, $csvRows);
+      
+      // Get and apply the column settings from the csv
+      $columnSettings = $this->sheetBuilder->getColumnSettings($csvRows);
+      $this->sheetBuilder->applyColumnSettings($columnIds, $columnSettings);
+
+      // Get sheet views from the csv
+      $sheetViewsSettings = $this->sheetBuilder->getSheetViewsSettings($csvRows);
+      $newSheetViewIds = $this->sheetBuilder->createSheetViews($newSheet->id, $columnIds, $sheetViewsSettings);
+      $newSheet->activeSheetViewId = $newSheetViewIds[0];
+      $newSheet->save();
 
       // Return the response
       return response()->json(null, 200);
