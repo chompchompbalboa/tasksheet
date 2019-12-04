@@ -15,10 +15,17 @@ use App\Models\SheetStyles;
 use App\Models\SheetView;
 
 use App\Utils\Csv;
+use App\Utils\SheetBuilder;
 use App\Utils\SheetUtils;
 
 class SheetController extends Controller
 {
+  
+    public function __construct(SheetBuilder $sheetBuilder) 
+    {
+      $this->sheetBuilder = $sheetBuilder; 
+    }
+  
     public static function show(Sheet $sheet)
     {
       return response()->json($sheet, 200);
@@ -122,10 +129,17 @@ class SheetController extends Controller
     {
       // Get the request inputs
       $newSheetId = $request->input('newSheetId');
+      $csvFile = $request->file('fileToUpload')->path();
 
-      // Build the array we'll use to insert the columns, rows, and cells
-      $arrayOfRows = Csv::toArray($request->file('fileToUpload')->path());
-
+      // Build the array we'll use to create the sheet
+      $csvRows = $this->sheetBuilder->getCsvRows($csvFile);
+      
+      // Get column settings from the csv
+      $columnSettings = $this->sheetBuilder->getColumnSettings($csvRows);
+      
+      // Get sheet views from the csv
+      $sheetViewsSettings = $this->sheetBuilder->getSheetViewsSettings($csvRows);
+      dd($sheetViewsSettings);
       // Create the sheet
       /*
       $newSheet = Sheet::create([ 
@@ -138,7 +152,7 @@ class SheetController extends Controller
       $currentRowContainsConfigurationData = true;
       $configurationData = [];
       while($currentRowContainsConfigurationData) {
-        $currentRow = $arrayOfRows[$currentRowIndex];
+        $currentRow = $arrayOfRowsFromCsv[$currentRowIndex];
         $currentRowFirstCellValue = $currentRow[array_keys($currentRow)[0]];
         if(Str::contains($currentRowFirstCellValue, '[TS]')) {
           $currentRowConfigurationData = [];
@@ -169,7 +183,7 @@ class SheetController extends Controller
       ]);
 
       // Create the sheet columns, rows and cells
-      $columnIds = $this->createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $arrayOfRows);
+      $columnIds = $this->createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $arrayOfRowsFromCsv);
 
       // Return the response
       return response()->json(null, 200);

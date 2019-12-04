@@ -106,36 +106,35 @@ const SheetActionDownloadCsv = ({
 
         const currentColumnFiltersString = currentColumnFilters.map(filterId => {
           const sheetFilter = allSheetFilters[filterId]
-          return '[FILTER;' + 
+          return '[FILTER={' + 
           'VALUE=' + sheetFilter.value + ';' +
-          'TYPE=' + sheetFilter.type + ';' + 
-          'CREATED_AT=' + sheetFilter.createdAt + 
-          ']'
+          'TYPE=**' + sheetFilter.type + '**;' + 
+          'CREATED_AT=' + sheetFilter.createdAt + '}]'
         })
 
         const currentColumnGroupsString = currentColumnGroups.map(filterId => {
           const sheetGroup = allSheetGroups[filterId]
-          return '[GROUP;' + 
-          'ORDER=' + sheetGroup.order + 
-          ']'
+          return '[GROUP={' + 
+          'ORDER=' + sheetGroup.order + ';' + 
+          'CREATED_AT=' + sheetGroup.createdAt + '}]'
         })
 
         const currentColumnSortsString = currentColumnSorts.map(filterId => {
           const sheetSort = allSheetSorts[filterId]
-          return '[SORT;' + 
-          'ORDER=' + sheetSort.order +
-          ']'
+          return '[SORT={' + 
+          'ORDER=' + sheetSort.order + ';' + 
+          'CREATED_AT=' + sheetSort.createdAt + '}]'
         })
 
         if(currentColumnFiltersString.length > 0 || currentColumnGroupsString.length > 0 || currentColumnSortsString.length > 0) {
           return '[TS]' + 
-          (index === 0 ? '[SHEET_VIEW=' + currentSheetView.name + ']' : '') +
+          '[SHEET_VIEW_NAME=' + currentSheetView.name + ']' +
           currentColumnFiltersString +
           currentColumnGroupsString +
           currentColumnSortsString
         }
 
-        return (index === 0 ? '[TS][SHEET_VIEW=' + currentSheetView.name + ']' : '')
+        return (index === 0 ? '[TS][SHEET_VIEW_NAME=' + currentSheetView.name + ']' : '')
       })
       csvData.push(currentSheetViewConfiguration)
     })
