@@ -111,10 +111,17 @@ export const resolveSheetVisibleRows = (
     const row = rows[rowId]
     return filterIds.every(filterId => {
       const filter = filters[filterId]
-      const cell = cells[row.cells[filter.columnId]]
-      return resolveSheetFilter(cell.value, filter.value, filter.type)
+      if(filter) {
+        const cell = cells[row.cells[filter.columnId]]
+        if(cell) {
+          return resolveSheetFilter(cell.value, filter.value, filter.type)
+        }
+        return true
+      }
+      return true
     }) ? row.id : undefined
   }).filter(Boolean)
+
 
   // Sort
   const sortByValue = sortIds && sortIds.map(sortId => {
@@ -126,6 +133,7 @@ export const resolveSheetVisibleRows = (
   })
   const sortOrder = sortIds && sortIds.map(sortId => sorts[sortId].order === 'ASC' ? 'asc' : 'desc')
   const filteredSortedRowIds = orderBy(filteredRowIds, sortByValue, sortOrder)
+
   
   // Group
   if(groupIds.length === 0) {
@@ -147,6 +155,7 @@ export const resolveSheetVisibleRows = (
       filteredSortedGroupedRowIds.push(...prioritizedGroup)
       filteredSortedGroupedRowIds.push('ROW_BREAK')
     })
+
     return filteredSortedGroupedRowIds
   }
 }
