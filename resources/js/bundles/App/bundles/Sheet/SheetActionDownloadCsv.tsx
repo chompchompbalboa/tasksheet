@@ -43,7 +43,7 @@ const SheetActionDownloadCsv = ({
   const activeFilename = useSelector((state: IAppState) => state.folder.files && state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].name)
   const sheet = allSheets && allSheets[sheetId]
   
-  const activeSheetView = allSheetViews[sheet.activeSheetViewId]
+  const activeSheetView = sheet && allSheetViews[sheet.activeSheetViewId]
 
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
   const [ filename, setFilename ] = useState(activeFilename)
@@ -195,7 +195,7 @@ const SheetActionDownloadCsv = ({
               checked={!isIncludeAllSheetRows}
               onChange={() => setIsIncludeAllSheetRows(!isIncludeAllSheetRows)}/>
             <DownloadOptionText>
-              Only include rows from "{activeSheetView.name}"
+              Only include rows from {activeSheetView ? '"' + activeSheetView.name + '"' : 'the active sheet view' }
             </DownloadOptionText>
           </DownloadOption>
         </DownloadOptions>
