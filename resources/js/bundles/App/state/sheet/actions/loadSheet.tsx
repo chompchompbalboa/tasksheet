@@ -74,7 +74,9 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
           isCellSelectedSheetIds: new Set() as Set<string>,
         }
         sheetRowCells[sheetRowCell.columnId] = sheetRowCell.id
-        normalizedSheetColumns[sheetRowCell.columnId].allCellValues.add(sheetRowCell.value)
+        if(sheetRowCell.value && ![null, ''].includes(sheetRowCell.value)) {
+          normalizedSheetColumns[sheetRowCell.columnId].allCellValues.add(sheetRowCell.value)
+        }
       })
       normalizedSheetRows[sheetRow.id] = { 
         id: sheetRow.id, 

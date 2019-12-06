@@ -61,7 +61,7 @@ const SheetCellBoolean = ({
   }
   
   const handleChange = (checked: boolean) => {
-    const nextCellValue = checked ? '1' : '0'
+    const nextCellValue = checked ? 'Checked' : ''
     updateCellValue(nextCellValue)
   }
   
@@ -70,7 +70,7 @@ const SheetCellBoolean = ({
       data-testid="SheetCellBoolean">
       <StyledInput 
         type="checkbox"
-        checked={value && ['1', 'TRUE', 'true'].includes(value)}
+        checked={value && value === 'Checked'}
         onChange={(e) => handleChange(e.target.checked)}/>
     </Container>
   )

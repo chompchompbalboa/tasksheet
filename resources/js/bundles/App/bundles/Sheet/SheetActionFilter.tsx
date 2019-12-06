@@ -33,19 +33,55 @@ const SheetActionFilter = ({
   sheetId
 }: SheetActionFilterProps) => {
 
+  // Refs
+  const autosizeInput = useRef(null)
+  const container = useRef(null)
+  const dropdown = useRef(null)
+
   // Redux
   const dispatch = useDispatch()
-
-  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
-
   const allSheetColumns = useSelector((state: IAppState) => state.sheet.allSheetColumns)
   const allSheetFilters = useSelector((state: IAppState) => state.sheet.allSheetFilters)
-
   const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
   const activeSheetViewVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].visibleColumns)
   const activeSheetViewFilters = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].filters)
+  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 
-  // Filter Types  
+  // State
+  const [ localSheetFilters, setLocalSheetFilters ] = useState(activeSheetViewFilters)
+  const [ localAllSheetFilters, setLocalAllSheetFilters ] = useState(allSheetFilters)
+
+  const [ autosizeInputValue, setAutosizeInputValue ] = useState('')
+  const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
+  const [ dropdownHighlightedOptionIndex, setDropdownHighlightedOptionIndex ] = useState(null)
+  const [ dropdownOptions, setDropdownOptions ] = useState(null)
+
+  const [ isColumnNameValid, setIsColumnNameValid ] = useState(false)
+  const [ isFilterTypeValid, setIsFilterTypeValid ] = useState(false)
+  const [ isFilterValid, setIsFilterValid ] = useState(false)
+  const [ filterColumnId, setFilterColumnId ] = useState(null)
+  const [ filterFilterType, setFilterFilterType ] = useState(null)
+  const [ filterValue, setFilterValue ] = useState(null)
+  
+  // Update local filters as needed
+  useEffect(() => {
+    setLocalAllSheetFilters(allSheetFilters)
+    setLocalSheetFilters(activeSheetViewFilters)
+  }, [ allSheetFilters, activeSheetViewFilters ])
+
+  // Add event listeners when the dropdown is visible
+  useEffect(() => {
+    isDropdownVisible ? addEventListener('mousedown', closeDropdownOnClickOutside) : removeEventListener('mousedown', closeDropdownOnClickOutside)
+    return () => removeEventListener('mousedown', closeDropdownOnClickOutside)
+  }, [ isDropdownVisible ])
+
+  // When the filter is valid, listen for Enter
+  useEffect(() => {
+    isFilterValid ? addEventListener('keypress', handleKeypressWhileFilterIsValid) : removeEventListener('keypress', handleKeypressWhileFilterIsValid)
+    return () => removeEventListener('keypress', handleKeypressWhileFilterIsValid)
+  }, [ autosizeInputValue, isFilterValid ])
+
+  // Filter Types
   const validFilterTypes: ISheetFilterType[] = ['!=', '>=', '<=', '=', '>', '<'] // The multicharacter items need to be before the single character items in this array for the validator to work correctly
 
   // Column Names
@@ -55,9 +91,20 @@ const SheetActionFilter = ({
     }
   })
 
+  // Close the dropdown on click outside
+  const closeDropdownOnClickOutside = (e: Event) => {
+    if(!dropdown.current.contains(e.target) && !container.current.contains(e.target)) {
+      setIsDropdownVisible(false)
+      setTimeout(() => batch(() => {
+        dispatch(allowSelectedCellEditing(sheetId))
+        dispatch(allowSelectedCellNavigation(sheetId))
+      }), 10)
+    }
+  }
+
   // Get the dropdown options
   const getDropdownOptions = (nextAutosizeInputValue: string, isColumnNameValid: boolean, isFilterTypeValid: boolean, isFilterValid: boolean, validColumnId: string, filterType: ISheetFilterType) => {
-    
+    // Get all available dropdown options
     let options: { id: string, value: string }[] = []
     if(!isColumnNameValid) {
       options = activeSheetViewVisibleColumns && activeSheetViewVisibleColumns.map(columnId => { 
@@ -77,20 +124,18 @@ const SheetActionFilter = ({
         }
       })
     }
-    else if(validColumnId && filterType) {
-      const validColumn = allSheetColumns[validColumnId]
+    else {
+      const validColumn = allSheetColumns[validColumnId || filterColumnId]
       if(validColumn) {
         options = [ ...validColumn.allCellValues ].map(validCellValue => {
           return {
             id: validCellValue,
-            value: validColumn.name + ' ' + filterType + ' ' + validCellValue
+            value: validColumn.name + ' ' + (filterType || filterFilterType) + ' ' + validCellValue
           }
-        }).sort((a, b) => a.value.localeCompare(b.value))
+        }).sort((a, b) => b.value.localeCompare(a.value))
       }
     }
-    console.log(options)
-    console.log(isColumnNameValid, isFilterTypeValid, validColumnId, filterType)
-    
+    // filter the available dropdown options to only display ones the current input value matches
     const dropdownOptions = options && options.filter(option => {
       if(nextAutosizeInputValue) {
         const searchString = nextAutosizeInputValue.trim().toLowerCase().split(' ').join('')
@@ -100,112 +145,53 @@ const SheetActionFilter = ({
         else if(isColumnNameValid && !isFilterTypeValid) {
           return !validFilterTypes.some(validFilterType => validFilterType.split('').some(character => searchString.includes(character)))
         }
-        else if (isColumnNameValid && isFilterTypeValid && validColumnId) {
-          console.log('isColumnNameValid && isFilterTypeValid && validColumnId')
-          console.log(searchString)
-          console.log(option.value.trim().toLowerCase().split(' ').join(''))
+        else {
           return option.value.trim().toLowerCase().split(' ').join('').includes(searchString)
-          /*
-          const optionValueCharacters = option.value.split('')
-          let validIndexes: number[] = []
-          optionValueCharacters.forEach((character, index) => {
-            if(searchString.includes(character)) {
-              validIndexes.push(index)
-            }
-          })
-          return validIndexes.length > 0 
-            && (filterType === null || (filterType && filterType.length <= validIndexes.length))
-            && validIndexes[0] === 0 
-            && validIndexes.every((validIndex, index) => validIndexes[index - 1] ? (validIndex - validIndexes[index - 1]) === 1 : true)
-          */
         }
         return true
       }
       return true
     })
-    console.log(dropdownOptions)
     return !isColumnNameValid ? dropdownOptions : dropdownOptions.reverse()
   }
 
-  // Set a local value for existing filters to allow for a quick ui update when the user presses enter
-  const [ localSheetFilters, setLocalSheetFilters ] = useState(activeSheetViewFilters)
-  const [ localAllSheetFilters, setLocalAllSheetFilters ] = useState(allSheetFilters)
-  useEffect(() => {
-    setLocalAllSheetFilters(allSheetFilters)
-    setLocalSheetFilters(activeSheetViewFilters)
-  }, [ allSheetFilters, activeSheetViewFilters ])
-
-  // Refs
-  const autosizeInput = useRef(null)
-  const container = useRef(null)
-  const dropdown = useRef(null)
-
-  // Input and dropdown
-  const [ autosizeInputValue, setAutosizeInputValue ] = useState('')
-  const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
-  const [ dropdownHighlightedOptionIndex, setDropdownHighlightedOptionIndex ] = useState(null)
-  const [ dropdownOptions, setDropdownOptions ] = useState(null)
-
-  // Validate filters
-  const [ isColumnNameValid, setIsColumnNameValid ] = useState(false)
-  const [ isFilterTypeValid, setIsFilterTypeValid ] = useState(false)
-  const [ isFilterValid, setIsFilterValid ] = useState(false)
-  const [ filterColumnId, setFilterColumnId ] = useState(null)
-  const [ filterFilterType, setFilterFilterType ] = useState(null)
-  const [ filterValue, setFilterValue ] = useState(null)
-
-  // Add event listeners when the dropdown is visible
-  useEffect(() => {
-    isDropdownVisible ? addEventListener('mousedown', closeDropdownOnClickOutside) : removeEventListener('mousedown', closeDropdownOnClickOutside)
-    return () => removeEventListener('mousedown', closeDropdownOnClickOutside)
-  }, [ isDropdownVisible ])
-
-  // When the filter is valid, listen for Enter
-  useEffect(() => {
-    isFilterValid ? addEventListener('keypress', handleKeypressWhileFilterIsValid) : removeEventListener('keypress', handleKeypressWhileFilterIsValid)
-    return () => removeEventListener('keypress', handleKeypressWhileFilterIsValid)
-  }, [ autosizeInputValue, isFilterValid ])
-
-  // Close the dropdown on click outside
-  const closeDropdownOnClickOutside = (e: Event) => {
-    if(!dropdown.current.contains(e.target) && !container.current.contains(e.target)) {
-      setIsDropdownVisible(false)
-      setTimeout(() => batch(() => {
-        dispatch(allowSelectedCellEditing(sheetId))
-        dispatch(allowSelectedCellNavigation(sheetId))
-      }), 10)
-    }
+  // Get the filter value
+  const getFilterValue = (nextAutosizeInputValue: string) => {
+    const reverseNextValue = clone(nextAutosizeInputValue).split('').reverse().join('')
+    const reverseValueStartArray = ['!', '>', '=', '<'].map(filterTypeCharacter => {
+      const index = reverseNextValue.indexOf(filterTypeCharacter)
+      return index > -1 ? index : null
+    }).filter(value => value !== null)
+    const reverseValueStartIndex = reverseValueStartArray.length === 0 ? null : Math.min(...reverseValueStartArray)
+    const valueStartIndex = reverseValueStartIndex !== null ? nextAutosizeInputValue.length - reverseValueStartIndex : null
+    return valueStartIndex !== null && valueStartIndex < nextAutosizeInputValue.trim().length ? clone(nextAutosizeInputValue).slice(valueStartIndex).trim() : null
   }
-
-  // Create a filter when the input value is a valid filter and the user presses enter
-  const handleKeypressWhileFilterIsValid = (e: KeyboardEvent) => {
-    if(e.key === 'Enter') {
-      if(isFilterValid) {
-        // Reset state
-        setAutosizeInputValue('')
-        setIsDropdownVisible(false)
-        setIsColumnNameValid(false)
-        setIsFilterTypeValid(false)
-        setIsFilterValid(false)
-        setFilterColumnId(null)
-        setFilterFilterType(null)
-        setFilterValue(null)
-        // New Filter
-        const newSheetFilter: ISheetFilter = {
-          id: createUuid(), 
-          createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
-          sheetId: sheetActiveSheetViewId ? null : sheetId,
-          sheetViewId: sheetActiveSheetViewId,
-          columnId: filterColumnId, 
-          value: filterValue, 
-          type: filterFilterType,
-          isLocked: false
-        }
-        setLocalAllSheetFilters({ ...localAllSheetFilters, [newSheetFilter.id]: newSheetFilter })
-        setLocalSheetFilters([ ...localSheetFilters, newSheetFilter.id ])
-        setTimeout(() => dispatch(createSheetFilter(sheetId, newSheetFilter)), 10)
-      }
+  
+  // Handle creating a sheet filter
+  const handleCreateSheetFilter = (columnId: string, filterType: ISheetFilterType, value: string) => {
+    // Reset state
+    setAutosizeInputValue('')
+    setIsDropdownVisible(false)
+    setIsColumnNameValid(false)
+    setIsFilterTypeValid(false)
+    setIsFilterValid(false)
+    setFilterColumnId(null)
+    setFilterFilterType(null)
+    setFilterValue(null)
+    // New Filter
+    const newSheetFilter: ISheetFilter = {
+      id: createUuid(), 
+      createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+      sheetId: sheetId,
+      sheetViewId: sheetActiveSheetViewId,
+      columnId: columnId, 
+      value: value, 
+      type: filterType,
+      isLocked: false
     }
+    setLocalAllSheetFilters({ ...localAllSheetFilters, [newSheetFilter.id]: newSheetFilter })
+    setLocalSheetFilters([ ...localSheetFilters, newSheetFilter.id ])
+    setTimeout(() => dispatch(createSheetFilter(sheetId, newSheetFilter)), 10)
   }
   
   // Handle the input value changing
@@ -236,8 +222,39 @@ const SheetActionFilter = ({
       dispatch(preventSelectedCellNavigation(sheetId))
     }), 10)
   }
+  
+  // Handle a filter delete
+  const handleDeleteSheetFilter = (filterId: string) => {
+    const { [filterId]: deletedFilter, ...nextLocalFilters } = localAllSheetFilters
+    const nextLocalSheetFilters = localSheetFilters.filter(localSheetFilterId => localSheetFilterId !== filterId)
+    setLocalAllSheetFilters(nextLocalFilters)
+    setLocalSheetFilters(nextLocalSheetFilters)
+    setTimeout(() => dispatch(deleteSheetFilter(sheetId, filterId)), 10)
+  }
+  
+  // Handle dropdown option click
+  const handleDropdownOptionClick = (option: IDropdownOption) => {
+    if(isColumnNameValid && isFilterTypeValid) {
+      const { columnId } = validateColumnName(option.value)
+      const { filterType } = validateFilterType(option.value)
+      const filterValue = getFilterValue(option.value)
+      handleCreateSheetFilter(columnId, filterType, filterValue)
+    }
+    else {
+      handleAutosizeInputChange(option.value)
+    }
+  }
 
-  // Check to see if the input contiains a valid column name
+  // Create a filter when the input value is a valid filter and the user presses enter
+  const handleKeypressWhileFilterIsValid = (e: KeyboardEvent) => {
+    if(e.key === 'Enter') {
+      if(isFilterValid) {
+        handleCreateSheetFilter(filterColumnId, filterFilterType, filterValue)
+      }
+    }
+  }
+  
+  // Check to see if the input contains a valid column name
   const validateColumnName = (nextAutosizeInputValue: string) => {
     // Combine the next input value into a single unspaced string
     const valueToTest = nextAutosizeInputValue.split(' ').join('')
@@ -278,32 +295,6 @@ const SheetActionFilter = ({
       isFilterTypeValidated: filterTypeIndex > -1,
       filterType: filterType
     }
-  }
-
-  // Get the filter value
-  const getFilterValue = (nextAutosizeInputValue: string) => {
-    const reverseNextValue = clone(nextAutosizeInputValue).split('').reverse().join('')
-    const reverseValueStartArray = ['!', '>', '=', '<'].map(filterTypeCharacter => {
-      const index = reverseNextValue.indexOf(filterTypeCharacter)
-      return index > -1 ? index : null
-    }).filter(value => value !== null)
-    const reverseValueStartIndex = reverseValueStartArray.length === 0 ? null : Math.min(...reverseValueStartArray)
-    const valueStartIndex = reverseValueStartIndex !== null ? nextAutosizeInputValue.length - reverseValueStartIndex : null
-    return valueStartIndex !== null && valueStartIndex < nextAutosizeInputValue.trim().length ? clone(nextAutosizeInputValue).slice(valueStartIndex).trim() : null
-  }
-  
-  // Handle a filter delete
-  const handleDeleteSheetFilter = (filterId: string) => {
-    const { [filterId]: deletedFilter, ...nextLocalFilters } = localAllSheetFilters
-    const nextLocalSheetFilters = localSheetFilters.filter(localSheetFilterId => localSheetFilterId !== filterId)
-    setLocalAllSheetFilters(nextLocalFilters)
-    setLocalSheetFilters(nextLocalSheetFilters)
-    setTimeout(() => dispatch(deleteSheetFilter(sheetId, filterId)), 10)
-  }
-  
-  // Handle dropdown option click
-  const handleDropdownOptionClick = (option: IDropdownOption) => {
-    handleAutosizeInputChange(option.value)
   }
 
   return (
@@ -443,8 +434,14 @@ const Dropdown = styled.div`
   top: calc(100% + 0.25rem);
   border-radius: 5px;
   box-shadow: 3px 3px 10px 0px rgba(150,150,150,1);
-  max-width: 15rem;
-  overflow: hidden;
+  max-height: 50vh;
+	overflow-y: scroll;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+	&::-webkit-scrollbar {
+		width: 0;
+		height: 0;
+	}
 `
 interface IDropdown {
   isDropdownVisible: boolean
@@ -454,9 +451,10 @@ const DropdownTextContainer = styled.div`
   padding: 0.1875rem 0.3rem;
   padding-right: 0.25rem;
   min-width: 5rem;
-  background-color: ${ ({ isFilterValid, userColorPrimary }: IDropdownTextContainer ) => isFilterValid ? userColorPrimary : 'rgb(232, 232, 232)'};
+  background-color: ${ ({ isFilterValid, userColorPrimary }: IDropdownTextContainer ) => isFilterValid ? userColorPrimary : 'rgb(233, 233, 233)'};
   color: ${ ({ isFilterValid }: IDropdownTextContainer ) => isFilterValid ? 'white' : 'inherit'};
-  border-radius: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 `
 interface IDropdownTextContainer {
   isFilterValid: boolean
@@ -468,6 +466,8 @@ const DropdownText = styled.span`
   font-style: ${ ({ isItalic }: IDropdownText ) => isItalic ? 'italic' : 'auto'};
   font-weight: ${ ({ isBold }: IDropdownText ) => isBold ? 'bold' : 'auto'};
   white-space: nowrap;
+  max-width: 15rem;
+  overflow: hidden;
 `
 interface IDropdownText {
   isBold: boolean
@@ -480,6 +480,7 @@ const DropdownOptions = styled.div``
 
 
 const DropdownOption = styled.div`
+  padding: 0.15rem 0.3rem;
   cursor: default;
   padding: 0.15rem 0.25rem;
   background-color: ${ ({ isHighlighted }: IStyledDropdownOption ) => isHighlighted ? 'rgb(240, 240, 240)' : 'transparent'};
