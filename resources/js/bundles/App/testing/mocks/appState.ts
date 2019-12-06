@@ -128,7 +128,8 @@ export const appStateFactory = ({
           sheetId: sheetId,
           name: sheetColumnId,
           width: 100,
-          typeId: columns[currentColumnNumber - 1]
+          typeId: columns[currentColumnNumber - 1],
+          allCellValues: new Set() as Set<string>
         }
         
         allSheetColumns[newSheetColumn.id] = newSheetColumn

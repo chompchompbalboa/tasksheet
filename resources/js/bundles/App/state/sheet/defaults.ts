@@ -47,7 +47,8 @@ export const defaultColumn = (sheetId: string): ISheetColumn => {
     sheetId: sheetId, 
     name: 'Column',
     typeId: 'STRING',
-    width: 100
+    width: 100,
+    allCellValues: new Set() as Set<string>
   }
 }
 

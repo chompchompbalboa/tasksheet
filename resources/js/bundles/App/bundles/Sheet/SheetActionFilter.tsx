@@ -56,35 +56,56 @@ const SheetActionFilter = ({
   })
 
   // Get the dropdown options
-  const getDropdownOptions = (nextAutosizeInputValue: string, isColumnNameValid: boolean, filterType: ISheetFilterType, isFilterValid: boolean) => {
-    const options = !isColumnNameValid 
-      ? activeSheetViewVisibleColumns && activeSheetViewVisibleColumns.map(columnId => { 
-          if(columnId !== 'COLUMN_BREAK') {
-            return { 
-              id: columnId,
-              value: allSheetColumns[columnId] && allSheetColumns[columnId].name
-            }
+  const getDropdownOptions = (nextAutosizeInputValue: string, isColumnNameValid: boolean, isFilterTypeValid: boolean, isFilterValid: boolean, validColumnId: string, filterType: ISheetFilterType) => {
+    
+    let options: { id: string, value: string }[] = []
+    if(!isColumnNameValid) {
+      options = activeSheetViewVisibleColumns && activeSheetViewVisibleColumns.map(columnId => { 
+        if(columnId !== 'COLUMN_BREAK') {
+          return { 
+            id: columnId,
+            value: allSheetColumns[columnId] && allSheetColumns[columnId].name + ' '
           }
-        }).filter(Boolean)
-      : validFilterTypes.map(validFilterType => {
+        }
+      }).filter(Boolean)
+    }
+    else if (isColumnNameValid && !isFilterTypeValid) {
+      options = validFilterTypes.map(validFilterType => {
+        return {
+          id: validFilterType,
+          value: nextAutosizeInputValue.trim() + ' ' + validFilterType + ' '
+        }
+      })
+    }
+    else if(validColumnId && filterType) {
+      const validColumn = allSheetColumns[validColumnId]
+      if(validColumn) {
+        options = [ ...validColumn.allCellValues ].map(validCellValue => {
           return {
-            id: validFilterType,
-            value: nextAutosizeInputValue.trim() + ' ' + validFilterType
+            id: validCellValue,
+            value: validColumn.name + ' ' + filterType + ' ' + validCellValue
           }
-        })
+        }).sort((a, b) => a.value.localeCompare(b.value))
+      }
+    }
+    console.log(options)
+    console.log(isColumnNameValid, isFilterTypeValid, validColumnId, filterType)
+    
     const dropdownOptions = options && options.filter(option => {
       if(nextAutosizeInputValue) {
-        const searchString = nextAutosizeInputValue.toLowerCase().replace(/ /g, "")
+        const searchString = nextAutosizeInputValue.trim().toLowerCase().split(' ').join('')
         if(!isColumnNameValid) {
-          return option.value.toLowerCase().replace(/ /g, "").includes(searchString)
+          return option.value.toLowerCase().split(' ').join('').includes(searchString)
         }
-        else if(isFilterValid) {
-          return false
+        else if(isColumnNameValid && !isFilterTypeValid) {
+          return !validFilterTypes.some(validFilterType => validFilterType.split('').some(character => searchString.includes(character)))
         }
-        else if(!validFilterTypes.some(validFilterType => validFilterType.split('').some(character => searchString.includes(character)))) {
-          return true
-        }
-        else {
+        else if (isColumnNameValid && isFilterTypeValid && validColumnId) {
+          console.log('isColumnNameValid && isFilterTypeValid && validColumnId')
+          console.log(searchString)
+          console.log(option.value.trim().toLowerCase().split(' ').join(''))
+          return option.value.trim().toLowerCase().split(' ').join('').includes(searchString)
+          /*
           const optionValueCharacters = option.value.split('')
           let validIndexes: number[] = []
           optionValueCharacters.forEach((character, index) => {
@@ -96,10 +117,13 @@ const SheetActionFilter = ({
             && (filterType === null || (filterType && filterType.length <= validIndexes.length))
             && validIndexes[0] === 0 
             && validIndexes.every((validIndex, index) => validIndexes[index - 1] ? (validIndex - validIndexes[index - 1]) === 1 : true)
+          */
         }
+        return true
       }
       return true
     })
+    console.log(dropdownOptions)
     return !isColumnNameValid ? dropdownOptions : dropdownOptions.reverse()
   }
 
@@ -190,7 +214,7 @@ const SheetActionFilter = ({
     const { isFilterTypeValidated, filterType } = validateFilterType(nextAutosizeInputValue)
     const nextFilterValue = getFilterValue(nextAutosizeInputValue)
     const isFilterValidated = isColumnNameValidated && isFilterTypeValidated && nextFilterValue !== null
-    const nextDropdownOptions = getDropdownOptions(nextAutosizeInputValue, isColumnNameValidated, filterType, isFilterValidated)
+    const nextDropdownOptions = getDropdownOptions(nextAutosizeInputValue, isColumnNameValidated, isFilterTypeValidated, isFilterValidated, columnId, filterType)
     setDropdownOptions(nextDropdownOptions)
     setIsDropdownVisible(true)
     setIsColumnNameValid(isColumnNameValidated)
@@ -205,7 +229,7 @@ const SheetActionFilter = ({
   
   // Handle the input focusing
   const handleAutosizeInputFocus = () => {
-    setDropdownOptions(getDropdownOptions(autosizeInputValue, isColumnNameValid, null, isFilterValid))
+    setDropdownOptions(getDropdownOptions(autosizeInputValue, isColumnNameValid, isFilterTypeValid, isFilterValid, null, null))
     setIsDropdownVisible(true)
     setTimeout(() => batch(() => {
       dispatch(preventSelectedCellEditing(sheetId))
@@ -279,7 +303,7 @@ const SheetActionFilter = ({
   
   // Handle dropdown option click
   const handleDropdownOptionClick = (option: IDropdownOption) => {
-    handleAutosizeInputChange(option.value + ' ')
+    handleAutosizeInputChange(option.value)
   }
 
   return (
@@ -419,6 +443,8 @@ const Dropdown = styled.div`
   top: calc(100% + 0.25rem);
   border-radius: 5px;
   box-shadow: 3px 3px 10px 0px rgba(150,150,150,1);
+  max-width: 15rem;
+  overflow: hidden;
 `
 interface IDropdown {
   isDropdownVisible: boolean
@@ -457,6 +483,7 @@ const DropdownOption = styled.div`
   cursor: default;
   padding: 0.15rem 0.25rem;
   background-color: ${ ({ isHighlighted }: IStyledDropdownOption ) => isHighlighted ? 'rgb(240, 240, 240)' : 'transparent'};
+  white-space: nowrap;
 `
 interface IStyledDropdownOption {
   isHighlighted: boolean

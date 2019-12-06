@@ -53,6 +53,15 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
 
     const activeSheetViewId = sheetFromDatabase.activeSheetViewId
 
+    // Sheet Columns
+    sheetFromDatabase.columns.forEach(sheetColumn => { 
+      normalizedSheetColumns[sheetColumn.id] = {
+        allCellValues: new Set() as Set<string>,
+        ...sheetColumn
+      }
+      sheetColumns.push(sheetColumn.id)
+    })
+
     // Sheet Rows
     sheetFromDatabase.rows.forEach(sheetRow => { 
       let sheetRowCells: { 
@@ -65,6 +74,7 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
           isCellSelectedSheetIds: new Set() as Set<string>,
         }
         sheetRowCells[sheetRowCell.columnId] = sheetRowCell.id
+        normalizedSheetColumns[sheetRowCell.columnId].allCellValues.add(sheetRowCell.value)
       })
       normalizedSheetRows[sheetRow.id] = { 
         id: sheetRow.id, 
@@ -73,13 +83,7 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       }
       sheetRows.push(sheetRow.id)
     })
-
-    // Sheet Columns
-    sheetFromDatabase.columns.forEach(sheetColumn => { 
-      normalizedSheetColumns[sheetColumn.id] = sheetColumn
-      sheetColumns.push(sheetColumn.id)
-    })
-
+    
     // Sheet Notes
     sheetFromDatabase.notes.forEach(sheetNote => { 
       normalizedSheetNotes[sheetNote.id] = sheetNote

@@ -135,12 +135,14 @@ export interface ISheetColumn {
 	typeId: ISheetColumnType['id']
 	name: string
 	width: number
+  allCellValues: Set<string>
 }
 
 export interface ISheetColumnUpdates {
   typeId?: ISheetColumnType['id']
   name?: string
   width?: number
+  allCellValues?: Set<string>
 }
 
 export interface ISheetColumnToDatabase {
