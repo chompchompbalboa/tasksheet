@@ -24,6 +24,7 @@ const SheetHeaders = ({
     name: 'Break',
     width: 10,
     typeId: null,
+    defaultValue: null,
     allCellValues: null
   }
   

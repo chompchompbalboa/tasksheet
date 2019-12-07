@@ -1,242 +1,267 @@
-﻿"Photos","Files","","Job Code","Project","Ele.","Ele. Name","","Task","Dept.","","Status","Check In","Completed","","Notes"
-"[TS][PHOTOS]","[TS][FILES]","[TS][COLUMN_BREAK]","[TS][STRING]","[TS][STRING]","[TS][STRING]","[TS][STRING]","[TS][COLUMN_BREAK]","[TS][STRING]","[TS][STRING]","[TS][COLUMN_BREAK]","[TS][STRING]","[TS][DATETIME]","[TS][BOOLEAN]","[TS][COLUMN_BREAK]","[TS][STRING]"
-"","","","18-104","Ft. McDowell","-20","Decorative Center Column","","Simple lighting test?","PM","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-04","Buffet Fins","","Get quote for solid surface","PM","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-15","Column Lightbox Panels","","Paint frames","Paint","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-13","Bar Light Boxes","","Get polycarbonate from Souers","Vendor","","8 - WIP","11/04/2019","","","Eddie is going to get back to me about FR / material thickness"
-"","","","18-104","Ft. McDowell","-24","Ceiling Beam Diffusers","","Build angle frames","Metal","","9 - Not Started","","","",""
-"","","","19-248","Kyle Mock","-02","","","Add dates to Smartsheet schedule","PM","","0 - Now","","1","","Partially complete - finish up on Wednesday"
-"","","","18-104","Ft. McDowell","-21","Garden Court Torchiers","","Talk to Kiera about Paint schedule","PM","","0 - Now","","1","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Make sure smoke panel support has been fastened to center support and tested","PM","","8 - WIP","11/04/2019","","",""
-"","","","18-104","Ft. McDowell","-20","Decorative Center Column","","Paint sheet metal pattern","Paint","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-23","Long and Short Lightbox Column","","Respond to Ryan Parker's email","PM","","0 - Today","10/29/2019","1","",""
-"","","","18-104","Ft. McDowell","-15","Column Lightbox Panels","","Visit Victor Friday at 10a","PM","","0 - Today","","1","",""
-"","","","18-104","Ft. McDowell","-03","Light Box Wall","","Build Angle Frames","Metal","","8 - WIP","11/06/2019","","",""
-"","","","18-104","Ft. McDowell","-25","Rivet Straps","","Ship Rivet Straps","Shipping","","9 - Not Started","","","","Truck # 2"
-"","","","18-104","Ft. McDowell","-09","Specialty Restaurant Facade","","Ship Facade","Shipping","","9 - Not Started","","","","Truck # 2"
-"","0","","18-104","Ft. McDowell","-03","Light Box Wall","","Review all quotes from Dani at Envel and figure out what to do","PM","","0 - Today","11/01/2019","","","(805) 376-8111. Sent a request for an update on 10/29/19 and 10/30/19"
-"","","","18-104","Ft. McDowell","-15","Column Lightbox Panels","","Check in on Victor's Progress","PM","","0 - Now","","1","",""
-"","","","19-248","Kyle Mock","-03","Cable Pedestals","","Get camera or camera specs","PM","","8 - With Client","","1","","Email sent to Kyle Gary and Patrick on 10/15/19"
-"","","","18-104","Ft. McDowell","-03","Light Box Wall","","Laminate PVC to Envel","Fab","","9 - Not Started","","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Send Christy signed change order","PM","","2 - Tuesday","","1","",""
-"","","","19-220","Alder Bar Top","-03","Alder Bar Top","","Schedule meeting to go over finish issues","PM","","0 - Today","","1","","10/28/19 - 3:30p"
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Write up plan to use a parachute with kids as the unveiling","PM","","0 - Today","11/01/2019","1","","Sent an email to Kyle on 10/30/19"
-"","","","18-104","Ft. McDowell","-03","Light Box Wall","","Package Light Box Wall","Shipping","","9 - Not Started","","","",""
-"","","","00-000","Overhead","0","","","Prep for Production Meeting","PM","","0 - Now","","1","",""
-"","","","18-104","Ft. McDowell","-15","Column Lightbox Panels","","Order Lumicor","PM","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-04","Buffet Fins","","Fabricate groups for overhead","Fab","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-20","Decorative Center Column","","Laminate sheet metal to backing polycarbonate","Fab","","9 - Not Started","","","",""
-"","","","19-248","Kyle Mock","-03","Cable Pedestals","","Find CV alternatives / look into custom options","Design","","9 - Not Started","11/04/2019","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Pat is coming over for a visit on Thursday","PM","","0 - Today","10/31/2019","1","",""
-"","","","18-104","Ft. McDowell","-24","Ceiling Beam Diffusers","","Get approval on polycarbonate or alternate material","PM","","8 - With Client","11/04/2019","","","Sent clarification email to Jenna Laughman on 10/24/19 @ 3:15p"
-"","","","18-104","Ft. McDowell","-15","Column Lightbox Panels","","Make sure materials got to RMH","PM","","3 - Wednesday","","1","",""
-"","","","18-104","Ft. McDowell","-24","Ceiling Beam Diffusers","","Package Ceiling Beam Diffusers","Shipping","","9 - Not Started","","","",""
-"","","","19-248","Kyle Mock","-05","Bark Wrap","","Get species and color specs","PM","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-13","Bar Light Boxes","","Get brake-formed pans from Pacer","Vendor","","8 - WIP","11/04/2019","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Build center support structure from base plate, gussets and tube","Metal","","8 - WIP","11/04/2019","0","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Slot rocket ship over center support and verify fit / sturdiness when fastened","PM","","8 - WIP","11/04/2019","","",""
-"","","","19-220","Alder Bar Top","-03","Alder Bar Top","","Make sure product gets ordered from Midway and here today","PM","","0 - Today","10/29/19","1","",""
-"","","","19-248","Kyle Mock","-03","Kyle Mock","","Send follow up / summary email","PM","","2 - Tuesday","","1","","Sent 10/15/19 @ 2:47"
-"","","","18-104","Ft. McDowell","-23","Long and Short Lightbox Column","","Package Long And Short Lightbox Column","Shipping","","9 - Not Started","","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Respond to Christy's email","PM","","0 - Today","","1","",""
-"","","","19-248","Kyle Mock","-05","Bark Wrap","","Pull (10) bark wraps from mold","Sculpt","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-05","Glazed Feather Wall","","Update shop drawing to include new assembly at top and bottom","Design","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-21","Garden Court Torchiers","","Torchier #1 - Ship","Shipping","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-21","Garden Court Torchiers","","Torchier #3 - Paint Basket Weave","Paint","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-20","Decorative Center Column","","Build metal frame","Metal","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-22","Back Bar Diffusers","","Ship Back Bar Diffusers","Shipping","","9 - Not Started","","","","Truck # 2"
-"","","","18-104","Ft. McDowell","-09","Specialty Restaurant Facade","","Paint Wall","Paint","","9 - Not Started","","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Rocket ship armature","Metal","","8 - WIP","11/04/2019","","",""
-"","","","18-104","Ft. McDowell","-21","Garden Court Torchiers","","Torchier #1 - Paint Basket Weave","Paint","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-21","Garden Court Torchiers","","Torchier #1 - Install Basket Weave","Fab","","9 - Not Started","","","",""
-"","","","19-220","Alder Bar Top","-03","Alder Bar Top","","Check in With Kiera","PM","","0 - Today","10/29/2019","1","",""
-"","","","18-104","Ft. McDowell","-24","Ceiling Beam Diffusers","","Paint angle frames","Paint","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-09","Specialty Restaurant Facade","","Pickup redlines and issue production drawings","PM","","0 - Today","11/01/2019","","",""
-"","","","19-248","Kyle Mock","-05","Bark Wrap","","Get or sculpt bark texture","Paint","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-22","Back Bar Diffusers","","Cut PVC frames","CNC","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-09","Specialty Restaurant Facade","","Cut Fin parts","CNC","","9 - Not Started","","","",""
-"","","","18-222","Desert Diamond","-03","Wall Panels","","Get recipe from Kiera and send to Jan","PM","","0 - Today","","1","",""
-"","","","18-104","Ft. McDowell","-04","Buffet Fins","","Order solid surface","PM","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-13","Bar Light Boxes","","Paint PVC","Paint","","9 - Not Started","","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Smoke panels armature","Metal","","8 - WIP","11/04/2019","","",""
-"","","","18-104","Ft. McDowell","-20","Decorative Center Column","","Mockup drawings to the floor","PM","","0 - Today","10/31/2019","","",""
-"","","","18-104","Ft. McDowell","-13","Bar Light Boxes","","Ship Bar Light Boxes","Shipping","","9 - Not Started","","","","Truck # 2"
-"","","","18-104","Ft. McDowell","-09","Specialty Restaurant Facade","","Paint / Stain? Fins","Paint","","9 - Not Started","","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Let Kyle and Rob know about new schedule","PM","","2 - Tuesday","","1","","10/14/19 @ 2:30p"
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Update and resubmit drawings","PM","","0 - Now","","1","",""
-"","","","18-104","Ft. McDowell","-02","","","Overall status for each element","PM","","0 - Now","","1","",""
-"","","","18-104","Ft. McDowell","-15","Column Lightbox Panels","","Get approval on mockup corner","PM","","0 - Today","11/04/2019","","","Email sent to ISEC on 10/24/19 with photos"
-"","","","19-248","Kyle Mock","-05","Bark Wrap","","Mold bark texture","Sculpt","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-20","Decorative Center Column","","Order cut sheet metal pattern","PM","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-23","Long and Short Lightbox Column","","Assemble Long and Short Lightbox Column","Fab","","9 - Not Started","","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Make sure all materials have been ordered","PM","","0 - Now","","1","","Marie is trying to find the center support tube"
-"","","","18-104","Ft. McDowell","-05","Glazed Feather Wall","","Package Feather Wall","Shipping","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-23","Long and Short Lightbox Column","","Cut files for PVC","PM","","0 - Today","11/01/2019","","",""
-"","","","18-104","Ft. McDowell","-21","Garden Court Torchiers","","Torchier #1 - Build metal frame + horizontal rings","Metal","","8 - WIP","11/04/2019","","",""
-"","","","00-000","Overhead","0","","","Job Costs","PM","","0 - Now","","1","",""
-"","","","18-104","Ft. McDowell","-02","","","Migrate tasks over to Smartsheet","PM","","0 - Today","11/01/2019","","",""
-"","","","19-248","Kyle Mock","-04","Log","","Modify opening on existing form?","Sculpt","","9 - Not Started","","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Respond to Christy's email about install date","PM","","0 - Now","","1","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Schedule meeting with Kyle and Rob","PM","","1- Monday","","1","","10/14/19 @ 2:30"
-"","0","","18-104","Ft. McDowell","-22","Back Bar Light Box","","Make sure Atomic was awarded","PM","","1- Monday","","1","","Awarded and materials are scheduled to be delivered on 10/14/19"
-"","","","19-248","Kyle Mock","-04","Log","","Shop drawings","Design","","9 - Not Started","","","",""
-"","","","19-248","Kyle Mock","-07","Stump (Pine)","","Get mounting bracket specs","PM","","8 - With Client","11/04/2019","","","Email sent to Kyle Gary and Patrick on 10/15/19"
-"","","","19-248","Kyle Mock","-06","Stump (Oak)","","Shop drawings","Design","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-24","Ceiling Beam Diffusers","","Ship Ceiling Beam Diffusers","Shipping","","9 - Not Started","","","","Truck # 2"
-"","","","18-104","Ft. McDowell","-21","Garden Court Torchiers","","Torchier #3 - Ship","Shipping","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-24","Ceiling Beam Diffusers","","Have production drawings been issued?","PM","","0 - Today","10/31/2019","","",""
-"","","","18-222","Desert Diamond","-03","Light Wall Panels","","Respond to Jan's email","","","3 - Wednesday","","1","","Check in with Stephen on how to price and Adam on how to best cut"
-"","","","19-248","Kyle Mock","-02","","","Prep for meeting","PM","","0 - Today","","1","",""
-"","","","18-104","Ft. McDowell","-20","Decorative Center Column","","Call back TBE re: submittal","PM","","0 - Now","","1","","Call (314) 791-4840 David Nejelski"
-"","","","18-104","Ft. McDowell","-03","Light Box Wall","","Ship Light Box Wall","Shipping","","9 - Not Started","","","","Truck #2"
-"","","","18-104","Ft. McDowell","-09","Specialty Restaurant Facade","","Assemble Facade","Fab","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-09","Specialty Restaurant Facade","","Resubmit updated sheet","PM","","0 - Now","","1","",""
-"","","","18-104","Ft. McDowell","-20","Decorative Center Column","","Package Decorative Center Column","Shipping","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-22","Back Bar Diffusers","","Paint PVC","Paint","","9 - Not Started","","","",""
-"","","","19-248","Kyle Mock","-04","Log","","Locate existing molds","Sculpt","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-04","Buffet Fins","","Package Buffet Fins","Shipping","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-09","Specialty Restaurant Facade","","Cut Wall parts","CNC","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-05","Glazed Feather Wall","","Order glazing","PM","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-23","Long and Short Lightbox Column","","Paint metal","Paint","","9 - Not Started","","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Powdercoat smoke panels","Vendor","","8 - WIP","11/01/2019","0","","Adam is aware, will also be welding the tube on there."
-"","","","18-104","Ft. McDowell","-20","Decorative Center Column","","Material Takeoffs","PM","","0 - Today","10/31/2019","","",""
-"","","","18-104","Ft. McDowell","-23","Long and Short Lightbox Column","","Submit RFI to not pick up notes","PM","","0 - Now","","1","",""
-"","","","18-104","Ft. McDowell","-21","Garden Court Torchiers","","Torchier #2 - Build metal frame + horizontal rings","Metal","","8 - WIP","11/04/2019","","",""
-"","","","18-104","Ft. McDowell","-02","All","","Get schedule back on track","PM","","3 - Wednesday","","1","",""
-"","","","18-104","Ft. McDowell","-13","Bar Light Boxes","","Weld brake-formed pans to vertical square tube","Metal","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-15","Column Lightbox Panels","","Get frames from RMH","PM","","8 - WIP","10/31/2019","","",""
-"","","","18-104","Ft. McDowell","-04","Buffet Fins","","Ship Buffet Fins","Shipping","","9 - Not Started","","","","Truck #2"
-"","","","18-104","Ft. McDowell","-24","Ceiling Beam Diffusers","","Get polycarbonate from Souers","PM","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-04","Buffet Fins","","Fabricate groups for screen wall","Fab","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-09","Specialty Restaurant Facade","","Material takeoffs","PM","","0 - Today","11/01/2019","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Make sure acrylic has been ordered or we have something in stock","PM","","8 - WIP","10/30/2019","1","","There's several different options downstairs in the racks for clear material."
-"","","","19-248","Kyle Mock","-02","","","Send follow up email with reference images","PM","","0 - Today","","1","","As soon as Allan is done with the one-sheet"
-"","","","18-104","Ft. McDowell","-20","Decorative Center Column","","Send Eric product data for ID-3000-SWF-2","PM","","2 - Tuesday","","1","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Get structural calcs from Canaan","PM","","0 - Today","","1","","In progress, he has the updated drawing set and we spoke about requirements on 10/24/19"
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Cut hole for viewport when putting rocket back together","Sculpt","","8 - WIP","11/04/2019","","",""
-"","","","18-104","Ft. McDowell","-22","Back Bar Diffusers","","Cut files for PVC","PM","","0 - Today","11/01/2019","","",""
-"","","","18-104","Ft. McDowell","-15","Column Lightbox Panels","","Assemble lumicor into frames","Fab","","9 - Not Started","","","",""
-"","","","18-222","Desert Diamond","-03","Panels","","Send Jan rough pricing","PM","","0 - Now","","1","",""
-"","","","18-104","Ft. McDowell","-13","Bar Light Boxes","","Get Kiera the paint callout","PM","","0 - Today","10/31/2019","","",""
-"","","","19-248","Kyle Mock","-06","Stump (Oak)","","Get mounting bracket specs","PM","","8 - With Client","11/04/2019","","","Email sent to Kyle Gary and Patrick on 10/15/19"
-"","","","18-104","Ft. McDowell","-05","Glazed Feather Wall","","Ship Feather Wall","Shipping","","9 - Not Started","","","","Truck # 2"
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Attach smoke panels to armature","Metal","","8 - WIP","11/04/2019","","",""
-"","","","18-104","Ft. McDowell","-15","Column Lightbox Panels","","Package Column Lightbox Panels","Shipping","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-13","Bar Light Boxes","","Assemble polycarbonate","Fab","","9 - Not Started","","","",""
-"","","","19-248","Kyle Mock","-02","","","Schedule kickoff meeting","PM","","0 - Now","","1","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Paint rocket ship","Paint","","8 - WIP","11/04/2019","0","",""
-"","","","18-104","Ft. McDowell","-13","Bar Light Boxes","","Paint brake-formed metal","Paint","","9 - Not Started","","","",""
-"","","","19-248","Kyle Mock","-03","Cable Pedestals","","Get additional information about what they'd like for the opening","PM","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-23","Long and Short Lightbox Column","","Issue Production Drawings","PM","","0 - Now","","1","",""
-"","","","18-104","Ft. McDowell","-15","Column Lightbox Panels","","Visit RMH (10:00a)","PM","","0 - Now","","1","",""
-"","","","18-104","Ft. McDowell","-03","Light Box Wall","","Paint PVC","Paint","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-03","Light Box Wall","","Cut PVC","CNC","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-23","Long and Short Lightbox Column","","Make sure material approvals come through","PM","","0 - Today","","1","","Overrode, I asked Tanner multiple times to review but they were pretty swamped and we needed to get them ordered"
-"","","","18-104","Ft. McDowell","-05","Glazed Feather Wall","","Paint MDF feathers","Paint","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-09","Specialty Restaurant Facade","","Package Facade","Shipping","","9 - Not Started","","","",""
-"","","","18-222","Desert Diamond","-03","Wall Panels","","Talk to printer if needed","PM","","0 - Today","11/01/2019","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Apply vinyl to smoke panels","Fab","","8 - WIP","11/04/2019","","",""
-"","","","18-104","Ft. McDowell","-22","Back Bar Diffusers","","Package Back Bar Diffusers","Shipping","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-23","Long and Short Lightbox Column","","Get metal from Atomic","Vendor","","8 - WIP","11/04/2019","","",""
-"","","","18-104","Ft. McDowell","-20","Decorative Center Column","","Order materials","PM","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-02","","","Respond to John's email about visiting","PM","","0 - Now","","1","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Get smoke panels cut","Vendor","","8 - WIP","10/29/19","1","",""
-"","","","00-000","Overhead","0","","","Job Costs","PM","","0 - Now","","1","",""
-"","","","19-248","Kyle Mock","-02","","","Schedule meeting with Christian to go over design","PM","","0 - Today","","1","","10/28/19 - 3:00p"
-"","","","18-104","Ft. McDowell","-23","Long and Short Lightbox Column","","Give Kiera a copy of the production drawings","PM","","0 - Now","","1","",""
-"","","","18-104","Ft. McDowell","-21","Garden Court Torchiers","","Torchier #2 - Install Basket Weave","Fab","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-05","Glazed Feather Wall","","Cut MDF","CNC","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-24","Ceiling Beam Diffusers","","Assemble polycarbonate into angle frames","Fab","","9 - Not Started","","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Find an installer for the 10th","PM","","8 - WIP","10/30/2019","1","","Daniel is out of town, we need someone else available"
-"","","","19-248","Kyle Mock","-03","Cable Pedestals","","Get mounting bracket specs","PM","","8 - With Client","11/04/2019","","","Email sent to Kyle Gary and Patrick on 10/15/19"
-"","","","18-104","Ft. McDowell","-24","Ceiling Beam Diffusers","","Order material","PM","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-25","Rivet Straps","","Get photos of finished straps","PM","","0 - Today","11/01/2019","","",""
-"","","","18-104","Ft. McDowell","-05","Glazed Feather Wall","","Get confirmation on materials","PM","","8 - With Client","11/04/2019","","","Sent clarification email to Jenna Laughman on 10/24/19 @ 3:15p"
-"","","","18-104","Ft. McDowell","-09","Specialty Restaurant Facade","","Assemble Wall","Fab","","9 - Not Started","","","",""
-"","","","19-248","Kyle Mock","-07","Stump (Pine)","","Get feedback on reference images","PM","","8 - With Client","11/04/2019","","","Email sent to Kyle Gary and Patrick on 10/15/19"
-"","","","18-104","Ft. McDowell","-21","Garden Court Torchiers","","Torchier #3 - Install Basket Weave","Fab","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-22","Back Bar Light Box","","Check in on materials","PM","","3 - Wednesday","","1","","Materials are going to be sent to RMH instead. Silly Atomic."
-"","","","18-104","Ft. McDowell","-09","Specialty Restaurant Facade","","Assemble Lightboxes","Fab","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-20","Decorative Center Column","","Ship Decorative Center Column","Shipping","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-04","Buffet Fins","","Order Envel","PM","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-23","Long and Short Lightbox Column","","Respond to Matt and Jenna's email about the light fixture","PM","","0 - Now","","1","",""
-"","","","19-248","Kyle Mock","-04","Log","","Get mounting bracket specs","PM","","8 - With Client","11/04/2019","","","Email sent to Kyle Gary and Patrick on 10/15/19"
-"","","","18-104","Ft. McDowell","-22","Back Bar Diffusers","","Paint metal","Paint","","9 - Not Started","","","",""
-"","","","19-248","Kyle Mock","-07","Stump (Pine)","","Find reference images or an actual stump to pull a mold from","Design","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-22","Back Bar Diffusers","","Assemble Back Bar Diffusers","Fab","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-03","Light Box Wall","","Paint Angle Frames","Paint","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-04","Buffet Fins","","Get updated quote from Envel","PM","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-04","Buffet Fins","","Hand off redesign to Brian T","PM","","0 - Today","11/01/2019","1","","Meeting scheduled for 11/1 @ 10a"
-"","","","18-104","Ft. McDowell","-23","Long and Short Lightbox Column","","Cut PVC frames","CNC","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-21","Garden Court Torchiers","","Torchier #3 - Package","Shipping","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-21","Garden Court Torchiers","","Torchier #2 - Paint Basket Weave","Paint","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-13","Bar Light Boxes","","Package Bar Light Boxes","Shipping","","9 - Not Started","","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Coordinate install schedule with Morgan at Forma","PM","","0 - Today","11/01/2019","","",""
-"","","","18-104","Ft. McDowell","-05","Glazed Feather Wall","","Order MDF","PM","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-23","Long and Short Lightbox Column","","Get polycarbonate from Souers","Vendor","","8 - WIP","11/04/2019","","","I don't think this is actually in process? Need to verify"
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Send cut files to Berry","PM","","1- Monday","","1","",""
-"","","","18-104","Ft. McDowell","-21","Garden Court Torchiers","","Torchier #2 - Package","Shipping","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-16","Decorative Metal Panel","","Ship Decorative Metal Panel","Shipping","","9 - Not Started","","","","Truck # 1"
-"","","","19-248","Kyle Mock","-04","Log","","Get camera or camera specs","PM","","8 - With Client","","1","","Email sent to Kyle Gary and Patrick on 10/15/19"
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Talk to Forma about moving install date to Sunday 11/10","PM","","0 - Today","10/29/19","1","","Kyle confirmed this was acceptable via email on 10/29/19"
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Make sure Marie has issued Canaan a PO","PM","","0 - Today","10/29/19","1","",""
-"","","","18-104","Ft. McDowell","-22","Back Bar Diffusers","","Get polycarbonate from Souers","Vendor","","8 - WIP","11/04/2019","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Submit ROM to Kyle on the unveiling","PM","","8 - WIP","11/01/2019","","","Wait to hear back about the parachute idea"
-"","","","19-109","CHW Hanging Book Sculpture","-03","Hanging Book Sculpture","","Update drawings with new rod locations","PM","","8 - With Client","11/04/2019","","","Will coordinate with Brian Nelson, per email on 10/25/19"
-"","","","18-104","Ft. McDowell","-21","Garden Court Torchiers","","Torchier #2 - Ship","Shipping","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-20","Decorative Center Column","","Get mockup approved","PM","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-20","Decorative Center Column","","Issue Production Drawings","PM","","0 - Today","10/31/2019","","",""
-"","","","18-104","Ft. McDowell","-02","","","Any remaining material takeoffs","PM","","0 - Today","11/01/2019","","","Create list in elements below today"
-"","","","18-104","Ft. McDowell","-20","Decorative Center Column","","Look in to providing adjustability on the track behind the panels","PM","","0 - Today","10/31/2019","","","Per (off the record) phone call with David Nejelski on 10/24/19"
-"","","","18-104","Ft. McDowell","-19","Framed Cut Metal Panels","","Ship Framed Cut Metal Panels","Shipping","","9 - Not Started","","","","Truck # 1"
-"","","","19-109","CHW Book Sculpture","-03","Book Sculpture","","Get meeting invite sorted out","PM","","0 - Now","","1","",""
-"","","","19-248","Kyle Mock","-05","Bark Wrap","","Paint (10) bark wraps","Paint","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-09","Specialty Restaurant Facade","","Assemble Fins","Fab","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-21","Garden Court Torchiers","","Get a status update and make sure we're on track for the 11th","PM","","0 - Today","11/05/2019","","","I'm going to need to update ISEC and Kitchell on the schedule"
-"","","","18-104","Ft. McDowell","-13","Bar Light Boxes","","Order brake-formed pans","PM","","2 - Tuesday","","1","","Tanner needs to check Supervisor Confirmed"
-"","","","18-104","Ft. McDowell","-20","Decorative Center Column","","Assemble polycarbonate + sheet metal to frame","Fab","","9 - Not Started","","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Make sure all tasks are in Smartsheet","PM","","3 - Wednesday","","1","",""
-"","","","18-104","Ft. McDowell","-18","Entry Panel","","Ship Entry Panel","Shipping","","9 - Not Started","","","","Truck # 1"
-"","","","19-248","Kyle Mock","-05","Bark Wrap","","Shop drawings","Design","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-21","Garden Court Torchiers","","Torchier #1 - Package","Shipping","","9 - Not Started","","","",""
-"","","","19-248","Kyle Mock","-03","Cable Pedestals","","Locate existing molds","Sculpt","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-15","Column Lightbox Panels","","Ship Column Lightbox Panels","Shipping","","9 - Not Started","","","","Truck # 1"
-"","","","18-222","Desert Diamond","-03","Wall Panels","","Ship out paint and send Jan tracking number","PM","","0 - Today","10/29/19","1","",""
-"","","","18-104","Ft. McDowell","-15","Column Lightbox Panels","","Get the status of the Lumicor sample","PM","","0 - Now","","1","",""
-"","","","19-248","Kyle Mock","-03","Kyle Mock","","Prep for meeting","PM","","2 - Tuesday","","1","","10/15/19 @ 10:00a"
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Verify tube is in for center support","PM","","0 - Today","10/29/19","1","",""
-"","","","18-104","Ft. McDowell","-21","Garden Court Torchiers","","Torchier #3 - Build metal frame + horizontal rings","Metal","","8 - WIP","11/04/2019","","",""
-"","","","19-248","Kyle Mock","-06","Stump (Oak)","","Get camera or camera specs","PM","","8 - With Client","","1","","Email sent to Kyle Gary and Patrick on 10/15/19"
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Order cut files for rocket ship","PM","","0 - Now","","1","","Get Phillip to change the cut files to stainless"
-"","","","18-104","Ft. McDowell","0","All","","Touch base with Matt about the multiple missed weeklys","PM","","3 - Wednesday","","1","",""
-"","","","19-248","Kyle Mock","-07","Stump (Pine)","","Get camera or camera specs","PM","","8 - With Client","","1","","Email sent to Kyle Gary and Patrick on 10/15/19"
-"","","","19-248","Kyle Mock","-07","Stump (Pine)","","Shop drawings","Design","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-21","Garden Court Torchiers","","Talk to Tanner about the schedule for Torchier metal","PM","","0 - Now","","1","",""
-"","","","19-248","Kyle Mock","-02","","","Build powerpoint for kickoff meeting","PM","","0 - Now","","1","",""
-"","","","18-104","Ft. McDowell","-23","Long and Short Lightbox Column","","Paint PVC","Paint","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-22","Back Bar Diffusers","","Get metal from Atomic","Vendor","","8 - WIP","11/04/2019","","",""
-"","","","18-104","Ft. McDowell","-04","Buffet Fins","","Update and resubmit shop drawings","Design","","9 - Not Started","11/04/2019","","",""
-"","","","18-104","Ft. McDowell","-05","Glazed Feather Wall","","Assemble MDF feathers","Fab","","9 - Not Started","","","",""
-"","","","19-248","Kyle Mock","-03","Cable Pedestals","","Shop drawings","Design","","9 - Not Started","","","",""
-"","","","18-104","Ft. McDowell","-23","Long and Short Lightbox Column","","Ship Long And Short Lightbox Column","Shipping","","9 - Not Started","","","","Truck # 2"
-"","","","00-000","Overhead","0","","","Production meeting","PM","","0 - Now","","1","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Attach rocket ship to armature and fiberglass halves together","Sculpt","","8 - WIP","11/04/2019","","",""
-"","","","18-104","Ft. McDowell","-15","Column Lightbox Panels","","Paint hardware","Paint","","9 - Not Started","","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Talk to Adam about who is doing the install and have them join the call on Thursday","PM","","0 - Today","10/30/2019","1","","Looks like its gonna be me. Wonderful."
-"","","","19-248","Kyle Mock","-02","","","Make sure John and Jesse know they can get started","PM","","0 - Today","10/30/2019","1","","Log and Cable Pedestal Only"
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Issue Adam a set of drawings","PM","","0 - Today","10/30/2019","1","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Put together drawing for RMH to price from","PM","","Right the fuck now","10/30/2019","1","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Drill hanging holes in smoke panels before delivery to Mukilteo Powder","PM","","0 - Today","10/31/2019","1","","Adam is aware, will also be welding the tube on there."
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Let Berry know there won't be much  to review for the smoke panels and rocket ship","PM","","0 - Today","10/31/2019","1","",""
-"","","","18-222","Desert Diamond","-03","Wall Panels","","Check in With Jan","PM","","0 - Today","11/01/2019","","",""
-"","","","00-000","Overhead","","","","Job Costs","PM","","0 - Today","10/31/2019","1","",""
-"","","","00-000","Overhead","","","","2 Week","PM","","0 - Today","10/31/2019","1","",""
-"","","","18-104","Ft. McDowell","-03","Light Box Wall","","Issue change order to Matt on the Envel - it's not a cost we're going to be able to pick up","PM","","0 - Today","11/01/2019","","",""
-"","","","18-104","Ft. McDowell","-23","Long and Short Lightbox Column","","Order polycarbonate from Souers","PM","","0 - Today","10/31/2019","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Talk to Kyle re: his voicemail","PM","","0 - Today","10/31/2019","1","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Berry needs electrical components by Wednesday next week","PM","","0 - Today","11/01/2019","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Berry needs an answer on the permit by Thursday","PM","","0 - Today","11/04/2019","","",""
-"","","","18-104","Ft. McDowell","-04","Buffet Fins","","Submit questions to Matt / David about spacing and lighting","PM","","0 - Today","11/01/2019","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Talk to Mary about 40% payment","PM","","0 - Today","11/01/2019","","",""
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Talk to Christy about the welds","PM","","0 - Today","11/01/2019","","","Email sent"
-"","","","19-156","Everett Public Library","-03","Rocket Ship Sign","","Get documentation to Maureen","PM","","0 - Today","11/01/2019","","",""
+﻿﻿Photos,Files,,Job Code,Project,Ele. #,Ele. Name,,Task,Dept.,,Check In,Completed,,Notes
+[TS][CELL_TYPE=PHOTOS][WIDTH=55],[TS][CELL_TYPE=FILES][WIDTH=50],[TS][CELL_TYPE=COLUMN_BREAK][WIDTH=10],[TS][CELL_TYPE=STRING][WIDTH=64],[TS][CELL_TYPE=STRING][WIDTH=139],[TS][CELL_TYPE=STRING][WIDTH=50],[TS][CELL_TYPE=STRING][WIDTH=214],[TS][CELL_TYPE=COLUMN_BREAK][WIDTH=10],[TS][CELL_TYPE=STRING][WIDTH=535],[TS][CELL_TYPE=STRING][WIDTH=64],[TS][CELL_TYPE=COLUMN_BREAK][WIDTH=10],[TS][CELL_TYPE=DATETIME][WIDTH=80],[TS][CELL_TYPE=BOOLEAN][WIDTH=72],[TS][CELL_TYPE=COLUMN_BREAK][WIDTH=10],[TS][CELL_TYPE=NOTES][WIDTH=476]
+[TS][SHEET_VIEW_NAME=Open Tasks By Check In],,,[TS][SHEET_VIEW_NAME=Open Tasks By Check In][SORT={ORDER=DESC;CREATED_AT=2019-12-02 10:08:27}],,[TS][SHEET_VIEW_NAME=Open Tasks By Check In][SORT={ORDER=ASC;CREATED_AT=2019-12-02 10:08:29}],,,,,,[TS][SHEET_VIEW_NAME=Open Tasks By Check In][FILTER={VALUE=01/01/01;TYPE=**>**;CREATED_AT=2019-12-02 08:51:38}][GROUP={ORDER=ASC;CREATED_AT=2019-12-02 08:51:18}],[TS][SHEET_VIEW_NAME=Open Tasks By Check In][FILTER={VALUE=Checked;TYPE=**!=**;CREATED_AT=2019-12-06 15:02:38}],,
+[TS][SHEET_VIEW_NAME=Open Ft. McDowell Tasks],,,[TS][SHEET_VIEW_NAME=Open Ft. McDowell Tasks][FILTER={VALUE=18-104;TYPE=**=**;CREATED_AT=2019-12-02 09:12:03}],,,,,,,,[TS][SHEET_VIEW_NAME=Open Ft. McDowell Tasks][FILTER={VALUE=01/01/01;TYPE=**>**;CREATED_AT=2019-12-02 09:07:44}][GROUP={ORDER=ASC;CREATED_AT=2019-12-02 09:07:45}],[TS][SHEET_VIEW_NAME=Open Ft. McDowell Tasks][FILTER={VALUE=Checked;TYPE=**!=**;CREATED_AT=2019-12-06 15:02:50}],,
+[TS][SHEET_VIEW_NAME=Open Everett Public Library Tasks],,,[TS][SHEET_VIEW_NAME=Open Everett Public Library Tasks][FILTER={VALUE=19-156;TYPE=**=**;CREATED_AT=2019-12-02 09:11:56}],,,,,,,,[TS][SHEET_VIEW_NAME=Open Everett Public Library Tasks][FILTER={VALUE=01/01/01;TYPE=**>**;CREATED_AT=2019-12-02 09:07:55}][GROUP={ORDER=ASC;CREATED_AT=2019-12-02 09:07:56}],[TS][SHEET_VIEW_NAME=Open Everett Public Library Tasks][FILTER={VALUE=Checked;TYPE=**!=**;CREATED_AT=2019-12-06 15:03:10}],,
+[TS][SHEET_VIEW_NAME=Open Kyle Mock Tasks],,,[TS][SHEET_VIEW_NAME=Open Kyle Mock Tasks][FILTER={VALUE=19-248;TYPE=**=**;CREATED_AT=2019-12-02 09:11:47}],,,,,,,,[TS][SHEET_VIEW_NAME=Open Kyle Mock Tasks][FILTER={VALUE=01/01/01;TYPE=**>**;CREATED_AT=2019-12-02 09:08:07}][GROUP={ORDER=ASC;CREATED_AT=2019-12-02 09:08:08}],[TS][SHEET_VIEW_NAME=Open Kyle Mock Tasks][FILTER={VALUE=Checked;TYPE=**!=**;CREATED_AT=2019-12-06 15:03:22}],,
+[TS][SHEET_VIEW_NAME=Open Desert Diamond Tasks],,,[TS][SHEET_VIEW_NAME=Open Desert Diamond Tasks][FILTER={VALUE=18-222;TYPE=**=**;CREATED_AT=2019-12-02 09:11:37}],,,,,,,,[TS][SHEET_VIEW_NAME=Open Desert Diamond Tasks][FILTER={VALUE=01/01/01;TYPE=**>**;CREATED_AT=2019-12-02 09:08:12}][GROUP={ORDER=ASC;CREATED_AT=2019-12-02 09:08:13}],[TS][SHEET_VIEW_NAME=Open Desert Diamond Tasks][FILTER={VALUE=Checked;TYPE=**!=**;CREATED_AT=2019-12-06 15:03:30}],,
+[TS][SHEET_VIEW_NAME=Check In Date Sort Test],,,,,,,,,[TS][SHEET_VIEW_NAME=Check In Date Sort Test][SORT={ORDER=DESC;CREATED_AT=2019-12-04 15:18:56}],,[TS][SHEET_VIEW_NAME=Check In Date Sort Test][GROUP={ORDER=DESC;CREATED_AT=2019-12-04 13:50:49}],[TS][SHEET_VIEW_NAME=Check In Date Sort Test][FILTER={VALUE=Checked;TYPE=**!=**;CREATED_AT=2019-12-06 15:03:39}],,
+[TS][SHEET_VIEW_NAME=Playground],,,,,,,,,,,,,,
+,,,18-104,Ft. McDowell,-13,Bar Light Boxes,,Paint brake-formed metal,Paint,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Make sure smoke panel support has been fastened to center support and tested,PM,,12/2/2019,Checked,,
+,,,18-104,Ft. McDowell,-5,Glazed Feather Wall,,Ship Feather Wall,Shipping,,,,,Truck # 2
+,0,,18-104,Ft. McDowell,-3,Light Box Wall,,Review all quotes from Dani at Envel and figure out what to do,PM,,12/5/2019,Checked,,(805) 376-8111. Sent a request for an update on 10/29/19 and 10/30/19
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Berry needs electrical components by Wednesday next week,PM,,12/2/2019,Checked,,
+,,,18-104,Ft. McDowell,-20,Decorative Center Column,,Simple lighting test?,PM,,,,,
+,,,18-104,Ft. McDowell,-4,Buffet Fins,,Order Envel,PM,,,,,
+,,,18-104,Ft. McDowell,-22,Back Bar Diffusers,,Package Back Bar Diffusers,Shipping,,,,,
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Torchier #2 - Install Basket Weave,Fab,,,,,
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Torchier #3 - Build metal frame + horizontal rings,Metal,,12/2/2019,Checked,,
+,,,19-248,Kyle Mock,-4,Log,,Get mounting bracket specs,PM,,12/2/2019,Checked,,Email sent to Kyle Gary and Patrick on 10/15/19
+,,,18-104,Ft. McDowell,-15,Column Lightbox Panels,,Make sure materials got to RMH,PM,,,Checked,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Make sure acrylic has been ordered or we have something in stock,PM,,10/30/2019,Checked,,There's several different options downstairs in the racks for clear material.
+,,,19-248,Kyle Mock,-4,Log,,Locate existing molds,Sculpt,,,,,
+,,,18-104,Ft. McDowell,-4,Buffet Fins,,Ship Buffet Fins,Shipping,,,,,Truck #2
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Talk to Mary about 40% payment,PM,,12/2/2019,Checked,,
+,,,18-104,Ft. McDowell,-5,Glazed Feather Wall,,Update shop drawing to include new assembly at top and bottom,Design,,,,,
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Torchier #3 - Package,Shipping,,,,,
+,,,18-104,Ft. McDowell,-24,Ceiling Beam Diffusers,,Ship Ceiling Beam Diffusers,Shipping,,,,,Truck # 2
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Respond to Christy's email,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-15,Column Lightbox Panels,,Ship Column Lightbox Panels,Shipping,,,,,Truck # 1
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Torchier #1 - Package,Shipping,,,,,
+,,,19-248,Kyle Mock,-3,Cable Pedestals,,Get camera or camera specs,PM,,,Checked,,Email sent to Kyle Gary and Patrick on 10/15/19
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Torchier #3 - Install Basket Weave,Fab,,,,,
+,,,18-104,Ft. McDowell,-4,Buffet Fins,,Hand off redesign to Brian T,PM,,11/1/2019,Checked,,Meeting scheduled for 11/1 @ 10a
+,,,19-248,Kyle Mock,-5,Bark Wrap,,Mold bark texture,Sculpt,,,,,
+,,,18-104,Ft. McDowell,-13,Bar Light Boxes,,Package Bar Light Boxes,Shipping,,,,,
+,,,18-104,Ft. McDowell,-3,Light Box Wall,,Paint PVC,Paint,,,,,
+,,,18-104,Ft. McDowell,-9,Specialty Restaurant Facade,,Assemble Lightboxes,Fab,,,,,
+,,,18-104,Ft. McDowell,-9,Specialty Restaurant Facade,,Package Facade,Shipping,,,,,
+,,,18-104,Ft. McDowell,-16,Decorative Metal Panel,,Ship Decorative Metal Panel,Shipping,,,,,Truck # 1
+,,,18-104,Ft. McDowell,-9,Specialty Restaurant Facade,,Pickup redlines and issue production drawings,PM,,12/2/2019,Checked,,
+,,,18-104,Ft. McDowell,-22,Back Bar Diffusers,,Assemble Back Bar Diffusers,Fab,,,,,
+,,,19-248,Kyle Mock,-6,Stump (Oak),,Get mounting bracket specs,PM,,12/2/2019,Checked,,Email sent to Kyle Gary and Patrick on 10/15/19
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Torchier #2 - Ship,Shipping,,,,,
+,,,00-000,Overhead,,,,2 Week,PM,,10/31/2019,Checked,,
+,,,18-104,Ft. McDowell,-23,Long and Short Lightbox Column,,Respond to Ryan Parker's email,PM,,10/29/2019,Checked,,
+,,,18-104,Ft. McDowell,-15,Column Lightbox Panels,,Get frames from RMH,PM,,12/6/2019,,,
+,,,18-104,Ft. McDowell,-22,Back Bar Diffusers,,Paint metal,Paint,,,,,
+,,,18-222,Desert Diamond,-3,Light Wall Panels,,Respond to Jan's email,,,,Checked,,Check in with Stephen on how to price and Adam on how to best cut
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Smoke panels armature,Metal,,12/2/2019,Checked,,
+,,,19-248,Kyle Mock,-5,Bark Wrap,,Get species and color specs,PM,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Talk to Kyle re: his voicemail,PM,,10/31/2019,Checked,,
+,,,18-104,Ft. McDowell,-22,Back Bar Diffusers,,Cut PVC frames,CNC,,,,,
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Torchier #1 - Paint Basket Weave,Paint,,,,,
+,,,18-104,Ft. McDowell,-15,Column Lightbox Panels,,Paint frames,Paint,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Let Berry know there won't be much  to review for the smoke panels and rocket ship,PM,,10/31/2019,Checked,,
+,,,18-104,Ft. McDowell,-9,Specialty Restaurant Facade,,Paint Wall,Paint,,,,,
+,,,18-104,Ft. McDowell,-3,Light Box Wall,,Laminate PVC to Envel,Fab,,,,,
+,,,19-220,Alder Bar Top,-3,Alder Bar Top,,Make sure product gets ordered from Midway and here today,PM,,10/29/2019,Checked,,
+,,,18-104,Ft. McDowell,-23,Long and Short Lightbox Column,,Submit RFI to not pick up notes,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-20,Decorative Center Column,,Assemble polycarbonate + sheet metal to frame,Fab,,,,,
+,,,18-104,Ft. McDowell,-3,Light Box Wall,,Build Angle Frames,Metal,,12/9/2019,,,
+,,,18-104,Ft. McDowell,-3,Light Box Wall,,Package Light Box Wall,Shipping,,,,,
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Talk to Kiera about Paint schedule,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-2,,,Overall status for each element,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-20,Decorative Center Column,,Package Decorative Center Column,Shipping,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Issue Adam a set of drawings,PM,,10/30/2019,Checked,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Attach rocket ship to armature and fiberglass halves together,Sculpt,,12/2/2019,Checked,,
+,,,18-104,Ft. McDowell,-24,Ceiling Beam Diffusers,,Have production drawings been issued?,PM,,12/3/2019,Checked,,
+,,,18-104,Ft. McDowell,-3,Light Box Wall,,Issue change order to Matt on the Envel - it's not a cost we're going to be able to pick up,PM,,12/6/2019,,,
+,,,19-248,Kyle Mock,-7,Stump (Pine),,Shop drawings,Design,,,,,
+,,,19-248,Kyle Mock,-3,Cable Pedestals,,Locate existing molds,Sculpt,,,,,
+,,,18-104,Ft. McDowell,-23,Long and Short Lightbox Column,,Ship Long And Short Lightbox Column,Shipping,,,,,Truck # 2
+,,,18-104,Ft. McDowell,-15,Column Lightbox Panels,,Order Lumicor,PM,,,,,
+,,,18-104,Ft. McDowell,-23,Long and Short Lightbox Column,,Paint metal,Paint,,,,,
+,,,18-104,Ft. McDowell,-13,Bar Light Boxes,,Ship Bar Light Boxes,Shipping,,,,,Truck # 2
+,,,18-222,Desert Diamond,-3,Wall Panels,,Get recipe from Kiera and send to Jan,PM,,,Checked,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Put together drawing for RMH to price from,PM,,10/30/2019,Checked,,
+,,,19-248,Kyle Mock,-3,Cable Pedestals,,Get mounting bracket specs,PM,,12/2/2019,Checked,,Email sent to Kyle Gary and Patrick on 10/15/19
+,,,18-104,Ft. McDowell,-2,,,Respond to John's email about visiting,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-13,Bar Light Boxes,,Assemble polycarbonate,Fab,,,,,
+,,,18-104,Ft. McDowell,-20,Decorative Center Column,,Ship Decorative Center Column,Shipping,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Find an installer for the 10th,PM,,10/30/2019,Checked,,Daniel is out of town we need someone else available
+,,,18-104,Ft. McDowell,-24,Ceiling Beam Diffusers,,Get polycarbonate from Souers,PM,,,,,
+,,,18-104,Ft. McDowell,-22,Back Bar Diffusers,,Cut files for PVC,PM,,12/6/2019,,,
+,,,18-104,Ft. McDowell,-20,Decorative Center Column,,Get mockup approved,PM,,,,,
+,,,00-000,Overhead,0,,,Production meeting,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Talk to Tanner about the schedule for Torchier metal,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-25,Rivet Straps,,Ship Rivet Straps,Shipping,,,,,Truck # 2
+,,,18-104,Ft. McDowell,-13,Bar Light Boxes,,Get brake-formed pans from Pacer,Vendor,,12/2/2019,Checked,,
+,,,18-104,Ft. McDowell,-9,Specialty Restaurant Facade,,Material takeoffs,PM,,12/2/2019,Checked,,
+,,,18-104,Ft. McDowell,-20,Decorative Center Column,,Laminate sheet metal to backing polycarbonate,Fab,,,,,
+,,,18-104,Ft. McDowell,-20,Decorative Center Column,,Send Eric product data for ID-3000-SWF-2,PM,,,Checked,,
+,,,19-248,Kyle Mock,-2,,,Build powerpoint for kickoff meeting,PM,,,Checked,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Paint rocket ship,Paint,,12/2/2019,Checked,,
+,,,18-104,Ft. McDowell,-9,Specialty Restaurant Facade,,Cut Wall parts,CNC,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Slot rocket ship over center support and verify fit / sturdiness when fastened,PM,,12/2/2019,Checked,,
+,,,18-104,Ft. McDowell,-3,Light Box Wall,,Cut PVC,CNC,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Send cut files to Berry,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Torchier #3 - Paint Basket Weave,Paint,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Verify tube is in for center support,PM,,10/29/2019,Checked,,
+,,,18-104,Ft. McDowell,-22,Back Bar Light Box,,Make sure Atomic was awarded,PM,,,Checked,,Awarded and materials are scheduled to be delivered on 10/14/19
+,,,19-248,Kyle Mock,-2,,,Schedule kickoff meeting,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-15,Column Lightbox Panels,,Visit RMH (10:00a),PM,,,Checked,,
+,,,18-104,Ft. McDowell,-22,Back Bar Diffusers,,Build Back Bar Diffusers,Metal,,12/11/2019,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Talk to Adam about who is doing the install and have them join the call on Thursday,PM,,10/30/2019,Checked,,Looks like its gonna be me. Wonderful.
+,,,18-104,Ft. McDowell,-23,Long and Short Lightbox Column,,Get polycarbonate from Souers,Vendor,,12/13/2019,,,I don't think this is actually in process? Need to verify
+,,,18-104,Ft. McDowell,-15,Column Lightbox Panels,,Paint hardware,Paint,,,,,
+,,,18-104,Ft. McDowell,-2,All,,Get schedule back on track,PM,,,Checked,,
+,,,19-248,Kyle Mock,-5,Bark Wrap,,Paint (10) bark wraps,Paint,,,,,
+,,,18-104,Ft. McDowell,-13,Bar Light Boxes,,Get Kiera the paint callout,PM,,12/3/2019,Checked,,
+,,,18-104,Ft. McDowell,-18,Entry Panel,,Ship Entry Panel,Shipping,,,,,Truck # 1
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Torchier #3 - Ship,Shipping,,,,,
+,,,19-248,Kyle Mock,-3,Cable Pedestals,,Shop drawings,Design,,,,,
+,,,19-220,Alder Bar Top,-3,Alder Bar Top,,Schedule meeting to go over finish issues,PM,,,Checked,,10/28/19 - 3:30p
+,,,00-000,Overhead,0,,,Job Costs,PM,,,Checked,,
+,,,00-000,Overhead,,,,Job Costs,PM,,10/31/2019,Checked,,
+,,,18-104,Ft. McDowell,-13,Bar Light Boxes,,Weld brake-formed pans to vertical square tube,Metal,,,,,
+,,,18-104,Ft. McDowell,-3,Light Box Wall,,Paint Angle Frames,Paint,,,,,
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Torchier #2 - Build metal frame + horizontal rings,Metal,,12/2/2019,Checked,,
+,,,18-104,Ft. McDowell,-4,Buffet Fins,,Package Buffet Fins,Shipping,,,,,
+,,,18-222,Desert Diamond,-3,Wall Panels,,Talk to printer if needed,PM,,12/2/2019,Checked,,
+,,,19-248,Kyle Mock,-5,Bark Wrap,,Shop drawings,Design,,,,,
+,,,19-248,Kyle Mock,-3,Cable Pedestals,,Get additional information about what they'd like for the opening,PM,,,,,
+,,,18-104,Ft. McDowell,0,All,,Touch base with Matt about the multiple missed weeklys,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-23,Long and Short Lightbox Column,,Paint PVC,Paint,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Powdercoat smoke panels,Vendor,,12/2/2019,Checked,,Adam is aware will also be welding the tube on there.
+,,,18-104,Ft. McDowell,-4,Buffet Fins,,Fabricate groups for overhead,Fab,,,,,
+,,,18-104,Ft. McDowell,-23,Long and Short Lightbox Column,,Issue Production Drawings,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-24,Ceiling Beam Diffusers,,Build angle frames,Metal,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Drill hanging holes in smoke panels before delivery to Mukilteo Powder,PM,,10/31/2019,Checked,,Adam is aware will also be welding the tube on there.
+,,,18-104,Ft. McDowell,-5,Glazed Feather Wall,,Assemble MDF feathers,Fab,,,,,
+,,,18-104,Ft. McDowell,-23,Long and Short Lightbox Column,,Make sure material approvals come through,PM,,,Checked,,Overrode I asked Tanner multiple times to review but they were pretty swamped and we needed to get them ordered
+,,,19-248,Kyle Mock,-4,Log,,Get camera or camera specs,PM,,,Checked,,Email sent to Kyle Gary and Patrick on 10/15/19
+,,,18-104,Ft. McDowell,-23,Long and Short Lightbox Column,,Give Kiera a copy of the production drawings,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-13,Bar Light Boxes,,Get polycarbonate from Souers,Vendor,,12/11/2019,,,
+,,,19-248,Kyle Mock,-2,,,Send follow up email with reference images,PM,,,Checked,,As soon as Allan is done with the one-sheet
+,,,18-104,Ft. McDowell,-20,Decorative Center Column,,Issue Production Drawings,PM,,12/3/2019,Checked,,
+,,,18-104,Ft. McDowell,-9,Specialty Restaurant Facade,,Assemble Fins,Fab,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Write up plan to use a parachute with kids as the unveiling,PM,,11/1/2019,Checked,,Sent an email to Kyle on 10/30/19
+,,,18-104,Ft. McDowell,-9,Specialty Restaurant Facade,,Ship Facade,Shipping,,,,,Truck # 2
+,,,18-104,Ft. McDowell,-15,Column Lightbox Panels,,Get the status of the Lumicor sample,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-13,Bar Light Boxes,,Order brake-formed pans,PM,,,Checked,,Tanner needs to check Supervisor Confirmed
+,,,18-104,Ft. McDowell,-20,Decorative Center Column,,Material Takeoffs,PM,,12/5/2019,Checked,,
+,,,18-104,Ft. McDowell,-4,Buffet Fins,,Fabricate groups for screen wall,Fab,,,,,
+,,,18-104,Ft. McDowell,-23,Long and Short Lightbox Column,,Cut files for PVC,PM,,12/6/2019,,,
+,,,18-104,Ft. McDowell,-3,Light Box Wall,,Ship Light Box Wall,Shipping,,,,,Truck #2
+,,,18-104,Ft. McDowell,-15,Column Lightbox Panels,,Assemble lumicor into frames,Fab,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Cut hole for viewport when putting rocket back together,Sculpt,,12/2/2019,Checked,,
+,,,18-222,Desert Diamond,-3,Wall Panels,,Check in With Jan,PM,,12/2/2019,Checked,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Make sure all tasks are in Smartsheet,PM,,,Checked,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Order cut files for rocket ship,PM,,,Checked,,Get Phillip to change the cut files to stainless
+,,,19-248,Kyle Mock,-7,Stump (Pine),,Get camera or camera specs,PM,,,Checked,,Email sent to Kyle Gary and Patrick on 10/15/19
+,,,18-104,Ft. McDowell,-9,Specialty Restaurant Facade,,Assemble Facade,Fab,,,,,
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Torchier #1 - Install Basket Weave,Fab,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Update and resubmit drawings,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Torchier #1 - Ship,Shipping,,,,,
+,,,18-104,Ft. McDowell,-25,Rivet Straps,,Get photos of finished straps,PM,,12/2/2019,Checked,,
+,,,18-104,Ft. McDowell,-4,Buffet Fins,,Order solid surface,PM,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Attach smoke panels to armature,Metal,,12/2/2019,Checked,,
+,,,18-104,Ft. McDowell,-5,Glazed Feather Wall,,Package Feather Wall,Shipping,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Call Maureen and follow up with Mary. Confirm paperwork was acceptable,PM,,12/5/2019,Checked,,I sent everything she requested via email on 12/04/19 @ 9:50a
+,,,18-104,Ft. McDowell,-22,Back Bar Diffusers,,Ship Back Bar Diffusers,Shipping,,,,,Truck # 2
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Pat is coming over for a visit on Thursday,PM,,10/31/2019,Checked,,
+,,,18-222,Desert Diamond,-3,Panels,,Send Jan rough pricing,PM,,,Checked,,
+,,,19-248,Kyle Mock,-6,Stump (Oak),,Shop drawings,Design,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Apply vinyl to smoke panels,Fab,,12/2/2019,Checked,,
+,,,18-104,Ft. McDowell,-24,Ceiling Beam Diffusers,,Assemble polycarbonate into angle frames,Fab,,,,,
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Torchier #2 - Paint Basket Weave,Paint,,,,,
+,,,18-104,Ft. McDowell,-22,Back Bar Light Box,,Check in on materials,PM,,,Checked,,Materials are going to be sent to RMH instead. Silly Atomic.
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Torchier #2 - Package,Shipping,,,,,
+,,,18-104,Ft. McDowell,-23,Long and Short Lightbox Column,,Assemble Long and Short Lightbox Column,Fab,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Rocket ship armature,Metal,,12/2/2019,Checked,,
+,,,18-104,Ft. McDowell,-5,Glazed Feather Wall,,Cut MDF,CNC,,,,,
+,,,18-104,Ft. McDowell,-15,Column Lightbox Panels,,Get approval on mockup corner,PM,,12/9/2019,,,Email sent to ISEC on 10/24/19 with photos
+,,,18-104,Ft. McDowell,-15,Column Lightbox Panels,,Check in on Victor's Progress,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-20,Decorative Center Column,,Mockup drawings to the floor,PM,,12/2/2019,Checked,,We're going to mock up the lighting on the finished element
+,,,19-248,Kyle Mock,-3,Kyle Mock,,Prep for meeting,PM,,,Checked,,10/15/19 @ 10:00a
+,,,18-104,Ft. McDowell,-24,Ceiling Beam Diffusers,,Get approval on polycarbonate or alternate material,PM,,12/13/2019,,,Sent clarification email to Jenna Laughman on 10/24/19 @ 3:15p
+,,,18-104,Ft. McDowell,-23,Long and Short Lightbox Column,,Respond to Matt and Jenna's email about the light fixture,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-5,Glazed Feather Wall,,Order MDF,PM,,,,,
+,,,19-248,Kyle Mock,-2,,,Prep for meeting,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-20,Decorative Center Column,,Order materials,PM,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Berry needs an answer on the permit by Thursday,PM,,12/2/2019,Checked,,
+,,,18-104,Ft. McDowell,-2,,,Any remaining material takeoffs,PM,,12/2/2019,Checked,,Create list in elements below today
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Talk to Forma about moving install date to Sunday 11/10,PM,,10/29/2019,Checked,,Kyle confirmed this was acceptable via email on 10/29/19
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Schedule meeting with Kyle and Rob,PM,,,Checked,,10/14/19 @ 2:30
+,,,18-104,Ft. McDowell,-20,Decorative Center Column,,Order cut sheet metal pattern,PM,,,,,
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Get a status update and make sure we're on track for the 11th,PM,,11/5/2019,Checked,,I'm going to need to update ISEC and Kitchell on the schedule
+,,,19-248,Kyle Mock,-3,Kyle Mock,,Send follow up / summary email,PM,,,Checked,,Sent 10/15/19 @ 2:47
+,,,18-222,Desert Diamond,-3,Wall Panels,,Ship out paint and send Jan tracking number,PM,,10/29/2019,Checked,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Get structural calcs from Canaan,PM,,,Checked,,In progress he has the updated drawing set and we spoke about requirements on 10/24/19
+,,,18-104,Ft. McDowell,-5,Glazed Feather Wall,,Order glazing,PM,,,,,
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Torchier #1 - Build metal frame + horizontal rings,Metal,,12/2/2019,Checked,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Respond to Christy's email about install date,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-4,Buffet Fins,,Get updated quote from Envel,PM,,,,,
+,,,18-104,Ft. McDowell,-20,Decorative Center Column,,Look in to providing adjustability on the track behind the panels,PM,,12/13/2019,,,Per (off the record) phone call with David Nejelski on 10/24/19
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Send Christy signed change order,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-23,Long and Short Lightbox Column,,Order polycarbonate from Souers,PM,,12/6/2019,,,
+,,,18-104,Ft. McDowell,-24,Ceiling Beam Diffusers,,Paint angle frames,Paint,,,,,
+,,,18-104,Ft. McDowell,-9,Specialty Restaurant Facade,,Resubmit updated sheet,PM,,,Checked,,
+,,,19-248,Kyle Mock,-3,Cable Pedestals,,Find CV alternatives / look into custom options,Design,,12/2/2019,Checked,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Get smoke panels cut,Vendor,,10/29/2019,Checked,,
+,,,18-104,Ft. McDowell,-9,Specialty Restaurant Facade,,Paint / Stain? Fins,Paint,,,,,
+,,,19-248,Kyle Mock,-2,,,Make sure John and Jesse know they can get started,PM,,10/30/2019,Checked,,Log and Cable Pedestal Only
+,,,18-104,Ft. McDowell,-19,Framed Cut Metal Panels,,Ship Framed Cut Metal Panels,Shipping,,,,,Truck # 1
+,,,18-104,Ft. McDowell,-4,Buffet Fins,,Submit questions to Matt / David about spacing and lighting,PM,,12/2/2019,Checked,,Addressed in the submittal
+,,,18-104,Ft. McDowell,-24,Ceiling Beam Diffusers,,Order material,PM,,,,,
+,,,18-104,Ft. McDowell,-20,Decorative Center Column,,Build metal frame,Metal,,,,,
+,,,18-104,Ft. McDowell,-24,Ceiling Beam Diffusers,,Package Ceiling Beam Diffusers,Shipping,,,,,
+,,,19-220,Alder Bar Top,-3,Alder Bar Top,,Check in With Kiera,PM,,10/29/2019,Checked,,
+,,,18-104,Ft. McDowell,-15,Column Lightbox Panels,,Package Column Lightbox Panels,Shipping,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Make sure all materials have been ordered,PM,,,Checked,,Marie is trying to find the center support tube
+,,,19-248,Kyle Mock,-5,Bark Wrap,,Pull (10) bark wraps from mold,Sculpt,,,,,
+,,,18-104,Ft. McDowell,-23,Long and Short Lightbox Column,,Cut PVC frames,CNC,,,,,
+,,,18-104,Ft. McDowell,-2,,,Migrate tasks over to Smartsheet,PM,,12/2/2019,Checked,,
+,,,19-248,Kyle Mock,-7,Stump (Pine),,Get mounting bracket specs,PM,,12/2/2019,Checked,,Email sent to Kyle Gary and Patrick on 10/15/19
+,,,18-104,Ft. McDowell,-22,Back Bar Diffusers,,Paint PVC,Paint,,,,,
+,,,19-248,Kyle Mock,-2,,,Add dates to Smartsheet schedule,PM,,,Checked,,Partially complete - finish up on Wednesday
+,,,18-104,Ft. McDowell,-5,Glazed Feather Wall,,Get confirmation on materials,PM,,12/6/2019,,,Sent clarification email to Jenna Laughman on 10/24/19 @ 3:15p
+,,,00-000,Overhead,0,,,Prep for Production Meeting,PM,,,Checked,,
+,,,19-248,Kyle Mock,-7,Stump (Pine),,Find reference images or an actual stump to pull a mold from,Design,,,,,
+,,,18-104,Ft. McDowell,-15,Column Lightbox Panels,,Visit Victor Friday at 10a,PM,,,Checked,,
+,,,18-104,Ft. McDowell,-4,Buffet Fins,,Get quote for solid surface,PM,,,,,
+,,,19-109,CHW Hanging Book Sculpture,-3,Hanging Book Sculpture,,Update drawings with new rod locations,PM,,12/2/2019,Checked,,Will coordinate with Brian Nelson per email on 10/25/19
+,,,19-248,Kyle Mock,-2,,,Schedule meeting with Christian to go over design,PM,,,Checked,,10/28/19 - 3:00p
+,,,18-104,Ft. McDowell,-23,Long and Short Lightbox Column,,Package Long And Short Lightbox Column,Shipping,,,,,
+,,,18-104,Ft. McDowell,-9,Specialty Restaurant Facade,,Assemble Wall,Fab,,,,,
+,,,19-248,Kyle Mock,-6,Stump (Oak),,Get camera or camera specs,PM,,,Checked,,Email sent to Kyle Gary and Patrick on 10/15/19
+,,,18-104,Ft. McDowell,-23,Long and Short Lightbox Column,,Get metal from Atomic,Vendor,,12/11/2019,,,
+,,,18-104,Ft. McDowell,-20,Decorative Center Column,,Call back TBE re: submittal,PM,,,Checked,,Call (314) 791-4840 David Nejelski
+,,,18-104,Ft. McDowell,-22,Back Bar Diffusers,,Get polycarbonate from Souers,Vendor,,12/11/2019,,,
+,,,19-248,Kyle Mock,-5,Bark Wrap,,Get or sculpt bark texture,Paint,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Build center support structure from base plate gussets and tube,Metal,,12/2/2019,Checked,,
+,,,18-104,Ft. McDowell,-5,Glazed Feather Wall,,Paint MDF feathers,Paint,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Let Kyle and Rob know about new schedule,PM,,,Checked,,10/14/19 @ 2:30p
+,,,18-104,Ft. McDowell,-13,Bar Light Boxes,,Paint PVC,Paint,,,,,
+,,,18-104,Ft. McDowell,-20,Decorative Center Column,,Paint sheet metal pattern,Paint,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Make sure Marie has issued Canaan a PO,PM,,10/29/2019,Checked,,
+,,,18-104,Ft. McDowell,-9,Specialty Restaurant Facade,,Cut Fin parts,CNC,,,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Talk to Christy about the welds,PM,,12/2/2019,Checked,,Email sent
+,,,19-248,Kyle Mock,-4,Log,,Modify opening on existing form?,Sculpt,,,,,
+,,,18-104,Ft. McDowell,-4,Buffet Fins,,Update and resubmit shop drawings,Design,,12/2/2019,Checked,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Submit ROM to Kyle on the unveiling,PM,,12/2/2019,Checked,,Wait to hear back about the parachute idea
+,,,19-109,CHW Book Sculpture,-3,Book Sculpture,,Get meeting invite sorted out,PM,,,Checked,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Coordinate install schedule with Morgan at Forma,PM,,12/2/2019,Checked,,
+,,,19-248,Kyle Mock,-7,Stump (Pine),,Get feedback on reference images,PM,,12/2/2019,Checked,,Email sent to Kyle Gary and Patrick on 10/15/19
+,,,19-248,Kyle Mock,-4,Log,,Shop drawings,Design,,,,,
+,,,00-000,Overhead,0,,,Job Costs,PM,,,Checked,,
+,,,18-222,Desert Diamond,-3,Wall Panels,,Call Jan about whether the shipment was picked up in LA or not.,PM,,12/3/2019,Checked,,He called back around 9 and confirmed they picked it up in LA
+,,,18-104,Ft. McDowell,-4,Buffet Fins,,Ask about the ID vs OD of the wall spacing,PM,,12/6/2019,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship Sign,,Confirm Thursday return to site isn't an issue,PM,,12/3/2019,Checked,,Morgan confirmed time was ok via email on 12/03/19
+,,,18-104,Ft. McDowell,-9,Specialty Restaurant Facade,,Get information about the film on the polycarbonate,PM,,12/6/2019,,,I asked Allan to put together a pattern for approval I'll submit when it's ready
+,,,18-104,Ft. McDowell,-4,Buffet Fins,,Get quote from Envel,PM,,12/6/2019,,,Email sent to Dani at Envel on 12/04/19 @ 8:45a
+,,,18-104,Ft. McDowell,-21,Garden Court Torchiers,,Get status in sculpt,PM,,12/9/2019,,,They're going to start working on these next week
+,,,18-104,Ft. McDowell,-3,Light Box Wall,,Send email to Matt justifying the removed VE credit,PM,,12/6/2019,,,
+,,,18-104,Ft. McDowell,-13,Bar Light Boxes,,Check in with Eddie about the status of the polycarbonate,PM,,12/9/2019,,,Email sent on 12/03/19 @ 1:20p letting them know the sample is still way off.
+,,,18-222,Desert Diamond,-3,Wall Panels,,Send tracking info to Jan,PM,,12/3/2019,Checked,,
+,,,18-104,Ft. McDowell,-9,Specialty Restaurant Facade,,Cut files for the radiused wall parts,PM,,12/4/2019,Checked,,
+,,,18-104,Ft. McDowell,-13,Bar Light Boxes,,Send sample back to Souers,PM,,12/4/2019,Checked,,Dropped off with Sue to ship on 12/04/19 @ 8:10a
+,,,18-104,Ft. McDowell,-15,Column Lightbox Panels,,Go review the frames at RMH,PM,,12/5/2019,Checked,,Approved them after the visit we're going to pick them up on 12/06
+,,,18-104,Ft. McDowell,-9,Specialty Restaurant Facade,,Get veneer in,PM,,12/11/2019,,,We're going to get a sample for Kiera to test the stain on before ordering the full lot
+,,,18-104,Ft. McDowell,-26,Display Cases,,Send CA to Marie and schedule a kickoff meeting with Brian T,PM,,12/6/2019,Checked,,Sent CA to Marie on 12/05/19 scheduled kickoff for 12/06/19
+,,,19-156,Everett Public Library,-3,Rocket Ship,,Close out documents,PM,,12/6/2019,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship,,Talk to Brian Tolen about the O&M Manuals,PM,,12/6/2019,,,
+,,,18-104,Ft. McDowell,-2,,,Get signature on CA #07,PM,,12/9/2019,,,
+,,,19-156,Everett Public Library,-3,Rocket Ship,,Make sure Berry sign has submitted certified payrolls,PM,,12/6/2019,,,

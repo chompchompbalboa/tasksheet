@@ -135,6 +135,7 @@ export interface ISheetColumn {
 	typeId: ISheetColumnType['id']
 	name: string
 	width: number
+  defaultValue: string
   allCellValues: Set<string>
 }
 
@@ -142,6 +143,7 @@ export interface ISheetColumnUpdates {
   typeId?: ISheetColumnType['id']
   name?: string
   width?: number
+  defaultValue?: string
   allCellValues?: Set<string>
 }
 
@@ -151,6 +153,7 @@ export interface ISheetColumnToDatabase {
   typeId: ISheetColumnType['id']
   name: string
   width: number
+  defaultValue: string
   cells: ISheetCell[]
 }
 

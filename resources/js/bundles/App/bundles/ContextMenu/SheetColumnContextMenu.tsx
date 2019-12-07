@@ -23,9 +23,6 @@ import {
   updateSheetActive,
   updateSheetColumn
 } from '@app/state/sheet/actions'
-import { 
-  updateActiveTab 
-} from '@app/state/tab/actions'
 
 import ContextMenu from '@app/bundles/ContextMenu/ContextMenu'
 import ContextMenuDivider from '@app/bundles/ContextMenu/ContextMenuDivider'
@@ -137,10 +134,11 @@ export const SheetColumnContextMenu = ({
             </ContextMenuItem>
             <ContextMenuItem
               testId="SheetColumnContextMenuColumnSettings"
-              text="Column Settings" 
-              onClick={() => closeContextMenuOnClick(() => {
-                dispatch(updateActiveTab('SETTINGS'))
-            })}/>
+              text="Settings">
+              <ContextMenuItem text="Default Value"/>
+              <ContextMenuItem text="Record History"/>
+              <ContextMenuItem text="Format"/>
+          </ContextMenuItem>
           <ContextMenuDivider />
         </>
       }
