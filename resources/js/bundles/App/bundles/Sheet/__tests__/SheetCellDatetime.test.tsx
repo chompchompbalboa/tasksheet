@@ -40,7 +40,6 @@ const {
     allSheets,
     allSheetRows,
     allSheetCells,
-    allSheetColumnTypes,
     allSheetViews
   }
 } = mockAppState
@@ -57,7 +56,6 @@ const sheetRowId = sheet.visibleRows[0]
 const sheetColumnId = activeSheetView.visibleColumns[datetimeColumnIndex]
 const sheetCellId = allSheetRows[sheetRowId].cells[sheetColumnId]
 const sheetCell = allSheetCells[sheetCellId]
-const sheetCellColumnType = allSheetColumnTypes['DATETIME']
 
 const sheetFromDatabase = allSheetsFromDatabase[sheetId]
 
@@ -86,7 +84,6 @@ const sheetCellDatetimeProps: ISheetCellDatetimeProps = {
   sheetId: sheetId,
   cellId: sheetCellId,
   cell: sheetCell,
-  columnType: sheetCellColumnType,
   isCellSelected: false,
   updateCellValue: jest.fn(),
   value: sheetCell.value

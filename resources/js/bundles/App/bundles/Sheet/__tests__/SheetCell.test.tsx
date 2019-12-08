@@ -59,43 +59,37 @@ describe('SheetCell', () => {
   })
 
   it("correctly renders SheetCellString", async () => {
-    const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'STRING' })
+    const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'STRING' })
     const { getByTestId } = renderWithRedux(<SheetCell {...props}/> ,{ store: createMockStore(mockAppState) })
     expect(getByTestId('SheetCellString')).toBeTruthy()
   })
 
   it("correctly renders SheetCellNumber", async () => {
-    const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'NUMBER' })
+    const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'NUMBER' })
     const { getByTestId } = renderWithRedux(<SheetCell {...props}/> ,{ store: createMockStore(mockAppState) })
     expect(getByTestId('SheetCellNumber')).toBeTruthy()
   })
 
   it("correctly renders SheetCellBoolean", async () => {
-    const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'BOOLEAN' })
+    const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'BOOLEAN' })
     const { getByTestId } = renderWithRedux(<SheetCell {...props}/> ,{ store: createMockStore(mockAppState) })
     expect(getByTestId('SheetCellBoolean')).toBeTruthy()
   })
 
   it("correctly renders SheetCellDatetime", async () => {
-    const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'DATETIME' })
+    const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'DATETIME' })
     const { getByTestId } = renderWithRedux(<SheetCell {...props}/> ,{ store: createMockStore(mockAppState) })
     expect(getByTestId('SheetCellDatetime')).toBeTruthy()
   })
 
-  it("correctly renders SheetCellDropdown", async () => {
-    const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'DROPDOWN' })
-    const { getByTestId } = renderWithRedux(<SheetCell {...props}/> ,{ store: createMockStore(mockAppState) })
-    expect(getByTestId('SheetCellDropdown')).toBeTruthy()
-  })
-
   it("correctly renders SheetCellPhotos", async () => {
-    const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'PHOTOS' })
+    const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'PHOTOS' })
     const { getByTestId } = renderWithRedux(<SheetCell {...props}/> ,{ store: createMockStore(mockAppState) })
     expect(getByTestId('SheetCellPhotos')).toBeTruthy()
   })
 
   it("correctly renders SheetCellFiles", async () => {
-    const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'FILES' })
+    const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'FILES' })
     const { getByTestId } = renderWithRedux(<SheetCell {...props}/> ,{ store: createMockStore(mockAppState) })
     expect(getByTestId('SheetCellFiles')).toBeTruthy()
   })
@@ -297,7 +291,7 @@ describe('SheetCell', () => {
   })
 
   it("SheetCellString begins editing the cell when double clicked", async () => {
-    const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'STRING' })
+    const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'STRING' })
     const { getByText, getByTestId, queryByTestId } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
     expect(queryByTestId('SheetCellStringTextarea')).toBeNull()
     fireEvent.doubleClick(getByText(cell.value))
@@ -305,7 +299,7 @@ describe('SheetCell', () => {
   })
 
   it("SheetCellNumber begins editing the cell when double clicked", async () => {
-    const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'NUMBER' })
+    const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'NUMBER' })
     const { getByText, getByTestId, queryByTestId } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
     expect(queryByTestId('SheetCellNumberInput')).toBeNull()
     fireEvent.doubleClick(getByText(cell.value))
@@ -313,20 +307,10 @@ describe('SheetCell', () => {
   })
 
   it("SheetCellDatetime begins editing the cell when double clicked", async () => {
-    const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'DATETIME' })
+    const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'DATETIME' })
     const { getByText, getByTestId, queryByTestId } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
     expect(queryByTestId('SheetCellDatetimeDatepickerInput')).toBeNull()
     fireEvent.doubleClick(getByText(cell.value))
     expect(getByTestId('SheetCellDatetimeDatepickerInput')).toBeTruthy()
-  })
-
-  it("SheetCellDropdown begins editing the cell and displays the dropdown when double clicked", async () => {
-    const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'DROPDOWN' })
-    const { getByText, getByTestId, queryByTestId } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
-    expect(queryByTestId('SheetCellDropdownTextarea')).toBeNull()
-    expect(queryByTestId('SheetCellDropdownDropdown')).toBeNull()
-    fireEvent.doubleClick(getByText(cell.value))
-    expect(getByTestId('SheetCellDropdownTextarea')).toBeTruthy()
-    expect(getByTestId('SheetCellDropdownDropdown')).toBeTruthy()
   })
 })

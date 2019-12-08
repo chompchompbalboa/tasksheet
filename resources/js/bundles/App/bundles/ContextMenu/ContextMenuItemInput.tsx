@@ -1,18 +1,16 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { 
-  ISheet, 
-  ISheetRow 
+  ISheet
 } from '@app/state/sheet/types'
 import {  
   allowSelectedCellEditing,
   allowSelectedCellNavigation,
-  createSheetRows,
   preventSelectedCellEditing,
   preventSelectedCellNavigation
 } from '@app/state/sheet/actions'
@@ -22,12 +20,13 @@ import AutosizeInput from 'react-input-autosize'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetRowContextMenuCreateRows = ({
+const ContextMenuItemInput = ({
   sheetId,
-  sheetRowId,
-  aboveOrBelow,
-  closeOnClick
-}: ISheetRowContextMenuCreateRowsProps) => {
+  inputValue,
+  placeholder,
+  setInputValue,
+  text = 'Input'
+}: IContextMenuItemInputProps) => {
 
   useEffect(() => {
     return () => {
@@ -37,16 +36,6 @@ const SheetRowContextMenuCreateRows = ({
   }, [])
 
   const dispatch = useDispatch()
-
-  const [ inputValue, setInputValue ] = useState(1)
-
-  const createRows = () => {
-    closeOnClick(() => {
-      dispatch(allowSelectedCellEditing(sheetId))
-      dispatch(allowSelectedCellNavigation(sheetId))
-      dispatch(createSheetRows(sheetId, inputValue, sheetRowId, aboveOrBelow))
-    })
-  }
   
   const handleAutosizeInputFocus = () => {
     dispatch(preventSelectedCellEditing(sheetId))
@@ -60,30 +49,27 @@ const SheetRowContextMenuCreateRows = ({
   return (
     <Container>
       <LeftPadding  />
-      <TextContainer onClick={() => createRows()}>
-        Add
+      <TextContainer>
+        {text}
       </TextContainer>
       <AutosizeInput
-        value={inputValue === 0 ? '' : inputValue}
+        value={inputValue}
         onBlur={() => handleAutosizeInputBlur()}
-        onChange={e => setInputValue(Math.min(Number(e.target.value), 10))}
+        onChange={e => setInputValue(e.target.value)}
         onFocus={() => handleAutosizeInputFocus()}
+        placeholder={placeholder}
         inputStyle={{
           margin: '0 0.25rem',
-          padding: '0.125rem 0.125rem 0.125rem 0.25rem',
+          padding: '0.125rem 0.25rem',
           height: '100%',
           minWidth: '0.5rem',
           border: '0.5px solid rgb(180, 180, 180)',
           borderRadius: '3px',
-          color: 'rgb(110, 110, 110)',
           backgroundColor: 'transparent',
           outline: 'none',
           fontFamily: 'inherit',
           fontSize: 'inherit',
           fontWeight: 'inherit'}}/>
-      <TextContainer onClick={() => createRows()}>
-        row{inputValue > 1 ? 's' : ''} {aboveOrBelow.toLowerCase()}
-      </TextContainer>
     </Container>
   )
 }
@@ -91,11 +77,12 @@ const SheetRowContextMenuCreateRows = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface ISheetRowContextMenuCreateRowsProps {
+interface IContextMenuItemInputProps {
   sheetId: ISheet['id']
-  sheetRowId: ISheetRow['id']
-  aboveOrBelow: 'ABOVE' | 'BELOW'
-  closeOnClick(...args: any): void
+  inputValue: string
+  placeholder: string
+  setInputValue(nextInputValue: string): void
+  text: string
 }
 
 //-----------------------------------------------------------------------------
@@ -124,9 +111,12 @@ align-items: center;
 justify-content: center;
 `
 
-const TextContainer = styled.span``
+const TextContainer = styled.span`
+  margin-right: 0.25rem;
+  white-space: nowrap;
+`
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetRowContextMenuCreateRows
+export default ContextMenuItemInput

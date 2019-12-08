@@ -6,7 +6,7 @@ import { IFile, IFiles, IFolders, IFileType } from '@app/state/folder/types'
 import { 
   IAllSheets, ISheet, ISheetFromDatabase,
   IAllSheetCells, ISheetCell,
-  IAllSheetColumns, ISheetColumn, ISheetColumnType, 
+  IAllSheetColumns, ISheetColumn, ISheetCellType, 
   ISheetFilter,
   ISheetGroup,
   IAllSheetRows, ISheetRow, ISheetFromDatabaseRow,
@@ -43,7 +43,6 @@ export const appStateFactoryColumns = [
   'STRING',
   'NUMBER',
   'DATETIME',
-  'DROPDOWN',
   'FILES',
   'PHOTOS',
   'BOOLEAN',
@@ -129,7 +128,7 @@ export const appStateFactory = ({
           name: sheetColumnId,
           width: 100,
           defaultValue: '',
-          typeId: columns[currentColumnNumber - 1],
+          cellType: columns[currentColumnNumber - 1] as ISheetCellType,
           allCellValues: new Set() as Set<string>
         }
         
@@ -324,20 +323,19 @@ export interface IGetCellAndCellProps {
   sheetId?: string,
   row: number,
   column: number,
-  columnTypeOverride?: ISheetColumnType['id']
+  cellTypeOverride?: ISheetCellType
 }
 export const getCellAndCellProps = ({
   sheetId,
   row: rowIndexPlusOne,
   column: columnIndexPlusOne,
-  columnTypeOverride
+  cellTypeOverride
 }: IGetCellAndCellProps) => {
   const {
     sheet: {
       allSheets,
       allSheetRows,
       allSheetColumns,
-      allSheetColumnTypes,
       allSheetCells,
       allSheetViews
     },
@@ -345,14 +343,14 @@ export const getCellAndCellProps = ({
   const sheet = allSheets[sheetId || Object.keys(allSheets)[0]]
   const columnId = allSheetViews[sheet.activeSheetViewId].visibleColumns[columnIndexPlusOne - 1]
   const column = allSheetColumns[columnId]
-  const columnType = allSheetColumnTypes[columnTypeOverride || column.typeId]
+  const cellType = cellTypeOverride || column.cellType
   const rowId = sheet.visibleRows[rowIndexPlusOne - 1]
   const row = allSheetRows[rowId]
   const cell = allSheetCells[row.cells[column.id]]
   const props: ISheetCellProps = {
     sheetId: sheetId,
     cellId: cell.id,
-    columnType: columnType,
+    cellType: cellType,
     style: {}
   }
   return {

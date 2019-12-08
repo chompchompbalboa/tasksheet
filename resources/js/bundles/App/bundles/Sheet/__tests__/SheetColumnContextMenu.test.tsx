@@ -12,7 +12,7 @@ import { appStateFactory, appStateFactoryColumns, IAppStateFactoryInput } from '
 import { createMockStore, mockAppState } from '@app/testing/mocks'
 
 //import { App } from '@app/App'
-import { SheetColumnContextMenu, ISheetColumnContextMenuProps } from '@app/bundles/ContextMenu/SheetColumnContextMenu'
+import { SheetColumnContextMenu, ISheetColumnContextMenuProps } from '@app/bundles/Sheet/SheetColumnContextMenu'
 
 //-----------------------------------------------------------------------------
 // Mocks

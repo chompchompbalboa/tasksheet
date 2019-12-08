@@ -10,7 +10,7 @@ import { fireEvent, renderWithRedux, waitForElement, within } from '@app/testing
 import { appStateFactory, appStateFactoryColumns, IAppStateFactoryInput, getCellAndCellProps } from '@app/testing/mocks/appState'
 
 import { Sheet, ISheetProps } from '@app/bundles/Sheet/Sheet'
-import { SheetRowContextMenu, ISheetRowContextMenuProps } from '@app/bundles/ContextMenu/SheetRowContextMenu'
+import { SheetRowContextMenu, ISheetRowContextMenuProps } from '@app/bundles/Sheet/SheetRowContextMenu'
 
 //-----------------------------------------------------------------------------
 // Mocks

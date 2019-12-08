@@ -26,13 +26,13 @@ export const defaultRow = (sheetId: string, rowId: ISheetRow['id'], columns: ISh
 //-----------------------------------------------------------------------------
 // Default Cell
 //-----------------------------------------------------------------------------
-export const defaultCell = (sheetId: string, rowId: ISheetRow['id'], columnId: string, cellId: string): ISheetCell => {
+export const defaultCell = (sheetId: string, rowId: ISheetRow['id'], columnId: string, cellId: string, defaultValue: string = ""): ISheetCell => {
   return {
     id: cellId,
     sheetId: sheetId, 
     columnId: columnId,
     rowId: rowId,
-    value: "",
+    value: defaultValue,
     isCellEditing: false,
     isCellSelectedSheetIds: new Set() as Set<string>
   }
@@ -46,8 +46,8 @@ export const defaultColumn = (sheetId: string): ISheetColumn => {
     id: createUuid(),
     sheetId: sheetId, 
     name: 'Column',
-    typeId: 'STRING',
     width: 100,
+    cellType: 'STRING',
     defaultValue: '',
     allCellValues: new Set() as Set<string>
   }

@@ -1,6 +1,5 @@
 import { IUser, IUserActive, IUserColor, IUserSubscription } from '@app/state/user/types'
 import { ITeamFromDatabase } from '@app/state/team/types'
-import { IAllSheetColumnTypes } from '@app/state/sheet/types'
 
 const initalData: IInitialData = {
 	user: <IUser> {
@@ -33,8 +32,7 @@ const initalData: IInitialData = {
 			folders: <string[]>[],
 			files: <string[]>[],
 		},
-  ],
-  columnTypes: <IAllSheetColumnTypes> {}
+  ]
 }
 
 export default initalData

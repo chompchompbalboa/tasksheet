@@ -6,8 +6,8 @@ import styled from 'styled-components'
 
 import { ISheet } from '@app/state/sheet/types'
 
-import SheetColumnContextMenu from '@app/bundles/ContextMenu/SheetColumnContextMenu'
-import SheetRowContextMenu from '@app/bundles/ContextMenu/SheetRowContextMenu'
+import SheetColumnContextMenu from '@app/bundles/Sheet/SheetColumnContextMenu'
+import SheetRowContextMenu from '@app/bundles/Sheet/SheetRowContextMenu'
 
 //-----------------------------------------------------------------------------
 // Component

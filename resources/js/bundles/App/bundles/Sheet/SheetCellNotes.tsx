@@ -11,7 +11,6 @@ import { TRASH_CAN } from '@app/assets/icons'
 import { IAppState } from '@app/state'
 import { 
   ISheetCell, 
-  ISheetColumnType,
   ISheetNote
 } from '@app/state/sheet/types'
 import {
@@ -134,7 +133,6 @@ export interface ISheetCellNotesProps {
   sheetId: string
   cell: ISheetCell
   cellId: string
-  columnType: ISheetColumnType
   isCellSelected: boolean
   updateCellValue(nextCellValue: string): void
   value: string

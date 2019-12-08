@@ -36,8 +36,7 @@ const SheetActionDownloadCsv = ({
     allSheetCells, 
     allSheetFilters,
     allSheetGroups,
-    allSheetSorts,
-    allSheetColumnTypes, 
+    allSheetSorts
   } = useSelector((state: IAppState) => state.sheet)
 
   const activeFilename = useSelector((state: IAppState) => state.folder.files && state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].name)
@@ -92,7 +91,7 @@ const SheetActionDownloadCsv = ({
   
     const columnSettingsToInclude = data && data.length > 0 ? visibleColumns.map(columnId => {
       const column = allSheetColumns[columnId]
-      const columnCellType = columnId === 'COLUMN_BREAK' ? 'COLUMN_BREAK' : allSheetColumnTypes[column.typeId].cellType
+      const columnCellType = columnId === 'COLUMN_BREAK' ? 'COLUMN_BREAK' : column.cellType
       const columnWidth = columnId === 'COLUMN_BREAK' ? 10 : column.width
       return '[TS]' + 
         '[CELL_TYPE=' + columnCellType + ']' +

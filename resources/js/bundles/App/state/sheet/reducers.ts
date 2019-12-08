@@ -1,13 +1,11 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import defaultInitialData from '@app/state/initialData'
 import { 
   IAllSheets, 
   IAllSheetColumns,
   IAllSheetRows,
   IAllSheetCells, 
-  IAllSheetColumnTypes,   
   IAllSheetFilters, 
   IAllSheetGroups, 
   IAllSheetSorts,
@@ -41,7 +39,6 @@ export interface ISheetState {
   allSheetColumns: IAllSheetColumns
   allSheetRows: IAllSheetRows
   allSheetCells: IAllSheetCells
-  allSheetColumnTypes: IAllSheetColumnTypes
   allSheetFilters: IAllSheetFilters
   allSheetGroups: IAllSheetGroups
   allSheetSorts: IAllSheetSorts
@@ -56,13 +53,6 @@ export interface ISheetState {
 //-----------------------------------------------------------------------------
 // Default State
 //-----------------------------------------------------------------------------
-const columnTypesFromServer: IAllSheetColumnTypes = 
-  typeof initialData !== 'undefined'
-    ? initialData.columnTypes !== undefined
-      ? initialData.columnTypes
-      : {}
-    : defaultInitialData.columnTypes
-
 export const initialSheetState: ISheetState = {
   allSheets: null,
   allSheetColumns: null,
@@ -75,92 +65,6 @@ export const initialSheetState: ISheetState = {
     sheetId: null,
     cutOrCopy: null,
     selections: null
-  },
-  allSheetColumnTypes: {
-    STRING: {
-      id: 'STRING',
-      organizationId: null,
-      userId: null,
-      sheetId: null,
-      name: 'Text',
-      cellType: 'STRING',
-      data: null
-    },
-    NUMBER: {
-      id: 'NUMBER',
-      organizationId: null,
-      userId: null,
-      sheetId: null,
-      name: 'Number',
-      cellType: 'NUMBER',
-      data: null
-    },
-    BOOLEAN: {
-      id: 'BOOLEAN',
-      organizationId: null,
-      userId: null,
-      sheetId: null,
-      name: 'Checkbox',
-      cellType: 'BOOLEAN',
-      data: null
-    },
-    DATETIME: {
-      id: 'DATETIME',
-      organizationId: null,
-      userId: null,
-      sheetId: null,
-      name: 'Date',
-      cellType: 'DATETIME',
-      data: null
-    },
-    DROPDOWN: {
-      id: 'DROPDOWN',
-      organizationId: null,
-      userId: null,
-      sheetId: null,
-      name: 'Dropdown',
-      cellType: 'DROPDOWN',
-      data: {
-        options: {}
-      }
-    },
-    PHOTOS: {
-      id: 'PHOTOS',
-      organizationId: null,
-      userId: null,
-      sheetId: null,
-      name: 'Photos',
-      cellType: 'PHOTOS',
-      data: null
-    },
-    FILES: {
-      id: 'FILES',
-      organizationId: null,
-      userId: null,
-      sheetId: null,
-      name: 'Files',
-      cellType: 'FILES',
-      data: null
-    },
-    NOTES: {
-      id: 'NOTES',
-      organizationId: null,
-      userId: null,
-      sheetId: null,
-      name: 'Notes',
-      cellType: 'NOTES',
-      data: null
-    },
-    TEAM_MEMBERS: {
-      id: 'TEAM_MEMBERS',
-      organizationId: null,
-      userId: null,
-      sheetId: null,
-      name: 'Team Members',
-      cellType: 'TEAM_MEMBERS',
-      data: null
-    },
-    ...columnTypesFromServer
   },
   allSheetFilters: null,
   allSheetGroups: null,

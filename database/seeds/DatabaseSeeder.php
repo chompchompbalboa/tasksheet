@@ -6,11 +6,19 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+use App\Models\SheetView;
+
 use App\Utils\Csv;
-use App\Http\Controllers\SheetController;
+use App\Utils\SheetBuilder;
 
 class DatabaseSeeder extends Seeder
 {
+  
+    public function __construct(SheetBuilder $sheetBuilder) 
+    {
+      $this->sheetBuilder = $sheetBuilder; 
+    }
+
     /**
      * Seed the application's database.
      *
@@ -225,15 +233,38 @@ class DatabaseSeeder extends Seeder
                 $newSheet->save();
                 
                 // Load the CSV we'll create the sheet from
-                $sourceCsv = Storage::disk('sources')->get($path.$folderItem);
-                $sourceCsvRows = Csv::toArray('database/sources/'.$path.$folderItem);
-                
-                // Create the sheet columns, rows and cells
-                $sheetViewVisibleColumns = SheetController::createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $sourceCsvRows);
+                //$csvFile = Storage::disk('sources')->get($path.$folderItem);
 
-                // Save the sheet view's visibleColumns
-                $newSheetView->visibleColumns = $sheetViewVisibleColumns;
-                $newSheetView->save();
+                // Get rows from the csv
+                $csvRows = $this->sheetBuilder->getCsvRows('database/sources/'.$path.$folderItem);
+          
+                // Create the sheet columns, rows and cells
+                $columnIds = $this->sheetBuilder->createSheetColumnsRowsAndCellsFromCsvRows($newSheet, $csvRows);
+                
+                // Get and apply the column settings from the csv
+                $columnSettings = $this->sheetBuilder->getColumnSettings($csvRows);
+                if(!is_null($columnSettings)) { 
+                  $this->sheetBuilder->applyColumnSettings($columnIds, $columnSettings);
+                }
+          
+                // Get sheet views from the csv
+                $sheetViewsSettings = $this->sheetBuilder->getSheetViewsSettings($csvRows);
+                if(!is_null($sheetViewsSettings)) {
+                  $newSheetViewIds = $this->sheetBuilder->createSheetViews($newSheet->id, $columnIds, $sheetViewsSettings);
+                  $newSheet->activeSheetViewId = $newSheetViewIds[0];
+                  $newSheet->save();
+                }
+                else {
+                  $newSheetView = SheetView::create([ 
+                    'id' => Str::uuid()->toString(), 
+                    'sheetId' => $newSheetId,
+                    'name' => 'Default View',
+                    'isLocked' => false,
+                    'visibleColumns' => $columnIds
+                  ]);
+                  $newSheet->activeSheetViewId = $newSheetView->id;
+                  $newSheet->save();
+                }
               }
             } 
           }

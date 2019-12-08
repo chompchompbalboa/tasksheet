@@ -23,7 +23,6 @@ const SheetGrid = memo(({
 }: SheetGridProps) => {
 
   const allSheetColumns = useSelector((state: IAppState) => state.sheet.allSheetColumns)
-  const allSheetColumnTypes = useSelector((state: IAppState) => state.sheet.allSheetColumnTypes)
   const allSheetRows = useSelector((state: IAppState) => state.sheet.allSheetRows)
 
   const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
@@ -69,7 +68,7 @@ const SheetGrid = memo(({
           cellId={allSheetRows[rowId].cells[columnId]}
           sheetId={sheetId}
           style={style}
-          columnType={allSheetColumnTypes[allSheetColumns[columnId].typeId]}/>
+          cellType={allSheetColumns[columnId].cellType}/>
       )
     }
     if(columnIndex === 0) {

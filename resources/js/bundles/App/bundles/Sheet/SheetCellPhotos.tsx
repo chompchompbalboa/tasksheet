@@ -9,7 +9,7 @@ import { ARROW_LEFT, ARROW_RIGHT, PHOTOS } from '@app/assets/icons'
 import { mutation, query } from '@app/api'
 import { storeFileToS3 } from '@/api/vapor'
 
-import { ISheetCell, ISheetColumnType } from '@app/state/sheet/types'
+import { ISheetCell } from '@app/state/sheet/types'
 
 import Icon from '@/components/Icon'
 import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
@@ -178,7 +178,6 @@ interface SheetCellPhotosProps {
   sheetId: string
   cell: ISheetCell
   cellId: string
-  columnType: ISheetColumnType
   isCellSelected: boolean
   updateCellValue(nextCellValue: string): void
   value: string

@@ -9,7 +9,7 @@ import { DOWNLOAD, FILES, CLOSE } from '@app/assets/icons'
 import { storeFileToS3 } from '@/api/vapor'
 import { mutation, query } from '@app/api'
 
-import { ISheetCell, ISheetColumnType } from '@app/state/sheet/types'
+import { ISheetCell } from '@app/state/sheet/types'
 
 import Icon from '@/components/Icon'
 import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
@@ -184,7 +184,6 @@ interface ISheetCellFiles {
   sheetId: string
   cell: ISheetCell
   cellId: string
-  columnType: ISheetColumnType
   isCellSelected: boolean
   updateCellValue(nextCellValue: string): void
   value: string

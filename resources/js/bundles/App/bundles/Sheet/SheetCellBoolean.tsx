@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
-import { ISheetCell, ISheetColumnType } from '@app/state/sheet/types'
+import { ISheetCell } from '@app/state/sheet/types'
 import {
   updateSheetSelectionFromArrowKey as updateSheetSelectionFromArrowKeyAction
 } from '@app/state/sheet/actions'
@@ -83,7 +83,6 @@ interface SheetCellBooleanProps {
   sheetId: string
   cell: ISheetCell
   cellId: string
-  columnType: ISheetColumnType
   isCellSelected: boolean
   updateCellValue(nextCellValue: string): void
   value: string

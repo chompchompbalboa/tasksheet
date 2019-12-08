@@ -8,7 +8,6 @@ import { ISettingsContent } from '@app/bundles/Settings/Settings'
 import SettingsBilling from '@app/bundles/Settings/SettingsBilling'
 import SettingsUser from '@app/bundles/Settings/SettingsUser'
 import SettingsTeams from '@app/bundles/Settings/SettingsTeams'
-import SettingsColumnSettings from '@app/bundles/Settings/SettingsColumnSettings'
 
 //-----------------------------------------------------------------------------
 // Components
@@ -19,7 +18,6 @@ const SettingsContent = ({
 
   const content = {
     BILLING: SettingsBilling,
-    COLUMN_SETTINGS: SettingsColumnSettings,
     TEAMS: SettingsTeams,
     USER: SettingsUser,
   }

@@ -17,8 +17,9 @@ class CreateSheetColumn extends Migration
             $table->uuid('id')->primary();
             $table->uuid('sheetId')->nullable();
             $table->string('name')->nullable();
-            $table->string('typeId');
+            $table->string('cellType');
             $table->float('width');
+            $table->string('defaultValue')->nullable();
             $table->timestamp('createdAt')->nullable();
             $table->timestamp('updatedAt')->nullable();
 

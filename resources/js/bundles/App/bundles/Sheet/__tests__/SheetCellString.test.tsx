@@ -45,19 +45,19 @@ jest.setTimeout(10000)
 describe('SheetCell', () => {
   
   it("renders without crashing", async () => {
-    const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'STRING' })
+    const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'STRING' })
     const { getByTestId } = renderWithRedux(<SheetCell {...props}/>, { store: createMockStore(mockAppState) })
     expect(getByTestId('SheetCellContainer')).toHaveTextContent(cell.value)
   })
 
   it("correctly renders the SheetCellString Component", async () => {
-    const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'STRING' })
+    const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'STRING' })
     const { getByTestId } = renderWithRedux(<SheetCell {...props}/> ,{ store: createMockStore(mockAppState) })
     expect(getByTestId('SheetCellString')).toBeTruthy()
   })
 
   it("begins editing the cell when double clicked", async () => {
-    const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'STRING' })
+    const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'STRING' })
     const { getByText, getByTestId, queryByTestId } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
     expect(queryByTestId('SheetCellStringTextarea')).toBeNull()
     fireEvent.doubleClick(getByText(cell.value))
@@ -65,7 +65,7 @@ describe('SheetCell', () => {
   })
 
   it("begins editing the cell when selected and the user enters a character key", async () => {
-    const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'STRING' })
+    const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'STRING' })
     const { getByTestId, queryByTestId, queryByText } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
     expect(queryByTestId('SheetCellStringTextarea')).toBeNull()
     const SheetCellString = getByTestId('SheetCellString')
@@ -79,7 +79,7 @@ describe('SheetCell', () => {
   })
 
   it("correctly updates its value on user input", async () => {
-    const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, columnTypeOverride: 'STRING' })
+    const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'STRING' })
     const { getByTestId, queryByTestId, queryByText } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
     expect(queryByTestId('SheetCellStringTextarea')).toBeNull()
     const SheetCellStringBefore = getByTestId('SheetCellString')

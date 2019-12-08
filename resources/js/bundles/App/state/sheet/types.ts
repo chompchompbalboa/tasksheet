@@ -5,7 +5,6 @@ export interface IAllSheets { [sheetId: string]: ISheet }
 export interface IAllSheetColumns { [columnId: string]: ISheetColumn }
 export interface IAllSheetRows { [rowId: string]: ISheetRow }
 export interface IAllSheetCells { [cellId: string]: ISheetCell }
-export interface IAllSheetColumnTypes { [cellId: string]: ISheetColumnType }
 export interface IAllSheetFilters { [filterId: string]: ISheetFilter }
 export interface IAllSheetGroups { [groupId: string]: ISheetGroup }
 export interface IAllSheetSorts { [sortId: string]: ISheetSort }
@@ -132,7 +131,7 @@ export interface ISheetViewUpdates {
 export interface ISheetColumn {
 	id: string
 	sheetId: string
-	typeId: ISheetColumnType['id']
+	cellType: ISheetCellType
 	name: string
 	width: number
   defaultValue: string
@@ -140,7 +139,7 @@ export interface ISheetColumn {
 }
 
 export interface ISheetColumnUpdates {
-  typeId?: ISheetColumnType['id']
+  cellType?: ISheetCellType
   name?: string
   width?: number
   defaultValue?: string
@@ -150,30 +149,11 @@ export interface ISheetColumnUpdates {
 export interface ISheetColumnToDatabase {
   id: string
   sheetId: string
-  typeId: ISheetColumnType['id']
+  cellType: ISheetCellType
   name: string
   width: number
   defaultValue: string
   cells: ISheetCell[]
-}
-
-export interface ISheetColumnType {
-  id: string
-  organizationId: string
-  userId: string
-  sheetId: string
-  name: string
-  cellType: ISheetCellType
-  data: ISheetColumnTypeDropdown
-}
-
-export interface ISheetColumnTypeDropdown {
-  options: { [key: string]: ISheetColumnTypeDropdownOption }
-}
-
-export interface ISheetColumnTypeDropdownOption {
-  id: string
-  value: string
 }
 
 //-----------------------------------------------------------------------------
@@ -222,7 +202,6 @@ export type ISheetCellType =
 'DATETIME'|
 'BOOLEAN'|
 'NUMBER' | 
-'DROPDOWN' |
 'PHOTOS' | 
 'FILES' |
 'NOTES' |

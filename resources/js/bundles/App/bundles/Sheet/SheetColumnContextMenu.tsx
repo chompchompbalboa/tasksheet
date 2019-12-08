@@ -10,7 +10,8 @@ import { CHECKMARK } from '@app/assets/icons'
 import { IAppState } from '@app/state'
 import { 
   ISheet,
-  ISheetColumn
+  ISheetColumn,
+  ISheetCellType
 } from '@app/state/sheet/types'
 import { 
   createSheetColumn,
@@ -27,6 +28,7 @@ import {
 import ContextMenu from '@app/bundles/ContextMenu/ContextMenu'
 import ContextMenuDivider from '@app/bundles/ContextMenu/ContextMenuDivider'
 import ContextMenuItem from '@app/bundles/ContextMenu/ContextMenuItem'
+import SheetColumnContextMenuSettings from '@app/bundles/Sheet/SheetColumnContextMenuSettings'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -43,17 +45,51 @@ export const SheetColumnContextMenu = ({
   
   // Redux
   const dispatch = useDispatch()
-
   const allSheetColumns = useSelector((state: IAppState) => state.sheet.allSheetColumns)
-  const allSheetColumnTypes = useSelector((state: IAppState) => state.sheet.allSheetColumnTypes)
-  const allSheetColumnTypesIds = Object.keys(allSheetColumnTypes)
-  
   const sheetColumns = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].columns)
   const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].activeSheetViewId)
   const sheetViewVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].visibleColumns)
-  
+  const sheetColumn = allSheetColumns[columnId]
+
+  // Cell Types
+  const sheetCellTypes: { [sheetCellType: string]: { label: string, cellType: ISheetCellType }} = {
+    STRING: {
+      label: 'Text',
+      cellType: 'STRING'
+    },
+    NUMBER: {
+      label: 'Number',
+      cellType: 'NUMBER'
+    },
+    DATETIME: {
+      label: 'Date',
+      cellType: 'DATETIME'
+    },
+    BOOLEAN: {
+      label: 'Checkbox',
+      cellType: 'BOOLEAN'
+    },
+    PHOTOS: {
+      label: 'Photos',
+      cellType: 'PHOTOS'
+    },
+    FILES: {
+      label: 'Files',
+      cellType: 'FILES'
+    },
+    NOTES: {
+      label: 'Notes',
+      cellType: 'NOTES'
+    },
+    TEAM_MEMBERS: {
+      label: 'Team Members',
+      cellType: 'TEAM_MEMBERS'
+    },
+  }
+  const sheetCellTypesKeys = Object.keys(sheetCellTypes)
+
   // Is this is a column break?
-  const sheetColumnType = columnId === 'COLUMN_BREAK' ? 'COLUMN_BREAK' : allSheetColumnTypes[allSheetColumns[columnId].typeId]
+  const sheetColumnCellType = columnId === 'COLUMN_BREAK' ? 'COLUMN_BREAK' : sheetColumn.cellType
   const onDeleteClick = columnId === 'COLUMN_BREAK' 
     ? () => dispatch(deleteSheetColumnBreak(sheetId, columnIndex))
     : () => dispatch(deleteSheetColumn(sheetId, columnId))
@@ -84,7 +120,7 @@ export const SheetColumnContextMenu = ({
         isFirstItem 
         text="Insert Column" 
         onClick={() => closeContextMenuOnClick(() => dispatch(createSheetColumn(sheetId, columnIndex)))}/>
-      {sheetColumnType !== 'COLUMN_BREAK' && 
+      {sheetColumnCellType !== 'COLUMN_BREAK' && 
         <>
           <ContextMenuItem 
             text="Insert Column Break" 
@@ -120,25 +156,21 @@ export const SheetColumnContextMenu = ({
             onClick={() => closeContextMenuOnClick(() => dispatch(updateSheetActive({ columnRenamingId: columnId })))}/>
           <ContextMenuItem 
             text="Type">
-            {allSheetColumnTypesIds.map((sheetColumnTypeId, index) => {
-              const currentColumnType = allSheetColumnTypes[sheetColumnTypeId]
+            {sheetCellTypesKeys.map((sheetCellType, index) => {
+              const currentCellType = sheetCellTypes[sheetCellType]
               return (
                 <ContextMenuItem
-                  key={sheetColumnTypeId}
+                  key={sheetCellType}
                   isFirstItem={index === 0}
-                  isLastItem={index === (allSheetColumnTypesIds.length - 1)}
-                  logo={sheetColumnType.id === currentColumnType.id ? CHECKMARK : null}
-                  onClick={() => closeContextMenuOnClick(() => dispatch(updateSheetColumn(columnId, { typeId: currentColumnType.id })))}
-                  text={currentColumnType.name}
+                  isLastItem={index === (sheetCellTypesKeys.length - 1)}
+                  logo={sheetColumnCellType === currentCellType.cellType ? CHECKMARK : null}
+                  onClick={() => closeContextMenuOnClick(() => dispatch(updateSheetColumn(columnId, { cellType: currentCellType.cellType })))}
+                  text={currentCellType.label}
                   />)})}
             </ContextMenuItem>
-            <ContextMenuItem
-              testId="SheetColumnContextMenuColumnSettings"
-              text="Settings">
-              <ContextMenuItem text="Default Value"/>
-              <ContextMenuItem text="Record History"/>
-              <ContextMenuItem text="Format"/>
-          </ContextMenuItem>
+            <SheetColumnContextMenuSettings
+              sheetId={sheetId}
+              columnId={columnId}/>
           <ContextMenuDivider />
         </>
       }

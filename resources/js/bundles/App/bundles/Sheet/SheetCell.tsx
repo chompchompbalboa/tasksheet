@@ -10,7 +10,6 @@ import { IAppState } from '@app/state'
 import { 
   ISheetCell, 
   ISheetCellType,
-  ISheetColumnType,
   ISheetStyles 
 } from '@app/state/sheet/types'
 import {
@@ -20,7 +19,6 @@ import {
 
 import SheetCellBoolean from '@app/bundles/Sheet/SheetCellBoolean'
 import SheetCellDatetime from '@app/bundles/Sheet/SheetCellDatetime'
-import SheetCellDropdown from '@app/bundles/Sheet/SheetCellDropdown'
 import SheetCellFiles from '@app/bundles/Sheet/SheetCellFiles'
 import SheetCellNumber from '@app/bundles/Sheet/SheetCellNumber'
 import SheetCellNotes from '@app/bundles/Sheet/SheetCellNotes'
@@ -35,7 +33,7 @@ import SheetCellTeamMembers from '@app/bundles/Sheet/SheetCellTeamMembers'
 export const SheetCell = memo(({
   sheetId,
   cellId,
-  columnType,
+  cellType,
   style
 }: ISheetCellProps) => {
 
@@ -79,7 +77,6 @@ export const SheetCell = memo(({
       NUMBER: SheetCellNumber,
       BOOLEAN: SheetCellBoolean,
       DATETIME: SheetCellDatetime,
-      DROPDOWN: SheetCellDropdown,
       PHOTOS: SheetCellPhotos,
       FILES: SheetCellFiles,
       NOTES: SheetCellNotes,
@@ -88,21 +85,21 @@ export const SheetCell = memo(({
 
     // Update selection when cell is clicked
     const handleMouseDown = (e: MouseEvent) => {
-      if(columnType.cellType !== 'BOOLEAN' || e.shiftKey) {
+      if(cellType !== 'BOOLEAN' || e.shiftKey) {
         dispatch(updateSheetSelectionFromCellClick(sheetId, cell.id, e.shiftKey))
       }
     }
 
     const isCellSelected = cell.isCellSelectedSheetIds.has(sheetId)
     const isCellInRange = sheetSelectionsRangeCellIds.has(cellId)
-    const SheetCellType = sheetCellTypes[columnType.cellType]
+    const SheetCellType = sheetCellTypes[cellType]
 
     return (
       <Container
         data-testid="SheetCellContainer"
         ref={cellContainer}
         cellId={cellId}
-        cellType={columnType.cellType}
+        cellType={cellType}
         highlightColor={userColorSecondary}
         isCellSelected={isCellSelected}
         isCellInRange={isCellInRange}
@@ -117,7 +114,6 @@ export const SheetCell = memo(({
           sheetId={sheetId}
           cell={cell}
           cellId={cell.id}
-          columnType={columnType}
           isCellSelected={isCellSelected}
           updateCellValue={setCellValue}
           value={cellValue}/>
@@ -143,7 +139,7 @@ export const SheetCell = memo(({
 export interface ISheetCellProps {
   sheetId: string
   cellId: ISheetCell['id']
-  columnType: ISheetColumnType
+  cellType: ISheetCellType
   style: {
     width?: ReactText
   }

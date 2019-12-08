@@ -42,6 +42,7 @@ export const createSheetRows = (
     
     const {
       allSheets,
+      allSheetColumns,
       allSheetCells,
       allSheetRows,
     } = getState().sheet
@@ -77,7 +78,8 @@ export const createSheetRows = (
       const newRowCellsToDatabase: ISheetCell[] = []
       Object.keys(newRow.cells).forEach((columnId: string) => {
         const cellId = newRow.cells[columnId]
-        const newCell = defaultCell(sheetId, newRow.id, columnId, cellId)
+        const column = allSheetColumns[columnId]
+        const newCell = defaultCell(sheetId, newRow.id, columnId, cellId, column.defaultValue)
         nextAllSheetCells[cellId] = newCell
         newRowCellsToDatabase.push(newCell)
       })

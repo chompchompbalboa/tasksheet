@@ -15,7 +15,6 @@ declare global {
     user: IUser
     teams: ITeamFromDatabase[]
     folders: IFolder[]
-    columnTypes: IAllSheetColumnTypes
 	}
 }
 export {} // Typescript needs this file to be a module

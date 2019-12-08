@@ -86,8 +86,9 @@ class SheetController extends Controller
           'id' => $newColumnId,
           'sheetId' => $newSheet->id,
           'name' => $columnName,
-          'typeId' => 'STRING',
-          'width' => 100
+          'cellType' => 'STRING',
+          'width' => 100,
+          'defaultValue' => null
         ]);
       }
 
@@ -175,117 +176,6 @@ class SheetController extends Controller
 
       // Return the response
       return response()->json(null, 200);
-    }
-
-
-    public static function createSheetColumnsRowsAndCellsFromArrayOfRows($newSheet, $arrayOfRows) {
-
-      // Count the number of rows
-      $arrayOfRowsCount = count($arrayOfRows);
-
-      // Tasksheet gives users the option to store configuration data about
-      // the sheet when downloading. If they choose to include that data, it is
-      // saved to the first row of the downloaded sheet. Here, we're checking
-      // the first row to see if the configuration data exists and if it does,
-      // setting it up for use during sheet creation
-      $arrayFirstRowCells = $arrayOfRows[0];
-      $arrayFirstRowFirstCellValue = $arrayOfRows[0][array_keys($arrayOfRows[0])[0]];
-      $isSortsheetConfigurationDataIncluded = Str::contains($arrayFirstRowFirstCellValue, '[TS]');
-      $cellTypes = [];
-      if($isSortsheetConfigurationDataIncluded) {
-        foreach($arrayFirstRowCells as $currentCell) {
-          // Load the configuration data into an array by using the end bracket as a delimiter
-          $currentCellsSortsheetConfigurationData = explode(']', $currentCell);
-           // The first configuration data point is always the cell type
-          $currentCellType = str_replace('[', '', $currentCellsSortsheetConfigurationData[1]);
-          array_push($cellTypes, $currentCellType);
-        }
-        // Remove the row containing the configuration data from the input array
-        array_splice($arrayOfRows, 0, 1);
-      }
-
-      // Create the sheet's columns by building an array that will be bulk 
-      // inserted into the database. During column creation, we also build 
-      // the sheet view's visible columns
-      $newSheetColumns = [];
-      $columnIds = [];
-      $currentColumnIndex = 0;
-      foreach($arrayOfRows[0] as $columnName => $cellValue) {
-        // Bail out if the current column is a column break
-        if(!Str::contains($columnName, 'COLUMN_BREAK')) {
-
-          // Create the new column.
-          $newColumnId = Str::uuid()->toString();
-          $nextColumnWidth = max(50, strlen($columnName) * 8);
-          array_push($newSheetColumns, [
-            'id' => $newColumnId,
-            'sheetId' => $newSheet->id,
-            'name' => $columnName,
-            'typeId' => $isSortsheetConfigurationDataIncluded 
-              ? $cellTypes[$currentColumnIndex] 
-              : SheetUtils::getColumnType($cellValue),
-            'width' => $nextColumnWidth
-          ]);
-
-          // Add the new column id to the sheet view's visible columns
-          $columnIds[$currentColumnIndex] = $newColumnId;
-        }
-        else {
-          // If it is a column break, add it to the sheet view's visible columns
-          $columnIds[$currentColumnIndex] = 'COLUMN_BREAK';
-        }
-        $currentColumnIndex++;
-      }
-
-      // Create the sheet's row and cell's by building an array that will be 
-      // bulk inserted into the database. 
-      $newSheetRows = [];
-      $newSheetCells = [];
-      foreach($arrayOfRows as $rowFromCsv) {
-
-        // Bail out if this row contains configuration data
-        $firstCellValue = $rowFromCsv[array_keys($rowFromCsv)[0]];
-        if(!Str::contains($firstCellValue, '[TS]')) {
-
-          // Create the new row
-          $newRowId = Str::uuid()->toString();
-          array_push($newSheetRows, [ 
-            'id' => $newRowId,
-            'sheetId' => $newSheet->id 
-          ]);
-  
-          // Create the new cells
-          foreach($newSheetColumns as $index => $column) {
-            $cellValue = $rowFromCsv[$column['name']];
-            array_push($newSheetCells, [
-              'id' => Str::uuid()->toString(),
-              'sheetId' => $newSheet->id,
-              'columnId' => $column['id'],
-              'rowId' => $newRowId,
-              'value' => $cellValue
-            ]);
-            $cellValueLength = strlen($cellValue);
-            $defaultColumnWidth = $newSheetColumns[$index]['width'];
-            $newColumnWidth = min(300, max($cellValueLength * 8, $defaultColumnWidth));
-            $newSheetColumns[$index]['width'] = $newColumnWidth;
-          }
-        }
-      }
-
-      // Save the sheet columns
-      SheetColumn::insert($newSheetColumns);
-
-      // Save the sheet rows
-      foreach (array_chunk($newSheetRows, 2500) as $chunk) {
-        SheetRow::insert($chunk);
-      }
-
-      // Save the sheet cells
-      foreach (array_chunk($newSheetCells, 2500) as $chunk) {
-        SheetCell::insert($chunk);
-      }  
-
-      return $columnIds;
     }
 
     public static function prepareSheetDownload(Request $request, Sheet $sheet)

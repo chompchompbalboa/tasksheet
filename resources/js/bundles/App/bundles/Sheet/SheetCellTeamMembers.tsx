@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
-import { ISheetCell, ISheetColumnType } from '@app/state/sheet/types'
+import { ISheetCell } from '@app/state/sheet/types'
 import { ITeamMember } from '@app/state/team/types'
 
 import {
@@ -135,7 +135,6 @@ interface SheetCellStringProps {
   sheetId: string
   cell: ISheetCell
   cellId: string
-  columnType: ISheetColumnType
   isCellSelected: boolean
   testId?: string
   updateCellValue(nextCellValue: string): void

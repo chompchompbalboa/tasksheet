@@ -24,7 +24,7 @@ class SheetBuilder
       if($columnId !== 'COLUMN_BREAK') {
         $sheetColumn = SheetColumn::find($columnId);
         $columnSettings = $allColumnSettings[$index];
-        if(array_key_exists('CELL_TYPE', $columnSettings)) { $sheetColumn->typeId = $columnSettings['CELL_TYPE']; }
+        if(array_key_exists('CELL_TYPE', $columnSettings)) { $sheetColumn->cellType = $columnSettings['CELL_TYPE']; }
         if(array_key_exists('WIDTH', $columnSettings)) { $sheetColumn->width = $columnSettings['WIDTH']; }
         $sheetColumn->save();
       }
@@ -49,8 +49,9 @@ class SheetBuilder
           'id' => $newColumnId,
           'sheetId' => $newSheet->id,
           'name' => $columnName,
-          'typeId' => SheetUtils::getColumnType($cellValue),
-          'width' => $nextColumnWidth
+          'cellType' => SheetUtils::getCellType($cellValue),
+          'width' => $nextColumnWidth,
+          'defaultValue' => null
         ]);
 
         // Add the new column id to the sheet view's visible columns
