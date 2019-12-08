@@ -10,7 +10,7 @@ import {
   IAllSheetGroups, 
   IAllSheetSorts,
   IAllSheetViews,
-  IAllSheetCellNotes, IAllSheetNotes,
+  IAllSheetCellChanges, IAllSheetChanges,
   IAllSheetPriorities,
   ISheetActive,
   ISheetClipboard, 
@@ -27,7 +27,7 @@ import {
   UPDATE_SHEET_ROW, SET_ALL_SHEET_ROWS,
   UPDATE_SHEET_SORT, SET_ALL_SHEET_SORTS,
   UPDATE_SHEET_VIEW, SET_ALL_SHEET_VIEWS,
-  SET_ALL_SHEET_CELL_NOTES, SET_ALL_SHEET_NOTES,
+  SET_ALL_SHEET_CELL_CHANGES, SET_ALL_SHEET_CHANGES,
   UPDATE_SHEET_PRIORITY, SET_ALL_SHEET_PRIORITIES
 } from '@app/state/sheet/actions'
 
@@ -43,8 +43,8 @@ export interface ISheetState {
   allSheetGroups: IAllSheetGroups
   allSheetSorts: IAllSheetSorts
   allSheetViews: IAllSheetViews
-  allSheetNotes: IAllSheetNotes
-  allSheetCellNotes: IAllSheetCellNotes
+  allSheetChanges: IAllSheetChanges
+  allSheetCellChanges: IAllSheetCellChanges
   allSheetPriorities: IAllSheetPriorities
   active: ISheetActive
   clipboard: ISheetClipboard
@@ -70,8 +70,8 @@ export const initialSheetState: ISheetState = {
   allSheetGroups: null,
   allSheetSorts: null,
   allSheetViews: null,
-  allSheetNotes: null,
-  allSheetCellNotes: null,
+  allSheetChanges: null,
+  allSheetCellChanges: null,
   allSheetPriorities: null
 }
 
@@ -92,8 +92,8 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
         filters, 
         groups,
         sorts,
-        cellNotes,
-        notes,
+        cellChanges,
+        changes,
         priorities
       } = action
 			return {
@@ -106,8 +106,8 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
         allSheetFilters: { ...state.allSheetFilters, ...filters },
         allSheetGroups: { ...state.allSheetGroups, ...groups },
         allSheetSorts: { ...state.allSheetSorts, ...sorts },
-        allSheetCellNotes: { ...state.allSheetCellNotes, ...cellNotes },
-        allSheetNotes: { ...state.allSheetNotes, ...notes },
+        allSheetCellChanges: { ...state.allSheetCellChanges, ...cellChanges },
+        allSheetChanges: { ...state.allSheetChanges, ...changes },
         allSheetPriorities: { ...state.allSheetPriorities, ...priorities }
 			}
 		}
@@ -119,8 +119,8 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
 		case SET_ALL_SHEET_GROUPS: { return { ...state, allSheetGroups: action.nextAllSheetGroups } }
 		case SET_ALL_SHEET_SORTS: { return { ...state, allSheetSorts: action.nextAllSheetSorts } }
 		case SET_ALL_SHEET_VIEWS: { return { ...state, allSheetViews: action.nextAllSheetViews } }
-		case SET_ALL_SHEET_CELL_NOTES: { return { ...state, allSheetCellNotes: action.nextAllSheetCellNotes } }
-		case SET_ALL_SHEET_NOTES: { return { ...state, allSheetNotes: action.nextAllSheetNotes } }
+		case SET_ALL_SHEET_CELL_CHANGES: { return { ...state, allSheetCellChanges: action.nextAllSheetCellChanges } }
+		case SET_ALL_SHEET_CHANGES: { return { ...state, allSheetChanges: action.nextAllSheetChanges } }
 		case SET_ALL_SHEET_PRIORITIES: { return { ...state, allSheetPriorities: action.nextAllSheetPriorities } }
       
 		case UPDATE_SHEET: {

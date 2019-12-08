@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSheetNote extends Migration
+class CreateSheetCellFile extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,16 @@ class CreateSheetNote extends Migration
      */
     public function up()
     {
-        Schema::create('sheetNotes', function (Blueprint $table) {
+        Schema::create('sheetCellFiles', function (Blueprint $table) {
           $table->uuid('id')->primary();
           $table->uuid('sheetId');
           $table->uuid('cellId');
-          $table->string('value');
-          $table->string('createdBy');
+          $table->string('filename');
+          $table->uuid('s3Uuid');
+          $table->string('s3Bucket');
+          $table->string('s3Key');
+          $table->string('uploadedBy');
+          $table->datetime('uploadedAt');
           $table->timestamp('createdAt')->nullable();
           $table->timestamp('updatedAt')->nullable();
 
@@ -34,6 +38,6 @@ class CreateSheetNote extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sheetNotes');
+        Schema::dropIfExists('sheetCellFiles');
     }
 }

@@ -11,11 +11,11 @@ import { TRASH_CAN } from '@app/assets/icons'
 import { IAppState } from '@app/state'
 import { 
   ISheetCell, 
-  ISheetNote
+  ISheetChange
 } from '@app/state/sheet/types'
 import {
-  createSheetCellNote,
-  deleteSheetCellNote
+  createSheetCellChange,
+  deleteSheetCellChange
 } from '@app/state/sheet/actions'
 
 import Icon from '@/components/Icon'
@@ -25,19 +25,19 @@ import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-export const SheetCellNotes = ({
+export const SheetCellChanges = ({
   sheetId,
   cellId,
   updateCellValue,
   value,
   ...passThroughProps
-}: ISheetCellNotesProps) => {
+}: ISheetCellChangesProps) => {
   
   const autosizeTextarea = useRef(null)
 
   const dispatch = useDispatch()
-  const sheetCellNotes = useSelector((state: IAppState) => state.sheet.allSheetCellNotes[cellId] && state.sheet.allSheetCellNotes[cellId].map((sheetNoteId: ISheetNote['id']) => {
-    return state.sheet.allSheetNotes[sheetNoteId]
+  const sheetCellChanges = useSelector((state: IAppState) => state.sheet.allSheetCellChanges[cellId] && state.sheet.allSheetCellChanges[cellId].map((sheetChangeId: ISheetChange['id']) => {
+    return state.sheet.allSheetChanges[sheetChangeId]
   }))
   
   const [ localIsCellEditing, setLocalIsCellEditing ] = useState(false)
@@ -54,7 +54,7 @@ export const SheetCellNotes = ({
   useEffect(() => {
     if(!localIsCellEditing && localValue !== null) {
       if(![null, ''].includes(value)) {
-        dispatch(createSheetCellNote(sheetId, cellId, value))
+        dispatch(createSheetCellChange(sheetId, cellId, value))
         setLocalValue(null)
       }
     }
@@ -68,14 +68,14 @@ export const SheetCellNotes = ({
     setLocalIsCellEditing(false)
   }
 
-  const handleCurrentNoteValueChange = (nextCellValue: string) => {
+  const handleCurrentChangeValueChange = (nextCellValue: string) => {
     setLocalValue(nextCellValue)
     updateCellValue(nextCellValue)
   }
 
   return (
     <SheetCellContainer
-      testId="SheetCellNotes"
+      testId="SheetCellChanges"
       sheetId={sheetId}
       cellId={cellId}
       focusCell={handleCellEditingStart}
@@ -84,43 +84,43 @@ export const SheetCellNotes = ({
       updateCellValue={updateCellValue}
       value={value}
       {...passThroughProps}>
-      <CurrentNoteContainer>
+      <CurrentChangeContainer>
         {localIsCellEditing
           ? <SheetCellInput
               ref={autosizeTextarea}
-              onChange={(e: any) => handleCurrentNoteValueChange(e.target.value)}
+              onChange={(e: any) => handleCurrentChangeValueChange(e.target.value)}
               value={value}/>
-          : <CurrentNote>
+          : <CurrentChange>
               {value}
-            </CurrentNote>
+            </CurrentChange>
         }
-      </CurrentNoteContainer>
-      {sheetCellNotes && sheetCellNotes.length > 0 &&
-        <NotesContainer>
-          {sheetCellNotes.map(sheetCellNote => (
-            <Note
-              key={sheetCellNote.id}>
-              <NoteValue>
-                {sheetCellNote.value}
-              </NoteValue>
-              <NoteDetailsAndActions>
-                <NoteDetails>
-                  {sheetCellNote.createdBy}<br/>
-                  {moment(sheetCellNote.createdAt).format('MMMM Do, YYYY')}<br/>
-                  {moment(sheetCellNote.createdAt).format('hh:mm a')}
-                </NoteDetails>
-                <NoteActions>
-                  <DeleteNote
-                    onClick={() => dispatch(deleteSheetCellNote(cellId, sheetCellNote.id))}>
+      </CurrentChangeContainer>
+      {sheetCellChanges && sheetCellChanges.length > 0 &&
+        <ChangesContainer>
+          {sheetCellChanges.map(sheetCellChange => (
+            <Change
+              key={sheetCellChange.id}>
+              <ChangeValue>
+                {sheetCellChange.value}
+              </ChangeValue>
+              <ChangeDetailsAndActions>
+                <ChangeDetails>
+                  {sheetCellChange.createdBy}<br/>
+                  {moment(sheetCellChange.createdAt).format('MMMM Do, YYYY')}<br/>
+                  {moment(sheetCellChange.createdAt).format('hh:mm a')}
+                </ChangeDetails>
+                <ChangeActions>
+                  <DeleteChange
+                    onClick={() => dispatch(deleteSheetCellChange(cellId, sheetCellChange.id))}>
                     <Icon
                       icon={TRASH_CAN}
                       size="0.85rem"/>
-                  </DeleteNote>
-                </NoteActions>
-              </NoteDetailsAndActions>
-            </Note>
+                  </DeleteChange>
+                </ChangeActions>
+              </ChangeDetailsAndActions>
+            </Change>
           ))}
-        </NotesContainer>
+        </ChangesContainer>
       }
     </SheetCellContainer>
   )
@@ -129,7 +129,7 @@ export const SheetCellNotes = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-export interface ISheetCellNotesProps {
+export interface ISheetCellChangesProps {
   sheetId: string
   cell: ISheetCell
   cellId: string
@@ -138,7 +138,7 @@ export interface ISheetCellNotesProps {
   value: string
 }
 
-const CurrentNoteContainer = styled.div`
+const CurrentChangeContainer = styled.div`
   position: absolute;
   top: 0;
   left: 0;
@@ -148,10 +148,10 @@ const CurrentNoteContainer = styled.div`
   overflow: hidden;
 `
 
-const CurrentNote = styled.div`
+const CurrentChange = styled.div`
 `
 
-const NotesContainer = styled.div`
+const ChangesContainer = styled.div`
   position: absolute;
   top: 100%;
   left: 0;
@@ -162,7 +162,7 @@ const NotesContainer = styled.div`
   background-color: rgb(245, 245, 245);
 `
 
-const Note = styled.div`
+const Change = styled.div`
   width: 100%;
   margin: 0.25rem 0;
   padding: 0.5rem;
@@ -176,11 +176,11 @@ const Note = styled.div`
   }
 `
 
-const NoteValue = styled.div`
+const ChangeValue = styled.div`
   white-space: normal;
 `
 
-const NoteDetailsAndActions = styled.div`
+const ChangeDetailsAndActions = styled.div`
   width: 33%;
   margin-left: 1rem;
   display: flex;
@@ -188,14 +188,14 @@ const NoteDetailsAndActions = styled.div`
   align-items: center;
 `
 
-const NoteDetails = styled.div`
+const ChangeDetails = styled.div`
   font-size: 0.7rem;
   font-style: italic;
   text-align: right;
   white-space: nowrap;
 `
 
-const NoteActions = styled.div`
+const ChangeActions = styled.div`
   margin-left: 0.375rem;
   padding: 0 0.375rem;
   display: flex;
@@ -203,7 +203,7 @@ const NoteActions = styled.div`
   align-items: center;
 `
 
-const DeleteNote = styled.div`
+const DeleteChange = styled.div`
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -213,4 +213,4 @@ const DeleteNote = styled.div`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetCellNotes
+export default SheetCellChanges

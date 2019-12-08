@@ -11,7 +11,7 @@ import {
   IAllSheetGroups, ISheetGroup,
   IAllSheetSorts, ISheetSort,
   IAllSheetRows, ISheetRow,
-  IAllSheetCellNotes, IAllSheetNotes,
+  IAllSheetCellChanges, IAllSheetChanges,
   IAllSheetPriorities, ISheetPriority, ISheetCellPriority
 } from '@app/state/sheet/types'
 
@@ -41,8 +41,8 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
     const normalizedSheetGroups: IAllSheetGroups = {}
     const normalizedSheetSorts: IAllSheetSorts = {}
     const normalizedSheetViews: IAllSheetViews = {}
-    const normalizedSheetCellNotes: IAllSheetCellNotes = {}
-    const normalizedSheetNotes: IAllSheetNotes = {}
+    const normalizedSheetCellChanges: IAllSheetCellChanges = {}
+    const normalizedSheetChanges: IAllSheetChanges = {}
     const normalizedSheetPriorities: IAllSheetPriorities = {}
 
     const sheetColumns: ISheetColumn['id'][] = []
@@ -86,12 +86,12 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       sheetRows.push(sheetRow.id)
     })
     
-    // Sheet Notes
-    sheetFromDatabase.notes.forEach(sheetNote => { 
-      normalizedSheetNotes[sheetNote.id] = sheetNote
-      normalizedSheetCellNotes[sheetNote.cellId] = [
-        ...(normalizedSheetCellNotes[sheetNote.cellId] || []),
-        sheetNote.id
+    // Sheet Changes
+    sheetFromDatabase.changes.forEach(sheetChange => { 
+      normalizedSheetChanges[sheetChange.id] = sheetChange
+      normalizedSheetCellChanges[sheetChange.cellId] = [
+        ...(normalizedSheetCellChanges[sheetChange.cellId] || []),
+        sheetChange.id
       ]
     })
 
@@ -197,8 +197,8 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         normalizedSheetRows,
         normalizedSheetSorts,
         normalizedSheetViews,
-        normalizedSheetCellNotes,
-        normalizedSheetNotes,
+        normalizedSheetCellChanges,
+        normalizedSheetChanges,
         normalizedSheetPriorities
 			)
     )

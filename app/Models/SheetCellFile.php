@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SheetPhoto extends Model
+class SheetCellFile extends Model
 {
   use Traits\UsesUuid;
 
-  protected $table = 'sheetPhotos';
+  protected $table = 'sheetCellFiles';
   
   const CREATED_AT = 'createdAt';
   const UPDATED_AT = 'updatedAt';

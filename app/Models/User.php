@@ -23,15 +23,6 @@ class User extends Authenticatable
       return $this->hasOne('App\Models\UserActive', 'userId');
     }
   
-    public function columnTypes() {
-      $columnTypes = [];
-      $dropdowns = $this->dropdowns()->get();
-      foreach($dropdowns as $dropdown) {
-        $columnTypes[$dropdown->id] = $dropdown;
-      }
-      return $columnTypes;
-    }
-  
     public function color() {
       return $this->hasOne('App\Models\UserColor', 'userId');
     }

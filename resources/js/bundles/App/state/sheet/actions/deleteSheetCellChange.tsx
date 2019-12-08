@@ -5,29 +5,29 @@ import { mutation } from '@app/api'
 
 import { IAppState } from '@app/state'
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
-import { ISheetCell, ISheetNote } from '@app/state/sheet/types'
+import { ISheetCell, ISheetChange } from '@app/state/sheet/types'
 import { 
-  setAllSheetCellNotes
+  setAllSheetCellChanges
 } from '@app/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
-// Delete Sheet CellNote
+// Delete Sheet CellChange
 //-----------------------------------------------------------------------------
-export const deleteSheetCellNote = (sheetCellId: ISheetCell['id'], sheetCellNoteId: ISheetNote['id']): IThunkAction => {
+export const deleteSheetCellChange = (sheetCellId: ISheetCell['id'], sheetCellChangeId: ISheetChange['id']): IThunkAction => {
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
       sheet: {
-        allSheetCellNotes
+        allSheetCellChanges
       }
     } = getState()
     
-    const nextAllSheetCellNotes = {
-      ...allSheetCellNotes,
-      [sheetCellId]: allSheetCellNotes[sheetCellId].filter(currentSheetCellNoteId => currentSheetCellNoteId !== sheetCellNoteId)
+    const nextAllSheetCellChanges = {
+      ...allSheetCellChanges,
+      [sheetCellId]: allSheetCellChanges[sheetCellId].filter(currentSheetCellChangeId => currentSheetCellChangeId !== sheetCellChangeId)
     }
     
-    dispatch(setAllSheetCellNotes(nextAllSheetCellNotes))
+    dispatch(setAllSheetCellChanges(nextAllSheetCellChanges))
     
-    mutation.deleteSheetCellNote(sheetCellNoteId)
+    mutation.deleteSheetCellChange(sheetCellChangeId)
   }
 }

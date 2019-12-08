@@ -4,17 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SheetNote extends Model
+class SheetCellChange extends Model
 {
   use Traits\UsesUuid;
 
-  protected $table = 'sheetNotes';
+  protected $table = 'sheetCellChanges';
   
   const CREATED_AT = 'createdAt';
   const UPDATED_AT = 'updatedAt';
 
-  protected $visible = ['id', 'sheetId', 'cellId', 'value', 'createdBy', 'createdAt'];
-  protected $fillable = ['id', 'sheetId', 'cellId', 'value', 'createdBy', 'createdAt'];
+  protected $visible = ['id', 'sheetId', 'columnId', 'rowId', 'cellId', 'value', 'createdBy', 'createdAt'];
+  protected $fillable = ['id', 'sheetId', 'columnId', 'rowId', 'cellId', 'value', 'createdBy', 'createdAt'];
   
   public function sheet() {
     return $this->belongsTo('App\Models\Sheet', 'sheetId');

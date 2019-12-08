@@ -45,8 +45,7 @@ Route::group([
     return view('app')->with([
       'user' => $user,
       'teams' => $teams,
-      'folders' => $folders,
-      'columnTypes' => $user->columnTypes()
+      'folders' => $folders
     ]);
   })->name('site');
 });
@@ -96,7 +95,7 @@ Route::group([
     'sheets/cells' => 'SheetCellController',
     'sheets/cells/photos' => 'SheetCellPhotoController',
     'sheets/cells/files' => 'SheetCellFileController',
-    'sheets/cells/notes' => 'SheetCellNoteController',
+    'sheets/cells/changes' => 'SheetCellChangeController',
     'sheets/columns' => 'SheetColumnController',
     'sheets/filters' => 'SheetFilterController',
     'sheets/groups' => 'SheetGroupController',

@@ -8,52 +8,61 @@ import { mutation } from '@app/api'
 
 import { IAppState } from '@app/state'
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
-import { ISheet, ISheetCell, ISheetNote } from '@app/state/sheet/types'
+import { ISheet, ISheetCell, ISheetChange } from '@app/state/sheet/types'
 import { 
-  setAllSheetCellNotes,
-  setAllSheetNotes
+  setAllSheetCellChanges,
+  setAllSheetChanges
 } from '@app/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
-// Create Sheet CellNote
+// Create Sheet CellChange
 //-----------------------------------------------------------------------------
-export const createSheetCellNote = (sheetId: ISheet['id'], cellId: ISheetCell['id'], value: string): IThunkAction => {
+export const createSheetCellChange = (
+  sheetId: ISheet['id'], 
+  cellId: ISheetCell['id'], 
+  value: string
+): IThunkAction => {
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
       sheet: {
-        allSheetCellNotes,
-        allSheetNotes
+        allSheetCells,
+        allSheetCellChanges,
+        allSheetChanges
       },
       user: {
         name: userName
       }
     } = getState()
     
-    const newSheetCellNote: ISheetNote = {
+    const sheetCell = allSheetCells[cellId]
+
+    const newSheetCellChange: ISheetChange = {
       id: createUuid(),
       sheetId: sheetId,
+      columnId: sheetCell.columnId,
+      rowId: sheetCell.rowId,
       cellId: cellId,
       value: value,
       createdBy: userName,
       createdAt: moment().format('YYYY-MM-DD HH:mm:ss')
     }
     
-    const nextAllSheetNotes = {
-      ...allSheetNotes,
-      [newSheetCellNote.id]: newSheetCellNote
+    const nextAllSheetChanges = {
+      ...allSheetChanges,
+      [newSheetCellChange.id]: newSheetCellChange
     }
     
-    const nextAllSheetCellNotes = {
-      ...allSheetCellNotes,
+    const nextAllSheetCellChanges = {
+      ...allSheetCellChanges,
       [cellId]: [
-        newSheetCellNote.id,
-        ...(allSheetCellNotes[cellId] || [])
+        newSheetCellChange.id,
+        ...(allSheetCellChanges[cellId] || [])
       ]
     }
     
-    dispatch(setAllSheetNotes(nextAllSheetNotes))    
-    dispatch(setAllSheetCellNotes(nextAllSheetCellNotes))
+    dispatch(setAllSheetChanges(nextAllSheetChanges))    
+    dispatch(setAllSheetCellChanges(nextAllSheetCellChanges))
     
-    mutation.createSheetCellNote(newSheetCellNote)
+    mutation.createSheetCellChange(newSheetCellChange)
   }
 }

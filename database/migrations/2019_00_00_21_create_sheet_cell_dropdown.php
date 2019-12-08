@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSheetDropdownOption extends Migration
+class CreateSheetCellDropdown extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,16 @@ class CreateSheetDropdownOption extends Migration
      */
     public function up()
     {
-        Schema::create('sheetDropdownOptions', function (Blueprint $table) {
+        Schema::create('sheetCellDropdowns', function (Blueprint $table) {
           $table->uuid('id')->primary();
-          $table->uuid('sheetDropdownId');
+          $table->uuid('sheetId')->nullable();
+          $table->uuid('cellId')->nullable();
           $table->string('value');
           $table->timestamp('createdAt')->nullable();
           $table->timestamp('updatedAt')->nullable();
 
-          $table->foreign('sheetDropdownId')->references('id')->on('sheetDropdowns');
+          $table->foreign('cellId')->references('id')->on('sheetCells');
+          $table->foreign('sheetId')->references('id')->on('sheets');
         });
     }
 
@@ -31,6 +33,6 @@ class CreateSheetDropdownOption extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sheetDropdownOptions');
+        Schema::dropIfExists('sheetCellDropdowns');
     }
 }

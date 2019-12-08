@@ -9,8 +9,8 @@ export interface IAllSheetFilters { [filterId: string]: ISheetFilter }
 export interface IAllSheetGroups { [groupId: string]: ISheetGroup }
 export interface IAllSheetSorts { [sortId: string]: ISheetSort }
 export interface IAllSheetViews { [viewId: string]: ISheetView }
-export interface IAllSheetNotes { [noteId: string]: ISheetNote }
-export interface IAllSheetCellNotes { [cellId: string]: ISheetNote['id'][] }
+export interface IAllSheetChanges { [changeId: string]: ISheetChange }
+export interface IAllSheetCellChanges { [cellId: string]: ISheetChange['id'][] }
 export interface IAllSheetPriorities { [priorityId: string]: ISheetPriority }
 
 //-----------------------------------------------------------------------------
@@ -54,7 +54,7 @@ export interface ISheetFromDatabase {
   cellPriorities: ISheetCellPriority[]
   styles: ISheetStylesFromDatabase
   views: ISheetViewFromDatabase[]
-  notes: ISheetNote[]
+  changes: ISheetChange[]
 }
 
 export interface ISheetFromDatabaseRow {
@@ -204,7 +204,6 @@ export type ISheetCellType =
 'NUMBER' | 
 'PHOTOS' | 
 'FILES' |
-'NOTES' |
 'TEAM_MEMBERS'
 
 //-----------------------------------------------------------------------------
@@ -264,11 +263,13 @@ export interface ISheetSortUpdates {
 export type ISheetSortOrder = 'ASC' | 'DESC'
 
 //-----------------------------------------------------------------------------
-// Sheet Note
+// Sheet History
 //-----------------------------------------------------------------------------
-export interface ISheetNote {
+export interface ISheetChange {
   id: string
   sheetId: ISheet['id']
+  columnId: ISheetColumn['id']
+  rowId: ISheetRow['id']
   cellId: ISheetCell['id']
   value: string
   createdAt: string

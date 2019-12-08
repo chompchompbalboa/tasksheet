@@ -17,7 +17,6 @@
         user: @json($user),
         teams: @json($teams),
         folders: @json($folders),
-        columnTypes: @json($columnTypes)
       }
     </script>
     @yield('react-script')

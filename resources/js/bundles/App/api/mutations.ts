@@ -19,7 +19,7 @@ import {
   ISheetSort, ISheetSortUpdates, 
   ISheetStylesDatabaseUpdates,
   ISheetViewToDatabase, ISheetViewUpdates,
-  ISheetNote,
+  ISheetChange,
   ISheetPriority, ISheetPriorityUpdates, ISheetCellPriority
 } from '@app/state/sheet/types'
 import { 
@@ -184,14 +184,14 @@ export const createSheetCellPhoto = async (
 	})
 }
 
-export const createSheetCellNote = async (newSheetNote: ISheetNote) => {
-	return axios.post('/app/sheets/cells/notes', newSheetNote).then(response => {
+export const createSheetCellChange = async (newSheetChange: ISheetChange) => {
+	return axios.post('/app/sheets/cells/changes', newSheetChange).then(response => {
 		return response.data
 	})
 }
 
-export const deleteSheetCellNote = async (sheetCellNoteId: string) => {
-	return axios.delete('/app/sheets/cells/notes/' + sheetCellNoteId).then(response => {
+export const deleteSheetCellChange = async (sheetCellChangeId: string) => {
+	return axios.delete('/app/sheets/cells/changes/' + sheetCellChangeId).then(response => {
 		return response.data
 	})
 }

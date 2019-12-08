@@ -14,7 +14,7 @@ import {
   IAllSheetGroups, ISheetGroupUpdates,
   IAllSheetSorts, ISheetSortUpdates,
   IAllSheetViews, ISheetViewUpdates,
-  IAllSheetNotes, IAllSheetCellNotes,
+  IAllSheetChanges, IAllSheetCellChanges,
   IAllSheetPriorities, ISheetPriorityUpdates
 } from '@app/state/sheet/types'
 
@@ -34,7 +34,7 @@ export { createSheetRows } from '@/bundles/App/state/sheet/actions/createSheetRo
 export { createSheetSort } from '@app/state/sheet/actions/createSheetSort'
 export { createSheetLink } from '@/bundles/App/state/sheet/actions/createSheetLink'
 export { createSheetView } from '@app/state/sheet/actions/createSheetView'
-export { createSheetCellNote } from '@app/state/sheet/actions/createSheetCellNote'
+export { createSheetCellChange } from '@app/state/sheet/actions/createSheetCellChange'
 export { createSheetPriority } from '@app/state/sheet/actions/createSheetPriority'
 
 export { deleteSheetColumn } from '@app/state/sheet/actions/deleteSheetColumn'
@@ -44,7 +44,7 @@ export { deleteSheetGroup } from '@app/state/sheet/actions/deleteSheetGroup'
 export { deleteSheetRows } from '@app/state/sheet/actions/deleteSheetRows'
 export { deleteSheetSort } from '@app/state/sheet/actions/deleteSheetSort'
 export { deleteSheetView } from '@app/state/sheet/actions/deleteSheetView'
-export { deleteSheetCellNote } from '@app/state/sheet/actions/deleteSheetCellNote'
+export { deleteSheetCellChange } from '@app/state/sheet/actions/deleteSheetCellChange'
 export { deleteSheetPriority } from '@app/state/sheet/actions/deleteSheetPriority'
 
 export { updateSheetCell } from '@app/state/sheet/actions/updateSheetCell'
@@ -93,7 +93,7 @@ export type ISheetActions =
   IUpdateSheetRow | ISetAllSheetRows | 
   IUpdateSheetSort | ISetAllSheetSorts |
   IUpdateSheetView | ISetAllSheetViews |
-  ISetAllSheetCellNotes | ISetAllSheetNotes |
+  ISetAllSheetCellChanges | ISetAllSheetChanges |
   IUpdateSheetPriority | ISetAllSheetPriorities
 
 //-----------------------------------------------------------------------------
@@ -110,8 +110,8 @@ interface ILoadSheet {
   rows: IAllSheetRows
   sorts: IAllSheetSorts
   views: IAllSheetViews
-  cellNotes: IAllSheetCellNotes
-  notes: IAllSheetNotes
+  cellChanges: IAllSheetCellChanges
+  changes: IAllSheetChanges
   priorities: IAllSheetPriorities
 }
 
@@ -124,8 +124,8 @@ export const loadSheetReducer = (
   rows: IAllSheetRows, 
   sorts: IAllSheetSorts, 
   views: IAllSheetViews,
-  cellNotes: IAllSheetCellNotes,
-  notes: IAllSheetNotes,
+  cellChanges: IAllSheetCellChanges,
+  changes: IAllSheetChanges,
   priorities: IAllSheetPriorities
 ): ISheetActions => {
   return {
@@ -138,8 +138,8 @@ export const loadSheetReducer = (
     groups,
     sorts,
     views,
-    cellNotes,
-    notes,
+    cellChanges,
+    changes,
     priorities
   }
 }
@@ -257,34 +257,34 @@ export const setAllSheetViews = (nextAllSheetViews: IAllSheetViews): ISheetActio
 }
 
 //-----------------------------------------------------------------------------
-// Set All Sheet Cell Notes
+// Set All Sheet Cell Changes
 //-----------------------------------------------------------------------------
-export const SET_ALL_SHEET_CELL_NOTES = 'SET_ALL_SHEET_CELL_NOTES'
-interface ISetAllSheetCellNotes {
-  type: typeof SET_ALL_SHEET_CELL_NOTES,
-  nextAllSheetCellNotes: IAllSheetCellNotes
+export const SET_ALL_SHEET_CELL_CHANGES = 'SET_ALL_SHEET_CELL_CHANGES'
+interface ISetAllSheetCellChanges {
+  type: typeof SET_ALL_SHEET_CELL_CHANGES,
+  nextAllSheetCellChanges: IAllSheetCellChanges
 }
 
-export const setAllSheetCellNotes = (nextAllSheetCellNotes: IAllSheetCellNotes): ISheetActions => {
+export const setAllSheetCellChanges = (nextAllSheetCellChanges: IAllSheetCellChanges): ISheetActions => {
 	return {
-		type: SET_ALL_SHEET_CELL_NOTES,
-    nextAllSheetCellNotes,
+		type: SET_ALL_SHEET_CELL_CHANGES,
+    nextAllSheetCellChanges,
 	}
 }
 
 //-----------------------------------------------------------------------------
-// Set All Sheet Notes
+// Set All Sheet Changes
 //-----------------------------------------------------------------------------
-export const SET_ALL_SHEET_NOTES = 'SET_ALL_SHEET_NOTES'
-interface ISetAllSheetNotes {
-  type: typeof SET_ALL_SHEET_NOTES,
-  nextAllSheetNotes: IAllSheetNotes
+export const SET_ALL_SHEET_CHANGES = 'SET_ALL_SHEET_CHANGES'
+interface ISetAllSheetChanges {
+  type: typeof SET_ALL_SHEET_CHANGES,
+  nextAllSheetChanges: IAllSheetChanges
 }
 
-export const setAllSheetNotes = (nextAllSheetNotes: IAllSheetNotes): ISheetActions => {
+export const setAllSheetChanges = (nextAllSheetChanges: IAllSheetChanges): ISheetActions => {
 	return {
-		type: SET_ALL_SHEET_NOTES,
-    nextAllSheetNotes,
+		type: SET_ALL_SHEET_CHANGES,
+    nextAllSheetChanges,
 	}
 }
 

@@ -77,10 +77,6 @@ export const SheetColumnContextMenu = ({
       label: 'Files',
       cellType: 'FILES'
     },
-    NOTES: {
-      label: 'Notes',
-      cellType: 'NOTES'
-    },
     TEAM_MEMBERS: {
       label: 'Team Members',
       cellType: 'TEAM_MEMBERS'

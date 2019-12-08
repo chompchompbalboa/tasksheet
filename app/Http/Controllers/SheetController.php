@@ -88,7 +88,8 @@ class SheetController extends Controller
           'name' => $columnName,
           'cellType' => 'STRING',
           'width' => 100,
-          'defaultValue' => null
+          'defaultValue' => null,
+          'recordCellHistory' => false
         ]);
       }
 
@@ -176,43 +177,5 @@ class SheetController extends Controller
 
       // Return the response
       return response()->json(null, 200);
-    }
-
-    public static function prepareSheetDownload(Request $request, Sheet $sheet)
-    {
-      // Request inputs
-      $filename = $request->input('filename');
-      $includeAssets = $request->input('includeAssets');
-      $includeColumnTypeInformation = $request->input('includeColumnTypeInformation');
-      $visibleRows = $request->input('visibleRows');
-      
-      // Variables
-      $downloadId = Str::uuid()->toString();
-      $csvPath = $downloadId.'/'.$filename.'.csv';
-      
-      // Csv
-      $sheetCsv = SheetUtils::createCsv($sheet, $includeColumnTypeInformation, $visibleRows);
-      Storage::disk('downloads')->put($csvPath, $sheetCsv);
-      
-      return response()->json($downloadId, 200);
-    }
-
-    public static function downloadSheet($sheetDownloadId)
-    {
-
-        $path = storage_path('app/public/downloads/'.$sheetDownloadId);
-        $zipFile = $path.'/tracksheet.zip';
-        $zip = new \ZipArchive();
-        $zip->open($zipFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-        $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
-        foreach ($files as $name => $file) {
-          if (!$file->isDir()) {
-            $filePath = $file->getRealPath();
-            $relativePath = substr($filePath, strlen($path) + 1);
-            $zip->addFile($filePath, $relativePath);
-          }
-        }
-        $zip->close();
-        return response()->download($zipFile);
     }
 }

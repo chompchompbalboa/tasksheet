@@ -18,13 +18,27 @@ class SheetBuilder
   
   protected $SHEET_SETTINGS_FLAG = '[TS]';
 
+  protected $validCellTypes = [
+    'STRING',
+    'DATETIME',
+    'BOOLEAN',
+    'NUMBER', 
+    'PHOTOS', 
+    'FILES',
+    'TEAM_MEMBERS'
+  ];
+
 
   public function applyColumnSettings(array $columnIds, array $allColumnSettings) {
     foreach($columnIds as $index => $columnId) {
       if($columnId !== 'COLUMN_BREAK') {
         $sheetColumn = SheetColumn::find($columnId);
         $columnSettings = $allColumnSettings[$index];
-        if(array_key_exists('CELL_TYPE', $columnSettings)) { $sheetColumn->cellType = $columnSettings['CELL_TYPE']; }
+        if(array_key_exists('CELL_TYPE', $columnSettings)) {
+          if(in_array($columnSettings['CELL_TYPE'], $this->validCellTypes)) {
+            $sheetColumn->cellType = $columnSettings['CELL_TYPE'];
+          }
+        }
         if(array_key_exists('WIDTH', $columnSettings)) { $sheetColumn->width = $columnSettings['WIDTH']; }
         $sheetColumn->save();
       }
@@ -51,7 +65,8 @@ class SheetBuilder
           'name' => $columnName,
           'cellType' => SheetUtils::getCellType($cellValue),
           'width' => $nextColumnWidth,
-          'defaultValue' => null
+          'defaultValue' => null,
+          'recordCellHistory' => false
         ]);
 
         // Add the new column id to the sheet view's visible columns

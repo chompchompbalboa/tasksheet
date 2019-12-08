@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSheetPhoto extends Migration
+class CreateSheetCellPhoto extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateSheetPhoto extends Migration
      */
     public function up()
     {
-        Schema::create('sheetPhotos', function (Blueprint $table) {
+        Schema::create('sheetCellPhotos', function (Blueprint $table) {
           $table->uuid('id')->primary();
           $table->uuid('sheetId');
           $table->uuid('cellId');
@@ -38,6 +38,6 @@ class CreateSheetPhoto extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sheetPhotos');
+        Schema::dropIfExists('sheetCellPhotos');
     }
 }
