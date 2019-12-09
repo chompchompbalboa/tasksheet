@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { isEmail } from 'validator'
@@ -27,18 +27,15 @@ const SettingsTeamsTeamMembersAddMember = ({
   const dispatch = useDispatch()
   const allTeamMembers = useSelector((state: IAppState) => state.teams.allTeamMembers)
   
-  const addMemberEmailInput = useRef(null)
-  
   const [ status, setStatus ] = useState('READY' as IStatus)
   const [ addMemberEmailInputValue, setAddMemberEmailInputValue ] = useState(null)
   
   useEffect(() => {
-    if(status === 'INPUT_VISIBLE') { 
-      addMemberEmailInput.current.focus()
+    if(status === 'READY') { 
       addEventListener('keypress', handleKeyPressWhileInputVisible)
     }
     if([ 'EMAIL_IS_INVALID', 'MEMBER_IS_ALREADY_ON_TEAM' ].includes(status)) { 
-      setTimeout(() => setStatus('INPUT_VISIBLE'), 2000) 
+      setTimeout(() => setStatus('READY'), 2000) 
     }
     return () => {
       removeEventListener('keypress', handleKeyPressWhileInputVisible)
@@ -72,7 +69,7 @@ const SettingsTeamsTeamMembersAddMember = ({
             setStatus('NEW_MEMBER_IS_INVALID')
           }, 300)
           setTimeout(() => {
-            setStatus('INPUT_VISIBLE')
+            setStatus('READY')
           }, 2000)
         }
       )
@@ -86,8 +83,7 @@ const SettingsTeamsTeamMembersAddMember = ({
   }
   
   const buttonMessages = {
-    READY: 'Add New Member...',
-    INPUT_VISIBLE: 'Add member',
+    READY: 'Add',
     CHECKING_IF_NEW_MEMBER_IS_VALID: 'Adding...',
     EMAIL_IS_INVALID: 'That is not a valid email address',
     MEMBER_IS_ALREADY_ON_TEAM: 'That user is already on the team',
@@ -96,32 +92,22 @@ const SettingsTeamsTeamMembersAddMember = ({
   }
   const buttonMessage = buttonMessages[status]
   
-  if(status === 'READY') {
-    return (
-      <AddMemberButton
-        onClick={() => setStatus('INPUT_VISIBLE')}>
-        {buttonMessage}
-      </AddMemberButton>
-    )
-  }
-  
   return (
     <AddMemberContainer>
       <AutosizeInput
-        ref={addMemberEmailInput}
         placeholder="New Member's Email Address..."
         value={addMemberEmailInputValue || ''}
         onChange={e => setAddMemberEmailInputValue(e.target.value)}
-          inputStyle={{
-            marginRight: '1rem',
-            padding: '0.125rem 0',
-            height: '100%',
-            border: 'none',
-            backgroundColor: 'transparent',
-            outline: 'none',
-            fontFamily: 'inherit',
-            fontSize: 'inherit',
-            fontWeight: 'inherit'}}/>
+        inputStyle={{
+          marginRight: '1rem',
+          padding: '0.125rem 0',
+          height: '100%',
+          border: 'none',
+          backgroundColor: 'transparent',
+          outline: 'none',
+          fontFamily: 'inherit',
+          fontSize: 'inherit',
+          fontWeight: 'inherit'}}/>
       <AddMemberButton
         isError={['EMAIL_IS_INVALID', 'NEW_MEMBER_IS_INVALID', 'MEMBER_IS_ALREADY_ON_TEAM'].includes(status)}
         onClick={() => handleAddMember()}>
@@ -139,7 +125,6 @@ export interface ISettingsTeamsTeamMembersAddMember {
 }
 
 type IStatus = 'READY' 
-  | 'INPUT_VISIBLE' 
   | 'CHECKING_IF_NEW_MEMBER_IS_VALID' 
   | 'EMAIL_IS_INVALID' 
   | 'NEW_MEMBER_IS_INVALID' 

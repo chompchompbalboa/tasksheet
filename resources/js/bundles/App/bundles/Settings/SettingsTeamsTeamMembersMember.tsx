@@ -49,7 +49,7 @@ const SettingsTeamsTeamMembersMember = ({
   }
   
   const deleteStatuses = {
-    READY: 'Remove Member',
+    READY: 'Remove',
     DELETING: 'Removing...',
     DELETED: 'Removed'
   }
