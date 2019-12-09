@@ -19,12 +19,13 @@ import {
 //-----------------------------------------------------------------------------
 export const createSheetCellChange = (
   sheetId: ISheet['id'], 
-  cellId: ISheetCell['id'], 
+  cellId: ISheetCell['id'],
   value: string
 ): IThunkAction => {
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
       sheet: {
+        allSheetColumns,
         allSheetCells,
         allSheetCellChanges,
         allSheetChanges
@@ -35,34 +36,37 @@ export const createSheetCellChange = (
     } = getState()
     
     const sheetCell = allSheetCells[cellId]
+    const sheetColumn = allSheetColumns[sheetCell.columnId]
+    
+    if(sheetColumn.trackCellChanges) {
+      const newSheetCellChange: ISheetChange = {
+        id: createUuid(),
+        sheetId: sheetId,
+        columnId: sheetCell.columnId,
+        rowId: sheetCell.rowId,
+        cellId: cellId,
+        value: value,
+        createdBy: userName,
+        createdAt: moment().format('YYYY-MM-DD HH:mm:ss')
+      }
 
-    const newSheetCellChange: ISheetChange = {
-      id: createUuid(),
-      sheetId: sheetId,
-      columnId: sheetCell.columnId,
-      rowId: sheetCell.rowId,
-      cellId: cellId,
-      value: value,
-      createdBy: userName,
-      createdAt: moment().format('YYYY-MM-DD HH:mm:ss')
+      const nextAllSheetChanges = {
+        ...allSheetChanges,
+        [newSheetCellChange.id]: newSheetCellChange
+      }
+
+      const nextAllSheetCellChanges = {
+        ...allSheetCellChanges,
+        [cellId]: [
+          newSheetCellChange.id,
+          ...(allSheetCellChanges[cellId] || [])
+        ]
+      }
+
+      dispatch(setAllSheetChanges(nextAllSheetChanges))    
+      dispatch(setAllSheetCellChanges(nextAllSheetCellChanges))
+
+      mutation.createSheetCellChange(newSheetCellChange)
     }
-    
-    const nextAllSheetChanges = {
-      ...allSheetChanges,
-      [newSheetCellChange.id]: newSheetCellChange
-    }
-    
-    const nextAllSheetCellChanges = {
-      ...allSheetCellChanges,
-      [cellId]: [
-        newSheetCellChange.id,
-        ...(allSheetCellChanges[cellId] || [])
-      ]
-    }
-    
-    dispatch(setAllSheetChanges(nextAllSheetChanges))    
-    dispatch(setAllSheetCellChanges(nextAllSheetCellChanges))
-    
-    mutation.createSheetCellChange(newSheetCellChange)
   }
 }

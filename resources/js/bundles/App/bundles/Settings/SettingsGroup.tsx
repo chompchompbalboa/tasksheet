@@ -53,6 +53,7 @@ const Container = styled.div`
   background-color: rgb(245, 245, 245);
   border: 1px solid rgb(220, 220, 220);
   border-radius: 4px;
+  margin-bottom: 0.5rem;
 `
 
 const Header = styled.div`

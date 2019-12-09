@@ -13,6 +13,7 @@ import {
   ISheetStyles 
 } from '@app/state/sheet/types'
 import {
+  createSheetCellChange,
   updateSheetCell,
   updateSheetSelectionFromCellClick
 } from '@app/state/sheet/actions'
@@ -66,6 +67,7 @@ export const SheetCell = memo(({
         clearTimeout(updateSheetCellTimer)
         updateSheetCellTimer = setTimeout(() => {
           dispatch(updateSheetCell(cell.id, { value: cellValue }, { value: cell.value }))
+          dispatch(createSheetCellChange(sheetId, cell.id, cellValue))
         }, 1000)
       }
       return () => clearTimeout(updateSheetCellTimer)
@@ -98,7 +100,6 @@ export const SheetCell = memo(({
         data-testid="SheetCellContainer"
         ref={cellContainer}
         cellId={cellId}
-        cellType={cellType}
         highlightColor={userColorSecondary}
         isCellSelected={isCellSelected}
         isCellInRange={isCellInRange}
@@ -117,6 +118,7 @@ export const SheetCell = memo(({
           updateCellValue={setCellValue}
           value={cellValue}/>
         <SheetCellChanges
+          columnId={cell.columnId}
           cellId={cell.id}/>
       </Container>
     )
@@ -125,7 +127,6 @@ export const SheetCell = memo(({
     <Container
       data-testid="SheetCellNotFoundContainer"
       cellId={cellId}
-      cellType='STRING'
       highlightColor={userColorSecondary}
       isCellSelected={false}
       isCellInRange={false}
@@ -150,7 +151,7 @@ export interface ISheetCellProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  z-index: ${ ({ cellType, isCellSelected }: IContainer ) => ['DATETIME', 'FILES', 'PHOTOS', 'NOTES', 'TEAM_MEMBERS'].includes(cellType) && isCellSelected ? '20' : '10' };
+  z-index: ${ ({ isCellSelected }: IContainer ) => isCellSelected ? '20' : '10' };
   position: relative;
   cursor: default;
   font-size: 0.9rem;
@@ -177,7 +178,6 @@ const Container = styled.div`
 `
 interface IContainer {
   cellId: ISheetCell['id']
-  cellType: ISheetCellType
   isCellSelected: boolean
   isCellInRange: boolean
   highlightColor: string

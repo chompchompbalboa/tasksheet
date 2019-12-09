@@ -16,6 +16,8 @@ class CreateSheetCellChange extends Migration
         Schema::create('sheetCellChanges', function (Blueprint $table) {
           $table->uuid('id')->primary();
           $table->uuid('sheetId');
+          $table->uuid('columnId');
+          $table->uuid('rowId');
           $table->uuid('cellId');
           $table->string('value');
           $table->string('createdBy');
@@ -23,6 +25,8 @@ class CreateSheetCellChange extends Migration
           $table->timestamp('updatedAt')->nullable();
 
           $table->foreign('sheetId')->references('id')->on('sheets');
+          $table->foreign('columnId')->references('id')->on('sheetColumns');
+          $table->foreign('rowId')->references('id')->on('sheetRows');
           $table->foreign('cellId')->references('id')->on('sheetCells');
         });
     }

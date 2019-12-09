@@ -15,6 +15,10 @@ class SheetColumn extends Model
 
   protected $visible = ['id', 'sheetId', 'name', 'width', 'cellType', 'defaultValue', 'trackCellChanges', 'showCellChanges'];
   protected $fillable = ['id', 'sheetId', 'name', 'width', 'cellType', 'defaultValue', 'trackCellChanges', 'showCellChanges'];
+  protected $casts = [
+    'trackCellChanges' => 'boolean',
+    'showCellChanges' => 'boolean'
+  ];
   
   public function sheet() {
     return $this->belongsTo('App\Models\Sheet', 'sheetId');

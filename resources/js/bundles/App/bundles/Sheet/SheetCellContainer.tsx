@@ -194,6 +194,7 @@ const Container = styled.div`
   text-overflow: ellipsis;
   font-weight: ${ ({ cellId, styles }: IContainer ) => styles.bold.has(cellId) ? 'bold' : 'normal' };
   font-style: ${ ({ cellId, styles }: IContainer ) => styles.italic.has(cellId) ? 'italic' : 'normal' };
+  overflow: hidden;
 `
 interface IContainer {
   cellId: ISheetCell['id']

@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SheetChange;
+use App\Models\SheetCellChange;
 use Illuminate\Http\Request;
 
 class SheetCellChangeController extends Controller
 {
     public function store(Request $request)
     {
-      $newSheetChange = SheetChange::create($request->all());
-      return response()->json($newSheetChange, 200);
+      $newSheetCellChange = SheetCellChange::create($request->all());
+      return response()->json($newSheetCellChange, 200);
     }
 
-    public function destroy(SheetChange $note)
+    public function destroy(SheetCellChange $change)
     {
-      $note->delete();
+      $change->delete();
       return response()->json(null, 204);
     }
 }
