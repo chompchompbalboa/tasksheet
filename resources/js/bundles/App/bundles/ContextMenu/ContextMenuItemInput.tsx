@@ -53,7 +53,7 @@ const ContextMenuItemInput = ({
         {text}
       </TextContainer>
       <AutosizeInput
-        value={inputValue}
+        value={inputValue || ''}
         onBlur={() => handleAutosizeInputBlur()}
         onChange={e => setInputValue(e.target.value)}
         onFocus={() => handleAutosizeInputFocus()}

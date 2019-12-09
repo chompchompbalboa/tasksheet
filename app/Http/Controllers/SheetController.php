@@ -89,7 +89,8 @@ class SheetController extends Controller
           'cellType' => 'STRING',
           'width' => 100,
           'defaultValue' => null,
-          'recordCellHistory' => false
+          'trackCellChanges' => false,
+          'showCellChanges' => false
         ]);
       }
 

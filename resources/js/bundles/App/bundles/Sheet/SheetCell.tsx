@@ -21,7 +21,7 @@ import SheetCellBoolean from '@app/bundles/Sheet/SheetCellBoolean'
 import SheetCellDatetime from '@app/bundles/Sheet/SheetCellDatetime'
 import SheetCellFiles from '@app/bundles/Sheet/SheetCellFiles'
 import SheetCellNumber from '@app/bundles/Sheet/SheetCellNumber'
-//import SheetCellChanges from '@app/bundles/Sheet/SheetCellChanges'
+import SheetCellChanges from '@app/bundles/Sheet/SheetCellChanges'
 import SheetCellPhotos from '@app/bundles/Sheet/SheetCellPhotos'
 import SheetCellString from '@app/bundles/Sheet/SheetCellString'
 import SheetCellTeamMembers from '@app/bundles/Sheet/SheetCellTeamMembers'
@@ -116,6 +116,8 @@ export const SheetCell = memo(({
           isCellSelected={isCellSelected}
           updateCellValue={setCellValue}
           value={cellValue}/>
+        <SheetCellChanges
+          cellId={cell.id}/>
       </Container>
     )
   }

@@ -20,7 +20,8 @@ class CreateSheetColumn extends Migration
             $table->float('width');
             $table->string('cellType');
             $table->string('defaultValue')->nullable();
-            $table->boolean('recordCellHistory');
+            $table->boolean('trackCellChanges');
+            $table->boolean('showCellChanges');
             $table->timestamp('createdAt')->nullable();
             $table->timestamp('updatedAt')->nullable();
 

@@ -11,6 +11,7 @@ import {
 } from '@app/state/sheet/types'
 
 import ContextMenuItem from '@app/bundles/ContextMenu/ContextMenuItem'
+import SheetColumnContextMenuSettingsChanges from '@app/bundles/Sheet/SheetColumnContextMenuSettingsChanges'
 import SheetColumnContextMenuSettingsDefaultValue from '@app/bundles/Sheet/SheetColumnContextMenuSettingsDefaultValue'
 
 //-----------------------------------------------------------------------------
@@ -28,8 +29,8 @@ export const SheetColumnContextMenuSettings = ({
       <SheetColumnContextMenuSettingsDefaultValue
         sheetId={sheetId}
         columnId={columnId}/>
-      <ContextMenuItem text="Keep Cell History"/>
-      <ContextMenuItem text="Format"/>
+      <SheetColumnContextMenuSettingsChanges
+        columnId={columnId}/>
     </ContextMenuItem>
   )
 }

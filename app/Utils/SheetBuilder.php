@@ -66,7 +66,8 @@ class SheetBuilder
           'cellType' => SheetUtils::getCellType($cellValue),
           'width' => $nextColumnWidth,
           'defaultValue' => null,
-          'recordCellHistory' => false
+          'trackCellChanges' => false,
+          'showCellChanges' => true,
         ]);
 
         // Add the new column id to the sheet view's visible columns

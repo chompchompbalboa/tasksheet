@@ -129,6 +129,8 @@ export const appStateFactory = ({
           width: 100,
           defaultValue: '',
           cellType: columns[currentColumnNumber - 1] as ISheetCellType,
+          trackCellChanges: false,
+          showCellChanges: false,
           allCellValues: new Set() as Set<string>
         }
         

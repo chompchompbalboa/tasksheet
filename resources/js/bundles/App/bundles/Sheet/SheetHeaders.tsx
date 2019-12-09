@@ -25,6 +25,8 @@ const SheetHeaders = ({
     width: 10,
     cellType: null,
     defaultValue: null,
+    trackCellChanges: false,
+    showCellChanges: false,
     allCellValues: null
   }
   

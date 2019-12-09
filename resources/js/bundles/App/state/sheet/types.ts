@@ -135,6 +135,8 @@ export interface ISheetColumn {
 	name: string
 	width: number
   defaultValue: string
+  trackCellChanges: boolean
+  showCellChanges: boolean
   allCellValues: Set<string>
 }
 
@@ -143,6 +145,8 @@ export interface ISheetColumnUpdates {
   name?: string
   width?: number
   defaultValue?: string
+  trackCellChanges?: boolean
+  showCellChanges?: boolean
   allCellValues?: Set<string>
 }
 
@@ -153,6 +157,8 @@ export interface ISheetColumnToDatabase {
   name: string
   width: number
   defaultValue: string
+  trackCellChanges: boolean
+  showCellChanges: boolean
   cells: ISheetCell[]
 }
 

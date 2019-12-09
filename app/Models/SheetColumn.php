@@ -13,8 +13,8 @@ class SheetColumn extends Model
   const CREATED_AT = 'createdAt';
   const UPDATED_AT = 'updatedAt';
 
-  protected $visible = ['id', 'sheetId', 'name', 'width', 'cellType', 'defaultValue'];
-  protected $fillable = ['id', 'sheetId', 'name', 'width', 'cellType', 'defaultValue'];
+  protected $visible = ['id', 'sheetId', 'name', 'width', 'cellType', 'defaultValue', 'trackCellChanges', 'showCellChanges'];
+  protected $fillable = ['id', 'sheetId', 'name', 'width', 'cellType', 'defaultValue', 'trackCellChanges', 'showCellChanges'];
   
   public function sheet() {
     return $this->belongsTo('App\Models\Sheet', 'sheetId');
