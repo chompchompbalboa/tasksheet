@@ -26,7 +26,7 @@ export const SheetCellChanges = ({
 }: ISheetCellChangesProps) => {
 
   const dispatch = useDispatch()
-  const sheetCellChanges = useSelector((state: IAppState) => state.sheet.allSheetCellChanges[cellId] && state.sheet.allSheetCellChanges[cellId].map((sheetChangeId: ISheetChange['id']) => {
+  const sheetCellChanges = useSelector((state: IAppState) => state.sheet.allSheetCellChanges && state.sheet.allSheetCellChanges[cellId] && state.sheet.allSheetCellChanges[cellId].map((sheetChangeId: ISheetChange['id']) => {
     return state.sheet.allSheetChanges[sheetChangeId]
   }))
 
