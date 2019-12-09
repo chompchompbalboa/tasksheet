@@ -35,7 +35,7 @@ export const SheetColumnContextMenuSettings = ({
   // Effects
   useEffect(() => {
     let updateSheetColumnTimer: number = null
-    if(trackCellChanges !== sheetColumnTrackCellChanges) {
+    if(trackCellChanges !== sheetColumnTrackCellChanges || showCellChanges !== sheetColumnShowCellChanges) {
       clearTimeout(updateSheetColumnTimer)
       updateSheetColumnTimer = setTimeout(() => {
         dispatch(updateSheetColumn(columnId, { 
