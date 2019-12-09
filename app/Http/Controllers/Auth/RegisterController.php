@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Carbon\Carbon;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -77,7 +79,9 @@ class RegisterController extends Controller
         $newUser->active()->save(factory(\App\Models\UserActive::class)->make());
         $newUser->color()->save(factory(\App\Models\UserColor::class)->make());
         $newUser->subscription()->save(factory(\App\Models\UserSubscription::class)->make([
-          'type' => 'TRIAL'
+          'type' => 'TRIAL',
+          'startDate' => Carbon::now(),
+          'endDate' => Carbon::now()->addDays(30),
         ]));
         Auth::loginUsingId($newUser->id, true);
         return response()->json(null, 200);

@@ -5,7 +5,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { FOLDER, SETTINGS } from '@app/assets/icons'
+import { FOLDER, USER } from '@app/assets/icons'
 
 import { IAppState } from '@app/state'
 import { 
@@ -83,7 +83,7 @@ const Tabs = () => {
           isActiveTab={localActiveTab === 'SETTINGS'}
           onClick={() => handleFileOpen('SETTINGS')}>
           <Icon
-            icon={SETTINGS}
+            icon={USER}
             size="0.825rem"/>
         </MiniTab>
       </TabsContainer>

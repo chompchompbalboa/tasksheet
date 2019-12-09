@@ -17,6 +17,8 @@ class CreateUserSubscription extends Migration
             $table->uuid('id')->primary();
             $table->uuid('userId');
             $table->string('type');
+            $table->timestamp('startDate')->nullable();
+            $table->timestamp('endDate')->nullable();
             $table->timestamp('createdAt')->nullable();
             $table->timestamp('updatedAt')->nullable();
 
