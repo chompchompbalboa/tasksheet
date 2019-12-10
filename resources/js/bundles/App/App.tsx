@@ -2,13 +2,16 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
+import {
+  updateActiveSiteSplashForm,
+  updateActiveSiteSplashFormMessage
+} from '@app/state/active/actions'
 
 import History from '@app/bundles/History/History'
-import Messenger from '@app/bundles/Messenger/Messenger'
 import Modals from '@app/bundles/Modal/Modals'
 import Tabs from '@app/bundles/Tabs/Tabs'
 import SiteSplash from '@site/SiteSplash'
@@ -18,8 +21,15 @@ import SiteSplash from '@site/SiteSplash'
 //-----------------------------------------------------------------------------
 export const App = () => {
 
+  const dispatch = useDispatch()
   const isDemoUser = useSelector((state: IAppState) => state.user.subscription.type === 'DEMO')
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
+
+  const handleDemoUserCallToActionClick = () => {
+    dispatch(updateActiveSiteSplashForm('REGISTER'))
+    dispatch(updateActiveSiteSplashFormMessage('CLICK_TO_LOGIN_INSTEAD'))
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth'})
+  }
 
   if(isDemoUser) {
     return (
@@ -34,8 +44,11 @@ export const App = () => {
         </SiteContainer>
         <AppContainer>
           <AppContent>
+            <DemoUserCallToAction
+              onClick={() => handleDemoUserCallToActionClick()}>
+              Click here to sign up for a free 30-day trial
+            </DemoUserCallToAction>
             <History />
-            <Messenger />
             <Modals />
             <Tabs />
           </AppContent>
@@ -47,7 +60,6 @@ export const App = () => {
     <AppContainer>
       <AppContent>
         <History />
-        <Messenger />
         <Modals />
         <Tabs />
       </AppContent>
@@ -114,6 +126,22 @@ const AppContainer = styled.div`
 const AppContent = styled.div`
 	width: 100%;
   min-height: 100vh;
+`
+
+const DemoUserCallToAction = styled.div`
+  z-index: 10000;
+  cursor: pointer;
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding-top: 0.25rem;
+  padding-right: 0.5rem;
+  color: white;
+  font-size: 0.75rem;
+  font-style: italic;
+  &:hover {
+    text-decoration: underline;
+  }
 `
 
 export default App

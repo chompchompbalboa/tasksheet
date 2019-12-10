@@ -114,7 +114,7 @@ const SiteSplash = () => {
         If you have an exisiting account, click here to login.
       </>,
     CLICK_TO_LOGIN_INSTEAD: 'Click here to login',
-    CLICK_TO_REGISTER_INSTEAD: 'Click here to sign up',
+    CLICK_TO_REGISTER_INSTEAD: 'Click here to sign up for a 30-day free trial',
     ERROR_DURING_LOGIN: 
       <>
         We were unable to log you in.
@@ -136,12 +136,12 @@ const SiteSplash = () => {
           tasksheet
         </HeaderName>
         <HeaderLinks>
-          <HeaderLink>30 day free trial<br/>$5 per month or $100 for lifetime access</HeaderLink>
+          <HeaderLink>30-day free trial<br/>$5 per month or $100 for lifetime access</HeaderLink>
         </HeaderLinks>
       </Header>
       <Splash>
         <Name>tasksheet</Name>
-        <Motto>The spreadsheet built to keep you sane at work</Motto>
+        <Motto>The spreadsheet built to keep track of your workplace to-dos</Motto>
         <Divider />
         <LoginRegisterContainer>
           {activeSiteSplashForm === 'REGISTER' &&

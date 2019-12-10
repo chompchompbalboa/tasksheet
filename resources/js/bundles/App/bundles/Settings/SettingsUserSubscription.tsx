@@ -15,7 +15,7 @@ const SettingsUserSubscription = () => {
   const userSubscriptionType = useSelector((state: IAppState) => state.user.subscription.type)
   
   const userSubscriptionTypeMessages = {
-    DEMO: 'You are a demo user',
+    DEMO: "Click the link in the top right to sign up for your free 30-day trial now.",
     TRIAL: 'You are a trial user',
     MONTHLY: 'You have a monthly billing plan',
     LIFETIME: "Thank you for your lifetime membership! We don't need any of your billing information."
