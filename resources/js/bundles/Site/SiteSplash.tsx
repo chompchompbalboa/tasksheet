@@ -141,7 +141,7 @@ const SiteSplash = () => {
       </Header>
       <Splash>
         <Name>tasksheet</Name>
-        <Motto>The spreadsheet built for keeping track of your team's to-dos</Motto>
+        <Motto>The spreadsheet built to keep you sane at work</Motto>
         <Divider />
         <LoginRegisterContainer>
           {activeSiteSplashForm === 'REGISTER' &&

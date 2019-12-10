@@ -10,7 +10,6 @@ import { TRASH_CAN } from '@app/assets/icons'
 
 import { IAppState } from '@app/state'
 import { 
-  ISheetColumn,
   ISheetCell,
   ISheetChange
 } from '@app/state/sheet/types'
@@ -24,20 +23,19 @@ import Icon from '@/components/Icon'
 // Component
 //-----------------------------------------------------------------------------
 export const SheetCellChanges = ({
-  columnId,
-  cellId
+  cellId,
+  showCellChanges,
+  trackCellChanges
 }: ISheetCellChangesProps) => {
 
   const dispatch = useDispatch()
-  const trackCellChanges = useSelector((state: IAppState) => state.sheet.allSheetColumns && state.sheet.allSheetColumns[columnId] && state.sheet.allSheetColumns[columnId].trackCellChanges)
-  const showCellChanges = useSelector((state: IAppState) => state.sheet.allSheetColumns && state.sheet.allSheetColumns[columnId] && state.sheet.allSheetColumns[columnId].showCellChanges)
   const sheetCellChanges = useSelector((state: IAppState) => state.sheet.allSheetCellChanges && state.sheet.allSheetCellChanges[cellId] && state.sheet.allSheetCellChanges[cellId].map((sheetChangeId: ISheetChange['id']) => {
     return state.sheet.allSheetChanges[sheetChangeId]
   }))
 
   return (
     <Container>
-      {trackCellChanges && showCellChanges && sheetCellChanges &&
+      {trackCellChanges && showCellChanges && sheetCellChanges && sheetCellChanges.length > 0 &&
         <ChangesContainer>
           {sheetCellChanges.map(sheetCellChange => (
             <Change
@@ -72,8 +70,9 @@ export const SheetCellChanges = ({
 // Props
 //-----------------------------------------------------------------------------
 export interface ISheetCellChangesProps {
-  columnId: ISheetColumn['id']
   cellId: ISheetCell['id']
+  showCellChanges: boolean
+  trackCellChanges: boolean
 }
 
 const Container = styled.div`

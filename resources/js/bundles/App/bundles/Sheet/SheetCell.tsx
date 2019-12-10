@@ -45,6 +45,8 @@ export const SheetCell = memo(({
   const sheetSelectionsRangeCellIds = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.rangeCellIds)
   const sheetStyles = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].styles)
   const userColorSecondary = useSelector((state: IAppState) => state.user.color.secondary)
+  const trackCellChanges = useSelector((state: IAppState) => state.sheet.allSheetColumns && state.sheet.allSheetColumns[cell.columnId] && state.sheet.allSheetColumns[cell.columnId].trackCellChanges)
+  const showCellChanges = useSelector((state: IAppState) => state.sheet.allSheetColumns && state.sheet.allSheetColumns[cell.columnId] && state.sheet.allSheetColumns[cell.columnId].showCellChanges)
   
   if(cell) {
 
@@ -100,11 +102,14 @@ export const SheetCell = memo(({
         data-testid="SheetCellContainer"
         ref={cellContainer}
         cellId={cellId}
+        cellType={cellType}
         highlightColor={userColorSecondary}
         isCellSelected={isCellSelected}
         isCellInRange={isCellInRange}
         onMouseDown={handleMouseDown}
         sheetStyles={sheetStyles}
+        showCellChanges={showCellChanges}
+        trackCellChanges={trackCellChanges}
         style={style}>
         <SheetRange
           data-testid="SheetCellSheetRange"
@@ -118,8 +123,9 @@ export const SheetCell = memo(({
           updateCellValue={setCellValue}
           value={cellValue}/>
         <SheetCellChanges
-          columnId={cell.columnId}
-          cellId={cell.id}/>
+          cellId={cell.id}
+          showCellChanges={showCellChanges}
+          trackCellChanges={trackCellChanges}/>
       </Container>
     )
   }
@@ -127,10 +133,13 @@ export const SheetCell = memo(({
     <Container
       data-testid="SheetCellNotFoundContainer"
       cellId={cellId}
+      cellType={cellType}
       highlightColor={userColorSecondary}
       isCellSelected={false}
       isCellInRange={false}
       sheetStyles={sheetStyles}
+      showCellChanges={showCellChanges}
+      trackCellChanges={trackCellChanges}
       style={style}/>
   )
 }, areEqual)
@@ -151,7 +160,12 @@ export interface ISheetCellProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  z-index: ${ ({ isCellSelected }: IContainer ) => isCellSelected ? '20' : '10' };
+  z-index: ${ ({ cellType, isCellSelected, showCellChanges, trackCellChanges }: IContainer ) => 
+    (['DATETIME', 'FILES', 'PHOTOS', 'TEAM_MEMBERS'].includes(cellType) || (trackCellChanges && showCellChanges))
+    && isCellSelected 
+      ? '20' 
+      : '10' 
+  };
   position: relative;
   cursor: default;
   font-size: 0.9rem;
@@ -178,10 +192,13 @@ const Container = styled.div`
 `
 interface IContainer {
   cellId: ISheetCell['id']
+  cellType: ISheetCellType
   isCellSelected: boolean
   isCellInRange: boolean
   highlightColor: string
   sheetStyles: ISheetStyles
+  showCellChanges: boolean
+  trackCellChanges: boolean
 }
 
 const SheetRange = styled.div`
