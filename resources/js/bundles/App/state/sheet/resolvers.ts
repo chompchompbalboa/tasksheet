@@ -128,7 +128,10 @@ export const resolveSheetVisibleRows = (
     const sort = sorts[sortId]
     return (rowId: string) => {
       const cell = cells[rows[rowId].cells[sort.columnId]]
-      return resolveSheetCellValue(cell.value)
+      if(cell) {
+        return resolveSheetCellValue(cell.value)
+      }
+      return ''
     }
   })
   const sortOrder = sortIds && sortIds.map(sortId => sorts[sortId].order === 'ASC' ? 'asc' : 'desc')

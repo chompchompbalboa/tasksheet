@@ -113,7 +113,7 @@ const SiteSplash = () => {
         <br/>
         If you have an exisiting account, click here to login.
       </>,
-    CLICK_TO_LOGIN_INSTEAD: 'Click here to login',
+    CLICK_TO_LOGIN_INSTEAD: 'Click here to log in instead',
     CLICK_TO_REGISTER_INSTEAD: 'Click here to sign up for a 30-day free trial',
     ERROR_DURING_LOGIN: 
       <>

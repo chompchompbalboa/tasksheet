@@ -65,14 +65,21 @@ export const SheetCell = memo(({
 
     useEffect(() => {
       let updateSheetCellTimer: number = null
+      let createSheetCellChangeTimer: number = null
       if(cell && cellValue !== cell.value) {
         clearTimeout(updateSheetCellTimer)
+        clearTimeout(createSheetCellChangeTimer)
         updateSheetCellTimer = setTimeout(() => {
           dispatch(updateSheetCell(cell.id, { value: cellValue }, { value: cell.value }))
-          dispatch(createSheetCellChange(sheetId, cell.id, cellValue))
         }, 1000)
+        createSheetCellChangeTimer = setTimeout(() => {
+          dispatch(createSheetCellChange(sheetId, cell.id, cellValue))
+        }, 2500)
       }
-      return () => clearTimeout(updateSheetCellTimer)
+      return () => {
+        clearTimeout(updateSheetCellTimer)
+        clearTimeout(createSheetCellChangeTimer)
+      }
     }, [ cellValue ])
 
     // Cell types

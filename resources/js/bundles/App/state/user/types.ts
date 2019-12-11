@@ -19,6 +19,8 @@ export interface IUserUpdates {
 export interface IUserSubscription {
   id: string
   type: 'DEMO' | 'TRIAL' | 'MONTHLY' | 'LIFETIME'
+  endDate: string
+  startDate: string
 }
 
 export interface IUserActive {

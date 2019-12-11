@@ -7,6 +7,11 @@ import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
 
+import SettingsUserSubscriptionDemo from '@app/bundles/Settings/SettingsUserSubscriptionDemo'
+import SettingsUserSubscriptionTrial from '@app/bundles/Settings/SettingsUserSubscriptionTrial'
+import SettingsUserSubscriptionMonthly from '@app/bundles/Settings/SettingsUserSubscriptionMonthly'
+import SettingsUserSubscriptionLifetime from '@app/bundles/Settings/SettingsUserSubscriptionLifetime'
+
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
@@ -14,16 +19,18 @@ const SettingsUserSubscription = () => {
   
   const userSubscriptionType = useSelector((state: IAppState) => state.user.subscription.type)
   
-  const userSubscriptionTypeMessages = {
-    DEMO: "Click the link in the top right to sign up for your free 30-day trial now.",
-    TRIAL: 'You are a trial user',
-    MONTHLY: 'You have a monthly billing plan',
-    LIFETIME: "Thank you for your lifetime membership! We don't need any of your billing information."
+  const userSubscriptionComponents = {
+    DEMO: SettingsUserSubscriptionDemo,
+    TRIAL: SettingsUserSubscriptionTrial,
+    MONTHLY: SettingsUserSubscriptionMonthly,
+    LIFETIME: SettingsUserSubscriptionLifetime
   }
+  
+  const UserSubscriptionComponent = userSubscriptionComponents[userSubscriptionType]
   
   return (
     <Container>
-      {userSubscriptionTypeMessages[userSubscriptionType]}
+      <UserSubscriptionComponent />
     </Container>
   )
 }
