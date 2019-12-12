@@ -25,3 +25,21 @@ div {
   color: inherit;
   opacity: 1
 }
+
+.StripeElement {
+  display: block;
+  max-width: 500px;
+  font-size: 0.8rem;
+  padding: 0.5rem;
+  box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
+  border: 1px solid rgb(150, 150, 150);
+  outline: 0;
+  border-radius: 4px;
+  background: white;
+}
+
+.StripeElement--focus {
+  box-shadow: rgba(50, 50, 93, 0.109804) 0px 4px 6px, rgba(0, 0, 0, 0.0784314) 0px 1px 3px;
+  -webkit-transition: all 150ms ease;
+  transition: all 150ms ease;
+}

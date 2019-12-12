@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { PLUS_SIGN } from '@app/assets/icons'
@@ -25,6 +25,8 @@ const SheetActionCreateSheet = () => {
   const dispatch = useDispatch()
   const isDemoUser = useSelector((state: IAppState) => state.user.subscription.type === 'DEMO')
   const userFolderId = useSelector((state: IAppState) => state.user.folderId)
+  
+  const [ isSheetCurrentlyBeingCreated, setIsSheetCurrentlyBeingCreated ] = useState(false)
 
   const handleButtonClick = () => {
     if(isDemoUser) {
@@ -33,7 +35,11 @@ const SheetActionCreateSheet = () => {
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth'})
     }
     else {
+      setIsSheetCurrentlyBeingCreated(true)
       dispatch(createSheet(userFolderId, 'New Sheet', true))
+      setTimeout(() => {
+        setIsSheetCurrentlyBeingCreated(false)
+      }, 2500)
     }
   }
 
@@ -43,7 +49,7 @@ const SheetActionCreateSheet = () => {
       iconSize="0.85rem"
       marginLeft="0"
       onClick={() => handleButtonClick()}
-      text='Sheet'
+      text={ isSheetCurrentlyBeingCreated ? 'Creating...' : 'Sheet' }
       tooltip='Create a new sheet'>
     </SheetActionButton>
   )

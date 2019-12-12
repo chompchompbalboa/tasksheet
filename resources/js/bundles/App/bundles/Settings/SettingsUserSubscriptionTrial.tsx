@@ -4,9 +4,12 @@
 import React, { useState } from 'react'
 import moment from 'moment'
 import { useSelector } from 'react-redux'
+import { Elements } from 'react-stripe-elements'
 import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
+
+import Stripe from '@app/bundles/Stripe/Stripe'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -19,60 +22,90 @@ const SettingsUserSubscriptionTrial = () => {
   const [ activeUserSubscriptionSelection, setActiveUserSubscriptionSelection ] = useState(null as 'MONTHLY' | 'LIFETIME')
   
   return (
-    <Container>
+    <>
       <ExpirationDate>
         Your 30-day free trial expires on <b>{moment(userSubscriptionEndDate).format('MMMM Do, YYYY')}.</b>
-        <br/><br/>
-        Please choose a plan: 
       </ExpirationDate>
-      <SubscriptionTypesContainer>
-        <SubscriptionType
-          isSelected={activeUserSubscriptionSelection === 'MONTHLY'}
-          onClick={() => setActiveUserSubscriptionSelection('MONTHLY')}
-          userColorPrimary={userColorPrimary}>
-          <SubscriptionTypeHeader>
-            Monthly
-          </SubscriptionTypeHeader>
-          <SubscriptionTypePrice>
-            $5
-          </SubscriptionTypePrice>
-          <Divider />
-          <SubscriptionTypeDescription>
-            Billed on the 1st of every month, your first billing would occur on <b>{moment().add(2, 'month').startOf('month').format('MMMM Do, YYYY')}</b>.
-          </SubscriptionTypeDescription>
-        </SubscriptionType>
-        <SubscriptionType
-          isSelected={activeUserSubscriptionSelection === 'LIFETIME'}
-          onClick={() => setActiveUserSubscriptionSelection('LIFETIME')}
-          userColorPrimary={userColorPrimary}>
-          <SubscriptionTypeHeader>
-            Lifetime
-          </SubscriptionTypeHeader>
-          <SubscriptionTypePrice>
-            $100
-          </SubscriptionTypePrice>
-          <Divider />
-          <SubscriptionTypeDescription>
-            Billed immediately, you'll have access to Tasksheet and all of its features forever.
-          </SubscriptionTypeDescription>
-        </SubscriptionType>
-      </SubscriptionTypesContainer>
-    </Container>
+      <Container>
+        <ContentContainer>
+          <Header>
+            Please choose a plan: 
+          </Header>
+          <SubscriptionTypesContainer>
+            <SubscriptionType
+              isSelected={activeUserSubscriptionSelection === 'MONTHLY'}
+              onClick={() => setActiveUserSubscriptionSelection('MONTHLY')}
+              userColorPrimary={userColorPrimary}>
+              <SubscriptionTypeHeader>
+                Monthly
+              </SubscriptionTypeHeader>
+              <SubscriptionTypePrice>
+                $5
+              </SubscriptionTypePrice>
+              <Divider />
+              <SubscriptionTypeDescription>
+                Billed on the 1st of every month, your first billing would occur on <b>{moment().add(2, 'month').startOf('month').format('MMMM Do, YYYY')}</b>.
+              </SubscriptionTypeDescription>
+            </SubscriptionType>
+            <SubscriptionType
+              isSelected={activeUserSubscriptionSelection === 'LIFETIME'}
+              onClick={() => setActiveUserSubscriptionSelection('LIFETIME')}
+              userColorPrimary={userColorPrimary}>
+              <SubscriptionTypeHeader>
+                Lifetime
+              </SubscriptionTypeHeader>
+              <SubscriptionTypePrice>
+                $100
+              </SubscriptionTypePrice>
+              <Divider />
+              <SubscriptionTypeDescription>
+                Billed immediately, you'll have access to Tasksheet and all of its features forever.
+              </SubscriptionTypeDescription>
+            </SubscriptionType>
+          </SubscriptionTypesContainer>
+        </ContentContainer>
+        <ContentContainer>
+          <Header>
+            Please enter your card information: 
+          </Header>
+          <Elements>
+            <Stripe />
+          </Elements>
+        </ContentContainer>
+      </Container>
+    </>
   )
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div``
-
-const ExpirationDate = styled.div``
-
-const SubscriptionTypesContainer = styled.div`
-  margin-top: 0.5rem;
+const Container = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
+`
+
+const ExpirationDate = styled.div`
+  margin-bottom: 1rem;
+`
+
+const ContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-right: 0.5rem;
+`
+
+const SubscriptionTypesContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+`
+
+const Header = styled.div`
+  margin-bottom: 0.5rem;
 `
 
 const SubscriptionType = styled.div`
