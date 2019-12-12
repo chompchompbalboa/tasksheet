@@ -8,20 +8,20 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 use App\Models\SheetCell;
-use App\Models\SheetFile;
+use App\Models\SheetCellFile;
 
 class SheetCellFileController extends Controller
 {
     public function show($cellId)
     {
       return response()->json(
-        SheetFile::where('cellId', $cellId)
+        SheetCellFile::where('cellId', $cellId)
         ->orderBy('createdAt')
         ->get()
       , 200);
     }
 
-    public function update(Request $request, SheetFile $file)
+    public function update(Request $request, SheetCellFile $file)
     {
       $file->update($request->all());
       return response()->json($file, 200);
@@ -29,12 +29,12 @@ class SheetCellFileController extends Controller
 
     public function destroy($sheetFileId)
     {
-      $sheetFile = SheetFile::find($sheetFileId);
+      $sheetFile = SheetCellFile::find($sheetFileId);
       $cellId = $sheetFile->cellId;
       Storage::delete('/public/files/'.$sheetFile->filename);
       $sheetFile->delete();
       return response()->json(
-        SheetFile::where('cellId', $cellId)
+        SheetCellFile::where('cellId', $cellId)
         ->orderBy('createdAt')
         ->get()
       , 200);
@@ -54,7 +54,7 @@ class SheetCellFileController extends Controller
       Storage::copy($s3PresignedUrlData['key'], $nextS3PresignedUrlDataKey);
       
       // Create the new sheet cell file
-      $newSheetFile = SheetFile::create([
+      $newSheetCellFile = SheetCellFile::create([
         'id' => Str::uuid()->toString(),
         'sheetId' => $sheetId,
         'cellId' => $sheetCellId,
@@ -66,7 +66,7 @@ class SheetCellFileController extends Controller
         'uploadedAt' => date("Y-m-d H:i:s")
       ]);
       
-      $nextSheetCellFiles = SheetFile::where('cellId', $sheetCellId)->orderBy('createdAt')->get();
+      $nextSheetCellFiles = SheetCellFile::where('cellId', $sheetCellId)->orderBy('createdAt')->get();
       $sheetCell = SheetCell::find($sheetCellId);
       $sheetCell->update([ 'value' => count($nextSheetCellFiles) ]);
       
@@ -75,7 +75,7 @@ class SheetCellFileController extends Controller
 
     public function downloadFiles($sheetFileId)
     {
-      $sheetFile = SheetFile::find($sheetFileId);
+      $sheetFile = SheetCellFile::find($sheetFileId);
       return Storage::download($sheetFile->s3Key, $sheetFile->filename);
     }
 }

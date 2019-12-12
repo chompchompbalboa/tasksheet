@@ -8,14 +8,14 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 use App\Models\SheetCell;
-use App\Models\SheetPhoto;
+use App\Models\SheetCellPhoto;
 
 class SheetCellPhotoController extends Controller
 {
     public function show($cellId)
     {
       return response()->json(
-        SheetPhoto::where('cellId', $cellId)
+        SheetCellPhoto::where('cellId', $cellId)
         ->orderBy('createdAt')
         ->get()
       , 200);
@@ -42,7 +42,7 @@ class SheetCellPhotoController extends Controller
       Storage::setVisibility($nextS3PresignedUrlDataKey, 'public');
       
       // Create the new sheet cell photo
-      $newSheetPhoto = SheetPhoto::create([
+      $newSheetCellPhoto = SheetCellPhoto::create([
         'id' => Str::uuid()->toString(),
         'sheetId' => $sheetId,
         'cellId' => $sheetCellId,
@@ -54,7 +54,7 @@ class SheetCellPhotoController extends Controller
         'uploadedAt' => date("Y-m-d H:i:s")
       ]);
 
-      $nextSheetCellPhotos = SheetPhoto::where('cellId', $sheetCellId)->orderBy('createdAt')->get();
+      $nextSheetCellPhotos = SheetCellPhoto::where('cellId', $sheetCellId)->orderBy('createdAt')->get();
       $sheetCell = SheetCell::find($sheetCellId);
       $sheetCell->update([ 'value' => count($nextSheetCellPhotos) ]);
       return response()->json($nextSheetCellPhotos, 200);
