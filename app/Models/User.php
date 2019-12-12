@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Laravel\Cashier\Billable;
+
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -9,6 +11,7 @@ use App\Models\Folder;
 
 class User extends Authenticatable
 {
+    use Billable;
     use Notifiable;
     use Traits\UsesUuid;
   
