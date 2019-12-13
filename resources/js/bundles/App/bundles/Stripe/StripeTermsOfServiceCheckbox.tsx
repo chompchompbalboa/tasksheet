@@ -91,6 +91,7 @@ const TermsOfServiceLink = styled.span`
   cursor: pointer;
   font-weight: bold;
   opacity: 0.7;
+  border-bottom: 1px dashed black;
   &:hover {
     opacity: 1;
   }
@@ -102,7 +103,7 @@ const TermsOfServiceContainer = styled.div`
   min-width: 15rem;
   top: 100%;
   left: 0;
-  padding: 0.375rem;
+  padding: 0.5rem;
   border-radius: 3px;
   background-color: white;
   border: 1px solid rgb(150, 150, 150);

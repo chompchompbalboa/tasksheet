@@ -10,8 +10,8 @@ import styled from 'styled-components'
 const StripeTermsAndConditionsText = () => {   
   return (
     <Container>
-      <h1>Terms of Service ("Terms")</h1>
-      <p>Last updated: December 12, 2019</p>
+      <Header>Tasksheet Terms of Service</Header>
+      <p><b>Last updated:</b> December 12, 2019</p>
       <br/>
       <p>Please read these Terms of Service ("Terms", "Terms of Service") carefully before using the http://www.tasksheet.app website (the "Service") operated by Tasksheet ("us", "we", or "our").</p>
       <br/>
@@ -70,6 +70,10 @@ const StripeTermsAndConditionsText = () => {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+`
+
+const Header = styled.h1`
+  text-decoration: underline;
 `
 
 export default StripeTermsAndConditionsText

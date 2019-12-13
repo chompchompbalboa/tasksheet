@@ -20,7 +20,7 @@ const SettingsUserSubscriptionTrial = () => {
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   const userSubscriptionEndDate = useSelector((state: IAppState) => state.user.subscription.endDate)
 
-  const [ activeUserSubscriptionSelection, setActiveUserSubscriptionSelection ] = useState(null as 'MONTHLY' | 'LIFETIME')
+  const [ activeUserSubscriptionSelection, setActiveUserSubscriptionSelection ] = useState('MONTHLY' as 'MONTHLY' | 'LIFETIME')
   
   return (
     <>
@@ -65,19 +65,17 @@ const SettingsUserSubscriptionTrial = () => {
             </SubscriptionType>
           </SubscriptionTypesContainer>
         </ContentContainer>
-        {activeUserSubscriptionSelection &&
-          <ContentContainer>
-            <Header>
-              Please enter your card information: 
-            </Header>
-            <Elements>
-              {activeUserSubscriptionSelection === 'MONTHLY' 
-                ? <StripeMonthlySubscription /> 
-                : <StripeLifetimeSubscription />
-              }
-            </Elements>
-          </ContentContainer>
-        }
+        <ContentContainer>
+          <Header>
+            Please enter your card information: 
+          </Header>
+          <Elements>
+            {activeUserSubscriptionSelection === 'MONTHLY' 
+              ? <StripeMonthlySubscription /> 
+              : <StripeLifetimeSubscription />
+            }
+          </Elements>
+        </ContentContainer>
       </Container>
     </>
   )

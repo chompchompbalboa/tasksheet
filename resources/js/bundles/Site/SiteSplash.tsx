@@ -141,7 +141,7 @@ const SiteSplash = () => {
       </Header>
       <Splash>
         <Name>tasksheet</Name>
-        <Motto>The spreadsheet built to keep track of your workplace to-dos</Motto>
+        <Motto>The spreadsheet that makes it easy to organize your to-dos</Motto>
         <Divider />
         <LoginRegisterContainer>
           {activeSiteSplashForm === 'REGISTER' &&
@@ -175,7 +175,7 @@ const SiteSplash = () => {
                 onFocus={() =>  handleInputFocus()}
                 isInputValueValid={true}/>
               <SubmitButton>
-                {!['REGISTERING'].includes(registerStatus) ? 'Sign Up' : 'Sending...'}
+                {!['REGISTERING'].includes(registerStatus) ? 'Sign Up' : 'Signing Up...'}
               </SubmitButton>
             </LoginRegisterForm>
           }
