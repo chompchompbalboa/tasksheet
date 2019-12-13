@@ -12,7 +12,8 @@
     <section id="react-container"></section>
     <script>
       const environment = {
-        assetUrl: '{{ asset('') }}'
+        assetUrl: "{{ asset('') }}",
+        s3Bucket: "{{ env('AWS_BUCKET') }}"
       }
       const initialData = {
         user: @json($user),

@@ -9,7 +9,8 @@ import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
 
-import Stripe from '@app/bundles/Stripe/Stripe'
+import StripeLifetimeSubscription from '@app/bundles/Stripe/StripeLifetimeSubscription'
+import StripeMonthlySubscription from '@app/bundles/Stripe/StripeMonthlySubscription'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -44,7 +45,7 @@ const SettingsUserSubscriptionTrial = () => {
               </SubscriptionTypePrice>
               <Divider />
               <SubscriptionTypeDescription>
-                Billed on the 1st of every month, your first billing would occur on <b>{moment().add(2, 'month').startOf('month').format('MMMM Do, YYYY')}</b>.
+                Billed on the 1st of every month, your first billing will occur on <b>{moment().add(2, 'month').startOf('month').format('MMMM Do, YYYY')}</b>.
               </SubscriptionTypeDescription>
             </SubscriptionType>
             <SubscriptionType
@@ -64,14 +65,19 @@ const SettingsUserSubscriptionTrial = () => {
             </SubscriptionType>
           </SubscriptionTypesContainer>
         </ContentContainer>
-        <ContentContainer>
-          <Header>
-            Please enter your card information: 
-          </Header>
-          <Elements>
-            <Stripe />
-          </Elements>
-        </ContentContainer>
+        {activeUserSubscriptionSelection &&
+          <ContentContainer>
+            <Header>
+              Please enter your card information: 
+            </Header>
+            <Elements>
+              {activeUserSubscriptionSelection === 'MONTHLY' 
+                ? <StripeMonthlySubscription /> 
+                : <StripeLifetimeSubscription />
+              }
+            </Elements>
+          </ContentContainer>
+        }
       </Container>
     </>
   )

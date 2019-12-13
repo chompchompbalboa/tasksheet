@@ -1,12 +1,14 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import React, { FormEvent, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { injectStripe, CardElement } from 'react-stripe-elements'
 import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
+
+import StripeTermsOfServiceCheckbox from '@app/bundles/Stripe/StripeTermsOfServiceCheckbox'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -15,7 +17,10 @@ const Stripe = () => {
   
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   
-  const handleSubmit = () => {
+  const [ termsOfServiceCheckboxValue, setTermsOfServiceCheckboxValue ] = useState(false)
+  
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
     console.log('handleSubmit')
   }
   
@@ -45,9 +50,12 @@ const Stripe = () => {
         <CardElement
           onChange={() => null}
           {...createOptions()}/>
+        <StripeTermsOfServiceCheckbox
+          checkboxValue={termsOfServiceCheckboxValue}
+          updateCheckboxValue={setTermsOfServiceCheckboxValue}/>
         <StyledButton
           userColorPrimary={userColorPrimary}>
-          Purchase
+          Purchase Lifetime Access
         </StyledButton>
       </StyledForm>
     </Container>
@@ -65,7 +73,6 @@ const StyledForm = styled.form``
 
 const StyledButton = styled.button`
   cursor: pointer;
-  margin-top: 0.5rem;
   min-width: 6rem;
   padding: 0.5rem;
   white-space: nowrap;
@@ -73,6 +80,7 @@ const StyledButton = styled.button`
   outline: 0;
   background-color:${ ({ userColorPrimary }: IStyledButton) => userColorPrimary };
   color: white;
+  font-size: 0.85rem;
   border-radius: 4px;
   text-decoration: none;
   transition: all 0.15s;

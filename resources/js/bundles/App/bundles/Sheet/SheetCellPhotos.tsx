@@ -144,7 +144,7 @@ const SheetCellPhotos = ({
                       <Photo
                         key={index}
                         isVisible={index === visiblePhotoIndex}
-                        src={'https://tracksheet-staging.s3.amazonaws.com/' + photo.s3Key}/>
+                        src={'https://' + environment.s3Bucket + '.s3.amazonaws.com/' + photo.s3Key}/>
                     ))
                   : <NoPhotoMessage
                       hasPhotosLoaded={hasPhotosLoaded}>
