@@ -72,6 +72,7 @@ interface IStripeTermsAndConditionsCheckbox {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  z-index: 100;
   position: relative;
   margin: 0.5rem 0;
 `

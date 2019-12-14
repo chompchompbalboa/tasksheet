@@ -54,8 +54,8 @@ const Header = styled.div`
   background-color: rgb(225, 225, 225);
   color: rgb(10, 10, 10);
   font-size: 0.95rem;
-  border: 1px solid rgb(220, 220, 220);
-  border-bottom: ${ ({ isContentVisible }: IHeader ) => isContentVisible ? 'none' : '1px solid rgb(220, 220, 220)' };
+  border: 1px solid rgb(175, 175, 175);
+  border-bottom: ${ ({ isContentVisible }: IHeader ) => isContentVisible ? 'none' : '1px solid rgb(175, 175, 175)' };
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   border-bottom-left-radius: ${ ({ isContentVisible }: IHeader ) => isContentVisible ? '0' : '3px' };
@@ -68,7 +68,7 @@ interface IHeader {
 const Content = styled.div`
   padding: 0.5rem;
   display: ${ ({ isContentVisible }: IContent ) => isContentVisible ? 'block' : 'none' };
-  border: 1px solid rgb(220, 220, 220);
+  border: 1px solid rgb(175, 175, 175);
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
 `

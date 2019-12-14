@@ -179,7 +179,7 @@ const Container = styled.div`
   color: rgb(80, 80, 80);
   text-decoration: none;
   border-radius: 3px;
-  border: 1px solid rgb(200, 200, 200);
+  border: 1px solid rgb(175, 175, 175);
 `
 interface IContainer {
   isBeforeDivider: boolean
@@ -190,7 +190,7 @@ const CurrentColorContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0.325rem 0.4rem;
+  padding: 0.35rem 0.4rem;
   transition: all 0.05s;
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
@@ -214,8 +214,8 @@ interface ICurrentColor {
 
 const DropdownToggle = styled.div`
   cursor: pointer;
-  padding: 0.4rem 0.1rem;
-  border-left: 1px solid rgb(170, 170, 170);
+  padding: 0.45rem 0.1rem;
+  border-left: 1px solid rgb(175, 175, 175);
   display: flex;
   flex-direction: column;
   justify-content: center;

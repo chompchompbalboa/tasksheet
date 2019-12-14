@@ -11,7 +11,7 @@ const SettingsUserSubscriptionLifetime = () => {
   
   return (
     <Container>
-      Thank you for your lifetime membership! We don't need any of your billing information.
+      Thank you for your lifetime membership!
     </Container>
   )
 }

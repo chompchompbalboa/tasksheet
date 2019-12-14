@@ -2,7 +2,6 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { injectStripe } from 'react-stripe-elements'
 import styled from 'styled-components'
 
 //-----------------------------------------------------------------------------
@@ -11,11 +10,13 @@ import styled from 'styled-components'
 const StripeForm = ({
   children,
   onSubmit
-}: IStripeForm) => (
-  <StyledForm onSubmit={onSubmit}>
-    {children}
-  </StyledForm>
-)
+}: IStripeForm) => {
+  return (
+    <StyledForm onSubmit={onSubmit}>
+      {children}
+    </StyledForm>
+  )
+}
 
 //-----------------------------------------------------------------------------
 // Props
@@ -29,7 +30,7 @@ interface IStripeForm {
 // Styled Components
 //-----------------------------------------------------------------------------
 const StyledForm = styled.form`
-  min-width: 25rem;
+  min-width: 20rem;
 `
 
-export default injectStripe(StripeForm)
+export default StripeForm

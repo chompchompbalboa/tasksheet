@@ -79,8 +79,8 @@ const ContentItems = styled.div`
   width: 100%;
   overflow-y: scroll;
   background-color: rgb(254, 254, 254);
-  border-top: 1px solid rgb(220, 220, 220);
-  border-left: 1px solid rgb(220, 220, 220);
+  border-top: 1px solid rgb(175, 175, 175);
+  border-left: 1px solid rgb(175, 175, 175);
   border-top-left-radius: 4px;
   display: flex;
 `

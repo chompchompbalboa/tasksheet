@@ -22,7 +22,7 @@ const SettingsUser = () => {
         <SettingsUserEmail />
       </SettingsGroup>
       <SettingsGroup
-        header="Billing">
+        header="Subscription">
         <SettingsUserSubscription />
       </SettingsGroup>
     </ContentContent>

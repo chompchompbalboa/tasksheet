@@ -75,7 +75,7 @@ interface FoldersFolderProps {
 const Container = styled.div`
   height: 100%;
   width: 13rem;
-  border-right: 1px solid rgb(220, 220, 220);
+  border-right: 1px solid rgb(175, 175, 175);
   display: flex;
   flex-direction: column;
   overflow: hidden;

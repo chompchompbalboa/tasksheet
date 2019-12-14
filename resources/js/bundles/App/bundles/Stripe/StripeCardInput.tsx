@@ -2,7 +2,8 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { CardElement } from 'react-stripe-elements'
+import { CardCvcElement, CardExpiryElement, CardNumberElement } from 'react-stripe-elements'
+import styled from 'styled-components'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -28,10 +29,52 @@ const StripeCardInput = () => {
   }
   
   return (
-    <CardElement {...cardElementOptions}/>
+    <Container>
+      <CardNumberContainer>
+        <CardDetailContainer
+          width="100%">
+          <label>Number:</label>
+          <CardNumberElement {...cardElementOptions}/>
+        </CardDetailContainer>
+      </CardNumberContainer>
+      <CardDetailsContainer>
+        <CardDetailContainer
+          width="20%">
+          <label>CVC:</label>
+          <CardCvcElement {...cardElementOptions}/>
+        </CardDetailContainer>
+        &nbsp;&nbsp;
+        <CardDetailContainer
+          width="40%">
+          <label>Expiration:</label>
+          <CardExpiryElement {...cardElementOptions}/>
+        </CardDetailContainer>
+      </CardDetailsContainer>
+    </Container>
   )
 }
+
+//-----------------------------------------------------------------------------
+// Styled Components
+//-----------------------------------------------------------------------------
+const Container = styled.div``
+
+const CardNumberContainer = styled.div`
   
+`
+
+const CardDetailsContainer = styled.div`
+  display: flex;
+`
+
+const CardDetailContainer = styled.div`
+  display: inline;
+  width: ${ ({ width }: ICardDetailContainer) => 'calc(' + width + ' - 0.5rem)' };
+`
+interface ICardDetailContainer {
+  width: string
+}
+
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------

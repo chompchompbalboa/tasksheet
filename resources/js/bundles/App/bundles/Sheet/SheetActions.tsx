@@ -116,7 +116,7 @@ const Container = styled.div`
   align-items: center;
   min-height: 2.75rem;
   background-color: rgb(250, 250, 250);
-  border-bottom: 1px solid rgb(180, 180, 180);
+  border-bottom: 1px solid rgb(175, 175, 175);
 `
 
 const Divider = styled.div`
@@ -124,7 +124,7 @@ const Divider = styled.div`
   height: 1.5rem;
   width: 1px;
   min-width: 1px;
-  background-color: rgb(180, 180, 180)
+  background-color: rgb(175, 175, 175)
 `
 
 //-----------------------------------------------------------------------------

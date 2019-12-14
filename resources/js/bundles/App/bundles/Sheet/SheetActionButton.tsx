@@ -166,7 +166,7 @@ const Container = styled.div`
   color: rgb(80, 80, 80);
   border-radius: 3px;
   transition: all 0.05s;
-  border: 1px solid rgb(200, 200, 200);
+  border: 1px solid rgb(175, 175, 175);
 `
 interface IContainer {
   containerMarginLeft: string
@@ -212,7 +212,7 @@ interface IIconText {
 const DropdownToggle = styled.div`
   cursor: pointer;
   padding: 0.45rem 0.1rem;
-  border-left: 1px solid rgb(170, 170, 170);
+  border-left: 1px solid rgb(175, 175, 175);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -243,7 +243,7 @@ const DropdownContainer = styled.div`
   background-color: rgb(250, 250, 250);
   box-shadow: 2px 2px 15px 0px rgba(0,0,0,0.3);
   white-space: nowrap;
-  border: 1px solid rgb(200, 200, 200);
+  border: 1px solid rgb(175, 175, 175);
 `
 interface IDropdown {
   isDropdownVisible: boolean

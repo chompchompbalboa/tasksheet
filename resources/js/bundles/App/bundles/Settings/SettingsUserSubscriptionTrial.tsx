@@ -4,13 +4,12 @@
 import React, { useState } from 'react'
 import moment from 'moment'
 import { useSelector } from 'react-redux'
-import { Elements } from 'react-stripe-elements'
+import { Elements, StripeProvider } from 'react-stripe-elements'
 import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
 
-import StripeLifetimeSubscription from '@app/bundles/Stripe/StripeLifetimeSubscription'
-import StripeMonthlySubscription from '@app/bundles/Stripe/StripeMonthlySubscription'
+import StripePurchaseSubscription from '@app/bundles/Stripe/StripePurchaseSubscription'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -69,12 +68,12 @@ const SettingsUserSubscriptionTrial = () => {
           <Header>
             Please enter your card information: 
           </Header>
-          <Elements>
-            {activeUserSubscriptionSelection === 'MONTHLY' 
-              ? <StripeMonthlySubscription /> 
-              : <StripeLifetimeSubscription />
-            }
-          </Elements>
+          <StripeProvider apiKey="pk_test_8At8pLHxkRH0MLAwBVTtT5eW00maMxOdQH">
+            <Elements>
+              <StripePurchaseSubscription
+                monthlyOrLifetime={activeUserSubscriptionSelection}/>
+            </Elements>
+          </StripeProvider>
         </ContentContainer>
       </Container>
     </>
@@ -99,10 +98,11 @@ const ContentContainer = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  margin-right: 0.5rem;
+  margin-right: 1rem;
 `
 
 const SubscriptionTypesContainer = styled.div`
+  padding-top: 1rem;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
@@ -134,23 +134,28 @@ interface ISubscriptionType {
   userColorPrimary: string
 }
 
-const SubscriptionTypeHeader = styled.div``
+const SubscriptionTypeHeader = styled.div`
+  padding: 0.25rem 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+`
 
 const Divider = styled.div`
-  margin: 0.5rem 0;
+  margin: 0.75rem 0;
   width: 60%;
   height: 1px;
   background-color: rgb(150, 150, 150);
 `
 
 const SubscriptionTypePrice = styled.div`
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: bold;
 `
 
 const SubscriptionTypeDescription = styled.div`
   width: 10rem;
   text-align: justify;
+  margin-bottom: 0.25rem;
 `
 
 //-----------------------------------------------------------------------------

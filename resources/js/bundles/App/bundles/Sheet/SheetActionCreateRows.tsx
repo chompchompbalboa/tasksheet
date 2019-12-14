@@ -103,9 +103,9 @@ const SheetCreateRows = ({
             padding: '0.4rem 0.5rem',
             minWidth: '0.5rem',
             border: 'none',
-            borderTop: '0.5px solid rgb(200, 200, 200)',
-            borderBottom: '0.5px solid rgb(200, 200, 200)',
-            borderLeft: '0.5px solid rgb(200, 200, 200)',
+            borderTop: '0.5px solid rgb(175, 175, 175)',
+            borderBottom: '0.5px solid rgb(175, 175, 175)',
+            borderLeft: '0.5px solid rgb(175, 175, 175)',
             borderTopLeftRadius: '3px',
             borderBottomLeftRadius: '3px',
             color: 'rgb(110, 110, 110)',
@@ -185,14 +185,14 @@ interface IAboveOrBelowButton {
 }
 
 const AboveButton = styled(AboveOrBelowButton)`
-  border-top: 1px solid rgb(200, 200, 200);
-  border-bottom: 1px solid rgb(200, 200, 200);
+  border-top: 1px solid rgb(175, 175, 175);
+  border-bottom: 1px solid rgb(175, 175, 175);
 `
 
 const BelowButton = styled(AboveOrBelowButton)`
-  border-top: 1px solid rgb(200, 200, 200);
-  border-bottom: 1px solid rgb(200, 200, 200);
-  border-right: 1px solid rgb(200, 200, 200);
+  border-top: 1px solid rgb(175, 175, 175);
+  border-bottom: 1px solid rgb(175, 175, 175);
+  border-right: 1px solid rgb(175, 175, 175);
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
 `
@@ -210,7 +210,7 @@ const Tooltip = styled.div`
   top: 100%;
   padding: 0.25rem;
   background-color: rgb(250, 250, 250);
-  border: 1px solid rgb(200, 200, 200);
+  border: 1px solid rgb(175, 175, 175);
   border-radius: 3px;
   box-shadow: 2px 2px 15px 0px rgba(0,0,0,0.3);
   white-space: nowrap;
