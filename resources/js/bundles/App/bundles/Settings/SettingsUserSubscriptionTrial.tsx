@@ -71,7 +71,7 @@ const SettingsUserSubscriptionTrial = () => {
           <StripeProvider apiKey="pk_test_8At8pLHxkRH0MLAwBVTtT5eW00maMxOdQH">
             <Elements>
               <StripePurchaseSubscription
-                monthlyOrLifetime={activeUserSubscriptionSelection}/>
+                monthlyOrLifetimeSubscription={activeUserSubscriptionSelection}/>
             </Elements>
           </StripeProvider>
         </ContentContainer>
