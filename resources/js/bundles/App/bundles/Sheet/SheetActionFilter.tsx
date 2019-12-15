@@ -135,7 +135,7 @@ const SheetActionFilter = ({
         }).sort((a, b) => b.value.localeCompare(a.value))
       }
     }
-    // filter the available dropdown options to only display ones the current input value matches
+    // Filter the available dropdown options to only display ones the current input value matches
     const dropdownOptions = options && options.filter(option => {
       if(nextAutosizeInputValue) {
         const searchString = nextAutosizeInputValue.trim().toLowerCase().split(' ').join('')

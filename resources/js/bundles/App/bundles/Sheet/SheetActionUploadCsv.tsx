@@ -50,9 +50,9 @@ const SheetActionUploadCsv = () => {
       onClick={() => handleButtonClick()}
       openDropdown={() => setIsDropdownVisible(true)}
       text='.csv'
-      tooltip='Upload a .csv file'>
+      tooltip='Create a new sheet from a .csv file'>
       <SheetActionButtonDropdown>
-        Upload .csv
+        Create a new sheet from a .csv file
       </SheetActionButtonDropdown>
     </SheetActionButton>
   )

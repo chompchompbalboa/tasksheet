@@ -7,7 +7,8 @@ import {
   IUser,
   IUserUpdates,
   IUserActiveUpdates,
-  IUserColorUpdates
+  IUserColorUpdates,
+  IUserSubscriptionUpdates
 } from './types'
 
 import { mutation } from '@app/api'
@@ -18,7 +19,7 @@ import { createMessengerMessage } from '@app/state/messenger/actions'
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-export type IUserActions = IUpdateUser | IUpdateUserActive | IUpdateUserColor
+export type IUserActions = IUpdateUser | IUpdateUserActive | IUpdateUserColor | IUpdateUserSubscription
 
 //-----------------------------------------------------------------------------
 // Update User
@@ -98,6 +99,30 @@ export const updateUserColor = (updates: IUserColorUpdates): IThunkAction => {
 export const updateUserColorReducer = (updates: IUserColorUpdates): IUserActions => {
 	return {
 		type: UPDATE_USER_COLOR,
+		updates: updates,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update User Active
+//-----------------------------------------------------------------------------
+export const UPDATE_USER_SUBSCRIPTION = 'UPDATE_USER_SUBSCRIPTION'
+interface IUpdateUserSubscription {
+	type: typeof UPDATE_USER_SUBSCRIPTION
+	updates: IUserSubscriptionUpdates
+}
+
+
+export const updateUserSubscription = (updates: IUserSubscriptionUpdates): IThunkAction => {
+	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
+		dispatch(updateUserSubscriptionReducer(updates))
+		//mutation.updateUserSubscription(getState().user.active.id, updates)
+	}
+}
+
+export const updateUserSubscriptionReducer = (updates: IUserSubscriptionUpdates): IUserActions => {
+	return {
+		type: UPDATE_USER_SUBSCRIPTION,
 		updates: updates,
 	}
 }

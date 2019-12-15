@@ -25,7 +25,8 @@ import {
 import { 
   IUser, IUserUpdates,
   IUserActiveUpdates, 
-  IUserColorUpdates
+  IUserColorUpdates,
+  IUserSubscriptionUpdates
 } from '@app/state/user/types'
 import { 
   ITeam, ITeamMember, ITeamUpdates
@@ -47,6 +48,12 @@ export const updateUserActive = async (id: string, updates: IUserActiveUpdates) 
 
 export const updateUserColor = async (id: string, updates: IUserColorUpdates) => {
 	return axios.patch('/app/user/color/' + id, updates).then(response => {
+		return response.data
+	})
+}
+
+export const updateUserSubscription = async (id: string, updates: IUserSubscriptionUpdates) => {
+	return axios.patch('/app/user/subscription/' + id, updates).then(response => {
 		return response.data
 	})
 }

@@ -23,6 +23,12 @@ export interface IUserSubscription {
   startDate: string
 }
 
+export interface IUserSubscriptionUpdates {
+  type?: 'DEMO' | 'TRIAL' | 'MONTHLY' | 'LIFETIME'
+  startDate?: string
+  endDate?: string
+}
+
 export interface IUserActive {
 	id: string
 	tab: string

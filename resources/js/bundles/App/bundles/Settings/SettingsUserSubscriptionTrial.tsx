@@ -24,7 +24,9 @@ const SettingsUserSubscriptionTrial = () => {
   return (
     <>
       <ExpirationDate>
-        Your 30-day free trial expires on <b>{moment(userSubscriptionEndDate).format('MMMM Do, YYYY')}.</b>
+        Your 30-day free trial expires on <b>{moment(userSubscriptionEndDate).format('MMMM Do, YYYY')}. </b>
+        If you'd like to continue using Tasksheet after that date, please choose one of our two subscription plans: $5 per month or $100 for lifetime access. 
+        Both plans include unlimited access to all Tasksheet features.
       </ExpirationDate>
       <Container>
         <ContentContainer>

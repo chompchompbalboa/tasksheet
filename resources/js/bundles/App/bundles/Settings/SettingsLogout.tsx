@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import React, { useState } from 'react'
 
 import { action } from '@app/api'
 import { LOGOUT } from '@app/assets/icons'
@@ -13,10 +13,15 @@ import ContentSidebarItem from '@app/bundles/Content/ContentSidebarItem'
 //-----------------------------------------------------------------------------
 const UserLogout = () => {
 
+  const [ isLoggingOut, setIsLoggingOut ] = useState(false)
+
   const handleLogoutButtonClick = () => {
+    setIsLoggingOut(true)
     action.userLogout().then(
       success => { if(success) { window.location = window.location.href as any } },
-      err => { console.log(err) }
+      err => {
+        setIsLoggingOut(false)
+       }
     )
   }
 
@@ -25,7 +30,7 @@ const UserLogout = () => {
       icon={LOGOUT}
       isActive={false}
       onClick={() => handleLogoutButtonClick()}
-      text="Logout"/>
+      text={isLoggingOut ? "Logging Out..." : "Logout"}/>
   )
 }
 

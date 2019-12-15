@@ -82,6 +82,9 @@ Route::group([
   // Team Members
   Route::post('/team/member/create', 'TeamMemberController@store');
   Route::post('/team/member/delete', 'TeamMemberController@destroy');
+
+  // User Subscriptions
+  Route::post('/user/{user}/subscription/purchase/lifetime', 'UserSubscriptionPurchaseController@subscriptionPurchaseLifetime');
   
   // Resource Controllers
   Route::resources([
@@ -110,6 +113,7 @@ Route::group([
     'user/active' => 'UserActiveController',
     'user/color' => 'UserColorController',
     'user/layout' => 'UserLayoutController',
+    'user/subscription' => 'UserSubscriptionController',
   ]);
 });
 

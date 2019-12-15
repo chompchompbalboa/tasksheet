@@ -3,6 +3,8 @@
 //-----------------------------------------------------------------------------
 import axios from '@/api/axios'
 
+import { IUser } from '@app/state/user/types'
+
 //-----------------------------------------------------------------------------
 // Queries
 //-----------------------------------------------------------------------------
@@ -28,6 +30,16 @@ export const userRegister = async (name: string, email: string, password: string
   }).then(
     response => response
   ).catch(
+    error => error.response
+  )
+}
+
+export const userSubscriptionPurchaseLifetime = async (userId: IUser['id'], stripePaymentMethodId: string) => {
+  return axios.post('/app/user/' + userId + '/subscription/purchase/lifetime', {
+    stripePaymentMethodId
+  }).then(response => {
+    return response
+  }).catch(
     error => error.response
   )
 }
