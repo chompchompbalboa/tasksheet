@@ -89,8 +89,9 @@ export const SheetCellDatetime = ({
           {currentMonthDatesArray.map((currentDate, index) =>
             <DatepickerDate
               key={index}
+              isEmpty={currentDate === null}
               isSelected={isValueInCurrentMonth && valueDate === currentDate}
-              onClick={() => updateCellValue(moment(currentMonth).date(currentDate).format('MM/DD/YYYY'))}
+              onClick={currentDate !== null ? () => updateCellValue(moment(currentMonth).date(currentDate).format('MM/DD/YYYY')) : () => null}
               userColorPrimary={userColorPrimary}>
               {currentDate}
             </DatepickerDate>
@@ -196,10 +197,11 @@ const DatepickerDate = styled.div`
   background-color: ${ ({ isSelected, userColorPrimary }: IDatePickerDate) => isSelected ? userColorPrimary : 'transparent'};
   color: ${ ({ isSelected }: IDatePickerDate) => isSelected ? 'white' : 'inherit'};
   &:hover {
-    background-color: ${ ({ isSelected, userColorPrimary }: IDatePickerDate) => isSelected ? userColorPrimary : 'rgb(240, 240, 240)'};
+    background-color: ${ ({ isEmpty, isSelected, userColorPrimary }: IDatePickerDate) => isSelected ? userColorPrimary : (isEmpty ? 'transparent' : 'rgb(240, 240, 240)')};
   }
 `
 interface IDatePickerDate {
+  isEmpty: boolean
   isSelected: boolean
   userColorPrimary: string
 }
