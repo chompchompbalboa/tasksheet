@@ -181,7 +181,7 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
 
     const sheetFirstVisibleRow = normalizedSheetRows[nextSheetVisibleRows[0]]
     const sheetFirstVisibleColumnId = newSheetViewVisibleColumns[0]
-    const sheetFirstCell = normalizedSheetCells[sheetFirstVisibleRow.cells[sheetFirstVisibleColumnId]]
+    const sheetFirstCell = sheetFirstVisibleRow && sheetFirstVisibleColumnId ? normalizedSheetCells[sheetFirstVisibleRow.cells[sheetFirstVisibleColumnId]] : null
     
     // Dispatch the state change
 		dispatch(
@@ -204,6 +204,6 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
 			)
     )
     
-    dispatch(updateSheetSelectionFromCellClick(newSheet.id, sheetFirstCell.id, false))
+    sheetFirstCell && dispatch(updateSheetSelectionFromCellClick(newSheet.id, sheetFirstCell.id, false))
 	}
 }
