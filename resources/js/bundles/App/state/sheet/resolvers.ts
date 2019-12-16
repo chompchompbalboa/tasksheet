@@ -5,9 +5,10 @@ import { groupBy, orderBy } from 'lodash'
 
 import { 
   ISheet,
-  IAllSheetCells,
+  IAllSheetColumns, ISheetColumn, 
   IAllSheetRows, ISheetRow,
-  IAllSheetFilters, ISheetFilterType,
+  IAllSheetCells, ISheetCell, ISheetCellType,
+  IAllSheetFilters, ISheetFilter,
   ISheetGroup, IAllSheetGroups, 
   IAllSheetSorts, 
   IAllSheetViews,
@@ -17,28 +18,33 @@ import {
 //-----------------------------------------------------------------------------
 // Resolve Filter
 //-----------------------------------------------------------------------------
-export const resolveSheetFilter = (cellValue: string, filterValue: string, type: ISheetFilterType) => {
+export const resolveSheetFilter = (cell: ISheetCell, column: ISheetColumn, filter: ISheetFilter) => {
+  
+  const cellValue = cell.value
+  const cellType = column.cellType
+  const filterValue = filter.value
+  const filterType = filter.type
   
   const filterValues = filterValue.split('|').map(untrimmedFilterValue => untrimmedFilterValue.trim())
   
-  switch (type) {
+  switch (filterType) {
     case '=': {
-      return filterValues.some(currentFilterValue => resolveSheetCellValue(cellValue) == resolveSheetCellValue(currentFilterValue))
+      return filterValues.some(currentFilterValue => resolveSheetCellValue(cellValue, cellType) == resolveSheetCellValue(currentFilterValue, cellType))
     }
     case '!=': {
-      return filterValues.every(currentFilterValue => resolveSheetCellValue(cellValue) != resolveSheetCellValue(currentFilterValue))
+      return filterValues.every(currentFilterValue => resolveSheetCellValue(cellValue, cellType) != resolveSheetCellValue(currentFilterValue, cellType))
     }
     case '>': {
-      return filterValues.some(currentFilterValue => resolveSheetCellValue(cellValue) > resolveSheetCellValue(currentFilterValue))
+      return filterValues.some(currentFilterValue => resolveSheetCellValue(cellValue, cellType) > resolveSheetCellValue(currentFilterValue, cellType))
     }
     case '>=': {
-      return filterValues.some(currentFilterValue => resolveSheetCellValue(cellValue) >= resolveSheetCellValue(currentFilterValue))
+      return filterValues.some(currentFilterValue => resolveSheetCellValue(cellValue, cellType) >= resolveSheetCellValue(currentFilterValue, cellType))
     }
     case '<': {
-      return filterValues.some(currentFilterValue => resolveSheetCellValue(cellValue) < resolveSheetCellValue(currentFilterValue))
+      return filterValues.some(currentFilterValue => resolveSheetCellValue(cellValue, cellType) < resolveSheetCellValue(currentFilterValue, cellType))
     }
     case '<=': {
-      return filterValues.some(currentFilterValue => resolveSheetCellValue(cellValue) <= resolveSheetCellValue(currentFilterValue))
+      return filterValues.some(currentFilterValue => resolveSheetCellValue(cellValue, cellType) <= resolveSheetCellValue(currentFilterValue, cellType))
     }
   }
 }
@@ -46,16 +52,25 @@ export const resolveSheetFilter = (cellValue: string, filterValue: string, type:
 //-----------------------------------------------------------------------------
 // Resolve Value
 //-----------------------------------------------------------------------------
-export const resolveSheetCellValue = (value: string) => {
-  const filteredValue = value !== null ? value.replace(new RegExp('%', 'g'), '').replace(new RegExp('/', 'g'), '') : ""
-  return isNaN(Number(filteredValue)) ? filteredValue.toLowerCase() : Number(filteredValue)
+export const resolveSheetCellValue = (value: string, cellType: ISheetCellType) => {
+  const cellValueResolvers = {
+    STRING: () => value ? value.toLowerCase() : '',
+    DATETIME: () => value ? new Date(value) : '',
+    BOOLEAN: () => value === 'Checked',
+    NUMBER: () => value && !isNaN(Number(value)) ? Number(value) : Number.MIN_SAFE_INTEGER,
+    PHOTOS: () => value ? Number(value) : 0,
+    FILES: () => value ? Number(value) : 0,
+    TEAM_MEMBERS: () => value ? value.toLowerCase() : '',
+  }
+  return cellValueResolvers[cellType]()
 }
 
 //-----------------------------------------------------------------------------
 // Resolve Visible Rows
 //-----------------------------------------------------------------------------
 export const resolveSheetVisibleRows = (
-  sheet: ISheet, 
+  sheet: ISheet,
+  columns: IAllSheetColumns,
   rows: IAllSheetRows, 
   cells: IAllSheetCells, 
   filters: IAllSheetFilters, 
@@ -113,8 +128,9 @@ export const resolveSheetVisibleRows = (
       const filter = filters[filterId]
       if(filter) {
         const cell = cells[row.cells[filter.columnId]]
+        const column = columns[filter.columnId]
         if(cell) {
-          return resolveSheetFilter(cell.value, filter.value, filter.type)
+          return resolveSheetFilter(cell, column, filter)
         }
         return true
       }
@@ -128,8 +144,9 @@ export const resolveSheetVisibleRows = (
     const sort = sorts[sortId]
     return (rowId: string) => {
       const cell = cells[rows[rowId].cells[sort.columnId]]
+      const column = columns[sort.columnId]
       if(cell) {
-        return resolveSheetCellValue(cell.value)
+        return resolveSheetCellValue(cell.value, column.cellType)
       }
       return ''
     }
@@ -146,7 +163,11 @@ export const resolveSheetVisibleRows = (
     const groupedRowIds = groupBy(filteredSortedRowIds, (rowId: string) => {
       const getValue = (group: ISheetGroup) => {
         const cell = rows[rowId] && cells[rows[rowId].cells[group.columnId]]
-        return cell && cell.value
+        const column = columns[group.columnId]
+        if(cell) {
+          return resolveSheetCellValue(cell.value, column.cellType)
+        }
+        return ''
       }
       return groupIds.map(groupId => getValue(groups[groupId])).reduce((combined: string, current: string) => combined + (current ? current.toLowerCase() : '') + '-')
     })

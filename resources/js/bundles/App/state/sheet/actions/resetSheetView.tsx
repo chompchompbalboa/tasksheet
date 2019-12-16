@@ -26,6 +26,7 @@ export const resetSheetView = (sheetId: ISheet['id']): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
       allSheets: { [sheetId]: sheet },
+      allSheetColumns,
       allSheetRows,
       allSheetCells,
       allSheetFilters,
@@ -45,6 +46,7 @@ export const resetSheetView = (sheetId: ISheet['id']): IThunkAction => {
 
     const nextSheetVisibleRows = resolveSheetVisibleRows(
       sheet, 
+      allSheetColumns,
       allSheetRows, 
       allSheetCells, 
       allSheetFilters, 

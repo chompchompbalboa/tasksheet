@@ -22,10 +22,11 @@ export const refreshSheetVisibleRows = (sheetId: string): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
       allSheets,
+      allSheetColumns,
+      allSheetRows,
       allSheetCells,
       allSheetFilters,
       allSheetGroups,
-      allSheetRows,
       allSheetSorts,
       allSheetViews,
       allSheetPriorities
@@ -33,6 +34,7 @@ export const refreshSheetVisibleRows = (sheetId: string): IThunkAction => {
     const sheet = allSheets[sheetId]
     const nextSheetVisibleRows = resolveSheetVisibleRows(
       sheet, 
+      allSheetColumns,
       allSheetRows, 
       allSheetCells, 
       allSheetFilters, 

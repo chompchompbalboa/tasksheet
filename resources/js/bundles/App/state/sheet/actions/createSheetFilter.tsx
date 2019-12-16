@@ -28,6 +28,7 @@ export const createSheetFilter = (sheetId: string, newFilter: ISheetFilter): ITh
 
     const {
       allSheets,
+      allSheetColumns,
       allSheetRows,
       allSheetCells,
       allSheetFilters,
@@ -44,6 +45,7 @@ export const createSheetFilter = (sheetId: string, newFilter: ISheetFilter): ITh
     const nextSheetViewFilters = [ ...activeSheetView.filters, newFilter.id ]
     const nextSheetVisibleRows = resolveSheetVisibleRows(
       sheet, 
+      allSheetColumns,
       allSheetRows, 
       allSheetCells, 
       nextAllSheetFilters, 

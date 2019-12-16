@@ -28,6 +28,7 @@ export const createSheetGroup = (sheetId: string, newGroup: ISheetGroup): IThunk
 
     const {
       allSheets,
+      allSheetColumns,
       allSheetRows,
       allSheetCells,
       allSheetFilters,
@@ -44,6 +45,7 @@ export const createSheetGroup = (sheetId: string, newGroup: ISheetGroup): IThunk
     const nextSheetViewGroups = [ ...activeSheetView.groups, newGroup.id ]
     const nextSheetVisibleRows = resolveSheetVisibleRows(
       sheet, 
+      allSheetColumns,
       allSheetRows, 
       allSheetCells, 
       allSheetFilters, 

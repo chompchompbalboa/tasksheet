@@ -28,6 +28,7 @@ export const createSheetSort = (sheetId: string, newSort: ISheetSort): IThunkAct
 
     const {
       allSheets,
+      allSheetColumns,
       allSheetRows,
       allSheetCells,
       allSheetFilters,
@@ -44,6 +45,7 @@ export const createSheetSort = (sheetId: string, newSort: ISheetSort): IThunkAct
     const nextSheetViewSorts = [ ...activeSheetView.sorts, newSort.id ]
     const nextSheetVisibleRows = resolveSheetVisibleRows(
       sheet, 
+      allSheetColumns,
       allSheetRows, 
       allSheetCells, 
       allSheetFilters, 

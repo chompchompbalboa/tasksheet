@@ -28,6 +28,7 @@ export const deleteSheetFilter = (sheetId: string, filterId: string): IThunkActi
 
     const {
       allSheets,
+      allSheetColumns,
       allSheetCells,
       allSheetFilters,
       allSheetGroups,
@@ -45,6 +46,7 @@ export const deleteSheetFilter = (sheetId: string, filterId: string): IThunkActi
     const nextSheetViewFilters = activeSheetView.filters.filter(sheetFilterId => sheetFilterId !== filterId)
     const nextSheetVisibleRows = resolveSheetVisibleRows(
       sheet, 
+      allSheetColumns,
       allSheetRows, 
       allSheetCells, 
       nextAllSheetFilters, 

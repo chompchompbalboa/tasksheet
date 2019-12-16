@@ -28,10 +28,11 @@ export const deleteSheetSort = (sheetId: string, sortId: string): IThunkAction =
 
     const {
       allSheets,
+      allSheetColumns,
       allSheetCells,
+      allSheetRows,
       allSheetFilters,
       allSheetGroups,
-      allSheetRows,
       allSheetSorts,
       allSheetViews,
       allSheetPriorities
@@ -45,6 +46,7 @@ export const deleteSheetSort = (sheetId: string, sortId: string): IThunkAction =
     const nextSheetViewSorts = activeSheetView.sorts.filter(sheetSortId => sheetSortId !== sortId)
     const nextSheetVisibleRows = resolveSheetVisibleRows(
       sheet, 
+      allSheetColumns,
       allSheetRows, 
       allSheetCells, 
       allSheetFilters, 

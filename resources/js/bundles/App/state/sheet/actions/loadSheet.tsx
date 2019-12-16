@@ -168,6 +168,7 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
     // Sheet's Visible Rows and Row Leaders
     const nextSheetVisibleRows = resolveSheetVisibleRows(
       newSheet, 
+      normalizedSheetColumns,
       normalizedSheetRows, 
       normalizedSheetCells, 
       normalizedSheetFilters, 

@@ -28,6 +28,7 @@ export const loadSheetView = (sheetId: ISheet['id'], sheetViewId: ISheetView['id
     
     const {
       allSheets: { [sheetId]: sheet },
+      allSheetColumns,
       allSheetRows,
       allSheetCells,
       allSheetFilters,
@@ -44,6 +45,7 @@ export const loadSheetView = (sheetId: ISheet['id'], sheetViewId: ISheetView['id
         ...sheet,
         activeSheetViewId: sheetViewId
       }, 
+      allSheetColumns,
       allSheetRows, 
       allSheetCells, 
       allSheetFilters, 

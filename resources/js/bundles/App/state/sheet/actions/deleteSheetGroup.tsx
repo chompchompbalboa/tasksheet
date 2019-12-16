@@ -28,6 +28,7 @@ export const deleteSheetGroup = (sheetId: string, groupId: string): IThunkAction
 
     const {
       allSheets,
+      allSheetColumns,
       allSheetCells,
       allSheetFilters,
       allSheetGroups,
@@ -45,6 +46,7 @@ export const deleteSheetGroup = (sheetId: string, groupId: string): IThunkAction
     const nextSheetViewGroups = activeSheetView.groups.filter(sheetGroupId => sheetGroupId !== groupId)
     const nextSheetVisibleRows = resolveSheetVisibleRows(
       sheet, 
+      allSheetColumns,
       allSheetRows, 
       allSheetCells, 
       allSheetFilters, 

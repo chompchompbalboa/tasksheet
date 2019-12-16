@@ -32,10 +32,11 @@ export const updateSheetGroup = (sheetId: ISheet['id'], groupId: string, updates
       setTimeout(() => {
         const {
           allSheets,
+          allSheetColumns,
+          allSheetRows,
           allSheetCells,
           allSheetFilters,
           allSheetGroups,
-          allSheetRows,
           allSheetSorts,
           allSheetViews,
           allSheetPriorities
@@ -44,6 +45,7 @@ export const updateSheetGroup = (sheetId: ISheet['id'], groupId: string, updates
         const sheet = allSheets[sheetId]
         const nextSheetVisibleRows = resolveSheetVisibleRows(
           sheet, 
+          allSheetColumns,
           allSheetRows, 
           allSheetCells, 
           allSheetFilters, 
