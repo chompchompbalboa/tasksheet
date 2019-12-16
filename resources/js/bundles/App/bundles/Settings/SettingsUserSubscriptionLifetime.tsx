@@ -17,7 +17,7 @@ const SettingsUserSubscriptionLifetime = () => {
   
   return (
     <Container>
-      Your lifetime membership was succesfully purchased on {moment(userSubscriptionStartDate).format('MMMM Do, YYYY')}. Thank you for choosing Tasksheet!
+      Your lifetime subscription was succesfully purchased on <b>{moment(userSubscriptionStartDate).format('MMMM Do, YYYY')}</b>. Thank you for choosing Tasksheet!
     </Container>
   )
 }

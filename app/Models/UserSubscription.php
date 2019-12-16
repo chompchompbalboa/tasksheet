@@ -13,10 +13,10 @@ class UserSubscription extends Model
   const CREATED_AT = 'createdAt';
   const UPDATED_AT = 'updatedAt';
   
-  protected $visible = [ 'id', 'type', 'startDate', 'endDate' ];
+  protected $visible = [ 'id', 'type', 'startDate', 'endDate', 'stripeSetupIntentClientSecret' ];
   protected $fillable = [ 'type', 'startDate', 'endDate' ];
   protected $dates = [ 'startDate', 'endDate' ];
-  
+
   public function user() {
     return $this->belongsTo('App\Models\User', 'userId');
   }

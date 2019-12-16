@@ -30,6 +30,7 @@ const StripePurchaseSubscription = ({
 
   const dispatch = useDispatch()
   const userId = useSelector((state: IAppState) => state.user.id)
+  const userSubscriptionStripePaymentIntentClientSecret = useSelector((state: IAppState) => state.user.subscription.stripeSetupIntentClientSecret)
   
   const [ isChargeAgreedTo, setIsChargeAgreedTo ] = useState(false)
   const [ isTermsOfServiceAccepted, setIsTermsOfServiceAccepted ] = useState(false)
@@ -45,11 +46,38 @@ const StripePurchaseSubscription = ({
     e.preventDefault()
     setStripeErrorMessage(null)
     setIsChargeBeingProcessed(true)
+    const cardNumberElement = stripeElements.getElement('cardNumber')
+    // Purchase a monthly susbcription
     if(monthlyOrLifetimeSubscription === 'MONTHLY') {
-      console.log('handleSubmit: MONTHLY')
+      // Get the Stripe setupIntent
+      const { setupIntent, error } = await stripe.confirmCardSetup(userSubscriptionStripePaymentIntentClientSecret, {
+        payment_method: {
+          card: cardNumberElement,
+        }
+      })
+      if(error) {
+        setTimeout(() => {
+          setStripeErrorMessage(error.message)
+          setIsChargeBeingProcessed(false)
+        }, 350)
+      }
+      else {
+        // Send the setupIntent to the backend to process the subscription
+        action.userSubscriptionPurchaseMonthly(userId, setupIntent.payment_method).then(response => {
+          const error = response.status === 500
+          if(error) {
+            setIsChargeBeingProcessed(false)
+            setStripeErrorMessage(response.data.message || 'We were unable to process your card. Please try again.')
+          }
+          else {
+            dispatch(updateUserSubscription({ type: 'MONTHLY' }))
+          }
+        })
+      }
     }
+    // Purchase a lifetime subscription
     if(monthlyOrLifetimeSubscription === 'LIFETIME') {
-      const cardNumberElement = stripeElements.getElement('cardNumber')
+      // Get the Stripe paymentMethod
       const { paymentMethod, error } = await stripe.createPaymentMethod({
         type: 'card',
         card: cardNumberElement
@@ -61,11 +89,14 @@ const StripePurchaseSubscription = ({
         }, 350)
       }
       else {
+        // Send the payment method to the backend to be processed
         action.userSubscriptionPurchaseLifetime(userId, paymentMethod.id).then(response => {
-          if(response.status === 500) {
+          const error = response.status === 500
+          if(error) {
             setIsChargeBeingProcessed(false)
             setStripeErrorMessage(response.data.message || 'We were unable to process your card. Please try again.')
           }
+          // If the purchase is successful, update the user subscription
           else {
             const nextUserSubscription = response.data as IUserSubscription
             dispatch(updateUserSubscription({ 

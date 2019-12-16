@@ -13,9 +13,7 @@ use App\Models\View;
 //-----------------------------------------------------------------------------
 // Site
 //-----------------------------------------------------------------------------
-Route::group([
-  'middleware' => [ 'guest' ]
-], function () {
+Route::group([], function () {
   Route::get('/', function () {
     
     if(Auth::check()) {
@@ -41,7 +39,12 @@ Route::group([
     foreach($user->folder()->get() as $userFolder) {
       array_push($folders, $userFolder);
     }
-    
+
+    if($user->subscription->type === 'TRIAL') {
+      $stripeSetupIntent = $user->createSetupIntent();
+      $user->subscription->stripeSetupIntentClientSecret = $stripeSetupIntent->client_secret;
+    }
+
     return view('app')->with([
       'user' => $user,
       'teams' => $teams,
@@ -85,6 +88,7 @@ Route::group([
 
   // User Subscriptions
   Route::post('/user/{user}/subscription/purchase/lifetime', 'UserSubscriptionPurchaseController@subscriptionPurchaseLifetime');
+  Route::post('/user/{user}/subscription/purchase/monthly', 'UserSubscriptionPurchaseController@subscriptionPurchaseMonthly');
   
   // Resource Controllers
   Route::resources([

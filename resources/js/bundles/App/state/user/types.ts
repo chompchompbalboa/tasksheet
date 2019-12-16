@@ -21,6 +21,7 @@ export interface IUserSubscription {
   type: 'DEMO' | 'TRIAL' | 'MONTHLY' | 'LIFETIME'
   endDate: string
   startDate: string
+  stripeSetupIntentClientSecret?: string // Only set for TRIAL users
 }
 
 export interface IUserSubscriptionUpdates {

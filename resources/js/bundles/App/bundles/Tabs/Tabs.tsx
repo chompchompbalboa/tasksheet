@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import { FOLDER, USER } from '@app/assets/icons'
 
 import { IAppState } from '@app/state'
-import { 
+import {
   closeTab,
   openFileInNewTab,
   updateActiveTab 

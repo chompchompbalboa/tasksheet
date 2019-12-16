@@ -30,4 +30,20 @@ class UserSubscriptionPurchaseController extends Controller
         return($e);
       }
     }
+    
+
+    public function subscriptionPurchaseMonthly(Request $request, User $user)
+    {
+      $stripeSetupIntentPaymentMethodId = $request->input('stripeSetupIntentPaymentMethodId');
+      try {
+        $user->addPaymentMethod($stripeSetupIntentPaymentMethodId);
+        $user->save();
+        $userSubscription = $user->subscription()->first();
+        $userSubscription->type = 'MONTHLY';
+        $userSubscription->save();
+        return response ($userSubscription, 200);
+      } catch (Exception $e) {
+        return($e);
+      }
+    }
 }
