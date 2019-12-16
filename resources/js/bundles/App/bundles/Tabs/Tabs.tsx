@@ -30,6 +30,7 @@ const Tabs = () => {
 
   const activeTab = useSelector((state: IAppState) => state.tab.activeTab)
   const tabs = useSelector((state: IAppState) => state.tab.tabs)
+  const userSubscriptionType = useSelector((state: IAppState) => state.user.subscription.type)
 
   // Local state
   const [ localActiveTab, setLocalActiveTab ] = useState(activeTab)
@@ -79,13 +80,15 @@ const Tabs = () => {
             icon={FOLDER}
             size="0.85rem"/>
         </MiniTab>
-        <MiniTab
-          isActiveTab={localActiveTab === 'SETTINGS'}
-          onClick={() => handleFileOpen('SETTINGS')}>
-          <Icon
-            icon={USER}
-            size="0.825rem"/>
-        </MiniTab>
+        {userSubscriptionType !== 'DEMO' &&
+          <MiniTab
+            isActiveTab={localActiveTab === 'SETTINGS'}
+            onClick={() => handleFileOpen('SETTINGS')}>
+            <Icon
+              icon={USER}
+              size="0.825rem"/>
+          </MiniTab>
+        }
       </TabsContainer>
       <FilesContainer>
         {localTabs.map((fileId) => (
