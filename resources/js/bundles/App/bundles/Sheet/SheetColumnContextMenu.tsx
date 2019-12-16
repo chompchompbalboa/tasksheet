@@ -104,6 +104,9 @@ export const SheetColumnContextMenu = ({
       dispatch(updateSheetView(sheetActiveSheetViewId, { visibleColumns: nextVisibleColumns }))
     })
   }
+  
+  // Hidden sheet columns
+  const hiddenSheetColumns = sheetColumns.filter(columnId => !sheetViewVisibleColumns.includes(columnId))
 
   return (
     <ContextMenu
@@ -134,18 +137,20 @@ export const SheetColumnContextMenu = ({
           <ContextMenuItem 
             text="Hide" 
             onClick={() => closeContextMenuOnClick(() => dispatch(hideSheetColumn(sheetId, columnIndex)))}/>
-          <ContextMenuItem 
-            text="Show">
-            {sheetColumns.filter(columnId => !sheetViewVisibleColumns.includes(columnId)).map(columnId => {
-              const column = allSheetColumns[columnId]
-              return (
-                <ContextMenuItem
-                  key={column.id}
-                  text={column.name}
-                  onClick={() => dispatch(showSheetColumn(sheetId, columnIndex, column.id))}/>
-              )
-            })}
-          </ContextMenuItem>
+          {hiddenSheetColumns.length > 0 &&
+            <ContextMenuItem 
+              text="Show">
+              {hiddenSheetColumns.map(columnId => {
+                const column = allSheetColumns[columnId]
+                return (
+                  <ContextMenuItem
+                    key={column.id}
+                    text={column.name}
+                    onClick={() => closeContextMenuOnClick(() => dispatch(showSheetColumn(sheetId, columnIndex, column.id)))}/>
+                )
+              })}
+            </ContextMenuItem>
+          }
           <ContextMenuDivider />
           <ContextMenuItem 
             text="Rename" 

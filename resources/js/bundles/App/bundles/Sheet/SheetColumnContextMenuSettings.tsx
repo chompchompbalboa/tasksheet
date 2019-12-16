@@ -2,15 +2,13 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-//import { useDispatch, useSelector } from 'react-redux'
 
-//import { IAppState } from '@app/state'
 import { 
   ISheet,
   ISheetColumn
 } from '@app/state/sheet/types'
 
-import ContextMenuItem from '@app/bundles/ContextMenu/ContextMenuItem'
+import ContextMenuDivider from '@app/bundles/ContextMenu/ContextMenuDivider'
 import SheetColumnContextMenuSettingsChanges from '@app/bundles/Sheet/SheetColumnContextMenuSettingsChanges'
 import SheetColumnContextMenuSettingsDefaultValue from '@app/bundles/Sheet/SheetColumnContextMenuSettingsDefaultValue'
 
@@ -23,15 +21,15 @@ export const SheetColumnContextMenuSettings = ({
 }: ISheetColumnContextMenuSettingsProps) => {
 
   return (
-    <ContextMenuItem
-      testId="SheetColumnContextMenuSettings"
-      text="Settings">
+    <>
+      <ContextMenuDivider />
       <SheetColumnContextMenuSettingsDefaultValue
         sheetId={sheetId}
         columnId={columnId}/>
+      <ContextMenuDivider />
       <SheetColumnContextMenuSettingsChanges
         columnId={columnId}/>
-    </ContextMenuItem>
+    </>
   )
 }
 
