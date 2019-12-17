@@ -32,7 +32,7 @@ const SheetActionCreateSheetLink = ({
   return (
     <SheetActionButton
       icon={SHEET_LINK}
-      iconPadding="0.2rem 0.4rem"
+      iconPadding="0.225rem 0.4rem"
       iconTextSize="1rem"
       marginLeft="0"
       marginRight="0"
