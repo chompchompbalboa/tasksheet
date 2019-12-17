@@ -124,6 +124,7 @@ export const SheetColumnContextMenu = ({
           <ContextMenuItem 
             text="Insert Column Break" 
             onClick={() => closeContextMenuOnClick(() => dispatch(createSheetColumnBreak(sheetId, columnIndex)))}/>
+          <ContextMenuDivider />
           <ContextMenuItem 
             text="Move Before">
             {sheetViewVisibleColumns.map((sheetColumnId, index) => (
@@ -133,7 +134,6 @@ export const SheetColumnContextMenu = ({
                 onClick={() => handleColumnMoveClick(columnId, index)}/>
             ))}
           </ContextMenuItem>
-          <ContextMenuDivider />
           <ContextMenuItem 
             text="Hide" 
             onClick={() => closeContextMenuOnClick(() => dispatch(hideSheetColumn(sheetId, columnIndex)))}/>

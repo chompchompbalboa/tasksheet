@@ -37,6 +37,7 @@ const SheetActionCreateSheetLink = ({
       marginLeft="0"
       marginRight="0"
       onClick={() => handleClick()}
+      tooltip="Create a linked sheet"
       text="+"/>
   )
 }

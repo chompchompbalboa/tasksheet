@@ -21,6 +21,7 @@ import SheetActionCellStyleItalic from '@app/bundles/Sheet/SheetActionCellStyleI
 import SheetActionCreateSheet from '@app/bundles/Sheet/SheetActionCreateSheet'
 import SheetActionCreateRows from '@app/bundles/Sheet/SheetActionCreateRows'
 import SheetActionCreateSheetView from '@/bundles/App/bundles/Sheet/SheetActionCreateSheetView'
+import SheetActionCreateSheetLink from '@/bundles/App/bundles/Sheet/SheetActionCreateSheetLink'
 import SheetActionDownloadCsv from '@app/bundles/Sheet/SheetActionDownloadCsv'
 import SheetActionFilter from '@app/bundles/Sheet/SheetActionFilter'
 import SheetActionGroup from '@app/bundles/Sheet/SheetActionGroup'
@@ -88,6 +89,8 @@ const SheetActions = ({
       <Divider />
       <SheetActionCreateSheet/>
       <SheetActionUploadCsv/>
+      <Divider />
+      <SheetActionCreateSheetLink sheetId={sheetId}/>
       <Divider />
       <SheetActionDownloadCsv sheetId={sheetId}/>
     </Container>

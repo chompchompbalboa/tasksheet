@@ -29,7 +29,8 @@ class SheetLinkController extends Controller
         'id' => $newActiveSheetViewId,
         'sheetId' => $newSheetId,
         'name' => $newActiveSheetViewName,
-        'visibleColumns' => $newActiveSheetViewVisibleColumns 
+        'visibleColumns' => $newActiveSheetViewVisibleColumns,
+        'isLocked' => false
       ]);
       $newSheet->activeSheetViewId = $newActiveSheetViewId;
       $newSheet->save();
