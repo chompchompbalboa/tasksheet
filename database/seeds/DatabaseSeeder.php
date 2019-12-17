@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Seeder;
@@ -94,8 +96,13 @@ class DatabaseSeeder extends Seeder
 
             // UserSubscription
             $user->subscription()->save(factory(App\Models\UserSubscription::class)->make([
-              'type' => $seedUser['email'] === 'demo@tasksheet.app' ? 'DEMO' : 'LIFETIME'
+              'type' => $seedUser['email'] === 'demo@tasksheet.app' ? 'DEMO' : 'LIFETIME',
+              'startDate' => Carbon::now(),
+              'endDate' => Carbon::now()->addDays(30),
             ]));
+
+            // Stripe Subscription
+            $newUser->newSubscription('Monthly', env('STRIPE_TASKSHEET_MONTHLY_PLAN_ID'))->trialDays(30)->create();
 
             // Add email to newUsers
             $newUsers->push($user);

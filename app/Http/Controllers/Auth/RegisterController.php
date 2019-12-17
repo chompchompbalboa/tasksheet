@@ -76,7 +76,7 @@ class RegisterController extends Controller
             'password' => Hash::make($newUser['password']),
             'folderId' => $newUserFolder->id
         ]);
-        $newUser->newSubscription('monthly', env('STRIPE_TASKSHEET_MONTHLY_PLAN_ID'))->trialDays(30)->create();
+        $newUser->newSubscription('Monthly', env('STRIPE_TASKSHEET_MONTHLY_PLAN_ID'))->trialDays(30)->create();
         $newUser->active()->save(factory(\App\Models\UserActive::class)->make());
         $newUser->color()->save(factory(\App\Models\UserColor::class)->make());
         $newUser->subscription()->save(factory(\App\Models\UserSubscription::class)->make([

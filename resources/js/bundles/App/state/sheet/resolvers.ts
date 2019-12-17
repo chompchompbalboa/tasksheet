@@ -70,21 +70,21 @@ export const resolveSheetCellValue = (value: string, cellType: ISheetCellType) =
 //-----------------------------------------------------------------------------
 export const resolveSheetVisibleRows = (
   sheet: ISheet,
-  columns: IAllSheetColumns,
-  rows: IAllSheetRows, 
-  cells: IAllSheetCells, 
-  filters: IAllSheetFilters, 
-  groups: IAllSheetGroups, 
-  sorts: IAllSheetSorts,
-  views: IAllSheetViews,
-  priorities: IAllSheetPriorities
+  allSheetColumns: IAllSheetColumns,
+  allSheetRows: IAllSheetRows, 
+  allSheetCells: IAllSheetCells, 
+  allSheetFilters: IAllSheetFilters, 
+  allSheetGroups: IAllSheetGroups, 
+  allSheetSorts: IAllSheetSorts,
+  allSheetViews: IAllSheetViews,
+  allSheetPriorities: IAllSheetPriorities
 ) => {
   
   // Row Ids
   const rowIds: string[] = sheet.rows
 
   // Active sheet view
-  const activeSheetView = views[sheet.activeSheetViewId]
+  const activeSheetView = allSheetViews[sheet.activeSheetViewId]
   const filterIds: string[] = activeSheetView.filters
   const groupIds: string[] = activeSheetView.groups
   const sortIds: string[] = activeSheetView.sorts
@@ -94,9 +94,9 @@ export const resolveSheetVisibleRows = (
   const rowIdsWithPriority = new Set()
   const rowIdPriorities: { [sheetRowId: string]: number } = {}
   Object.keys(sheet.cellPriorities).forEach(sheetCellId => {
-    const sheetCell = cells[sheetCellId]
+    const sheetCell = allSheetCells[sheetCellId]
     const sheetCellPriority = sheet.cellPriorities[sheetCellId]
-    const sheetPriority = priorities[sheetCellPriority.priorityId]
+    const sheetPriority = allSheetPriorities[sheetCellPriority.priorityId]
     rowIdsWithPriority.add(sheetCell.rowId)
     rowIdPriorities[sheetCell.rowId] = sheetPriority.order
   })
@@ -122,13 +122,13 @@ export const resolveSheetVisibleRows = (
   }
 
   // Filter
-  const filteredRowIds: string[] = !filters ? rowIds : rowIds.map(rowId => {
-    const row = rows[rowId]
+  const filteredRowIds: string[] = !allSheetFilters ? rowIds : rowIds.map(rowId => {
+    const row = allSheetRows[rowId]
     return filterIds.every(filterId => {
-      const filter = filters[filterId]
+      const filter = allSheetFilters[filterId]
       if(filter) {
-        const cell = cells[row.cells[filter.columnId]]
-        const column = columns[filter.columnId]
+        const cell = allSheetCells[row.cells[filter.columnId]]
+        const column = allSheetColumns[filter.columnId]
         if(cell) {
           return resolveSheetFilter(cell, column, filter)
         }
@@ -141,17 +141,17 @@ export const resolveSheetVisibleRows = (
 
   // Sort
   const sortByValue = sortIds && sortIds.map(sortId => {
-    const sort = sorts[sortId]
+    const sort = allSheetSorts[sortId]
     return (rowId: string) => {
-      const cell = cells[rows[rowId].cells[sort.columnId]]
-      const column = columns[sort.columnId]
+      const cell = allSheetCells[allSheetRows[rowId].cells[sort.columnId]]
+      const column = allSheetColumns[sort.columnId]
       if(cell) {
         return resolveSheetCellValue(cell.value, column.cellType)
       }
       return ''
     }
   })
-  const sortOrder = sortIds && sortIds.map(sortId => sorts[sortId].order === 'ASC' ? 'asc' : 'desc')
+  const sortOrder = sortIds && sortIds.map(sortId => allSheetSorts[sortId].order === 'ASC' ? 'asc' : 'desc')
   const filteredSortedRowIds = orderBy(filteredRowIds, sortByValue, sortOrder)
 
   
@@ -163,14 +163,14 @@ export const resolveSheetVisibleRows = (
     // Get the groups
     const groupedRowIds = groupBy(filteredSortedRowIds, (rowId: string) => {
       const getValue = (group: ISheetGroup) => {
-        const cell = rows[rowId] && cells[rows[rowId].cells[group.columnId]]
-        const column = columns[group.columnId]
+        const cell = allSheetRows[rowId] && allSheetCells[allSheetRows[rowId].cells[group.columnId]]
+        const column = allSheetColumns[group.columnId]
         if(cell) {
           return resolveSheetCellValue(cell.value, column.cellType)
         }
         return ''
       }
-      return groupIds.map(groupId => getValue(groups[groupId]))
+      return groupIds.map(groupId => getValue(allSheetGroups[groupId]))
                      .reduce((combined: string, current: string) => combined + (current ? ('&&**&&**&&' + current).toLowerCase() : ''))
     })
     // Sort the group keys into the correct order
@@ -179,15 +179,15 @@ export const resolveSheetVisibleRows = (
       return groupKey.split('&&**&&**&&')
     })
     const sortGroupKeysArray = groupIds.map((groupId, index) => {
-      const group = groups[groupId]
-      const column = columns[group.columnId]
+      const group = allSheetGroups[groupId]
+      const column = allSheetColumns[group.columnId]
       return (groupKeyArray: string[]) => {
         const currentKey = groupKeyArray[index]
         return resolveSheetCellValue(currentKey, column.cellType)
       }
     })
     const groupOrdersArray = groupIds.map(groupId => {
-      const group = groups[groupId]
+      const group = allSheetGroups[groupId]
       return group.order === 'ASC' ? 'asc' : 'desc'
     })
     const orderedGroupKeysArray = orderBy(groupKeysArray, sortGroupKeysArray, groupOrdersArray)
