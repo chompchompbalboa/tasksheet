@@ -9,7 +9,7 @@ import {
   IAllSheetRows, ISheetRow,
   IAllSheetCells, ISheetCell, ISheetCellType,
   IAllSheetFilters, ISheetFilter,
-  ISheetGroup, IAllSheetGroups, 
+  IAllSheetGroups, ISheetGroup,
   IAllSheetSorts, 
   IAllSheetViews,
   IAllSheetPriorities
@@ -160,6 +160,7 @@ export const resolveSheetVisibleRows = (
     return filteredSortedRowIds.sort(sortByPriority)
   }
   else {
+    // Get the groups
     const groupedRowIds = groupBy(filteredSortedRowIds, (rowId: string) => {
       const getValue = (group: ISheetGroup) => {
         const cell = rows[rowId] && cells[rows[rowId].cells[group.columnId]]
@@ -169,12 +170,32 @@ export const resolveSheetVisibleRows = (
         }
         return ''
       }
-      return groupIds.map(groupId => getValue(groups[groupId])).reduce((combined: string, current: string) => combined + (current ? current.toLowerCase() : '') + '-')
+      return groupIds.map(groupId => getValue(groups[groupId]))
+                     .reduce((combined: string, current: string) => combined + (current ? ('&&**&&**&&' + current).toLowerCase() : ''))
     })
+    // Sort the group keys into the correct order
+    const groupKeys = Object.keys(groupedRowIds)
+    const groupKeysArray = groupKeys.map(groupKey => {
+      return groupKey.split('&&**&&**&&')
+    })
+    const sortGroupKeysArray = groupIds.map((groupId, index) => {
+      const group = groups[groupId]
+      const column = columns[group.columnId]
+      return (groupKeyArray: string[]) => {
+        const currentKey = groupKeyArray[index]
+        return resolveSheetCellValue(currentKey, column.cellType)
+      }
+    })
+    const groupOrdersArray = groupIds.map(groupId => {
+      const group = groups[groupId]
+      return group.order === 'ASC' ? 'asc' : 'desc'
+    })
+    const orderedGroupKeysArray = orderBy(groupKeysArray, sortGroupKeysArray, groupOrdersArray)
+    // Use the sorted group keys to populate the return value with the rowIds
     const filteredSortedGroupedRowIds: string[] = []
-    const orderedGroups = groups[groupIds[0]].order === 'ASC' ? Object.keys(groupedRowIds).sort() : Object.keys(groupedRowIds).sort().reverse()
-    orderedGroups.forEach(groupValue => {
-      const group = groupedRowIds[groupValue]
+    orderedGroupKeysArray.forEach(groupKeysArray => {
+      const groupKey = groupKeysArray.join('&&**&&**&&')
+      const group = groupedRowIds[groupKey]
       const prioritizedGroup = group.sort(sortByPriority)
       filteredSortedGroupedRowIds.push(...prioritizedGroup)
       filteredSortedGroupedRowIds.push('ROW_BREAK')
