@@ -31,9 +31,10 @@ export const SheetRowContextMenu = ({
   const sheetSelectionRangeStartRowId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections && state.sheet.allSheets[sheetId].selections.rangeStartRowId )
   const sheetSelectionRangeEndRowId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections && state.sheet.allSheets[sheetId].selections.rangeEndRowId )
 
-  const closeOnClick = (andCallThis: (...args: any) => void) => {
+  // Close the context menu before handling a click
+  const closeOnClick = (thenCallThis: (...args: any) => void) => {
     closeContextMenu()
-    andCallThis()
+    thenCallThis()
   }
   
   const isMultipleRowsSelected = sheetSelectionRangeEndRowId !== null && sheetSelectionRangeStartRowId !== sheetSelectionRangeEndRowId

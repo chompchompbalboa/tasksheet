@@ -101,23 +101,23 @@ export const createSheetRows = (
     // Actions
     const actions = () => {
       batch(() => {
-        dispatch(setAllSheetRows(nextAllSheetRows))
         dispatch(setAllSheetCells(nextAllSheetCells))
+        dispatch(setAllSheetRows(nextAllSheetRows))
         dispatch(updateSheet(sheetId, {
           visibleRowLeaders: nextSheetRowLeaders,
           rows: nextSheetRows,
           visibleRows: nextSheetVisibleRows,
-        }))
+        }, true))
         sheet.sourceSheetId && dispatch(updateSheet(sheet.sourceSheetId, {
           rows: nextSheetRows
-        }))
+        }, true))
         childSheets && childSheets.forEach(childSheetId => {
           dispatch(updateSheet(childSheetId, {
             rows: nextSheetRows
-          }))
+          }, true))
         })
-        mutation.createSheetRows(newRowsToDatabase)
       })
+      mutation.createSheetRows(newRowsToDatabase)
     }
 
     // Undo actions
@@ -129,17 +129,17 @@ export const createSheetRows = (
           visibleRowLeaders: sheet.visibleRowLeaders,
           rows: sheet.rows,
           visibleRows: sheet.visibleRows
-        }))
+        }, true))
         sheet.sourceSheetId && dispatch(updateSheet(sheet.sourceSheetId, {
           rows: sheet.rows
-        }))
+        }, true))
         childSheets && childSheets.forEach(childSheetId => {
           dispatch(updateSheet(childSheetId, {
             rows: sheet.rows
-          }))
+          }, true))
         })
-        mutation.deleteSheetRows(newRowIds)
       })
+      mutation.deleteSheetRows(newRowIds)
     }
 
     // Create the history step

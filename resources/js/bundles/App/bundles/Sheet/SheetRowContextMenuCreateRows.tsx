@@ -29,16 +29,16 @@ const SheetRowContextMenuCreateRows = ({
   closeOnClick
 }: ISheetRowContextMenuCreateRowsProps) => {
 
+  const dispatch = useDispatch()
+
+  const [ inputValue, setInputValue ] = useState(1)
+
   useEffect(() => {
     return () => {
       dispatch(allowSelectedCellEditing(sheetId))
       dispatch(allowSelectedCellNavigation(sheetId))
     }
   }, [])
-
-  const dispatch = useDispatch()
-
-  const [ inputValue, setInputValue ] = useState(1)
 
   const createRows = () => {
     closeOnClick(() => {
