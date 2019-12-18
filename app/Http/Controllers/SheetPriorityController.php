@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SheetPriority;
 use Illuminate\Http\Request;
+
+use App\Models\SheetPriority;
+use App\Models\SheetCellPriority;
 
 class SheetPriorityController extends Controller
 {
@@ -28,6 +30,7 @@ class SheetPriorityController extends Controller
 
     public function destroy(SheetPriority $priority)
     {
+      SheetCellPriority::where('priorityId', $priority->id)->delete();
       $priority->delete();
       return response()->json(null, 204);
     }
