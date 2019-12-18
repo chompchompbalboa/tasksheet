@@ -3,14 +3,12 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { useMediaQuery } from 'react-responsive'
 import styled from 'styled-components'
 
 import { IAppState } from '@app/state'
 
 import ErrorBoundary from '@/components/ErrorBoundary'
 import Sheet from '@app/bundles/Sheet/Sheet'
-import SheetMobile from '@app/bundles/SheetMobile/SheetMobile'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -18,29 +16,18 @@ import SheetMobile from '@app/bundles/SheetMobile/SheetMobile'
 const File = ({
   fileId
 }: FileProps) => {
-  
-  const isMobile = useMediaQuery({ query: '(max-width: 480px)' })
 
   const file = useSelector((state: IAppState) => state.folder.files[fileId])
 
   const fileComponents = {
     SHEET: Sheet
   }
-  const mobileFileComponents = {
-    SHEET: SheetMobile
-  }
   const FileComponent = file ? fileComponents[file.type] : null
-  const MobileFileComponent = file ? mobileFileComponents[file.type] : null
 
   return (
     <StyledErrorBoundary>
-      {file && !isMobile &&
+      {file &&
         <FileComponent 
-          fileId={file.id}
-          id={file.typeId}/>
-      }
-      {file && isMobile &&
-        <MobileFileComponent 
           fileId={file.id}
           id={file.typeId}/>
       }
