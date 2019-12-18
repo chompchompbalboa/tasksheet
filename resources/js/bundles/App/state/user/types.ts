@@ -8,7 +8,8 @@ export interface IUser {
   folderId: string
 	active: IUserActive
 	color: IUserColor
-  subscription: IUserSubscription
+  tasksheetSubscription: IUserTasksheetSubscription
+  stripeSubscription: IUserStripeSubscription
 }
 
 export interface IUserUpdates {
@@ -16,7 +17,7 @@ export interface IUserUpdates {
   email?: string
 }
 
-export interface IUserSubscription {
+export interface IUserTasksheetSubscription {
   id: string
   type: 'DEMO' | 'TRIAL' | 'MONTHLY' | 'LIFETIME'
   endDate: string
@@ -24,10 +25,16 @@ export interface IUserSubscription {
   stripeSetupIntentClientSecret?: string // Only set for TRIAL users
 }
 
-export interface IUserSubscriptionUpdates {
+export interface IUserTasksheetSubscriptionUpdates {
   type?: 'DEMO' | 'TRIAL' | 'MONTHLY' | 'LIFETIME'
   startDate?: string
   endDate?: string
+}
+
+export interface IUserStripeSubscription {
+  stripe_status: 'trialing' | 'active' | 'incomplete' | 'incomplete_expired' | 'past_due' | 'canceled' | 'unpaid'
+  trial_ends_at: string
+  ends_at: string
 }
 
 export interface IUserActive {

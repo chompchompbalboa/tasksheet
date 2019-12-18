@@ -22,7 +22,7 @@ import SiteSplash from '@site/SiteSplash'
 export const App = () => {
 
   const dispatch = useDispatch()
-  const isDemoUser = useSelector((state: IAppState) => state.user.subscription.type === 'DEMO')
+  const isDemoUser = useSelector((state: IAppState) => state.user.tasksheetSubscription.type === 'DEMO')
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 
   const handleDemoUserCallToActionClick = () => {

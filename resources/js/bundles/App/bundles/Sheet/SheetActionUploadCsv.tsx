@@ -24,7 +24,7 @@ import SheetActionButtonDropdown from '@app/bundles/Sheet/SheetActionButtonDropd
 const SheetActionUploadCsv = () => {
 
   const dispatch = useDispatch()
-  const isDemoUser = useSelector((state: IAppState) => state.user.subscription.type === 'DEMO')
+  const isDemoUser = useSelector((state: IAppState) => state.user.tasksheetSubscription.type === 'DEMO')
   const userFolderId = useSelector((state: IAppState) => state.user.folderId)
 
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)

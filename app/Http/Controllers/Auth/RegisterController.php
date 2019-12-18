@@ -79,7 +79,7 @@ class RegisterController extends Controller
         $newUser->newSubscription('Monthly', env('STRIPE_TASKSHEET_MONTHLY_PLAN_ID'))->trialDays(30)->create();
         $newUser->active()->save(factory(\App\Models\UserActive::class)->make());
         $newUser->color()->save(factory(\App\Models\UserColor::class)->make());
-        $newUser->subscription()->save(factory(\App\Models\UserSubscription::class)->make([
+        $newUser->tasksheetSubscription()->save(factory(\App\Models\UserTasksheetSubscription::class)->make([
           'type' => 'TRIAL',
           'startDate' => Carbon::now(),
           'endDate' => Carbon::now()->addDays(30),

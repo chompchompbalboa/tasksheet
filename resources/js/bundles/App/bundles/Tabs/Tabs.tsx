@@ -30,7 +30,7 @@ const Tabs = () => {
 
   const activeTab = useSelector((state: IAppState) => state.tab.activeTab)
   const tabs = useSelector((state: IAppState) => state.tab.tabs)
-  const userSubscriptionType = useSelector((state: IAppState) => state.user.subscription.type)
+  const userSubscriptionType = useSelector((state: IAppState) => state.user.tasksheetSubscription.type)
 
   // Local state
   const [ localActiveTab, setLocalActiveTab ] = useState(activeTab)

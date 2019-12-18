@@ -17,7 +17,7 @@ import StripePurchaseSubscription from '@app/bundles/Stripe/StripePurchaseSubscr
 const SettingsUserSubscriptionTrial = () => {
   
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
-  const userSubscriptionEndDate = useSelector((state: IAppState) => state.user.subscription.endDate)
+  const userSubscriptionEndDate = useSelector((state: IAppState) => state.user.tasksheetSubscription.endDate)
 
   const [ activeUserSubscriptionSelection, setActiveUserSubscriptionSelection ] = useState('MONTHLY' as 'MONTHLY' | 'LIFETIME')
   
@@ -46,7 +46,7 @@ const SettingsUserSubscriptionTrial = () => {
               </SubscriptionTypePrice>
               <Divider />
               <SubscriptionTypeDescription>
-                Billed on the 1st of every month, your first billing will occur on <b>{moment().add(2, 'month').startOf('month').format('MMMM Do, YYYY')}</b>.
+                Your first billing will occur on <b>{moment(userSubscriptionEndDate).format('MMMM Do, YYYY')}</b> and repeat every month on the {moment(userSubscriptionEndDate).format('Do')}
               </SubscriptionTypeDescription>
             </SubscriptionType>
             <SubscriptionType

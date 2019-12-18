@@ -8,7 +8,7 @@ import {
   IUserUpdates,
   IUserActiveUpdates,
   IUserColorUpdates,
-  IUserSubscriptionUpdates
+  IUserTasksheetSubscriptionUpdates
 } from './types'
 
 import { mutation } from '@app/api'
@@ -19,7 +19,7 @@ import { createMessengerMessage } from '@app/state/messenger/actions'
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-export type IUserActions = IUpdateUser | IUpdateUserActive | IUpdateUserColor | IUpdateUserSubscription
+export type IUserActions = IUpdateUser | IUpdateUserActive | IUpdateUserColor | IUpdateUserTasksheetSubscription
 
 //-----------------------------------------------------------------------------
 // Update User
@@ -106,23 +106,22 @@ export const updateUserColorReducer = (updates: IUserColorUpdates): IUserActions
 //-----------------------------------------------------------------------------
 // Update User Active
 //-----------------------------------------------------------------------------
-export const UPDATE_USER_SUBSCRIPTION = 'UPDATE_USER_SUBSCRIPTION'
-interface IUpdateUserSubscription {
-	type: typeof UPDATE_USER_SUBSCRIPTION
-	updates: IUserSubscriptionUpdates
+export const UPDATE_USER_TASKSHEET_SUBSCRIPTION = 'UPDATE_USER_TASKSHEET_SUBSCRIPTION'
+interface IUpdateUserTasksheetSubscription {
+	type: typeof UPDATE_USER_TASKSHEET_SUBSCRIPTION
+	updates: IUserTasksheetSubscriptionUpdates
 }
 
 
-export const updateUserSubscription = (updates: IUserSubscriptionUpdates): IThunkAction => {
+export const updateUserTasksheetSubscription = (updates: IUserTasksheetSubscriptionUpdates): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
-		dispatch(updateUserSubscriptionReducer(updates))
-		//mutation.updateUserSubscription(getState().user.active.id, updates)
+		dispatch(updateUserTasksheetSubscriptionReducer(updates))
 	}
 }
 
-export const updateUserSubscriptionReducer = (updates: IUserSubscriptionUpdates): IUserActions => {
+export const updateUserTasksheetSubscriptionReducer = (updates: IUserTasksheetSubscriptionUpdates): IUserActions => {
 	return {
-		type: UPDATE_USER_SUBSCRIPTION,
+		type: UPDATE_USER_TASKSHEET_SUBSCRIPTION,
 		updates: updates,
 	}
 }

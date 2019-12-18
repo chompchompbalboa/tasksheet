@@ -17,7 +17,7 @@ import SettingsUserSubscriptionLifetime from '@app/bundles/Settings/SettingsUser
 //-----------------------------------------------------------------------------
 const SettingsUserSubscription = () => {
   
-  const userSubscriptionType = useSelector((state: IAppState) => state.user.subscription.type)
+  const userSubscriptionType = useSelector((state: IAppState) => state.user.tasksheetSubscription.type)
   
   const userSubscriptionComponents = {
     DEMO: SettingsUserSubscriptionDemo,

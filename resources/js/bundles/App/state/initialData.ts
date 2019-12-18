@@ -1,4 +1,4 @@
-import { IUser, IUserActive, IUserColor, IUserSubscription } from '@app/state/user/types'
+import { IUser, IUserActive, IUserColor, IUserTasksheetSubscription } from '@app/state/user/types'
 import { ITeamFromDatabase } from '@app/state/team/types'
 
 const initalData: IInitialData = {
@@ -15,7 +15,7 @@ const initalData: IInitialData = {
 			primary: '',
 			secondary: '',
     },
-    subscription: <IUserSubscription> {
+    tasksheetSubscription: <IUserTasksheetSubscription> {
       id: 'userSubscriptionId',
       type: 'LIFETIME'
     }

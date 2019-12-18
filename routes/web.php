@@ -40,11 +40,6 @@ Route::group([], function () {
       array_push($folders, $userFolder);
     }
 
-    if($user->subscription->type === 'TRIAL') {
-      $stripeSetupIntent = $user->createSetupIntent();
-      $user->subscription->stripeSetupIntentClientSecret = $stripeSetupIntent->client_secret;
-    }
-
     return view('app')->with([
       'user' => $user,
       'teams' => $teams,

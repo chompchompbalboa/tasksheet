@@ -8,7 +8,7 @@ import {
   UPDATE_USER,
   UPDATE_USER_ACTIVE, 
   UPDATE_USER_COLOR,
-  UPDATE_USER_SUBSCRIPTION
+  UPDATE_USER_TASKSHEET_SUBSCRIPTION
 } from '@app/state/user/actions'
 
 //-----------------------------------------------------------------------------
@@ -37,9 +37,9 @@ export const userReducer = (state = initialUserState, action: IUserActions): IUs
 			return { ...state, color: { ...state.color, ...updates } }
 		}
 
-		case UPDATE_USER_SUBSCRIPTION: {
+		case UPDATE_USER_TASKSHEET_SUBSCRIPTION: {
 			const { updates } = action
-			return { ...state, subscription: { ...state.subscription, ...updates } }
+			return { ...state, tasksheetSubscription: { ...state.tasksheetSubscription, ...updates } }
 		}
 
 		default:

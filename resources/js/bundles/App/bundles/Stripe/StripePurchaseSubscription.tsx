@@ -8,9 +8,9 @@ import styled from 'styled-components'
 
 import { action } from '@app/api'
 import { IAppState } from '@app/state'
-import { IUserSubscription } from '@app/state/user/types'
+import { IUserTasksheetSubscription } from '@app/state/user/types'
 import {
-  updateUserSubscription
+  updateUserTasksheetSubscription
 } from '@app/state/user/actions'
 
 import StripeAgreeToChargeCheckbox from '@app/bundles/Stripe/StripeAgreeToChargeCheckbox'
@@ -30,7 +30,7 @@ const StripePurchaseSubscription = ({
 
   const dispatch = useDispatch()
   const userId = useSelector((state: IAppState) => state.user.id)
-  const userSubscriptionStripePaymentIntentClientSecret = useSelector((state: IAppState) => state.user.subscription.stripeSetupIntentClientSecret)
+  const userSubscriptionStripePaymentIntentClientSecret = useSelector((state: IAppState) => state.user.tasksheetSubscription.stripeSetupIntentClientSecret)
   
   const [ isChargeAgreedTo, setIsChargeAgreedTo ] = useState(false)
   const [ isTermsOfServiceAccepted, setIsTermsOfServiceAccepted ] = useState(false)
@@ -70,7 +70,7 @@ const StripePurchaseSubscription = ({
             setStripeErrorMessage(response.data.message || 'We were unable to process your card. Please try again.')
           }
           else {
-            dispatch(updateUserSubscription({ type: 'MONTHLY' }))
+            dispatch(updateUserTasksheetSubscription({ type: 'MONTHLY' }))
           }
         })
       }
@@ -98,8 +98,8 @@ const StripePurchaseSubscription = ({
           }
           // If the purchase is successful, update the user subscription
           else {
-            const nextUserSubscription = response.data as IUserSubscription
-            dispatch(updateUserSubscription({ 
+            const nextUserSubscription = response.data as IUserTasksheetSubscription
+            dispatch(updateUserTasksheetSubscription({ 
               type: nextUserSubscription.type, 
               startDate: nextUserSubscription.startDate,
               endDate: nextUserSubscription.endDate
@@ -112,7 +112,7 @@ const StripePurchaseSubscription = ({
   
   const text = {
     MONTHLY: {
-      agreeToCharge: "I agree to be charged $5 on the 1st of each month",
+      agreeToCharge: "I agree to be charged $5 each month",
       submitButton: "Subscribe To Monthly Access"
     },
     LIFETIME: {
