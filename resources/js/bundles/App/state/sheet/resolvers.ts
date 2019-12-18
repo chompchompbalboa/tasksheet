@@ -98,8 +98,10 @@ export const resolveSheetVisibleRows = (
     const sheetCell = allSheetCells[sheetCellId]
     const sheetCellPriority = sheet.cellPriorities[sheetCellId]
     const sheetPriority = allSheetPriorities[sheetCellPriority.priorityId]
-    rowIdsWithPriority.add(sheetCell.rowId)
-    rowIdPriorities[sheetCell.rowId] = sheetPriority.order
+    if(sheetCell && sheetCellPriority && sheetPriority) {
+      rowIdsWithPriority.add(sheetCell.rowId)
+      rowIdPriorities[sheetCell.rowId] = sheetPriority.order
+    }
   })
   
   const sortByPriority = (firstRowId: string, secondRowId: string) => {
