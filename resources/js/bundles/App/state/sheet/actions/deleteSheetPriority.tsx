@@ -5,7 +5,7 @@ import { mutation } from '@app/api'
 
 import { IAppState } from '@app/state'
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
-import { ISheet, ISheetPriority } from '@app/state/sheet/types'
+import { ISheet, ISheetPriority, ISheetCellPriority } from '@app/state/sheet/types'
 import { 
   setAllSheetPriorities,
   updateSheet
@@ -27,11 +27,20 @@ export const deleteSheetPriority = (sheetId: ISheet['id'], sheetPriorityId: IShe
     const { [sheetPriorityId]: deletedSheetPriority, ...nextAllSheetPriorities } = allSheetPriorities
 
     const nextSheetPriorities = sheet.priorities.filter(priorityId => priorityId !== sheetPriorityId)
+    
+    const nextSheetCellPriorities: { [cellId: string]: ISheetCellPriority } = {}
+    Object.keys(sheet.cellPriorities).forEach(cellId => {
+      const sheetCellPriority = sheet.cellPriorities[cellId]
+      if(sheetCellPriority.id !== sheetPriorityId) {
+        nextSheetCellPriorities[cellId] = sheetCellPriority
+      }
+    })
 
     dispatch(setAllSheetPriorities(nextAllSheetPriorities))
 
     dispatch(updateSheet(sheetId, {
-      priorities: nextSheetPriorities
+      priorities: nextSheetPriorities,
+      cellPriorities: nextSheetCellPriorities
     }, true))
 
     mutation.deleteSheetPriority(sheetPriorityId)
