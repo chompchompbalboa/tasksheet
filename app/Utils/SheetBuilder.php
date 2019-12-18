@@ -5,6 +5,7 @@ namespace App\Utils;
 use App\Utils\Csv;
 use Illuminate\Support\Str;
 
+use App\Models\Sheet;
 use App\Models\SheetColumn;
 use App\Models\SheetRow;
 use App\Models\SheetCell;
@@ -12,6 +13,7 @@ use App\Models\SheetView;
 use App\Models\SheetFilter;
 use App\Models\SheetSort;
 use App\Models\SheetGroup;
+use App\Models\SheetStyles;
 
 class SheetBuilder
 {
@@ -43,6 +45,95 @@ class SheetBuilder
         $sheetColumn->save();
       }
     }
+  }
+
+  
+  public function createSheet($newSheetId) {
+
+      // Create the sheet
+      $newSheet = Sheet::create([ 'id' => $newSheetId ]);
+
+      // Create the sheet view
+      $newSheetView = SheetView::create([ 
+        'id' => Str::uuid()->toString(), 
+        'sheetId' => $newSheetId,
+        'name' => 'Default View',
+        'visibleColumns' => [],
+        'isLocked' => false
+      ]);
+      $newSheet->activeSheetViewId = $newSheetView->id;
+      $newSheet->save();
+      
+      // Create the sheet styles
+      $newSheetStyles = SheetStyles::create([ 
+        'id' => Str::uuid()->toString(), 
+        'sheetId' => $newSheetId 
+      ]);
+
+      // Create the sheet columns
+      $newSheetColumns = [];
+      $newSheetViewVisibleColumns = [];
+      $columnsToCreate = [
+        [ 'name' => 'Photos', 'cellType' => 'PHOTOS', 'width' => 50, 'trackCellChanges' => false, 'showCellChanges' => false ],
+        [ 'name' => 'Files', 'cellType' => 'FILES', 'width' => 50, 'trackCellChanges' => false, 'showCellChanges' => false ],
+        [ 'cellType' => 'COLUMN_BREAK' ],
+        [ 'name' => 'Category', 'cellType' => 'STRING', 'width' => 100, 'trackCellChanges' => false, 'showCellChanges' => false ],
+        [ 'name' => 'Task', 'cellType' => 'STRING', 'width' => 450, 'trackCellChanges' => false, 'showCellChanges' => false ],
+        [ 'cellType' => 'COLUMN_BREAK' ],
+        [ 'name' => 'Check In', 'cellType' => 'DATETIME', 'width' => 100, 'trackCellChanges' => false, 'showCellChanges' => false ],
+        [ 'name' => 'Completed', 'cellType' => 'BOOLEAN', 'width' => 75, 'trackCellChanges' => false, 'showCellChanges' => false ],
+        [ 'cellType' => 'COLUMN_BREAK' ],
+        [ 'name' => 'Notes', 'cellType' => 'STRING', 'width' => 450, 'trackCellChanges' => true, 'showCellChanges' => true ],
+      ];
+      foreach($columnsToCreate as $columnToCreate) {
+        if($columnToCreate['cellType'] === 'COLUMN_BREAK') {
+          array_push($newSheetViewVisibleColumns, 'COLUMN_BREAK');
+        }
+        else {
+          $newColumnId = Str::uuid()->toString();
+          array_push($newSheetViewVisibleColumns, $newColumnId);
+          array_push($newSheetColumns, [
+            'id' => $newColumnId,
+            'sheetId' => $newSheet->id,
+            'name' => $columnToCreate['name'],
+            'cellType' => $columnToCreate['cellType'],
+            'width' => $columnToCreate['width'],
+            'defaultValue' => null,
+            'trackCellChanges' => $columnToCreate['trackCellChanges'],
+            'showCellChanges' => $columnToCreate['showCellChanges']
+          ]);
+        }
+      }
+
+      // Create the sheet rows and cells
+      $newSheetRows = [];
+      $newSheetCells = [];
+      for($rowNumber = 0; $rowNumber < 5; $rowNumber++) {
+        $newRowId = Str::uuid()->toString();
+        array_push($newSheetRows, [ 
+          'id' => $newRowId,
+          'sheetId' => $newSheet->id
+        ]);
+
+        foreach($newSheetColumns as $index => $column) {
+          array_push($newSheetCells, [
+            'id' => Str::uuid()->toString(),
+            'sheetId' => $newSheet->id,
+            'columnId' => $column['id'],
+            'rowId' => $newRowId,
+            'value' => null
+          ]);
+        }
+      }
+
+      // Save the columns, rows, and cells to the database
+      SheetColumn::insert($newSheetColumns);
+      SheetRow::insert($newSheetRows);
+      SheetCell::insert($newSheetCells);
+
+      // Save the sheet view's visibleColumns
+      $newSheetView->visibleColumns = $newSheetViewVisibleColumns;
+      $newSheetView->save();
   }
 
 

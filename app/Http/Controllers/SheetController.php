@@ -56,73 +56,8 @@ class SheetController extends Controller
       // Get the request inputs
       $newSheetId = $request->input('newSheetId');
 
-      // Create the sheet
-      $newSheet = Sheet::create([ 'id' => $newSheetId ]);
-
-      // Create the sheet view
-      $newSheetView = SheetView::create([ 
-        'id' => Str::uuid()->toString(), 
-        'sheetId' => $newSheetId,
-        'name' => 'Default View',
-        'visibleColumns' => [],
-        'isLocked' => false
-      ]);
-      $newSheet->activeSheetViewId = $newSheetView->id;
-      $newSheet->save();
-      
-      // Create the sheet styles
-      $newSheetStyles = SheetStyles::create([ 
-        'id' => Str::uuid()->toString(), 
-        'sheetId' => $newSheetId 
-      ]);
-
-      // Create the sheet columns
-      $newSheetColumns = [];
-      $newSheetViewVisibleColumns = [];
-      foreach(explode(',', 'A,B,C,D,E') as $columnName) {
-        $newColumnId = Str::uuid()->toString();
-        array_push($newSheetViewVisibleColumns, $newColumnId);
-        array_push($newSheetColumns, [
-          'id' => $newColumnId,
-          'sheetId' => $newSheet->id,
-          'name' => $columnName,
-          'cellType' => 'STRING',
-          'width' => 100,
-          'defaultValue' => null,
-          'trackCellChanges' => false,
-          'showCellChanges' => false
-        ]);
-      }
-
-      // Create the sheet rows and cells
-      $newSheetRows = [];
-      $newSheetCells = [];
-      for($rowNumber = 0; $rowNumber < 5; $rowNumber++) {
-        $newRowId = Str::uuid()->toString();
-        array_push($newSheetRows, [ 
-          'id' => $newRowId,
-          'sheetId' => $newSheet->id
-        ]);
-
-        foreach($newSheetColumns as $index => $column) {
-          array_push($newSheetCells, [
-            'id' => Str::uuid()->toString(),
-            'sheetId' => $newSheet->id,
-            'columnId' => $column['id'],
-            'rowId' => $newRowId,
-            'value' => null
-          ]);
-        }
-      }
-
-      // Save the columns, rows, and cells to the database
-      SheetColumn::insert($newSheetColumns);
-      SheetRow::insert($newSheetRows);
-      SheetCell::insert($newSheetCells);
-
-      // Save the sheet view's visibleColumns
-      $newSheetView->visibleColumns = $newSheetViewVisibleColumns;
-      $newSheetView->save();
+      // Create the new sheet
+      $this->sheetBuilder->createSheet($newSheetId);
 
       return response()->json(null, 200);
     }
