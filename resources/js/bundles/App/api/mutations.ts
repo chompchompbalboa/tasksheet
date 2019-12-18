@@ -121,6 +121,18 @@ export const updateFolder = async (id: string, updates: IFolderUpdates) => {
 	})
 }
 
+export const deleteFolder = async (folderId: string) => {
+	return axios.delete('/app/folders/' + folderId).then(response => {
+		return response.data
+	})
+}
+
+export const restoreFolder = async (folderId: string) => {
+	return axios.post('/app/folders/restore/' + folderId).then(response => {
+		return response.data
+	})
+}
+
 //-----------------------------------------------------------------------------
 // Sheet
 //-----------------------------------------------------------------------------

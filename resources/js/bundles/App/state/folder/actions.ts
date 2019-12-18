@@ -230,6 +230,38 @@ export const deleteFile = (fileId: string) => {
 }
 
 //-----------------------------------------------------------------------------
+// Delete Folder
+//-----------------------------------------------------------------------------
+export const deleteFolder = (folderId: string) => {
+	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
+    const {
+      folder: {
+        folders
+      }
+    } = getState()
+    const folder = folders[folderId]
+    if(folder) {
+      const parentFolder = folders[folder.folderId]
+      if(parentFolder) {
+        const nextParentFolderFolders = parentFolder.folders.filter(currentFolderId => currentFolderId !== folderId)
+      const actions = () => {
+        batch(() => {
+          dispatch(updateFolder(parentFolder.id, { folders: nextParentFolderFolders }, true))
+        })
+        mutation.deleteFolder(folderId)
+      }
+      const undoActions = () => {
+        dispatch(updateFolder(parentFolder.id, { folders: parentFolder.folders }, true))
+        mutation.restoreFolder(folderId)
+      }
+      dispatch(createHistoryStep({actions, undoActions}))
+      actions()
+      }
+    }
+	}
+}
+
+//-----------------------------------------------------------------------------
 // Update File
 //-----------------------------------------------------------------------------
 export const UPDATE_FILE = 'UPDATE_FILE'

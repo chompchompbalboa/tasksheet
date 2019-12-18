@@ -14,6 +14,7 @@ import {
 } from '@app/state/folder/types'
 import { 
   createFolder as createFolderAction,
+  deleteFolder as deleteFolderAction,
   pasteFromClipboard as pasteFromClipboardAction,
   updateClipboard as updateClipboardAction,  
   updateFolder as updateFolderAction,
@@ -32,6 +33,7 @@ import Icon from '@/components/Icon'
 const mapDispatchToProps = (dispatch: IThunkDispatch) => ({
   createFolder: (folderId: string) => dispatch(createFolderAction(folderId)),
   createSheet: (folderId: string) => dispatch(createSheetAction(folderId)),
+  deleteFolder: (folderId: string) => dispatch(deleteFolderAction(folderId)),
   pasteFromClipboard: (folderId: string) => dispatch(pasteFromClipboardAction(folderId)),
   updateModal: (updates: IModalUpdates) => dispatch(updateModalAction(updates)),
   updateClipboard: (updates: IFolderClipboardUpdates) => dispatch(updateClipboardAction(updates)),
@@ -45,6 +47,7 @@ const FoldersFolderFolder = ({
   activeFolderPath,
   createFolder,
   createSheet,
+  deleteFolder,
   folder,
   level,
   pasteFromClipboard,
@@ -54,30 +57,14 @@ const FoldersFolderFolder = ({
   updateFolder
 }: FoldersFolderFolderProps) => {
   
-  const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
   const [ contextMenuTop, setContextMenuTop ] = useState(null)
   const [ contextMenuLeft, setContextMenuLeft ] = useState(null)
-  const handleContextMenu = (e: MouseEvent) => {
-    e.preventDefault()
-    setIsContextMenuVisible(true)
-    setContextMenuTop(e.clientY)
-    setContextMenuLeft(e.clientX)
-  }
-
-  const [ isRenaming, setIsRenaming ] = useState(folder.name === null)
   const [ folderName, setFolderName ] = useState(folder.name)
-  const handleAutosizeInputBlur = () => {
-    if(folderName !== null) {
-      setIsRenaming(false)
-      updateFolder(folder.id, { name: folderName })
-    }
-  }
-
-  const blurAutosizeInputOnEnter = (e: KeyboardEvent) => {
-    if(e.key === "Enter") {
-      handleAutosizeInputBlur()
-    }
-  }
+  const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
+  const [ isRenaming, setIsRenaming ] = useState(folder.name === null)
+  
+  const isRootFolder = level === 0
+  
   useEffect(() => {
     if(isRenaming) {
       addEventListener('keypress', blurAutosizeInputOnEnter)
@@ -87,6 +74,26 @@ const FoldersFolderFolder = ({
     }
     return () => removeEventListener('keypress', blurAutosizeInputOnEnter)
   })
+  
+  const handleAutosizeInputBlur = () => {
+    if(folderName !== null) {
+      setIsRenaming(false)
+      updateFolder(folder.id, { name: folderName })
+    }
+  }
+  
+  const handleContextMenu = (e: MouseEvent) => {
+    e.preventDefault()
+    setIsContextMenuVisible(true)
+    setContextMenuTop(e.clientY)
+    setContextMenuLeft(e.clientX)
+  }
+
+  const blurAutosizeInputOnEnter = (e: KeyboardEvent) => {
+    if(e.key === "Enter") {
+      handleAutosizeInputBlur()
+    }
+  }
 
   return (
     <>
@@ -132,6 +139,8 @@ const FoldersFolderFolder = ({
           contextMenuTop={contextMenuTop}
           createFolder={createFolder}
           createSheet={createSheet}
+          deleteFolder={deleteFolder}
+          isRootFolder={isRootFolder}
           pasteFromClipboard={pasteFromClipboard}
           setIsRenaming={setIsRenaming}
           updateModal={updateModal}
@@ -148,6 +157,7 @@ interface FoldersFolderFolderProps {
   activeFolderPath: string[]
   createFolder?(folderId: string): void
   createSheet?(folderId: string): void
+  deleteFolder?(folderId: string): void
   folder: IFolder
   level: number
   pasteFromClipboard(folderId: string): void
