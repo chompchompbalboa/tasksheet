@@ -129,8 +129,8 @@ export const SheetHeader = ({
               color: 'black',
               outline: 'none',
               fontFamily: 'inherit',
-              fontSize: 'inherit',
-              fontWeight: 'inherit'}}/>
+              fontSize: '0.8rem',
+              fontWeight: 'bold'}}/>
       }
       {!isColumnBreak && 
         <ResizeContainer
@@ -194,7 +194,7 @@ const NameContainer = styled.div`
   white-space: nowrap;
   display: flex;
   align-items: center;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: bold;
   color: ${({ isColumnBreak }: NameContainerProps ) => isColumnBreak ? 'transparent' : 'rgb(50, 50, 50)'};
 `

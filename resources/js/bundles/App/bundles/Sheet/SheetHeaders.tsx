@@ -72,7 +72,7 @@ const Container = styled.div`
   position: sticky;
   top: 0;
   left: 0;
-  height: 3.5vh;
+  height: 1.6rem;
 `
 
 const SheetRowLeaderHeader = styled.div`
