@@ -87,7 +87,6 @@ const SheetRowLeaderHeader = styled.div`
   background-color: rgb(250, 250, 250);
   box-shadow: inset 0 -1px 0px 0px rgba(180,180,180,1);
   border-right: 1px solid rgb(230, 230, 230);
-  font-size: 0.875rem;
   &:hover {
     background-color: rgb(243, 243, 243);
   }
@@ -101,7 +100,7 @@ const SheetRowLeaderHeaderText = styled.div`
   white-space: nowrap;
   display: flex;
   align-items: center;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: bold;
   color: transparent;
 `
