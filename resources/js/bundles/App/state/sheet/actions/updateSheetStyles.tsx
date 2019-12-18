@@ -16,7 +16,7 @@ import { createHistoryStep } from '@app/state/history/actions'
 //-----------------------------------------------------------------------------
 // Update Sheet Styles
 //-----------------------------------------------------------------------------
-export const updateSheetStyles = (sheetId: ISheet['id'], updates: ISheetStylesUpdates): IThunkAction => {	
+export const updateSheetStyles = (sheetId: ISheet['id'], updates: ISheetStylesUpdates, skipHistoryStep: boolean = false): IThunkAction => {	
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     
     const {
@@ -54,7 +54,7 @@ export const updateSheetStyles = (sheetId: ISheet['id'], updates: ISheetStylesUp
       mutation.updateSheetStyles(sheet.styles.id, undoActionsDatabaseUpdates)
     }
 
-    dispatch(createHistoryStep({ actions, undoActions }))
+    !skipHistoryStep && dispatch(createHistoryStep({ actions, undoActions }))
 
     actions()
 	}
