@@ -13,6 +13,7 @@ use App\Models\SheetView;
 use App\Models\SheetFilter;
 use App\Models\SheetSort;
 use App\Models\SheetGroup;
+use App\Models\SheetPriority;
 use App\Models\SheetStyles;
 
 class SheetBuilder
@@ -53,7 +54,7 @@ class SheetBuilder
       // Create the sheet
       $newSheet = Sheet::create([ 'id' => $newSheetId ]);
 
-      // Create the sheet view
+      // Create the default sheet view
       $newSheetView = SheetView::create([ 
         'id' => Str::uuid()->toString(), 
         'sheetId' => $newSheetId,
@@ -69,6 +70,23 @@ class SheetBuilder
         'id' => Str::uuid()->toString(), 
         'sheetId' => $newSheetId 
       ]);
+    
+      // Create the default sheet priorities
+      $prioritiesToCreate = [
+        [ 'name' => 'Now', 'backgroundColor' => 'rgba(255, 0, 0, 0.25)', 'color' => 'black', 'order' => 1 ],
+        [ 'name' => 'Soon', 'backgroundColor' => 'rgba(255, 127, 0, 0.25)', 'color' => 'black', 'order' => 2 ],
+        [ 'name' => 'Flagged', 'backgroundColor' => 'rgba(255, 255, 0, 0.25)', 'color' => 'black', 'order' => 3 ],
+      ];
+      foreach($prioritiesToCreate as $priorityToCreate) {
+        SheetPriority::create([
+          'id' => Str::uuid()->toString(),
+          'sheetId' => $newSheet->id,
+          'name' => $priorityToCreate['name'],
+          'backgroundColor' => $priorityToCreate['backgroundColor'],
+          'color' => $priorityToCreate['color'],
+          'order' => $priorityToCreate['order'],
+        ]);
+      }
 
       // Create the sheet columns
       $newSheetColumns = [];
