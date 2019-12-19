@@ -131,7 +131,7 @@ export const updateSheetCellPriorities = (sheetId: ISheet['id'], sheetPriorityId
           nextSheetStylesBackgroundColor.delete(sheetCellId)
           nextSheetStylesColor.delete(sheetCellId)
           if(sheetCellPriorities[sheetCellId]) {
-            const sheetCellPriority = sheetCellPriorities[selectedCellId]
+            const sheetCellPriority = sheetCellPriorities[sheetCellId]
             nextSheetCellPriorities = _.omit(nextSheetCellPriorities, sheetCellId)
             sheetCellPriorityIdsToDelete.push(sheetCellPriority.id)
             deletedSheetCellPriorities.push(sheetCellPriority)
