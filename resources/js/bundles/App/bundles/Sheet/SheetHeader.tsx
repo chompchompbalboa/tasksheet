@@ -93,7 +93,7 @@ export const SheetHeader = ({
   }
 
   const handleColumnResizeEnd = (columnWidthChange: number) => {
-    dispatch(updateSheetColumn(column.id, { width: column.width + columnWidthChange }))
+    dispatch(updateSheetColumn(column.id, { width: Math.max(column.width + columnWidthChange, 20) }))
   }
 
   return (
