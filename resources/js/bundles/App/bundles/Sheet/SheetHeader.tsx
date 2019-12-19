@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { MouseEvent, useEffect, useState } from 'react'
+import React, { MouseEvent, RefObject, useEffect, useState } from 'react'
 import { batch, useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -21,13 +21,14 @@ import {
 } from '@app/state/sheet/actions'
 
 import AutosizeInput from 'react-input-autosize'
-import ResizeContainer from '@app/components/ResizeContainer'
+import SheetHeaderResizeContainer from '@app/bundles/Sheet/SheetHeaderResizeContainer'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 export const SheetHeader = ({
   sheetId,
   column,
+  gridContainerRef,
   handleContextMenu,
   isLast,
   isNextColumnAColumnBreak,
@@ -133,7 +134,8 @@ export const SheetHeader = ({
               fontWeight: 'bold'}}/>
       }
       {!isColumnBreak && 
-        <ResizeContainer
+        <SheetHeaderResizeContainer
+          gridContainerRef={gridContainerRef}
           onResizeStart={() => setIsResizing(true)}
           onResizeEnd={handleColumnResizeEnd}/>
       }
@@ -147,6 +149,7 @@ export const SheetHeader = ({
 export interface ISheetHeaderProps {
   sheetId: ISheet['id']
   column: ISheetColumn
+  gridContainerRef: RefObject<HTMLDivElement>
   handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void
   isLast: boolean
   isNextColumnAColumnBreak: boolean

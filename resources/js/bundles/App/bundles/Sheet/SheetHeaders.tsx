@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { MouseEvent } from 'react'
+import React, { MouseEvent, RefObject } from 'react'
 import styled from 'styled-components'
 
 import { ISheet, ISheetColumn, IAllSheetColumns } from '@app/state/sheet/types'
@@ -13,6 +13,7 @@ import SheetHeader from '@app/bundles/Sheet/SheetHeader'
 //-----------------------------------------------------------------------------
 const SheetHeaders = ({
   sheetId,
+  gridContainerRef,
   columns,
   handleContextMenu,
   sheetViewVisibleColumns
@@ -46,10 +47,11 @@ const SheetHeaders = ({
           key={index}
           sheetId={sheetId}
           column={columnId !== 'COLUMN_BREAK' ? columns[columnId] : columnBreakHeader}
-          visibleColumnsIndex={index}
+          gridContainerRef={gridContainerRef}
           handleContextMenu={handleContextMenu}
           isLast={index === sheetViewVisibleColumns.length - 1}
-          isNextColumnAColumnBreak={isNextColumnAColumnBreak(index)}/>))}
+          isNextColumnAColumnBreak={isNextColumnAColumnBreak(index)}
+          visibleColumnsIndex={index}/>))}
     </Container>
   )
 }
@@ -60,6 +62,7 @@ const SheetHeaders = ({
 interface SheetHeadersProps {
   sheetId: ISheet['id']
   columns: IAllSheetColumns
+  gridContainerRef: RefObject<HTMLDivElement>
   handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void
   sheetViewVisibleColumns: ISheetColumn['id'][]
 }

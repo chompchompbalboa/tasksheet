@@ -1,20 +1,22 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { MouseEvent, useState, useEffect } from 'react'
+import React, { MouseEvent, useState, useEffect, RefObject } from 'react'
 import styled from 'styled-components'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-export const ResizeContainer = ({ 
+export const SheetHeaderResizeContainer = ({ 
   containerBackgroundColor = 'rgb(180, 180, 180)',
   containerWidth = '2px',
+  gridContainerRef,
   onResizeStart = null,
   onResizeEnd = null
-}: ResizeContainerProps) => {
+}: SheetHeaderResizeContainerProps) => {
 
   const [ currentClientX, setCurrentClientX ] = useState(0)
+  const [ gridContainerScrollLeft, setGridContainerScrollLeft ] = useState(0)
   const [ isResizing, setIsResizing ] = useState(false)
   const [ startClientX, setStartClientX ] = useState(null)
 
@@ -22,6 +24,10 @@ export const ResizeContainer = ({
     if (isResizing) {
       window.addEventListener('mousemove', handleMouseMove)
       window.addEventListener('mouseup', handleMouseUp)
+    }
+    else {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseup', handleMouseUp)
     }
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
@@ -35,12 +41,13 @@ export const ResizeContainer = ({
     setIsResizing(true)
     setStartClientX(e.clientX)
     setCurrentClientX(e.clientX)
+    setGridContainerScrollLeft(gridContainerRef.current.scrollLeft)
   }
   
   const handleMouseMove = (e: Event) => {
     document.body.style.cursor = 'col-resize'
     e.preventDefault()
-    // @ts-ignore mouse-move
+    // @ts-ignore
     setCurrentClientX(e.clientX)
   }
   
@@ -51,27 +58,29 @@ export const ResizeContainer = ({
     setCurrentClientX(null)
     setIsResizing(false)
     setStartClientX(null)
-    // @ts-ignore mouse-move
+    // @ts-ignore
     onResizeEnd(e.clientX - startClientX)
   }
 
   return (
     <Container
-      data-testid="resizeContainer"
+      data-testid="SheetHeaderResizeContainer"
       containerBackgroundColor={containerBackgroundColor}
-      containerLeft={currentClientX + "px"}
+      containerLeft={currentClientX}
       containerWidth={containerWidth}
+      gridContainerScrollLeft={gridContainerScrollLeft}
       isResizing={isResizing}
       onMouseDown={(e: MouseEvent<HTMLDivElement>) => handleMouseDown(e)}/>
   )
 }
 
 //-----------------------------------------------------------------------------
-// Props & State
+// Props
 //-----------------------------------------------------------------------------
-export type ResizeContainerProps = {
+export type SheetHeaderResizeContainerProps = {
   containerBackgroundColor?: string
   containerWidth?: string
+  gridContainerRef: RefObject<HTMLDivElement>
   onResizeStart?(): void
   onResizeEnd(widthChange: number): void
 }
@@ -83,7 +92,7 @@ const Container = styled.div`
   z-index: 10000;
   position: ${ ({ isResizing }: ContainerProps) => isResizing ? 'fixed' : 'relative' };
   cursor: col-resize;
-  left: ${ ({ containerLeft }: ContainerProps) => containerLeft };
+  left: ${ ({ containerLeft, gridContainerScrollLeft }: ContainerProps) => containerLeft + gridContainerScrollLeft + "px" };
   width: ${ ({ containerWidth, isResizing }: ContainerProps) => isResizing ? containerWidth : '4px' };
   height: 100%;
   background-color: ${ ({ containerBackgroundColor, isResizing }: ContainerProps) => isResizing ? containerBackgroundColor : 'transparent' };
@@ -94,9 +103,10 @@ const Container = styled.div`
 `
 type ContainerProps = {
   containerBackgroundColor: string
-  containerLeft: string
+  containerLeft: number
   containerWidth: string
+  gridContainerScrollLeft: number
   isResizing: boolean
 }
 
-export default ResizeContainer
+export default SheetHeaderResizeContainer

@@ -62,6 +62,7 @@ const sheetProps: ISheetProps = {
 const sheetHeaderProps: ISheetHeaderProps = {
   sheetId: sheetId,
   column: column,
+  gridContainerRef: null,
   handleContextMenu: jest.fn(),
   isLast: false,
   isNextColumnAColumnBreak: false,
@@ -128,7 +129,7 @@ describe('SheetHeader', () => {
     expect(RLastC1SheetCellSheetRange).toHaveStyleRule('background-color', userColorSecondary)
   })
   
-  it("selects the next sheet row if an entire row is selected and the user keyDowns a right or left arrow", async () => {
+  it("selects the next sheet column if an entire column is selected and the user keyDowns a right or left arrow", async () => {
     const { cell: R1C1Cell } = getCellAndCellProps({ row: 1, column: 1 })
     const { cell: RLastC1Cell } = getCellAndCellProps({ row: sheet.visibleRows.length, column: 1 })
     const { cell: R1C2Cell } = getCellAndCellProps({ row: 1, column: 2 })

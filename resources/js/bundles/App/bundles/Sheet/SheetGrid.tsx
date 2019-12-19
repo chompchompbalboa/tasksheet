@@ -31,6 +31,7 @@ const SheetGrid = memo(({
   const sheetVisibleRowLeaders = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleRowLeaders)
 
   const grid = useRef()
+  const gridContainerRef = useRef()
   useLayoutEffect(() => {
     if(grid && grid.current) { 
     // @ts-ignore
@@ -47,6 +48,7 @@ const SheetGrid = memo(({
       <SheetHeaders
         sheetId={sheetId}
         columns={allSheetColumns}
+        gridContainerRef={gridContainerRef}
         handleContextMenu={handleContextMenu}
         sheetViewVisibleColumns={sheetViewVisibleColumns}/>
       <GridItems>
@@ -93,6 +95,7 @@ const SheetGrid = memo(({
       {({ width, height }) => (
         <Grid
           ref={grid}
+          outerRef={gridContainerRef}
           innerElementType={GridWrapper}
           width={width}
           height={height}
