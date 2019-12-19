@@ -24,7 +24,7 @@ const SheetActionPrioritiesPriorityChooseBackgroundColor = ({
 }: ISheetActionPrioritiesPriorityChooseBackgroundColor) => {
 
   const dispatch = useDispatch()
-console.log(sheetPriority)
+
   return (
     <Container>
       <IconContainer
