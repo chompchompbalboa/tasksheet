@@ -20,7 +20,7 @@ import SheetActionCellStyleColor from '@app/bundles/Sheet/SheetActionCellStyleCo
 import SheetActionCellStyleItalic from '@app/bundles/Sheet/SheetActionCellStyleItalic'
 import SheetActionCreateSheet from '@app/bundles/Sheet/SheetActionCreateSheet'
 import SheetActionCreateRows from '@app/bundles/Sheet/SheetActionCreateRows'
-import SheetActionCreateSheetView from '@/bundles/App/bundles/Sheet/SheetActionCreateSheetView'
+import SheetActionSheetViews from '@/bundles/App/bundles/Sheet/SheetActionSheetViews'
 import SheetActionCreateSheetLink from '@/bundles/App/bundles/Sheet/SheetActionCreateSheetLink'
 import SheetActionDownloadCsv from '@app/bundles/Sheet/SheetActionDownloadCsv'
 import SheetActionFilter from '@app/bundles/Sheet/SheetActionFilter'
@@ -62,7 +62,7 @@ const SheetActions = ({
 
   return (
     <Container>
-      <SheetActionCreateSheetView sheetId={sheetId}/>
+      <SheetActionSheetViews sheetId={sheetId}/>
       <SheetActionRefreshVisibleRows sheetId={sheetId}/>
       <SheetActionButton
         icon={!isSheetViewLocked ? LOCK_CLOSED : LOCK_OPEN}

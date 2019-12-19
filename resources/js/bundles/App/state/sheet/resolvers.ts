@@ -159,7 +159,7 @@ export const resolveSheetVisibleRows = (
 
   // Group
   if(groupIds.length === 0) {
-    return filteredSortedRowIds.sort(sortByPriority)
+    return [ ...filteredSortedRowIds.sort(sortByPriority), 'ROW_BREAK' ]
   }
   else {
     // Get the groups
@@ -205,8 +205,7 @@ export const resolveSheetVisibleRows = (
       filteredSortedGroupedRowIds.push(...prioritizedGroup)
       filteredSortedGroupedRowIds.push('ROW_BREAK')
     })
-
-    return filteredSortedGroupedRowIds
+    return filteredSortedGroupedRowIds.length === 0 ? [ 'ROW_BREAK' ] : filteredSortedGroupedRowIds
   }
 }
 

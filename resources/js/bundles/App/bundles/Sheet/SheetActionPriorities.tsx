@@ -64,6 +64,8 @@ const SheetActionSheetCellPriorities = ({
             sheetId={sheetId}
             closeDropdown={() => setIsDropdownVisible(false)}
             isActiveSheetPriority={activeSheetPriorityId === sheetPriorityId}
+            isFirst={index === 0}
+            isLast={index === sheetPriorities.length - 1}
             order={index + 1}
             priority={allSheetPriorities[sheetPriorityId]}
             setActiveSheetPriorityId={setActiveSheetPriorityId}/>

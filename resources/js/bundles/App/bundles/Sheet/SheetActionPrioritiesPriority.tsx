@@ -25,6 +25,8 @@ const SheetActionPrioritiesPriority = ({
   sheetId,
   closeDropdown,
   isActiveSheetPriority,
+  isFirst,
+  isLast,
   order: sheetPriorityOrder,
   priority: sheetPriority,
   setActiveSheetPriorityId
@@ -73,7 +75,8 @@ const SheetActionPrioritiesPriority = ({
       containerHoverBackgroundColor={isColorPickerVisible ? sheetPriority.backgroundColor : null}
       containerColor={sheetPriority && sheetPriority.color}
       containerHoverColor={isColorPickerVisible ? 'black' : 'white'}
-      isFirst={sheetPriorityOrder === 1}
+      isFirst={isFirst}
+      isLast={isLast}
       isTextUpdating={isSheetPriorityRenaming}
       onClick={() => handleSheetPriorityClick()}
       onUpdateTextEnd={() => onSheetPriorityRenamingEnd()}
@@ -106,6 +109,8 @@ interface ISheetActionPrioritiesPriority {
   sheetId: ISheet['id']
   closeDropdown(): void
   isActiveSheetPriority: boolean
+  isFirst: boolean
+  isLast: boolean
   order: number
   priority: ISheetPriority
   setActiveSheetPriorityId(nextActiveSheetPriorityId: ISheetPriority['id']): void

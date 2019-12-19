@@ -10,14 +10,14 @@ import { createSheetView, resetSheetView } from '@app/state/sheet/actions'
 import SheetActionButton from '@app/bundles/Sheet/SheetActionButton'
 import SheetActionButtonDropdown from '@app/bundles/Sheet/SheetActionButtonDropdown'
 import SheetActionButtonDropdownItem from '@app/bundles/Sheet/SheetActionButtonDropdownItem'
-import SheetView from '@app/bundles/Sheet/SheetActionCreateSheetViewSheetView'
+import SheetActionSheetViewsSheetView from '@app/bundles/Sheet/SheetActionSheetViewsSheetView'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetActionCreateSheetView = ({
+const SheetActionSheetViews = ({
   sheetId
-}: ISheetActionCreateSheetViewProps) => {
+}: ISheetActionSheetViewsProps) => {
 
   const dispatch = useDispatch()
   
@@ -46,13 +46,13 @@ const SheetActionCreateSheetView = ({
       text={sheetActiveSheetViewId && allSheetViews[sheetActiveSheetViewId] && allSheetViews[sheetActiveSheetViewId].name ? allSheetViews[sheetActiveSheetViewId].name : 'Views'}
       tooltip="Create new views and switch between your existing views">
       <SheetActionButtonDropdown>
-        {sheetViews && sheetViews.map(sheetViewId => (
-          <SheetView
+        {sheetViews && sheetViews.map((sheetViewId, index) => (
+          <SheetActionSheetViewsSheetView
             key={sheetViewId}
             sheetId={sheetId}
             sheetViewId={sheetViewId}
             closeDropdown={() => setIsDropdownVisible(false)}
-            openDropdown={() => setIsDropdownVisible(true)}/>
+            isFirst={index === 0}/>
         ))}
         <SheetActionButtonDropdownItem
           sheetId={sheetId}
@@ -60,6 +60,7 @@ const SheetActionCreateSheetView = ({
           text="Create New View..."
           textFontStyle="italic"/>
         <SheetActionButtonDropdownItem
+          isLast
           sheetId={sheetId}
           onClick={() => handleResetSheetViewClick()}
           text="Reset Current View..."
@@ -72,11 +73,11 @@ const SheetActionCreateSheetView = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface ISheetActionCreateSheetViewProps {
+interface ISheetActionSheetViewsProps {
   sheetId: string
 }
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetActionCreateSheetView
+export default SheetActionSheetViews
