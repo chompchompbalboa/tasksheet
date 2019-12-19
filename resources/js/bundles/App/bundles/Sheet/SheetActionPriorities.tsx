@@ -75,7 +75,6 @@ const SheetActionSheetCellPriorities = ({
             sheetId={sheetId}
             containerBackgroundColor="transparent"
             containerColor="black"
-            isLast
             onClick={() => {
               setIsDropdownVisible(false)
               dispatch(updateSheetCellPriorities(sheetId, null))
@@ -85,6 +84,7 @@ const SheetActionSheetCellPriorities = ({
           </SheetActionButtonDropdownItem>
         }
         <SheetActionButtonDropdownItem
+          isLast
           sheetId={sheetId}
           onClick={() => dispatch(createSheetPriority(sheetId))}
           text="Create New Priority..."
