@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, RefObject, forwardRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -19,7 +19,7 @@ import AutosizeInput from 'react-input-autosize'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetActionButtonDropdownItem = ({
+const SheetActionButtonDropdownItem = forwardRef(({
   sheetId,
   children,
   containerBackgroundColor = 'transparent',
@@ -37,7 +37,7 @@ const SheetActionButtonDropdownItem = ({
   textFontStyle = 'inherit',
   textPlaceholder = 'New...',
   updateText
-}: ISheetActionButtonDropdownItem) => {
+}: ISheetActionButtonDropdownItem, ref: RefObject<HTMLDivElement>) => {
 
   const dispatch = useDispatch()
   const textInput = useRef(null)
@@ -74,6 +74,7 @@ const SheetActionButtonDropdownItem = ({
   
   return (
     <Container
+      ref={ref}
       containerBackgroundColor={containerBackgroundColor}
       containerColor={containerColor}
       containerHoverBackgroundColor={containerHoverBackgroundColor || userColorPrimary}
@@ -111,7 +112,7 @@ const SheetActionButtonDropdownItem = ({
       </Actions>
     </Container>
   )
-}
+})
 
 //-----------------------------------------------------------------------------
 // Props

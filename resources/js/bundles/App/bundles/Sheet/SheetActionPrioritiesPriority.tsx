@@ -1,22 +1,22 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { BACKGROUND_COLOR, EDIT, TRASH_CAN } from '@app/assets/icons'
+import { EDIT, TRASH_CAN } from '@app/assets/icons'
 
 import { ISheet, ISheetPriority } from '@app/state/sheet/types'
 
 import {
   deleteSheetPriority,
   updateSheetPriority,
-  updateSheetCellPriorities,
-  updateSheetPriorityStyle
+  updateSheetCellPriorities
 } from '@app/state/sheet/actions'
 
 import SheetActionButtonDropdownItem from '@app/bundles/Sheet/SheetActionButtonDropdownItem'
 import SheetActionButtonDropdownItemAction from '@app/bundles/Sheet/SheetActionButtonDropdownItemAction'
+import SheetActionPrioritiesPriorityChooseBackgroundColor from '@app/bundles/Sheet/SheetActionPrioritiesPriorityChooseBackgroundColor'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -32,6 +32,25 @@ const SheetActionPrioritiesPriority = ({
 
   const dispatch = useDispatch()
   const [ isSheetPriorityRenaming, setIsSheetPriorityRenaming ] = useState(sheetPriority.name === null)
+  const [ isColorPickerVisible, setIsColorPickerVisible ] = useState(false)
+
+  const sheetActionPrioritiesPriority = useRef(null)
+
+  useEffect(() => {
+    if(isColorPickerVisible) {
+      addEventListener('mousedown', closeColorPickerOnClickOutside)
+    }
+    else {
+      removeEventListener('mousedown', closeColorPickerOnClickOutside)
+    }
+    return () => removeEventListener('mousedown', closeColorPickerOnClickOutside)
+  }, [ isColorPickerVisible ])
+
+  const closeColorPickerOnClickOutside = (e: MouseEvent) => {
+    if(!sheetActionPrioritiesPriority.current.contains(e.target)) {
+      setIsColorPickerVisible(false)
+    }
+  }
 
   const handleSheetPriorityClick = () => {
     setActiveSheetPriorityId(sheetPriority.id)
@@ -48,9 +67,12 @@ const SheetActionPrioritiesPriority = ({
 
   return (
     <SheetActionButtonDropdownItem
+      ref={sheetActionPrioritiesPriority}
       sheetId={sheetId}
       containerBackgroundColor={sheetPriority && sheetPriority.backgroundColor}
+      containerHoverBackgroundColor={isColorPickerVisible ? sheetPriority.backgroundColor : null}
       containerColor={sheetPriority && sheetPriority.color}
+      containerHoverColor={isColorPickerVisible ? 'black' : 'white'}
       isFirst={sheetPriorityOrder === 1}
       isTextUpdating={isSheetPriorityRenaming}
       onClick={() => handleSheetPriorityClick()}
@@ -59,13 +81,10 @@ const SheetActionPrioritiesPriority = ({
       textPrefix={sheetPriorityOrder + '. '}
       textPlaceholder="New Priority..."
       updateText={nextSheetPriorityName => dispatch(updateSheetPriority(sheetPriority.id, { name: nextSheetPriorityName }, true))}>
-      <SheetActionButtonDropdownItemAction
-        icon={BACKGROUND_COLOR}
-        iconSize="1.125rem"
-        onClick={() => {
-          setActiveSheetPriorityId(sheetPriority.id)
-          dispatch(updateSheetPriorityStyle(sheetId, sheetPriority.id))
-        }}/>
+      <SheetActionPrioritiesPriorityChooseBackgroundColor
+        isColorPickerVisible={isColorPickerVisible}
+        setIsColorPickerVisible={setIsColorPickerVisible}
+        sheetPriority={sheetPriority}/>
       <SheetActionButtonDropdownItemAction
         icon={EDIT}
         onClick={() => setIsSheetPriorityRenaming(true)}/>
@@ -91,10 +110,6 @@ interface ISheetActionPrioritiesPriority {
   priority: ISheetPriority
   setActiveSheetPriorityId(nextActiveSheetPriorityId: ISheetPriority['id']): void
 }
-
-//-----------------------------------------------------------------------------
-// Styled Components
-//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 // Export
