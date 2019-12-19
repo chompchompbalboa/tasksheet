@@ -8,9 +8,10 @@ import { mutation } from '@app/api'
 import { IAppState } from '@app/state'
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import { ISheet, ISheetCellUpdates } from '@app/state/sheet/types'
+import { defaultSheetSelections } from '@app/state/sheet/defaults'
 
 import { createHistoryStep } from '@app/state/history/actions'
-import { clearSheetSelection, setAllSheetCells } from '@app/state/sheet/actions'
+import { clearSheetSelection, setAllSheetCells, updateSheet } from '@app/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
 // Paste Sheet Range
@@ -100,18 +101,35 @@ export const pasteSheetRange = (sheetId: ISheet['id']): IThunkAction => {
     const actions = (isHistoryStep: boolean = false) => {
       isHistoryStep && dispatch(clearSheetSelection(sheetId))
       dispatch(setAllSheetCells(nextAllSheetCells))
+      dispatch(setAllSheetCells({
+        ...nextAllSheetCells,
+        [sheetRangeStartCellId]: {
+          ...nextAllSheetCells[sheetRangeStartCellId],
+          isCellSelectedSheetIds: new Set([ ...allSheetCells[sheetRangeStartCellId].isCellSelectedSheetIds, sheetId ])
+        }
+      }))
+      dispatch(updateSheet(sheetId, {
+        selections: {
+          ...defaultSheetSelections,
+          rangeStartColumnId: sheetRangeStartColumnId,
+          rangeStartRowId: sheetRangeStartRowId,
+          rangeStartCellId: sheetRangeStartCellId,
+        }
+      }, true))
       mutation.updateSheetCells(sheetCellUpdates)
     }
     
     const undoActions = (isHistoryStep: boolean = false) => {
       isHistoryStep && dispatch(clearSheetSelection(sheetId))
-      dispatch(setAllSheetCells({
-        ...allSheetCells,
-        [sheetRangeStartCellId]: {
-          ...allSheetCells[sheetRangeStartCellId],
-          isCellSelectedSheetIds: new Set( [ ...allSheetCells[sheetRangeStartCellId].isCellSelectedSheetIds ].filter(currentSheetId => currentSheetId !== sheetId) )
+      dispatch(setAllSheetCells(allSheetCells))
+      dispatch(updateSheet(sheetId, {
+        selections: {
+          ...defaultSheetSelections,
+          rangeStartColumnId: sheetRangeStartColumnId,
+          rangeStartRowId: sheetRangeStartRowId,
+          rangeStartCellId: sheetRangeStartCellId,
         }
-      }))
+      }, true))
       mutation.updateSheetCells(undoSheetCellUpdates)
     }
     
