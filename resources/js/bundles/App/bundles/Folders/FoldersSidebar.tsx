@@ -1,18 +1,16 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useCallback } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { PLUS_SIGN, UPLOAD } from '@app/assets/icons'
 
 import { IAppState } from '@app/state'
-import { IFolder } from '@app/state/folder/types'
-import { createSheet as createSheetAction } from '@app/state/sheet/actions'
-import { selectActiveFolderPath, selectRootFolderIds } from '@app/state/folder/selectors'
-import { IModalUpdates } from '@app/state/modal/types'
-import { updateModal as updateModalAction } from '@app/state/modal/actions'
+
+import { createSheet } from '@app/state/sheet/actions'
+import { updateModal } from '@app/state/modal/actions'
 
 import Icon from '@/components/Icon'
 
@@ -20,29 +18,30 @@ import Icon from '@/components/Icon'
 // Component
 //-----------------------------------------------------------------------------
 const FoldersSidebar = ({
-}: FoldersSidebarProps) => {
-
-  // State
-  const activeFolderPath = useSelector((state: IAppState) => selectActiveFolderPath(state))
-  const rootFolderIds = useSelector((state: IAppState) => selectRootFolderIds(state))
+  isSheetCurrentlyBeingCreated,
+  setIsSheetCurrentlyBeingCreated
+}: IFoldersSidebar) => {
   
   // Dispatch
   const dispatch = useDispatch()
-  const createSheet = useCallback((folderId: IFolder['id']) => dispatch(createSheetAction(folderId)), [])
-  const updateModal = useCallback((updates: IModalUpdates) => dispatch(updateModalAction(updates)), [])
+  const activeFolderPath = useSelector((state: IAppState) => state.folder.activeFolderPath)
+  const rootFolderIds = useSelector((state: IAppState) => state.folder.rootFolderIds)
 
   const activeFolderId = activeFolderPath.length > 0 ? activeFolderPath[activeFolderPath.length - 1] : rootFolderIds[0]
-  
+
   return (
     <Container>
       <ActionsContainer>
         <Action
-          onClick={() => createSheet(activeFolderId)}>
+          onClick={() => {
+            setIsSheetCurrentlyBeingCreated(true)
+            dispatch(createSheet(activeFolderId, 'New Sheet', true))
+          }}>
           <ActionIcon><Icon icon={PLUS_SIGN} size="0.85rem"/></ActionIcon>
-          <ActionText>New Sheet</ActionText>
+          <ActionText>{isSheetCurrentlyBeingCreated ? 'Creating...' : 'New Sheet'}</ActionText>
         </Action>
         <Action
-          onClick={() => updateModal({ activeModal: 'CREATE_SHEET_FROM_CSV', createSheetFolderId: activeFolderId })}>
+          onClick={() => dispatch(updateModal({ activeModal: 'CREATE_SHEET_FROM_CSV', createSheetFolderId: activeFolderId }))}>
           <ActionIcon><Icon icon={UPLOAD} size="0.85rem"/></ActionIcon>
           <ActionText>Upload CSV</ActionText>
         </Action>
@@ -54,7 +53,9 @@ const FoldersSidebar = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface FoldersSidebarProps {
+interface IFoldersSidebar {
+  isSheetCurrentlyBeingCreated: boolean
+  setIsSheetCurrentlyBeingCreated(nextIsSheetCurrentlyBeingCreated: boolean): void
 }
 
 //-----------------------------------------------------------------------------
@@ -66,8 +67,7 @@ const Container = styled.div`
   background-color: rgb(240, 240, 240);
 `
 
-const ActionsContainer = styled.div`
-`
+const ActionsContainer = styled.div``
 
 const Action = styled.div`
   cursor: default;

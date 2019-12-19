@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 
 import { IAppState } from '@app/state'
@@ -48,8 +48,14 @@ const Folders = ({
   updateActiveFolderPath
 }: FoldersProps) => {
 
+  const [ isSheetCurrentlyBeingCreated, setIsSheetCurrentlyBeingCreated ] = useState(false)
+
   const Sidebar = () => {
-    return <FoldersSidebar />
+    return (
+      <FoldersSidebar
+         isSheetCurrentlyBeingCreated={isSheetCurrentlyBeingCreated}
+         setIsSheetCurrentlyBeingCreated={setIsSheetCurrentlyBeingCreated}/>
+     )
   }
 
   const Header = () => {
