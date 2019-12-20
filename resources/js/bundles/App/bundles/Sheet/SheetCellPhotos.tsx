@@ -2,14 +2,16 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { ARROW_LEFT, ARROW_RIGHT, PHOTOS } from '@app/assets/icons'
 
-import { mutation, query } from '@app/api'
+import { mutation } from '@app/api'
 import { storeFileToS3 } from '@/api/vapor'
 
-import { ISheetCell } from '@app/state/sheet/types'
+import { IAppState } from '@app/state'
+import { ISheetCell, ISheetPhoto } from '@app/state/sheet/types'
 
 import Icon from '@/components/Icon'
 import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
@@ -28,10 +30,13 @@ const SheetCellPhotos = ({
   // Refs
   const container = useRef(null)
   const uploadInput = useRef(null)
+  
+  // Redux
+  const sheetCellPhotos = useSelector((state: IAppState) => state.sheet.allSheetCellPhotos && state.sheet.allSheetCellPhotos[cellId] && state.sheet.allSheetCellPhotos[cellId].map((sheetPhotoId: ISheetPhoto['id']) => {
+    return state.sheet.allSheetPhotos[sheetPhotoId]
+  }))
 
   // State
-  const [ hasPhotosLoaded, setHasPhotosLoaded ] = useState(false)
-  const [ photos, setPhotos ] = useState([] as IStatePhoto[])
   const [ isPhotosVisible, setIsPhotosVisible ] = useState(false)
   const [ uploadStatus, setUploadStatus ] = useState('READY' as TUploadStatus)
   const [ visiblePhotoIndex, setVisiblePhotoIndex ] = useState(0)
@@ -39,12 +44,6 @@ const SheetCellPhotos = ({
   useEffect(() => {
     if(isPhotosVisible) { 
       addEventListener('click', closeOnClickOutside)
-      if(!hasPhotosLoaded) {
-        query.getSheetCellPhotos(cellId).then(photosFromServer => {
-          setHasPhotosLoaded(true)
-          setPhotos(photosFromServer)
-        })
-      }
     }
     else { removeEventListener('click', closeOnClickOutside) }
     return () => removeEventListener('click', closeOnClickOutside)
@@ -80,7 +79,6 @@ const SheetCellPhotos = ({
       storeFileToS3(file).then(s3PresignedUrlData => {
         setUploadStatus('SAVING_SHEET_CELL_PHOTO')
         mutation.createSheetCellPhoto(sheetId, cellId, file.name, s3PresignedUrlData).then(nextSheetCellPhotos => {
-          setPhotos(nextSheetCellPhotos)
           setUploadStatus('UPLOADED')
           updateCellValue(nextSheetCellPhotos.length + '')
           setTimeout(() => setUploadStatus('READY'), 1000)
@@ -121,39 +119,42 @@ const SheetCellPhotos = ({
         {isPhotosVisible &&
           <PhotosContainer>
             <LeftArrow 
-              onClick={() => setVisiblePhotoIndex(visiblePhotoIndex - 1 < 0 ? photos.length - 1 : visiblePhotoIndex - 1)}>
+              onClick={sheetCellPhotos ? () => setVisiblePhotoIndex(visiblePhotoIndex - 1 < 0 ? sheetCellPhotos.length - 1 : visiblePhotoIndex - 1) : () => null}>
               <Icon 
                 icon={ARROW_LEFT}/>
             </LeftArrow>
             <Photos>
-              <PhotoHeader>
-                <PhotoLabel>
-                  {hasPhotosLoaded && photos.length > 0 && photos[visiblePhotoIndex]
-                    ? photos[visiblePhotoIndex].uploadedBy + ' on ' + photos[visiblePhotoIndex].uploadedAt
-                    : ''
-                  }
-                </PhotoLabel>
-                <UploadPhotoButton
-                  onClick={() => handleUploadPhotosButtonClick()}>
-                  {uploadStatusMessages[uploadStatus]}
-                </UploadPhotoButton>
-              </PhotoHeader>
+              {sheetCellPhotos &&
+                <PhotoHeader>
+                  <PhotoLabel>
+                    {sheetCellPhotos && sheetCellPhotos.length > 0 && sheetCellPhotos[visiblePhotoIndex]
+                      ? sheetCellPhotos[visiblePhotoIndex].uploadedBy + ' on ' + sheetCellPhotos[visiblePhotoIndex].uploadedAt
+                      : ''
+                    }
+                  </PhotoLabel>
+                  <UploadPhotoButton
+                    onClick={() => handleUploadPhotosButtonClick()}>
+                    {uploadStatusMessages[uploadStatus]}
+                  </UploadPhotoButton>
+                </PhotoHeader>
+              }
               <PhotoContainer>
-                {hasPhotosLoaded && photos.length > 0 
-                  ? photos.map((photo, index) => (
+                {sheetCellPhotos && sheetCellPhotos.length > 0 
+                  ? sheetCellPhotos.map((photo, index) => (
                       <Photo
                         key={index}
                         isVisible={index === visiblePhotoIndex}
                         src={'https://' + environment.s3Bucket + '.s3.amazonaws.com/' + photo.s3Key}/>
                     ))
                   : <NoPhotoMessage
-                      hasPhotosLoaded={hasPhotosLoaded}>
+                      onClick={() => handleUploadPhotosButtonClick()}>
+                      Click here to upload photos
                     </NoPhotoMessage>
               }
               </PhotoContainer>
             </Photos>
             <RightArrow 
-              onClick={() => setVisiblePhotoIndex(visiblePhotoIndex + 1 === photos.length ? 0 : visiblePhotoIndex + 1)}>
+              onClick={sheetCellPhotos ? () => setVisiblePhotoIndex(visiblePhotoIndex + 1 === sheetCellPhotos.length ? 0 : visiblePhotoIndex + 1) : () => null}>
               <Icon 
                 icon={ARROW_RIGHT}/>
             </RightArrow>
@@ -182,13 +183,6 @@ interface SheetCellPhotosProps {
   updateCellValue(nextCellValue: string): void
   value: string
 }
-
-interface IStatePhoto {
-  s3Key: string
-  uploadedAt: string
-  uploadedBy: string
-}
-
 type TUploadStatus = 'READY' | 'SAVING_SHEET_CELL_PHOTO' | 'UPLOADING' | 'UPLOADED'
 
 //-----------------------------------------------------------------------------
@@ -221,43 +215,42 @@ const PhotosContainer = styled.div`
   position: absolute;
   top: calc(100% + 2.5px);
   left: -4px;
-  background-color: black;
-  color: white;
-  width: 50vw;
-  height: 75vh;
-  border-radius: 10px;
-  border-top-left-radius: 0;
-  box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.5);
+  width: 35vw;
+  height: 60vh;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: rgb(245, 245, 245);
+  color: black;
+  border-radius: 5px;
+  box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.5);
 `
 
 const Arrow = styled.div`
   cursor: pointer;
-  width: 6%;
+  width: 3rem;
   align-self: stretch;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  transition: background 0.15s;
+  background-color: rgb(245, 245, 245);
   &:hover {
-    background: rgba(255, 255, 255, 0.25);
+    background-color: rgba(255, 255, 255, 0.5);
   }
 `
 const LeftArrow = styled(Arrow)`
-  border-bottom-left-radius: 10px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 `
 
 const RightArrow = styled(Arrow)`
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 `
 
 const Photos = styled.div`
-  width: 88%;
-  height: 100%;
+  width: calc(100% - 6rem);
+  height: calc(100% - 6rem);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -290,6 +283,7 @@ const PhotoContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: white;
 `
 
 const Photo = styled.img`
@@ -303,16 +297,14 @@ interface IStyledImg {
 }
 
 const NoPhotoMessage = styled.div`
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  opacity: ${ ({ hasPhotosLoaded }: INoPhotoMessage ) => hasPhotosLoaded ? '1' : '0' };
-  transition: opacity 0.5s;
 `
-interface INoPhotoMessage {
-  hasPhotosLoaded: boolean
-}
 
 const UploadInput = styled.input`
   display: none;

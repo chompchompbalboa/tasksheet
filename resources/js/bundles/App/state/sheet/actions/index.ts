@@ -15,6 +15,7 @@ import {
   IAllSheetSorts, ISheetSortUpdates,
   IAllSheetViews, ISheetViewUpdates,
   IAllSheetChanges, IAllSheetCellChanges,
+  IAllSheetPhotos, IAllSheetCellPhotos,
   IAllSheetPriorities, ISheetPriorityUpdates
 } from '@app/state/sheet/types'
 
@@ -110,9 +111,11 @@ interface ILoadSheet {
   rows: IAllSheetRows
   sorts: IAllSheetSorts
   views: IAllSheetViews
-  cellChanges: IAllSheetCellChanges
   changes: IAllSheetChanges
+  photos: IAllSheetPhotos
   priorities: IAllSheetPriorities
+  cellChanges: IAllSheetCellChanges
+  cellPhotos: IAllSheetCellPhotos
 }
 
 export const loadSheetReducer = (
@@ -124,9 +127,11 @@ export const loadSheetReducer = (
   rows: IAllSheetRows, 
   sorts: IAllSheetSorts, 
   views: IAllSheetViews,
-  cellChanges: IAllSheetCellChanges,
   changes: IAllSheetChanges,
-  priorities: IAllSheetPriorities
+  photos: IAllSheetPhotos,
+  priorities: IAllSheetPriorities,
+  cellChanges: IAllSheetCellChanges,
+  cellPhotos: IAllSheetCellPhotos,
 ): ISheetActions => {
   return {
     type: LOAD_SHEET,
@@ -138,9 +143,11 @@ export const loadSheetReducer = (
     groups,
     sorts,
     views,
-    cellChanges,
     changes,
-    priorities
+    photos,
+    priorities,
+    cellChanges,
+    cellPhotos
   }
 }
 

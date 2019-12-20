@@ -81,9 +81,11 @@ export const createSheetLink = (sheetId: string, newSheetLinkName: string): IThu
         ...allSheetViews,
         [newLinkedSheetActiveSheetView.id]: newLinkedSheetActiveSheetView
       },
-      null, // Cell Notes
-      null, // Notes
+      null, // Changes
+      null, // Photos
       null, // Priorities
+      null, // Cell Changes
+      null // Cell photos
     ))
     // Update folders and files
     const newFile = {

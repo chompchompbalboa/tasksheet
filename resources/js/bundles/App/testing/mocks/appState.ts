@@ -231,9 +231,10 @@ export const appStateFactory = ({
           italic: []
         },
         views: newSheetFromDatabaseViews,
+        changes: [],
+        photos: [],
         priorities: newSheetFromDatabasePriorities,
         cellPriorities: [],
-        changes: []
       }
 
       allFiles[newFile.id] = newFile

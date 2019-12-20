@@ -10,8 +10,10 @@ export interface IAllSheetGroups { [groupId: string]: ISheetGroup }
 export interface IAllSheetSorts { [sortId: string]: ISheetSort }
 export interface IAllSheetViews { [viewId: string]: ISheetView }
 export interface IAllSheetChanges { [changeId: string]: ISheetChange }
-export interface IAllSheetCellChanges { [cellId: string]: ISheetChange['id'][] }
+export interface IAllSheetPhotos { [photoId: string]: ISheetPhoto }
 export interface IAllSheetPriorities { [priorityId: string]: ISheetPriority }
+export interface IAllSheetCellChanges { [cellId: string]: ISheetChange['id'][] }
+export interface IAllSheetCellPhotos { [cellId: string]: ISheetPhoto['id'][] }
 
 //-----------------------------------------------------------------------------
 // Sheet
@@ -55,6 +57,7 @@ export interface ISheetFromDatabase {
   styles: ISheetStylesFromDatabase
   views: ISheetViewFromDatabase[]
   changes: ISheetChange[]
+  photos: ISheetPhoto[]
 }
 
 export interface ISheetFromDatabaseRow {
@@ -269,7 +272,7 @@ export interface ISheetSortUpdates {
 export type ISheetSortOrder = 'ASC' | 'DESC'
 
 //-----------------------------------------------------------------------------
-// Sheet History
+// Sheet Change
 //-----------------------------------------------------------------------------
 export interface ISheetChange {
   id: string
@@ -280,6 +283,21 @@ export interface ISheetChange {
   value: string
   createdAt: string
   createdBy: string
+}
+
+//-----------------------------------------------------------------------------
+// Sheet Photo
+//-----------------------------------------------------------------------------
+export interface ISheetPhoto {
+  id: string
+  sheetId: ISheet['id']
+  cellId: ISheetCell['id']
+  filename: string
+  s3Uuid: string
+  s3Bucket: string
+  s3Key: string
+  uploadedBy: string
+  uploadedAt: string
 }
 
 //-----------------------------------------------------------------------------

@@ -11,9 +11,21 @@ class Sheet extends Model
   const CREATED_AT = 'createdAt';
   const UPDATED_AT = 'updatedAt';
 
-  protected $visible = ['id', 'sourceSheetId', 'defaultSheetViewId', 'activeSheetViewId', 'rows', 'columns', 'views', 'styles', 'changes', 'priorities', 'cellPriorities'];
-  protected $fillable = ['id', 'sourceSheetId', 'defaultSheetViewId', 'activeSheetViewId'];
-  protected $with = ['changes', 'priorities', 'views'];
+  protected $visible = [
+    'id', 
+    'sourceSheetId', 
+    'activeSheetViewId', 
+    'columns', 
+    'rows', 
+    'cellPriorities',
+    'views', 
+    'styles', 
+    'changes', 
+    'priorities',
+    'photos'
+  ];
+  protected $fillable = ['id', 'sourceSheetId', 'activeSheetViewId'];
+  protected $with = ['changes', 'priorities', 'photos', 'views'];
   protected $appends = ['columns', 'rows', 'styles', 'cellPriorities'];
   
   public function getColumnsAttribute() {
@@ -41,6 +53,10 @@ class Sheet extends Model
   
   public function changes() {
     return $this->hasMany('App\Models\SheetCellChange', 'sheetId')->orderBy('createdAt', 'desc');
+  }
+  
+  public function photos() {
+    return $this->hasMany('App\Models\SheetCellPhoto', 'sheetId')->orderBy('createdAt', 'desc');
   }
   
   public function priorities() {

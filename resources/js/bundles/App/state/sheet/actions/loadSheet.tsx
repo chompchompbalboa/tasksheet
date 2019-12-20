@@ -12,6 +12,7 @@ import {
   IAllSheetSorts, ISheetSort,
   IAllSheetRows, ISheetRow,
   IAllSheetCellChanges, IAllSheetChanges,
+  IAllSheetCellPhotos, IAllSheetPhotos,
   IAllSheetPriorities, ISheetPriority, ISheetCellPriority
 } from '@app/state/sheet/types'
 
@@ -26,7 +27,7 @@ import {
   resolveSheetRowLeaders,
   resolveSheetVisibleRows
  } from '@app/state/sheet/resolvers'
-import {  } from './updateSheetSelectionFromCellClick'
+
 //-----------------------------------------------------------------------------
 // Action
 //-----------------------------------------------------------------------------
@@ -41,9 +42,11 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
     const normalizedSheetGroups: IAllSheetGroups = {}
     const normalizedSheetSorts: IAllSheetSorts = {}
     const normalizedSheetViews: IAllSheetViews = {}
-    const normalizedSheetCellChanges: IAllSheetCellChanges = {}
     const normalizedSheetChanges: IAllSheetChanges = {}
+    const normalizedSheetPhotos: IAllSheetPhotos = {}
     const normalizedSheetPriorities: IAllSheetPriorities = {}
+    const normalizedSheetCellChanges: IAllSheetCellChanges = {}
+    const normalizedSheetCellPhotos: IAllSheetCellPhotos = {}
 
     const sheetColumns: ISheetColumn['id'][] = []
     const sheetRows: ISheetRow['id'][] = []
@@ -85,15 +88,6 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       }
       sheetRows.push(sheetRow.id)
     })
-    
-    // Sheet Changes
-    sheetFromDatabase.changes.forEach(sheetChange => { 
-      normalizedSheetChanges[sheetChange.id] = sheetChange
-      normalizedSheetCellChanges[sheetChange.cellId] = [
-        ...(normalizedSheetCellChanges[sheetChange.cellId] || []),
-        sheetChange.id
-      ]
-    })
 
     // Sheet Views
     sheetFromDatabase.views.forEach(sheetView => { 
@@ -109,6 +103,24 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         sorts: sheetViewSortIds
       }
       sheetViews.push(sheetView.id)
+    })
+    
+    // Sheet Changes
+    sheetFromDatabase.changes.forEach(sheetChange => { 
+      normalizedSheetChanges[sheetChange.id] = sheetChange
+      normalizedSheetCellChanges[sheetChange.cellId] = [
+        ...(normalizedSheetCellChanges[sheetChange.cellId] || []),
+        sheetChange.id
+      ]
+    })
+    
+    // Sheet Photos
+    sheetFromDatabase.photos.forEach(sheetPhoto => { 
+      normalizedSheetPhotos[sheetPhoto.id] = sheetPhoto
+      normalizedSheetCellPhotos[sheetPhoto.cellId] = [
+        ...(normalizedSheetCellPhotos[sheetPhoto.cellId] || []),
+        sheetPhoto.id
+      ]
     })
 
     // Sheet Priorities
@@ -198,9 +210,11 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         normalizedSheetRows,
         normalizedSheetSorts,
         normalizedSheetViews,
-        normalizedSheetCellChanges,
         normalizedSheetChanges,
-        normalizedSheetPriorities
+        normalizedSheetPhotos,
+        normalizedSheetPriorities,
+        normalizedSheetCellChanges,
+        normalizedSheetCellPhotos,
 			)
     )
     
