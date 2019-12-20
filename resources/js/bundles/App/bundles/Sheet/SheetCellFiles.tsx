@@ -77,7 +77,7 @@ const SheetCellFiles = ({
       const file = filesToUpload[0]
       setUploadStatus('UPLOADING')
       setFiles([...files, { id: '', filename: file.name, isUploading: true }])
-      storeFileToS3(file).then(s3PresignedUrlData => {
+      storeFileToS3(file, null, null, null).then(s3PresignedUrlData => {
         setUploadStatus('SAVING_SHEET_CELL_FILE')
         mutation.createSheetCellFile(sheetId, cellId, file.name, s3PresignedUrlData).then(nextSheetCellFiles => {
           setFiles(nextSheetCellFiles)

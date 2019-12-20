@@ -29,6 +29,7 @@ import {
   UPDATE_SHEET_SORT, SET_ALL_SHEET_SORTS,
   UPDATE_SHEET_VIEW, SET_ALL_SHEET_VIEWS,
   SET_ALL_SHEET_CELL_CHANGES, SET_ALL_SHEET_CHANGES,
+  SET_ALL_SHEET_CELL_PHOTOS, SET_ALL_SHEET_PHOTOS,
   UPDATE_SHEET_PRIORITY, SET_ALL_SHEET_PRIORITIES
 } from '@app/state/sheet/actions'
 
@@ -129,8 +130,10 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
 		case SET_ALL_SHEET_SORTS: { return { ...state, allSheetSorts: action.nextAllSheetSorts } }
 		case SET_ALL_SHEET_VIEWS: { return { ...state, allSheetViews: action.nextAllSheetViews } }
 		case SET_ALL_SHEET_CHANGES: { return { ...state, allSheetChanges: action.nextAllSheetChanges } }
+		case SET_ALL_SHEET_PHOTOS: { return { ...state, allSheetPhotos: action.nextAllSheetPhotos } }
 		case SET_ALL_SHEET_PRIORITIES: { return { ...state, allSheetPriorities: action.nextAllSheetPriorities } }
 		case SET_ALL_SHEET_CELL_CHANGES: { return { ...state, allSheetCellChanges: action.nextAllSheetCellChanges } }
+		case SET_ALL_SHEET_CELL_PHOTOS: { return { ...state, allSheetCellPhotos: action.nextAllSheetCellPhotos } }
       
 		case UPDATE_SHEET: {
       const { sheetId, updates } = action

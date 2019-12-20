@@ -36,6 +36,7 @@ export { createSheetSort } from '@app/state/sheet/actions/createSheetSort'
 export { createSheetLink } from '@/bundles/App/state/sheet/actions/createSheetLink'
 export { createSheetView } from '@app/state/sheet/actions/createSheetView'
 export { createSheetCellChange } from '@app/state/sheet/actions/createSheetCellChange'
+export { createSheetCellPhoto } from '@app/state/sheet/actions/createSheetCellPhoto'
 export { createSheetPriority } from '@app/state/sheet/actions/createSheetPriority'
 
 export { deleteSheetColumn } from '@app/state/sheet/actions/deleteSheetColumn'
@@ -95,6 +96,7 @@ export type ISheetActions =
   IUpdateSheetSort | ISetAllSheetSorts |
   IUpdateSheetView | ISetAllSheetViews |
   ISetAllSheetCellChanges | ISetAllSheetChanges |
+  ISetAllSheetCellPhotos | ISetAllSheetPhotos |
   IUpdateSheetPriority | ISetAllSheetPriorities
 
 //-----------------------------------------------------------------------------
@@ -292,6 +294,38 @@ export const setAllSheetChanges = (nextAllSheetChanges: IAllSheetChanges): IShee
 	return {
 		type: SET_ALL_SHEET_CHANGES,
     nextAllSheetChanges,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Set All Sheet Cell Photos
+//-----------------------------------------------------------------------------
+export const SET_ALL_SHEET_CELL_PHOTOS = 'SET_ALL_SHEET_CELL_PHOTOS'
+interface ISetAllSheetCellPhotos {
+  type: typeof SET_ALL_SHEET_CELL_PHOTOS,
+  nextAllSheetCellPhotos: IAllSheetCellPhotos
+}
+
+export const setAllSheetCellPhotos = (nextAllSheetCellPhotos: IAllSheetCellPhotos): ISheetActions => {
+	return {
+		type: SET_ALL_SHEET_CELL_PHOTOS,
+    nextAllSheetCellPhotos,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Set All Sheet Photos
+//-----------------------------------------------------------------------------
+export const SET_ALL_SHEET_PHOTOS = 'SET_ALL_SHEET_PHOTOS'
+interface ISetAllSheetPhotos {
+  type: typeof SET_ALL_SHEET_PHOTOS,
+  nextAllSheetPhotos: IAllSheetPhotos
+}
+
+export const setAllSheetPhotos = (nextAllSheetPhotos: IAllSheetPhotos): ISheetActions => {
+	return {
+		type: SET_ALL_SHEET_PHOTOS,
+    nextAllSheetPhotos,
 	}
 }
 
