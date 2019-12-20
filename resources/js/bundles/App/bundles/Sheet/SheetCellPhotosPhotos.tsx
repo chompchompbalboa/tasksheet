@@ -29,9 +29,20 @@ const SheetCellPhotosPhotos = ({
   const uploadStatusMessages = {
     READY: 'Click here to upload a photo',
     PREPARING_UPLOAD: 'Preparing Upload...',
-    UPLOADING: 'Uploading...',
+    UPLOADING: 'Uploading',
     SAVING_SHEET_CELL_PHOTO: 'Saving File Data...',
     UPLOADED: 'Uploaded!',
+  }
+
+  const progressPercentage = (uploadStatus: ISheetCellPhotosUploadStatus) => {
+    const percentages = {
+      READY: '',
+      PREPARING_UPLOAD: '',
+      UPLOADING: uploadProgress + '%',
+      SAVING_SHEET_CELL_PHOTO: '',
+      UPLOADED: '',
+    }
+    return percentages[uploadStatus]
   }
 
   const leftArrowPhotoIndexValue = sheetCellPhotos ? visiblePhotoIndex - 1 < 0 ? sheetCellPhotos.length - 1 : visiblePhotoIndex - 1 : 0
@@ -63,7 +74,7 @@ const SheetCellPhotosPhotos = ({
               ))
             : <NoPhotoMessage
                 onClick={() => openPhotosInput()}>
-                {uploadStatusMessages[uploadStatus]}
+                {uploadStatusMessages[uploadStatus]} {progressPercentage(uploadStatus)}
               </NoPhotoMessage>
         }
         </PhotoContainer>
@@ -144,7 +155,6 @@ const PhotoContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: white;
 `
 
 const NoPhotoMessage = styled.div`
@@ -155,6 +165,7 @@ const NoPhotoMessage = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
+  background-color: white;
 `
 
 //-----------------------------------------------------------------------------
