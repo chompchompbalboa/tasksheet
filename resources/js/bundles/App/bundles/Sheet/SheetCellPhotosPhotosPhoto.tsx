@@ -10,12 +10,10 @@ import { ISheetPhoto } from '@app/state/sheet/types'
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellPhotosPhotosPhoto = ({
-  isVisible,
   sheetPhoto
 }: SheetCellPhotosPhotosPhotoProps) => {
   return (
     <Photo
-      isVisible={isVisible}
       src={'https://' + environment.s3Bucket + '.s3.amazonaws.com/' + sheetPhoto.s3Key}/>
   )
 }
@@ -24,7 +22,6 @@ const SheetCellPhotosPhotosPhoto = ({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetCellPhotosPhotosPhotoProps {
-  isVisible: boolean
   sheetPhoto: ISheetPhoto
 }
 
@@ -32,14 +29,9 @@ interface SheetCellPhotosPhotosPhotoProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Photo = styled.img`
-  display: ${ ({ isVisible }: IPhoto ) => isVisible ? 'block' : 'none' };
-  max-width:100%; 
-  max-height:100%;
-  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
 `
-interface IPhoto {
-  isVisible: boolean
-}
 
 //-----------------------------------------------------------------------------
 // Export

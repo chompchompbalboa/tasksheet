@@ -21,11 +21,12 @@ const SheetCellPhotosPhotos = ({
   prepareUploadProgress,
   setVisiblePhotoIndex,
   sheetCellPhotos,
-  updateCellValue,
   uploadProgress,
   uploadStatus,
   visiblePhotoIndex
 }: SheetCellPhotosPhotosProps) => {
+  
+  const activeSheetCellPhoto = sheetCellPhotos && sheetCellPhotos[visiblePhotoIndex]
   
   const uploadStatusMessages = {
     READY: 'Click here to upload a photo',
@@ -46,36 +47,33 @@ const SheetCellPhotosPhotos = ({
     return percentages[uploadStatus]
   }
 
+  const isArrowsVisible = sheetCellPhotos && sheetCellPhotos.length > 1
   const leftArrowPhotoIndexValue = sheetCellPhotos ? visiblePhotoIndex - 1 < 0 ? sheetCellPhotos.length - 1 : visiblePhotoIndex - 1 : 0
   const rightArrowPhotoIndexValue = sheetCellPhotos ? visiblePhotoIndex + 1 === sheetCellPhotos.length ? 0 : visiblePhotoIndex + 1 : 0
 
   return (
     <PhotosContainer>
       <LeftArrow 
+        isVisible={isArrowsVisible}
         onClick={sheetCellPhotos ? () => setVisiblePhotoIndex(leftArrowPhotoIndexValue) : null}>
         <Icon 
           icon={ARROW_LEFT}/>
       </LeftArrow>
       <Photos>
-        {sheetCellPhotos && sheetCellPhotos[visiblePhotoIndex] && 
+        {sheetCellPhotos && activeSheetCellPhoto && 
           <SheetCellPhotosPhotosHeader
-            activeSheetCellPhoto={sheetCellPhotos[visiblePhotoIndex]}
+            activeSheetCellPhoto={activeSheetCellPhoto}
             beforePhotoDelete={() => setVisiblePhotoIndex(Math.max(0, visiblePhotoIndex - 1))}
             openPhotosInput={openPhotosInput}
             prepareUploadProgress={prepareUploadProgress}
             sheetCellPhotos={sheetCellPhotos}
-            updateCellValue={updateCellValue}
             uploadProgress={uploadProgress}
             uploadStatus={uploadStatus}/>
         }
         <PhotoContainer>
-          {sheetCellPhotos && sheetCellPhotos.length > 0 
-            ? sheetCellPhotos.map((sheetPhoto, index) => (
-                <SheetCellPhotosPhotosPhoto
-                  key={index}
-                  isVisible={index === visiblePhotoIndex}
-                  sheetPhoto={sheetPhoto}/>
-              ))
+          {sheetCellPhotos && sheetCellPhotos.length > 0 && activeSheetCellPhoto
+            ? <SheetCellPhotosPhotosPhoto
+                sheetPhoto={activeSheetCellPhoto}/>
             : <NoPhotoMessage
                 onClick={() => openPhotosInput()}>
                 {uploadStatusMessages[uploadStatus]} {progressPercentage(uploadStatus)}
@@ -84,6 +82,7 @@ const SheetCellPhotosPhotos = ({
         </PhotoContainer>
       </Photos>
       <RightArrow 
+        isVisible={isArrowsVisible}
         onClick={sheetCellPhotos ? () => setVisiblePhotoIndex(rightArrowPhotoIndexValue) : null}>
         <Icon 
           icon={ARROW_RIGHT}/>
@@ -100,7 +99,6 @@ interface SheetCellPhotosPhotosProps {
   prepareUploadProgress: number
   setVisiblePhotoIndex(nextVisiblePhotoIndex: number): void
   sheetCellPhotos: ISheetPhoto[]
-  updateCellValue(nextCellValue: string): void
   uploadProgress: number
   uploadStatus: ISheetCellPhotosUploadStatus
   visiblePhotoIndex: number
@@ -113,8 +111,6 @@ const PhotosContainer = styled.div`
   position: absolute;
   top: calc(100% + 2.5px);
   left: -4px;
-  width: 35vw;
-  height: 60vh;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -125,7 +121,6 @@ const PhotosContainer = styled.div`
 `
 
 const Arrow = styled.div`
-  cursor: pointer;
   width: 2rem;
   align-self: stretch;
   display: flex;
@@ -136,36 +131,44 @@ const Arrow = styled.div`
     background-color: rgba(255, 255, 255, 0.5);
   }
 `
+
 const LeftArrow = styled(Arrow)`
+  cursor: ${ ({ isVisible }: IArrow) => isVisible ? 'pointer' : 'default' };
+  opacity: ${ ({ isVisible }: IArrow) => isVisible ? '1' : '0' };
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 `
 
 const RightArrow = styled(Arrow)`
+  cursor: ${ ({ isVisible }: IArrow) => isVisible ? 'pointer' : 'default' };
+  opacity: ${ ({ isVisible }: IArrow) => isVisible ? '1' : '0' };
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
 `
+interface IArrow {
+  isVisible: boolean
+}
 
 const Photos = styled.div`
-  width: calc(100% - 4rem);
-  height: calc(100% - 4rem);
   display: flex;
   flex-direction: column;
   align-items: center;
 `
 
 const PhotoContainer = styled.div`
-  width: 100%;
-  height: 100%;
+  padding-bottom: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: calc(35vw - 4rem);
+  height: calc(60vh - 9rem);
 `
 
 const NoPhotoMessage = styled.div`
+  margin-top: 1rem;
   cursor: pointer;
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 2rem);
+  height: calc(100% - 3rem);
   display: flex;
   justify-content: center;
   align-items: center;

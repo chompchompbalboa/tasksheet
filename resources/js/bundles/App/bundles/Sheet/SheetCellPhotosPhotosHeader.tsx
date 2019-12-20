@@ -22,7 +22,6 @@ const SheetCellPhotosPhotosHeader = ({
   beforePhotoDelete,
   openPhotosInput,
   sheetCellPhotos,
-  updateCellValue,
   uploadProgress,
   uploadStatus
 }: SheetCellPhotosPhotosHeaderProps) => {
@@ -38,7 +37,6 @@ const SheetCellPhotosPhotosHeader = ({
   let deletePhotoTimeout = useRef(null)
   let setDeleteStatusDeletedTimeout = useRef(null)
   let setDeleteStatusReadyTimeout = useRef(null)
-  let updateCellValueTimeout = useRef(null)
   
   // Effects
   useEffect(() => {
@@ -47,7 +45,6 @@ const SheetCellPhotosPhotosHeader = ({
       clearTimeout(deletePhotoTimeout.current)
       clearTimeout(setDeleteStatusDeletedTimeout.current)
       clearTimeout(setDeleteStatusReadyTimeout.current)
-      clearTimeout(updateCellValueTimeout.current)
     }
   }, [])
   
@@ -64,7 +61,6 @@ const SheetCellPhotosPhotosHeader = ({
     beforePhotoDeleteTimeout.current = setTimeout(() => beforePhotoDelete(), 250)
     deletePhotoTimeout.current = setTimeout(() => dispatch(deleteSheetCellPhoto(activeSheetCellPhoto.cellId, activeSheetCellPhoto.id)), 350)
     setDeleteStatusDeletedTimeout.current = setTimeout(() => setDeleteStatus('DELETED'), 350)
-    setDeleteStatusDeletedTimeout.current = setTimeout(() => updateCellValue(Math.max(0, sheetCellPhotos.length - 1) + ''), 350)
     setDeleteStatusReadyTimeout.current = setTimeout(() => setDeleteStatus('READY'), 1350)
   }
   
@@ -92,8 +88,8 @@ const SheetCellPhotosPhotosHeader = ({
   return (
     <Container>
       <Details>
-        <UploadedBy>{activeSheetCellPhoto.uploadedBy}</UploadedBy>
-        <UploadedAt>{moment(activeSheetCellPhoto.uploadedAt).format('MMMM Do, YYYY / hh:mma')}</UploadedAt>
+        <Filename>{activeSheetCellPhoto.filename}</Filename>
+        <UploadDetails>{activeSheetCellPhoto.uploadedBy} / {moment(activeSheetCellPhoto.uploadedAt).format('MMMM Do, YYYY / hh:mma')}</UploadDetails>
       </Details>
       <Actions>
         <UploadPhotoButton
@@ -118,7 +114,6 @@ interface SheetCellPhotosPhotosHeaderProps {
   openPhotosInput(): void
   prepareUploadProgress: number
   sheetCellPhotos: ISheetPhoto[]
-  updateCellValue(nextCellValue: string): void
   uploadProgress: number
   uploadStatus: ISheetCellPhotosUploadStatus
 }
@@ -128,7 +123,7 @@ interface SheetCellPhotosPhotosHeaderProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   width: 100%;
-  margin-top: -2rem;
+  height: 5rem;
   padding: 1rem 0.3rem;
   display: flex;
   justify-content: space-between;
@@ -142,12 +137,12 @@ const Details = styled.div`
   align-items: flex-start;
 `
 
-const UploadedBy = styled.div`
+const Filename = styled.div`
   font-size: 0.85rem;
   font-weight: bold;
 `
 
-const UploadedAt = styled.div`
+const UploadDetails = styled.div`
   font-size: 0.75rem;
 `
 
@@ -164,6 +159,7 @@ const ActionButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 0.8rem;
   background-color: rgba(180, 180, 180, 0.25);
   color: rgb(25, 25, 25);
   border-radius: 5px;

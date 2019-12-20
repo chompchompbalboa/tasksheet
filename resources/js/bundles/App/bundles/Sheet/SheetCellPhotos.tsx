@@ -52,6 +52,12 @@ const SheetCellPhotos = ({
   }, [ isCellSelected ])
   
   useEffect(() => {
+    if(sheetCellPhotos && cell && cell.value && (sheetCellPhotos.length + '') !== (cell.value + '')) {
+      updateCellValue((sheetCellPhotos && sheetCellPhotos.length + '') || '0')
+    }
+  })
+  
+  useEffect(() => {
     return () => { setIsPhotosVisible(false) }
   }, [])
   
@@ -77,7 +83,6 @@ const SheetCellPhotos = ({
           setPrepareUploadProgress(0)
           setUploadProgress(0)
           dispatch(createSheetCellPhoto(cellId, newSheetCellPhoto))
-          updateCellValue(nextSheetCellPhotos.length + '')
           setTimeout(() => setVisiblePhotoIndex(0), 25)
           setTimeout(() => setUploadStatus('READY'), 1000)
         })
@@ -106,7 +111,6 @@ const SheetCellPhotos = ({
             prepareUploadProgress={prepareUploadProgress}
             setVisiblePhotoIndex={setVisiblePhotoIndex}
             sheetCellPhotos={sheetCellPhotos}
-            updateCellValue={updateCellValue}
             uploadProgress={uploadProgress}
             uploadStatus={uploadStatus}
             visiblePhotoIndex={visiblePhotoIndex}/>
