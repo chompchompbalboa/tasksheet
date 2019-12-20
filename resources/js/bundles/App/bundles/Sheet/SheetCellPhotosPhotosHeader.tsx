@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import moment from 'moment'
 import styled from 'styled-components'
 
-import { PLUS_SIGN, TRASH_CAN } from '@app/assets/icons'
+import { DOWNLOAD, PLUS_SIGN, TRASH_CAN } from '@app/assets/icons'
 
 import { ISheetPhoto } from '@app/state/sheet/types'
 import { ISheetCellPhotosUploadStatus } from '@app/bundles/Sheet/SheetCellPhotos'
@@ -63,6 +63,11 @@ const SheetCellPhotosPhotosHeader = ({
     setDeleteStatusDeletedTimeout.current = setTimeout(() => setDeleteStatus('DELETED'), 350)
     setDeleteStatusReadyTimeout.current = setTimeout(() => setDeleteStatus('READY'), 1350)
   }
+
+  const handleDownloadPhoto = () => {
+    const url = '/app/sheets/cells/photos/download/' + activeSheetCellPhoto.id
+    window.open(url, '_blank')
+  }
   
   // Upload Status Messages
   const uploadStatusMessages = {
@@ -96,6 +101,10 @@ const SheetCellPhotosPhotosHeader = ({
           onClick={() => openPhotosInput()}>
           {uploadStatusMessages[uploadStatus]} {uploadProgressPercentage(uploadStatus)}
         </UploadPhotoButton>
+        <DownloadPhotoButton
+          onClick={() => handleDownloadPhoto()}>
+          <Icon icon={DOWNLOAD} size="0.85rem"/>
+        </DownloadPhotoButton>
         <DeletePhotoButton
           onClick={() => handleDeletePhoto()}>
           {deleteStatusMessages[deleteStatus]}
@@ -154,7 +163,7 @@ const Actions = styled.div`
 
 const ActionButton = styled.div`
   cursor: pointer;
-  margin-left: 0.5rem;
+  margin-left: 0.25rem;
   padding: 0.375rem 0.75rem;
   display: flex;
   justify-content: center;
@@ -171,6 +180,7 @@ const ActionButton = styled.div`
 
 const UploadPhotoButton = styled(ActionButton)``
 const DeletePhotoButton = styled(ActionButton)``
+const DownloadPhotoButton = styled(ActionButton)``
 
 //-----------------------------------------------------------------------------
 // Export

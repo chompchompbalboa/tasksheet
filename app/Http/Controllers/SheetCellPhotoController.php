@@ -66,4 +66,10 @@ class SheetCellPhotoController extends Controller
       $sheetCell->update([ 'value' => count($nextSheetCellPhotos) ]);
       return response()->json($nextSheetCellPhotos, 200);
     }
+
+    public function downloadPhotos($sheetPhotoId)
+    {
+      $sheetPhoto = SheetCellPhoto::find($sheetPhotoId);
+      return Storage::download($sheetPhoto->s3Key, $sheetPhoto->filename);
+    }
 }

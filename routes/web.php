@@ -64,6 +64,7 @@ Route::group([
   Route::post('/sheets/prepare-download/{sheet}', 'SheetController@prepareSheetDownload');
   Route::get('/sheets/download/{sheet}', 'SheetController@downloadSheet');
   Route::get('/sheets/cells/files/download/{file}', 'SheetCellFileController@downloadFiles');
+  Route::get('/sheets/cells/photos/download/{file}', 'SheetCellPhotoController@downloadPhotos');
   
   // Restore soft deleted folders and files
   Route::post('/folders/restore/{folder}', 'FolderController@restore');
