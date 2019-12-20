@@ -70,6 +70,8 @@ class SheetCellPhotoController extends Controller
     public function downloadPhotos($sheetPhotoId)
     {
       $sheetPhoto = SheetCellPhoto::find($sheetPhotoId);
-      return Storage::download($sheetPhoto->s3Key, $sheetPhoto->filename);
+      return Storage::download($sheetPhoto->s3Key, $sheetPhoto->filename, [
+          'X-Vapor-Base64-Encode' => 'True',
+      ]);
     }
 }

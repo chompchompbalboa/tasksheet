@@ -76,6 +76,8 @@ class SheetCellFileController extends Controller
     public function downloadFiles($sheetFileId)
     {
       $sheetFile = SheetCellFile::find($sheetFileId);
-      return Storage::download($sheetFile->s3Key, $sheetFile->filename);
+      return Storage::download($sheetFile->s3Key, $sheetFile->filename, [
+          'X-Vapor-Base64-Encode' => 'True',
+      ]);
     }
 }
