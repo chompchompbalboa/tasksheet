@@ -190,10 +190,6 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       normalizedSheetPriorities
     )
     const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
-
-    const sheetFirstVisibleRow = normalizedSheetRows[nextSheetVisibleRows[0]]
-    const sheetFirstVisibleColumnId = newSheetViewVisibleColumns[0]
-    const sheetFirstCell = sheetFirstVisibleRow && sheetFirstVisibleColumnId ? normalizedSheetCells[sheetFirstVisibleRow.cells[sheetFirstVisibleColumnId]] : null
     
     // Dispatch the state change
 		dispatch(
@@ -218,6 +214,11 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
 			)
     )
     
-    sheetFirstCell && dispatch(updateSheetSelectionFromCellClick(newSheet.id, sheetFirstCell.id, false))
+    // Select the first cell of the sheet
+    const sheetFirstVisibleRow = normalizedSheetRows[nextSheetVisibleRows[0]]
+    const sheetFirstVisibleColumnId = newSheetViewVisibleColumns[0]
+    const sheetFirstVisibleColumn = normalizedSheetColumns[sheetFirstVisibleColumnId]
+    const sheetFirstCell = sheetFirstVisibleRow && sheetFirstVisibleColumnId ? normalizedSheetCells[sheetFirstVisibleRow.cells[sheetFirstVisibleColumnId]] : null
+    sheetFirstCell && sheetFirstVisibleColumn && !['FILES', 'PHOTOS'].includes(sheetFirstVisibleColumn.cellType) && dispatch(updateSheetSelectionFromCellClick(newSheet.id, sheetFirstCell.id, false))
 	}
 }

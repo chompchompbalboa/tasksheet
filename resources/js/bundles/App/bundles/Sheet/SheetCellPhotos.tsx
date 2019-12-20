@@ -2,6 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import moment from 'moment'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -24,12 +25,12 @@ const SheetCellPhotos = ({
   sheetId,
   cellId,
   cell,
+  isCellSelected,
   updateCellValue,
   ...passThroughProps
 }: SheetCellPhotosProps) => {
 
   // Refs
-  const container = useRef(null)
   const uploadInput = useRef(null)
   
   // Redux
@@ -44,29 +45,15 @@ const SheetCellPhotos = ({
   const [ uploadProgress, setUploadProgress ] = useState(0)
   const [ uploadStatus, setUploadStatus ] = useState('READY' as ISheetCellPhotosUploadStatus)
   const [ visiblePhotoIndex, setVisiblePhotoIndex ] = useState(0)
-
+  
   // Effects
   useEffect(() => {
-    if(isPhotosVisible) { addEventListener('click', closeOnClickOutside) }
-    else { removeEventListener('click', closeOnClickOutside) }
-    return () => removeEventListener('click', closeOnClickOutside)
-  }, [ isPhotosVisible ])
+    setIsPhotosVisible(isCellSelected)
+  }, [ isCellSelected ])
   
   useEffect(() => {
     return () => { setIsPhotosVisible(false) }
   }, [])
-
-  // Close the photos container on click outside
-  const closeOnClickOutside = (e: MouseEvent) => {
-    if(!container.current.contains(e.target)) {
-      setIsPhotosVisible(false)
-    }
-  }
-
-  // Open the photos container when the cell is clicked on
-  const handleContainerClick = () => {
-    setIsPhotosVisible(true)
-  }
   
   // Open the file dialog to upload a photo
   const openPhotosInput = () => {
@@ -80,15 +67,18 @@ const SheetCellPhotos = ({
     const photosToUpload = photosIndexes.map((index: any) => photosList[index])
     if(photosIndexes.length > 0) {
       const file = photosToUpload[0]
+      const createdAt = moment().format('YYYY-MM-DD HH:mm:ss')
       setUploadStatus('PREPARING_UPLOAD')
       storeFileToS3(file, () => setUploadStatus('UPLOADING'), setPrepareUploadProgress, setUploadProgress).then(s3PresignedUrlData => {
         setUploadStatus('SAVING_SHEET_CELL_PHOTO')
-        mutation.createSheetCellPhoto(sheetId, cellId, file.name, s3PresignedUrlData).then(nextSheetCellPhotos => {
+        mutation.createSheetCellPhoto(sheetId, cellId, file.name, s3PresignedUrlData, createdAt).then(nextSheetCellPhotos => {
+          const newSheetCellPhoto = nextSheetCellPhotos[nextSheetCellPhotos.length - 1]
           setUploadStatus('UPLOADED')
           setPrepareUploadProgress(0)
           setUploadProgress(0)
-          dispatch(createSheetCellPhoto(cellId, nextSheetCellPhotos[nextSheetCellPhotos.length - 1]))
+          dispatch(createSheetCellPhoto(cellId, newSheetCellPhoto))
           updateCellValue(nextSheetCellPhotos.length + '')
+          setTimeout(() => setVisiblePhotoIndex(0), 25)
           setTimeout(() => setUploadStatus('READY'), 1000)
         })
       })
@@ -102,13 +92,12 @@ const SheetCellPhotos = ({
       cellId={cellId}
       cell={cell}
       focusCell={() => null}
+      isCellSelected={isCellSelected}
       onlyRenderChildren
       updateCellValue={() => null}
       value={null}
       {...passThroughProps}>
-      <Container
-        ref={container}
-        onClick={() => handleContainerClick()}>
+      <Container>
         <SheetCellPhotosValue
           value={cell.value}/>
         {isPhotosVisible &&
@@ -117,6 +106,7 @@ const SheetCellPhotos = ({
             prepareUploadProgress={prepareUploadProgress}
             setVisiblePhotoIndex={setVisiblePhotoIndex}
             sheetCellPhotos={sheetCellPhotos}
+            updateCellValue={updateCellValue}
             uploadProgress={uploadProgress}
             uploadStatus={uploadStatus}
             visiblePhotoIndex={visiblePhotoIndex}/>

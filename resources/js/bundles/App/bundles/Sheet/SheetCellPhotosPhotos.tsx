@@ -21,6 +21,7 @@ const SheetCellPhotosPhotos = ({
   prepareUploadProgress,
   setVisiblePhotoIndex,
   sheetCellPhotos,
+  updateCellValue,
   uploadProgress,
   uploadStatus,
   visiblePhotoIndex
@@ -59,8 +60,11 @@ const SheetCellPhotosPhotos = ({
         {sheetCellPhotos && sheetCellPhotos[visiblePhotoIndex] && 
           <SheetCellPhotosPhotosHeader
             activeSheetCellPhoto={sheetCellPhotos[visiblePhotoIndex]}
+            beforePhotoDelete={() => setVisiblePhotoIndex(Math.max(0, visiblePhotoIndex - 1))}
             openPhotosInput={openPhotosInput}
             prepareUploadProgress={prepareUploadProgress}
+            sheetCellPhotos={sheetCellPhotos}
+            updateCellValue={updateCellValue}
             uploadProgress={uploadProgress}
             uploadStatus={uploadStatus}/>
         }
@@ -96,6 +100,7 @@ interface SheetCellPhotosPhotosProps {
   prepareUploadProgress: number
   setVisiblePhotoIndex(nextVisiblePhotoIndex: number): void
   sheetCellPhotos: ISheetPhoto[]
+  updateCellValue(nextCellValue: string): void
   uploadProgress: number
   uploadStatus: ISheetCellPhotosUploadStatus
   visiblePhotoIndex: number

@@ -26,6 +26,12 @@ class SheetCellPhotoController extends Controller
       $photo->update($request->all());
       return response()->json($photo, 200);
     }
+
+    public function destroy(SheetCellPhoto $photo)
+    {
+      $photo->delete();
+      return response()->json(null, 204);
+    }
     
     public function uploadPhotos(Request $request)
     {
@@ -34,6 +40,7 @@ class SheetCellPhotoController extends Controller
       $sheetCellId = $request->input('sheetCellId');
       $filename = $request->input('filename');
       $s3PresignedUrlData = $request->input('s3PresignedUrlData');
+      $createdAt = $request->input('createdAt');
       $user = Auth::user();
       
       // Move the file to permanent storage on S3
@@ -51,7 +58,7 @@ class SheetCellPhotoController extends Controller
         's3Bucket' => $s3PresignedUrlData['bucket'],
         's3Key' => $nextS3PresignedUrlDataKey,
         'uploadedBy' => $user->name,
-        'uploadedAt' => date("Y-m-d H:i:s")
+        'uploadedAt' => $createdAt
       ]);
 
       $nextSheetCellPhotos = SheetCellPhoto::where('cellId', $sheetCellId)->orderBy('createdAt')->get();

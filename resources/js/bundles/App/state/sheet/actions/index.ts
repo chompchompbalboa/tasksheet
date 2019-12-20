@@ -47,6 +47,7 @@ export { deleteSheetRows } from '@app/state/sheet/actions/deleteSheetRows'
 export { deleteSheetSort } from '@app/state/sheet/actions/deleteSheetSort'
 export { deleteSheetView } from '@app/state/sheet/actions/deleteSheetView'
 export { deleteSheetCellChange } from '@app/state/sheet/actions/deleteSheetCellChange'
+export { deleteSheetCellPhoto } from '@app/state/sheet/actions/deleteSheetCellPhoto'
 export { deleteSheetPriority } from '@app/state/sheet/actions/deleteSheetPriority'
 
 export { updateSheetCell } from '@app/state/sheet/actions/updateSheetCell'

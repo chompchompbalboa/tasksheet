@@ -196,9 +196,16 @@ export const createSheetCellPhoto = async (
   sheetId: ISheet['id'], 
   sheetCellId: ISheetCell['id'],
   filename: string,
-  s3PresignedUrlData: IS3PresignedUrlData
+  s3PresignedUrlData: IS3PresignedUrlData,
+  createdAt: string
 ) => {
-	return axios.post('/app/sheets/cells/photos/upload', {sheetId, sheetCellId, filename, s3PresignedUrlData}).then(response => {
+	return axios.post('/app/sheets/cells/photos/upload', { sheetId, sheetCellId, filename, s3PresignedUrlData, createdAt }).then(response => {
+		return response.data
+	})
+}
+
+export const deleteSheetCellPhoto = async (sheetCellPhotoId: string) => {
+	return axios.delete('/app/sheets/cells/photos/' + sheetCellPhotoId).then(response => {
 		return response.data
 	})
 }
