@@ -66,7 +66,6 @@ const SheetCellPhotosPhotos = ({
             beforePhotoDelete={() => setVisiblePhotoIndex(Math.max(0, visiblePhotoIndex - 1))}
             openPhotosInput={openPhotosInput}
             prepareUploadProgress={prepareUploadProgress}
-            sheetCellPhotos={sheetCellPhotos}
             uploadProgress={uploadProgress}
             uploadStatus={uploadStatus}/>
         }

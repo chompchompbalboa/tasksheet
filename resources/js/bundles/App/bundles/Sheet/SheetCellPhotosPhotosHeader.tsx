@@ -21,7 +21,6 @@ const SheetCellPhotosPhotosHeader = ({
   activeSheetCellPhoto,
   beforePhotoDelete,
   openPhotosInput,
-  sheetCellPhotos,
   uploadProgress,
   uploadStatus
 }: SheetCellPhotosPhotosHeaderProps) => {
@@ -122,7 +121,6 @@ interface SheetCellPhotosPhotosHeaderProps {
   beforePhotoDelete(): void
   openPhotosInput(): void
   prepareUploadProgress: number
-  sheetCellPhotos: ISheetPhoto[]
   uploadProgress: number
   uploadStatus: ISheetCellPhotosUploadStatus
 }
