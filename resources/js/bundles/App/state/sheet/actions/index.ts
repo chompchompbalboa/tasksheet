@@ -54,6 +54,7 @@ export { deleteSheetCellPhoto } from '@app/state/sheet/actions/deleteSheetCellPh
 export { deleteSheetPriority } from '@app/state/sheet/actions/deleteSheetPriority'
 
 export { updateSheetCell } from '@app/state/sheet/actions/updateSheetCell'
+export { updateSheetCellValues } from '@app/state/sheet/actions/updateSheetCellValues'
 export { updateSheetColumn } from '@app/state/sheet/actions/updateSheetColumn'
 export { updateSheetFilter } from '@app/state/sheet/actions/updateSheetFilter'
 export { updateSheetGroup } from '@app/state/sheet/actions/updateSheetGroup'

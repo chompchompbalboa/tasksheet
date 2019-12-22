@@ -15,6 +15,7 @@ import {
 import {
   createSheetCellChange,
   updateSheetCell,
+  updateSheetCellValues,
   updateSheetSelectionFromCellClick
 } from '@app/state/sheet/actions'
 
@@ -69,18 +70,23 @@ export const SheetCell = memo(({
       if(cell && cellValue !== cell.value) {
         clearTimeout(updateSheetCellTimer)
         clearTimeout(createSheetCellChangeTimer)
-        updateSheetCellTimer = setTimeout(() => {
-          dispatch(updateSheetCell(cell.id, { value: cellValue }, { value: cell.value }))
-        }, 1000)
-        createSheetCellChangeTimer = setTimeout(() => {
-          dispatch(createSheetCellChange(sheetId, cell.id, cellValue))
-        }, 2500)
+        if(sheetSelectionsRangeCellIds.size > 0) {
+          dispatch(updateSheetCellValues(sheetId, cellValue))
+        }
+        else {
+          updateSheetCellTimer = setTimeout(() => {
+            dispatch(updateSheetCell(cell.id, { value: cellValue }, { value: cell.value }))
+          }, 1000)
+          createSheetCellChangeTimer = setTimeout(() => {
+            dispatch(createSheetCellChange(sheetId, cell.id, cellValue))
+          }, 2500)
+        }
       }
       return () => {
         clearTimeout(updateSheetCellTimer)
         clearTimeout(createSheetCellChangeTimer)
       }
-    }, [ cellValue ])
+    }, [ cellValue, sheetSelectionsRangeCellIds ])
 
     // Cell types
     const sheetCellTypes = {

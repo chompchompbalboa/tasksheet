@@ -10,7 +10,7 @@ import { updateSheetCellReducer } from '@app/state/sheet/actions'
 import { createHistoryStep } from '@app/state/history/actions'
 
 //-----------------------------------------------------------------------------
-// Delete Sheet Column Break
+// Update Sheet Cell
 //-----------------------------------------------------------------------------
 export const updateSheetCell = (cellId: string, updates: ISheetCellUpdates, undoUpdates: ISheetCellUpdates = null, skipDatabaseUpdate: boolean = false): IThunkAction => {
 	return async (dispatch: IThunkDispatch) => {

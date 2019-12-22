@@ -11,7 +11,8 @@ import {
   ISheetStyles 
 } from '@app/state/sheet/types'
 import {
-  updateSheetCell as updateSheetCell,
+  updateSheetCell,
+  updateSheetCellValues,
   updateSheetSelectionFromArrowKey
 } from '@app/state/sheet/actions'
 
@@ -36,6 +37,7 @@ const SheetCellContainer = ({
   const activeSheetId = useSelector((state: IAppState) => state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].typeId)
   const isSelectedCellEditingPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellEditingPrevented)
   const isSelectedCellNavigationPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellNavigationPrevented)
+  const sheetSelectionsRangeCellIds = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.rangeCellIds)
   const sheetStyles = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].styles)
 
   const container = useRef(null)
@@ -54,7 +56,7 @@ const SheetCellContainer = ({
     return () => {
       removeEventListener('keydown', handleKeydownWhileCellIsSelected)
     }
-  }, [ isCellSelected, isCellEditing, isSelectedCellEditingPrevented, isSelectedCellNavigationPrevented ])
+  }, [ isCellSelected, isCellEditing, isSelectedCellEditingPrevented, isSelectedCellNavigationPrevented, sheetSelectionsRangeCellIds ])
   
   useEffect(() => {
     if(isCellEditing) {
@@ -121,9 +123,15 @@ const SheetCellContainer = ({
       && !preventValueChangeWhileSelected
     ) {
       e.preventDefault()
-      const updates = { value: e.key, isCellEditing: true }
-      const undoUpdates = { value: value }
-      dispatch(updateSheetCell(cellId, updates, undoUpdates))
+      if(sheetSelectionsRangeCellIds.size > 0) {
+        dispatch(updateSheetCell(cellId, { isCellEditing: true }))
+        dispatch(updateSheetCellValues(sheetId, e.key))
+      }
+      else {
+        const updates = { value: e.key, isCellEditing: true }
+        const undoUpdates = { value: value }
+        dispatch(updateSheetCell(cellId, updates, undoUpdates))
+      }
     }
     if(!isSelectedCellNavigationPrevented) {
       // Otherwise, navigate to an adjacent cell on an arrow or enter press
@@ -143,11 +151,17 @@ const SheetCellContainer = ({
         e.preventDefault()
         dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'UP', e.shiftKey))
       }
-      if(e.key === 'Delete' || e.key === 'Backspace') {
+      if((e.key === 'Delete' || e.key === 'Backspace') && !preventValueChangeWhileSelected) {
         e.preventDefault()
-        const updates = { value: '', isCellEditing: true}
-        const undoUpdates = { value: value }
-        dispatch(updateSheetCell(cellId, updates, undoUpdates))
+        if(sheetSelectionsRangeCellIds.size > 0) {
+          dispatch(updateSheetCell(cellId, { isCellEditing: true }))
+          dispatch(updateSheetCellValues(sheetId, ''))
+        }
+        else {
+          const updates = { value: '', isCellEditing: true }
+          const undoUpdates = { value: value }
+          dispatch(updateSheetCell(cellId, updates, undoUpdates))
+        }
       }
     }
   }

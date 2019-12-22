@@ -2,13 +2,17 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import moment, { Moment } from 'moment'
-import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { ARROW_LEFT, ARROW_RIGHT } from '@app/assets/icons'
 
 import { IAppState } from '@app/state'
+import { ISheet } from '@app/state/sheet/types'
+import { 
+  updateSheetCellValues
+} from '@app/state/sheet/actions'
 
 import Icon from '@/components/Icon'
 
@@ -16,30 +20,35 @@ import Icon from '@/components/Icon'
 // Component
 //-----------------------------------------------------------------------------
 export const SheetCellDatetime = ({
+  sheetId,
   dateValidator,
   value,
   updateCellValue,
 }: ISheetCellDatetimeProps) => {
 
+  // Refs
   const styledInput = useRef(null)
+
+  // Redux
+  const dispatch = useDispatch()
+  const sheetSelectionsRangeCellIds = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.rangeCellIds)
+  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
+
+  // Is Value Valid Date
+  const isValueValidDate = dateValidator(value)
+
+  // State
+  const [ currentMonth, setCurrentMonth ] = useState(isValueValidDate ? moment(value) : moment())
+
+  // Effects
   useEffect(() => {
     styledInput.current && styledInput.current.focus()
   }, [])
 
-  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
-
-  const isValueValidDate = dateValidator(value)
-
-  const [ currentMonth, setCurrentMonth ] = useState(
-    localStorage.getItem('Tracksheet.SheetCellDatetimeDatepicker.currentMonth')
-      ? moment(localStorage.getItem('Tracksheet.SheetCellDatetimeDatepicker.currentMonth'))
-      : isValueValidDate ? moment(value) : moment()
-  )
-
+  // Build the array to display the dates
+  let currentMonthDatesArray = []
   const isValueInCurrentMonth = isValueValidDate && currentMonth.year() === moment(value).year() && currentMonth.month() === moment(value).month()
   const valueDate = isValueValidDate && moment(value).date()
-
-  let currentMonthDatesArray = []
   let daysInCurrentMonth = currentMonth.daysInMonth()
   const firstDayOfCurrentMonth = currentMonth.startOf('month').day()
   let previousMonthsDate = 0
@@ -51,9 +60,19 @@ export const SheetCellDatetime = ({
     currentMonthDatesArray.push(currentDate)
   }
 
+  // Handle a change in the current visible month
   const handleChangeCurrentMonth = (nextCurrentMonth: Moment) => {
-    localStorage.setItem('Tracksheet.SheetCellDatetimeDatepicker.currentMonth', nextCurrentMonth.toISOString())
     setCurrentMonth(nextCurrentMonth)
+  }
+
+  // Handle a change in cell value
+  const handleStyledInputChange = (nextSheetCellValue: string) => {
+    if(sheetSelectionsRangeCellIds.size === 0) {
+      updateCellValue(nextSheetCellValue)
+    }
+    else {
+      dispatch(updateSheetCellValues(sheetId, nextSheetCellValue))
+    }
   }
 
   return (
@@ -63,41 +82,43 @@ export const SheetCellDatetime = ({
         <StyledInput
           data-testid="SheetCellDatetimeDatepickerInput"
           ref={styledInput}
-          onChange={e => updateCellValue(e.target.value)}
+          onChange={e => handleStyledInputChange(e.target.value)}
           value={value || ''}/>
       </InputContainer>
-      <DropdownContainer>
-        <DatepickerHeader>
-          <GoToPreviousMonth
-            data-testid="SheetCellDatetimeDatepickerGoToPreviousMonth"
-            onClick={() => handleChangeCurrentMonth(moment(currentMonth).subtract(1, 'M'))}>
-            <Icon
-              icon={ARROW_LEFT}/>
-          </GoToPreviousMonth>
-          <CurrentMonth>
-            {currentMonth.format('MMMM YYYY')}
-          </CurrentMonth>
-          <GoToNextMonth
-            data-testid="SheetCellDatetimeDatepickerGoToNextMonth"
-            onClick={() => handleChangeCurrentMonth(moment(currentMonth).add(1, 'M'))}>
-            <Icon
-              icon={ARROW_RIGHT}/>
-          </GoToNextMonth>
-        </DatepickerHeader>
-        <DatepickerDates
-          data-testid="SheetCellDatetimeDatepickerDates">
-          {currentMonthDatesArray.map((currentDate, index) =>
-            <DatepickerDate
-              key={index}
-              isEmpty={currentDate === null}
-              isSelected={isValueInCurrentMonth && valueDate === currentDate}
-              onClick={currentDate !== null ? () => updateCellValue(moment(currentMonth).date(currentDate).format('MM/DD/YYYY')) : () => null}
-              userColorPrimary={userColorPrimary}>
-              {currentDate}
-            </DatepickerDate>
-          )}
-        </DatepickerDates>
-      </DropdownContainer>
+      {sheetSelectionsRangeCellIds.size === 0 &&
+        <DropdownContainer>
+          <DatepickerHeader>
+            <GoToPreviousMonth
+              data-testid="SheetCellDatetimeDatepickerGoToPreviousMonth"
+              onClick={() => handleChangeCurrentMonth(moment(currentMonth).subtract(1, 'M'))}>
+              <Icon
+                icon={ARROW_LEFT}/>
+            </GoToPreviousMonth>
+            <CurrentMonth>
+              {currentMonth.format('MMMM YYYY')}
+            </CurrentMonth>
+            <GoToNextMonth
+              data-testid="SheetCellDatetimeDatepickerGoToNextMonth"
+              onClick={() => handleChangeCurrentMonth(moment(currentMonth).add(1, 'M'))}>
+              <Icon
+                icon={ARROW_RIGHT}/>
+            </GoToNextMonth>
+          </DatepickerHeader>
+          <DatepickerDates
+            data-testid="SheetCellDatetimeDatepickerDates">
+            {currentMonthDatesArray.map((currentDate, index) =>
+              <DatepickerDate
+                key={index}
+                isEmpty={currentDate === null}
+                isSelected={isValueInCurrentMonth && valueDate === currentDate}
+                onClick={currentDate !== null ? () => updateCellValue(moment(currentMonth).date(currentDate).format('MM/DD/YYYY')) : () => null}
+                userColorPrimary={userColorPrimary}>
+                {currentDate}
+              </DatepickerDate>
+            )}
+          </DatepickerDates>
+        </DropdownContainer>
+      }
     </Container>
   )
 }
@@ -106,6 +127,7 @@ export const SheetCellDatetime = ({
 // Props
 //-----------------------------------------------------------------------------
 export interface ISheetCellDatetimeProps {
+  sheetId: ISheet['id']
   dateValidator(date: any): boolean
   updateCellValue(nextCellValue: string): void
   value: string
