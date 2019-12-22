@@ -6,16 +6,18 @@ import moment from 'moment'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-
 import { mutation } from '@app/api'
 import { storeFileToS3 } from '@/api/vapor'
 
 import { IAppState } from '@app/state'
 import { ISheetCell, ISheetPhoto } from '@app/state/sheet/types'
-import { createSheetCellPhoto } from '@app/state/sheet/actions'
+import { 
+  createSheetCellPhoto,
+  deleteSheetCellPhoto
+} from '@app/state/sheet/actions'
 
 import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
-import SheetCellPhotosPhotos from '@app/bundles/Sheet/SheetCellPhotosPhotos'
+import SheetCellPhotosDropdown from '@app/bundles/Sheet/SheetCellPhotosDropdown'
 import SheetCellPhotosValue from '@app/bundles/Sheet/SheetCellPhotosValue'
 
 //-----------------------------------------------------------------------------
@@ -40,17 +42,21 @@ const SheetCellPhotos = ({
   }))
 
   // State
-  const [ isPhotosVisible, setIsPhotosVisible ] = useState(false)
-  const [ prepareUploadProgress, setPrepareUploadProgress ] = useState(0)
-  const [ uploadProgress, setUploadProgress ] = useState(0)
-  const [ uploadStatus, setUploadStatus ] = useState('READY' as ISheetCellPhotosUploadStatus)
-  const [ visiblePhotoIndex, setVisiblePhotoIndex ] = useState(0)
+  const [ deleteActiveSheetCellPhotoStatus, setDeleteActiveSheetCellPhotoStatus ] = useState('READY' as ISheetCellPhotosDeleteStatus)
+  const [ uploadSheetCellPhotoProgress, setUploadSheetCellPhotoProgress ] = useState(0)
+  const [ uploadSheetCellPhotoStatus, setUploadSheetCellPhotoStatus ] = useState('READY' as ISheetCellPhotosUploadStatus)
+  const [ activeSheetCellPhotoIndex, setActiveSheetCellPhotoIndex ] = useState(0)
+
+  // Active Sheet Cell Photo
+  const activeSheetCellPhoto = sheetCellPhotos && sheetCellPhotos[activeSheetCellPhotoIndex]
+
+  // Timeouts
+  let beforePhotoDeleteTimeout = useRef(null)
+  let deleteActiveSheetCellPhotoTimeout = useRef(null)
+  let setDeleteActiveSheetCellPhotoStatusToDeletedTimeout = useRef(null)
+  let setDeleteActiveSheetCellPhotoStatusToReadyTimeout = useRef(null)
   
   // Effects
-  useEffect(() => {
-    setIsPhotosVisible(isCellSelected)
-  }, [ isCellSelected ])
-  
   useEffect(() => {
     if(sheetCellPhotos && cell && cell.value && (sheetCellPhotos.length + '') !== (cell.value + '')) {
       updateCellValue((sheetCellPhotos && sheetCellPhotos.length + '') || '0')
@@ -58,33 +64,52 @@ const SheetCellPhotos = ({
   })
   
   useEffect(() => {
-    return () => { setIsPhotosVisible(false) }
+    return () => {
+      clearTimeout(beforePhotoDeleteTimeout.current)
+      clearTimeout(deleteActiveSheetCellPhotoTimeout.current)
+      clearTimeout(setDeleteActiveSheetCellPhotoStatusToDeletedTimeout.current)
+      clearTimeout(setDeleteActiveSheetCellPhotoStatusToReadyTimeout.current)
+    }
   }, [])
   
-  // Open the file dialog to upload a photo
-  const openPhotosInput = () => {
+  // Delete Photo
+  const deleteActiveSheetCellPhoto = () => {
+    setDeleteActiveSheetCellPhotoStatus('DELETING')
+    beforePhotoDeleteTimeout.current = setTimeout(() => setActiveSheetCellPhotoIndex(Math.max(0, activeSheetCellPhotoIndex - 1)), 250)
+    deleteActiveSheetCellPhotoTimeout.current = setTimeout(() => dispatch(deleteSheetCellPhoto(activeSheetCellPhoto.cellId, activeSheetCellPhoto.id)), 350)
+    setDeleteActiveSheetCellPhotoStatusToDeletedTimeout.current = setTimeout(() => setDeleteActiveSheetCellPhotoStatus('DELETED'), 350)
+    setDeleteActiveSheetCellPhotoStatusToReadyTimeout.current = setTimeout(() => setDeleteActiveSheetCellPhotoStatus('READY'), 1350)
+  }
+
+  // Download Photo
+  const downloadActiveSheetCellPhoto = () => {
+    const url = '/app/sheets/cells/photos/download/' + activeSheetCellPhoto.id
+    window.open(url, '_blank')
+  }
+  
+  // Open Photo Upload Dialog
+  const openPhotoUploadDialog = () => {
     uploadInput.current.click()
   }
   
-  // Upload a photo
-  const handlePhotoUpload = (e: ChangeEvent<HTMLInputElement>) => {
+  // Upload Photo
+  const uploadSheetCellPhoto = (e: ChangeEvent<HTMLInputElement>) => {
     const photosList = e.target.files
     const photosIndexes = Object.keys(photosList)
     const photosToUpload = photosIndexes.map((index: any) => photosList[index])
     if(photosIndexes.length > 0) {
       const file = photosToUpload[0]
-      const createdAt = moment().format('YYYY-MM-DD HH:mm:ss')
-      setUploadStatus('PREPARING_UPLOAD')
-      storeFileToS3(file, () => setUploadStatus('UPLOADING'), setPrepareUploadProgress, setUploadProgress).then(s3PresignedUrlData => {
-        setUploadStatus('SAVING_SHEET_CELL_PHOTO')
-        mutation.createSheetCellPhoto(sheetId, cellId, file.name, s3PresignedUrlData, createdAt).then(nextSheetCellPhotos => {
+      const uploadedAt = moment().format('YYYY-MM-DD HH:mm:ss')
+      setUploadSheetCellPhotoStatus('PREPARING_UPLOAD')
+      storeFileToS3(file, () => setUploadSheetCellPhotoStatus('UPLOADING'), setUploadSheetCellPhotoProgress).then(s3PresignedUrlData => {
+        setUploadSheetCellPhotoStatus('SAVING_FILE_DATA')
+        mutation.createSheetCellPhoto(sheetId, cellId, file.name, s3PresignedUrlData, uploadedAt).then(nextSheetCellPhotos => {
           const newSheetCellPhoto = nextSheetCellPhotos[nextSheetCellPhotos.length - 1]
-          setUploadStatus('UPLOADED')
-          setPrepareUploadProgress(0)
-          setUploadProgress(0)
+          setUploadSheetCellPhotoStatus('UPLOADED')
+          setUploadSheetCellPhotoProgress(0)
           dispatch(createSheetCellPhoto(cellId, newSheetCellPhoto))
-          setTimeout(() => setVisiblePhotoIndex(0), 25)
-          setTimeout(() => setUploadStatus('READY'), 1000)
+          setTimeout(() => setActiveSheetCellPhotoIndex(0), 25)
+          setTimeout(() => setUploadSheetCellPhotoStatus('READY'), 1000)
         })
       })
     }
@@ -99,29 +124,31 @@ const SheetCellPhotos = ({
       focusCell={() => null}
       isCellSelected={isCellSelected}
       onlyRenderChildren
-      updateCellValue={() => null}
+      preventValueChangeWhileSelected
       value={null}
       {...passThroughProps}>
       <Container>
         <SheetCellPhotosValue
-          value={cell.value}/>
-        {isPhotosVisible &&
-          <SheetCellPhotosPhotos
-            openPhotosInput={openPhotosInput}
-            prepareUploadProgress={prepareUploadProgress}
-            setVisiblePhotoIndex={setVisiblePhotoIndex}
+          value={(sheetCellPhotos && sheetCellPhotos.length || 0) + ''}/>
+        {isCellSelected &&
+          <SheetCellPhotosDropdown
+            activeSheetCellPhoto={activeSheetCellPhoto}
+            activeSheetCellPhotoIndex={activeSheetCellPhotoIndex}
+            deleteActiveSheetCellPhoto={deleteActiveSheetCellPhoto}
+            deleteActiveSheetCellPhotoStatus={deleteActiveSheetCellPhotoStatus}
+            downloadActiveSheetCellPhoto={downloadActiveSheetCellPhoto}
+            openPhotoUploadDialog={openPhotoUploadDialog}
+            setActiveSheetCellPhotoIndex={setActiveSheetCellPhotoIndex}
             sheetCellPhotos={sheetCellPhotos}
-            uploadProgress={uploadProgress}
-            uploadStatus={uploadStatus}
-            visiblePhotoIndex={visiblePhotoIndex}/>
-        }
+            uploadSheetCellPhotoProgress={uploadSheetCellPhotoProgress}
+            uploadSheetCellPhotoStatus={uploadSheetCellPhotoStatus}/>}
       </Container>
       <UploadInput
         ref={uploadInput}
         type="file"
         accept="image/*"
         multiple
-        onChange={e => handlePhotoUpload(e)}/>
+        onChange={e => uploadSheetCellPhoto(e)}/>
     </SheetCellContainer>
   )
 
@@ -138,7 +165,18 @@ interface SheetCellPhotosProps {
   updateCellValue(nextCellValue: string): void
   value: string
 }
-export type ISheetCellPhotosUploadStatus = 'READY' | 'PREPARING_UPLOAD' | 'UPLOADING' | 'SAVING_SHEET_CELL_PHOTO' | 'UPLOADED'
+
+export type ISheetCellPhotosUploadStatus = 
+  'READY' | 
+  'PREPARING_UPLOAD' | 
+  'UPLOADING' | 
+  'SAVING_FILE_DATA' | 
+  'UPLOADED'
+
+export type ISheetCellPhotosDeleteStatus = 
+  'READY' |
+  'DELETING' |
+  'DELETED'
 
 //-----------------------------------------------------------------------------
 // Styled Components

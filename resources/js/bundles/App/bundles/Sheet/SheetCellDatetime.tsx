@@ -53,7 +53,6 @@ export const SheetCellDatetime = ({
       testId="SheetCellDatetime"
       focusCell={() => setIsInputEditing(true)}
       onCloseCell={() => setIsInputEditing(false)}
-      updateCellValue={handleUpdateCellValue}
       value={localValue}
       {...passThroughProps}>
       <SheetCellDatetimeDatepicker

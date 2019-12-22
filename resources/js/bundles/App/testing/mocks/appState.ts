@@ -232,6 +232,7 @@ export const appStateFactory = ({
         },
         views: newSheetFromDatabaseViews,
         changes: [],
+        files: [],
         photos: [],
         priorities: newSheetFromDatabasePriorities,
         cellPriorities: [],

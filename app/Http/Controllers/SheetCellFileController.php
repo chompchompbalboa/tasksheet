@@ -47,6 +47,7 @@ class SheetCellFileController extends Controller
       $sheetCellId = $request->input('sheetCellId');
       $filename = $request->input('filename');
       $s3PresignedUrlData = $request->input('s3PresignedUrlData');
+      $uploadedAt = $request->input('uploadedAt');
       $user = Auth::user();
       
       // Move the file to permanent storage on S3
@@ -63,7 +64,7 @@ class SheetCellFileController extends Controller
         's3Bucket' => $s3PresignedUrlData['bucket'],
         's3Key' => $nextS3PresignedUrlDataKey,
         'uploadedBy' => $user->name,
-        'uploadedAt' => date("Y-m-d H:i:s")
+        'uploadedAt' => $uploadedAt
       ]);
       
       $nextSheetCellFiles = SheetCellFile::where('cellId', $sheetCellId)->orderBy('createdAt')->get();

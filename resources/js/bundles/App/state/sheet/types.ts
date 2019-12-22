@@ -10,9 +10,11 @@ export interface IAllSheetGroups { [groupId: string]: ISheetGroup }
 export interface IAllSheetSorts { [sortId: string]: ISheetSort }
 export interface IAllSheetViews { [viewId: string]: ISheetView }
 export interface IAllSheetChanges { [changeId: string]: ISheetChange }
+export interface IAllSheetFiles { [changeId: string]: ISheetFile }
 export interface IAllSheetPhotos { [photoId: string]: ISheetPhoto }
 export interface IAllSheetPriorities { [priorityId: string]: ISheetPriority }
 export interface IAllSheetCellChanges { [cellId: string]: ISheetChange['id'][] }
+export interface IAllSheetCellFiles { [cellId: string]: ISheetFile['id'][] }
 export interface IAllSheetCellPhotos { [cellId: string]: ISheetPhoto['id'][] }
 
 //-----------------------------------------------------------------------------
@@ -57,6 +59,7 @@ export interface ISheetFromDatabase {
   styles: ISheetStylesFromDatabase
   views: ISheetViewFromDatabase[]
   changes: ISheetChange[]
+  files: ISheetFile[]
   photos: ISheetPhoto[]
 }
 
@@ -283,6 +286,21 @@ export interface ISheetChange {
   value: string
   createdAt: string
   createdBy: string
+}
+
+//-----------------------------------------------------------------------------
+// Sheet File
+//-----------------------------------------------------------------------------
+export interface ISheetFile {
+  id: string
+  sheetId: ISheet['id']
+  cellId: ISheetCell['id']
+  filename: string
+  s3Uuid: string
+  s3Bucket: string
+  s3Key: string
+  uploadedBy: string
+  uploadedAt: string
 }
 
 //-----------------------------------------------------------------------------

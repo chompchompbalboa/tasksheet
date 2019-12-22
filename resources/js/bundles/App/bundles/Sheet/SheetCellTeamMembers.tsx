@@ -22,14 +22,14 @@ import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetCellString = ({
+const SheetCellTeamMembers = ({
   testId,
   sheetId,
   cellId,
   updateCellValue,
   value,
   ...passThroughProps
-}: SheetCellStringProps) => {
+}: SheetCellTeamMembersProps) => {
   
   const autosizeInput = useRef(null)
   
@@ -99,7 +99,6 @@ const SheetCellString = ({
       testId={"SheetCellTeamMembers"}
       sheetId={sheetId}
       cellId={cellId}
-      updateCellValue={updateCellValue}
       focusCell={handleCellEditingStart}
       onCloseCell={handleCellEditingEnd}
       value={value}
@@ -131,7 +130,7 @@ const SheetCellString = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetCellStringProps {
+interface SheetCellTeamMembersProps {
   sheetId: string
   cell: ISheetCell
   cellId: string
@@ -176,4 +175,4 @@ interface ITeamMemberProps {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetCellString
+export default SheetCellTeamMembers

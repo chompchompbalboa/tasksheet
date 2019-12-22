@@ -35,7 +35,6 @@ const SheetCellString = ({
     <SheetCellContainer
       testId={testId || "SheetCellString"}
       focusCell={focusCell}
-      updateCellValue={updateCellValue}
       value={safeValue}
       {...passThroughProps}>
       <StyledTextarea

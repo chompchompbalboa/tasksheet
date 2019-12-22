@@ -4,14 +4,15 @@
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import { 
   ISheet, ISheetFromDatabase,
-  IAllSheetCells, ISheetCell,
   IAllSheetColumns, ISheetColumn,
-  IAllSheetViews, ISheetView, ISheetViewFromDatabase,
+  IAllSheetRows, ISheetRow,
+  IAllSheetCells, ISheetCell,
   IAllSheetFilters, ISheetFilter,
   IAllSheetGroups, ISheetGroup,
   IAllSheetSorts, ISheetSort,
-  IAllSheetRows, ISheetRow,
+  IAllSheetViews, ISheetView, ISheetViewFromDatabase,
   IAllSheetCellChanges, IAllSheetChanges,
+  IAllSheetCellFiles, IAllSheetFiles,
   IAllSheetCellPhotos, IAllSheetPhotos,
   IAllSheetPriorities, ISheetPriority, ISheetCellPriority
 } from '@app/state/sheet/types'
@@ -43,9 +44,11 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
     const normalizedSheetSorts: IAllSheetSorts = {}
     const normalizedSheetViews: IAllSheetViews = {}
     const normalizedSheetChanges: IAllSheetChanges = {}
+    const normalizedSheetFiles: IAllSheetFiles = {}
     const normalizedSheetPhotos: IAllSheetPhotos = {}
     const normalizedSheetPriorities: IAllSheetPriorities = {}
     const normalizedSheetCellChanges: IAllSheetCellChanges = {}
+    const normalizedSheetCellFiles: IAllSheetCellFiles = {}
     const normalizedSheetCellPhotos: IAllSheetCellPhotos = {}
 
     const sheetColumns: ISheetColumn['id'][] = []
@@ -111,6 +114,15 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       normalizedSheetCellChanges[sheetChange.cellId] = [
         ...(normalizedSheetCellChanges[sheetChange.cellId] || []),
         sheetChange.id
+      ]
+    })
+    
+    // Sheet Files
+    sheetFromDatabase.files.forEach(sheetFile => { 
+      normalizedSheetFiles[sheetFile.id] = sheetFile
+      normalizedSheetCellFiles[sheetFile.cellId] = [
+        ...(normalizedSheetCellFiles[sheetFile.cellId] || []),
+        sheetFile.id
       ]
     })
     
@@ -207,9 +219,11 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         normalizedSheetSorts,
         normalizedSheetViews,
         normalizedSheetChanges,
+        normalizedSheetFiles,
         normalizedSheetPhotos,
         normalizedSheetPriorities,
         normalizedSheetCellChanges,
+        normalizedSheetCellFiles,
         normalizedSheetCellPhotos,
 			)
     )

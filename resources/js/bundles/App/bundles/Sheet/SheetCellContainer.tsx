@@ -26,6 +26,7 @@ const SheetCellContainer = ({
   focusCell,
   onCloseCell,
   onlyRenderChildren,
+  preventValueChangeWhileSelected = false,
   value,
   testId = null
 }: SheetCellContainerProps) => {
@@ -112,7 +113,13 @@ const SheetCellContainer = ({
 
   const handleKeydownWhileCellIsSelected = (e: KeyboardEvent) => {
     // If a character key is pressed, start editing the cell
-    if(e.key && e.key.length === 1 && !e.ctrlKey && !e.metaKey && !isSelectedCellEditingPrevented) {
+    if(e.key 
+      && e.key.length === 1 
+      && !e.ctrlKey 
+      && !e.metaKey 
+      && !isSelectedCellEditingPrevented
+      && !preventValueChangeWhileSelected
+    ) {
       e.preventDefault()
       const updates = { value: e.key, isCellEditing: true }
       const undoUpdates = { value: value }
@@ -174,8 +181,8 @@ interface SheetCellContainerProps {
   isCellSelected: boolean
   onCloseCell?(...args: any): void
   onlyRenderChildren?: boolean
+  preventValueChangeWhileSelected?: boolean
   testId?: string
-  updateCellValue(nextCellValue: string): void
   value: string
 }
 

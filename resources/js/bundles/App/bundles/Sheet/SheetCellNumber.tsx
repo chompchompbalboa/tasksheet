@@ -29,7 +29,6 @@ const SheetCellNumber = ({
     <SheetCellContainer
       testId="SheetCellNumber"
       focusCell={focusCell}
-      updateCellValue={updateCellValue}
       value={safeValue}
       {...passThroughProps}>
       <StyledInput

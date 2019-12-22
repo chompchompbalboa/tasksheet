@@ -16,16 +16,17 @@ class Sheet extends Model
     'sourceSheetId', 
     'activeSheetViewId', 
     'columns', 
-    'rows', 
+    'rows',
     'cellPriorities',
-    'views', 
-    'styles', 
-    'changes', 
+    'views',
+    'styles',
+    'changes',
+    'files',
+    'photos',
     'priorities',
-    'photos'
   ];
   protected $fillable = ['id', 'sourceSheetId', 'activeSheetViewId'];
-  protected $with = ['changes', 'priorities', 'photos', 'views'];
+  protected $with = ['changes', 'files', 'photos', 'priorities', 'views'];
   protected $appends = ['columns', 'rows', 'styles', 'cellPriorities'];
   
   public function getColumnsAttribute() {
@@ -37,10 +38,9 @@ class Sheet extends Model
   
   public function getRowsAttribute() {
     $sheetId = is_null($this->sourceSheetId) ? $this->id : $this->sourceSheetId;
-    $rows = SheetRow::where('sheetId', '=', $sheetId)
+    return SheetRow::where('sheetId', '=', $sheetId)
     ->orderBy('createdAt', 'ASC')
     ->get();
-    return $rows;
   }
 
   public function getStylesAttribute() {
@@ -53,6 +53,10 @@ class Sheet extends Model
   
   public function changes() {
     return $this->hasMany('App\Models\SheetCellChange', 'sheetId')->orderBy('createdAt', 'desc');
+  }
+  
+  public function files() {
+    return $this->hasMany('App\Models\SheetCellFile', 'sheetId')->orderBy('createdAt', 'asc');
   }
   
   public function photos() {

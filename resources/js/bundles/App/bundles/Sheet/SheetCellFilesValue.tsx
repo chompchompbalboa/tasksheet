@@ -4,7 +4,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { PHOTOS } from '@app/assets/icons'
+import { FILES } from '@app/assets/icons'
 
 import Icon from '@/components/Icon'
 
@@ -17,7 +17,7 @@ const SheetCellPhotos = ({
   return (
     <IconContainer>
       <Icon 
-        icon={PHOTOS}
+        icon={FILES}
         size="18px"/>
       <PhotoCount>
         ({ value || 0 })

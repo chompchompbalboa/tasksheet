@@ -2,17 +2,23 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import moment from 'moment'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { DOWNLOAD, FILES, CLOSE } from '@app/assets/icons'
-
 import { storeFileToS3 } from '@/api/vapor'
-import { mutation, query } from '@app/api'
+import { mutation } from '@app/api'
 
-import { ISheetCell } from '@app/state/sheet/types'
+import { IAppState } from '@app/state'
+import { ISheetCell, ISheetFile } from '@app/state/sheet/types'
+import { 
+  createSheetCellFile,
+  deleteSheetCellFile as deleteSheetCellFileAction
+} from '@app/state/sheet/actions'
 
-import Icon from '@/components/Icon'
 import SheetCellContainer from '@app/bundles/Sheet/SheetCellContainer'
+import SheetCellFilesDropdown from '@app/bundles/Sheet/SheetCellFilesDropdown'
+import SheetCellFilesValue from '@app/bundles/Sheet/SheetCellFilesValue'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -21,96 +27,72 @@ const SheetCellFiles = ({
   sheetId,
   cellId,
   cell,
+  isCellSelected,
   updateCellValue,
   ...passThroughProps
 }: ISheetCellFiles) => {
 
   // Refs
-  const container = useRef(null)
   const uploadInput = useRef(null)
+  
+  // Redux
+  const dispatch = useDispatch()
+  const sheetCellFiles = useSelector((state: IAppState) => state.sheet.allSheetCellFiles && state.sheet.allSheetCellFiles[cellId] && state.sheet.allSheetCellFiles[cellId].map((sheetFileId: ISheetFile['id']) => {
+    return state.sheet.allSheetFiles[sheetFileId]
+  }))
+  
+  // Effects
+  useEffect(() => {
+    if(sheetCellFiles && cell && cell.value && (sheetCellFiles.length + '') !== (cell.value + '')) {
+      updateCellValue((sheetCellFiles && sheetCellFiles.length + '') || '0')
+    }
+  })
 
   // State
-  const [ hasFilesLoaded, setHasFilesLoaded ] = useState(false)
-  const [ files, setFiles ] = useState([])
-  const [ isFilesVisible, setIsFilesVisible ] = useState(false)
-  const [ uploadStatus, setUploadStatus ] = useState('READY' as TUploadStatus)
+  const [ uploadSheetCellFileStatus, setUploadSheetCellFileStatus ] = useState('READY' as ISheetCellFilesUploadStatus)
+  const [ uploadSheetCellFileProgress, setUploadSheetCellFileProgress ] = useState(0)
 
-  useEffect(() => {
-    if(isFilesVisible) { 
-      addEventListener('click', closeOnClickOutside)
-      if(!hasFilesLoaded) {
-        query.getSheetCellFiles(cellId).then(filesFromServer => {
-          setHasFilesLoaded(true)
-          setFiles(filesFromServer)
-        })
-      }
-    }
-    else { removeEventListener('click', closeOnClickOutside) }
-    return () => removeEventListener('click', closeOnClickOutside)
-  }, [ isFilesVisible ])
-  
-  useEffect(() => {
-    return () => {
-      setIsFilesVisible(false)
-    }
-  }, [])
-
-  const closeOnClickOutside = (e: MouseEvent) => {
-    if(!container.current.contains(e.target)) {
-      setIsFilesVisible(false)
-    }
+  // Handle File Download
+  const downloadSheetCellFile = (sheetCellFileId: ISheetFile['id']) => {
+    const url = '/app/sheets/cells/files/download/' + sheetCellFileId
+    window.open(url, '_blank')
   }
 
-  const handleContainerClick = () => {
-    setIsFilesVisible(true)
+  // Handle File Delete
+  const deleteSheetCellFile = (sheetCellFileId: ISheetFile['id']) => {
+    dispatch(deleteSheetCellFileAction(cellId, sheetCellFileId))
   }
-  
-  const handleUploadFilesButtonClick = () => {
+
+  // Open File Upload Dialog
+  const openFileUploadDialog = () => {
     uploadInput.current.click()
   }
   
-  const handleUploadInputSelect = (e: ChangeEvent<HTMLInputElement>) => {
+  // Handle File Upload
+  const uploadSheetCellFile = (e: ChangeEvent<HTMLInputElement>) => {
     const filesList = e.target.files
     const filesIndexes = Object.keys(filesList)
     const filesToUpload = filesIndexes.map((index: any) => filesList[index])
     if(filesIndexes.length > 0) {
       const file = filesToUpload[0]
-      setUploadStatus('UPLOADING')
-      setFiles([...files, { id: '', filename: file.name, isUploading: true }])
-      storeFileToS3(file, null, null, null).then(s3PresignedUrlData => {
-        setUploadStatus('SAVING_SHEET_CELL_FILE')
-        mutation.createSheetCellFile(sheetId, cellId, file.name, s3PresignedUrlData).then(nextSheetCellFiles => {
-          setFiles(nextSheetCellFiles)
-          setUploadStatus('UPLOADED')
-          updateCellValue(nextSheetCellFiles.length + '')
-          setTimeout(() => setUploadStatus('READY'), 1000)
+      setUploadSheetCellFileStatus('PREPARING_UPLOAD')
+      storeFileToS3(file, () => setUploadSheetCellFileStatus('UPLOADING'), setUploadSheetCellFileProgress).then(s3PresignedUrlData => {
+        const uploadedAt = moment().format('YYYY-MM-DD HH:mm:ss')
+        setUploadSheetCellFileStatus('SAVING_FILE_DATA')
+        mutation.createSheetCellFile(sheetId, cellId, file.name, s3PresignedUrlData, uploadedAt).then(nextSheetCellFiles => {
+          const newSheetCellFile = nextSheetCellFiles[nextSheetCellFiles.length - 1]
+          dispatch(createSheetCellFile(newSheetCellFile.cellId, newSheetCellFile))
+          setUploadSheetCellFileProgress(0)
+          if(nextSheetCellFiles.length === 1) {
+            setUploadSheetCellFileStatus('READY')
+          }
+          else {
+            setUploadSheetCellFileStatus('UPLOADED')
+            setTimeout(() => setUploadSheetCellFileStatus('READY'), 1000)
+          }
         })
       })
     }
-  }
-
-  const handleFileDownloadClick = (sheetFileId: string) => {
-    const url = '/app/sheets/cells/files/download/' + sheetFileId
-    window.open(url, '_blank')
-  }
-
-  const handleFileDeleteClick = (sheetFileId: string) => {
-    setUploadStatus('DELETING')
-    mutation.deleteSheetCellFile(sheetFileId).then(nextSheetCellFiles => {
-      setUploadStatus('DELETED')
-      setFiles(nextSheetCellFiles)
-      updateCellValue(nextSheetCellFiles.length)
-      setTimeout(() => setUploadStatus('READY'), 1000)
-    })
-  }
-  
-  const uploadStatusMessages = {
-    READY: 'Add File',
-    SAVING_SHEET_CELL_FILE: 'Saving File Data...',
-    UPLOADING: 'Uploading...',
-    UPLOADED: 'Added!',
-    DELETING: 'Deleting...',
-    DELETED: 'Deleted'
   }
 
   return (
@@ -120,58 +102,27 @@ const SheetCellFiles = ({
       cellId={cellId}
       cell={cell}
       focusCell={() => null}
+      isCellSelected={isCellSelected}
       onlyRenderChildren
-      updateCellValue={() => null}
+      preventValueChangeWhileSelected
       value={null}
       {...passThroughProps}>
-      <Container
-        ref={container}
-        onClick={() => handleContainerClick()}>
-        <IconContainer>
-          <Icon 
-            icon={FILES}
-            size="18px"/>
-          <FileCount>
-            ({ cell.value || 0 })
-          </FileCount>
-        </IconContainer>
-        {isFilesVisible &&
-          <FilesDropdown>
-            <FileHeader>
-              <UploadFileButton
-                onClick={() => handleUploadFilesButtonClick()}>
-                {uploadStatusMessages[uploadStatus]}
-              </UploadFileButton>
-            </FileHeader>
-            <Files>
-              {hasFilesLoaded && files.length > 0 &&
-                files.map((file, index) => (
-                  <File
-                    key={index}>
-                    <FileName>{file.filename}</FileName>
-                    {!file.isUploading && 
-                      <FileActions>
-                        <FileAction
-                          onClick={() => handleFileDownloadClick(file.id)}>
-                          <Icon icon={DOWNLOAD}/>
-                        </FileAction>
-                        <FileAction
-                          onClick={() => handleFileDeleteClick(file.id)}>
-                          <Icon icon={CLOSE}/>
-                        </FileAction>
-                      </FileActions>
-                    }
-                  </File>
-                ))
-            }
-            </Files>
-          </FilesDropdown>
-        }
+      <Container>
+        <SheetCellFilesValue
+          value={(sheetCellFiles && sheetCellFiles.length || 0) + ''}/>
+        {isCellSelected &&
+          <SheetCellFilesDropdown
+            downloadSheetCellFile={downloadSheetCellFile}
+            deleteSheetCellFile={deleteSheetCellFile}
+            openFileUploadDialog={openFileUploadDialog}
+            sheetCellFiles={sheetCellFiles}
+            uploadSheetCellFileProgress={uploadSheetCellFileProgress}
+            uploadSheetCellFileStatus={uploadSheetCellFileStatus}/>}
       </Container>
       <UploadInput
         ref={uploadInput}
         type="file"
-        onChange={e => handleUploadInputSelect(e)}/>
+        onChange={e => uploadSheetCellFile(e)}/>
     </SheetCellContainer>
   )
 
@@ -189,7 +140,12 @@ interface ISheetCellFiles {
   value: string
 }
 
-type TUploadStatus = 'READY' | 'SAVING_SHEET_CELL_FILE' | 'UPLOADING'| 'UPLOADED' | 'DELETING' | 'DELETED'
+export type ISheetCellFilesUploadStatus = 
+  'READY' | 
+  'PREPARING_UPLOAD' | 
+  'UPLOADING'| 
+  'SAVING_FILE_DATA' | 
+  'UPLOADED'
 
 //-----------------------------------------------------------------------------
 // Styled Components
@@ -198,106 +154,6 @@ const Container = styled.div`
   z-index: 10;
   width: 100%;
   height: 100%;
-`
-
-const IconContainer = styled.div`
-  cursor: pointer;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  color: rgb(100, 100, 100);
-  &:hover {
-    color: rgb(60, 60, 60);
-  }
-`
-
-const FileCount = styled.div`
-  font-weight: bold;
-`
-
-const FilesDropdown = styled.div`
-  position: absolute;
-  top: calc(100% + 2.5px);
-  left: -4px;
-  background-color: rgb(245, 245, 245);
-  width: 35vw;
-  height: 60vh;
-  border-radius: 10px;
-  border-top-left-radius: 0;
-  padding: 2rem;
-  padding-top: 0rem;
-  box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.5);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-`
-
-const Files = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: white;
-`
-
-
-const FileHeader = styled.div`
-  width: 100%;
-  padding: 1rem 0;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-`
-
-const UploadFileButton = styled.div`
-  cursor: pointer;
-  padding: 0.25rem 1.5rem;
-  background-color: rgba(180, 180, 180, 0.25);
-  border-radius: 5px;
-  transition: background-color 0.15s;
-  &:hover {
-    background-color: rgba(180, 180, 180, 0.5);
-  }
-`
-
-const File = styled.div`
-  cursor: pointer;
-  width: 100%;
-  padding: 0.5rem;
-  transition: background-color 0.15s;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  &:hover {
-    background-color: rgb(225, 225, 225);
-  }
-`
-
-const FileName = styled.div`
-  z-index: 1;
-  width: 75%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`
-
-const FileActions = styled.div`
-  z-index: 2;
-  width: 25%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-`
-
-const FileAction = styled.div`
-  margin: 0.5rem;
-  color: rgb(120, 120, 120);
-  &:hover {
-    color: rgb(0, 0, 0);
-  }
 `
 
 const UploadInput = styled.input`

@@ -15,6 +15,7 @@ import {
   IAllSheetSorts, ISheetSortUpdates,
   IAllSheetViews, ISheetViewUpdates,
   IAllSheetChanges, IAllSheetCellChanges,
+  IAllSheetFiles, IAllSheetCellFiles,
   IAllSheetPhotos, IAllSheetCellPhotos,
   IAllSheetPriorities, ISheetPriorityUpdates
 } from '@app/state/sheet/types'
@@ -36,6 +37,7 @@ export { createSheetSort } from '@app/state/sheet/actions/createSheetSort'
 export { createSheetLink } from '@/bundles/App/state/sheet/actions/createSheetLink'
 export { createSheetView } from '@app/state/sheet/actions/createSheetView'
 export { createSheetCellChange } from '@app/state/sheet/actions/createSheetCellChange'
+export { createSheetCellFile } from '@app/state/sheet/actions/createSheetCellFile'
 export { createSheetCellPhoto } from '@app/state/sheet/actions/createSheetCellPhoto'
 export { createSheetPriority } from '@app/state/sheet/actions/createSheetPriority'
 
@@ -47,6 +49,7 @@ export { deleteSheetRows } from '@app/state/sheet/actions/deleteSheetRows'
 export { deleteSheetSort } from '@app/state/sheet/actions/deleteSheetSort'
 export { deleteSheetView } from '@app/state/sheet/actions/deleteSheetView'
 export { deleteSheetCellChange } from '@app/state/sheet/actions/deleteSheetCellChange'
+export { deleteSheetCellFile } from '@app/state/sheet/actions/deleteSheetCellFile'
 export { deleteSheetCellPhoto } from '@app/state/sheet/actions/deleteSheetCellPhoto'
 export { deleteSheetPriority } from '@app/state/sheet/actions/deleteSheetPriority'
 
@@ -98,6 +101,7 @@ export type ISheetActions =
   IUpdateSheetView | ISetAllSheetViews |
   ISetAllSheetCellChanges | ISetAllSheetChanges |
   ISetAllSheetCellPhotos | ISetAllSheetPhotos |
+  ISetAllSheetCellFiles | ISetAllSheetFiles |
   IUpdateSheetPriority | ISetAllSheetPriorities
 
 //-----------------------------------------------------------------------------
@@ -115,9 +119,11 @@ interface ILoadSheet {
   sorts: IAllSheetSorts
   views: IAllSheetViews
   changes: IAllSheetChanges
+  files: IAllSheetFiles
   photos: IAllSheetPhotos
   priorities: IAllSheetPriorities
   cellChanges: IAllSheetCellChanges
+  cellFiles: IAllSheetCellFiles
   cellPhotos: IAllSheetCellPhotos
 }
 
@@ -131,9 +137,11 @@ export const loadSheetReducer = (
   sorts: IAllSheetSorts, 
   views: IAllSheetViews,
   changes: IAllSheetChanges,
+  files: IAllSheetFiles,
   photos: IAllSheetPhotos,
   priorities: IAllSheetPriorities,
   cellChanges: IAllSheetCellChanges,
+  cellFiles: IAllSheetCellFiles,
   cellPhotos: IAllSheetCellPhotos,
 ): ISheetActions => {
   return {
@@ -147,9 +155,11 @@ export const loadSheetReducer = (
     sorts,
     views,
     changes,
+    files,
     photos,
     priorities,
     cellChanges,
+    cellFiles,
     cellPhotos
   }
 }
@@ -295,6 +305,38 @@ export const setAllSheetChanges = (nextAllSheetChanges: IAllSheetChanges): IShee
 	return {
 		type: SET_ALL_SHEET_CHANGES,
     nextAllSheetChanges,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Set All Sheet Cell Files
+//-----------------------------------------------------------------------------
+export const SET_ALL_SHEET_CELL_FILES = 'SET_ALL_SHEET_CELL_FILES'
+interface ISetAllSheetCellFiles {
+  type: typeof SET_ALL_SHEET_CELL_FILES,
+  nextAllSheetCellFiles: IAllSheetCellFiles
+}
+
+export const setAllSheetCellFiles = (nextAllSheetCellFiles: IAllSheetCellFiles): ISheetActions => {
+	return {
+		type: SET_ALL_SHEET_CELL_FILES,
+    nextAllSheetCellFiles,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Set All Sheet Files
+//-----------------------------------------------------------------------------
+export const SET_ALL_SHEET_FILES = 'SET_ALL_SHEET_FILES'
+interface ISetAllSheetFiles {
+  type: typeof SET_ALL_SHEET_FILES,
+  nextAllSheetFiles: IAllSheetFiles
+}
+
+export const setAllSheetFiles = (nextAllSheetFiles: IAllSheetFiles): ISheetActions => {
+	return {
+		type: SET_ALL_SHEET_FILES,
+    nextAllSheetFiles,
 	}
 }
 

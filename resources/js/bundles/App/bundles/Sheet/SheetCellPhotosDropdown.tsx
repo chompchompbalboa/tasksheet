@@ -7,106 +7,115 @@ import styled from 'styled-components'
 import { ARROW_LEFT, ARROW_RIGHT } from '@app/assets/icons'
 
 import { ISheetPhoto } from '@app/state/sheet/types'
-import { ISheetCellPhotosUploadStatus } from '@app/bundles/Sheet/SheetCellPhotos'
+import { 
+  ISheetCellPhotosDeleteStatus,
+  ISheetCellPhotosUploadStatus 
+} from '@app/bundles/Sheet/SheetCellPhotos'
 
 import Icon from '@/components/Icon'
-import SheetCellPhotosPhotosHeader from '@app/bundles/Sheet/SheetCellPhotosPhotosHeader'
-import SheetCellPhotosPhotosPhoto from '@app/bundles/Sheet/SheetCellPhotosPhotosPhoto'
+import SheetCellPhotosDropdownHeader from '@app/bundles/Sheet/SheetCellPhotosDropdownHeader'
+import SheetCellPhotosDropdownPhoto from '@app/bundles/Sheet/SheetCellPhotosDropdownPhoto'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetCellPhotosPhotos = ({
-  openPhotosInput,
-  prepareUploadProgress,
-  setVisiblePhotoIndex,
+const SheetCellPhotosDropdown = ({
+  activeSheetCellPhoto,
+  activeSheetCellPhotoIndex,
+  deleteActiveSheetCellPhoto,
+  deleteActiveSheetCellPhotoStatus,
+  downloadActiveSheetCellPhoto,
+  openPhotoUploadDialog,
+  setActiveSheetCellPhotoIndex,
   sheetCellPhotos,
-  uploadProgress,
-  uploadStatus,
-  visiblePhotoIndex
-}: SheetCellPhotosPhotosProps) => {
+  uploadSheetCellPhotoProgress,
+  uploadSheetCellPhotoStatus
+}: SheetCellPhotosDropdownProps) => {
   
-  const activeSheetCellPhoto = sheetCellPhotos && sheetCellPhotos[visiblePhotoIndex]
-  
-  const uploadStatusMessages = {
+  const uploadSheetCellPhotoStatusMessages = {
     READY: 'Click here to upload a photo',
     PREPARING_UPLOAD: 'Preparing Upload...',
     UPLOADING: 'Uploading',
-    SAVING_SHEET_CELL_PHOTO: 'Saving File Data...',
+    SAVING_FILE_DATA: 'Saving File Data...',
     UPLOADED: 'Uploaded!',
   }
 
-  const progressPercentage = (uploadStatus: ISheetCellPhotosUploadStatus) => {
+  const uploadSheetCellPhotosProgressMessages = (uploadSheetCellPhotoStatus: ISheetCellPhotosUploadStatus) => {
     const percentages = {
       READY: '',
       PREPARING_UPLOAD: '',
-      UPLOADING: uploadProgress + '%',
-      SAVING_SHEET_CELL_PHOTO: '',
+      UPLOADING: uploadSheetCellPhotoProgress + '%',
+      SAVING_FILE_DATA: '',
       UPLOADED: '',
     }
-    return percentages[uploadStatus]
+    return percentages[uploadSheetCellPhotoStatus]
   }
 
   const isArrowsVisible = sheetCellPhotos && sheetCellPhotos.length > 1
-  const leftArrowPhotoIndexValue = sheetCellPhotos ? visiblePhotoIndex - 1 < 0 ? sheetCellPhotos.length - 1 : visiblePhotoIndex - 1 : 0
-  const rightArrowPhotoIndexValue = sheetCellPhotos ? visiblePhotoIndex + 1 === sheetCellPhotos.length ? 0 : visiblePhotoIndex + 1 : 0
+  const leftArrowIndex = sheetCellPhotos ? activeSheetCellPhotoIndex - 1 < 0 ? sheetCellPhotos.length - 1 : activeSheetCellPhotoIndex - 1 : 0
+  const rightArrowIndex = sheetCellPhotos ? activeSheetCellPhotoIndex + 1 === sheetCellPhotos.length ? 0 : activeSheetCellPhotoIndex + 1 : 0
 
   return (
-    <PhotosContainer>
+    <Container>
       <LeftArrow 
         isVisible={isArrowsVisible}
-        onClick={sheetCellPhotos ? () => setVisiblePhotoIndex(leftArrowPhotoIndexValue) : null}>
+        onClick={sheetCellPhotos ? () => setActiveSheetCellPhotoIndex(leftArrowIndex) : null}>
         <Icon 
           icon={ARROW_LEFT}/>
       </LeftArrow>
       <Photos>
         {sheetCellPhotos && activeSheetCellPhoto && 
-          <SheetCellPhotosPhotosHeader
+          <SheetCellPhotosDropdownHeader
             activeSheetCellPhoto={activeSheetCellPhoto}
-            beforePhotoDelete={() => setVisiblePhotoIndex(Math.max(0, visiblePhotoIndex - 1))}
-            openPhotosInput={openPhotosInput}
-            prepareUploadProgress={prepareUploadProgress}
-            uploadProgress={uploadProgress}
-            uploadStatus={uploadStatus}/>
+            deleteActiveSheetCellPhoto={deleteActiveSheetCellPhoto}
+            deleteActiveSheetCellPhotoStatus={deleteActiveSheetCellPhotoStatus}
+            downloadActiveSheetCellPhoto={downloadActiveSheetCellPhoto}
+            openPhotoUploadDialog={openPhotoUploadDialog}
+            uploadSheetCellPhotoProgress={uploadSheetCellPhotoProgress}
+            uploadSheetCellPhotoStatus={uploadSheetCellPhotoStatus}/>
         }
-        <PhotoContainer>
+        <PhotoContainer
+          numberOfPhotos={sheetCellPhotos && sheetCellPhotos.length || 0}>
           {sheetCellPhotos && sheetCellPhotos.length > 0 && activeSheetCellPhoto
-            ? <SheetCellPhotosPhotosPhoto
+            ? <SheetCellPhotosDropdownPhoto
                 sheetPhoto={activeSheetCellPhoto}/>
             : <NoPhotoMessage
-                onClick={() => openPhotosInput()}>
-                {uploadStatusMessages[uploadStatus]} {progressPercentage(uploadStatus)}
+                onClick={() => openPhotoUploadDialog()}>
+                {uploadSheetCellPhotoStatusMessages[uploadSheetCellPhotoStatus]} {uploadSheetCellPhotosProgressMessages(uploadSheetCellPhotoStatus)}
               </NoPhotoMessage>
         }
         </PhotoContainer>
       </Photos>
       <RightArrow 
         isVisible={isArrowsVisible}
-        onClick={sheetCellPhotos ? () => setVisiblePhotoIndex(rightArrowPhotoIndexValue) : null}>
+        onClick={sheetCellPhotos ? () => setActiveSheetCellPhotoIndex(rightArrowIndex) : null}>
         <Icon 
           icon={ARROW_RIGHT}/>
       </RightArrow>
-    </PhotosContainer>
+    </Container>
   )
 }
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetCellPhotosPhotosProps {
-  openPhotosInput(): void
-  prepareUploadProgress: number
-  setVisiblePhotoIndex(nextVisiblePhotoIndex: number): void
+interface SheetCellPhotosDropdownProps {
+  activeSheetCellPhoto: ISheetPhoto
+  activeSheetCellPhotoIndex: number
+  deleteActiveSheetCellPhoto(): void
+  deleteActiveSheetCellPhotoStatus: ISheetCellPhotosDeleteStatus
+  downloadActiveSheetCellPhoto(): void
+  openPhotoUploadDialog(): void
+  setActiveSheetCellPhotoIndex(nextActiveSheetCellPhotoIndex: number): void
   sheetCellPhotos: ISheetPhoto[]
-  uploadProgress: number
-  uploadStatus: ISheetCellPhotosUploadStatus
-  visiblePhotoIndex: number
+  uploadSheetCellPhotoProgress: number
+  uploadSheetCellPhotoStatus: ISheetCellPhotosUploadStatus
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const PhotosContainer = styled.div`
+const Container = styled.div`
   position: absolute;
   top: calc(100% + 2.5px);
   left: -4px;
@@ -159,14 +168,17 @@ const PhotoContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: calc(35vw - 4rem);
-  height: calc(60vh - 9rem);
+  width: ${ ({ numberOfPhotos }: IPhotoContainer ) => numberOfPhotos > 0 ? 'calc(50vw - 4rem)' : 'calc(40vw - 4rem)'};
+  height: calc(70vh - 4.75rem);
 `
+interface IPhotoContainer {
+  numberOfPhotos: number
+}
 
 const NoPhotoMessage = styled.div`
   margin-top: 1rem;
   cursor: pointer;
-  width: calc(100% - 2rem);
+  width: 100%;
   height: calc(100% - 3rem);
   display: flex;
   justify-content: center;
@@ -178,4 +190,4 @@ const NoPhotoMessage = styled.div`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetCellPhotosPhotos
+export default SheetCellPhotosDropdown

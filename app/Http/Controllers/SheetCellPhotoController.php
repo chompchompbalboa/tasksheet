@@ -40,7 +40,7 @@ class SheetCellPhotoController extends Controller
       $sheetCellId = $request->input('sheetCellId');
       $filename = $request->input('filename');
       $s3PresignedUrlData = $request->input('s3PresignedUrlData');
-      $createdAt = $request->input('createdAt');
+      $uploadedAt = $request->input('uploadedAt');
       $user = Auth::user();
       
       // Move the file to permanent storage on S3
@@ -58,7 +58,7 @@ class SheetCellPhotoController extends Controller
         's3Bucket' => $s3PresignedUrlData['bucket'],
         's3Key' => $nextS3PresignedUrlDataKey,
         'uploadedBy' => $user->name,
-        'uploadedAt' => $createdAt
+        'uploadedAt' => $uploadedAt
       ]);
 
       $nextSheetCellPhotos = SheetCellPhoto::where('cellId', $sheetCellId)->orderBy('createdAt')->get();

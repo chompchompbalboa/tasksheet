@@ -175,9 +175,10 @@ export const createSheetCellFile = async (
   sheetId: ISheet['id'], 
   sheetCellId: ISheetCell['id'],
   filename: string,
-  s3PresignedUrlData: IS3PresignedUrlData
+  s3PresignedUrlData: IS3PresignedUrlData,
+  uploadedAt: string
 ) => {
-	return axios.post('/app/sheets/cells/files/upload', {sheetId, sheetCellId, filename, s3PresignedUrlData}).then(response => {
+	return axios.post('/app/sheets/cells/files/upload', { sheetId, sheetCellId, filename, s3PresignedUrlData, uploadedAt }).then(response => {
 		return response.data
 	})
 }
@@ -197,9 +198,9 @@ export const createSheetCellPhoto = async (
   sheetCellId: ISheetCell['id'],
   filename: string,
   s3PresignedUrlData: IS3PresignedUrlData,
-  createdAt: string
+  uploadedAt: string
 ) => {
-	return axios.post('/app/sheets/cells/photos/upload', { sheetId, sheetCellId, filename, s3PresignedUrlData, createdAt }).then(response => {
+	return axios.post('/app/sheets/cells/photos/upload', { sheetId, sheetCellId, filename, s3PresignedUrlData, uploadedAt }).then(response => {
 		return response.data
 	})
 }

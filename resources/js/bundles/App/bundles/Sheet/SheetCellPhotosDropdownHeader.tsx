@@ -1,112 +1,84 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React from 'react'
 import moment from 'moment'
 import styled from 'styled-components'
 
 import { DOWNLOAD, PLUS_SIGN, TRASH_CAN } from '@app/assets/icons'
 
 import { ISheetPhoto } from '@app/state/sheet/types'
-import { ISheetCellPhotosUploadStatus } from '@app/bundles/Sheet/SheetCellPhotos'
-import { deleteSheetCellPhoto } from '@app/state/sheet/actions'
+import { 
+  ISheetCellPhotosDeleteStatus,
+  ISheetCellPhotosUploadStatus 
+} from '@app/bundles/Sheet/SheetCellPhotos'
 
 import Icon from '@/components/Icon'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetCellPhotosPhotosHeader = ({
+const SheetCellPhotosDropdownHeader = ({
   activeSheetCellPhoto,
-  beforePhotoDelete,
-  openPhotosInput,
-  uploadProgress,
-  uploadStatus
-}: SheetCellPhotosPhotosHeaderProps) => {
+  deleteActiveSheetCellPhoto,
+  deleteActiveSheetCellPhotoStatus,
+  downloadActiveSheetCellPhoto,
+  openPhotoUploadDialog,
+  uploadSheetCellPhotoProgress,
+  uploadSheetCellPhotoStatus
+}: SheetCellPhotosDropdownHeaderProps) => {
   
-  // Redux
-  const dispatch = useDispatch()
-  
-  // State
-  const [ deleteStatus, setDeleteStatus ] = useState('READY' as 'READY' | 'DELETING' | 'DELETED')
-  
-  // Timeouts
-  let beforePhotoDeleteTimeout = useRef(null)
-  let deletePhotoTimeout = useRef(null)
-  let setDeleteStatusDeletedTimeout = useRef(null)
-  let setDeleteStatusReadyTimeout = useRef(null)
-  
-  // Effects
-  useEffect(() => {
-    return () => {
-      clearTimeout(beforePhotoDeleteTimeout.current)
-      clearTimeout(deletePhotoTimeout.current)
-      clearTimeout(setDeleteStatusDeletedTimeout.current)
-      clearTimeout(setDeleteStatusReadyTimeout.current)
-    }
-  }, [])
-  
-  // Delete Status Messages
-  const deleteStatusMessages = {
+  // Delete Sheet Cell Photo Status Messages
+  const deleteSheetCellPhotoStatusMessages = {
     READY: <Icon icon={TRASH_CAN} size="0.85rem"/>,
     DELETING: 'Deleting...',
     DELETED: 'Deleted!',
   }
   
-  // Handle Delete Photo
-  const handleDeletePhoto = () => {
-    setDeleteStatus('DELETING')
-    beforePhotoDeleteTimeout.current = setTimeout(() => beforePhotoDelete(), 250)
-    deletePhotoTimeout.current = setTimeout(() => dispatch(deleteSheetCellPhoto(activeSheetCellPhoto.cellId, activeSheetCellPhoto.id)), 350)
-    setDeleteStatusDeletedTimeout.current = setTimeout(() => setDeleteStatus('DELETED'), 350)
-    setDeleteStatusReadyTimeout.current = setTimeout(() => setDeleteStatus('READY'), 1350)
-  }
-
-  const handleDownloadPhoto = () => {
-    const url = '/app/sheets/cells/photos/download/' + activeSheetCellPhoto.id
-    window.open(url, '_blank')
-  }
-  
-  // Upload Status Messages
-  const uploadStatusMessages = {
+  // Upload Sheet Cell Photo Status Messages
+  const uploadSheetCellPhotoStatusMessages = {
     READY: <Icon icon={PLUS_SIGN} size="0.85rem"/>,
     PREPARING_UPLOAD: 'Preparing Upload...',
     UPLOADING: 'Uploading',
-    SAVING_SHEET_CELL_PHOTO: 'Saving File Data...',
+    SAVING_FILE_DATA: 'Saving File Data...',
     UPLOADED: 'Uploaded!',
   }
   
-  // Upload Progress Percentages
-  const uploadProgressPercentage = (uploadStatus: ISheetCellPhotosUploadStatus) => {
+  // Upload Sheet Cell Photo Progress Percentage Messages
+  const uploadSheetCellPhotoProgressPercentageMessages = (uploadSheetCellPhotoStatus: ISheetCellPhotosUploadStatus) => {
     const progressPercentages = {
       READY: '',
       PREPARING_UPLOAD: '',
-      UPLOADING: uploadProgress + '%',
-      SAVING_SHEET_CELL_PHOTO: '',
+      UPLOADING: uploadSheetCellPhotoProgress + '%',
+      SAVING_FILE_DATA: '',
       UPLOADED: '',
     }
-    return progressPercentages[uploadStatus]
+    return progressPercentages[uploadSheetCellPhotoStatus]
   }
+
+  // Trim Active Sheet Cell Photo Filename To 30 Characters
+  const filename = activeSheetCellPhoto.filename
+  const filenameMaxLength = 50
+  const trimmedFilename = filename.length > filenameMaxLength ? filename.substring(0, filenameMaxLength - 3) + "..." : filename.substring(0, filenameMaxLength)
 
   return (
     <Container>
       <Details>
-        <Filename>{activeSheetCellPhoto.filename}</Filename>
+        <Filename>{trimmedFilename}</Filename>
         <UploadDetails>{activeSheetCellPhoto.uploadedBy} / {moment(activeSheetCellPhoto.uploadedAt).format('MMMM Do, YYYY / hh:mma')}</UploadDetails>
       </Details>
       <Actions>
         <UploadPhotoButton
-          onClick={() => openPhotosInput()}>
-          {uploadStatusMessages[uploadStatus]} {uploadProgressPercentage(uploadStatus)}
+          onClick={() => openPhotoUploadDialog()}>
+          {uploadSheetCellPhotoStatusMessages[uploadSheetCellPhotoStatus]} {uploadSheetCellPhotoProgressPercentageMessages(uploadSheetCellPhotoStatus)}
         </UploadPhotoButton>
         <DownloadPhotoButton
-          onClick={() => handleDownloadPhoto()}>
+          onClick={() => downloadActiveSheetCellPhoto()}>
           <Icon icon={DOWNLOAD} size="0.85rem"/>
         </DownloadPhotoButton>
         <DeletePhotoButton
-          onClick={() => handleDeletePhoto()}>
-          {deleteStatusMessages[deleteStatus]}
+          onClick={() => deleteActiveSheetCellPhoto()}>
+          {deleteSheetCellPhotoStatusMessages[deleteActiveSheetCellPhotoStatus]}
         </DeletePhotoButton>
       </Actions>
     </Container>
@@ -116,13 +88,14 @@ const SheetCellPhotosPhotosHeader = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetCellPhotosPhotosHeaderProps {
+interface SheetCellPhotosDropdownHeaderProps {
   activeSheetCellPhoto: ISheetPhoto
-  beforePhotoDelete(): void
-  openPhotosInput(): void
-  prepareUploadProgress: number
-  uploadProgress: number
-  uploadStatus: ISheetCellPhotosUploadStatus
+  openPhotoUploadDialog(): void
+  deleteActiveSheetCellPhoto(): void
+  deleteActiveSheetCellPhotoStatus: ISheetCellPhotosDeleteStatus
+  downloadActiveSheetCellPhoto(): void
+  uploadSheetCellPhotoProgress: number
+  uploadSheetCellPhotoStatus: ISheetCellPhotosUploadStatus
 }
 
 //-----------------------------------------------------------------------------
@@ -166,7 +139,7 @@ const ActionButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   background-color: rgba(180, 180, 180, 0.25);
   color: rgb(25, 25, 25);
   border-radius: 5px;
@@ -183,4 +156,4 @@ const DownloadPhotoButton = styled(ActionButton)``
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetCellPhotosPhotosHeader
+export default SheetCellPhotosDropdownHeader
