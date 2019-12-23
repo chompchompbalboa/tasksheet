@@ -10,7 +10,8 @@ import {
 
 import { 
   clearSheetSelection,
-  updateSheet 
+  updateSheet,
+  updateSheetView
 } from '@app/state/sheet/actions'
 
 import {
@@ -39,6 +40,12 @@ export const loadSheetView = (sheetId: ISheet['id'], sheetViewId: ISheetView['id
     } = getState().sheet
 
     const sheetView = allSheetViews[sheetViewId]
+    const allSheetColumnIds = Object.keys(allSheetColumns)
+    
+    // Filter out any deleted columns from the sheet view's visibleColumns
+    const nextSheetViewVisibleColumns = sheetView.visibleColumns.filter(visibleColumnId => 
+      allSheetColumnIds.includes(visibleColumnId) || visibleColumnId === 'COLUMN_BREAK'
+    )
 
     const nextSheetVisibleRows = resolveSheetVisibleRows(
       {
@@ -51,7 +58,13 @@ export const loadSheetView = (sheetId: ISheet['id'], sheetViewId: ISheetView['id
       allSheetFilters, 
       allSheetGroups, 
       allSheetSorts,
-      allSheetViews,
+      {
+        ...allSheetViews,
+        [sheetView.id]: {
+          ...allSheetViews[sheetView.id],
+          visibleColumns: nextSheetViewVisibleColumns
+        }
+      },
       allSheetPriorities
     )
     const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
@@ -61,5 +74,9 @@ export const loadSheetView = (sheetId: ISheet['id'], sheetViewId: ISheetView['id
       visibleRows: nextSheetVisibleRows,
       visibleRowLeaders: nextSheetRowLeaders,
     }))
+
+    if(sheetView.visibleColumns.length !== nextSheetViewVisibleColumns.length) {
+      dispatch(updateSheetView(sheetView.id, { visibleColumns: nextSheetViewVisibleColumns }))
+    }
   }
 }

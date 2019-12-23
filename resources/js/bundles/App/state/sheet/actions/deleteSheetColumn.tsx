@@ -79,7 +79,6 @@ export const deleteSheetColumn = (sheetId: string, columnId: string): IThunkActi
         }))
       })
       mutation.deleteSheetColumn(columnId)
-      mutation.updateSheetView(activeSheetView.id, { visibleColumns: nextSheetViewVisibleColumns })
     }
     
     const undoActions = () => {
@@ -95,7 +94,6 @@ export const deleteSheetColumn = (sheetId: string, columnId: string): IThunkActi
         }))
       })
       mutation.createSheetColumn(deletedColumn, deletedSheetCells)
-      mutation.updateSheetView(sheetId, { visibleColumns: activeSheetView.visibleColumns })
     }
     
     dispatch(createHistoryStep({ actions, undoActions }))
