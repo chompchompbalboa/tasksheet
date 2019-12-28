@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\SheetCell;
 use App\Models\SheetColumn;
 use App\Models\SheetRow;
+use App\Models\SheetCell;
+use App\Models\SheetFilter;
+use App\Models\SheetGroup;
+use App\Models\SheetSort;
 
 class SheetColumnController extends Controller
 {
@@ -27,13 +30,50 @@ class SheetColumnController extends Controller
 
     public function destroy(SheetColumn $column)
     {
-      // Delete all of the cells
+      // Delete the filters, groups and sorts that reference this column
+      SheetFilter::where('columnId', $column->id)->delete();
+      SheetGroup::where('columnId', $column->id)->delete();
+      SheetSort::where('columnId', $column->id)->delete();
+
+      // Delete all of the cells belonging to this column
       SheetCell::where('columnId', $column->id)->delete();
+
       // If deleting the sheet's only column, delete any rows as well
       $columnCount = SheetColumn::where('sheetId', $column->sheetId)->count();
       if($columnCount === 1) {
         SheetRow::where('sheetId', $column->sheetId)->delete();
       }
-      return SheetColumn::destroy($column->id);
+
+      // Delete the column
+      SheetColumn::destroy($column->id);
+      return response()->json(null, 200);
+    }
+
+    public function restore(string $columnId)
+    {
+      // Get the deleted column
+      $column = SheetColumn::withTrashed()
+                ->where('id', $columnId)
+                ->first();
+
+      if($column) {
+        // Restore the column
+        $column->restore();
+
+        // Restore the cells
+        SheetCell::withTrashed()->where('columnId', $columnId)->restore();
+
+        // Restore the filters
+        SheetFilter::withTrashed()->where('columnId', $columnId)->restore();
+
+        // Restore the groups
+        SheetGroup::withTrashed()->where('columnId', $columnId)->restore();
+
+        // Restore the sorts
+        SheetSort::withTrashed()->where('columnId', $columnId)->restore();
+
+        return response()->json(true, 200);
+      }
+      return response()->json(false, 404);
     }
 }

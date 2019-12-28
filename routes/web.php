@@ -66,9 +66,10 @@ Route::group([
   Route::get('/sheets/cells/files/download/{file}', 'SheetCellFileController@downloadFiles');
   Route::get('/sheets/cells/photos/download/{file}', 'SheetCellPhotoController@downloadPhotos');
   
-  // Restore soft deleted folders and files
+  // Restore soft deleted models
   Route::post('/folders/restore/{folder}', 'FolderController@restore');
   Route::post('/files/restore/{file}', 'FileController@restore');
+  Route::post('/sheets/columns/restore/{column}', 'SheetColumnController@restore');
 
   // Batch actions
   Route::patch('/sheets/cells/batch/update', 'SheetCellController@batchUpdate');

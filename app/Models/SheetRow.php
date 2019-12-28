@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\SheetCell;
 
 class SheetRow extends Model
 {
   use Traits\UsesUuid;
+  use SoftDeletes;
 
   protected $table = 'sheetRows';
 

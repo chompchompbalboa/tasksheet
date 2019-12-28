@@ -29,6 +29,7 @@ import {
   UPDATE_SHEET_ROW, SET_ALL_SHEET_ROWS,
   UPDATE_SHEET_SORT, SET_ALL_SHEET_SORTS,
   UPDATE_SHEET_VIEW, SET_ALL_SHEET_VIEWS,
+  SET_ALL_SHEETS,
   SET_ALL_SHEET_CELL_CHANGES, SET_ALL_SHEET_CHANGES,
   SET_ALL_SHEET_CELL_FILES, SET_ALL_SHEET_FILES,
   SET_ALL_SHEET_CELL_PHOTOS, SET_ALL_SHEET_PHOTOS,
@@ -132,6 +133,7 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
 			}
 		}
 
+		case SET_ALL_SHEETS: { return { ...state, allSheets: action.nextAllSheets } }
 		case SET_ALL_SHEET_COLUMNS: { return { ...state, allSheetColumns: action.nextAllSheetColumns } }
 		case SET_ALL_SHEET_ROWS: { return { ...state, allSheetRows: action.nextAllSheetRows } }
 		case SET_ALL_SHEET_CELLS: { return { ...state, allSheetCells: action.nextAllSheetCells } }

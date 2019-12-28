@@ -4,23 +4,29 @@
 import { batch } from 'react-redux'
 
 import clone from '@/utils/clone'
-
 import { mutation } from '@app/api'
 
 import { IAppState } from '@app/state'
 import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import { 
-  IAllSheetCells, ISheetCell,
+  IAllSheets,
+  IAllSheetCells,
+  ISheetFilter, IAllSheetFilters,
+  ISheetGroup, IAllSheetGroups,
+  ISheetSort, IAllSheetSorts,
   IAllSheetRows
 } from '@app/state/sheet/types'
 
 import { 
   clearSheetSelection,
-  setAllSheetCells,
+  setAllSheets,
   setAllSheetColumns,
   setAllSheetRows,
-  updateSheet,
-  updateSheetView
+  setAllSheetCells,
+  setAllSheetViews,
+  setAllSheetFilters,
+  setAllSheetGroups,
+  setAllSheetSorts,
 } from '@app/state/sheet/actions'
 import { createHistoryStep } from '@app/state/history/actions'
 
@@ -37,63 +43,108 @@ export const deleteSheetColumn = (sheetId: string, columnId: string): IThunkActi
       allSheetCells,
       allSheetColumns,
       allSheetRows,
+      allSheetFilters,
+      allSheetGroups,
+      allSheetSorts,
       allSheetViews
     } = getState().sheet
-
-    const sheet = allSheets[sheetId]
-    const activeSheetView = allSheetViews[sheet.activeSheetViewId]
     
-    // Columns
+    // All Columns
     const { [columnId]: deletedColumn, ...nextAllSheetColumns } = allSheetColumns
     
-    // Rows
-    const nextAllSheetRows: IAllSheetRows = clone(allSheetRows)
-    sheet.rows.forEach(rowId => {
-      const { [columnId]: deletedCell, ...nextSheetCells } = nextAllSheetRows[rowId].cells
-      nextAllSheetRows[rowId].cells = nextSheetCells
+    // Sheet Columns
+    const nextAllSheets: IAllSheets = {}
+    Object.keys(allSheets).forEach(sheetId => {
+      const sheet = allSheets[sheetId]
+      nextAllSheets[sheetId] = {
+        ...sheet,
+        columns: sheet.columns.filter(sheetColumnId => sheetColumnId !== columnId)
+      }
     })
     
-    // Cells
-    const deletedSheetCells: ISheetCell[] = []
+    // All Rows
+    const nextAllSheetRows: IAllSheetRows = {}
+    Object.keys(allSheetRows).forEach(rowId => {
+      const { [columnId]: deletedCell, ...nextSheetRowCells } = allSheetRows[rowId].cells
+      nextAllSheetRows[rowId] = {
+        ...allSheetRows[rowId],
+        cells: nextSheetRowCells
+      }
+    })
+    
+    // All Cells
     const nextAllSheetCells: IAllSheetCells = {}
     Object.keys(allSheetCells).forEach(cellId => {
       const cell = allSheetCells[cellId]
       if(cell.columnId !== columnId) { nextAllSheetCells[cellId] = cell }
-      else { deletedSheetCells.push(cell) }
     })
-    
-    // Sheet Columns
-    const nextSheetColumns = sheet.columns.filter(sheetColumnId => sheetColumnId !== columnId)
-    const nextSheetViewVisibleColumns = activeSheetView.visibleColumns.filter(sheetColumnId => sheetColumnId !== columnId)
-    
+
+    // All Filters
+    const deletedSheetFilterIds: ISheetFilter['id'][] = []
+    const nextAllSheetFilters: IAllSheetFilters = {}
+    Object.keys(allSheetFilters).forEach(filterId => {
+      const filter = allSheetFilters[filterId]
+      if(filter.columnId !== columnId) { nextAllSheetFilters[filterId] = filter }
+      else { deletedSheetFilterIds.push(filter.id) }
+    })
+
+    // All Groups
+    const deletedSheetGroupIds: ISheetGroup['id'][] = []
+    const nextAllSheetGroups: IAllSheetGroups = {}
+    Object.keys(allSheetGroups).forEach(groupId => {
+      const group = allSheetGroups[groupId]
+      if(group.columnId !== columnId) { nextAllSheetGroups[groupId] = group }
+      else { deletedSheetGroupIds.push(group.id) }
+    })
+
+    // All Sorts
+    const deletedSheetSortIds: ISheetSort['id'][] = []
+    const nextAllSheetSorts: IAllSheetSorts = {}
+    Object.keys(allSheetSorts).forEach(sortId => {
+      const sort = allSheetSorts[sortId]
+      if(sort.columnId !== columnId) { nextAllSheetSorts[sortId] = sort }
+      else { deletedSheetSortIds.push(sort.id) }
+    })
+
+    // Sheet Views
+    const nextAllSheetViews = clone(allSheetViews)
+    Object.keys(allSheetViews).forEach(sheetViewId => {
+      const sheetView = allSheetViews[sheetViewId]
+      nextAllSheetViews[sheetViewId] = {
+        ...sheetView,
+        visibleColumns: sheetView.visibleColumns.filter(visibleColumnId => visibleColumnId !== columnId),
+        filters: sheetView.filters.filter(filterId => !deletedSheetFilterIds.includes(filterId)),
+        groups: sheetView.groups.filter(groupId => !deletedSheetGroupIds.includes(groupId)),
+        sorts: sheetView.sorts.filter(sortId => !deletedSheetSortIds.includes(sortId)),
+      }
+    })
+
     const actions = () => {
       batch(() => {
-        dispatch(setAllSheetCells(nextAllSheetCells))
+        dispatch(setAllSheets(nextAllSheets))
         dispatch(setAllSheetColumns(nextAllSheetColumns))
         dispatch(setAllSheetRows(nextAllSheetRows))
-        dispatch(updateSheet(sheetId, {
-          columns: nextSheetColumns
-        }, true))
-        dispatch(updateSheetView(activeSheetView.id, {
-          visibleColumns: nextSheetViewVisibleColumns
-        }))
+        dispatch(setAllSheetCells(nextAllSheetCells))
+        dispatch(setAllSheetViews(nextAllSheetViews))
+        dispatch(setAllSheetFilters(nextAllSheetFilters))
+        dispatch(setAllSheetGroups(nextAllSheetGroups))
+        dispatch(setAllSheetSorts(nextAllSheetSorts))
       })
       mutation.deleteSheetColumn(columnId)
     }
     
     const undoActions = () => {
       batch(() => {
-        dispatch(setAllSheetCells(allSheetCells))
+        dispatch(setAllSheets(allSheets))
         dispatch(setAllSheetColumns(allSheetColumns))
         dispatch(setAllSheetRows(allSheetRows))
-        dispatch(updateSheet(sheetId, {
-          columns: sheet.columns
-        }, true))
-        dispatch(updateSheetView(activeSheetView.id, {
-          visibleColumns: activeSheetView.visibleColumns
-        }))
+        dispatch(setAllSheetCells(allSheetCells))
+        dispatch(setAllSheetViews(allSheetViews))
+        dispatch(setAllSheetFilters(allSheetFilters))
+        dispatch(setAllSheetGroups(allSheetGroups))
+        dispatch(setAllSheetSorts(allSheetSorts))
       })
-      mutation.createSheetColumn(deletedColumn, deletedSheetCells)
+      mutation.restoreSheetColumn(deletedColumn.id)
     }
     
     dispatch(createHistoryStep({ actions, undoActions }))

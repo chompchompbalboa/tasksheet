@@ -223,7 +223,10 @@ export const deleteSheetCellChange = async (sheetCellChangeId: string) => {
 	})
 }
 
-export const createSheetColumn = async (newColumn: ISheetColumn, newCells: ISheetCell[]) => {
+export const createSheetColumn = async (
+  newColumn: ISheetColumn, 
+  newCells: ISheetCell[]
+) => {
 	return axios.post('/app/sheets/columns', {
     newColumn: newColumn,
     newCells: newCells
@@ -234,6 +237,12 @@ export const createSheetColumn = async (newColumn: ISheetColumn, newCells: IShee
 
 export const deleteSheetColumn = async (columnId: string) => {
 	return axios.delete('/app/sheets/columns/' + columnId).then(response => {
+		return response.data
+	})
+}
+
+export const restoreSheetColumn = async (columnId: string) => {
+	return axios.post('/app/sheets/columns/restore/' + columnId).then(response => {
 		return response.data
 	})
 }

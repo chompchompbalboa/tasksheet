@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sheet extends Model
 {
   use Traits\UsesUuid;
+  use SoftDeletes;
   
   const CREATED_AT = 'createdAt';
   const UPDATED_AT = 'updatedAt';

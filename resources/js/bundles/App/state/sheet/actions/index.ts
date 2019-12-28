@@ -4,7 +4,7 @@
 import { mutation } from '@app/api'
 
 import { 
-  ISheet, ISheetUpdates,
+  IAllSheets, ISheet, ISheetUpdates,
   ISheetActiveUpdates, 
   IAllSheetColumns, ISheetColumnUpdates,
   IAllSheetRows, ISheetRowUpdates, 
@@ -90,6 +90,7 @@ export { updateSheetSelectionFromCellClick } from '@app/state/sheet/actions/upda
 // Sheet Actions
 //-----------------------------------------------------------------------------
 export type ISheetActions = 
+  ISetAllSheets | 
   ILoadSheet | IUpdateSheet | 
   IUpdateSheetActive |
   IUpdateSheetCell | ISetAllSheetCells | 
@@ -163,6 +164,22 @@ export const loadSheetReducer = (
     cellFiles,
     cellPhotos
   }
+}
+
+//-----------------------------------------------------------------------------
+// Set All Sheets
+//-----------------------------------------------------------------------------
+export const SET_ALL_SHEETS = 'SET_ALL_SHEETS'
+interface ISetAllSheets {
+  type: typeof SET_ALL_SHEETS,
+  nextAllSheets: IAllSheets
+}
+
+export const setAllSheets = (nextAllSheets: IAllSheets): ISheetActions => {
+	return {
+		type: SET_ALL_SHEETS,
+    nextAllSheets,
+	}
 }
 
 //-----------------------------------------------------------------------------

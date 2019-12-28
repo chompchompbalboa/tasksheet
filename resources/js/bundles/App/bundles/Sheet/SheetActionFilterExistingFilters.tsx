@@ -25,8 +25,9 @@ const SheetActionFilterExistingFilter = ({
 
   // Redux
   const dispatch = useDispatch()
-
   const allSheetColumns = useSelector((state: IAppState) => state.sheet.allSheetColumns)
+  
+  const filterSheetColumn = allSheetColumns[filter.columnId]
 
   return (
     <SheetActionDropdownSelectedOption
@@ -34,7 +35,10 @@ const SheetActionFilterExistingFilter = ({
       onOptionUpdate={(updates) => dispatch(updateSheetFilter(sheetId, filter.id, updates))}
       onOptionDelete={() => handleDeleteSheetFilter(filter.id)}>
       <Container>
-        {allSheetColumns[filter.columnId].name} {filter.type} {filter.value}
+        {filter && filterSheetColumn
+          ? filterSheetColumn.name + ' ' + filter.type + ' ' + filter.value
+          : ''
+        }
       </Container>
     </SheetActionDropdownSelectedOption>
   )
