@@ -65,6 +65,8 @@ export { updateSheetSort } from '@app/state/sheet/actions/updateSheetSort'
 export { updateSheetStyles } from '@app/state/sheet/actions/updateSheetStyles'
 export { updateSheetView } from '@app/state/sheet/actions/updateSheetView'
 
+export { addSheetColumnAllCellValue } from '@app/state/sheet/actions/addSheetColumnAllCellValue'
+
 export { resetSheetView } from '@app/state/sheet/actions/resetSheetView'
 
 export { refreshSheetVisibleRows } from '@app/state/sheet/actions/refreshSheetVisibleRows'

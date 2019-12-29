@@ -13,6 +13,7 @@ import {
   ISheetStyles 
 } from '@app/state/sheet/types'
 import {
+  addSheetColumnAllCellValue,
   createSheetCellChange,
   updateSheetCell,
   updateSheetCellValues,
@@ -66,10 +67,10 @@ export const SheetCell = memo(({
 
     useEffect(() => {
       let updateSheetCellTimer: number = null
-      let createSheetCellChangeTimer: number = null
+      let updateSheetCellSideEffectsTimer: number = null
       if(cell && cellValue !== cell.value) {
         clearTimeout(updateSheetCellTimer)
-        clearTimeout(createSheetCellChangeTimer)
+        clearTimeout(updateSheetCellSideEffectsTimer)
         if(sheetSelectionsRangeCellIds.size > 0) {
           dispatch(updateSheetCellValues(sheetId, cellValue))
         }
@@ -77,14 +78,15 @@ export const SheetCell = memo(({
           updateSheetCellTimer = setTimeout(() => {
             dispatch(updateSheetCell(cell.id, { value: cellValue }, { value: cell.value }))
           }, 1000)
-          createSheetCellChangeTimer = setTimeout(() => {
+          updateSheetCellSideEffectsTimer = setTimeout(() => {
+            dispatch(addSheetColumnAllCellValue(cell.columnId, cellValue))
             dispatch(createSheetCellChange(sheetId, cell.id, cellValue))
           }, 2500)
         }
       }
       return () => {
         clearTimeout(updateSheetCellTimer)
-        clearTimeout(createSheetCellChangeTimer)
+        clearTimeout(updateSheetCellSideEffectsTimer)
       }
     }, [ cellValue, sheetSelectionsRangeCellIds ])
 

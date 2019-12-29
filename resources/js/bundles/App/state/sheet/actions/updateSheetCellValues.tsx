@@ -8,7 +8,11 @@ import { IThunkAction, IThunkDispatch } from '@app/state/types'
 import { ISheet, ISheetCellUpdates } from '@app/state/sheet/types'
 
 import { createHistoryStep } from '@app/state/history/actions'
-import { setAllSheetCells, updateSheet } from '@app/state/sheet/actions'
+import { 
+  addSheetColumnAllCellValue,
+  setAllSheetCells, 
+  updateSheet 
+} from '@app/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
 // Update Sheet Cell
@@ -65,7 +69,10 @@ export const updateSheetCellValues = (sheetId: ISheet['id'], value: string): ITh
           }
         }, true))
         dispatch(setAllSheetCells(nextAllSheetCells))
-        updateSheetCellValuesTimeout = setTimeout(() => mutation.updateSheetCells(databaseUpdates), 1000)
+        updateSheetCellValuesTimeout = setTimeout(() => {
+          dispatch(addSheetColumnAllCellValue(rangeStartColumnId, value))
+          mutation.updateSheetCells(databaseUpdates)
+        }, 1000)
       }
 
       const undoActions = () => {

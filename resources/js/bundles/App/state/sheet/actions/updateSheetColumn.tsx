@@ -12,15 +12,15 @@ import { createHistoryStep } from '@app/state/history/actions'
 //-----------------------------------------------------------------------------
 // Update Sheet Column
 //-----------------------------------------------------------------------------
-export const updateSheetColumn = (columnId: string, updates: ISheetColumnUpdates, undoUpdates?: ISheetColumnUpdates): IThunkAction => {
+export const updateSheetColumn = (columnId: string, updates: ISheetColumnUpdates, undoUpdates?: ISheetColumnUpdates, skipDatabaseUpdate: boolean = false): IThunkAction => {
 	return async (dispatch: IThunkDispatch) => {
     const actions = () => {
       dispatch(updateSheetColumnReducer(columnId, updates))
-      mutation.updateSheetColumn(columnId, updates)
+      !skipDatabaseUpdate && mutation.updateSheetColumn(columnId, updates)
     }
     const undoActions = () => {
       dispatch(updateSheetColumnReducer(columnId, undoUpdates))
-      mutation.updateSheetColumn(columnId, undoUpdates)
+      !skipDatabaseUpdate && mutation.updateSheetColumn(columnId, undoUpdates)
     }
     undoUpdates && dispatch(createHistoryStep({ actions, undoActions }))
     actions()
