@@ -67,11 +67,11 @@ class SheetViewController extends Controller
       return response()->json(null, 204);
     }
 
-    public function reset(SheetView $view)
+    public function reset($sheetViewId)
     {
-      SheetFilter::where('sheetViewId', $view->id)->delete();
-      SheetGroup::where('sheetViewId', $view->id)->delete();
-      SheetSort::where('sheetViewId', $view->id)->delete();
+      SheetFilter::where('sheetViewId', $sheetViewId)->delete();
+      SheetGroup::where('sheetViewId', $sheetViewId)->delete();
+      SheetSort::where('sheetViewId', $sheetViewId)->delete();
       return response()->json(null, 204);
     }
 }

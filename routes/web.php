@@ -78,7 +78,7 @@ Route::group([
   Route::post('/sheets/rows/batch/delete', 'SheetRowController@batchDestroy');
 
   // Reset Sheet View
-  Route::post('/sheets/views/reset/{sheet}', 'SheetViewController@reset');
+  Route::post('/sheets/views/reset/{sheetViewId}', 'SheetViewController@reset');
   
   // Team Members
   Route::post('/team/member/create', 'TeamMemberController@store');
