@@ -162,6 +162,7 @@ interface SheetCellPhotosProps {
   cell: ISheetCell
   cellId: string
   isCellSelected: boolean
+  isCellInRange: boolean
   updateCellValue(nextCellValue: string): void
   value: string
 }

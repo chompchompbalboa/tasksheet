@@ -83,6 +83,7 @@ interface SheetCellBooleanProps {
   sheetId: string
   cell: ISheetCell
   cellId: string
+  isCellInRange: boolean
   isCellSelected: boolean
   updateCellValue(nextCellValue: string): void
   value: string

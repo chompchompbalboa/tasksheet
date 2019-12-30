@@ -134,6 +134,7 @@ export const SheetCell = memo(({
           sheetId={sheetId}
           cell={cell}
           cellId={cell.id}
+          isCellInRange={isCellInRange}
           isCellSelected={isCellSelected}
           updateCellValue={setCellValue}
           value={cellValue}/>

@@ -84,6 +84,7 @@ const sheetCellDatetimeProps: ISheetCellDatetimeProps = {
   sheetId: sheetId,
   cellId: sheetCellId,
   cell: sheetCell,
+  isCellInRange: false,
   isCellSelected: false,
   updateCellValue: jest.fn(),
   value: sheetCell.value

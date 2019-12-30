@@ -54,6 +54,7 @@ interface SheetCellStringProps {
   sheetId: string
   cell: ISheetCell
   cellId: string
+  isCellInRange: boolean
   isCellSelected: boolean
   testId?: string
   updateCellValue(nextCellValue: string): void
