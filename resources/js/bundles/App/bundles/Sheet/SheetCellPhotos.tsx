@@ -27,6 +27,7 @@ const SheetCellPhotos = ({
   sheetId,
   cellId,
   cell,
+  isCellInRange,
   isCellSelected,
   updateCellValue,
   ...passThroughProps
@@ -130,7 +131,7 @@ const SheetCellPhotos = ({
       <Container>
         <SheetCellPhotosValue
           value={(sheetCellPhotos && sheetCellPhotos.length || 0) + ''}/>
-        {isCellSelected &&
+        {isCellSelected && !isCellInRange &&
           <SheetCellPhotosDropdown
             activeSheetCellPhoto={activeSheetCellPhoto}
             activeSheetCellPhotoIndex={activeSheetCellPhotoIndex}

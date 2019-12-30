@@ -27,6 +27,7 @@ const SheetCellFiles = ({
   sheetId,
   cellId,
   cell,
+  isCellInRange,
   isCellSelected,
   updateCellValue,
   ...passThroughProps
@@ -110,7 +111,7 @@ const SheetCellFiles = ({
       <Container>
         <SheetCellFilesValue
           value={(sheetCellFiles && sheetCellFiles.length || 0) + ''}/>
-        {isCellSelected &&
+        {isCellSelected && !isCellInRange &&
           <SheetCellFilesDropdown
             downloadSheetCellFile={downloadSheetCellFile}
             deleteSheetCellFile={deleteSheetCellFile}
