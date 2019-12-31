@@ -7,10 +7,10 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { applyMiddleware, createStore } from 'redux'
 import thunkMiddleware, { ThunkMiddleware } from 'redux-thunk'
 import { useMediaQuery } from 'react-responsive'
-import { appReducer, IAppState } from '@app/state'
+import { appReducer, IAppState } from '@/state'
 
-import App from '@app/App'
-import MobileApp from '@app/bundles/Mobile/MobileApp'
+import Desktop from '@desktop/Desktop'
+import Mobile from '@desktop/Mobile/MobileApp'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -25,8 +25,8 @@ export const Root = () => {
   return (
     <ReduxProvider store={store}>
       {isMobile && !isMobileSiteUnderConstruction
-        ? <MobileApp />
-        : <App />}
+        ? <Mobile />
+        : <Desktop />}
     </ReduxProvider>
   )
 }

@@ -9,8 +9,7 @@
     "baseUrl": "./resources/js",
     "paths": {
       "@/*": ["./*"],
-      "@app/*": ["./bundles/App/*"],
-      "@site/*": ["./bundles/Site/*"]
+      "@desktop/*": ["./bundles/Desktop/*"]
     },
     "skipLibCheck": true,
     "esModuleInterop": true,

@@ -4,7 +4,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 
-import { ERROR } from '@app/assets/icons'
+import { ERROR } from '@/assets/icons'
 
 import Icon from '@/components/Icon'
 
