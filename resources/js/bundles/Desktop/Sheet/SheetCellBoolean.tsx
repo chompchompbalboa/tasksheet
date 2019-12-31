@@ -1,78 +1,47 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { IAppState } from '@/state'
 import { ISheetCell } from '@/state/sheet/types'
 import {
-  updateSheetSelectionFromArrowKey as updateSheetSelectionFromArrowKeyAction
+  updateSheetCell
 } from '@/state/sheet/actions'
+
+import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellBoolean = ({
-  sheetId,
   cellId,
-  isCellSelected,
-  updateCellValue,
-  value
+  value,
+  ...passThroughProps
 }: SheetCellBooleanProps) => {
-
-  const dispatch = useDispatch()
-  const isSelectedCellEditingPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellEditingPrevented)
-  const isSelectedCellNavigationPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellNavigationPrevented)
   
-  useEffect(() => {
-    if(isCellSelected) {
-      window.addEventListener('keydown', handleKeydownWhileCellIsSelected)
-    }
-    else {
-      window.removeEventListener('keydown', handleKeydownWhileCellIsSelected)
-    }
-    return () => {
-      window.removeEventListener('keydown', handleKeydownWhileCellIsSelected)
-    }
-  }, [ isCellSelected, isSelectedCellEditingPrevented, isSelectedCellNavigationPrevented ])
-
-  const handleKeydownWhileCellIsSelected = (e: KeyboardEvent) => {
-    if(!isSelectedCellEditingPrevented && !isSelectedCellNavigationPrevented) {
-      // Otherwise, navigate to an adjacent cell on an arrow or enter press
-      if(e.key === 'Enter' || e.key === 'ArrowDown') {
-        e.preventDefault()
-        dispatch(updateSheetSelectionFromArrowKeyAction(sheetId, cellId, 'DOWN', e.shiftKey))
-      }
-      if(e.key === 'Tab' || e.key === 'ArrowRight') {
-        e.preventDefault()
-        dispatch(updateSheetSelectionFromArrowKeyAction(sheetId, cellId, 'RIGHT', e.shiftKey))
-      }
-      if(e.key === 'ArrowLeft') {
-        e.preventDefault()
-        dispatch(updateSheetSelectionFromArrowKeyAction(sheetId, cellId, 'LEFT', e.shiftKey))
-      }
-      if(e.key === 'ArrowUp') {
-        e.preventDefault()
-        dispatch(updateSheetSelectionFromArrowKeyAction(sheetId, cellId, 'UP', e.shiftKey))
-      }
-    }
-  }
+  const dispatch = useDispatch()
   
   const handleChange = (checked: boolean) => {
     const nextCellValue = checked ? 'Checked' : ''
-    updateCellValue(nextCellValue)
+    dispatch(updateSheetCell(cellId, { value: nextCellValue }, { value: value }))
   }
   
   return (
-    <Container
-      data-testid="SheetCellBoolean">
-      <StyledInput 
-        type="checkbox"
-        checked={value && value === 'Checked'}
-        onChange={(e) => handleChange(e.target.checked)}/>
-    </Container>
+    <SheetCellContainer
+      testId="SheetCellBoolean"
+      cellId={cellId}
+      onlyRenderChildren
+      value={value}
+      {...passThroughProps}>
+      <Container>
+        <StyledInput 
+          type="checkbox"
+          checked={value && value === 'Checked'}
+          onChange={(e) => handleChange(e.target.checked)}/>
+      </Container>
+    </SheetCellContainer>
   )
 }
 

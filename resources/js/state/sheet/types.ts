@@ -215,8 +215,7 @@ export type ISheetCellType =
 'BOOLEAN'|
 'NUMBER' | 
 'PHOTOS' | 
-'FILES' |
-'TEAM_MEMBERS'
+'FILES'
 
 //-----------------------------------------------------------------------------
 // Sheet Filter

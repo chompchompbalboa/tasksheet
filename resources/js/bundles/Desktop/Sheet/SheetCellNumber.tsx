@@ -5,6 +5,7 @@ import React, { useRef } from 'react'
 import styled from 'styled-components'
 
 import { ISheetCell} from '@/state/sheet/types'
+import { ISheetCellTypesSharedProps } from '@desktop/bundles/Sheet/SheetCell'
 
 import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
 
@@ -12,46 +13,50 @@ import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellNumber = ({
-  updateCellValue,
-  value,
-  ...passThroughProps
-}: SheetCellNumberProps) => {
+  cell
+}: ISheetCellTypesSharedProps) => {
   
+  // Refs
   const input = useRef(null)
   
-  const focusCell = () => {
-    input.current.focus()
+  // State
+  const [ sheetCellPreviousValue, setSheetCellPreviousValue ] = useState(null)
+  
+  // Begin Editing
+  const beginEditing = (nextSheetCellValue: string = null) => {
+    input.current && input.current.focus()
+    setSheetCellPreviousValue(cell.value)
+    dispatch(updateSheetCell(cell.id, { isEditing: true, value: nextSheetCellValue || cell.value } ))
   }
   
-  const safeValue = value === null ? "" : value
+  // Complete Editing
+  const completeEditing = () => {
+    dispatch(updateSheetCell(cell.id, { isEditing: false }, null, true))
+    setTimeout(() => {
+      dispatch(updateSheetCell(cell.id, { value: e.target.value }, { value: sheetCellPreviousValue }))
+    }, 25)
+  }
+  
+  // On Value Change
+  const onValueChange = (e: any) => {
+    dispatch(updateSheetCell(cell.id, { value: e.target.value }, null, true))
+  }
 
   return (
     <SheetCellContainer
       testId="SheetCellNumber"
-      focusCell={focusCell}
-      value={safeValue}
-      {...passThroughProps}>
+      cell={cell}
+      beginEditing={beginEditing}
+      completeEditing={completeEditing}
+      value={cell.value}>
       <StyledInput
         data-testid="SheetCellNumberInput"
         ref={input}
         type="number"
-        onChange={(e) => updateCellValue(e.target.value)}
-        value={safeValue}/>
+        onChange={onValueChange}
+        value={cell.value || ''}/>
     </SheetCellContainer>
   )
-}
-
-//-----------------------------------------------------------------------------
-// Props
-//-----------------------------------------------------------------------------
-interface SheetCellNumberProps {
-  sheetId: string
-  cell: ISheetCell
-  cellId: string
-  isCellInRange: boolean
-  isCellSelected: boolean
-  updateCellValue(nextCellValue: string): void
-  value: string
 }
 
 //-----------------------------------------------------------------------------

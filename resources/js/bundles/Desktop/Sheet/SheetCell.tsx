@@ -13,8 +13,6 @@ import {
   ISheetStyles 
 } from '@/state/sheet/types'
 import {
-  addSheetColumnAllCellValue,
-  createSheetCellChange,
   updateSheetCell,
   updateSheetCellValues,
   updateSheetSelectionFromCellClick
@@ -27,8 +25,6 @@ import SheetCellNumber from '@desktop/Sheet/SheetCellNumber'
 import SheetCellChanges from '@desktop/Sheet/SheetCellChanges'
 import SheetCellPhotos from '@desktop/Sheet/SheetCellPhotos'
 import SheetCellString from '@desktop/Sheet/SheetCellString'
-import SheetCellTeamMembers from '@desktop/Sheet/SheetCellTeamMembers'
-
 
 //-----------------------------------------------------------------------------
 // Component
@@ -40,9 +36,8 @@ export const SheetCell = memo(({
   style
 }: ISheetCellProps) => {
 
-  const dispatch = useDispatch()
-
   // Redux
+  const dispatch = useDispatch()
   const cell = useSelector((state: IAppState) => state.sheet.allSheetCells[cellId])
   const sheetSelectionsRangeCellIds = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.rangeCellIds)
   const sheetStyles = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].styles)
@@ -50,45 +45,20 @@ export const SheetCell = memo(({
   const trackCellChanges = useSelector((state: IAppState) => cell && state.sheet.allSheetColumns && state.sheet.allSheetColumns[cell.columnId] && state.sheet.allSheetColumns[cell.columnId].trackCellChanges)
   const showCellChanges = useSelector((state: IAppState) => cell && state.sheet.allSheetColumns && state.sheet.allSheetColumns[cell.columnId] && state.sheet.allSheetColumns[cell.columnId].showCellChanges)
   
+  // Make sure the cell exists
   if(cell) {
 
     // Refs
     const cellContainer = useRef(null)
 
-    // Local State
-    const [ cellValue, setCellValue ] = useState(cell ? cell.value : null)
+    // Cell selection state
+    const isCellSelected = cell.isCellSelectedSheetIds.has(sheetId)
+    const isCellInRange = sheetSelectionsRangeCellIds.has(cellId)
 
-    // Effects
-    useEffect(() => {
-      if(cellValue !== cell.value) {
-        setCellValue(cell.value)
-      }
-    }, [ cell && cell.value ])
-
-    useEffect(() => {
-      let updateSheetCellTimer: number = null
-      let updateSheetCellSideEffectsTimer: number = null
-      if(cell && cellValue !== cell.value) {
-        clearTimeout(updateSheetCellTimer)
-        clearTimeout(updateSheetCellSideEffectsTimer)
-        if(sheetSelectionsRangeCellIds.size > 0) {
-          dispatch(updateSheetCellValues(sheetId, cellValue))
-        }
-        else {
-          updateSheetCellTimer = setTimeout(() => {
-            dispatch(updateSheetCell(cell.id, { value: cellValue }, { value: cell.value }))
-          }, 1000)
-          updateSheetCellSideEffectsTimer = setTimeout(() => {
-            dispatch(addSheetColumnAllCellValue(cell.columnId, cellValue))
-            dispatch(createSheetCellChange(sheetId, cell.id, cellValue))
-          }, 2500)
-        }
-      }
-      return () => {
-        clearTimeout(updateSheetCellTimer)
-        clearTimeout(updateSheetCellSideEffectsTimer)
-      }
-    }, [ cellValue, sheetSelectionsRangeCellIds ])
+    // Update selection when cell is clicked
+    const handleMouseDown = (e: MouseEvent) => {
+      dispatch(updateSheetSelectionFromCellClick(sheetId, cell.id, e.shiftKey))
+    }
 
     // Cell types
     const sheetCellTypes = {
@@ -97,19 +67,8 @@ export const SheetCell = memo(({
       BOOLEAN: SheetCellBoolean,
       DATETIME: SheetCellDatetime,
       PHOTOS: SheetCellPhotos,
-      FILES: SheetCellFiles,
-      TEAM_MEMBERS: SheetCellTeamMembers
+      FILES: SheetCellFiles
     }
-
-    // Update selection when cell is clicked
-    const handleMouseDown = (e: MouseEvent) => {
-      if(cellType !== 'BOOLEAN' || e.shiftKey) {
-        dispatch(updateSheetSelectionFromCellClick(sheetId, cell.id, e.shiftKey))
-      }
-    }
-
-    const isCellSelected = cell.isCellSelectedSheetIds.has(sheetId)
-    const isCellInRange = sheetSelectionsRangeCellIds.has(cellId)
     const SheetCellType = sheetCellTypes[cellType]
 
     return (
@@ -131,13 +90,7 @@ export const SheetCell = memo(({
           isCellInRange={isCellInRange}
           highlightColor={userColorSecondary}/>
         <SheetCellType
-          sheetId={sheetId}
-          cell={cell}
-          cellId={cell.id}
-          isCellInRange={isCellInRange}
-          isCellSelected={isCellSelected}
-          updateCellValue={setCellValue}
-          value={cellValue}/>
+          cell={cell}/>
         <SheetCellChanges
           cellId={cell.id}
           showCellChanges={showCellChanges}
@@ -145,6 +98,7 @@ export const SheetCell = memo(({
       </Container>
     )
   }
+  // If the cell doesn't exist, render a dummy cell
   return (
     <Container
       data-testid="SheetCellNotFoundContainer"
@@ -164,12 +118,16 @@ export const SheetCell = memo(({
 // Props
 //-----------------------------------------------------------------------------
 export interface ISheetCellProps {
-  sheetId: string
+  sheetId: ISheet['id']
   cellId: ISheetCell['id']
   cellType: ISheetCellType
   style: {
     width?: ReactText
   }
+}
+
+export interface ISheetCellTypesSharedProps {
+  cell: ISheetCell
 }
 
 //-----------------------------------------------------------------------------

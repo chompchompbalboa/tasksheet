@@ -15,6 +15,7 @@ import {
 // Update Sheet Cell
 //-----------------------------------------------------------------------------
 export const addSheetColumnAllCellValue = (columnId: ISheetColumn['id'], value: string): IThunkAction => {
+  console.log('addSheetColumnAllCellValue')
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
       allSheetColumns: {

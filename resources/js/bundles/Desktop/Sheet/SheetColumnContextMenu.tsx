@@ -76,11 +76,7 @@ export const SheetColumnContextMenu = ({
     FILES: {
       label: 'Files',
       cellType: 'FILES'
-    },
-    TEAM_MEMBERS: {
-      label: 'Team Members',
-      cellType: 'TEAM_MEMBERS'
-    },
+    }
   }
   const sheetCellTypesKeys = Object.keys(sheetCellTypes)
 

@@ -1,27 +1,34 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { ISheetCell } from '@/state/sheet/types'
+import { ISheetCellTypesSharedProps } from '@desktop/bundles/Sheet/SheetCell'
 
-import AutosizeTextArea from 'react-autosize-textarea'
+import { updateSheetCell } from '@/state/sheet/actions'
+
 import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellString = ({
-  testId,
-  updateCellValue,
-  value,
-  ...passThroughProps
-}: SheetCellStringProps) => {
+  cell
+}: ISheetCellTypesSharedProps) => {
   
+  // Refs
   const textarea = useRef(null)
   
-  const focusCell = () => {
+  // State
+  const [ sheetCellPreviousValue, setSheetCellPreviousValue ] = useState(null)
+  
+  // Begin Editing
+  const beginEditing = (nextSheetCellValue: string = null) => {
+    setSheetCellPreviousValue(cell.value)
+    dispatch(updateSheetCell(cell.id, { isEditing: true, value: nextSheetCellValue || cell.value } ))
     if(textarea && textarea.current) {
       const textareaLength = textarea.current.value && textarea.current.value.length || 0
       textarea.current.focus()
@@ -29,42 +36,39 @@ const SheetCellString = ({
     }
   }
   
-  const safeValue = value === null ? "" : value
+  // Complete Editing
+  const completeEditing = () => {
+    dispatch(updateSheetCell(cell.id, { isEditing: false }, null, true))
+    setTimeout(() => {
+      dispatch(updateSheetCell(cell.id, { value: e.target.value }, { value: sheetCellPreviousValue }))
+    }, 25)
+  }
+  
+  // On Value Change
+  const onValueChange = (e: any) => {
+    dispatch(updateSheetCell(cell.id, { value: e.target.value }, null, true))
+  }
 
   return (
     <SheetCellContainer
-      testId={testId || "SheetCellString"}
-      focusCell={focusCell}
-      value={safeValue}
-      {...passThroughProps}>
-      <StyledTextarea
+      testId="SheetCellString"
+      cell={cell}
+      beginEditing={beginEditing}
+      completeEditing={completeEditing}
+      value={cell.value}>
+      <StyledInput
         data-testid="SheetCellStringTextarea"
         ref={textarea}
-        onChange={(e: any) => updateCellValue(e.target.value)}
-        value={safeValue}/>
+        onChange={onValueChange}
+        value={cell.value || ""}/>
     </SheetCellContainer>
   )
-
-}
-
-//-----------------------------------------------------------------------------
-// Props
-//-----------------------------------------------------------------------------
-interface SheetCellStringProps {
-  sheetId: string
-  cell: ISheetCell
-  cellId: string
-  isCellInRange: boolean
-  isCellSelected: boolean
-  testId?: string
-  updateCellValue(nextCellValue: string): void
-  value: string
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const StyledTextarea = styled(AutosizeTextArea)`
+const StyledInput = styled.input`
   width: 100%;
   height: 100%;
   font-size: inherit;
@@ -74,14 +78,7 @@ const StyledTextarea = styled(AutosizeTextArea)`
   letter-spacing: inherit;
   border: none;
   outline: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background-color: transparent;
-  -moz-appearance: textfield;
-  resize: none;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 `
 
 //-----------------------------------------------------------------------------

@@ -13,6 +13,7 @@ import { createHistoryStep } from '@/state/history/actions'
 // Update Sheet Column
 //-----------------------------------------------------------------------------
 export const updateSheetColumn = (columnId: string, updates: ISheetColumnUpdates, undoUpdates?: ISheetColumnUpdates, skipDatabaseUpdate: boolean = false): IThunkAction => {
+  console.log('updateSheetColumn')
 	return async (dispatch: IThunkDispatch) => {
     const actions = () => {
       dispatch(updateSheetColumnReducer(columnId, updates))
