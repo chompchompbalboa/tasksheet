@@ -72,6 +72,7 @@ const TabsFiles = () => {
   return (
     <Container>
       <ActiveFile
+        isFilesDropdownVisible={isFilesDropdownVisible}
         onClick={() => setIsFilesDropdownVisible(true)}>
         <ActiveFileName>
           {activeFile.name}
@@ -102,15 +103,22 @@ const Container = styled.div`
   position: relative;
   width: calc(50% - 1px);
   border-right: 1px solid rgb(220, 220, 220);
+  display: flex;
+  align-items: center;
 `
 
 const ActiveFile = styled.div`
   width: 100%;
-  padding: 0.5rem;
+  height: 100%;
+  padding: 0 0.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: ${ ({ isFilesDropdownVisible }: IActiveFile) => isFilesDropdownVisible ? '1px solid white' : '1px solid rgb(220, 220, 220)' };
 `
+interface IActiveFile {
+  isFilesDropdownVisible: boolean
+}
 
 const ActiveFileName = styled.div`
   width: 85%;

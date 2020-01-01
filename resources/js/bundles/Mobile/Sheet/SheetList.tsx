@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { memo } from 'react'
+import React, { memo, useLayoutEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { areEqual, VariableSizeList as List } from 'react-window'
 import styled from 'styled-components'
@@ -21,10 +21,43 @@ export const SheetList = memo(({
   sheetId
 }: ISheetListProps) => {
 
+  // Refs
+  const list = useRef()
+
   // Redux
   const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
   const sheetViewVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].visibleColumns)
   const sheetVisibleRows = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleRows)
+
+  useLayoutEffect(() => {
+    if(list && list.current) { 
+    // @ts-ignore
+      list.current.resetAfterIndex(0)
+    }
+  }, [ sheetActiveSheetViewId ])
+
+  // Get Row Height
+  const getRowHeight = (index: number) => {
+    if(sheetViewVisibleColumns) {
+      const rowId = sheetVisibleRows[index]
+      if(rowId === 'ROW_BREAK') {
+        return 20
+      }
+      else {
+        let rowHeight = 0
+        sheetViewVisibleColumns.forEach(visibleColumnId => {
+          if(visibleColumnId === 'COLUMN_BREAK') {
+            rowHeight += 3
+          }
+          else {
+            rowHeight += 30
+          }
+        })
+        return rowHeight + 20
+      }
+    }
+    return 0
+  }
 
   // Row
   const Row = ({ 
@@ -35,9 +68,9 @@ export const SheetList = memo(({
     if(rowId !== 'ROW_BREAK') {
       return (
         <SheetListRow
-          sheetId={sheetId}
           rowId={rowId}
-          style={style}/>
+          style={style}
+          visibleColumns={sheetViewVisibleColumns}/>
       )
     }
     return (
@@ -51,10 +84,11 @@ export const SheetList = memo(({
       <Autosizer>
         {({ width, height }) => (
           <List
+            ref={list}
             width={width}
             height={height}
             itemCount={sheetVisibleRows ? sheetVisibleRows.length : 0}
-            itemSize={sheetViewVisibleColumns ? () => sheetViewVisibleColumns.length * 20 : () => 0}>
+            itemSize={getRowHeight}>
             {Row}
           </List>
         )}

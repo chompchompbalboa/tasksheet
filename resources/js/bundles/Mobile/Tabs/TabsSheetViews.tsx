@@ -56,6 +56,7 @@ const TabsSheetViews = () => {
   return (
     <Container>
       <ActiveSheetView
+        isSheetViewsDropdownVisible={isSheetViewsDropdownVisible}
         onClick={() => setIsSheetViewsDropdownVisible(true)}>
         <ActiveSheetViewName>
           {activeSheetView ? activeSheetView.name : 'Loading...'}
@@ -88,15 +89,22 @@ const TabsSheetViews = () => {
 const Container = styled.div`
   position: relative;
   width: 50%;
+  display: flex;
+  align-items: center;
 `
 
 const ActiveSheetView = styled.div`
   width: 100%;
-  padding: 0.5rem;
+  height: 100%;
+  padding: 0 0.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: ${ ({ isSheetViewsDropdownVisible }: IActiveSheetView) => isSheetViewsDropdownVisible ? '1px solid white' : '1px solid rgb(220, 220, 220)' };
 `
+interface IActiveSheetView {
+  isSheetViewsDropdownVisible: boolean
+}
 
 const ActiveSheetViewName = styled.div`
   width: 85%;

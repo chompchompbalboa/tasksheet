@@ -24,13 +24,14 @@ const Tabs = () => {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  border-bottom: 1px solid rgb(220, 220, 220);
+  height: calc(2.375rem + 1px);
 `
 
 const SelectionContainers = styled.div`
   position: relative;
   z-index: 2;
   width: 100%;
+  height: 100%;
   display: flex;
   background-color: white;
   color: black;

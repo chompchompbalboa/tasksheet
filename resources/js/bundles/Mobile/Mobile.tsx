@@ -54,9 +54,10 @@ interface ContainerProps {
 
 const OpenFilesContainer = styled.div`
   z-index: 1;
-  position: relative;
+  position: absolute;
+  top: calc(2.375rem + 1px);
   width: 100%;
-  height: 100%;
+  height: calc(100% - 2.375rem - 1px);
   background-color: rgb(240,240,240);
   box-shadow: -1px 0px 10px 0px rgba(0,0,0,0.5);
 `
