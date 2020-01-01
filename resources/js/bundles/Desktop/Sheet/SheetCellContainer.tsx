@@ -1,12 +1,13 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useRef } from 'react'
+import React, { MouseEvent, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { IAppState } from '@/state'
 import { 
+  ISheet,
   ISheetCell, 
   ISheetStyles 
 } from '@/state/sheet/types'
@@ -19,12 +20,8 @@ import {
 //-----------------------------------------------------------------------------
 const SheetCellContainer = ({
   testId,
-  cell: {
-    id: cellId,
-    sheetId,
-    isCellEditing,
-    isCellSelectedSheetIds
-  },
+  sheetId,
+  cell,
   children,
   beginEditing,
   completeEditing,
@@ -40,13 +37,12 @@ const SheetCellContainer = ({
   const activeSheetId = useSelector((state: IAppState) => state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].typeId)
   const isSelectedCellEditingPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellEditingPrevented)
   const isSelectedCellNavigationPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellNavigationPrevented)
-  const sheetSelectionsRangeCellIds = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.rangeCellIds)
   const sheetStyles = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].styles)
   
   // Local Variables
   const isActiveSheet = activeSheetId === sheetId
-  const isCellEditing = isActiveSheet && isCellEditing
-  const isCellSelected = isActiveSheet && isCellSelectedSheetIds.has(sheetId)
+  const isCellEditing = isActiveSheet && cell.isCellEditing
+  const isCellSelected = isActiveSheet && cell.isCellSelectedSheetIds.has(sheetId)
   
   // If the cell is selected, but not editing, add the correct keydown event listener
   useEffect(() => {
@@ -54,41 +50,56 @@ const SheetCellContainer = ({
       ? addEventListener('keydown', handleKeydownWhileCellIsSelected)
       : removeEventListener('keydown', handleKeydownWhileCellIsSelected)
     return () => removeEventListener('keydown', handleKeydownWhileCellIsSelected)
-  }, [ isCellSelected, isCellEditing, isSelectedCellEditingPrevented, isSelectedCellNavigationPrevented, sheetSelectionsRangeCellIds ])
+  }, [ beginEditing, isCellSelected, isCellEditing, isSelectedCellEditingPrevented, isSelectedCellNavigationPrevented ])
   
-  // If the cell is editing, add the correct keydown event listener
+  // If the cell is editing, add a mousedown event listener and the correct keydown event listener
   useEffect(() => {
-    isCellEditing
-      ? addEventListener('keydown', handleKeydownWhileCellIsEditing)
-      : removeEventListener('keydown', handleKeydownWhileCellIsEditing)
-    return () => removeEventListener('keydown', handleKeydownWhileCellIsEditing)
-  }, [ isCellEditing, isSelectedCellNavigationPrevented ])
+    if(isCellEditing) {
+      addEventListener('keydown', handleKeydownWhileCellIsEditing)
+      addEventListener('mousedown', completeEditingOnClickOutside)
+    }
+    else {
+      removeEventListener('keydown', handleKeydownWhileCellIsEditing)
+      removeEventListener('mousedown', completeEditingOnClickOutside)
+    }
+    return () => {
+      removeEventListener('keydown', handleKeydownWhileCellIsEditing)
+      removeEventListener('mousedown', completeEditingOnClickOutside)
+    }
+  }, [ completeEditing, isCellEditing, isSelectedCellNavigationPrevented ])
 
   // Begin editing on double click
   // Note: Needing to handle both click and double click events within cells
   // is the reason we have both SheetCell and SheetCellContainer. A single 
   // component can't handle both events wihout unexpected behavior.
-  const beginEditingOnDoubleClick = (e: any) => {
+  const beginEditingOnDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
     beginEditing()
   }
+
+  // Complete Editing On Click Outside
+  const completeEditingOnClickOutside = (e: any) => {
+    if(!container.current.contains(e.target)) {
+      completeEditing()
+    }
+  } 
 
   // Handle keydown while cell is editing
   const handleKeydownWhileCellIsEditing = (e: KeyboardEvent) => {
     if(!isSelectedCellNavigationPrevented) {
       if(e.key === 'Enter' || e.key === 'ArrowDown') {
         e.preventDefault()
-        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'DOWN', e.shiftKey))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cell.id, 'DOWN', e.shiftKey))
         completeEditing()
       }
       if(e.key === 'Tab') {
         e.preventDefault()
-        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'RIGHT', e.shiftKey))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cell.id, 'RIGHT', e.shiftKey))
         completeEditing()
       }
       if(e.key === 'ArrowUp') {
         e.preventDefault()
-        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'UP', e.shiftKey))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cell.id, 'UP', e.shiftKey))
         completeEditing()
       }
     }
@@ -111,19 +122,19 @@ const SheetCellContainer = ({
       // Otherwise, navigate to an adjacent cell on an arrow or enter press
       if(e.key === 'Enter' || e.key === 'ArrowDown') {
         e.preventDefault()
-        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'DOWN', e.shiftKey))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cell.id, 'DOWN', e.shiftKey))
       }
       if(e.key === 'Tab' || e.key === 'ArrowRight') {
         e.preventDefault()
-        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'RIGHT', e.shiftKey))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cell.id, 'RIGHT', e.shiftKey))
       }
       if(e.key === 'ArrowLeft') {
         e.preventDefault()
-        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'LEFT', e.shiftKey))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cell.id, 'LEFT', e.shiftKey))
       }
       if(e.key === 'ArrowUp') {
         e.preventDefault()
-        dispatch(updateSheetSelectionFromArrowKey(sheetId, cellId, 'UP', e.shiftKey))
+        dispatch(updateSheetSelectionFromArrowKey(sheetId, cell.id, 'UP', e.shiftKey))
       }
       if((e.key === 'Delete' || e.key === 'Backspace') && !onlyRenderChildren) {
         e.preventDefault()
@@ -136,9 +147,9 @@ const SheetCellContainer = ({
     <Container
       data-testid={testId}
       ref={container}
-      cellId={cellId}
+      cellId={cell.id}
       isCellEditing={isCellEditing}
-      onDoubleClick={(e) => beginEditingOnDoubleClick(e)}
+      onDoubleClick={beginEditingOnDoubleClick}
       styles={sheetStyles}>
         {isCellEditing || onlyRenderChildren
           ? children
@@ -153,9 +164,10 @@ const SheetCellContainer = ({
 //-----------------------------------------------------------------------------
 interface SheetCellContainerProps {
   testId: string
+  sheetId: ISheet['id']
   cell: ISheetCell
   children?: any
-  beginEditing(): void
+  beginEditing(nextSheetCellValue?: string): void
   completeEditing(...args: any): void
   onlyRenderChildren?: boolean
   value: string

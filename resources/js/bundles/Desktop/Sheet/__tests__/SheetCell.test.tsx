@@ -293,9 +293,9 @@ describe('SheetCell', () => {
   it("SheetCellString begins editing the cell when double clicked", async () => {
     const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'STRING' })
     const { getByText, getByTestId, queryByTestId } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
-    expect(queryByTestId('SheetCellStringTextarea')).toBeNull()
+    expect(queryByTestId('SheetCellStringInput')).toBeNull()
     fireEvent.doubleClick(getByText(cell.value))
-    expect(getByTestId('SheetCellStringTextarea')).toBeTruthy()
+    expect(getByTestId('SheetCellStringInput')).toBeTruthy()
   })
 
   it("SheetCellNumber begins editing the cell when double clicked", async () => {

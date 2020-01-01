@@ -5,10 +5,9 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { ISheetCell } from '@/state/sheet/types'
-import {
-  updateSheetCell
-} from '@/state/sheet/actions'
+import { ISheetCellTypesSharedProps } from '@desktop/Sheet/SheetCell'
+
+import { updateSheetCell } from '@/state/sheet/actions'
 
 import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
 
@@ -16,46 +15,34 @@ import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellBoolean = ({
-  cellId,
-  value,
-  ...passThroughProps
-}: SheetCellBooleanProps) => {
+  sheetId,
+  cell
+}: ISheetCellTypesSharedProps) => {
   
   const dispatch = useDispatch()
   
   const handleChange = (checked: boolean) => {
     const nextCellValue = checked ? 'Checked' : ''
-    dispatch(updateSheetCell(cellId, { value: nextCellValue }, { value: value }))
+    dispatch(updateSheetCell(cell.id, { value: nextCellValue }, { value: cell.value }))
   }
   
   return (
     <SheetCellContainer
       testId="SheetCellBoolean"
-      cellId={cellId}
+      sheetId={sheetId}
+      cell={cell}
+      beginEditing={() => null}
+      completeEditing={() => null}
       onlyRenderChildren
-      value={value}
-      {...passThroughProps}>
+      value={cell.value}>
       <Container>
         <StyledInput 
           type="checkbox"
-          checked={value && value === 'Checked'}
+          checked={cell.value === 'Checked'}
           onChange={(e) => handleChange(e.target.checked)}/>
       </Container>
     </SheetCellContainer>
   )
-}
-
-//-----------------------------------------------------------------------------
-// Props
-//-----------------------------------------------------------------------------
-interface SheetCellBooleanProps {
-  sheetId: string
-  cell: ISheetCell
-  cellId: string
-  isCellInRange: boolean
-  isCellSelected: boolean
-  updateCellValue(nextCellValue: string): void
-  value: string
 }
 
 //-----------------------------------------------------------------------------

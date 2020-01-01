@@ -1,20 +1,19 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { ReactText, memo, MouseEvent, useEffect, useRef, useState } from 'react'
+import React, { ReactText, memo, MouseEvent, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
 import { IAppState } from '@/state'
 import { 
+  ISheet,
   ISheetCell, 
   ISheetCellType,
   ISheetStyles 
 } from '@/state/sheet/types'
 import {
-  updateSheetCell,
-  updateSheetCellValues,
   updateSheetSelectionFromCellClick
 } from '@/state/sheet/actions'
 
@@ -90,7 +89,9 @@ export const SheetCell = memo(({
           isCellInRange={isCellInRange}
           highlightColor={userColorSecondary}/>
         <SheetCellType
-          cell={cell}/>
+          sheetId={sheetId}
+          cell={cell}
+          isCellInRange={isCellInRange}/>
         <SheetCellChanges
           cellId={cell.id}
           showCellChanges={showCellChanges}
@@ -127,7 +128,9 @@ export interface ISheetCellProps {
 }
 
 export interface ISheetCellTypesSharedProps {
+  sheetId: ISheet['id']
   cell: ISheetCell
+  isCellInRange?: boolean // Always provided, only used by some cell types
 }
 
 //-----------------------------------------------------------------------------

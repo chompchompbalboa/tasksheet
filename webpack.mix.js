@@ -13,9 +13,4 @@ mix.webpackConfig({
 	},
 })
 
-if(!mix.inProduction) {
-  mix.ts('resources/js/bundles/App.tsx', 'public/js/app.js').sourceMaps()
-}
-else {
-  mix.ts('resources/js/bundles/App.tsx', 'public/js/app.js')
-}
+mix.ts('resources/js/bundles/App.tsx', 'public/js/app.js').sourceMaps()

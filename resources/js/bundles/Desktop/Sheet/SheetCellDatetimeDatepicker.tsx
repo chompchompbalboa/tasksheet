@@ -2,7 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import moment, { Moment } from 'moment'
 import styled from 'styled-components'
 
@@ -10,27 +10,23 @@ import { ARROW_LEFT, ARROW_RIGHT } from '@/assets/icons'
 
 import { IAppState } from '@/state'
 import { ISheet } from '@/state/sheet/types'
-import { 
-  updateSheetCellValues
-} from '@/state/sheet/actions'
 
 import Icon from '@/components/Icon'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-export const SheetCellDatetime = ({
+export const SheetCellDatetimeDatepicker = ({
   sheetId,
   dateValidator,
+  handleEditing,
   value,
-  updateCellValue,
-}: ISheetCellDatetimeProps) => {
+}: ISheetCellDatetimeDatepickerProps) => {
 
   // Refs
   const styledInput = useRef(null)
 
   // Redux
-  const dispatch = useDispatch()
   const sheetSelectionsRangeCellIds = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.rangeCellIds)
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 
@@ -65,16 +61,6 @@ export const SheetCellDatetime = ({
     setCurrentMonth(nextCurrentMonth)
   }
 
-  // Handle a change in cell value
-  const handleStyledInputChange = (nextSheetCellValue: string) => {
-    if(sheetSelectionsRangeCellIds.size === 0) {
-      updateCellValue(nextSheetCellValue)
-    }
-    else {
-      dispatch(updateSheetCellValues(sheetId, nextSheetCellValue))
-    }
-  }
-
   return (
     <Container
       data-testid="SheetCellDatetimeDatepicker">
@@ -82,7 +68,7 @@ export const SheetCellDatetime = ({
         <StyledInput
           data-testid="SheetCellDatetimeDatepickerInput"
           ref={styledInput}
-          onChange={e => handleStyledInputChange(e.target.value)}
+          onChange={(e: any) => handleEditing(e.target.value)}
           value={value || ''}/>
       </InputContainer>
       {sheetSelectionsRangeCellIds.size === 0 &&
@@ -111,7 +97,7 @@ export const SheetCellDatetime = ({
                 key={index}
                 isEmpty={currentDate === null}
                 isSelected={isValueInCurrentMonth && valueDate === currentDate}
-                onClick={currentDate !== null ? () => updateCellValue(moment(currentMonth).date(currentDate).format('MM/DD/YYYY')) : () => null}
+                onClick={currentDate !== null ? () => handleEditing(moment(currentMonth).date(currentDate).format('MM/DD/YYYY')) : () => null}
                 userColorPrimary={userColorPrimary}>
                 {currentDate}
               </DatepickerDate>
@@ -126,10 +112,10 @@ export const SheetCellDatetime = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-export interface ISheetCellDatetimeProps {
+export interface ISheetCellDatetimeDatepickerProps {
   sheetId: ISheet['id']
   dateValidator(date: any): boolean
-  updateCellValue(nextCellValue: string): void
+  handleEditing(nextCellValue: string): void
   value: string
 }
 
@@ -231,4 +217,4 @@ interface IDatePickerDate {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetCellDatetime
+export default SheetCellDatetimeDatepicker

@@ -25,6 +25,7 @@ export const updateSheetCellValues = (sheetId: ISheet['id'], value: string): ITh
         [sheetId]: {
           selections: {
             rangeStartColumnId,
+            rangeStartCellId,
             rangeEndColumnId,
             rangeCellIds,
             ...sheetSelections
@@ -63,6 +64,7 @@ export const updateSheetCellValues = (sheetId: ISheet['id'], value: string): ITh
         dispatch(updateSheet(sheetId, {
           selections: {
             rangeStartColumnId,
+            rangeStartCellId,
             rangeEndColumnId,
             rangeCellIds,
             ...sheetSelections
@@ -80,6 +82,7 @@ export const updateSheetCellValues = (sheetId: ISheet['id'], value: string): ITh
         dispatch(updateSheet(sheetId, {
           selections: {
             rangeStartColumnId,
+            rangeStartCellId,
             rangeEndColumnId,
             rangeCellIds,
             ...sheetSelections

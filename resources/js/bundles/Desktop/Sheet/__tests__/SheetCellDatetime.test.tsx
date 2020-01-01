@@ -7,7 +7,7 @@ import 'jest-styled-components'
 import '@testing-library/jest-dom/extend-expect'
 import axiosMock from 'axios'
 
-import { cleanup, fireEvent, renderWithRedux, waitForElement, within } from '@/testing/library'
+import { cleanup, fireEvent, renderWithRedux, waitForElement, within, waitForDomChange } from '@/testing/library'
 import { 
   createMockStore,
   mockAppState,
@@ -21,7 +21,8 @@ import {
 } from '@/testing/mocks/appState'
 
 import { Sheet, ISheetProps } from '@desktop/Sheet/Sheet'
-import { SheetCellDatetime, ISheetCellDatetimeProps } from '@desktop/Sheet/SheetCellDatetime'
+import { ISheetCellTypesSharedProps } from '@desktop/Sheet/SheetCell'
+import { SheetCellDatetime } from '@desktop/Sheet/SheetCellDatetime'
 import { ISheetCell } from '@/state/sheet/types'
 
 //-----------------------------------------------------------------------------
@@ -80,14 +81,10 @@ const sheetProps: ISheetProps = {
   id: sheetId
 }
 
-const sheetCellDatetimeProps: ISheetCellDatetimeProps = {
+const sheetCellDatetimeProps: ISheetCellTypesSharedProps = {
   sheetId: sheetId,
-  cellId: sheetCellId,
   cell: sheetCell,
-  isCellInRange: false,
-  isCellSelected: false,
-  updateCellValue: jest.fn(),
-  value: sheetCell.value
+  isCellInRange: false
 }
 
 //-----------------------------------------------------------------------------
@@ -182,6 +179,7 @@ describe('SheetCellDatetime', () => {
     expect(SheetCellDatetimeDatepickerInput).toHaveValue('1/1/10')
 
     fireEvent.keyDown(SheetCellDatetime, { key: 'Enter' })
+    await waitForDomChange({ container: SheetCellDatetime })
     expect(SheetCellDatetime).toContainHTML('01/01/2010')
   })
   

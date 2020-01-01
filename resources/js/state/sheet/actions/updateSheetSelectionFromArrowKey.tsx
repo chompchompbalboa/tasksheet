@@ -139,11 +139,13 @@ export const updateSheetSelectionFromArrowKey = (
             const rowId = visibleRows[rowIndex]
             if(rowId !== 'ROW_BREAK') {
               const row = allSheetRows[rowId]
-              for(let columnIndex = rangeStartColumnIndex; columnIndex <= nextRangeEndColumnIndex; columnIndex++) {
-                const columnId = activeSheetView.visibleColumns[columnIndex]
-                if(columnId !== 'COLUMN_BREAK') {
-                  const cellId = row.cells[columnId]
-                  nextSheetSelectionRangeCellIds.add(cellId)
+              if(row) {
+                for(let columnIndex = rangeStartColumnIndex; columnIndex <= nextRangeEndColumnIndex; columnIndex++) {
+                  const columnId = activeSheetView.visibleColumns[columnIndex]
+                  if(columnId !== 'COLUMN_BREAK') {
+                    const cellId = row.cells[columnId]
+                    nextSheetSelectionRangeCellIds.add(cellId)
+                  }
                 }
               }
             }

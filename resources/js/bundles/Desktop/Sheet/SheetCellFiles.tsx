@@ -10,10 +10,13 @@ import { storeFileToS3 } from '@/api/vapor'
 import { mutation } from '@/api'
 
 import { IAppState } from '@/state'
-import { ISheetCell, ISheetFile } from '@/state/sheet/types'
+import { ISheetFile } from '@/state/sheet/types'
+import { ISheetCellTypesSharedProps } from '@desktop/Sheet/SheetCell'
+
 import { 
   createSheetCellFile,
-  deleteSheetCellFile as deleteSheetCellFileAction
+  deleteSheetCellFile as deleteSheetCellFileAction,
+  updateSheetCell
 } from '@/state/sheet/actions'
 
 import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
@@ -25,43 +28,43 @@ import SheetCellFilesValue from '@desktop/Sheet/SheetCellFilesValue'
 //-----------------------------------------------------------------------------
 const SheetCellFiles = ({
   sheetId,
-  cellId,
-  cell,
-  isCellInRange,
-  isCellSelected,
-  updateCellValue,
-  ...passThroughProps
-}: ISheetCellFiles) => {
+  cell
+}: ISheetCellTypesSharedProps) => {
 
   // Refs
   const uploadInput = useRef(null)
   
   // Redux
   const dispatch = useDispatch()
-  const sheetCellFiles = useSelector((state: IAppState) => state.sheet.allSheetCellFiles && state.sheet.allSheetCellFiles[cellId] && state.sheet.allSheetCellFiles[cellId].map((sheetFileId: ISheetFile['id']) => {
+  const sheetCellFiles = useSelector((state: IAppState) => state.sheet.allSheetCellFiles && state.sheet.allSheetCellFiles[cell.id] && state.sheet.allSheetCellFiles[cell.id].map((sheetFileId: ISheetFile['id']) => {
     return state.sheet.allSheetFiles[sheetFileId]
   }))
-  
-  // Effects
-  useEffect(() => {
-    if(sheetCellFiles && cell && cell.value && (sheetCellFiles.length + '') !== (cell.value + '')) {
-      updateCellValue((sheetCellFiles && sheetCellFiles.length + '') || '0')
-    }
-  })
+  const sheetSelectionsRangeCellIds = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.rangeCellIds)
 
   // State
   const [ uploadSheetCellFileStatus, setUploadSheetCellFileStatus ] = useState('READY' as ISheetCellFilesUploadStatus)
   const [ uploadSheetCellFileProgress, setUploadSheetCellFileProgress ] = useState(0)
 
-  // Handle File Download
+  // Local Variables
+  const isCellSelected = cell.isCellSelectedSheetIds.has(sheetId)
+  const isCellInRange = sheetSelectionsRangeCellIds.has(cell.id)
+  
+  // Effects
+  useEffect(() => {
+    if(sheetCellFiles && cell && cell.value && (sheetCellFiles.length + '') !== (cell.value + '')) {
+      dispatch(updateSheetCell(cell.id, { value: (sheetCellFiles && sheetCellFiles.length + '') || '0' }))
+    }
+  })
+
+  // Download Sheet Cell File
   const downloadSheetCellFile = (sheetCellFileId: ISheetFile['id']) => {
     const url = '/app/sheets/cells/files/download/' + sheetCellFileId
     window.open(url, '_blank')
   }
 
-  // Handle File Delete
+  // Delete Sheet Cell File
   const deleteSheetCellFile = (sheetCellFileId: ISheetFile['id']) => {
-    dispatch(deleteSheetCellFileAction(cellId, sheetCellFileId))
+    dispatch(deleteSheetCellFileAction(cell.id, sheetCellFileId))
   }
 
   // Open File Upload Dialog
@@ -69,7 +72,7 @@ const SheetCellFiles = ({
     uploadInput.current.click()
   }
   
-  // Handle File Upload
+  // Upload Sheet Cell File
   const uploadSheetCellFile = (e: ChangeEvent<HTMLInputElement>) => {
     const filesList = e.target.files
     const filesIndexes = Object.keys(filesList)
@@ -80,7 +83,7 @@ const SheetCellFiles = ({
       storeFileToS3(file, () => setUploadSheetCellFileStatus('UPLOADING'), setUploadSheetCellFileProgress).then(s3PresignedUrlData => {
         const uploadedAt = moment().format('YYYY-MM-DD HH:mm:ss')
         setUploadSheetCellFileStatus('SAVING_FILE_DATA')
-        mutation.createSheetCellFile(sheetId, cellId, file.name, s3PresignedUrlData, uploadedAt).then(nextSheetCellFiles => {
+        mutation.createSheetCellFile(sheetId, cell.id, file.name, s3PresignedUrlData, uploadedAt).then(nextSheetCellFiles => {
           const newSheetCellFile = nextSheetCellFiles[nextSheetCellFiles.length - 1]
           dispatch(createSheetCellFile(newSheetCellFile.cellId, newSheetCellFile))
           setUploadSheetCellFileProgress(0)
@@ -100,14 +103,11 @@ const SheetCellFiles = ({
     <SheetCellContainer
       testId="SheetCellFiles"
       sheetId={sheetId}
-      cellId={cellId}
       cell={cell}
-      focusCell={() => null}
-      isCellSelected={isCellSelected}
+      beginEditing={() => null}
+      completeEditing={() => null}
       onlyRenderChildren
-      preventValueChangeWhileSelected
-      value={null}
-      {...passThroughProps}>
+      value={null}>
       <Container>
         <SheetCellFilesValue
           value={(sheetCellFiles && sheetCellFiles.length || 0) + ''}/>
@@ -132,16 +132,6 @@ const SheetCellFiles = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface ISheetCellFiles {
-  sheetId: string
-  cell: ISheetCell
-  cellId: string
-  isCellInRange: boolean
-  isCellSelected: boolean
-  updateCellValue(nextCellValue: string): void
-  value: string
-}
-
 export type ISheetCellFilesUploadStatus = 
   'READY' | 
   'PREPARING_UPLOAD' | 

@@ -10,10 +10,13 @@ import { mutation } from '@/api'
 import { storeFileToS3 } from '@/api/vapor'
 
 import { IAppState } from '@/state'
-import { ISheetCell, ISheetPhoto } from '@/state/sheet/types'
+import { ISheetPhoto } from '@/state/sheet/types'
+import { ISheetCellTypesSharedProps } from '@desktop/Sheet/SheetCell'
+
 import { 
   createSheetCellPhoto,
-  deleteSheetCellPhoto
+  deleteSheetCellPhoto,
+  updateSheetCell
 } from '@/state/sheet/actions'
 
 import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
@@ -25,22 +28,18 @@ import SheetCellPhotosValue from '@desktop/Sheet/SheetCellPhotosValue'
 //-----------------------------------------------------------------------------
 const SheetCellPhotos = ({
   sheetId,
-  cellId,
-  cell,
-  isCellInRange,
-  isCellSelected,
-  updateCellValue,
-  ...passThroughProps
-}: SheetCellPhotosProps) => {
+  cell
+}: ISheetCellTypesSharedProps) => {
 
   // Refs
   const uploadInput = useRef(null)
   
   // Redux
   const dispatch = useDispatch()
-  const sheetCellPhotos = useSelector((state: IAppState) => state.sheet.allSheetCellPhotos && state.sheet.allSheetCellPhotos[cellId] && state.sheet.allSheetCellPhotos[cellId].map((sheetPhotoId: ISheetPhoto['id']) => {
+  const sheetCellPhotos = useSelector((state: IAppState) => state.sheet.allSheetCellPhotos && state.sheet.allSheetCellPhotos[cell.id] && state.sheet.allSheetCellPhotos[cell.id].map((sheetPhotoId: ISheetPhoto['id']) => {
     return state.sheet.allSheetPhotos[sheetPhotoId]
   }))
+  const sheetSelectionsRangeCellIds = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.rangeCellIds)
 
   // State
   const [ deleteActiveSheetCellPhotoStatus, setDeleteActiveSheetCellPhotoStatus ] = useState('READY' as ISheetCellPhotosDeleteStatus)
@@ -48,8 +47,10 @@ const SheetCellPhotos = ({
   const [ uploadSheetCellPhotoStatus, setUploadSheetCellPhotoStatus ] = useState('READY' as ISheetCellPhotosUploadStatus)
   const [ activeSheetCellPhotoIndex, setActiveSheetCellPhotoIndex ] = useState(0)
 
-  // Active Sheet Cell Photo
+  // Local Variables
   const activeSheetCellPhoto = sheetCellPhotos && sheetCellPhotos[activeSheetCellPhotoIndex]
+  const isCellSelected = cell.isCellSelectedSheetIds.has(sheetId)
+  const isCellInRange = sheetSelectionsRangeCellIds.has(cell.id)
 
   // Timeouts
   let beforePhotoDeleteTimeout = useRef(null)
@@ -60,7 +61,7 @@ const SheetCellPhotos = ({
   // Effects
   useEffect(() => {
     if(sheetCellPhotos && cell && cell.value && (sheetCellPhotos.length + '') !== (cell.value + '')) {
-      updateCellValue((sheetCellPhotos && sheetCellPhotos.length + '') || '0')
+      dispatch(updateSheetCell(cell.id, { value: (sheetCellPhotos && sheetCellPhotos.length + '') || '0' }))
     }
   })
   
@@ -104,11 +105,11 @@ const SheetCellPhotos = ({
       setUploadSheetCellPhotoStatus('PREPARING_UPLOAD')
       storeFileToS3(file, () => setUploadSheetCellPhotoStatus('UPLOADING'), setUploadSheetCellPhotoProgress).then(s3PresignedUrlData => {
         setUploadSheetCellPhotoStatus('SAVING_FILE_DATA')
-        mutation.createSheetCellPhoto(sheetId, cellId, file.name, s3PresignedUrlData, uploadedAt).then(nextSheetCellPhotos => {
+        mutation.createSheetCellPhoto(sheetId, cell.id, file.name, s3PresignedUrlData, uploadedAt).then(nextSheetCellPhotos => {
           const newSheetCellPhoto = nextSheetCellPhotos[nextSheetCellPhotos.length - 1]
           setUploadSheetCellPhotoStatus('UPLOADED')
           setUploadSheetCellPhotoProgress(0)
-          dispatch(createSheetCellPhoto(cellId, newSheetCellPhoto))
+          dispatch(createSheetCellPhoto(cell.id, newSheetCellPhoto))
           setTimeout(() => setActiveSheetCellPhotoIndex(0), 25)
           setTimeout(() => setUploadSheetCellPhotoStatus('READY'), 1000)
         })
@@ -120,14 +121,11 @@ const SheetCellPhotos = ({
     <SheetCellContainer
       testId="SheetCellPhotos"
       sheetId={sheetId}
-      cellId={cellId}
       cell={cell}
-      focusCell={() => null}
-      isCellSelected={isCellSelected}
+      beginEditing={() => null}
+      completeEditing={() => null}
       onlyRenderChildren
-      preventValueChangeWhileSelected
-      value={null}
-      {...passThroughProps}>
+      value={null}>
       <Container>
         <SheetCellPhotosValue
           value={(sheetCellPhotos && sheetCellPhotos.length || 0) + ''}/>
@@ -158,16 +156,6 @@ const SheetCellPhotos = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetCellPhotosProps {
-  sheetId: string
-  cell: ISheetCell
-  cellId: string
-  isCellSelected: boolean
-  isCellInRange: boolean
-  updateCellValue(nextCellValue: string): void
-  value: string
-}
-
 export type ISheetCellPhotosUploadStatus = 
   'READY' | 
   'PREPARING_UPLOAD' | 

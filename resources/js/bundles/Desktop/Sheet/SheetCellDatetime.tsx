@@ -1,10 +1,16 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import moment from 'moment'
 
-import { ISheetCell } from '@/state/sheet/types'
+import { ISheetCellTypesSharedProps } from '@desktop/Sheet/SheetCell'
+
+import { 
+  updateSheetCell,
+  updateSheetCellValues
+} from '@/state/sheet/actions'
 
 import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
 import SheetCellDatetimeDatepicker from '@desktop/Sheet/SheetCellDatetimeDatepicker'
@@ -14,27 +20,49 @@ import SheetCellDatetimeDatepicker from '@desktop/Sheet/SheetCellDatetimeDatepic
 //-----------------------------------------------------------------------------
 export const SheetCellDatetime = ({
   sheetId,
-  updateCellValue,
-  value,
-  ...passThroughProps
-}: ISheetCellDatetimeProps) => {
+  cell,
+  isCellInRange
+}: ISheetCellTypesSharedProps) => {
 
+  // Redux
+  const dispatch = useDispatch()
+  
   // State
-  const [ localValue, setLocalValue ] = useState(value)
-  const [ isInputEditing, setIsInputEditing ] = useState(false)
-
-  // Effects
-  useEffect(() => {
-    setLocalValue(value)
-  }, [ value ])
-
-  useEffect(() => {
-    if(value !== localValue && !isInputEditing) {
-      const isLocalValueValidDate = dateValidator(localValue)
-      const nextCellValue = isLocalValueValidDate ? formatDate(localValue) : localValue
-      updateCellValue(nextCellValue)
+  const [ sheetCellPreviousValue, setSheetCellPreviousValue ] = useState(null)
+  
+  // Begin Editing
+  const beginEditing = (value: string = null) => {
+    const nextSheetCellValue = value === null ? cell.value : value
+    setSheetCellPreviousValue(cell.value)
+    if(isCellInRange) {
+      dispatch(updateSheetCell(cell.id, { isCellEditing: true }, null, true ))
+      dispatch(updateSheetCellValues(sheetId, nextSheetCellValue))
     }
-  }, [ isInputEditing, localValue ])
+    else {
+      dispatch(updateSheetCell(cell.id, { isCellEditing: true, value: nextSheetCellValue }, null, true ))
+    }
+  }
+  
+  // Complete Editing
+  const completeEditing = () => {
+    dispatch(updateSheetCell(cell.id, { isCellEditing: false }, null, true))
+    setTimeout(() => {
+      if(!isCellInRange) {
+        const nextSheetCellValue = formatDate(cell.value)
+        dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }, { value: sheetCellPreviousValue }))
+      }
+    }, 25)
+  }
+  
+  // Handle Editing
+  const handleEditing = (nextSheetCellValue: string) => {
+    if(isCellInRange) {
+      dispatch(updateSheetCellValues(sheetId, nextSheetCellValue))
+    }
+    else {
+      dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }, null, true))
+    }
+  }
 
   // Date Validator
   const dateValidator = (date: any) => {
@@ -44,44 +72,29 @@ export const SheetCellDatetime = ({
       && ![0, 1, '0', '1', null].includes(date)
   }
 
-  // Format the date
+  // Format Date
   const formatDate = (date: any) => {
-    return moment(new Date(date)).format('MM/DD/YYYY')
-  }
-
-  // Handle Update Cell Value
-  const handleUpdateCellValue = (nextCellValue: string) => {
-    setLocalValue(nextCellValue)
+    if(dateValidator(date)) {
+      return moment(new Date(date)).format('MM/DD/YYYY')
+    }
+    return date
   }
 
   return (
     <SheetCellContainer
       testId="SheetCellDatetime"
       sheetId={sheetId}
-      focusCell={() => setIsInputEditing(true)}
-      onCloseCell={() => setIsInputEditing(false)}
-      value={localValue}
-      {...passThroughProps}>
+      cell={cell}
+      beginEditing={beginEditing}
+      completeEditing={completeEditing}
+      value={cell.value}>
       <SheetCellDatetimeDatepicker
         sheetId={sheetId}
         dateValidator={dateValidator}
-        updateCellValue={handleUpdateCellValue}
-        value={localValue}/>
+        handleEditing={handleEditing}
+        value={cell.value}/>
     </SheetCellContainer>
   )
-}
-
-//-----------------------------------------------------------------------------
-// Props
-//-----------------------------------------------------------------------------
-export interface ISheetCellDatetimeProps {
-  sheetId: string
-  cell: ISheetCell
-  cellId: string
-  isCellInRange: boolean
-  isCellSelected: boolean
-  updateCellValue(nextCellValue: string): void
-  value: string
 }
 
 //-----------------------------------------------------------------------------

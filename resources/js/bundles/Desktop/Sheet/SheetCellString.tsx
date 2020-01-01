@@ -1,14 +1,16 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useRef, useState } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { ISheetCell } from '@/state/sheet/types'
-import { ISheetCellTypesSharedProps } from '@desktop/bundles/Sheet/SheetCell'
+import { ISheetCellTypesSharedProps } from '@desktop/Sheet/SheetCell'
 
-import { updateSheetCell } from '@/state/sheet/actions'
+import { 
+  updateSheetCell,
+  updateSheetCellValues
+} from '@/state/sheet/actions'
 
 import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
 
@@ -16,50 +18,75 @@ import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellString = ({
-  cell
+  sheetId,
+  cell,
+  isCellInRange
 }: ISheetCellTypesSharedProps) => {
   
   // Refs
-  const textarea = useRef(null)
+  const input = useRef(null)
+
+  // Redux
+  const dispatch = useDispatch()
   
   // State
   const [ sheetCellPreviousValue, setSheetCellPreviousValue ] = useState(null)
+
+  // Effects
+  useEffect(() => {
+    if(cell.isCellEditing && input && input.current) {
+      const inputLength = input.current.value && input.current.value.length || 0
+      input.current.focus()
+      input.current.setSelectionRange(inputLength,inputLength)
+    }
+  })
   
   // Begin Editing
-  const beginEditing = (nextSheetCellValue: string = null) => {
+  const beginEditing = (value: string = null) => {
+    const nextSheetCellValue = value === null ? cell.value : value
     setSheetCellPreviousValue(cell.value)
-    dispatch(updateSheetCell(cell.id, { isEditing: true, value: nextSheetCellValue || cell.value } ))
-    if(textarea && textarea.current) {
-      const textareaLength = textarea.current.value && textarea.current.value.length || 0
-      textarea.current.focus()
-      textarea.current.setSelectionRange(textareaLength,textareaLength)
+    if(isCellInRange) {
+      dispatch(updateSheetCell(cell.id, { isCellEditing: true }, null, true ))
+      dispatch(updateSheetCellValues(sheetId, nextSheetCellValue))
+    }
+    else {
+      dispatch(updateSheetCell(cell.id, { isCellEditing: true, value: nextSheetCellValue }, null, true ))
     }
   }
   
   // Complete Editing
   const completeEditing = () => {
-    dispatch(updateSheetCell(cell.id, { isEditing: false }, null, true))
+    dispatch(updateSheetCell(cell.id, { isCellEditing: false }, null, true))
     setTimeout(() => {
-      dispatch(updateSheetCell(cell.id, { value: e.target.value }, { value: sheetCellPreviousValue }))
+      if(!isCellInRange) {
+        dispatch(updateSheetCell(cell.id, { value: cell.value }, { value: sheetCellPreviousValue }))
+      }
     }, 25)
   }
   
-  // On Value Change
-  const onValueChange = (e: any) => {
-    dispatch(updateSheetCell(cell.id, { value: e.target.value }, null, true))
+  // Handle Editing
+  const handleEditing = (e: ChangeEvent<HTMLInputElement>) => {
+    const nextSheetCellValue = e.target.value
+    if(isCellInRange) {
+      dispatch(updateSheetCellValues(sheetId, nextSheetCellValue))
+    }
+    else {
+      dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }, null, true))
+    }
   }
 
   return (
     <SheetCellContainer
       testId="SheetCellString"
+      sheetId={sheetId}
       cell={cell}
       beginEditing={beginEditing}
       completeEditing={completeEditing}
       value={cell.value}>
       <StyledInput
-        data-testid="SheetCellStringTextarea"
-        ref={textarea}
-        onChange={onValueChange}
+        data-testid="SheetCellStringInput"
+        ref={input}
+        onChange={handleEditing}
         value={cell.value || ""}/>
     </SheetCellContainer>
   )

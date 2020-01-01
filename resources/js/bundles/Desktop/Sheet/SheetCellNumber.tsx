@@ -1,11 +1,16 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useRef } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { ISheetCell} from '@/state/sheet/types'
-import { ISheetCellTypesSharedProps } from '@desktop/bundles/Sheet/SheetCell'
+import { ISheetCellTypesSharedProps } from '@desktop/Sheet/SheetCell'
+
+import { 
+  updateSheetCell,
+  updateSheetCellValues
+} from '@/state/sheet/actions'
 
 import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
 
@@ -13,38 +18,65 @@ import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellNumber = ({
-  cell
+  sheetId,
+  cell,
+  isCellInRange
 }: ISheetCellTypesSharedProps) => {
   
   // Refs
   const input = useRef(null)
+
+  // Redux
+  const dispatch = useDispatch()
   
   // State
   const [ sheetCellPreviousValue, setSheetCellPreviousValue ] = useState(null)
+
+  // Effects
+  useEffect(() => {
+    if(cell.isCellEditing && input && input.current) {
+      input.current.focus()
+    }
+  })
   
   // Begin Editing
-  const beginEditing = (nextSheetCellValue: string = null) => {
-    input.current && input.current.focus()
+  const beginEditing = (value: string = null) => {
+    const nextSheetCellValue = value === null ? cell.value : value
     setSheetCellPreviousValue(cell.value)
-    dispatch(updateSheetCell(cell.id, { isEditing: true, value: nextSheetCellValue || cell.value } ))
+    if(isCellInRange) {
+      dispatch(updateSheetCell(cell.id, { isCellEditing: true }, null, true ))
+      dispatch(updateSheetCellValues(sheetId, nextSheetCellValue))
+    }
+    else {
+      dispatch(updateSheetCell(cell.id, { isCellEditing: true, value: nextSheetCellValue }, null, true ))
+    }
   }
   
   // Complete Editing
   const completeEditing = () => {
-    dispatch(updateSheetCell(cell.id, { isEditing: false }, null, true))
+    dispatch(updateSheetCell(cell.id, { isCellEditing: false }, null, true))
     setTimeout(() => {
-      dispatch(updateSheetCell(cell.id, { value: e.target.value }, { value: sheetCellPreviousValue }))
+      if(!isCellInRange) {
+        dispatch(updateSheetCell(cell.id, { value: cell.value }, { value: sheetCellPreviousValue }))
+      }
     }, 25)
   }
   
-  // On Value Change
-  const onValueChange = (e: any) => {
-    dispatch(updateSheetCell(cell.id, { value: e.target.value }, null, true))
+  // Handle Editing
+  const handleEditing = (e: ChangeEvent<HTMLInputElement>) => {
+    const nextSheetCellValue = e.target.value
+    if(isCellInRange) {
+      dispatch(updateSheetCellValues(sheetId, nextSheetCellValue))
+    }
+    else {
+      dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }, null, true))
+    }
   }
 
   return (
     <SheetCellContainer
       testId="SheetCellNumber"
+      sheetId={sheetId}
       cell={cell}
       beginEditing={beginEditing}
       completeEditing={completeEditing}
@@ -53,7 +85,7 @@ const SheetCellNumber = ({
         data-testid="SheetCellNumberInput"
         ref={input}
         type="number"
-        onChange={onValueChange}
+        onChange={handleEditing}
         value={cell.value || ''}/>
     </SheetCellContainer>
   )
