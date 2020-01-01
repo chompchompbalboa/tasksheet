@@ -1,23 +1,52 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { memo } from 'react'
+import React, { memo, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
+import { query } from '@/api'
+
+import { IAppState } from '@/state' 
 import { IFile } from '@/state/folder/types'
 import { ISheet } from '@/state/sheet/types'
+
+import {
+  loadSheet
+} from '@/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-export const SheetMobile = memo(({
+export const MobileSheet = memo(({
   fileId,
   id: sheetId,
 }: ISheetProps) => {
+
+  // Redux
+  const dispatch = useDispatch()
+  const activeTab = useSelector((state: IAppState) => state.tab.activeTab)
+
+  // State
+  const [ hasLoaded, setHasLoaded ] = useState(false)
+
+  // Local Variables
+  const isActiveFile = fileId === activeTab
+
+  // Effects
+  useEffect(() => {
+    if(!hasLoaded && isActiveFile) {
+      query.getSheet(sheetId).then(sheet => {
+        dispatch(loadSheet(sheet))
+        setHasLoaded(true)
+      })
+    }
+  }, [ activeTab ])
+
   return (
     <Container
-      data-testid="SheetMobileContainer">
+      data-testid="MobileSheetContainer">
       {fileId} / {sheetId}
     </Container>
   )
@@ -43,4 +72,4 @@ const Container = styled.div`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetMobile
+export default MobileSheet
