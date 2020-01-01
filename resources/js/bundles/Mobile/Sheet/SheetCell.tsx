@@ -1,8 +1,8 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { ChangeEvent, memo, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { memo } from 'react'
+import { useSelector } from 'react-redux'
 import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
@@ -14,39 +14,36 @@ import {
   ISheetStyles 
 } from '@/state/sheet/types'
 
-import { updateSheetCell } from '@/state/sheet/actions'
+import SheetCellBoolean from '@mobile/Sheet/SheetCellBoolean'
+import SheetCellString from '@mobile/Sheet/SheetCellString'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-export const SheetListRowCell = memo(({
+export const SheetCell = memo(({
   sheetId,
   columnId,
   cellId
-}: ISheetListRowCellProps) => {
+}: ISheetCellProps) => {
 
   // Redux
-  const dispatch = useDispatch()
   const sheetColumn = useSelector((state: IAppState) => state.sheet.allSheetColumns && state.sheet.allSheetColumns[columnId])
   const sheetCell = useSelector((state: IAppState) => state.sheet.allSheetCells && state.sheet.allSheetCells[cellId])
   const sheetStyles = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].styles)
 
-  // State
-  const [ sheetCellValue, setSheetCellValue ] = useState(sheetCell ? sheetCell.value : '')
-
-  // Effects
-  useEffect(() => {
-    setSheetCellValue(sheetCell.value)
-  }, [ sheetCell.value ])
-
-  // Handle Input Blur
-  const handleInputBlur = () => {
-    if(sheetCell.value !== sheetCellValue) {
-      dispatch(updateSheetCell(cellId, { value: sheetCellValue }))
-    }
-  }
-
   if(sheetCell) {
+
+    // Cell types
+    const sheetCellTypes = {
+      STRING: SheetCellString,
+      NUMBER: SheetCellString,
+      BOOLEAN: SheetCellBoolean,
+      DATETIME: SheetCellString,
+      PHOTOS: SheetCellString,
+      FILES: SheetCellString
+    }
+    const SheetCellType = sheetCellTypes[sheetColumn.cellType]
+
     return (
       <Container>
         <Column>{sheetColumn.name}</Column>
@@ -54,10 +51,9 @@ export const SheetListRowCell = memo(({
           cellId={cellId}
           isCellSelected={false}
           sheetStyles={sheetStyles}>
-          <StyledInput
-            onBlur={handleInputBlur}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setSheetCellValue(e.target.value)}
-            value={sheetCellValue || ''}/>
+          <SheetCellType
+            sheetId={sheetId}
+            cell={sheetCell}/>
         </Cell>
       </Container>
     )
@@ -70,10 +66,15 @@ export const SheetListRowCell = memo(({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-export interface ISheetListRowCellProps {
+export interface ISheetCellProps {
   sheetId: ISheet['id']
   columnId: ISheetColumn['id']
   cellId: ISheetCell['id']
+}
+
+export interface ISheetCellTypesSharedProps {
+  sheetId: ISheet['id']
+  cell: ISheetCell
 }
 
 //-----------------------------------------------------------------------------
@@ -121,21 +122,7 @@ interface ICell {
   sheetStyles: ISheetStyles
 }
 
-const StyledInput = styled.input`
-  width: 100%;
-  height: 100%;
-  font-size: inherit;
-  font-weight: inherit;
-  font-family: inherit;
-  color: inherit;
-  letter-spacing: inherit;
-  border: none;
-  outline: none;
-  background-color: transparent;
-  text-align: right;
-`
-
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetListRowCell
+export default SheetCell

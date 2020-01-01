@@ -10,8 +10,8 @@ import { IAppState } from '@/state'
 import { ISheet } from '@/state/sheet/types'
 
 import Autosizer from 'react-virtualized-auto-sizer'
-import SheetListRow from '@mobile/Sheet/SheetListRow'
-import SheetListRowBreak from '@mobile/Sheet/SheetListRowBreak'
+import SheetRow from '@mobile/Sheet/SheetRow'
+import SheetRowBreak from '@mobile/Sheet/SheetRowBreak'
 
 
 //-----------------------------------------------------------------------------
@@ -67,7 +67,7 @@ export const SheetList = memo(({
     const rowId = sheetVisibleRows[index]
     if(rowId !== 'ROW_BREAK') {
       return (
-        <SheetListRow
+        <SheetRow
           sheetId={sheetId}
           rowId={rowId}
           style={style}
@@ -75,7 +75,7 @@ export const SheetList = memo(({
       )
     }
     return (
-      <SheetListRowBreak
+      <SheetRowBreak
         style={style}/>
     )
   }

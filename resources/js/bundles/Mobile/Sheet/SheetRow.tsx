@@ -13,18 +13,18 @@ import {
   ISheetRow 
 } from '@/state/sheet/types'
 
-import SheetListRowCell from '@mobile/Sheet/SheetListRowCell'
-import SheetListRowCellBreak from '@mobile/Sheet/SheetListRowCellBreak'
+import SheetCell from '@mobile/Sheet/SheetCell'
+import SheetColumnBreak from '@mobile/Sheet/SheetColumnBreak'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-export const SheetListRow = memo(({
+export const SheetRow = memo(({
   sheetId,
   rowId,
   style,
   visibleColumns
-}: ISheetListRowProps) => {
+}: ISheetRowProps) => {
 
   const sheetRow = useSelector((state: IAppState) => state.sheet.allSheetRows && state.sheet.allSheetRows[rowId])
 
@@ -35,7 +35,7 @@ export const SheetListRow = memo(({
         {visibleColumns && visibleColumns.map((columnId, index) => {
           if(columnId === 'COLUMN_BREAK') {
             return (
-              <SheetListRowCellBreak
+              <SheetColumnBreak
                 key={index}/>
             )
           }
@@ -43,7 +43,7 @@ export const SheetListRow = memo(({
             const cellId = sheetRow.cells[columnId]
             if(cellId) {
               return (
-                <SheetListRowCell
+                <SheetCell
                   key={cellId}
                   sheetId={sheetId}
                   columnId={columnId}
@@ -60,7 +60,7 @@ export const SheetListRow = memo(({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-export interface ISheetListRowProps {
+export interface ISheetRowProps {
   sheetId: ISheet['id']
   rowId: ISheetRow['id']
   style: any
@@ -85,4 +85,4 @@ const ContentContainer = styled.div`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetListRow
+export default SheetRow
