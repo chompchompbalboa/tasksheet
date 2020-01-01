@@ -10,7 +10,7 @@ import { useMediaQuery } from 'react-responsive'
 import { appReducer, IAppState } from '@/state'
 
 import Desktop from '@desktop/Desktop'
-import Mobile from '@desktop/Mobile/MobileApp'
+import Mobile from '@mobile/Mobile'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -20,11 +20,11 @@ export const Root = () => {
   const store = createStore(appReducer, applyMiddleware(thunkMiddleware as ThunkMiddleware<IAppState>))
   
   const isMobile = useMediaQuery({ query: '(max-width: 480px)' })
-  const isMobileSiteUnderConstruction = true
+  const forceDesktopApp = false
 
   return (
     <ReduxProvider store={store}>
-      {isMobile && !isMobileSiteUnderConstruction
+      {isMobile && !forceDesktopApp
         ? <Mobile />
         : <Desktop />}
     </ReduxProvider>

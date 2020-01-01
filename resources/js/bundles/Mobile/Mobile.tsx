@@ -7,6 +7,8 @@ import styled from 'styled-components'
 
 import { IAppState } from '@/state'
 
+import Tabs from '@mobile/Tabs/Tabs'
+
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
@@ -16,7 +18,7 @@ export const MobileApp = () => {
   return (
     <Container
       userColorPrimary={userColorPrimary}>
-      MobileApp
+      <Tabs />
     </Container>
   )
 }

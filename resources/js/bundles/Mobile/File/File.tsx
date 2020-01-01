@@ -1,47 +1,61 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { memo } from 'react'
-import { areEqual } from 'react-window'
+import React from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { IFile } from '@/state/folder/types'
-import { ISheet } from '@/state/sheet/types'
+import { IAppState } from '@/state'
+
+import ErrorBoundary from '@/components/ErrorBoundary'
+import Sheet from '@mobile/Sheet/Sheet'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-export const SheetMobile = memo(({
-  fileId,
-  id: sheetId,
-}: ISheetProps) => {
-  false && console.log(fileId, sheetId)
+const File = ({
+  fileId
+}: FileProps) => {
+
+  const file = useSelector((state: IAppState) => state.folder.files[fileId])
+
+  const fileComponents = {
+    SHEET: Sheet
+  }
+  const FileComponent = file ? fileComponents[file.type] : null
+
   return (
-    <Container
-      data-testid="SheetMobileContainer">
-      SheetMobile
-    </Container>
+    <StyledErrorBoundary>
+      {file &&
+        <FileComponent 
+          fileId={file.id}
+          id={file.typeId}/>
+      }
+    </StyledErrorBoundary>
   )
-}, areEqual)
+}
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-export interface ISheetProps {
-  fileId: IFile['id']
-  id: ISheet['id']
+interface FileProps {
+  fileId: string
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div`
+const StyledErrorBoundary = styled(ErrorBoundary)`
   position: relative;
   width: 100%;
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(230, 230, 230);
 `
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetMobile
+export default File

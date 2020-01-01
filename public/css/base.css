@@ -21,6 +21,14 @@ div {
   font-size: 0.8rem;
 }
 
+@media (max-width: 480px) {
+  div {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+  }
+}
+
 .input_placeholder_color_inherit input::placeholder {
   color: inherit;
   opacity: 1

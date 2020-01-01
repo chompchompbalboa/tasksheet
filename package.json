@@ -95,7 +95,8 @@
     "jest": {
         "moduleNameMapper": {
             "^@/(.*)$": "<rootDir>resources/js/$1",
-            "^@desktop/(.*)$": "<rootDir>resources/js/bundles/Desktop/$1"
+            "^@desktop/(.*)$": "<rootDir>resources/js/bundles/Desktop/$1",
+            "^@mobile/(.*)$": "<rootDir>resources/js/bundles/Mobile/$1"
         },
         "setupFiles": [
             "jest-canvas-mock"
