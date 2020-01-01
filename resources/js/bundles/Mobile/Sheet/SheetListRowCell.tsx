@@ -1,8 +1,8 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { memo } from 'react'
-import { useSelector } from 'react-redux'
+import React, { ChangeEvent, memo } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { areEqual } from 'react-window'
 import styled from 'styled-components'
 
@@ -14,6 +14,8 @@ import {
   ISheetStyles 
 } from '@/state/sheet/types'
 
+import { updateSheetCell } from '@/state/sheet/actions'
+
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
@@ -24,9 +26,15 @@ export const SheetListRowCell = memo(({
 }: ISheetListRowCellProps) => {
 
   // Redux
+  const dispatch = useDispatch()
   const sheetColumn = useSelector((state: IAppState) => state.sheet.allSheetColumns && state.sheet.allSheetColumns[columnId])
   const sheetCell = useSelector((state: IAppState) => state.sheet.allSheetCells && state.sheet.allSheetCells[cellId])
   const sheetStyles = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].styles)
+
+  // Handle Input Blur
+  const handleInputBlur = () => {
+    dispatch(updateSheetCell(cellId, { value: sheetCell.value }))
+  }
 
   if(sheetCell) {
     return (
@@ -36,9 +44,10 @@ export const SheetListRowCell = memo(({
           cellId={cellId}
           isCellSelected={false}
           sheetStyles={sheetStyles}>
-          <CellValue>
-            {sheetCell.value}
-          </CellValue>
+          <StyledInput
+            onBlur={handleInputBlur}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => dispatch(updateSheetCell(cellId, { value: e.target.value }, null, true))}
+            value={sheetCell.value || ''}/>
         </Cell>
       </Container>
     )
@@ -102,11 +111,18 @@ interface ICell {
   sheetStyles: ISheetStyles
 }
 
-const CellValue = styled.div`
+const StyledInput = styled.input`
   width: 100%;
+  height: 100%;
+  font-size: inherit;
+  font-weight: inherit;
+  font-family: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  border: none;
+  outline: none;
+  background-color: transparent;
   text-align: right;
-  white-space: nowrap;
-  overflow: hidden;
 `
 
 //-----------------------------------------------------------------------------
