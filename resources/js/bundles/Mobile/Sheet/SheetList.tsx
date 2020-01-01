@@ -68,6 +68,7 @@ export const SheetList = memo(({
     if(rowId !== 'ROW_BREAK') {
       return (
         <SheetListRow
+          sheetId={sheetId}
           rowId={rowId}
           style={style}
           visibleColumns={sheetViewVisibleColumns}/>

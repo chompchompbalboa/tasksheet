@@ -33,7 +33,7 @@ const SelectionContainers = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  background-color: white;
+  background-color: rgb(250, 250, 250);
   color: black;
 `
 

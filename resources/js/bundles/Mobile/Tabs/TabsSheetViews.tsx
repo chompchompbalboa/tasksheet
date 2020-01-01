@@ -100,7 +100,7 @@ const ActiveSheetView = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: ${ ({ isSheetViewsDropdownVisible }: IActiveSheetView) => isSheetViewsDropdownVisible ? '1px solid white' : '1px solid rgb(220, 220, 220)' };
+  border-bottom: ${ ({ isSheetViewsDropdownVisible }: IActiveSheetView) => isSheetViewsDropdownVisible ? '1px solid rgb(250, 250, 250)' : '1px solid rgb(200, 200, 200)' };
 `
 interface IActiveSheetView {
   isSheetViewsDropdownVisible: boolean
@@ -119,8 +119,8 @@ const SheetViewsDropdown = styled.div`
   top: 100%;
   left: -100%;
   width: 100vw;
-  background-color: white;
-  border-bottom: 2px solid rgb(220, 220, 220);
+  background-color: rgb(250, 250, 250);
+  border-bottom: 2px solid rgb(200, 200, 200);
 `
 interface ISheetViewsDropdown {
   isVisible: boolean

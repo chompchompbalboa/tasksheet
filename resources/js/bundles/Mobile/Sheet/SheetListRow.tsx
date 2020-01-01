@@ -8,6 +8,7 @@ import styled from 'styled-components'
 
 import { IAppState } from '@/state'
 import { 
+  ISheet,
   ISheetColumn,
   ISheetRow 
 } from '@/state/sheet/types'
@@ -19,6 +20,7 @@ import SheetListRowCellBreak from '@mobile/Sheet/SheetListRowCellBreak'
 // Component
 //-----------------------------------------------------------------------------
 export const SheetListRow = memo(({
+  sheetId,
   rowId,
   style,
   visibleColumns
@@ -43,6 +45,7 @@ export const SheetListRow = memo(({
               return (
                 <SheetListRowCell
                   key={cellId}
+                  sheetId={sheetId}
                   columnId={columnId}
                   cellId={cellId}/>
               )
@@ -58,6 +61,7 @@ export const SheetListRow = memo(({
 // Props
 //-----------------------------------------------------------------------------
 export interface ISheetListRowProps {
+  sheetId: ISheet['id']
   rowId: ISheetRow['id']
   style: any
   visibleColumns: ISheetColumn['id'][]

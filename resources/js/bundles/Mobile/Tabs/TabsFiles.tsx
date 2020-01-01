@@ -102,7 +102,7 @@ const TabsFiles = () => {
 const Container = styled.div`
   position: relative;
   width: calc(50% - 1px);
-  border-right: 1px solid rgb(220, 220, 220);
+  border-right: 1px solid rgb(200, 200, 200);
   display: flex;
   align-items: center;
 `
@@ -114,7 +114,7 @@ const ActiveFile = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: ${ ({ isFilesDropdownVisible }: IActiveFile) => isFilesDropdownVisible ? '1px solid white' : '1px solid rgb(220, 220, 220)' };
+  border-bottom: ${ ({ isFilesDropdownVisible }: IActiveFile) => isFilesDropdownVisible ? '1px solid rgb(250, 250, 250)' : '1px solid rgb(200, 200, 200)' };
 `
 interface IActiveFile {
   isFilesDropdownVisible: boolean
@@ -133,8 +133,8 @@ const FilesDropdown = styled.div`
   top: 100%;
   left: 0;
   width: 100vw;
-  background-color: white;
-  border-bottom: 2px solid rgb(220, 220, 220);
+  background-color: rgb(250, 250, 250);
+  border-bottom: 2px solid rgb(200, 200, 200);
 `
 interface IFilesDropdown {
   isVisible: boolean
