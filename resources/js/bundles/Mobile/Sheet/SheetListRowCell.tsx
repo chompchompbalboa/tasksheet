@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { ChangeEvent, memo } from 'react'
+import React, { ChangeEvent, memo, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { areEqual } from 'react-window'
 import styled from 'styled-components'
@@ -31,9 +31,19 @@ export const SheetListRowCell = memo(({
   const sheetCell = useSelector((state: IAppState) => state.sheet.allSheetCells && state.sheet.allSheetCells[cellId])
   const sheetStyles = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].styles)
 
+  // State
+  const [ sheetCellValue, setSheetCellValue ] = useState(sheetCell ? sheetCell.value : '')
+
+  // Effects
+  useEffect(() => {
+    setSheetCellValue(sheetCell.value)
+  }, [ sheetCell.value ])
+
   // Handle Input Blur
   const handleInputBlur = () => {
-    dispatch(updateSheetCell(cellId, { value: sheetCell.value }))
+    if(sheetCell.value !== sheetCellValue) {
+      dispatch(updateSheetCell(cellId, { value: sheetCellValue }))
+    }
   }
 
   if(sheetCell) {
@@ -46,8 +56,8 @@ export const SheetListRowCell = memo(({
           sheetStyles={sheetStyles}>
           <StyledInput
             onBlur={handleInputBlur}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => dispatch(updateSheetCell(cellId, { value: e.target.value }, null, true))}
-            value={sheetCell.value || ''}/>
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setSheetCellValue(e.target.value)}
+            value={sheetCellValue || ''}/>
         </Cell>
       </Container>
     )
