@@ -112,6 +112,7 @@ const SheetViewsDropdown = styled.div`
   left: -100%;
   width: 100vw;
   background-color: white;
+  border-bottom: 2px solid rgb(220, 220, 220);
 `
 interface ISheetViewsDropdown {
   isVisible: boolean

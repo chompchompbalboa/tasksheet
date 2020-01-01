@@ -1,42 +1,56 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import React, { memo } from 'react'
+import { areEqual } from 'react-window'
 import styled from 'styled-components'
-import OpenFiles from '@mobile/Tabs/TabsFiles'
-import SheetViews from '@mobile/Tabs/TabsSheetViews'
+
+import { ISheet, ISheetRow } from '@/state/sheet/types'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const Tabs = () => {
+export const SheetListRow = memo(({
+  sheetId,
+  rowId,
+  style
+}: ISheetListRowProps) => {
+
   return (
-    <Container>
-      <SelectionContainers>
-        <OpenFiles />
-        <SheetViews />
-      </SelectionContainers>
+    <Container
+      style={style}>
+      <ContentContainer>
+        {sheetId} / {rowId}
+      </ContentContainer>
     </Container>
   )
+}, areEqual)
+
+//-----------------------------------------------------------------------------
+// Props
+//-----------------------------------------------------------------------------
+export interface ISheetListRowProps {
+  sheetId: ISheet['id']
+  rowId: ISheetRow['id']
+  style: any
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  border-bottom: 1px solid rgb(220, 220, 220);
+  width: 100%;
+  padding: 0.5rem;
 `
 
-const SelectionContainers = styled.div`
-  position: relative;
-  z-index: 2;
+const ContentContainer = styled.div`
   width: 100%;
-  display: flex;
+  height: 100%;
+  border-radius: 3px;
   background-color: white;
-  color: black;
 `
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default Tabs
+export default SheetListRow

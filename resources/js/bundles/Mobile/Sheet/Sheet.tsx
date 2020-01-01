@@ -16,6 +16,9 @@ import {
   loadSheet
 } from '@/state/sheet/actions'
 
+import LoadingTimer from '@/components/LoadingTimer'
+import SheetList from '@mobile/Sheet/SheetList'
+
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
@@ -47,7 +50,10 @@ export const MobileSheet = memo(({
   return (
     <Container
       data-testid="MobileSheetContainer">
-      {fileId} / {sheetId}
+      {!hasLoaded
+        ? isActiveFile ? <LoadingTimer fromId={sheetId}/> : null
+        : <SheetList sheetId={sheetId}/>
+      }
     </Container>
   )
 }, areEqual)

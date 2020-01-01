@@ -126,6 +126,7 @@ const FilesDropdown = styled.div`
   left: 0;
   width: 100vw;
   background-color: white;
+  border-bottom: 2px solid rgb(220, 220, 220);
 `
 interface IFilesDropdown {
   isVisible: boolean
