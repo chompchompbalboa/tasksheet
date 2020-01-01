@@ -39,7 +39,7 @@ const SheetCellString = ({
       input.current.focus()
       input.current.setSelectionRange(inputLength,inputLength)
     }
-  })
+  }, [ cell.isCellEditing ])
   
   // Begin Editing
   const beginEditing = (value: string = null) => {
