@@ -114,7 +114,7 @@ const ActiveFile = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: ${ ({ isFilesDropdownVisible }: IActiveFile) => isFilesDropdownVisible ? '1px solid rgb(250, 250, 250)' : '1px solid rgb(200, 200, 200)' };
+  border-bottom: ${ ({ isFilesDropdownVisible }: IActiveFile) => isFilesDropdownVisible ? '1px solid rgb(242, 242, 242)' : '1px solid rgb(200, 200, 200)' };
 `
 interface IActiveFile {
   isFilesDropdownVisible: boolean
@@ -133,7 +133,7 @@ const FilesDropdown = styled.div`
   top: 100%;
   left: 0;
   width: 100vw;
-  background-color: rgb(250, 250, 250);
+  background-color: rgb(242, 242, 242);
   border-bottom: 2px solid rgb(200, 200, 200);
 `
 interface IFilesDropdown {

@@ -26,7 +26,9 @@ import SheetCellString from '@mobile/Sheet/SheetCellString'
 export const SheetCell = memo(({
   sheetId,
   columnId,
-  cellId
+  cellId,
+  isFirstColumn,
+  isLastColumn
 }: ISheetCellProps) => {
 
   // Redux
@@ -49,10 +51,16 @@ export const SheetCell = memo(({
 
     return (
       <Container>
-        <Column>{sheetColumn.name}</Column>
+        <Column
+          isFirstColumn={isFirstColumn}
+          isLastColumn={isLastColumn}>
+          {sheetColumn.name}
+        </Column>
         <Cell
           cellId={cellId}
           isCellSelected={false}
+          isFirstColumn={isFirstColumn}
+          isLastColumn={isLastColumn}
           sheetStyles={sheetStyles}>
           <SheetCellType
             sheetId={sheetId}
@@ -62,7 +70,7 @@ export const SheetCell = memo(({
     )
   }
   return (
-    <Container/>
+    <Container />
   )
 }, areEqual)
 
@@ -73,6 +81,8 @@ export interface ISheetCellProps {
   sheetId: ISheet['id']
   columnId: ISheetColumn['id']
   cellId: ISheetCell['id']
+  isFirstColumn: boolean
+  isLastColumn: boolean
 }
 
 export interface ISheetCellTypesSharedProps {
@@ -93,19 +103,26 @@ const Container = styled.div`
 `
 
 const Column = styled.div`
-  width: 25%;
+  width: 30%;
   height: 100%;
   padding-left: 0.5rem;
   display: flex;
   align-items: center;
-  background-color: rgb(250, 250, 250);
+  background-color: rgb(242, 242, 242);
+  border-right: 1px solid rgb(200, 200, 200);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  border-top-left-radius: ${ ({ isFirstColumn }: IColumn) => isFirstColumn ? '5px' : 'none' };
+  border-bottom-left-radius: ${ ({ isLastColumn }: IColumn) => isLastColumn ? '5px' : 'none' };
 `
+interface IColumn {
+  isFirstColumn: boolean
+  isLastColumn: boolean
+}
 
 const Cell = styled.div`
-  width: 75%;
+  width: 70%;
   height: 100%;
   padding: 0 0.5rem;
   display: flex;
@@ -118,10 +135,14 @@ const Cell = styled.div`
         ? 'rgb(245, 245, 245)'
         : 'white'
   };
+  border-top-right-radius: ${ ({ isFirstColumn }: ICell) => isFirstColumn ? '5px' : 'none' };
+  border-bottom-right-radius: ${ ({ isLastColumn }: ICell) => isLastColumn ? '5px' : 'none' };
 `
 interface ICell {
   cellId: ISheetCell['id']
   isCellSelected: boolean
+  isFirstColumn: boolean
+  isLastColumn: boolean
   sheetStyles: ISheetStyles
 }
 

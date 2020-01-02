@@ -36,7 +36,9 @@ export const SheetRow = memo(({
           if(columnId === 'COLUMN_BREAK') {
             return (
               <SheetColumnBreak
-                key={index}/>
+                key={index}
+                isFirstColumn={index === 0}
+                isLastColumn={index === visibleColumns.length - 1}/>
             )
           }
           else {
@@ -47,7 +49,9 @@ export const SheetRow = memo(({
                   key={cellId}
                   sheetId={sheetId}
                   columnId={columnId}
-                  cellId={cellId}/>
+                  cellId={cellId}
+                  isFirstColumn={index === 0}
+                  isLastColumn={index === visibleColumns.length - 1}/>
               )
             }
           }
@@ -80,6 +84,7 @@ const ContentContainer = styled.div`
   height: 100%;
   background-color: white;
   box-shadow: 1px 1px 10px 1px rgba(200, 200, 200, 1);
+  border-radius: 5px;
 `
 
 //-----------------------------------------------------------------------------
