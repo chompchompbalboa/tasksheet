@@ -39,7 +39,6 @@ export const SheetCellDatetime = ({
       dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }))
     }
   }
-  console.log(cellValue ? moment(cellValue).format('YYYY-MM-DD') : '')
 
   return (
     <SheetCellContainer>
@@ -56,7 +55,6 @@ export const SheetCellDatetime = ({
 // Styled Components
 //-----------------------------------------------------------------------------
 const StyledInput = styled.input`
-  width: 100%;
   height: 100%;
   font-size: inherit;
   font-weight: inherit;
