@@ -24,7 +24,7 @@ const Tabs = () => {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  height: calc(2.375rem + 1px);
+  height: calc(3rem + 1px);
 `
 
 const SelectionContainers = styled.div`
