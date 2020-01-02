@@ -24,9 +24,10 @@ export const SheetCellDatetime = ({
   // Redux
   const dispatch = useDispatch()
 
-  // Handle Input Blur
+  // Handle Input Change
   const handleInputChange = (nextValue: string) => {
     const nextSheetCellValue = formatDate(nextValue)
+    window.alert(nextSheetCellValue)
     dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }))
   }
 
@@ -34,7 +35,6 @@ export const SheetCellDatetime = ({
     <SheetCellContainer>
       <StyledInput
         type="date"
-        onBlur={e => handleInputChange(e.target.value)}
         onChange={e => handleInputChange(e.target.value)}
         value={cell.value ? moment(cell.value).format('YYYY-MM-DD') : ''}/>
     </SheetCellContainer>

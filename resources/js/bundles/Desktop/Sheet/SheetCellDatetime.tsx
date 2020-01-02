@@ -93,7 +93,7 @@ export const dateValidator = (date: any) => {
 
 export const formatDate = (date: any) => {
   if(dateValidator(date)) {
-    return moment(new Date(date)).format('MM/DD/YYYY')
+    return moment(date).format('MM/DD/YYYY')
   }
   return date
 }
