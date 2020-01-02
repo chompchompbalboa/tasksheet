@@ -238,6 +238,11 @@ const Container = styled.div`
 	display: flex;
   flex-direction: column;
   color: white;
+  @media (max-width: 480px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
 `
 
 const Header = styled.div`

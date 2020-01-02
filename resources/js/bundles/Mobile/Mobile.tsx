@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { IAppState } from '@/state'
 
 import File from '@mobile/File/File'
+import Site from '@desktop/Site/SiteSplash'
 import Tabs from '@mobile/Tabs/Tabs'
 
 //-----------------------------------------------------------------------------
@@ -15,6 +16,7 @@ import Tabs from '@mobile/Tabs/Tabs'
 //-----------------------------------------------------------------------------
 export const MobileApp = () => {
   
+  const isDemoUser = useSelector((state: IAppState) => state.user.tasksheetSubscription.type === 'DEMO')
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   const openFiles = useSelector((state: IAppState) => state.user.active.tabs)
   const openFileId = useSelector((state: IAppState) => state.user.active.tab)
@@ -22,17 +24,26 @@ export const MobileApp = () => {
   return (
     <Container
       userColorPrimary={userColorPrimary}>
-      <Tabs />
-      <OpenFilesContainer>
-        {openFiles.map((fileId) => (
-          <OpenFileContainer
-            key={fileId}
-            isActiveFile={openFileId === fileId}>
-            <File
-              fileId={fileId}/>
-          </OpenFileContainer>))
-        }
-      </OpenFilesContainer>
+      {isDemoUser 
+        ? <>
+            <Site />
+            <SpreadsheetIcon
+              src={environment.assetUrl + 'images/spreadsheet.png'}/>
+          </>
+        : <>
+            <Tabs />
+            <OpenFilesContainer>
+              {openFiles.map((fileId) => (
+                <OpenFileContainer
+                  key={fileId}
+                  isActiveFile={openFileId === fileId}>
+                  <File
+                    fileId={fileId}/>
+                </OpenFileContainer>))
+              }
+            </OpenFilesContainer>
+          </>
+      }
     </Container>
   )
 }
@@ -51,6 +62,15 @@ const Container = styled.div`
 interface ContainerProps {
   userColorPrimary: string
 }
+
+const SpreadsheetIcon = styled.img`
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: auto;
+  opacity: 0.1;
+`
 
 const OpenFilesContainer = styled.div`
   z-index: 1;
