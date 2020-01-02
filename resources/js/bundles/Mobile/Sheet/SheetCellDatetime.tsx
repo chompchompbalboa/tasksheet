@@ -27,7 +27,6 @@ export const SheetCellDatetime = ({
   // Handle Input Change
   const handleInputChange = (nextValue: string) => {
     const nextSheetCellValue = formatDate(nextValue)
-    window.alert(nextSheetCellValue)
     dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }))
   }
 
