@@ -51,7 +51,7 @@ export const MobileSheet = memo(({
     <Container
       data-testid="MobileSheetContainer">
       {!hasLoaded
-        ? isActiveFile ? <LoadingTimer fromId={sheetId}/> : null
+        ? isActiveFile ? <LoadingTimer color="white" fromId={sheetId}/> : null
         : <SheetList sheetId={sheetId}/>
       }
     </Container>

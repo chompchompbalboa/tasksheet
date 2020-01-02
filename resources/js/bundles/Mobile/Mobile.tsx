@@ -78,7 +78,6 @@ const OpenFilesContainer = styled.div`
   top: calc(3rem + 1px);
   width: 100%;
   height: calc(100% - 3rem - 1px);
-  background-color: rgb(230,230,230);
   box-shadow: -1px 0px 10px 0px rgba(0,0,0,0.5);
 `
 

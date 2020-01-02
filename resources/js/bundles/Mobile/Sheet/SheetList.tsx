@@ -53,7 +53,7 @@ export const SheetList = memo(({
             rowHeight += 30
           }
         })
-        return rowHeight + 20
+        return rowHeight + 14
       }
     }
     return 0

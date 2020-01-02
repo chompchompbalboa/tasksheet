@@ -76,14 +76,13 @@ export interface ISheetRowProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   width: 100%;
-  padding: 10px;
+  padding: 7px 10px;
 `
 
 const ContentContainer = styled.div`
   width: 100%;
   height: 100%;
   background-color: white;
-  box-shadow: 1px 1px 10px 1px rgba(200, 200, 200, 1);
   border-radius: 5px;
 `
 

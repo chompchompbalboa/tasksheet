@@ -50,7 +50,8 @@ export const SheetCell = memo(({
     const SheetCellType = sheetCellTypes[sheetColumn.cellType]
 
     return (
-      <Container>
+      <Container
+        isLastColumn={isLastColumn}>
         <Column
           isFirstColumn={isFirstColumn}
           isLastColumn={isLastColumn}>
@@ -70,7 +71,8 @@ export const SheetCell = memo(({
     )
   }
   return (
-    <Container />
+    <Container
+      isLastColumn={isLastColumn}/>
   )
 }, areEqual)
 
@@ -99,8 +101,11 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgb(200, 200, 200);
+  border-bottom: ${ ({ isLastColumn }: IContainer) => isLastColumn ? 'none' : '1px solid rgb(200, 200, 200)' };
 `
+interface IContainer {
+  isLastColumn: boolean
+}
 
 const Column = styled.div`
   width: 30%;

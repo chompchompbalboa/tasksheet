@@ -10,6 +10,7 @@ import useInterval from '@/utils/useInterval'
 // Component
 //-----------------------------------------------------------------------------
 const LoadingTimer = ({
+  color = "black",
   fromId
 }: LoadingTimerProps) => {
   
@@ -25,7 +26,8 @@ const LoadingTimer = ({
   
   return (
     <Container
-      data-testid="loadingTimerContainer">
+      data-testid="loadingTimerContainer"
+      containerColor={color}>
       <Time>{(time / 1000).toFixed(2)} seconds</Time>
     </Container>
   )
@@ -35,6 +37,7 @@ const LoadingTimer = ({
 // Styled Components
 //-----------------------------------------------------------------------------
 interface LoadingTimerProps {
+  color?: string
   fromId: string
 }
 //-----------------------------------------------------------------------------
@@ -48,9 +51,13 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  color: ${ ({ containerColor }: IContainer ) => containerColor };
   font-size: 1.2rem;
   opacity: 0.8;
 `
+interface IContainer {
+  containerColor: string
+}
 
 const Time = styled.div``
 
