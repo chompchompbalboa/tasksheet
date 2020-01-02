@@ -15,6 +15,7 @@ import {
 } from '@/state/sheet/types'
 
 import SheetCellBoolean from '@mobile/Sheet/SheetCellBoolean'
+import SheetCellDatetime from '@mobile/Sheet/SheetCellDatetime'
 import SheetCellString from '@mobile/Sheet/SheetCellString'
 
 //-----------------------------------------------------------------------------
@@ -38,7 +39,7 @@ export const SheetCell = memo(({
       STRING: SheetCellString,
       NUMBER: SheetCellString,
       BOOLEAN: SheetCellBoolean,
-      DATETIME: SheetCellString,
+      DATETIME: SheetCellDatetime,
       PHOTOS: SheetCellString,
       FILES: SheetCellString
     }

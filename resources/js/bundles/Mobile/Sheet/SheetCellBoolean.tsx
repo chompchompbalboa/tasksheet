@@ -14,7 +14,7 @@ import SheetCellContainer from '@mobile/Sheet/SheetCellContainer'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-export const SheetCellString = ({
+export const SheetCellBoolean = ({
   cell
 }: ISheetCellTypesSharedProps) => {
 
@@ -40,19 +40,9 @@ export const SheetCellString = ({
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const StyledInput = styled.input`
-  font-size: inherit;
-  font-weight: inherit;
-  font-family: inherit;
-  color: inherit;
-  letter-spacing: inherit;
-  border: none;
-  outline: none;
-  background-color: transparent;
-  text-align: right;
-`
+const StyledInput = styled.input``
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetCellString
+export default SheetCellBoolean

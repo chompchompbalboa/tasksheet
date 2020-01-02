@@ -2,8 +2,11 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { ChangeEvent, useEffect, useState } from 'react'
+import moment from 'moment'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
+
+import { formatDate } from '@desktop/Sheet/SheetCellDatetime'
 
 import { ISheetCellTypesSharedProps } from '@mobile/Sheet/SheetCell'
 
@@ -14,7 +17,7 @@ import SheetCellContainer from '@mobile/Sheet/SheetCellContainer'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-export const SheetCellString = ({
+export const SheetCellDatetime = ({
   cell
 }: ISheetCellTypesSharedProps) => {
 
@@ -32,16 +35,19 @@ export const SheetCellString = ({
   // Handle Input Blur
   const handleInputBlur = () => {
     if(cell.value !== cellValue) {
-      dispatch(updateSheetCell(cell.id, { value: cellValue }))
+      const nextSheetCellValue = formatDate(cell.value)
+      dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }))
     }
   }
+  console.log(cellValue ? moment(cellValue).format('YYYY-MM-DD') : '')
 
   return (
     <SheetCellContainer>
       <StyledInput
+        type="date"
         onBlur={handleInputBlur}
         onChange={(e: ChangeEvent<HTMLInputElement>) => setCellValue(e.target.value)}
-        value={cellValue || ''}/>
+        value={cellValue ? moment(cellValue).format('YYYY-MM-DD') : ''}/>
     </SheetCellContainer>
   )
 }
@@ -66,4 +72,4 @@ const StyledInput = styled.input`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetCellString
+export default SheetCellDatetime

@@ -64,22 +64,6 @@ export const SheetCellDatetime = ({
     }
   }
 
-  // Date Validator
-  const dateValidator = (date: any) => {
-    return date
-      && String(date).length > 5
-      && moment(new Date(date)).isValid() 
-      && ![0, 1, '0', '1', null].includes(date)
-  }
-
-  // Format Date
-  const formatDate = (date: any) => {
-    if(dateValidator(date)) {
-      return moment(new Date(date)).format('MM/DD/YYYY')
-    }
-    return date
-  }
-
   return (
     <SheetCellContainer
       testId="SheetCellDatetime"
@@ -95,6 +79,23 @@ export const SheetCellDatetime = ({
         value={cell.value}/>
     </SheetCellContainer>
   )
+}
+
+//-----------------------------------------------------------------------------
+// Date functions
+//-----------------------------------------------------------------------------
+export const dateValidator = (date: any) => {
+  return date
+    && String(date).length > 5
+    && moment(new Date(date)).isValid() 
+    && ![0, 1, '0', '1', null].includes(date)
+}
+
+export const formatDate = (date: any) => {
+  if(dateValidator(date)) {
+    return moment(new Date(date)).format('MM/DD/YYYY')
+  }
+  return date
 }
 
 //-----------------------------------------------------------------------------
