@@ -34,6 +34,7 @@ export const SheetCellDatetime = ({
     <SheetCellContainer>
       <StyledInput
         type="date"
+        onBlur={e => handleInputChange(e.target.value)}
         onChange={e => handleInputChange(e.target.value)}
         value={cell.value ? moment(cell.value).format('YYYY-MM-DD') : ''}/>
     </SheetCellContainer>
