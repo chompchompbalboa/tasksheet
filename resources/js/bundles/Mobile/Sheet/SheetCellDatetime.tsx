@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React from 'react'
 import moment from 'moment'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
@@ -24,29 +24,18 @@ export const SheetCellDatetime = ({
   // Redux
   const dispatch = useDispatch()
 
-  // State
-  const [ cellValue, setCellValue ] = useState(cell ? cell.value : '')
-
-  // Effects
-  useEffect(() => {
-    setCellValue(cell.value)
-  }, [ cell.value ])
-
   // Handle Input Blur
-  const handleInputBlur = () => {
-    if(cell.value !== cellValue) {
-      const nextSheetCellValue = formatDate(cell.value)
-      dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }))
-    }
+  const handleInputChange = (nextValue: string) => {
+    const nextSheetCellValue = formatDate(nextValue)
+    dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }))
   }
 
   return (
     <SheetCellContainer>
       <StyledInput
         type="date"
-        onBlur={handleInputBlur}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => setCellValue(e.target.value)}
-        value={cellValue ? moment(cellValue).format('YYYY-MM-DD') : ''}/>
+        onChange={e => handleInputChange(e.target.value)}
+        value={cell.value ? moment(cell.value).format('YYYY-MM-DD') : ''}/>
     </SheetCellContainer>
   )
 }
