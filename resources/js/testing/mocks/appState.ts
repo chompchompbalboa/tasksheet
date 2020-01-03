@@ -353,7 +353,8 @@ export const getCellAndCellProps = ({
   const cell = allSheetCells[row.cells[column.id]]
   const props: ISheetCellProps = {
     sheetId: sheetId,
-    cellId: cell.id,
+    columnId: columnId,
+    rowId: rowId,
     cellType: cellType,
     style: {}
   }

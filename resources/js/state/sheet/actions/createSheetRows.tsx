@@ -59,7 +59,11 @@ export const createSheetRows = (
     // Get any open sheets this is a source sheet for
     const childSheets: ISheet['id'][] = []
     Object.keys(allSheets).forEach(currentSheetId => {
-      if([ sheet.id, sheet.sourceSheetId ].includes(allSheets[currentSheetId].sourceSheetId)){ 
+      const currentSheet = allSheets[currentSheetId]
+      if(currentSheetId !== sheetId 
+         && currentSheet.sourceSheetId !== null
+         && [ sheet.id, sheet.sourceSheetId ].includes(currentSheet.sourceSheetId)
+      ){ 
         childSheets.push(currentSheetId)
       }
     })

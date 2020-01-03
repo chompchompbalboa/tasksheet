@@ -18,13 +18,12 @@ import SheetRowLeader from '@desktop/Sheet/SheetRowLeader'
 // Component
 //-----------------------------------------------------------------------------
 const SheetGrid = memo(({
-  handleContextMenu,
   sheetId,
+  handleContextMenu,
 }: SheetGridProps) => {
 
+  // Redux
   const allSheetColumns = useSelector((state: IAppState) => state.sheet.allSheetColumns)
-  const allSheetRows = useSelector((state: IAppState) => state.sheet.allSheetRows)
-
   const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
   const sheetViewVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].visibleColumns)
   const sheetVisibleRows = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].visibleRows)
@@ -67,8 +66,9 @@ const SheetGrid = memo(({
     if(columnIndex !== 0 && columnId !== 'COLUMN_BREAK' && rowId !== 'ROW_BREAK') {
       return (
         <SheetCell
-          cellId={allSheetRows[rowId].cells[columnId]}
           sheetId={sheetId}
+          columnId={columnId}
+          rowId={rowId}
           style={style}
           cellType={allSheetColumns[columnId].cellType}/>
       )

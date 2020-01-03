@@ -53,7 +53,7 @@ const SheetActionButton = ({
   }, [ isDropdownVisible ])
 
   const closeOnClickOutside = (e: MouseEvent) => {
-    if(!container.current.contains(e.target)) {
+    if(container && container.current && !container.current.contains(e.target)) {
       closeDropdown()
     }
   }

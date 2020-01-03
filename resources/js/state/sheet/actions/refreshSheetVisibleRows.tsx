@@ -31,7 +31,9 @@ export const refreshSheetVisibleRows = (sheetId: string): IThunkAction => {
       allSheetViews,
       allSheetPriorities
     } = getState().sheet
+    
     const sheet = allSheets[sheetId]
+    
     const nextSheetVisibleRows = resolveSheetVisibleRows(
       sheet, 
       allSheetColumns,
@@ -44,6 +46,7 @@ export const refreshSheetVisibleRows = (sheetId: string): IThunkAction => {
       allSheetPriorities
     )
     const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
+    
     batch(() => {
       dispatch(clearSheetSelection(sheetId))
       dispatch(updateSheet(sheetId, {

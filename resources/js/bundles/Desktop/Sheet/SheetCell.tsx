@@ -9,7 +9,9 @@ import styled from 'styled-components'
 import { IAppState } from '@/state'
 import { 
   ISheet,
-  ISheetCell, 
+  ISheetColumn,
+  ISheetRow,
+  ISheetCell,
   ISheetCellType,
   ISheetStyles 
 } from '@/state/sheet/types'
@@ -30,14 +32,16 @@ import SheetCellString from '@desktop/Sheet/SheetCellString'
 //-----------------------------------------------------------------------------
 export const SheetCell = memo(({
   sheetId,
-  cellId,
+  columnId,
+  rowId,
   cellType,
   style
 }: ISheetCellProps) => {
 
   // Redux
   const dispatch = useDispatch()
-  const cell = useSelector((state: IAppState) => state.sheet.allSheetCells[cellId])
+  const cellId = useSelector((state: IAppState) => state.sheet.allSheetRows && state.sheet.allSheetRows[rowId] && state.sheet.allSheetRows[rowId].cells[columnId])
+  const cell = useSelector((state: IAppState) => cellId && state.sheet.allSheetCells[cellId])
   const sheetSelectionsRangeCellIds = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.rangeCellIds)
   const sheetStyles = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].styles)
   const userColorSecondary = useSelector((state: IAppState) => state.user.color.secondary)
@@ -120,7 +124,8 @@ export const SheetCell = memo(({
 //-----------------------------------------------------------------------------
 export interface ISheetCellProps {
   sheetId: ISheet['id']
-  cellId: ISheetCell['id']
+  columnId: ISheetColumn['id']
+  rowId: ISheetRow['id']
   cellType: ISheetCellType
   style: {
     width?: ReactText
