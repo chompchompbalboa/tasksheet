@@ -107,7 +107,7 @@ export const SheetCell = memo(({
   }
   // If the cell doesn't exist, render a dummy cell
   return (
-    <Container
+    <SheetCellNotFoundContainer
       data-testid="SheetCellNotFoundContainer"
       cellId={cellId}
       cellType={cellType}
@@ -186,6 +186,15 @@ interface IContainer {
   isShowCellChanges: boolean
   isTrackCellChanges: boolean
 }
+
+const SheetCellNotFoundContainer = styled(Container)`
+  background-color: red;
+  opacity: 0.9;
+  &:hover {
+    background-color: red;
+    opacity: 1;
+  }
+`
 
 const SheetRange = styled.div`
   position: absolute;
