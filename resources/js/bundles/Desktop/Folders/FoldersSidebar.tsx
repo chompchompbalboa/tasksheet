@@ -36,6 +36,9 @@ const FoldersSidebar = ({
           onClick={() => {
             setIsSheetCurrentlyBeingCreated(true)
             dispatch(createSheet(activeFolderId, 'New Sheet', true))
+            setTimeout(() => {
+              setIsSheetCurrentlyBeingCreated(false)
+            }, 2500)
           }}>
           <ActionIcon><Icon icon={PLUS_SIGN} size="0.85rem"/></ActionIcon>
           <ActionText>{isSheetCurrentlyBeingCreated ? 'Creating...' : 'New Sheet'}</ActionText>
