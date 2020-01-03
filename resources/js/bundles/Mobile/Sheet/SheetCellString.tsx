@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { ISheetCellTypesSharedProps } from '@mobile/Sheet/SheetCell'
 
-import { updateSheetCell } from '@/state/sheet/actions'
+import { updateSheetCell, createSheetCellChange } from '@/state/sheet/actions'
 
 import SheetCellContainer from '@mobile/Sheet/SheetCellContainer'
 
@@ -15,7 +15,9 @@ import SheetCellContainer from '@mobile/Sheet/SheetCellContainer'
 // Component
 //-----------------------------------------------------------------------------
 export const SheetCellString = ({
-  cell
+  sheetId,
+  cell,
+  isTrackCellChanges
 }: ISheetCellTypesSharedProps) => {
 
   // Redux
@@ -33,6 +35,9 @@ export const SheetCellString = ({
   const handleInputBlur = () => {
     if(cell.value !== cellValue) {
       dispatch(updateSheetCell(cell.id, { value: cellValue }))
+    }
+    if(isTrackCellChanges) {
+      dispatch(createSheetCellChange(sheetId, cell.id, cellValue))
     }
   }
 

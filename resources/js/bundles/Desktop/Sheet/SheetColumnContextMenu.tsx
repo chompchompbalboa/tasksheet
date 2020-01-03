@@ -52,7 +52,12 @@ export const SheetColumnContextMenu = ({
   const sheetColumn = allSheetColumns[columnId]
 
   // Cell Types
-  const sheetCellTypes: { [sheetCellType: string]: { label: string, cellType: ISheetCellType }} = {
+  const sheetCellTypes: { 
+    [sheetCellType: string]: { 
+      label: string, 
+      cellType: ISheetCellType 
+    }
+  } = {
     STRING: {
       label: 'Text',
       cellType: 'STRING'
@@ -82,6 +87,8 @@ export const SheetColumnContextMenu = ({
 
   // Is this is a column break?
   const sheetColumnCellType = columnId === 'COLUMN_BREAK' ? 'COLUMN_BREAK' : sheetColumn.cellType
+
+  // On Delete Click
   const onDeleteClick = columnId === 'COLUMN_BREAK' 
     ? () => dispatch(deleteSheetColumnBreak(sheetId, columnIndex))
     : () => dispatch(deleteSheetColumn(sheetId, columnId))

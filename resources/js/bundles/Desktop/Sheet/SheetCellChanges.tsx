@@ -24,8 +24,8 @@ import Icon from '@/components/Icon'
 //-----------------------------------------------------------------------------
 export const SheetCellChanges = ({
   cellId,
-  showCellChanges,
-  trackCellChanges
+  isShowCellChanges,
+  isTrackCellChanges
 }: ISheetCellChangesProps) => {
 
   const dispatch = useDispatch()
@@ -35,7 +35,7 @@ export const SheetCellChanges = ({
 
   return (
     <Container>
-      {trackCellChanges && showCellChanges && sheetCellChanges && sheetCellChanges.length > 0 &&
+      {isTrackCellChanges && isShowCellChanges && sheetCellChanges && sheetCellChanges.length > 0 &&
         <ChangesContainer>
           {sheetCellChanges.map(sheetCellChange => (
             <Change
@@ -71,8 +71,8 @@ export const SheetCellChanges = ({
 //-----------------------------------------------------------------------------
 export interface ISheetCellChangesProps {
   cellId: ISheetCell['id']
-  showCellChanges: boolean
-  trackCellChanges: boolean
+  isShowCellChanges: boolean
+  isTrackCellChanges: boolean
 }
 
 const Container = styled.div`

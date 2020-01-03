@@ -65,7 +65,8 @@ export const SheetCell = memo(({
           sheetStyles={sheetStyles}>
           <SheetCellType
             sheetId={sheetId}
-            cell={sheetCell}/>
+            cell={sheetCell}
+            isTrackCellChanges={sheetColumn.trackCellChanges}/>
         </Cell>
       </Container>
     )
@@ -90,6 +91,7 @@ export interface ISheetCellProps {
 export interface ISheetCellTypesSharedProps {
   sheetId: ISheet['id']
   cell: ISheetCell
+  isTrackCellChanges: boolean
 }
 
 //-----------------------------------------------------------------------------

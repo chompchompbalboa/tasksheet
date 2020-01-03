@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { ISheetCellTypesSharedProps } from '@desktop/Sheet/SheetCell'
 
 import { 
+  createSheetCellChange,
   updateSheetCell,
   updateSheetCellValues
 } from '@/state/sheet/actions'
@@ -20,7 +21,8 @@ import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
 const SheetCellString = ({
   sheetId,
   cell,
-  isCellInRange
+  isCellInRange,
+  isTrackCellChanges
 }: ISheetCellTypesSharedProps) => {
   
   // Refs
@@ -60,6 +62,9 @@ const SheetCellString = ({
     setTimeout(() => {
       if(!isCellInRange) {
         dispatch(updateSheetCell(cell.id, { value: cell.value }, { value: sheetCellPreviousValue }))
+      }
+      if(isTrackCellChanges) {
+        dispatch(createSheetCellChange(sheetId, cell.id, cell.value))
       }
     }, 25)
   }
