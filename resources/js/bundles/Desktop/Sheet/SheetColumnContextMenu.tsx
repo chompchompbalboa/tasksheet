@@ -54,33 +54,40 @@ export const SheetColumnContextMenu = ({
   // Cell Types
   const sheetCellTypes: { 
     [sheetCellType: string]: { 
-      label: string, 
-      cellType: ISheetCellType 
+      label: string
+      cellType: ISheetCellType
+      defaultValue: string
     }
   } = {
     STRING: {
       label: 'Text',
-      cellType: 'STRING'
+      cellType: 'STRING',
+      defaultValue: null
     },
     NUMBER: {
       label: 'Number',
-      cellType: 'NUMBER'
+      cellType: 'NUMBER',
+      defaultValue: null
     },
     DATETIME: {
       label: 'Date',
-      cellType: 'DATETIME'
+      cellType: 'DATETIME',
+      defaultValue: null
     },
     BOOLEAN: {
       label: 'Checkbox',
-      cellType: 'BOOLEAN'
+      cellType: 'BOOLEAN',
+      defaultValue: 'Unchecked'
     },
     PHOTOS: {
       label: 'Photos',
-      cellType: 'PHOTOS'
+      cellType: 'PHOTOS',
+      defaultValue: null
     },
     FILES: {
       label: 'Files',
-      cellType: 'FILES'
+      cellType: 'FILES',
+      defaultValue: null
     }
   }
   const sheetCellTypesKeys = Object.keys(sheetCellTypes)
@@ -121,7 +128,10 @@ export const SheetColumnContextMenu = ({
       <ContextMenuItem 
         isFirstItem 
         text="Insert Column" 
-        onClick={() => closeContextMenuOnClick(() => dispatch(createSheetColumn(sheetId, columnIndex)))}/>
+        onClick={() => {
+          dispatch(createSheetColumn(sheetId, columnIndex))
+          closeContextMenu()
+        }}/>
       {sheetColumnCellType !== 'COLUMN_BREAK' && 
         <>
           <ContextMenuItem 
@@ -168,7 +178,7 @@ export const SheetColumnContextMenu = ({
                   isFirstItem={index === 0}
                   isLastItem={index === (sheetCellTypesKeys.length - 1)}
                   logo={sheetColumnCellType === currentCellType.cellType ? CHECKMARK : null}
-                  onClick={() => closeContextMenuOnClick(() => dispatch(updateSheetColumn(columnId, { cellType: currentCellType.cellType })))}
+                  onClick={() => closeContextMenuOnClick(() => dispatch(updateSheetColumn(columnId, { cellType: currentCellType.cellType, defaultValue: currentCellType.defaultValue })))}
                   text={currentCellType.label}
                   />)})}
             </ContextMenuItem>

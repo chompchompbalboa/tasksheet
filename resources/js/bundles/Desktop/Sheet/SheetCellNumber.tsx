@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { ISheetCellTypesSharedProps } from '@desktop/Sheet/SheetCell'
 
 import { 
+  createSheetCellChange,
   updateSheetCell,
   updateSheetCellValues
 } from '@/state/sheet/actions'
@@ -20,7 +21,8 @@ import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
 const SheetCellNumber = ({
   sheetId,
   cell,
-  isCellInRange
+  isCellInRange,
+  isTrackCellChanges
 }: ISheetCellTypesSharedProps) => {
   
   // Refs
@@ -55,9 +57,15 @@ const SheetCellNumber = ({
   // Complete Editing
   const completeEditing = () => {
     dispatch(updateSheetCell(cell.id, { isCellEditing: false }, null, true))
-    setTimeout(() => {
-      if(!isCellInRange) {
-        dispatch(updateSheetCell(cell.id, { value: cell.value }, { value: sheetCellPreviousValue }))
+    setTimeout(() => {          
+      setSheetCellPreviousValue(null)
+      if(cell.value !== sheetCellPreviousValue) {
+        if(!isCellInRange) {
+          dispatch(updateSheetCell(cell.id, { value: cell.value }, { value: sheetCellPreviousValue }))
+        }
+        if(isTrackCellChanges) {
+          dispatch(createSheetCellChange(sheetId, cell.id, cell.value))
+        }
       }
     }, 25)
   }
@@ -96,7 +104,6 @@ const SheetCellNumber = ({
 //-----------------------------------------------------------------------------
 const StyledInput = styled.input`
   width: 100%;
-  height: 100%;
   font-size: inherit;
   font-weight: inherit;
   font-family: inherit;

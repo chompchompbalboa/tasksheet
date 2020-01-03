@@ -147,7 +147,7 @@ export interface ISheetCellTypesSharedProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   z-index: ${ ({ cellType, isCellSelected, isShowCellChanges, isTrackCellChanges }: IContainer ) => 
-    (['DATETIME', 'FILES', 'PHOTOS', 'TEAM_MEMBERS'].includes(cellType) || (isTrackCellChanges && isShowCellChanges))
+    (['DATETIME', 'FILES', 'PHOTOS'].includes(cellType) || (isTrackCellChanges && isShowCellChanges))
     && isCellSelected 
       ? '20' 
       : '10' 

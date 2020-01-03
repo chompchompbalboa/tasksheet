@@ -83,7 +83,8 @@ export const createSheetRows = (
       Object.keys(newRow.cells).forEach((columnId: string) => {
         const cellId = newRow.cells[columnId]
         const column = allSheetColumns[columnId]
-        const newCell = defaultCell(sheetId, newRow.id, columnId, cellId, column.defaultValue)
+        const columnDefaultValue = column.defaultValue || (column.cellType === 'BOOLEAN' ? 'Unchecked' : null)
+        const newCell = defaultCell(sheetId, newRow.id, columnId, cellId, columnDefaultValue)
         nextAllSheetCells[cellId] = newCell
         newRowCellsToDatabase.push(newCell)
       })

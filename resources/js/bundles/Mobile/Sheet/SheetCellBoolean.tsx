@@ -7,7 +7,10 @@ import styled from 'styled-components'
 
 import { ISheetCellTypesSharedProps } from '@mobile/Sheet/SheetCell'
 
-import { updateSheetCell } from '@/state/sheet/actions'
+import { 
+  createSheetCellChange,
+  updateSheetCell 
+} from '@/state/sheet/actions'
 
 import SheetCellContainer from '@mobile/Sheet/SheetCellContainer'
 
@@ -15,7 +18,9 @@ import SheetCellContainer from '@mobile/Sheet/SheetCellContainer'
 // Component
 //-----------------------------------------------------------------------------
 export const SheetCellBoolean = ({
-  cell
+  sheetId,
+  cell,
+  isTrackCellChanges
 }: ISheetCellTypesSharedProps) => {
 
   // Redux
@@ -23,8 +28,11 @@ export const SheetCellBoolean = ({
   
   // Handle Change
   const handleChange = (checked: boolean) => {
-    const nextCellValue = checked ? 'Checked' : ''
+    const nextCellValue = checked ? 'Checked' : 'Unchecked'
     dispatch(updateSheetCell(cell.id, { value: nextCellValue }, { value: cell.value }))
+    if(isTrackCellChanges) {
+      dispatch(createSheetCellChange(sheetId, cell.id, nextCellValue))
+    }
   }
 
   return (

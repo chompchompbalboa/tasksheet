@@ -84,6 +84,7 @@ const Container = styled.div`
 
 const ChangesContainer = styled.div`
   width: 100%;
+  min-width: 16rem;
   padding: 0.25rem 0.5rem;
   border: 1px solid rgb(200, 200, 200);
   border-radius: 3px;
@@ -105,15 +106,19 @@ const Change = styled.div`
 `
 
 const ChangeValue = styled.div`
+  z-index: 1;
   white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const ChangeDetailsAndActions = styled.div`
-  width: 33%;
+  z-index: 2;
   margin-left: 1rem;
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  background-color: white;
 `
 
 const ChangeDetails = styled.div`
@@ -125,7 +130,7 @@ const ChangeDetails = styled.div`
 
 const ChangeActions = styled.div`
   margin-left: 0.375rem;
-  padding: 0 0.375rem;
+  padding-left: 0.375rem;
   display: flex;
   justify-content: flex-end;
   align-items: center;

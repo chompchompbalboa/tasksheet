@@ -153,7 +153,10 @@ const SheetCellContainer = ({
       styles={sheetStyles}>
         {isCellEditing || onlyRenderChildren
           ? children
-          : value === null ? " " : value}
+          : <CellValue>
+              {value === null ? " " : value}
+            </CellValue>
+        }
     </Container>
   )
 
@@ -182,10 +185,7 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   padding: 0.15rem 0.25rem;
-  display: flex;
-  align-items: center;
   white-space: nowrap;
-  text-overflow: ellipsis;
   font-weight: ${ ({ cellId, styles }: IContainer ) => styles.bold.has(cellId) ? 'bold' : 'normal' };
   font-style: ${ ({ cellId, styles }: IContainer ) => styles.italic.has(cellId) ? 'italic' : 'normal' };
 `
@@ -194,6 +194,12 @@ interface IContainer {
   isCellEditing: boolean
   styles: ISheetStyles
 }
+
+const CellValue = styled.div`
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
 
 //-----------------------------------------------------------------------------
 // Export

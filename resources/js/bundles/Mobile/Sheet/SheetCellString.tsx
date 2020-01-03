@@ -7,7 +7,10 @@ import styled from 'styled-components'
 
 import { ISheetCellTypesSharedProps } from '@mobile/Sheet/SheetCell'
 
-import { updateSheetCell, createSheetCellChange } from '@/state/sheet/actions'
+import { 
+  createSheetCellChange,
+  updateSheetCell
+} from '@/state/sheet/actions'
 
 import SheetCellContainer from '@mobile/Sheet/SheetCellContainer'
 
@@ -35,9 +38,9 @@ export const SheetCellString = ({
   const handleInputBlur = () => {
     if(cell.value !== cellValue) {
       dispatch(updateSheetCell(cell.id, { value: cellValue }))
-    }
-    if(isTrackCellChanges) {
-      dispatch(createSheetCellChange(sheetId, cell.id, cellValue))
+      if(isTrackCellChanges) {
+        dispatch(createSheetCellChange(sheetId, cell.id, cellValue))
+      }
     }
   }
 

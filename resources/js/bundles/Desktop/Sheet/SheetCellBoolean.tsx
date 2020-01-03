@@ -7,7 +7,10 @@ import styled from 'styled-components'
 
 import { ISheetCellTypesSharedProps } from '@desktop/Sheet/SheetCell'
 
-import { updateSheetCell } from '@/state/sheet/actions'
+import { 
+  createSheetCellChange,
+  updateSheetCell 
+} from '@/state/sheet/actions'
 
 import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
 
@@ -16,14 +19,18 @@ import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
 //-----------------------------------------------------------------------------
 const SheetCellBoolean = ({
   sheetId,
-  cell
+  cell,
+  isTrackCellChanges
 }: ISheetCellTypesSharedProps) => {
   
   const dispatch = useDispatch()
   
   const handleChange = (checked: boolean) => {
-    const nextCellValue = checked ? 'Checked' : ''
+    const nextCellValue = checked ? 'Checked' : 'Unchecked'
     dispatch(updateSheetCell(cell.id, { value: nextCellValue }, { value: cell.value }))
+    if(isTrackCellChanges) {
+      dispatch(createSheetCellChange(sheetId, cell.id, nextCellValue))
+    }
   }
   
   return (

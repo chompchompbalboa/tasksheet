@@ -136,7 +136,6 @@ const InputContainer = styled.div`
 
 const StyledInput = styled.input`
   width: 100%;
-  height: 100%;
   background-color: transparent;
   outline: none;
   border: none;
