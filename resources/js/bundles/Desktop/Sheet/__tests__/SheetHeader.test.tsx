@@ -61,7 +61,7 @@ const sheetProps: ISheetProps = {
 
 const sheetHeaderProps: ISheetHeaderProps = {
   sheetId: sheetId,
-  column: column,
+  columnId: column.id,
   gridContainerRef: null,
   handleContextMenu: jest.fn(),
   isLast: false,

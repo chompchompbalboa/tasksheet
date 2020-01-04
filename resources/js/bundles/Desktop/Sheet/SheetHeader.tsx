@@ -27,7 +27,7 @@ import SheetHeaderResizeContainer from '@desktop/Sheet/SheetHeaderResizeContaine
 //-----------------------------------------------------------------------------
 export const SheetHeader = ({
   sheetId,
-  column,
+  columnId,
   gridContainerRef,
   handleContextMenu,
   isLast,
@@ -35,24 +35,23 @@ export const SheetHeader = ({
   visibleColumnsIndex
 }: ISheetHeaderProps) => {
   
+  // Redux
   const dispatch = useDispatch()
+  const sheetColumn = useSelector((state: IAppState) => state.sheet.allSheetColumns && state.sheet.allSheetColumns[columnId])
   const rangeStartColumnId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeStartColumnId)
   const columnRenamingId = useSelector((state: IAppState) => state.sheet.active.columnRenamingId)
-  
-  const isColumnBreak = column.id === 'COLUMN_BREAK'
 
+  // Local State
   const [ isRenaming, setIsRenaming ] = useState(false)
-  const [ columnName, setColumnName ] = useState(column && column.name && column.name.length > 0 ? column.name : '?')
+  const [ columnName, setColumnName ] = useState(sheetColumn && sheetColumn.name && sheetColumn.name.length > 0 ? sheetColumn.name : '?')
   const [ isResizing, setIsResizing ] = useState(false)
-
-  const handleAutosizeInputBlur = () => {
-    if(columnName !== null) {
-      handleColumnRenamingFinish()
-    }
-  }
   
+  // Local Variables
+  const isColumnBreak = columnId === 'COLUMN_BREAK'
+
+  // Effects 
   useEffect(() => {
-    if(columnRenamingId === column.id) { 
+    if(sheetColumn && columnRenamingId === sheetColumn.id) { 
       setIsRenaming(true)
       batch(() => {
         dispatch(preventSelectedCellEditing(sheetId))
@@ -64,24 +63,40 @@ export const SheetHeader = ({
       removeEventListener('keypress', handleKeypressWhileColumnIsRenaming)
     }
     return () => removeEventListener('keypress', handleKeypressWhileColumnIsRenaming)
-  }, [ columnName, columnRenamingId ])
+  }, [ sheetColumn, columnName, columnRenamingId ])
+
+  useEffect(() => {
+    if(sheetColumn) {
+      setColumnName(sheetColumn.name)
+    }
+  }, [ sheetColumn && sheetColumn.name ])
+
+  // Handle Autosize Input Blur
+  const handleAutosizeInputBlur = () => {
+    if(columnName !== null) {
+      handleColumnRenamingFinish()
+    }
+  }
   
+  // Handle Container Mouse Down
   const handleContainerMouseDown = (e: MouseEvent) => {
     if(e.shiftKey && !isRenaming) {
-      dispatch(selectSheetColumns(sheetId, rangeStartColumnId, column.id))
+      dispatch(selectSheetColumns(sheetId, rangeStartColumnId, sheetColumn.id))
     }
     else if (!isRenaming) {
 
-      dispatch(selectSheetColumns(sheetId, column.id))
+      dispatch(selectSheetColumns(sheetId, sheetColumn.id))
     } 
   }
   
+  // Handle Keypress While Column Is Renaming
   const handleKeypressWhileColumnIsRenaming = (e: KeyboardEvent) => {
     if(e.key === 'Enter') {
       handleColumnRenamingFinish()
     }
   }
   
+  // Handle Column Renaming Finish
   const handleColumnRenamingFinish = () => {
     setIsRenaming(false)
     batch(() => {
@@ -89,22 +104,24 @@ export const SheetHeader = ({
       dispatch(allowSelectedCellNavigation(sheetId))
       dispatch(updateSheetActive({ columnRenamingId: null }))
     })
-    setTimeout(() => dispatch(updateSheetColumn(column.id, { name: columnName }, { name: column.name })), 250)
+    setTimeout(() => dispatch(updateSheetColumn(sheetColumn.id, { name: columnName }, { name: sheetColumn.name })), 250)
   }
 
+  // Handle Column Resize End
   const handleColumnResizeEnd = (columnWidthChange: number) => {
-    dispatch(updateSheetColumn(column.id, { width: Math.max(column.width + columnWidthChange, 20) }))
+    dispatch(updateSheetColumn(sheetColumn.id, { width: Math.max(sheetColumn.width + columnWidthChange, 20) }))
+    setIsResizing(false)
   }
 
   return (
     <Container
       data-testid="SheetHeader"
-      containerWidth={column.width}
+      containerWidth={columnId === 'COLUMN_BREAK' ? 10 : sheetColumn.width}
       isColumnBreak={isColumnBreak}
       isLast={isLast}
       isNextColumnAColumnBreak={isNextColumnAColumnBreak}
       isResizing={isResizing}
-      onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'COLUMN', column.id, visibleColumnsIndex)}>
+      onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'COLUMN', sheetColumn && sheetColumn.id || 'COLUMN_BREAK', visibleColumnsIndex)}>
       {!isRenaming
         ? <NameContainer
             data-testid="SheetHeaderNameContainer"
@@ -148,7 +165,7 @@ export const SheetHeader = ({
 //-----------------------------------------------------------------------------
 export interface ISheetHeaderProps {
   sheetId: ISheet['id']
-  column: ISheetColumn
+  columnId: ISheetColumn['id']
   gridContainerRef: RefObject<HTMLDivElement>
   handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void
   isLast: boolean

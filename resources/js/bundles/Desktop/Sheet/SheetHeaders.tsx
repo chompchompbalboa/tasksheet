@@ -2,9 +2,11 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { MouseEvent, RefObject } from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { ISheet, ISheetColumn, IAllSheetColumns } from '@/state/sheet/types'
+import { IAppState } from '@/state'
+import { ISheet } from '@/state/sheet/types'
 
 import SheetHeader from '@desktop/Sheet/SheetHeader'
 
@@ -14,39 +16,32 @@ import SheetHeader from '@desktop/Sheet/SheetHeader'
 const SheetHeaders = ({
   sheetId,
   gridContainerRef,
-  columns,
   handleContextMenu,
-  sheetViewVisibleColumns
+  skipLeader = false
 }: SheetHeadersProps) => {
+
+  // Redux
+  const sheetViewVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheetViews && state.sheet.allSheetViews[state.sheet.allSheets[sheetId].activeSheetViewId].visibleColumns)
   
-  const columnBreakHeader: ISheetColumn = {
-    id: 'COLUMN_BREAK',
-    sheetId: '',
-    name: 'Break',
-    width: 10,
-    cellType: null,
-    defaultValue: null,
-    trackCellChanges: false,
-    showCellChanges: false,
-    allCellValues: null
-  }
-  
+  // Is Next Column A Column Break
   const isNextColumnAColumnBreak = (index: number) => {
     return sheetViewVisibleColumns[index + 1] && sheetViewVisibleColumns[index + 1] === 'COLUMN_BREAK'
   } 
 
   return (
     <Container>
-      <SheetRowLeaderHeader>
-        <SheetRowLeaderHeaderText>
-          +
-        </SheetRowLeaderHeaderText>
-      </SheetRowLeaderHeader>
+      {!skipLeader &&
+        <SheetRowLeaderHeader>
+          <SheetRowLeaderHeaderText>
+            +
+          </SheetRowLeaderHeaderText>
+        </SheetRowLeaderHeader>
+      }
       {sheetViewVisibleColumns.map((columnId: string, index: number) => (
         <SheetHeader
           key={index}
           sheetId={sheetId}
-          column={columnId !== 'COLUMN_BREAK' ? columns[columnId] : columnBreakHeader}
+          columnId={columnId}
           gridContainerRef={gridContainerRef}
           handleContextMenu={handleContextMenu}
           isLast={index === sheetViewVisibleColumns.length - 1}
@@ -61,10 +56,9 @@ const SheetHeaders = ({
 //-----------------------------------------------------------------------------
 interface SheetHeadersProps {
   sheetId: ISheet['id']
-  columns: IAllSheetColumns
   gridContainerRef: RefObject<HTMLDivElement>
   handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void
-  sheetViewVisibleColumns: ISheetColumn['id'][]
+  skipLeader?: boolean
 }
 
 //-----------------------------------------------------------------------------

@@ -147,13 +147,13 @@ const SheetCellContainer = ({
     <Container
       data-testid={testId}
       ref={container}
-      cellId={cell.id}
       isCellEditing={isCellEditing}
-      onDoubleClick={beginEditingOnDoubleClick}
-      styles={sheetStyles}>
+      onDoubleClick={beginEditingOnDoubleClick}>
         {isCellEditing || onlyRenderChildren
           ? children
-          : <CellValue>
+          : <CellValue
+              cellId={cell.id}
+              styles={sheetStyles}>
               {value === null ? " " : value}
             </CellValue>
         }
@@ -185,21 +185,23 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   padding: 0.15rem 0.25rem;
-  white-space: nowrap;
-  font-weight: ${ ({ cellId, styles }: IContainer ) => styles.bold.has(cellId) ? 'bold' : 'normal' };
-  font-style: ${ ({ cellId, styles }: IContainer ) => styles.italic.has(cellId) ? 'italic' : 'normal' };
 `
 interface IContainer {
-  cellId: ISheetCell['id']
   isCellEditing: boolean
-  styles: ISheetStyles
 }
 
 const CellValue = styled.div`
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: ${ ({ cellId, styles }: ICellValue ) => styles.bold.has(cellId) ? 'bold' : 'normal' };
+  font-style: ${ ({ cellId, styles }: ICellValue ) => styles.italic.has(cellId) ? 'italic' : 'normal' };
 `
+interface ICellValue {
+  cellId: ISheetCell['id']
+  styles: ISheetStyles
+}
 
 //-----------------------------------------------------------------------------
 // Export

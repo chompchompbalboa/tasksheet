@@ -131,6 +131,7 @@ export interface ISheetCellProps {
   cellType: ISheetCellType
   style: {
     width?: ReactText
+    height?: ReactText
   }
 }
 

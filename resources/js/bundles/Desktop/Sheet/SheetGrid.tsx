@@ -46,10 +46,8 @@ const SheetGrid = memo(({
       ref={ref} {...rest}>
       <SheetHeaders
         sheetId={sheetId}
-        columns={allSheetColumns}
         gridContainerRef={gridContainerRef}
-        handleContextMenu={handleContextMenu}
-        sheetViewVisibleColumns={sheetViewVisibleColumns}/>
+        handleContextMenu={handleContextMenu}/>
       <GridItems>
         {children}
       </GridItems>

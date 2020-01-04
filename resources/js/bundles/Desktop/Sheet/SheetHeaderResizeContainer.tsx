@@ -10,7 +10,7 @@ import styled from 'styled-components'
 export const SheetHeaderResizeContainer = ({ 
   containerBackgroundColor = 'rgb(180, 180, 180)',
   containerWidth = '2px',
-  gridContainerRef,
+  gridContainerRef = null,
   onResizeStart = null,
   onResizeEnd = null
 }: SheetHeaderResizeContainerProps) => {
@@ -41,7 +41,7 @@ export const SheetHeaderResizeContainer = ({
     setIsResizing(true)
     setStartClientX(e.clientX)
     setCurrentClientX(e.clientX)
-    setGridContainerScrollLeft(gridContainerRef.current.scrollLeft)
+    gridContainerRef && setGridContainerScrollLeft(gridContainerRef.current.scrollLeft)
   }
   
   const handleMouseMove = (e: Event) => {
@@ -80,7 +80,7 @@ export const SheetHeaderResizeContainer = ({
 export type SheetHeaderResizeContainerProps = {
   containerBackgroundColor?: string
   containerWidth?: string
-  gridContainerRef: RefObject<HTMLDivElement>
+  gridContainerRef?: RefObject<HTMLDivElement>
   onResizeStart?(): void
   onResizeEnd(widthChange: number): void
 }
