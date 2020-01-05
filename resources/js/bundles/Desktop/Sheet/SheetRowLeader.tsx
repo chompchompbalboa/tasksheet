@@ -18,7 +18,7 @@ import {
 export const SheetRowLeader = memo(({
   sheetId,
   rowId,
-  handleContextMenu,
+  handleContextMenu = () => null,
   isRowBreak,
   style,
   text = null

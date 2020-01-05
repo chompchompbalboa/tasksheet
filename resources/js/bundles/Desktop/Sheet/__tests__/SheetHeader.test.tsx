@@ -7,7 +7,7 @@ import '@testing-library/jest-dom/extend-expect'
 import axiosMock from 'axios'
 
 import { fireEvent, renderWithRedux, waitForElement, within } from '@/testing/library'
-import { appState as mockAppState, appStateFactory, appStateFactoryColumns, IAppStateFactoryInput, getCellAndCellProps } from '@/testing/mocks/appState'
+import { appState as mockAppState, appStateFactory, IAppStateFactoryInput, getCellAndCellProps } from '@/testing/mocks/appState'
 
 import { ISheetCell } from '@/state/sheet/types'
 import { Sheet, ISheetProps } from '@desktop/Sheet/Sheet'
@@ -73,22 +73,15 @@ const sheetHeaderProps: ISheetHeaderProps = {
 // Tests
 //-----------------------------------------------------------------------------
 describe('SheetHeader', () => {
-  
-  // The Autosizer from react-window relies on DOM properties that don't exist 
-  // in JSDom. We need to replace those properties so it can properly calculate
-  // the grid dimensions and render the children. This solution comes from here:
-  // https://github.com/bvaughn/react-virtualized/issues/493#issuecomment-447014986
-  const originalOffsetHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetHeight')
-  const originalOffsetWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetWidth')
 
+  // JSDom returns 0 for all getBoundingClientRect values (since its not actually
+  // rendering anything). SheetWindow relies on the width and height property to
+  // calculate the sheet size, so we need to mock those vaulues in.
   beforeAll(() => {
-    Object.defineProperty(HTMLElement.prototype, 'offsetHeight', { configurable: true, value: 240 }) // 10 rows
-    Object.defineProperty(HTMLElement.prototype, 'offsetWidth', { configurable: true, value: appStateFactoryColumns.length * 100 })
-  })
-
-  afterAll(() => {
-    Object.defineProperty(HTMLElement.prototype, 'offsetHeight', originalOffsetHeight);
-    Object.defineProperty(HTMLElement.prototype, 'offsetWidth', originalOffsetWidth);
+    Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', { writable: true, value: () => ({
+      width: 1024,
+      height: 768
+    }) })
   })
   
   it("renders without crashing", async () => {
@@ -107,7 +100,7 @@ describe('SheetHeader', () => {
   
   it("selects the sheet column on click", async () => {
     const { cell: R1C1Cell } = getCellAndCellProps({ row: 1, column: 1 })
-    const { cell: RLastC1Cell } = getCellAndCellProps({ row: sheet.visibleRows.length, column: 1 })
+    const { cell: RLastC1Cell } = getCellAndCellProps({ row: sheet.visibleRows.length - 1, column: 1 })
     const { getAllByTestId } = renderWithRedux(<Sheet {...sheetProps}/>)
     const SheetCellContainers = await waitForElement(() => getAllByTestId('SheetCellContainer'))
 
@@ -131,11 +124,11 @@ describe('SheetHeader', () => {
   
   it("selects the next sheet column if an entire column is selected and the user keyDowns a right or left arrow", async () => {
     const { cell: R1C1Cell } = getCellAndCellProps({ row: 1, column: 1 })
-    const { cell: RLastC1Cell } = getCellAndCellProps({ row: sheet.visibleRows.length, column: 1 })
+    const { cell: RLastC1Cell } = getCellAndCellProps({ row: sheet.visibleRows.length - 1, column: 1 })
     const { cell: R1C2Cell } = getCellAndCellProps({ row: 1, column: 2 })
-    const { cell: RLastC2Cell } = getCellAndCellProps({ row: sheet.visibleRows.length, column: 2 })
+    const { cell: RLastC2Cell } = getCellAndCellProps({ row: sheet.visibleRows.length - 1, column: 2 })
     const { cell: R1C3Cell } = getCellAndCellProps({ row: 1, column: 3 })
-    const { cell: RLastC3Cell } = getCellAndCellProps({ row: sheet.visibleRows.length, column: 3 })
+    const { cell: RLastC3Cell } = getCellAndCellProps({ row: sheet.visibleRows.length - 1, column: 3 })
     const { getByTestId, getAllByTestId } = renderWithRedux(<Sheet {...sheetProps}/>)
     const SheetCellContainers = await waitForElement(() => getAllByTestId('SheetCellContainer'))
 

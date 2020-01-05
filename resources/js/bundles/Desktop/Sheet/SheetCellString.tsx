@@ -37,9 +37,7 @@ const SheetCellString = ({
   // Effects
   useEffect(() => {
     if(cell.isCellEditing && input && input.current) {
-      const inputLength = input.current.value && input.current.value.length || 0
       input.current.focus()
-      input.current.setSelectionRange(inputLength,inputLength)
     }
   }, [ cell.isCellEditing ])
   

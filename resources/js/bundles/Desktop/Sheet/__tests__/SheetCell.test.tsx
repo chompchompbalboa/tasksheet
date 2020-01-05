@@ -177,8 +177,8 @@ describe('SheetCell', () => {
   it("doesn't change the selected cell in response to the arrow keys if the update would move the selection to a cell that doesn't exist", async () => {    
     const { props: RFirstCFirstCellProps } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1 })
     const { props: RFirstCLastCellProps } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: activeSheetView.visibleColumns.length })
-    const { props: RLastCFirstCellProps } = getCellAndCellProps({ sheetId: sheetId, row: sheet.visibleRows.length, column: 1 })
-    const { props: RLastCLastCellProps } = getCellAndCellProps({ sheetId: sheetId, row: sheet.visibleRows.length, column: activeSheetView.visibleColumns.length })
+    const { props: RLastCFirstCellProps } = getCellAndCellProps({ sheetId: sheetId, row: sheet.visibleRows.length - 1, column: 1 })
+    const { props: RLastCLastCellProps } = getCellAndCellProps({ sheetId: sheetId, row: sheet.visibleRows.length - 1, column: activeSheetView.visibleColumns.length })
 
     const { getAllByTestId } = renderWithRedux(
       <>

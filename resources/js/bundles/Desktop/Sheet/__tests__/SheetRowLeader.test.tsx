@@ -7,7 +7,7 @@ import '@testing-library/jest-dom/extend-expect'
 import axiosMock from 'axios'
 
 import { fireEvent, renderWithRedux, waitForElement, within } from '@/testing/library'
-import { appState as mockAppState, appStateFactory, appStateFactoryColumns, IAppStateFactoryInput, getCellAndCellProps } from '@/testing/mocks/appState'
+import { appState as mockAppState, appStateFactory, IAppStateFactoryInput, getCellAndCellProps } from '@/testing/mocks/appState'
 
 import { ISheetCell } from '@/state/sheet/types'
 import { Sheet, ISheetProps } from '@desktop/Sheet/Sheet'
@@ -69,22 +69,15 @@ const sheetRowLeaderProps: ISheetRowLeaderProps = {
 // Tests
 //-----------------------------------------------------------------------------
 describe('SheetRowLeader', () => {
-  
-  // The Autosizer from react-window relies on DOM properties that don't exist 
-  // in JSDom. We need to replace those properties so it can properly calculate
-  // the grid dimensions and render the children. This solution comes from here:
-  // https://github.com/bvaughn/react-virtualized/issues/493#issuecomment-447014986
-  const originalOffsetHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetHeight')
-  const originalOffsetWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetWidth')
 
+  // JSDom returns 0 for all getBoundingClientRect values (since its not actually
+  // rendering anything). SheetWindow relies on the width and height property to
+  // calculate the sheet size, so we need to mock those vaulues in.
   beforeAll(() => {
-    Object.defineProperty(HTMLElement.prototype, 'offsetHeight', { configurable: true, value: 240 }) // 10 rows
-    Object.defineProperty(HTMLElement.prototype, 'offsetWidth', { configurable: true, value: appStateFactoryColumns.length * 100 })
-  })
-
-  afterAll(() => {
-    Object.defineProperty(HTMLElement.prototype, 'offsetHeight', originalOffsetHeight);
-    Object.defineProperty(HTMLElement.prototype, 'offsetWidth', originalOffsetWidth);
+    Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', { writable: true, value: () => ({
+      width: 1024,
+      height: 768
+    }) })
   })
 
   const sheetRowLeaderPropsText = sheetRowLeaderProps.text as string

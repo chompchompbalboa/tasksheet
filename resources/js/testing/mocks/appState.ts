@@ -25,6 +25,8 @@ import { initialUserState } from '@/state/user/reducers'
 
 import { defaultSheetSelections, defaultSheetStyles } from '@/state/sheet/defaults'
 
+import { resolveSheetVisibleRows, resolveSheetRowLeaders } from '@/state/sheet/resolvers'
+
 import { ISheetCellProps } from '@desktop/Sheet/SheetCell'
 
 //-----------------------------------------------------------------------------
@@ -104,9 +106,6 @@ export const appStateFactory = ({
       const newSheetColumns: ISheetColumn['id'][] = []
       const newSheetRows: ISheetRow['id'][] = []
       const newSheetViewVisibleColumns: ISheetColumn['id'][] = []
-      const newSheetDefaultVisibleRows: ISheetRow['id'][] = []
-      const newSheetVisibleRows: ISheetRow['id'][] = []
-      const newSheetRowLeaders: string[] = []
       const newSheetCellPriorities = {}
 
       const newSheetFromDatabaseRows: ISheetFromDatabaseRow[] = []
@@ -180,8 +179,6 @@ export const appStateFactory = ({
 
         allSheetRows[newSheetRow.id] = newSheetRow
         newSheetRows.push(newSheetRow.id)
-        newSheetDefaultVisibleRows.push(newSheetRow.id)
-        newSheetVisibleRows.push(newSheetRow.id)
         newSheetFromDatabaseRows.push(newSheetFromFromDatabaseRow)
       }
 
@@ -201,6 +198,7 @@ export const appStateFactory = ({
         groups: newSheetFromDatabaseGroups,
         sorts: newSheetFromDatabaseSorts,
       })
+      allSheetViews[activeSheetView.id] = activeSheetView
 
       const newSheet: ISheet = {
         id: sheetId,
@@ -208,14 +206,27 @@ export const appStateFactory = ({
         activeSheetViewId: activeSheetViewId,
         rows: newSheetRows,
         columns: newSheetColumns,
-        visibleRows: newSheetVisibleRows,
-        visibleRowLeaders: newSheetRowLeaders,
+        visibleRows: null,
+        visibleRowLeaders: null,
         styles: defaultSheetStyles,
         selections: defaultSheetSelections,
         views: newSheetFromDatabaseViews.map(view => view.id),
         priorities: newSheetFromDatabasePriorities.map(priority => priority.id),
         cellPriorities: newSheetCellPriorities
       }
+
+      newSheet.visibleRows = resolveSheetVisibleRows(
+        newSheet,
+        allSheetColumns,
+        allSheetRows,
+        allSheetCells,
+        null,
+        null,
+        null,
+        allSheetViews,
+        null
+      )
+      newSheet.visibleRowLeaders = resolveSheetRowLeaders(newSheet.visibleRows)
 
       const newSheetFromDatabase: ISheetFromDatabase = {
         id: sheetId,
@@ -241,11 +252,9 @@ export const appStateFactory = ({
       allFiles[newFile.id] = newFile
       allFileIds.push(newFile.id)
       allSheets[newSheet.id] = newSheet
-      allSheetViews[activeSheetView.id] = activeSheetView
       folderFiles.push(newFile.id)
       allSheetsFromDatabase[newSheetFromDatabase.id] = newSheetFromDatabase
     }
-
 
     allFolders[folderId] = {
       id: folderId,
@@ -254,6 +263,7 @@ export const appStateFactory = ({
       files: folderFiles
     }
   }
+  
   return {
     allFolders,
     allFiles,
