@@ -15,9 +15,10 @@ import SheetHeader from '@desktop/Sheet/SheetHeader'
 //-----------------------------------------------------------------------------
 const SheetHeaders = ({
   sheetId,
+  containerWidth = '100%',
   gridContainerRef,
   handleContextMenu,
-  skipLeader = false
+  startingIndex = 0
 }: SheetHeadersProps) => {
 
   // Redux
@@ -29,24 +30,29 @@ const SheetHeaders = ({
   } 
 
   return (
-    <Container>
-      {!skipLeader &&
-        <SheetRowLeaderHeader>
-          <SheetRowLeaderHeaderText>
-            +
-          </SheetRowLeaderHeaderText>
-        </SheetRowLeaderHeader>
+    <Container
+      containerWidth={containerWidth}>
+      <SheetRowLeaderHeader>
+        <SheetRowLeaderHeaderText>
+          +
+        </SheetRowLeaderHeaderText>
+      </SheetRowLeaderHeader>
+      {sheetViewVisibleColumns.map((columnId: string, index: number) => {
+        if(index >= startingIndex) {
+          return (
+            <SheetHeader
+              key={index}
+              sheetId={sheetId}
+              columnId={columnId}
+              gridContainerRef={gridContainerRef}
+              handleContextMenu={handleContextMenu}
+              isLast={index === sheetViewVisibleColumns.length - 1}
+              isNextColumnAColumnBreak={isNextColumnAColumnBreak(index)}
+              visibleColumnsIndex={index}/>
+          )
+        }
       }
-      {sheetViewVisibleColumns.map((columnId: string, index: number) => (
-        <SheetHeader
-          key={index}
-          sheetId={sheetId}
-          columnId={columnId}
-          gridContainerRef={gridContainerRef}
-          handleContextMenu={handleContextMenu}
-          isLast={index === sheetViewVisibleColumns.length - 1}
-          isNextColumnAColumnBreak={isNextColumnAColumnBreak(index)}
-          visibleColumnsIndex={index}/>))}
+      )}
     </Container>
   )
 }
@@ -56,9 +62,11 @@ const SheetHeaders = ({
 //-----------------------------------------------------------------------------
 interface SheetHeadersProps {
   sheetId: ISheet['id']
+  containerWidth?: string
   gridContainerRef: RefObject<HTMLDivElement>
   handleContextMenu(e: MouseEvent, type: string, id: string, index?: number): void
   skipLeader?: boolean
+  startingIndex?: number
 }
 
 //-----------------------------------------------------------------------------
@@ -69,8 +77,12 @@ const Container = styled.div`
   position: sticky;
   top: 0;
   left: 0;
+  width: ${ ({ containerWidth }: IContainer ) => containerWidth };
   height: 1.6rem;
 `
+interface IContainer {
+  containerWidth: string
+}
 
 const SheetRowLeaderHeader = styled.div`
   z-index: 10;

@@ -122,7 +122,7 @@ export const resolveSheetVisibleRows = (
   
   // Bail out if there aren't any filters, groups or sorts
   if(filterIds.length === 0 && groupIds.length === 0 && sortIds.length === 0) {
-    return rowIds.sort(sortByPriority)
+    return [ ...rowIds.sort(sortByPriority), 'ROW_BREAK' ]
   }
 
   // Filter

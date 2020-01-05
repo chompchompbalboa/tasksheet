@@ -5,6 +5,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { colorPickerColors } from '@/components/ColorPicker'
+
 import { ARROW_DOWN, RESET_COLOR } from '@/assets/icons'
 
 import { IAppState } from '@/state'
@@ -93,18 +95,6 @@ const SheetActionCellStyleColorPicker = ({
 
     updateSheetStyles(nextSheetStylesSet, nextSheetStylesColorReference)
   }
-  
-  const colors = [
-    ['rgba(255, 255, 255, 1)', 'rgba(0, 0, 0, 0.125)', 'rgba(0, 0, 0, 0.25)', 'rgba(0, 0, 0, 0.375)'],
-    ['rgba(0, 0, 0, 0.5)', 'rgba(0, 0, 0, 0.625)', 'rgba(0, 0, 0, 0.75)', 'rgba(0, 0, 0, 1)'],
-    ['rgba(255, 0, 0, 0.25)', 'rgba(255, 0, 0, 0.5)', 'rgba(255, 0, 0, 0.75)', 'rgba(255, 0, 0, 1)'],
-    ['rgba(255, 127, 0, 0.25)', 'rgba(255, 127, 0, 0.5)', 'rgba(255, 127, 0, 0.75)', 'rgba(255, 127, 0, 1)'],
-    ['rgba(255, 255, 0, 0.25)', 'rgba(255, 255, 0, 0.5)', 'rgba(255, 255, 0, 0.75)', 'rgba(255, 255, 0, 1)'],
-    ['rgba(0, 255, 0 , 0.25)', 'rgba(0, 255, 0 , 0.5)', 'rgba(0, 255, 0 , 0.75)', 'rgba(0, 255, 0 , 1)'],
-    ['rgba(0, 0, 255, 0.25)', 'rgba(0, 0, 255, 0.5)', 'rgba(0, 0, 255, 0.75)', 'rgba(0, 0, 255, 1)'],
-    ['rgba(75, 0, 130, 0.25)', 'rgba(75, 0, 130, 0.5)', 'rgba(75, 0, 130, 0.75)', 'rgba(75, 0, 130, 1)'],
-    ['rgba(143, 0, 255, 0.25)', 'rgba(143, 0, 255, 0.5)', 'rgba(143, 0, 255, 0.75)', 'rgba(143, 0, 255, 1)'],
-  ]
 
   return (
     <Container
@@ -134,7 +124,7 @@ const SheetActionCellStyleColorPicker = ({
           &nbsp;&nbsp;Reset
         </ResetColor>
         <Colors>
-          {colors.map((colorGroup, colorGroupIndex) => (
+          {colorPickerColors.map((colorGroup, colorGroupIndex) => (
             <ColorGroup
               key={colorGroupIndex}>
               {colorGroup.map((color, colorIndex) => (
