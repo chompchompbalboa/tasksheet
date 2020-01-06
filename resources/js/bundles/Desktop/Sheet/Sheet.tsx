@@ -24,7 +24,7 @@ import ErrorBoundary from '@/components/ErrorBoundary'
 import LoadingTimer from '@/components/LoadingTimer'
 import SheetActions from '@desktop/Sheet/SheetActions'
 import SheetContextMenus from '@desktop/Sheet/SheetContextMenus'
-import SheetGrid from '@desktop/Sheet/SheetWindow'
+import SheetWindow from '@desktop/Sheet/SheetWindow'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -131,12 +131,13 @@ export const Sheet = memo(({
           sheetId={sheetId}/>
         {!hasLoaded
           ? isActiveFile ? <LoadingTimer fromId={sheetId}/> : null
-          : <SheetGridContainer
-              data-testid="SheetGridContainer">
-              <SheetGrid
-                  sheetId={sheetId}
-                  handleContextMenu={handleContextMenu}/>
-            </SheetGridContainer>
+          : <SheetWindowContainer
+              data-testid="SheetWindowContainer">
+              <SheetWindow
+                sheetId={sheetId}
+                handleContextMenu={handleContextMenu}
+                isActiveFile={isActiveFile}/>
+            </SheetWindowContainer>
         }
         </SheetContainer>
     </Container>
@@ -166,7 +167,7 @@ const SheetContainer = styled.div`
   height: calc(100% - 4.075rem);
 `
 
-const SheetGridContainer = styled(ErrorBoundary)`
+const SheetWindowContainer = styled(ErrorBoundary)`
   width: 100%;
   height: 100%;
 `

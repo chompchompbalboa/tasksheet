@@ -60,9 +60,15 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
   
   // Component Did Update
   componentDidUpdate(previousProps: ISheetWindowConnectedProps) {
-    if(previousProps.sheetVisibleRows !== this.props.sheetVisibleRows 
-      || previousProps.allSheetColumns !== this.props.allSheetColumns
+    const {
+      isActiveFile
+    } = this.props
+    // 
+    if(isActiveFile &&
+      (previousProps.sheetVisibleRows !== this.props.sheetVisibleRows 
+      || previousProps.allSheetColumns !== this.props.allSheetColumns)
     ) {
+      console.log('ok')
       const sheetDimensionsState = this.calculateSheetDimensionsState()
       this.setState(sheetDimensionsState)
     }
@@ -314,8 +320,9 @@ interface ISheetWindowConnectedProps extends ISheetWindowProps {
 }
 
 interface ISheetWindowProps {
-  handleContextMenu(e: MouseEvent, type: string, id: string): void
   sheetId: string
+  handleContextMenu(e: MouseEvent, type: string, id: string): void
+  isActiveFile: boolean
 }
 
 const mapStateToProps = (state: IAppState, ownProps: ISheetWindowProps) => {
