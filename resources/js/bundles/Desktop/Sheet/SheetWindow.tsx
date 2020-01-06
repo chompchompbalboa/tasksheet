@@ -67,8 +67,6 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
     const {
       updateSheetDimensionsOnNextActiveFile
     } = this.state
-    console.log(updateSheetDimensionsOnNextActiveFile)
-    // 
     if(isActiveFile &&
       (previousProps.sheetVisibleRows !== this.props.sheetVisibleRows 
       || previousProps.allSheetColumns !== this.props.allSheetColumns)

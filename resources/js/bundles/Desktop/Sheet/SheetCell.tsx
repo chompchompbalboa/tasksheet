@@ -193,12 +193,7 @@ interface IContainer {
 }
 
 const SheetCellNotFoundContainer = styled(Container)`
-  background-color: red;
-  opacity: 0.9;
-  &:hover {
-    background-color: red;
-    opacity: 1;
-  }
+  background-color: rgb(190, 190, 190);
 `
 
 const SheetRange = styled.div`
