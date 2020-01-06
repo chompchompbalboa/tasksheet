@@ -46,7 +46,8 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
       numberOfColumnsToRender: 0,
       numberOfRowsToRender: 0,
       sheetWidthPx: null,
-      sheetHeightPx: null
+      sheetHeightPx: null,
+      updateSheetDimensionsOnNextActiveFile: false
 		}
   }
 
@@ -63,6 +64,10 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
     const {
       isActiveFile
     } = this.props
+    const {
+      updateSheetDimensionsOnNextActiveFile
+    } = this.state
+    console.log(updateSheetDimensionsOnNextActiveFile)
     // 
     if(isActiveFile &&
       (previousProps.sheetVisibleRows !== this.props.sheetVisibleRows 
@@ -70,6 +75,13 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
     ) {
       const sheetDimensionsState = this.calculateSheetDimensionsState()
       this.setState(sheetDimensionsState)
+    }
+    if(isActiveFile && updateSheetDimensionsOnNextActiveFile) {
+      const sheetDimensionsState = this.calculateSheetDimensionsState()
+      this.setState({
+        ...sheetDimensionsState,
+        updateSheetDimensionsOnNextActiveFile: false
+      })
     }
   }
 
@@ -137,8 +149,21 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
 
   // Handle Resize
   handleResize() {
-    const sheetDimensionsState = this.calculateSheetDimensionsState()
-    this.setState(sheetDimensionsState)
+    const {
+      isActiveFile
+    } = this.props
+    if(isActiveFile) {
+      const sheetDimensionsState = this.calculateSheetDimensionsState()
+      this.setState(sheetDimensionsState)
+    }
+    else {
+      // We have to handle the resize for non-active files when they become active again
+      // or their container height and width calculates to 0 (since their container isn't
+      // rendered at the time of the resize)
+      this.setState({
+        updateSheetDimensionsOnNextActiveFile: true
+      })
+    }
   }
 
   // Handle Sheet Scroll
@@ -349,6 +374,7 @@ interface ISheetWindowState {
   numberOfRowsToRender: number
   sheetWidthPx: number
   sheetHeightPx: number
+  updateSheetDimensionsOnNextActiveFile: boolean
 }
 
 //-----------------------------------------------------------------------------
