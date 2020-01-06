@@ -92,6 +92,7 @@ const Container = styled.div`
   z-index: 10000;
   position: ${ ({ isResizing }: ContainerProps) => isResizing ? 'fixed' : 'relative' };
   cursor: col-resize;
+  top: ${ ({ isResizing }: ContainerProps) => isResizing ? '2rem' : '0' };
   left: ${ ({ containerLeft, gridContainerScrollLeft }: ContainerProps) => containerLeft + gridContainerScrollLeft + "px" };
   width: ${ ({ containerWidth, isResizing }: ContainerProps) => isResizing ? containerWidth : '4px' };
   height: 100%;
