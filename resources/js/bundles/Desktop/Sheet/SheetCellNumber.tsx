@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { ISheetCellTypesSharedProps } from '@desktop/Sheet/SheetCell'
 
 import { 
+  addSheetColumnAllCellValue,
   createSheetCellChange,
   updateSheetCell,
   updateSheetCellValues
@@ -20,6 +21,7 @@ import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
 //-----------------------------------------------------------------------------
 const SheetCellNumber = ({
   sheetId,
+  columnId,
   cell,
   isCellInRange,
   isTrackCellChanges
@@ -60,6 +62,7 @@ const SheetCellNumber = ({
     setTimeout(() => {          
       setSheetCellPreviousValue(null)
       if(cell.value !== sheetCellPreviousValue) {
+        dispatch(addSheetColumnAllCellValue(columnId, cell.value))
         if(!isCellInRange) {
           dispatch(updateSheetCell(cell.id, { value: cell.value }, { value: sheetCellPreviousValue }))
         }

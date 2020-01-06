@@ -82,6 +82,7 @@ const sheetProps: ISheetProps = {
 
 const sheetCellDatetimeProps: ISheetCellTypesSharedProps = {
   sheetId: sheetId,
+  columnId: sheetColumnId,
   cell: sheetCell,
   isCellInRange: false,
   isShowCellChanges: false,

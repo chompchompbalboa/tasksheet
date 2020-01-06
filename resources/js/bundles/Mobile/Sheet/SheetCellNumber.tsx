@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { ISheetCellTypesSharedProps } from '@mobile/Sheet/SheetCell'
 
 import { 
+  addSheetColumnAllCellValue,
   createSheetCellChange,
   updateSheetCell 
 } from '@/state/sheet/actions'
@@ -19,6 +20,7 @@ import SheetCellContainer from '@mobile/Sheet/SheetCellContainer'
 //-----------------------------------------------------------------------------
 export const SheetCellNumber = ({
   sheetId,
+  columnId,
   cell,
   isTrackCellChanges
 }: ISheetCellTypesSharedProps) => {
@@ -38,6 +40,7 @@ export const SheetCellNumber = ({
   const handleInputBlur = () => {
     if(cell.value !== cellValue) {
       dispatch(updateSheetCell(cell.id, { value: cellValue }))
+      dispatch(addSheetColumnAllCellValue(columnId, cellValue))
       if(isTrackCellChanges) {
         dispatch(createSheetCellChange(sheetId, cell.id, cellValue))
       }

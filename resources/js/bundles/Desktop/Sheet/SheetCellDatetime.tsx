@@ -8,6 +8,7 @@ import moment from 'moment'
 import { ISheetCellTypesSharedProps } from '@desktop/Sheet/SheetCell'
 
 import { 
+  addSheetColumnAllCellValue,
   createSheetCellChange,
   updateSheetCell,
   updateSheetCellValues
@@ -21,6 +22,7 @@ import SheetCellDatetimeDatepicker from '@desktop/Sheet/SheetCellDatetimeDatepic
 //-----------------------------------------------------------------------------
 export const SheetCellDatetime = ({
   sheetId,
+  columnId,
   cell,
   isCellInRange,
   isTrackCellChanges
@@ -52,6 +54,7 @@ export const SheetCellDatetime = ({
       setSheetCellPreviousValue(null)
       const nextSheetCellValue = formatDate(cell.value)
       if(sheetCellPreviousValue !== nextSheetCellValue) {
+        dispatch(addSheetColumnAllCellValue(columnId, cell.value))
         if(!isCellInRange) {
           dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }, { value: sheetCellPreviousValue }))
         }

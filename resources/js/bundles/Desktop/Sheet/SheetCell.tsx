@@ -94,6 +94,7 @@ export const SheetCell = memo(({
           highlightColor={userColorSecondary}/>
         <SheetCellType
           sheetId={sheetId}
+          columnId={columnId}
           cell={cell}
           isCellInRange={isCellInRange}
           isShowCellChanges={isShowCellChanges}
@@ -139,6 +140,7 @@ export interface ISheetCellProps {
 
 export interface ISheetCellTypesSharedProps {
   sheetId: ISheet['id']
+  columnId: ISheetColumn['id']
   cell: ISheetCell
   isCellInRange: boolean
   isShowCellChanges: boolean
