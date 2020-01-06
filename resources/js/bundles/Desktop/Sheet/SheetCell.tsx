@@ -100,6 +100,8 @@ export const SheetCell = memo(({
           isTrackCellChanges={isTrackCellChanges}/>
         <SheetCellChanges
           cellId={cell.id}
+          cellType={cellType}
+          isCellEditing={cell.isCellEditing}
           isShowCellChanges={isShowCellChanges}
           isTrackCellChanges={isTrackCellChanges}/>
       </Container>

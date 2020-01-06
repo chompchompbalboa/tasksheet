@@ -10,7 +10,10 @@ import { formatDate } from '@desktop/Sheet/SheetCellDatetime'
 
 import { ISheetCellTypesSharedProps } from '@mobile/Sheet/SheetCell'
 
-import { updateSheetCell } from '@/state/sheet/actions'
+import { 
+  createSheetCellChange,
+  updateSheetCell 
+} from '@/state/sheet/actions'
 
 import SheetCellContainer from '@mobile/Sheet/SheetCellContainer'
 
@@ -18,7 +21,9 @@ import SheetCellContainer from '@mobile/Sheet/SheetCellContainer'
 // Component
 //-----------------------------------------------------------------------------
 export const SheetCellDatetime = ({
-  cell
+  sheetId,
+  cell,
+  isTrackCellChanges
 }: ISheetCellTypesSharedProps) => {
 
   // Redux
@@ -27,6 +32,12 @@ export const SheetCellDatetime = ({
   // Handle Input Change
   const handleInputChange = (nextValue: string) => {
     const nextSheetCellValue = formatDate(nextValue)
+    if(cell.value !== nextSheetCellValue) {
+      dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }))
+      if(isTrackCellChanges) {
+        dispatch(createSheetCellChange(sheetId, cell.id, nextSheetCellValue))
+      }
+    }
     dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }))
   }
 

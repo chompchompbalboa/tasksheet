@@ -8,6 +8,7 @@ import moment from 'moment'
 import { ISheetCellTypesSharedProps } from '@desktop/Sheet/SheetCell'
 
 import { 
+  createSheetCellChange,
   updateSheetCell,
   updateSheetCellValues
 } from '@/state/sheet/actions'
@@ -21,7 +22,8 @@ import SheetCellDatetimeDatepicker from '@desktop/Sheet/SheetCellDatetimeDatepic
 export const SheetCellDatetime = ({
   sheetId,
   cell,
-  isCellInRange
+  isCellInRange,
+  isTrackCellChanges
 }: ISheetCellTypesSharedProps) => {
 
   // Redux
@@ -29,7 +31,7 @@ export const SheetCellDatetime = ({
   
   // State
   const [ sheetCellPreviousValue, setSheetCellPreviousValue ] = useState(null)
-  
+
   // Begin Editing
   const beginEditing = (value: string = null) => {
     const nextSheetCellValue = value === null ? cell.value : value
@@ -46,10 +48,16 @@ export const SheetCellDatetime = ({
   // Complete Editing
   const completeEditing = () => {
     dispatch(updateSheetCell(cell.id, { isCellEditing: false }, null, true))
-    setTimeout(() => {
-      if(!isCellInRange) {
-        const nextSheetCellValue = formatDate(cell.value)
-        dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }, { value: sheetCellPreviousValue }))
+    setTimeout(() => {          
+      setSheetCellPreviousValue(null)
+      const nextSheetCellValue = formatDate(cell.value)
+      if(sheetCellPreviousValue !== nextSheetCellValue) {
+        if(!isCellInRange) {
+          dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }, { value: sheetCellPreviousValue }))
+        }
+        if(isTrackCellChanges) {
+          dispatch(createSheetCellChange(sheetId, cell.id, nextSheetCellValue))
+        }
       }
     }, 25)
   }

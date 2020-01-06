@@ -68,7 +68,6 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
       (previousProps.sheetVisibleRows !== this.props.sheetVisibleRows 
       || previousProps.allSheetColumns !== this.props.allSheetColumns)
     ) {
-      console.log('ok')
       const sheetDimensionsState = this.calculateSheetDimensionsState()
       this.setState(sheetDimensionsState)
     }
