@@ -35,7 +35,7 @@ const SheetActionGroupSelectedOption = ({
       <Container
         isLocked={group && group.isLocked}
         onClick={() => handleOptionClick(group)}>
-        <Icon icon={groupOrder === 'ASC' ? ARROW_UP : ARROW_DOWN} size="0.8rem"/>{option.label}
+        <Icon icon={groupOrder === 'ASC' ? ARROW_DOWN : ARROW_UP} size="0.8rem"/>{option.label}
       </Container>
     )
   }

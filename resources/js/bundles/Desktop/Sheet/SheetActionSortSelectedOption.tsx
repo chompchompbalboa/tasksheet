@@ -40,7 +40,7 @@ const SheetActionSortSelectedOption = ({
       <Container
         isLocked={sort && sort.isLocked}
         onClick={() => handleOptionClick(sort)}>
-        <Icon icon={sortOrder === 'ASC' ? ARROW_UP : ARROW_DOWN} size="0.8rem"/>{option.label}
+        <Icon icon={sortOrder === 'ASC' ? ARROW_DOWN : ARROW_UP} size="0.8rem"/>{option.label}
       </Container>
     )
   }
