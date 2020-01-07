@@ -95,14 +95,14 @@ class DatabaseSeeder extends Seeder
             $user->color()->save(factory(App\Models\UserColor::class)->make());
 
             // UserSubscription
-            $user->subscription()->save(factory(App\Models\UserSubscription::class)->make([
+            $user->tasksheetSubscription()->save(factory(App\Models\UserTasksheetSubscription::class)->make([
               'type' => $seedUser['email'] === 'demo@tasksheet.app' ? 'DEMO' : 'LIFETIME',
               'startDate' => Carbon::now(),
               'endDate' => Carbon::now()->addDays(30),
             ]));
 
             // Stripe Subscription
-            $newUser->newSubscription('Monthly', env('STRIPE_TASKSHEET_MONTHLY_PLAN_ID'))->trialDays(30)->create();
+            $user->newSubscription('Monthly', env('STRIPE_TASKSHEET_MONTHLY_PLAN_ID'))->trialDays(30)->create();
 
             // Add email to newUsers
             $newUsers->push($user);
