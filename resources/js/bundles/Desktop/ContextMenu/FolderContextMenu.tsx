@@ -40,18 +40,15 @@ const FolderContextMenu = ({
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}>
       {!isRootFolder &&
-        <>
-          <ContextMenuItem 
-            isFirstItem
-            text="Cut"
-            onClick={() => closeOnClick(() => updateClipboard({ itemId: folderId, folderOrFile: 'FOLDER', cutOrCopy: 'CUT' }))}/>
-          <ContextMenuItem text="Copy" />
-          <ContextMenuItem
-            text="Paste"
-            onClick={() => closeOnClick(() => pasteFromClipboard(folderId))}/>
-          <ContextMenuDivider />
-        </>
+        <ContextMenuItem 
+          isFirstItem
+          text="Cut"
+          onClick={() => closeOnClick(() => updateClipboard({ itemId: folderId, folderOrFile: 'FOLDER', cutOrCopy: 'CUT' }))}/>
       }
+      <ContextMenuItem
+        text="Paste"
+        onClick={() => closeOnClick(() => pasteFromClipboard(folderId))}/>
+      <ContextMenuDivider />
       <ContextMenuItem 
         text="New Sheet"
         onClick={() => closeOnClick(() => createSheet(folderId))}/>

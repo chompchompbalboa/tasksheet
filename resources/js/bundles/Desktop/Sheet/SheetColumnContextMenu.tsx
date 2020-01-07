@@ -143,7 +143,7 @@ export const SheetColumnContextMenu = ({
             {sheetViewVisibleColumns.map((sheetColumnId, index) => (
               <ContextMenuItem 
                 key={sheetColumnId === 'COLUMN_BREAK' ? sheetColumnId + index : sheetColumnId}
-                text={sheetColumnId === 'COLUMN_BREAK' ? 'Column Break' : allSheetColumns[sheetColumnId].name} 
+                text={sheetColumnId === 'COLUMN_BREAK' ? '-- Column Break --' : allSheetColumns[sheetColumnId].name} 
                 onClick={() => handleColumnMoveClick(columnId, index)}/>
             ))}
           </ContextMenuItem>
