@@ -11,11 +11,11 @@ import {
 import { 
   ISheet, ISheetUpdates,
   ISheetLinkToDatabase,
-  ISheetCell, ISheetCellUpdates,
   ISheetColumn, ISheetColumnUpdates,
+  ISheetRow, ISheetRowToDatabase,
+  ISheetCell, ISheetCellUpdates,
   ISheetFilter, 
   ISheetGroup, ISheetGroupUpdates, 
-  ISheetRowToDatabase, 
   ISheetSort, ISheetSortUpdates, 
   ISheetStylesDatabaseUpdates,
   ISheetViewToDatabase, ISheetViewUpdates,
@@ -300,6 +300,16 @@ export const deleteSheetRows = async (rowIds: string[]) => {
 		return response.data
 	})
 }
+
+export const restoreSheetRows = async (rowIds: ISheetRow['id'][], cellIds: ISheetCell['id'][]) => {
+	return axios.post('/app/sheets/rows/restore', {
+    rowIds,
+    cellIds
+  }).then(response => {
+		return response.data
+	})
+}
+
 
 export const createSheetSort = async (sort: ISheetSort) => {
 	return axios.post('/app/sheets/sorts', sort).then(response => {

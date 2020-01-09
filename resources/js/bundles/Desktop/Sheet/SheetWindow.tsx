@@ -132,7 +132,7 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
     // Calculate the number of columns and rows to render
     const nextNumberOfColumnsToRender = Math.min(numberOfColumnsToRender, sheetViewVisibleColumns.length)
     const nextNumberOfRowsToRender = Math.min(Math.round(containerDimensions.height / this.ROW_HEIGHT), sheetVisibleRows.length)
-
+    
     return {
       containerWidthPx: containerDimensions.width,
       containerHeightPx: containerDimensions.height,
@@ -225,9 +225,8 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
       sheetHeightPx
     } = this.state
 
-    const columnRenderHelper = _.times(numberOfColumnsToRender, String)
-    const rowRenderHelper = _.times(numberOfRowsToRender, String)
-
+    const columnRenderHelper = _.times(Math.min(sheetViewVisibleColumns.length, numberOfColumnsToRender), String)
+    const rowRenderHelper = _.times(Math.min(sheetVisibleRows.length, numberOfRowsToRender), String)
     return (
 			<Container
         ref={this.container}
@@ -240,14 +239,15 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
 				</ScrollContainer>
 				<Sheet>
           <SheetHeaders 
+            key={'SheetHeaders'}
             sheetId={sheetId}
             containerWidth={sheetWidthPx + 'px'}
             gridContainerRef={null}
             handleContextMenu={handleContextMenu}
             startingIndex={currentStartingColumnIndex}/>
-					{rowRenderHelper.map((__, index) => {
-            const sheetVisibleRowId = sheetVisibleRows[index + currentStartingRowIndex]
-            const sheetVisibleRowLeaderText = sheetVisibleRowLeaders[index + currentStartingRowIndex]
+					{rowRenderHelper.map((__, rowRenderIndex) => {
+            const sheetVisibleRowId = sheetVisibleRows[rowRenderIndex + currentStartingRowIndex]
+            const sheetVisibleRowLeaderText = sheetVisibleRowLeaders[rowRenderIndex + currentStartingRowIndex]
             if(sheetVisibleRowId !== 'ROW_BREAK') {
               return (
                 <SheetRow 
@@ -263,8 +263,8 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
                       width: '35px',
                       height: this.ROW_HEIGHT + 'px'
                     }}/>
-                  {columnRenderHelper.map((__, index) => {
-                    const columnId = sheetViewVisibleColumns[index + currentStartingColumnIndex]
+                  {columnRenderHelper.map((__, columnRenderIndex) => {
+                    const columnId = sheetViewVisibleColumns[columnRenderIndex + currentStartingColumnIndex]
                     if(columnId && columnId !== 'COLUMN_BREAK') {
                       return (
                         <SheetCell 
@@ -282,7 +282,7 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
                     else if (columnId) {
                       return (
                         <SheetBreakCell
-                          key={'COLUMN_BREAK_' + index}
+                          key={'COLUMN_BREAK_' + columnRenderIndex}
                           style={{
                             width: '10px',
                             height: this.ROW_HEIGHT + 'px'
@@ -295,7 +295,7 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
             }
             return (
               <SheetRow 
-                key={'ROW_BREAK' + index}
+                key={'ROW_BREAK' + rowRenderIndex}
                 widthPx={sheetWidthPx}>
                 <SheetRowLeader
                   sheetId={sheetId}
@@ -306,12 +306,12 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
                     width: '35px',
                     height: this.ROW_HEIGHT + 'px'
                   }}/>
-                {columnRenderHelper.map((__, index) => {
-                  const columnId = sheetViewVisibleColumns[index + currentStartingColumnIndex]
+                {columnRenderHelper.map((__, columnRenderIndex) => {
+                  const columnId = sheetViewVisibleColumns[columnRenderIndex + currentStartingColumnIndex]
                   if(columnId) {
                     return (
                       <SheetBreakCell
-                        key={columnId === 'COLUMN_BREAK' ? columnId + index : columnId}
+                        key={columnId === 'COLUMN_BREAK' ? columnId + columnRenderIndex : columnId}
                         style={{
                           width: columnId === 'COLUMN_BREAK' ? '10px' : allSheetColumns[columnId].width,
                           height: this.ROW_HEIGHT + 'px'
@@ -323,7 +323,6 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
               </SheetRow>
             )
           }
-              
 					)}
 				</Sheet>
 			</Container>

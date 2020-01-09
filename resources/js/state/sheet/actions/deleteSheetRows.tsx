@@ -8,7 +8,7 @@ import { mutation } from '@/api'
 import { IAppState } from '@/state'
 import { IThunkAction, IThunkDispatch } from '@/state/types'
 
-import { ISheet, ISheetCell, ISheetRow, ISheetRowToDatabase } from '@/state/sheet/types'
+import { ISheet, ISheetCell, ISheetRow } from '@/state/sheet/types'
 
 import { createHistoryStep } from '@/state/history/actions'
 import { updateSheet } from '@/state/sheet/actions'
@@ -29,40 +29,47 @@ export const deleteSheetRows = (sheetId: ISheet['id'], rowId: ISheetRow['id']): 
           visibleRowLeaders: sheetVisibleRowLeaders
         }
       },
-      allSheetCells,
       allSheetRows
     } = getState().sheet
     
-    const sheetRowsForUndoActionsDatabaseUpdate: ISheetRowToDatabase[] = []
+    //const sheetRowsForUndoActionsDatabaseUpdate: ISheetRowToDatabase[] = []
     let nextSheetRows = [ ...sheetRows ]
-    let nextSheetVisibleRows = [ ...sheetVisibleRows ]
     let rowIdsToDelete: ISheetRow['id'][] = []
+    let cellIdsToDelete: ISheetCell['id'][] = []
+    
     
     const firstSelectedRowIdVisibleRowsIndex = sheetVisibleRows.indexOf(sheetSelections.rangeStartRowId)
     const lastSelectedRowIdVisibleRowsIndex = sheetVisibleRows.indexOf(sheetSelections.rangeEndRowId)
     
     if(lastSelectedRowIdVisibleRowsIndex > -1) {
       for(let currentIndex = firstSelectedRowIdVisibleRowsIndex; currentIndex <= lastSelectedRowIdVisibleRowsIndex; currentIndex++) {
-        rowIdsToDelete.push(sheetVisibleRows[currentIndex])
+        const currentRowId = sheetVisibleRows[currentIndex]
+        if(currentRowId !== 'ROW_BREAK') {
+          rowIdsToDelete.push(currentRowId)
+        }
       }
     }
     else {
       rowIdsToDelete.push(rowId)
     }
     
-    rowIdsToDelete.forEach(rangeRowId => {
-      const sheetRow = allSheetRows[rangeRowId]
-      const sheetRowCellsForUndoActionsDatabaseUpdate: ISheetCell[] = Object.keys(sheetRow.cells).map(columnId => allSheetCells[sheetRow.cells[columnId]])
-      sheetRowsForUndoActionsDatabaseUpdate.push({
-        ...sheetRow,
-        cells: sheetRowCellsForUndoActionsDatabaseUpdate
-      })
-      nextSheetRows = nextSheetRows.filter(sheetRowId => sheetRowId !== rangeRowId)
-      nextSheetVisibleRows = nextSheetVisibleRows.filter(visibleRowId => visibleRowId !== rangeRowId)
+    rowIdsToDelete.forEach(rowIdToDelete => {
+      const sheetRow = allSheetRows[rowIdToDelete]
+      if(sheetRow) {
+        nextSheetRows = nextSheetRows.filter(sheetRowId => sheetRowId !== rowIdToDelete)
+        Object.keys(sheetRow.cells).forEach(currentColumnId => {
+          const currentCellId = sheetRow.cells[currentColumnId]
+          cellIdsToDelete.push(currentCellId)
+        })
+      }
     })
     
+    const nextSheetVisibleRows = [ 
+      ...([ ...sheetVisibleRows ].splice(0, firstSelectedRowIdVisibleRowsIndex)),
+      ...([ ...sheetVisibleRows ].slice(lastSelectedRowIdVisibleRowsIndex + 1)) 
+    ]
     const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
-    
+
     const actions = () => {
       batch(() => {
         dispatch(updateSheet(sheetId, {
@@ -81,8 +88,8 @@ export const deleteSheetRows = (sheetId: ISheet['id'], rowId: ISheetRow['id']): 
           visibleRows: sheetVisibleRows,
           visibleRowLeaders: sheetVisibleRowLeaders
         }, true))
-        mutation.createSheetRows(sheetRowsForUndoActionsDatabaseUpdate)
       })
+      mutation.restoreSheetRows(rowIdsToDelete, cellIdsToDelete)
     }
     dispatch(createHistoryStep({ actions, undoActions }))
     actions()
