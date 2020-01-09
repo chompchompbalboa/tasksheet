@@ -2,43 +2,43 @@
 // Imports
 //-----------------------------------------------------------------------------
 import { 
-  IActiveSiteSplashForm,
-  IActiveSiteSplashFormMessage
+  IActiveSiteForm,
+  IActiveSiteFormMessage
  } from '@/state/active/types'
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-export type IActiveActions = IUpdateActiveSiteSplashForm | IUpdateActiveSiteSplashFormMessage
+export type IActiveActions = IUpdateActiveSiteForm | IUpdateActiveSiteFormMessage
 
 //-----------------------------------------------------------------------------
 // Site Splash Form
 //-----------------------------------------------------------------------------
-export const UPDATE_ACTIVE_SITE_SPLASH_FORM = 'UPDATE_ACTIVE_SITE_SPLASH_FORM'
-interface IUpdateActiveSiteSplashForm {
-	type: typeof UPDATE_ACTIVE_SITE_SPLASH_FORM
-	nextSiteSplashForm: IActiveSiteSplashForm
+export const UPDATE_ACTIVE_SITE_FORM = 'UPDATE_ACTIVE_SITE_FORM'
+interface IUpdateActiveSiteForm {
+	type: typeof UPDATE_ACTIVE_SITE_FORM
+	nextSiteForm: IActiveSiteForm
 }
 
-export const updateActiveSiteSplashForm = (nextSiteSplashForm: IActiveSiteSplashForm): IActiveActions => {
+export const updateActiveSiteForm = (nextSiteForm: IActiveSiteForm): IActiveActions => {
 	return {
-		type: UPDATE_ACTIVE_SITE_SPLASH_FORM,
-		nextSiteSplashForm
+		type: UPDATE_ACTIVE_SITE_FORM,
+		nextSiteForm
 	}
 }
 
 //-----------------------------------------------------------------------------
 // Site Splash Form
 //-----------------------------------------------------------------------------
-export const UPDATE_ACTIVE_SITE_SPLASH_FORM_MESSAGE = 'UPDATE_ACTIVE_SITE_SPLASH_FORM_MESSAGE'
-interface IUpdateActiveSiteSplashFormMessage {
-	type: typeof UPDATE_ACTIVE_SITE_SPLASH_FORM_MESSAGE
-	nextSiteSplashFormMessage: IActiveSiteSplashFormMessage
+export const UPDATE_ACTIVE_SITE_FORM_MESSAGE = 'UPDATE_ACTIVE_SITE_FORM_MESSAGE'
+interface IUpdateActiveSiteFormMessage {
+	type: typeof UPDATE_ACTIVE_SITE_FORM_MESSAGE
+	nextSiteFormMessage: IActiveSiteFormMessage
 }
 
-export const updateActiveSiteSplashFormMessage = (nextSiteSplashFormMessage: IActiveSiteSplashFormMessage): IActiveActions => {
+export const updateActiveSiteFormMessage = (nextSiteFormMessage: IActiveSiteFormMessage): IActiveActions => {
 	return {
-		type: UPDATE_ACTIVE_SITE_SPLASH_FORM_MESSAGE,
-		nextSiteSplashFormMessage
+		type: UPDATE_ACTIVE_SITE_FORM_MESSAGE,
+		nextSiteFormMessage
 	}
 }

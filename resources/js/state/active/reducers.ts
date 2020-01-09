@@ -2,25 +2,25 @@
 // Initial
 //-----------------------------------------------------------------------------
 import { 
-  IActiveSiteSplashForm,
-  IActiveSiteSplashFormMessage 
+  IActiveSiteForm,
+  IActiveSiteFormMessage 
 } from '@/state/active/types'
 import { 
   IActiveActions,
-  UPDATE_ACTIVE_SITE_SPLASH_FORM,
-  UPDATE_ACTIVE_SITE_SPLASH_FORM_MESSAGE
+  UPDATE_ACTIVE_SITE_FORM,
+  UPDATE_ACTIVE_SITE_FORM_MESSAGE
 } from '@/state/active/actions'
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
 export const initialActiveState: IActiveState = {
-  SITE_SPLASH_FORM: 'LOGIN',
-  SITE_SPLASH_FORM_MESSAGE: 'CLICK_TO_REGISTER_INSTEAD'
+  SITE_FORM: 'LOGIN',
+  SITE_FORM_MESSAGE: 'CLICK_TO_REGISTER_INSTEAD'
 
 }
 export type IActiveState = {
-  SITE_SPLASH_FORM: IActiveSiteSplashForm
-  SITE_SPLASH_FORM_MESSAGE: IActiveSiteSplashFormMessage
+  SITE_FORM: IActiveSiteForm
+  SITE_FORM_MESSAGE: IActiveSiteFormMessage
 }
 
 //-----------------------------------------------------------------------------
@@ -29,19 +29,19 @@ export type IActiveState = {
 export const activeReducer = (state = initialActiveState, action: IActiveActions): IActiveState => {
 	switch (action.type) {
 
-    case UPDATE_ACTIVE_SITE_SPLASH_FORM: {
-      const { nextSiteSplashForm } = action
+    case UPDATE_ACTIVE_SITE_FORM: {
+      const { nextSiteForm } = action
       return {
         ...state,
-        SITE_SPLASH_FORM: nextSiteSplashForm
+        SITE_FORM: nextSiteForm
       }
     }
 
-    case UPDATE_ACTIVE_SITE_SPLASH_FORM_MESSAGE: {
-      const { nextSiteSplashFormMessage } = action
+    case UPDATE_ACTIVE_SITE_FORM_MESSAGE: {
+      const { nextSiteFormMessage } = action
       return {
         ...state,
-        SITE_SPLASH_FORM_MESSAGE: nextSiteSplashFormMessage
+        SITE_FORM_MESSAGE: nextSiteFormMessage
       }
     }
 

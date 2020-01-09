@@ -7,14 +7,14 @@ import styled from 'styled-components'
 
 import { IAppState } from '@/state'
 import {
-  updateActiveSiteSplashForm,
-  updateActiveSiteSplashFormMessage
+  updateActiveSiteForm,
+  updateActiveSiteFormMessage
 } from '@/state/active/actions'
 
 import History from '@desktop/History/History'
 import Modals from '@desktop/Modal/Modals'
 import Tabs from '@desktop/Tabs/Tabs'
-import SiteSplash from '@desktop/Site/SiteSplash'
+import Site from '@desktop/Site/Site'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -26,8 +26,8 @@ export const App = () => {
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 
   const handleDemoUserCallToActionClick = () => {
-    dispatch(updateActiveSiteSplashForm('REGISTER'))
-    dispatch(updateActiveSiteSplashFormMessage('CLICK_TO_LOGIN_INSTEAD'))
+    dispatch(updateActiveSiteForm('REGISTER'))
+    dispatch(updateActiveSiteFormMessage('CLICK_TO_LOGIN_INSTEAD'))
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth'})
   }
 
@@ -37,7 +37,7 @@ export const App = () => {
         containerBackgroundColor={userColorPrimary}>
         <SiteContainer>
           <SiteContent>
-            <SiteSplash/>
+            <Site/>
             <SpreadsheetIcon
               src={environment.assetUrl + 'images/spreadsheet.png'}/>
           </SiteContent>

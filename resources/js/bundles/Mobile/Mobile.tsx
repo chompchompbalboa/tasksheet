@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import { IAppState } from '@/state'
 
 import File from '@mobile/File/File'
-import Site from '@desktop/Site/SiteSplash'
+import Site from '@desktop/Site/Site'
 import Tabs from '@mobile/Tabs/Tabs'
 
 //-----------------------------------------------------------------------------

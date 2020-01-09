@@ -8,8 +8,8 @@ import { UPLOAD } from '@/assets/icons'
 
 import { IAppState } from '@/state'
 import {
-  updateActiveSiteSplashForm,
-  updateActiveSiteSplashFormMessage
+  updateActiveSiteForm,
+  updateActiveSiteFormMessage
 } from '@/state/active/actions'
 import {
   updateModal
@@ -31,8 +31,8 @@ const SheetActionUploadCsv = () => {
 
   const handleButtonClick = () => {
     if(isDemoUser) {
-      dispatch(updateActiveSiteSplashForm('REGISTER'))
-      dispatch(updateActiveSiteSplashFormMessage('ACCOUNT_NEEDED_TO_UPLOAD_CSV'))
+      dispatch(updateActiveSiteForm('REGISTER'))
+      dispatch(updateActiveSiteFormMessage('ACCOUNT_NEEDED_TO_UPLOAD_CSV'))
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth'})
     }
     else {

@@ -1,6 +1,6 @@
-export type IActiveSiteSplashForm = 'LOGIN' | 'REGISTER'
+export type IActiveSiteForm = 'LOGIN' | 'REGISTER'
 
-export type IActiveSiteSplashFormMessage = 
+export type IActiveSiteFormMessage = 
   'ACCOUNT_NEEDED_TO_CREATE_SHEET' |
   'ACCOUNT_NEEDED_TO_UPLOAD_CSV' |
   'CLICK_TO_LOGIN_INSTEAD' |
