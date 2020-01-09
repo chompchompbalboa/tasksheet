@@ -102,6 +102,8 @@ export const SheetCell = memo(({
         <SheetCellChanges
           cellId={cell.id}
           cellType={cellType}
+          isCellInRange={isCellInRange}
+          isCellSelected={isCellSelected}
           isCellEditing={cell.isCellEditing}
           isShowCellChanges={isShowCellChanges}
           isTrackCellChanges={isTrackCellChanges}/>

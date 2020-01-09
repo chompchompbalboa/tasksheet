@@ -27,6 +27,8 @@ export const SheetCellChanges = ({
   cellId,
   cellType,
   isCellEditing,
+  isCellInRange,
+  isCellSelected,
   isShowCellChanges,
   isTrackCellChanges
 }: ISheetCellChangesProps) => {
@@ -38,7 +40,9 @@ export const SheetCellChanges = ({
 
   return (
     <Container>
-      {isTrackCellChanges 
+      {isCellSelected 
+      && !isCellInRange 
+      && isTrackCellChanges 
       && isShowCellChanges 
       && sheetCellChanges 
       && sheetCellChanges.length > 0 
@@ -81,6 +85,8 @@ export interface ISheetCellChangesProps {
   cellId: ISheetCell['id']
   cellType: ISheetCellType
   isCellEditing: boolean
+  isCellInRange: boolean
+  isCellSelected: boolean
   isShowCellChanges: boolean
   isTrackCellChanges: boolean
 }
