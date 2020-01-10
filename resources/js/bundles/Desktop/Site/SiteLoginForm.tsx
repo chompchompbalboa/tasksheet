@@ -18,7 +18,10 @@ import SiteFormInput from '@desktop/Site/SiteFormInput'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SiteLoginForm = () => {
+const SiteLoginForm = ({
+  flexDirection = 'row',
+  isDisplayLabels = false
+}: ISiteLoginForm) => {
   
   const dispatch = useDispatch()
 
@@ -49,23 +52,37 @@ const SiteLoginForm = () => {
   }
   
   return (
-    <LoginForm onSubmit={e => handleLoginAttempt(e)}>
+    <LoginForm 
+      flexDirection={flexDirection}
+      onSubmit={e => handleLoginAttempt(e)}>
       <SiteFormInput
+        label={isDisplayLabels && "Email"}
         type="email"
         placeholder="Email"
         value={emailInputValue}
         onChange={nextValue => setEmailInputValue(nextValue)}
         isInputValueValid={emailInputValue === '' || isEmail(emailInputValue)}/>
       <SiteFormInput
+        label={isDisplayLabels && "Password"}
         type="password"
         placeholder="Password"
         value={passwordInputValue}
         onChange={nextValue => setPasswordInputValue(nextValue)}
         isInputValueValid={true}/>
       <SiteFormButton
+        marginTop={flexDirection === 'column' ? '0.5rem' : '0'}
+        marginLeft={flexDirection === 'column' ? '0' : '0.375rem'}
         text={!['LOGGING_IN'].includes(loginStatus) ? 'Log In' : 'Logging In...'} />
     </LoginForm>
   )
+}
+
+//-----------------------------------------------------------------------------
+// Props
+//-----------------------------------------------------------------------------
+interface ISiteLoginForm {
+  flexDirection?: 'column' | 'row'
+  isDisplayLabels?: boolean
 }
 
 //-----------------------------------------------------------------------------
@@ -74,11 +91,15 @@ const SiteLoginForm = () => {
 const LoginForm = styled.form`
   width: 100%;
   display: flex;
+  flex-direction: ${ ({ flexDirection }: ILoginForm ) => flexDirection }; 
   justify-content: center;
   align-items: center;
   @media (max-width: 480px) {
     flex-direction: column;
   }
 `
+interface ILoginForm {
+  flexDirection: string
+}
 
 export default SiteLoginForm

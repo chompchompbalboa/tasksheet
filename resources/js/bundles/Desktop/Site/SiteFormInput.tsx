@@ -17,7 +17,9 @@ import {
 // Component
 //-----------------------------------------------------------------------------
 const SiteFormInput = ({
+  borderColor = 'rgb(150, 150, 150)',
   isInputValueValid,
+  label = null,
   onChange,
   placeholder,
   type = "text",
@@ -51,14 +53,20 @@ const SiteFormInput = ({
   }
 
   return (
-    <StyledInput
-      type={type}
-      placeholder={placeholder}
-      value={value}
-      onChange={e => onChange(e.target.value)}
-      onFocus={handleInputFocus}
-      onBlur={handleInputBlur}
-      isInputValueValid={isActiveInput || isInputValueValid}/>
+    <Container>
+      {label &&
+        <Label>{label}:</Label>
+      }
+      <StyledInput
+        type={type}
+        borderColor={borderColor}
+        isInputValueValid={isActiveInput || isInputValueValid}
+        onChange={e => onChange(e.target.value)}
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
+        placeholder={placeholder}
+        value={value}/>
+    </Container>
   )
 }
 
@@ -66,7 +74,9 @@ const SiteFormInput = ({
 // Props
 //-----------------------------------------------------------------------------
 interface ISiteFormInput {
+  borderColor?: string
   isInputValueValid: boolean
+  label?: string
   onChange(nextValue: string): void
   placeholder: string
   type?: string
@@ -76,11 +86,24 @@ interface ISiteFormInput {
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+`
+
+const Label = styled.label`
+  width: 100%;
+`
+
 const StyledInput = styled.input`
-  margin: 0 0.375rem;
+  width: 100%;
+  margin: 0.375rem;
   padding: 0.5rem 0.25rem;
   border: none;
-  border: ${ ({ isInputValueValid }: StyledInputProps ) => isInputValueValid ? '2px solid transparent' : '2px solid red'};
+  border: ${ ({ borderColor, isInputValueValid }: StyledInputProps ) => isInputValueValid ? '1px solid ' + borderColor : '1px solid red'};
   border-radius: 4px;
   outline: none;
   font-size: 0.9rem;
@@ -90,6 +113,7 @@ const StyledInput = styled.input`
   }
 `
 interface StyledInputProps {
+  borderColor: string
   isInputValueValid: boolean
 }
 
