@@ -24,7 +24,6 @@ const Site = () => {
   
   // Handle Scroll
   const handleScroll = () => {
-    console.log('o')
     // If SiteSplash has scrolled out of the window, dock it to the top
     if(window.scrollY >= window.innerHeight) {
       setIsSiteSplashDocked(true)
@@ -45,7 +44,7 @@ const Site = () => {
       <CallToAction
         isSiteSplashDocked={isSiteSplashDocked}
         onClick={handleCallToActionClick}>
-        Click here to sign up for a free 30-day trial
+        Click here to sign up for a free 30-day trial / Log in
       </CallToAction>
       <SiteActions
         dockSiteActions={() => setIsSiteActionsDocked(true)}

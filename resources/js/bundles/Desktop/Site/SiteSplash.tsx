@@ -36,7 +36,9 @@ const SiteSplash = ({
         <Motto>The spreadsheet that makes it easy to organize your to-dos</Motto>
         <Divider />
         <LoginContainer>
-          <SiteLoginForm />
+          <SiteLoginForm
+            inputsMarginLeft="0.375rem"
+            statusTextAlign="center"/>
         </LoginContainer>
       </Splash>
       <SpreadsheetIcon
@@ -145,6 +147,7 @@ const Motto = styled.div`
 `
 
 const LoginContainer = styled.div`
+  width: 40rem;
 	display: flex;
   justify-content: center;
   align-items: center;

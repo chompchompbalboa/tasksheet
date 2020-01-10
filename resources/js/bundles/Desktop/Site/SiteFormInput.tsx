@@ -20,6 +20,7 @@ const SiteFormInput = ({
   borderColor = 'rgb(150, 150, 150)',
   isInputValueValid,
   label = null,
+  marginLeft = '0',
   onChange,
   placeholder,
   type = "text",
@@ -53,7 +54,8 @@ const SiteFormInput = ({
   }
 
   return (
-    <Container>
+    <Container
+      marginLeft={marginLeft}>
       {label &&
         <Label>{label}:</Label>
       }
@@ -77,6 +79,7 @@ interface ISiteFormInput {
   borderColor?: string
   isInputValueValid: boolean
   label?: string
+  marginLeft?: string
   onChange(nextValue: string): void
   placeholder: string
   type?: string
@@ -87,12 +90,16 @@ interface ISiteFormInput {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  margin-left: ${ ({ marginLeft }: IContainer ) => marginLeft };
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 `
+interface IContainer {
+  marginLeft: string
+}
 
 const Label = styled.label`
   width: 100%;
@@ -103,7 +110,7 @@ const StyledInput = styled.input`
   margin: 0.375rem;
   padding: 0.5rem 0.25rem;
   border: none;
-  border: ${ ({ borderColor, isInputValueValid }: StyledInputProps ) => isInputValueValid ? '1px solid ' + borderColor : '1px solid red'};
+  border: ${ ({ borderColor, isInputValueValid }: IStyledInput ) => isInputValueValid ? '1px solid ' + borderColor : '1px solid red'};
   border-radius: 4px;
   outline: none;
   font-size: 0.9rem;
@@ -112,7 +119,7 @@ const StyledInput = styled.input`
     margin: 0.375rem 0;
   }
 `
-interface StyledInputProps {
+interface IStyledInput {
   borderColor: string
   isInputValueValid: boolean
 }

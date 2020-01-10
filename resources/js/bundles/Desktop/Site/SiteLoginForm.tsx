@@ -2,33 +2,31 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { FormEvent, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { isEmail } from 'validator'
 
 import { action } from '@/api'
 
-import {
-  updateActiveSiteFormMessage
-} from '@/state/active/actions'
-
 import SiteFormButton from '@desktop/Site/SiteFormButton'
 import SiteFormInput from '@desktop/Site/SiteFormInput'
+import SiteFormStatus from '@desktop/Site/SiteFormStatus'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SiteLoginForm = ({
   flexDirection = 'row',
-  isDisplayLabels = false
+  inputsMarginLeft = '0',
+  isDisplayLabels = false,
+  statusTextAlign = 'left'
 }: ISiteLoginForm) => {
-  
-  const dispatch = useDispatch()
 
+  // State
   const [ emailInputValue, setEmailInputValue ] = useState('')
   const [ passwordInputValue, setPasswordInputValue ] = useState('')
-  const [ loginStatus, setLoginStatus ] = useState('READY')
+  const [ loginStatus, setLoginStatus ] = useState('READY' as ILoginStatus)
   
+  // Handle Login Attempt
   const handleLoginAttempt = (e: FormEvent) => {
     e.preventDefault()
     if(isEmail(emailInputValue)) {
@@ -40,39 +38,51 @@ const SiteLoginForm = ({
           }
           else {
             setTimeout(() => {
-              setLoginStatus('READY')
-              dispatch(updateActiveSiteFormMessage('ERROR_DURING_LOGIN'))
+              setLoginStatus('ERROR_DURING_LOGIN')
             }, 500)
-            setTimeout(() => {
-              dispatch(updateActiveSiteFormMessage('CLICK_TO_REGISTER_INSTEAD'))
-            }, 5000)
           }
       })
     }
   }
   
+  // Status Messages
+  const statusMessages = {
+    READY: "",
+    LOGGING_IN: "",
+    ERROR_DURING_LOGIN: "We were unable to log you in. Please check your username and password and try again."
+  }
+  
   return (
     <LoginForm 
-      flexDirection={flexDirection}
       onSubmit={e => handleLoginAttempt(e)}>
-      <SiteFormInput
-        label={isDisplayLabels && "Email"}
-        type="email"
-        placeholder="Email"
-        value={emailInputValue}
-        onChange={nextValue => setEmailInputValue(nextValue)}
-        isInputValueValid={emailInputValue === '' || isEmail(emailInputValue)}/>
-      <SiteFormInput
-        label={isDisplayLabels && "Password"}
-        type="password"
-        placeholder="Password"
-        value={passwordInputValue}
-        onChange={nextValue => setPasswordInputValue(nextValue)}
-        isInputValueValid={true}/>
-      <SiteFormButton
-        marginTop={flexDirection === 'column' ? '0.5rem' : '0'}
-        marginLeft={flexDirection === 'column' ? '0' : '0.375rem'}
-        text={!['LOGGING_IN'].includes(loginStatus) ? 'Log In' : 'Logging In...'} />
+      <InputsContainer
+        flexDirection={flexDirection}>
+        <SiteFormInput
+          label={isDisplayLabels && "Email"}
+          marginLeft={inputsMarginLeft}
+          type="email"
+          placeholder="Email"
+          value={emailInputValue}
+          onChange={nextValue => setEmailInputValue(nextValue)}
+          isInputValueValid={emailInputValue === '' || isEmail(emailInputValue)}/>
+        <SiteFormInput
+          label={isDisplayLabels && "Password"}
+          marginLeft={inputsMarginLeft}
+          type="password"
+          placeholder="Password"
+          value={passwordInputValue}
+          onChange={nextValue => setPasswordInputValue(nextValue)}
+          isInputValueValid={true}/>
+        <SiteFormButton
+          marginTop={flexDirection === 'column' ? '0.5rem' : '0'}
+          marginLeft={flexDirection === 'column' ? '0' : '0.375rem'}
+          text={!['LOGGING_IN'].includes(loginStatus) ? 'Log In' : 'Logging In...'} />
+      </InputsContainer>
+      <StatusContainer>
+        <SiteFormStatus
+          status={statusMessages[loginStatus]}
+          statusTextAlign={statusTextAlign}/>
+      </StatusContainer>
     </LoginForm>
   )
 }
@@ -83,7 +93,11 @@ const SiteLoginForm = ({
 interface ISiteLoginForm {
   flexDirection?: 'column' | 'row'
   isDisplayLabels?: boolean
+  inputsMarginLeft?: string
+  statusTextAlign?: string
 }
+
+type ILoginStatus = 'READY' | 'LOGGING_IN' | 'ERROR_DURING_LOGIN'
 
 //-----------------------------------------------------------------------------
 // Styled Components
@@ -91,15 +105,27 @@ interface ISiteLoginForm {
 const LoginForm = styled.form`
   width: 100%;
   display: flex;
-  flex-direction: ${ ({ flexDirection }: ILoginForm ) => flexDirection }; 
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   @media (max-width: 480px) {
     flex-direction: column;
   }
 `
-interface ILoginForm {
+
+const InputsContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: ${ ({ flexDirection }: IInputsContainer ) => flexDirection }; 
+  justify-content: center;
+  align-items: center;
+`
+interface IInputsContainer {
   flexDirection: string
 }
+
+const StatusContainer = styled.div`
+  width: 100%;
+`
 
 export default SiteLoginForm

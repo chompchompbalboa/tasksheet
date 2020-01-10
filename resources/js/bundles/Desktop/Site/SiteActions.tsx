@@ -28,17 +28,17 @@ const SiteActions = ({
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 
   // State
-  const [ activeSiteAction, setActiveSiteAction ] = useState('REGISTER' as IActiveSiteAction)
+  const [ activeSiteAction, setActiveSiteAction ] = useState('LOGIN' as IActiveSiteAction)
 
   // Effects
   useEffect(() => {
     if(isSiteActionsDocked) {
-      removeEventListener('click', closeContainerOnClickOutside)
+      removeEventListener('mousedown', closeContainerOnClickOutside)
     }
     else {
-      addEventListener('click', closeContainerOnClickOutside)
+      addEventListener('mousedown', closeContainerOnClickOutside)
     }
-    return () => removeEventListener('click', closeContainerOnClickOutside)
+    return () => removeEventListener('mousedown', closeContainerOnClickOutside)
   }, [ isSiteActionsDocked ])
 
   // Close Container On Click Outside
@@ -84,10 +84,10 @@ export type IActiveSiteAction = 'REGISTER' | 'LOGIN' | 'PRICING'
 const Container = styled.div`
   z-index: 500;
   position: fixed;
-  width: 35vw;
+  width: 30vw;
   height: 100vh;
   top: 0;
-  left: ${ ({ isSiteActionsDocked }: IContainer) => isSiteActionsDocked ? '100vw' : '65vw' };
+  left: ${ ({ isSiteActionsDocked }: IContainer) => isSiteActionsDocked ? '100vw' : '70vw' };
   transition: left 0.25s;
   padding: 1.5rem;
   display: flex;

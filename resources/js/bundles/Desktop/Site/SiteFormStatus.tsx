@@ -7,10 +7,12 @@ import styled from 'styled-components'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const ISiteFormSubmitButton = ({
-  status
-}: IISiteFormSubmitButton) => (
-  <Container>
+const ISiteFormStatus = ({
+  status,
+  statusTextAlign = 'left'
+}: IISiteFormStatus) => (
+  <Container
+    statusTextAlign={statusTextAlign}>
     {status}
   </Container>
 )
@@ -18,8 +20,9 @@ const ISiteFormSubmitButton = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface IISiteFormSubmitButton {
+interface IISiteFormStatus {
   status: string
+  statusTextAlign?: string
 }
 
 //-----------------------------------------------------------------------------
@@ -27,6 +30,10 @@ interface IISiteFormSubmitButton {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   margin-top: 0.5rem;
+  text-align: ${ ({ statusTextAlign }: IContainer ) => statusTextAlign };
 `
+interface IContainer {
+  statusTextAlign: string
+}
 
-export default ISiteFormSubmitButton
+export default ISiteFormStatus
