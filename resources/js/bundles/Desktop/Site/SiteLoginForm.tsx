@@ -108,9 +108,6 @@ const LoginForm = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  @media (max-width: 480px) {
-    flex-direction: column;
-  }
 `
 
 const InputsContainer = styled.div`
@@ -119,6 +116,9 @@ const InputsContainer = styled.div`
   flex-direction: ${ ({ flexDirection }: IInputsContainer ) => flexDirection }; 
   justify-content: center;
   align-items: center;
+  @media (max-width: 480px) {
+    flex-direction: column;
+  }
 `
 interface IInputsContainer {
   flexDirection: string
