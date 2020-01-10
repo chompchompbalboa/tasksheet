@@ -2,15 +2,10 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { FormEvent, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { isEmail } from 'validator'
 
 import { action } from '@/api'
-
-import {
-  updateActiveSiteFormMessage
-} from '@/state/active/actions'
 
 import SiteFormButton from '@desktop/Site/SiteFormButton'
 import SiteFormCheckbox from '@desktop/Site/SiteFormCheckbox'
@@ -22,9 +17,6 @@ import SiteFormStatus from '@desktop/Site/SiteFormStatus'
 //-----------------------------------------------------------------------------
 const SiteRegisterForm = () => {
   
-  // Redux
-  const dispatch = useDispatch()
-  
   // State
   const [ nameInputValue, setNameInputValue ] = useState('')
   const [ emailInputValue, setEmailInputValue ] = useState('')
@@ -32,29 +24,40 @@ const SiteRegisterForm = () => {
   const [ confirmPasswordInputValue, setConfirmPasswordInputValue ] = useState('')
   const [ accessCodeInputValue, setAccessCodeInputValue ] = useState('')
   const [ startTrialCheckboxValue, setStartTrialCheckboxValue ] = useState(false)
-  const [ registerStatus, setRegisterStatus ] = useState('READY')
+  const [ registerStatus, setRegisterStatus ] = useState('READY' as IRegisterStatus)
   
   // Handle Register Attempt
   const handleRegisterAttempt = (e: FormEvent) => {
     e.preventDefault()
-    if(isEmail(emailInputValue)) {
+    if(isEmail(emailInputValue) && passwordInputValue === confirmPasswordInputValue && startTrialCheckboxValue) {
       setRegisterStatus('REGISTERING')
-      action.userRegister(nameInputValue, emailInputValue, passwordInputValue).then(
-        response => {
-          if(response.status === 200) {
-            window.location = window.location.href as any
-          }
-          else {
-            setTimeout(() => {
-              setRegisterStatus('READY')
-              dispatch(updateActiveSiteFormMessage('ERROR_DURING_REGISTRATION'))
-            }, 500)
-            setTimeout(() => {
-              dispatch(updateActiveSiteFormMessage('CLICK_TO_LOGIN_INSTEAD'))
-            }, 5000)
-          }
-      })
+      if(accessCodeInputValue === 'FRIENDS_AND_FAMILY') {
+        action.userRegister(nameInputValue, emailInputValue, passwordInputValue, accessCodeInputValue).then(
+          response => {
+            if(response.status === 200) {
+              window.location = window.location.href as any
+            }
+            else {
+              setTimeout(() => {
+                setRegisterStatus('ERROR_DURING_REGISTRATION')
+              }, 500)
+            }
+        })
+      }
+      else {
+        setTimeout(() => {
+          setRegisterStatus('INCORRECT_ACCESS_CODE')
+        }, 500)
+      }
     }
+  }
+  
+  // Status Messages
+  const statusMessages = {
+    READY: "",
+    REGISTERING: "",
+    INCORRECT_ACCESS_CODE: "Your access code is incorrect. Tasksheet is in closed beta and requires an access code to sign up for an account. Please email rocky@tasksheet.app if you're interested in joining the beta - we'd love to have you!",
+    ERROR_DURING_REGISTRATION: "We were unable to sign you up for an account. Please make sure you have entered all of your information correctly and try again."
   }
   
   return (
@@ -101,10 +104,15 @@ const SiteRegisterForm = () => {
         marginTop="0.5rem"
         text={!['REGISTERING'].includes(registerStatus) ? 'Sign Up' : 'Signing Up...'} />
       <SiteFormStatus
-        status=""/>
+        status={statusMessages[registerStatus]}/>
     </RegisterForm>
   )
 }
+
+//-----------------------------------------------------------------------------
+// Types
+//-----------------------------------------------------------------------------
+type IRegisterStatus = 'READY' | 'REGISTERING' | 'INCORRECT_ACCESS_CODE' | 'ERROR_DURING_REGISTRATION'
 
 //-----------------------------------------------------------------------------
 // Styled Components

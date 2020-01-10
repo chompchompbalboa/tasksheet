@@ -63,62 +63,71 @@ class RegisterController extends Controller
         return response()->json(null, 200);
       }
       else {
+        
+        // Get the access code
+        $accessCode = $request->input('accessCode');
+    
+        // If the access code is correct
+        if($accessCode === 'FRIENDS_AND_FAMILY') {
 
-        // Validate the inputs and get the new user's information
-        $newUser = $request->validate([
-            'name' => ['required', 'string'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string'],
-        ]);
+          // Validate the inputs and get the new user's information
+          $newUserInfo = $request->validate([
+              'name' => ['required', 'string'],
+              'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+              'password' => ['required', 'string'],
+          ]);
 
-        // Create the user folder
-        $newUserFolder = Folder::create([
-          'id' => Str::uuid()->toString(),
-          'name' => 'Your First Folder'
-        ]);
+          // Create the user folder
+          $newUserFolder = Folder::create([
+            'id' => Str::uuid()->toString(),
+            'name' => 'Your First Folder'
+          ]);
 
-        // Create the new user
-        $newUser = User::create([
-          'name' => $newUser['name'],
-          'email' => $newUser['email'],
-          'password' => Hash::make($newUser['password']),
-          'folderId' => $newUserFolder->id
-        ]);
+          // Create the new user
+          $newUser = User::create([
+            'name' => $newUserInfo['name'],
+            'email' => $newUserInfo['email'],
+            'password' => Hash::make($newUserInfo['password']),
+            'folderId' => $newUserFolder->id
+          ]);
 
-        // Create the Stripe subscription
-        $newUser->newSubscription('Monthly', env('STRIPE_TASKSHEET_MONTHLY_PLAN_ID'))->trialDays(30)->create();
+          // Create the Stripe subscription
+          $newUser->newSubscription('Monthly', env('STRIPE_TASKSHEET_MONTHLY_PLAN_ID'))->trialDays(30)->create();
 
-        // Create the Tasksheet subscription
-        $newUser->tasksheetSubscription()->save(factory(\App\Models\UserTasksheetSubscription::class)->make([
-          'type' => 'TRIAL',
-          'startDate' => Carbon::now(),
-          'endDate' => Carbon::now()->addDays(30),
-        ]));
+          // Create the Tasksheet subscription
+          $newUser->tasksheetSubscription()->save(factory(\App\Models\UserTasksheetSubscription::class)->make([
+            'type' => 'TRIAL',
+            'startDate' => Carbon::now(),
+            'endDate' => Carbon::now()->addDays(30),
+          ]));
 
-        // Create userActive and userColor
-        $newUser->active()->save(factory(\App\Models\UserActive::class)->make());
-        $newUser->color()->save(factory(\App\Models\UserColor::class)->make());
+          // Create userActive and userColor
+          $newUser->active()->save(factory(\App\Models\UserActive::class)->make());
+          $newUser->color()->save(factory(\App\Models\UserColor::class)->make());
 
-        // Create "Your First Tasksheet"
-        $newUserFirstTasksheetSheetId = Str::uuid()->toString();
-        $this->sheetBuilder->createSheet($newUserFirstTasksheetSheetId);
-        $newUserFirstTasksheetFile = File::create([
-          'folderId' => $newUserFolder->id,
-          'name' => 'Your First Tasksheet',
-          'type' => 'SHEET',
-          'typeId' => $newUserFirstTasksheetSheetId
-        ]);
+          // Create "Your First Tasksheet"
+          $newUserFirstTasksheetSheetId = Str::uuid()->toString();
+          $this->sheetBuilder->createSheet($newUserFirstTasksheetSheetId);
+          $newUserFirstTasksheetFile = File::create([
+            'folderId' => $newUserFolder->id,
+            'name' => 'Your First Tasksheet',
+            'type' => 'SHEET',
+            'typeId' => $newUserFirstTasksheetSheetId
+          ]);
 
-        // Set the active tabs
-        $newUser->active->tab = $newUserFirstTasksheetFile->id;
-        $newUser->active->tabs = [ $newUserFirstTasksheetFile->id ];
-        $newUser->active->save();
+          // Set the active tabs
+          $newUser->active->tab = $newUserFirstTasksheetFile->id;
+          $newUser->active->tabs = [ $newUserFirstTasksheetFile->id ];
+          $newUser->active->save();
 
-        // Log the user in
-        Auth::loginUsingId($newUser->id, true);
+          // Log the user in
+          Auth::loginUsingId($newUser->id, true);
 
-        // Return the response
-        return response()->json(null, 200);
+          // Return the response
+          return response()->json(null, 200);
+        }
+        // Return a 500 code if the access code is incorrect
+        return response()->json(null, 500);
       }
     }
 }

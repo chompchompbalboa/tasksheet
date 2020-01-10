@@ -28,7 +28,7 @@ const SiteActions = ({
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 
   // State
-  const [ activeSiteAction, setActiveSiteAction ] = useState('LOGIN' as IActiveSiteAction)
+  const [ activeSiteAction, setActiveSiteAction ] = useState('REGISTER' as IActiveSiteAction)
 
   // Effects
   useEffect(() => {
