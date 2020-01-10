@@ -18,30 +18,34 @@ import SiteFormInput from '@desktop/Site/SiteFormInput'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SiteLoginForm = () => {
+const SiteRegisterForm = () => {
   
+  // Redux
   const dispatch = useDispatch()
-
+  
+  // State
+  const [ nameInputValue, setNameInputValue ] = useState('')
   const [ emailInputValue, setEmailInputValue ] = useState('')
   const [ passwordInputValue, setPasswordInputValue ] = useState('')
-  const [ loginStatus, setLoginStatus ] = useState('READY')
+  const [ registerStatus, setRegisterStatus ] = useState('READY')
   
-  const handleLoginAttempt = (e: FormEvent) => {
+  // Handle Register Attempt
+  const handleRegisterAttempt = (e: FormEvent) => {
     e.preventDefault()
     if(isEmail(emailInputValue)) {
-      setLoginStatus('LOGGING_IN')
-      action.userLogin(emailInputValue, passwordInputValue).then(
+      setRegisterStatus('REGISTERING')
+      action.userRegister(nameInputValue, emailInputValue, passwordInputValue).then(
         response => {
           if(response.status === 200) {
             window.location = window.location.href as any
           }
           else {
             setTimeout(() => {
-              setLoginStatus('READY')
-              dispatch(updateActiveSiteFormMessage('ERROR_DURING_LOGIN'))
+              setRegisterStatus('READY')
+              dispatch(updateActiveSiteFormMessage('ERROR_DURING_REGISTRATION'))
             }, 500)
             setTimeout(() => {
-              dispatch(updateActiveSiteFormMessage('CLICK_TO_REGISTER_INSTEAD'))
+              dispatch(updateActiveSiteFormMessage('CLICK_TO_LOGIN_INSTEAD'))
             }, 5000)
           }
       })
@@ -49,7 +53,12 @@ const SiteLoginForm = () => {
   }
   
   return (
-    <LoginForm onSubmit={e => handleLoginAttempt(e)}>
+    <RegisterForm onSubmit={e => handleRegisterAttempt(e)}>
+      <SiteFormInput
+        placeholder="Name"
+        value={nameInputValue}
+        onChange={nextValue => setNameInputValue(nextValue)}
+        isInputValueValid={true}/>
       <SiteFormInput
         type="email"
         placeholder="Email"
@@ -63,17 +72,18 @@ const SiteLoginForm = () => {
         onChange={nextValue => setPasswordInputValue(nextValue)}
         isInputValueValid={true}/>
       <SiteFormButton
-        text={!['LOGGING_IN'].includes(loginStatus) ? 'Log In' : 'Logging In...'} />
-    </LoginForm>
+        text={!['REGISTERING'].includes(registerStatus) ? 'Sign Up' : 'Signing Up...'} />
+    </RegisterForm>
   )
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const LoginForm = styled.form`
+const RegisterForm = styled.form`
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   @media (max-width: 480px) {
@@ -81,4 +91,4 @@ const LoginForm = styled.form`
   }
 `
 
-export default SiteLoginForm
+export default SiteRegisterForm

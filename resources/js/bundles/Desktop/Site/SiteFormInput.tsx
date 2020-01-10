@@ -20,7 +20,7 @@ const SiteFormInput = ({
   isInputValueValid,
   onChange,
   placeholder,
-  type,
+  type = "text",
   value
 }: ISiteFormInput) => {
 
@@ -69,7 +69,7 @@ interface ISiteFormInput {
   isInputValueValid: boolean
   onChange(nextValue: string): void
   placeholder: string
-  type: string
+  type?: string
   value: string
 }
 

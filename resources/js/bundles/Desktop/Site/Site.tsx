@@ -1,181 +1,83 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { FormEvent, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { isEmail } from 'validator'
-
-import { action } from '@/api'
 
 import { IAppState } from '@/state'
-import {
-  updateActiveSiteForm,
-  updateActiveSiteFormMessage
-} from '@/state/active/actions'
-import {
-  allowSelectedCellEditing,
-  allowSelectedCellNavigation,
-  preventSelectedCellEditing,
-  preventSelectedCellNavigation
-} from '@/state/sheet/actions'
 
 import SiteLoginForm from '@desktop/Site/SiteLoginForm'
+import SiteRegisterForm from '@desktop/Site/SiteRegisterForm'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SiteSplash = () => {
+const Site = () => {
   
-  const dispatch = useDispatch()
-  const activeSheetId = useSelector((state: IAppState) => {
-    if(state.tab.activeTab && state.folder.files[state.tab.activeTab]) {
-      return state.folder.files[state.tab.activeTab].typeId
-    }
-    return null
-  })
-  const activeSiteSplashForm = useSelector((state: IAppState) => state.active.SITE_FORM)
-  const activeSiteFormMessage = useSelector((state: IAppState) => state.active.SITE_FORM_MESSAGE)
+  // Redux
+  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   
-  const [ activeInput, setActiveInput ] = useState(null)
-  const [ nameInputValue, setNameInputValue ] = useState('')
-  const [ emailInputValue, setEmailInputValue ] = useState('')
-  const [ passwordInputValue, setPasswordInputValue ] = useState('')
-  const [ registerStatus, setRegisterStatus ] = useState('READY')
+  // State
+  const [ isLoginFormDocked, setIsLoginFormDocked ] = useState(false)
+  const [ isRegisterFormDocked, setIsRegisterFormDocked ] = useState(true)
   
-  const handleRegisterAttempt = (e: FormEvent) => {
-    e.preventDefault()
-    if(isEmail(emailInputValue)) {
-      setRegisterStatus('REGISTERING')
-      action.userRegister(nameInputValue, emailInputValue, passwordInputValue).then(
-        response => {
-          if(response.status === 200) {
-            window.location = window.location.href as any
-          }
-          else {
-            setTimeout(() => {
-              setRegisterStatus('READY')
-              dispatch(updateActiveSiteFormMessage('ERROR_DURING_REGISTRATION'))
-            }, 500)
-            setTimeout(() => {
-              dispatch(updateActiveSiteFormMessage('CLICK_TO_LOGIN_INSTEAD'))
-            }, 5000)
-          }
-      })
-    }
-  }
+  // Effects
+  useEffect(() => {
+    addEventListener('scroll', handleScroll)
+    return () => removeEventListener('scroll', handleScroll)
+  }, [])
   
-  const handleInputBlur = () => {
-    if(activeSheetId) {
-      dispatch(allowSelectedCellEditing(activeSheetId))
-      dispatch(allowSelectedCellNavigation(activeSheetId))
-    }
-  }
-  
-  const handleInputFocus = () => {
-    if(activeSheetId) {
-      dispatch(preventSelectedCellEditing(activeSheetId))
-      dispatch(preventSelectedCellNavigation(activeSheetId))
+  // Handle Scroll
+  const handleScroll = () => {
+    // If the site container is no longer visible, dock it to the top
+    if(window.scrollY >= window.innerHeight) {
+      setIsLoginFormDocked(true)
+      removeEventListener('scroll', handleScroll)
     }
   }
 
-  const siteFormMessages = {
-    ACCOUNT_NEEDED_TO_CREATE_SHEET: 
-      <>
-        You need to create an account or sign in to an existing account to create a new sheet.
-        <br/>
-        If you have an exisiting account, click here to login.
-      </>,
-    ACCOUNT_NEEDED_TO_UPLOAD_CSV: 
-      <>
-        You need to create an account or sign in to an existing account to upload a .csv file.
-        <br/>
-        If you have an exisiting account, click here to login.
-      </>,
-    CLICK_TO_LOGIN_INSTEAD: 'Click here to log in instead',
-    CLICK_TO_REGISTER_INSTEAD: 'Click here to sign up for a 30-day free trial',
-    ERROR_DURING_LOGIN: 
-      <>
-        We were unable to log you in.
-        <br/>
-        Please verify that you have correctly entered your email address and password and try again.
-      </>,
-    ERROR_DURING_REGISTRATION: 
-      <>
-        We were unable to create your account.
-        <br/>
-        Please verify that you have correctly entered your name, email address and password and try again.
-      </>
+  // Handle Call To Action Click
+  const handleCallToActionClick = () => {
+    setIsRegisterFormDocked(false)
   }
   
+
   return (
-    <Container>
-      <Header>
-        <HeaderName>
-          tasksheet
-        </HeaderName>
-        <HeaderLinks>
-          <HeaderLink>30-day free trial<br/>$5 per month or $100 for lifetime access</HeaderLink>
-        </HeaderLinks>
-      </Header>
-      <Splash>
-        <Name>tasksheet</Name>
-        <Motto>The spreadsheet that makes it easy to organize your to-dos</Motto>
-        <Divider />
-        <LoginRegisterContainer>
-          {activeSiteSplashForm === 'REGISTER' &&
-            <LoginRegisterForm onSubmit={e => handleRegisterAttempt(e)}>
-              <StyledInput
-                placeholder="Name"
-                value={nameInputValue}
-                onBlur={() =>  handleInputBlur()}
-                onChange={e => setNameInputValue(e.target.value)}
-                onFocus={() =>  handleInputFocus()}
-                isInputValueValid={true}/>
-              <StyledInput
-                placeholder="Email"
-                value={emailInputValue}
-                onChange={e => setEmailInputValue(e.target.value)}
-                onFocus={() => {
-                  handleInputFocus()
-                  setActiveInput('REGISTER_EMAIL')
-                }}
-                onBlur={() => {
-                  handleInputBlur()
-                  setActiveInput(null)
-                }}
-                isInputValueValid={activeInput === 'REGISTER_EMAIL' || emailInputValue === '' || isEmail(emailInputValue)}/>
-              <StyledInput
-                type="password"
-                placeholder="Password"
-                value={passwordInputValue}
-                onBlur={() =>  handleInputBlur()}
-                onChange={e => setPasswordInputValue(e.target.value)}
-                onFocus={() =>  handleInputFocus()}
-                isInputValueValid={true}/>
-              <SubmitButton>
-                {!['REGISTERING'].includes(registerStatus) ? 'Sign Up' : 'Signing Up...'}
-              </SubmitButton>
-            </LoginRegisterForm>
-          }
-          {activeSiteSplashForm === 'LOGIN' &&
+    <Container
+      isLoginFormDocked={isLoginFormDocked}>
+      <SiteSplash
+        userColorPrimary={userColorPrimary}>
+        <Header>
+          <HeaderName>
+            tasksheet
+          </HeaderName>
+          <HeaderLinks>
+            <HeaderLink>30-day free trial<br/>$5 per month or $100 for lifetime access</HeaderLink>
+          </HeaderLinks>
+        </Header>
+        <Splash>
+          <Name>tasksheet</Name>
+          <Motto>The spreadsheet that makes it easy to organize your to-dos</Motto>
+          <Divider />
+          <LoginRegisterContainer>
             <SiteLoginForm />
-          }
-        </LoginRegisterContainer>
-        <CurrentStatus>
-          <CurrentStatusLink
-            onClick={activeSiteSplashForm === 'LOGIN' 
-              ? () => {
-                  dispatch(updateActiveSiteForm('REGISTER'))
-                  dispatch(updateActiveSiteFormMessage('CLICK_TO_LOGIN_INSTEAD'))}
-              : () => {
-                  dispatch(updateActiveSiteForm('LOGIN'))
-                  dispatch(updateActiveSiteFormMessage('CLICK_TO_REGISTER_INSTEAD'))}
-              }>
-            {siteFormMessages[activeSiteFormMessage]}
-          </CurrentStatusLink>
-        </CurrentStatus>
-      </Splash>
+          </LoginRegisterContainer>
+        </Splash>
+        <SpreadsheetIcon
+          src={environment.assetUrl + 'images/spreadsheet.png'}/>
+      </SiteSplash>
+      <CallToAction
+        isLoginFormDocked={isLoginFormDocked}
+        onClick={handleCallToActionClick}>
+        Click here to sign up for a free 30-day trial
+      </CallToAction>
+      <RegisterFormContainer
+        isRegisterFormDocked={isRegisterFormDocked}
+        userColorPrimary={userColorPrimary}>
+        <SiteRegisterForm />
+      </RegisterFormContainer>
+      <AppOverlay></AppOverlay>
     </Container>
   )
 }
@@ -184,22 +86,83 @@ const SiteSplash = () => {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  z-index: 1000;
   position: absolute;
-  top: 100vh;
-  z-index: 100;
-	width: 100%;
-	height: 100vh;
-	display: flex;
-  flex-direction: column;
+  top: ${ ({ isLoginFormDocked }: IContainer) => isLoginFormDocked ? '-100vh' : '0' };
+  left: 0;
+  width: 100%;
+  height: 100vh;
+`
+interface IContainer {
+  isLoginFormDocked: boolean
+}
+
+const SiteSplash = styled.div`
+  width: 100%;
+  height: 100vh;
+  background-color: ${ ({ userColorPrimary }: ISiteSplash) => userColorPrimary };
   color: white;
-  @media (max-width: 480px) {
-    position: fixed;
-    top: 0;
-    left: 0;
+  font-family: inherit;
+  overflow: hidden;
+`
+interface ISiteSplash {
+  userColorPrimary: string
+}
+
+const SpreadsheetIcon = styled.img`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.1;
+`
+
+const RegisterFormContainer = styled.div`
+  z-index: 500;
+  position: fixed;
+  width: 25vw;
+  height: 100vh;
+  top: 0;
+  left: ${ ({ isRegisterFormDocked }: IRegisterFormContainer) => isRegisterFormDocked ? '100vw' : '75vw' };
+  transition: left 0.25s;
+  background-color: ${ ({ userColorPrimary }: IRegisterFormContainer) => userColorPrimary };
+`
+interface IRegisterFormContainer {
+  isRegisterFormDocked: boolean
+  userColorPrimary: string
+}
+
+const CallToAction = styled.div`
+  display: ${ ({ isLoginFormDocked }: ICallToAction) => isLoginFormDocked ? 'block' : 'none' };
+  z-index: 500;
+  cursor: pointer;
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding-top: 0.25rem;
+  padding-right: 0.5rem;
+  color: white;
+  font-size: 0.75rem;
+  font-style: italic;
+  &:hover {
+    text-decoration: underline;
   }
+`
+interface ICallToAction {
+  isLoginFormDocked: boolean
+}
+
+const AppOverlay = styled.div`
+  width: 100%;
+  height: 100vh;
+  background-color: transparent;
+  pointer-events: none;
 `
 
 const Header = styled.div`
+  z-index: 10;
+  position: relative;
   width: 100%;
   padding: 2rem;
   display: flex;
@@ -234,6 +197,8 @@ const HeaderLink = styled.div`
 `
 
 const Splash = styled.div`
+  z-index: 10;
+  position: relative;
   margin-top: 2rem;
   height: calc(100% - 5.5rem);
 	display: flex;
@@ -260,24 +225,6 @@ const Motto = styled.div`
   text-align: center;
 `
 
-const CurrentStatus = styled.div`
-  font-size: 0.85rem;
-  line-height: 1.25rem;
-  text-align: center;
-`
-
-const CurrentStatusLink = styled.span`
-  cursor: pointer;
-  transition: text-decoration 0.1s;
-  text-align: center;
-  &:hover {
-    text-decoration: underline;
-  }
-  @media (max-width: 480px) {
-    max-width: 90%;
-  }
-`
-
 const LoginRegisterContainer = styled.div`
 	display: flex;
   justify-content: center;
@@ -288,16 +235,6 @@ const LoginRegisterContainer = styled.div`
   }
 `
 
-const LoginRegisterForm = styled.form`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  @media (max-width: 480px) {
-    flex-direction: column;
-  }
-`
-
 const Divider = styled.div`
   margin: 2rem 0;
   width: 10rem;
@@ -305,42 +242,6 @@ const Divider = styled.div`
   background-color: white;
 `
 
-const StyledInput = styled.input`
-  margin: 0 0.375rem;
-  padding: 0.5rem 0.25rem;
-  border: none;
-  border: ${ ({ isInputValueValid }: StyledInputProps ) => isInputValueValid ? '2px solid transparent' : '2px solid red'};
-  border-radius: 4px;
-  outline: none;
-  font-size: 0.9rem;
-  @media (max-width: 480px) {
-    width: 100%;
-    margin: 0.375rem 0;
-  }
-`
-interface StyledInputProps {
-  isInputValueValid: boolean
-}
 
-const SubmitButton = styled.button`
-  margin-left: 0.375rem;
-  cursor: pointer;
-  padding: 0.5rem 1.25rem;
-  border: 1px solid white;
-  border-radius: 5px;
-  font-size: 0.9rem;
-  background-color: rgba(220, 220, 220, 1);
-  color: black;
-  outline: none;
-  transition: background-color 0.1s;
-  &:hover {
-    background-color: white;
-    color: black;
-  }
-  @media (max-width: 480px) {
-    width: 100%;
-    margin: 0.375rem;
-  }
-`
 
-export default SiteSplash
+export default Site
