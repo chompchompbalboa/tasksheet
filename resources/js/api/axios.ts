@@ -17,7 +17,7 @@ if (axiosWithToken && axiosWithToken.defaults && axiosWithToken.defaults.headers
 //-----------------------------------------------------------------------------
 // Cancel the request if it originates from a demo user
 //-----------------------------------------------------------------------------
-axiosWithToken.interceptors.request.use(
+axiosWithToken && axiosWithToken.interceptors && axiosWithToken.interceptors.request && axiosWithToken.interceptors.request.use(
   config => {
     // This is a bit of a hack, but without access to the redux store (which I'm
     // open to hooking up here but feel this is a simpler solution), the best
