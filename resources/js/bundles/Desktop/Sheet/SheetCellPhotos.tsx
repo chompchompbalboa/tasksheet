@@ -103,17 +103,19 @@ const SheetCellPhotos = ({
       const file = photosToUpload[0]
       const uploadedAt = moment().format('YYYY-MM-DD HH:mm:ss')
       setUploadSheetCellPhotoStatus('PREPARING_UPLOAD')
-      storeFileToS3(file, () => setUploadSheetCellPhotoStatus('UPLOADING'), setUploadSheetCellPhotoProgress).then(s3PresignedUrlData => {
-        setUploadSheetCellPhotoStatus('SAVING_FILE_DATA')
-        mutation.createSheetCellPhoto(sheetId, cell.id, file.name, s3PresignedUrlData, uploadedAt).then(nextSheetCellPhotos => {
-          const newSheetCellPhoto = nextSheetCellPhotos[nextSheetCellPhotos.length - 1]
-          setUploadSheetCellPhotoStatus('UPLOADED')
-          setUploadSheetCellPhotoProgress(0)
-          dispatch(createSheetCellPhoto(cell.id, newSheetCellPhoto))
-          setTimeout(() => setActiveSheetCellPhotoIndex(0), 25)
-          setTimeout(() => setUploadSheetCellPhotoStatus('READY'), 1000)
+      storeFileToS3(file, () => setUploadSheetCellPhotoStatus('UPLOADING'), setUploadSheetCellPhotoProgress)
+        .then(s3PresignedUrlData => {
+          setUploadSheetCellPhotoStatus('SAVING_FILE_DATA')
+          mutation.createSheetCellPhoto(sheetId, cell.id, file.name, s3PresignedUrlData, uploadedAt).then(nextSheetCellPhotos => {
+            const newSheetCellPhoto = nextSheetCellPhotos[nextSheetCellPhotos.length - 1]
+            setUploadSheetCellPhotoStatus('UPLOADED')
+            setUploadSheetCellPhotoProgress(0)
+            dispatch(createSheetCellPhoto(cell.id, newSheetCellPhoto))
+            setTimeout(() => setActiveSheetCellPhotoIndex(0), 25)
+            setTimeout(() => setUploadSheetCellPhotoStatus('READY'), 1000)
+          })
         })
-      })
+        .catch(console.log.bind(console))
     }
   }
 

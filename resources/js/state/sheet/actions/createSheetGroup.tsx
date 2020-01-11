@@ -71,7 +71,7 @@ export const createSheetGroup = (sheetId: string, newGroup: ISheetGroup): IThunk
       }, true))
       dispatch(updateSheetView(activeSheetView.id, {
         groups: nextSheetViewGroups
-      }))
+      }, true))
     })
 
     mutation.createSheetGroup(newGroup)

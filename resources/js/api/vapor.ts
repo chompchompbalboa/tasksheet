@@ -7,14 +7,14 @@ export const storeFileToS3 = async (
 ) => {
   const response = await axios.post('/vapor/signed-storage-url', 
     { 'content_type': fileToStore.type },
-  )
+  ).catch(console.log.bind(console))
 
   onUploadPrepared()
 
   await axios.put(response.data.url, fileToStore, {
     headers: response.data.headers,
     onUploadProgress: (progressEvent) => onUploadProgress(Math.round((progressEvent.loaded / progressEvent.total) * 100))
-  })
+  }).catch(console.log.bind(console))
     
   return response.data as IS3PresignedUrlData
 }

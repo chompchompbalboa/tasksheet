@@ -80,22 +80,24 @@ const SheetCellFiles = ({
     if(filesIndexes.length > 0) {
       const file = filesToUpload[0]
       setUploadSheetCellFileStatus('PREPARING_UPLOAD')
-      storeFileToS3(file, () => setUploadSheetCellFileStatus('UPLOADING'), setUploadSheetCellFileProgress).then(s3PresignedUrlData => {
-        const uploadedAt = moment().format('YYYY-MM-DD HH:mm:ss')
-        setUploadSheetCellFileStatus('SAVING_FILE_DATA')
-        mutation.createSheetCellFile(sheetId, cell.id, file.name, s3PresignedUrlData, uploadedAt).then(nextSheetCellFiles => {
-          const newSheetCellFile = nextSheetCellFiles[nextSheetCellFiles.length - 1]
-          dispatch(createSheetCellFile(newSheetCellFile.cellId, newSheetCellFile))
-          setUploadSheetCellFileProgress(0)
-          if(nextSheetCellFiles.length === 1) {
-            setUploadSheetCellFileStatus('READY')
-          }
-          else {
-            setUploadSheetCellFileStatus('UPLOADED')
-            setTimeout(() => setUploadSheetCellFileStatus('READY'), 1000)
-          }
+      storeFileToS3(file, () => setUploadSheetCellFileStatus('UPLOADING'), setUploadSheetCellFileProgress)
+        .then(s3PresignedUrlData => {
+          const uploadedAt = moment().format('YYYY-MM-DD HH:mm:ss')
+          setUploadSheetCellFileStatus('SAVING_FILE_DATA')
+          mutation.createSheetCellFile(sheetId, cell.id, file.name, s3PresignedUrlData, uploadedAt).then(nextSheetCellFiles => {
+            const newSheetCellFile = nextSheetCellFiles[nextSheetCellFiles.length - 1]
+            dispatch(createSheetCellFile(newSheetCellFile.cellId, newSheetCellFile))
+            setUploadSheetCellFileProgress(0)
+            if(nextSheetCellFiles.length === 1) {
+              setUploadSheetCellFileStatus('READY')
+            }
+            else {
+              setUploadSheetCellFileStatus('UPLOADED')
+              setTimeout(() => setUploadSheetCellFileStatus('READY'), 1000)
+            }
+          })
         })
-      })
+        .catch(console.log.bind(console))
     }
   }
 

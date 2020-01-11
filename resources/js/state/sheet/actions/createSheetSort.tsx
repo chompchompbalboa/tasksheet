@@ -71,7 +71,7 @@ export const createSheetSort = (sheetId: string, newSort: ISheetSort): IThunkAct
       }, true))
       dispatch(updateSheetView(activeSheetView.id, {
         sorts: nextSheetViewSorts
-      }))
+      }, true))
     })
 
     mutation.createSheetSort(newSort)

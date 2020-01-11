@@ -37,22 +37,27 @@ const SheetActions = ({
   sheetId,
 }: ISheetActionsProps) => {
 
+  // Redux
   const dispatch = useDispatch()
   const activeSheetView = useSelector((state: IAppState) => {
     const activeSheetViewId = state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId
     if(activeSheetViewId && state.sheet.allSheetViews && state.sheet.allSheetViews[activeSheetViewId]) {
       return state.sheet.allSheetViews[activeSheetViewId]
   }})
+  const isDemoUser = useSelector((state: IAppState) => state.user.tasksheetSubscription.type === 'DEMO')
 
+  // State
   const [ isSheetViewLocked, setIsSheetViewLocked ] = useState((activeSheetView && activeSheetView.isLocked) || true)
 
+  // Effects
   useEffect(() => {
     if(activeSheetView) {
       setIsSheetViewLocked(activeSheetView.isLocked)
     }
-  })
+  }, [ activeSheetView && activeSheetView.isLocked ])
 
-  const handleIsFiltersGroupsSortsToggle = () => {
+  // Toggle Is Sheet View Locked
+  const toggleIsSheetViewLocked = () => {
     const nextIsSheetViewLocked = !isSheetViewLocked
     setIsSheetViewLocked(nextIsSheetViewLocked)
     dispatch(updateSheetView(activeSheetView.id, {
@@ -68,7 +73,7 @@ const SheetActions = ({
         icon={!isSheetViewLocked ? LOCK_CLOSED : LOCK_OPEN}
         marginLeft="0.375rem"
         marginRight={!isSheetViewLocked ? "0.4125rem" : "0"}
-        onClick={() => handleIsFiltersGroupsSortsToggle()}
+        onClick={() => toggleIsSheetViewLocked()}
         tooltip={!isSheetViewLocked ? 'Lock the view' : 'Unlock the view'}/>
       {!isSheetViewLocked &&
         <>
@@ -87,10 +92,14 @@ const SheetActions = ({
       <SheetActionCellStyleBackgroundColor sheetId={sheetId}/>
       <SheetActionCellStyleColor sheetId={sheetId}/>
       <Divider />
-      <SheetActionCreateSheet/>
-      <SheetActionUploadCsv/>
-      <Divider />
-      <SheetActionCreateSheetLink sheetId={sheetId}/>
+      {!isDemoUser && 
+        <>
+          <SheetActionCreateSheet/>
+          <SheetActionUploadCsv/>
+          <Divider />
+          <SheetActionCreateSheetLink sheetId={sheetId}/>
+        </>
+      }
       <Divider />
       <SheetActionDownloadCsv sheetId={sheetId}/>
     </Container>

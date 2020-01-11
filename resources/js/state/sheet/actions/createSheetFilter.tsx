@@ -71,7 +71,7 @@ export const createSheetFilter = (sheetId: string, newFilter: ISheetFilter): ITh
       }, true))
       dispatch(updateSheetView(activeSheetView.id, {
         filters: nextSheetViewFilters
-      }))
+      }, true))
     })
 
     mutation.createSheetFilter(newFilter)

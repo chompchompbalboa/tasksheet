@@ -8,10 +8,6 @@ import { UPLOAD } from '@/assets/icons'
 
 import { IAppState } from '@/state'
 import {
-  updateActiveSiteForm,
-  updateActiveSiteFormMessage
-} from '@/state/active/actions'
-import {
   updateModal
 } from '@/state/modal/actions'
 
@@ -23,21 +19,16 @@ import SheetActionButtonDropdown from '@desktop/Sheet/SheetActionButtonDropdown'
 //-----------------------------------------------------------------------------
 const SheetActionUploadCsv = () => {
 
+  // Redux
   const dispatch = useDispatch()
-  const isDemoUser = useSelector((state: IAppState) => state.user.tasksheetSubscription.type === 'DEMO')
   const userFolderId = useSelector((state: IAppState) => state.user.folderId)
 
+  // State
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
 
+  // Handle Button Click
   const handleButtonClick = () => {
-    if(isDemoUser) {
-      dispatch(updateActiveSiteForm('REGISTER'))
-      dispatch(updateActiveSiteFormMessage('ACCOUNT_NEEDED_TO_UPLOAD_CSV'))
-      window.scrollTo({ top: 0, left: 0, behavior: 'smooth'})
-    }
-    else {
-      dispatch(updateModal({ activeModal: 'CREATE_SHEET_FROM_CSV', createSheetFolderId: userFolderId, openSheetAfterCreate: true }))
-    }
+    dispatch(updateModal({ activeModal: 'CREATE_SHEET_FROM_CSV', createSheetFolderId: userFolderId, openSheetAfterCreate: true }))
   }
 
   return (
