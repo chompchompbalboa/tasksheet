@@ -31,6 +31,7 @@ const SheetCellPhotosDropdownHeader = ({
   // Delete Sheet Cell Photo Status Messages
   const deleteSheetCellPhotoStatusMessages = {
     READY: <Icon icon={TRASH_CAN} size="0.85rem"/>,
+    NEED_AN_ACCOUNT_TO_DELETE: 'Please sign in to delete this photo',
     DELETING: 'Deleting...',
     DELETED: 'Deleted!',
   }
@@ -38,6 +39,7 @@ const SheetCellPhotosDropdownHeader = ({
   // Upload Sheet Cell Photo Status Messages
   const uploadSheetCellPhotoStatusMessages = {
     READY: <Icon icon={PLUS_SIGN} size="0.85rem"/>,
+    NEED_AN_ACCOUNT_TO_UPLOAD: 'Please sign in to upload a photo',
     PREPARING_UPLOAD: 'Preparing Upload...',
     UPLOADING: 'Uploading',
     SAVING_FILE_DATA: 'Saving File Data...',
@@ -48,6 +50,7 @@ const SheetCellPhotosDropdownHeader = ({
   const uploadSheetCellPhotoProgressPercentageMessages = (uploadSheetCellPhotoStatus: ISheetCellPhotosUploadStatus) => {
     const progressPercentages = {
       READY: '',
+      NEED_AN_ACCOUNT_TO_UPLOAD: '',
       PREPARING_UPLOAD: '',
       UPLOADING: uploadSheetCellPhotoProgress + '%',
       SAVING_FILE_DATA: '',

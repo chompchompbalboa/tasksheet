@@ -2,11 +2,13 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import moment from 'moment'
 import styled from 'styled-components'
 
 import { DOWNLOAD, TRASH_CAN } from '@/assets/icons'
 
+import { IAppState } from '@/state'
 import { ISheetFile } from '@/state/sheet/types'
 
 import Icon from '@/components/Icon'
@@ -20,8 +22,11 @@ const SheetCellFilesDropdown = ({
   sheetCellFile
 }: ISheetCellFilesDropdown) => {
 
+  // Redux
+  const isDemoUser = useSelector((state: IAppState) => state.user.tasksheetSubscription.type === 'DEMO')
+
   // State
-  const [ deleteSheetCellFileStatus, setDeleteSheetCellFileStatus ] = useState('READY' as 'READY' | 'DELETING' | 'DELETED')
+  const [ deleteSheetCellFileStatus, setDeleteSheetCellFileStatus ] = useState('READY' as ISheetCellFileDeleteStatus)
 
   // Timeouts
   const setStatusToDeletedTimeout = useRef(null)
@@ -38,18 +43,25 @@ const SheetCellFilesDropdown = ({
   // Delete Status Messages
   const deleteSheetCellFileStatusMessages = {
     READY: '',
+    NEED_AN_ACCOUNT_TO_DELETE: 'Please sign in to delete this file',
     DELETING: 'Deleting...',
     DELETED: 'Deleted'
   }
 
   // Handle Sheet Cell File Delete
   const handleSheetCellFileDelete = () => {
-    setDeleteSheetCellFileStatus('DELETING')
-    setTimeout(() => setDeleteSheetCellFileStatus('DELETED'), 350)
-    setTimeout(() => {
-      setDeleteSheetCellFileStatus('READY')
-      deleteSheetCellFile(sheetCellFile.id)
-    }, 500)
+    if(!isDemoUser) {
+      setDeleteSheetCellFileStatus('DELETING')
+      setTimeout(() => setDeleteSheetCellFileStatus('DELETED'), 350)
+      setTimeout(() => {
+        setDeleteSheetCellFileStatus('READY')
+        deleteSheetCellFile(sheetCellFile.id)
+      }, 500)
+    }
+    else {
+      setDeleteSheetCellFileStatus('NEED_AN_ACCOUNT_TO_DELETE')
+      setTimeout(() => setDeleteSheetCellFileStatus('READY'), 5000)
+    }
   }
   
   // Trim Active Sheet Cell File Filename To 50 Characters
@@ -89,6 +101,12 @@ interface ISheetCellFilesDropdown {
   downloadSheetCellFile(fileId: ISheetFile['id']): void
   sheetCellFile: ISheetFile
 }
+
+type ISheetCellFileDeleteStatus =
+  'READY' | 
+  'NEED_AN_ACCOUNT_TO_DELETE' |
+  'DELETING' | 
+  'DELETED'
 
 //-----------------------------------------------------------------------------
 // Styled Components
@@ -140,6 +158,7 @@ const FileAction = styled.div`
   color: rgb(25, 25, 25);
   border-radius: 5px;
   transition: background-color 0.15s;
+  white-space: nowrap;
   &:hover {
     background-color: rgba(180, 180, 180, 0.5);
   }

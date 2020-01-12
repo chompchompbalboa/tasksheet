@@ -36,6 +36,7 @@ const SheetCellPhotos = ({
   
   // Redux
   const dispatch = useDispatch()
+  const isDemoUser = useSelector((state: IAppState) => state.user.tasksheetSubscription.type === 'DEMO')
   const sheetCellPhotos = useSelector((state: IAppState) => state.sheet.allSheetCellPhotos && state.sheet.allSheetCellPhotos[cell.id] && state.sheet.allSheetCellPhotos[cell.id].map((sheetPhotoId: ISheetPhoto['id']) => {
     return state.sheet.allSheetPhotos[sheetPhotoId]
   }))
@@ -60,8 +61,8 @@ const SheetCellPhotos = ({
   
   // Effects
   useEffect(() => {
-    if(sheetCellPhotos && cell && cell.value && (sheetCellPhotos.length + '') !== (cell.value + '')) {
-      dispatch(updateSheetCell(cell.id, { value: (sheetCellPhotos && sheetCellPhotos.length + '') || '0' }))
+    if(sheetCellPhotos && cell && cell.value && (sheetCellPhotos.length + '') !== (cell.value + '')) { // If the number of photos has changed
+      dispatch(updateSheetCell(cell.id, { value: (sheetCellPhotos && sheetCellPhotos.length + '') || '0' })) // Update the cell value
     }
   })
   
@@ -76,11 +77,17 @@ const SheetCellPhotos = ({
   
   // Delete Photo
   const deleteActiveSheetCellPhoto = () => {
-    setDeleteActiveSheetCellPhotoStatus('DELETING')
-    beforePhotoDeleteTimeout.current = setTimeout(() => setActiveSheetCellPhotoIndex(Math.max(0, activeSheetCellPhotoIndex - 1)), 250)
-    deleteActiveSheetCellPhotoTimeout.current = setTimeout(() => dispatch(deleteSheetCellPhoto(activeSheetCellPhoto.cellId, activeSheetCellPhoto.id)), 350)
-    setDeleteActiveSheetCellPhotoStatusToDeletedTimeout.current = setTimeout(() => setDeleteActiveSheetCellPhotoStatus('DELETED'), 350)
-    setDeleteActiveSheetCellPhotoStatusToReadyTimeout.current = setTimeout(() => setDeleteActiveSheetCellPhotoStatus('READY'), 1350)
+    if(!isDemoUser) {
+      setDeleteActiveSheetCellPhotoStatus('DELETING')
+      beforePhotoDeleteTimeout.current = setTimeout(() => setActiveSheetCellPhotoIndex(Math.max(0, activeSheetCellPhotoIndex - 1)), 250)
+      deleteActiveSheetCellPhotoTimeout.current = setTimeout(() => dispatch(deleteSheetCellPhoto(activeSheetCellPhoto.cellId, activeSheetCellPhoto.id)), 350)
+      setDeleteActiveSheetCellPhotoStatusToDeletedTimeout.current = setTimeout(() => setDeleteActiveSheetCellPhotoStatus('DELETED'), 350)
+      setDeleteActiveSheetCellPhotoStatusToReadyTimeout.current = setTimeout(() => setDeleteActiveSheetCellPhotoStatus('READY'), 1350)
+    }
+    else {
+      setDeleteActiveSheetCellPhotoStatus('NEED_AN_ACCOUNT_TO_DELETE')
+      setTimeout(() => setDeleteActiveSheetCellPhotoStatus('READY'), 5000)
+    }
   }
 
   // Download Photo
@@ -96,26 +103,32 @@ const SheetCellPhotos = ({
   
   // Upload Photo
   const uploadSheetCellPhoto = (e: ChangeEvent<HTMLInputElement>) => {
-    const photosList = e.target.files
-    const photosIndexes = Object.keys(photosList)
-    const photosToUpload = photosIndexes.map((index: any) => photosList[index])
-    if(photosIndexes.length > 0) {
-      const file = photosToUpload[0]
-      const uploadedAt = moment().format('YYYY-MM-DD HH:mm:ss')
-      setUploadSheetCellPhotoStatus('PREPARING_UPLOAD')
-      storeFileToS3(file, () => setUploadSheetCellPhotoStatus('UPLOADING'), setUploadSheetCellPhotoProgress)
-        .then(s3PresignedUrlData => {
-          setUploadSheetCellPhotoStatus('SAVING_FILE_DATA')
-          mutation.createSheetCellPhoto(sheetId, cell.id, file.name, s3PresignedUrlData, uploadedAt).then(nextSheetCellPhotos => {
-            const newSheetCellPhoto = nextSheetCellPhotos[nextSheetCellPhotos.length - 1]
-            setUploadSheetCellPhotoStatus('UPLOADED')
-            setUploadSheetCellPhotoProgress(0)
-            dispatch(createSheetCellPhoto(cell.id, newSheetCellPhoto))
-            setTimeout(() => setActiveSheetCellPhotoIndex(0), 25)
-            setTimeout(() => setUploadSheetCellPhotoStatus('READY'), 1000)
+    if(!isDemoUser) {
+      const photosList = e.target.files
+      const photosIndexes = Object.keys(photosList)
+      const photosToUpload = photosIndexes.map((index: any) => photosList[index])
+      if(photosIndexes.length > 0) {
+        const file = photosToUpload[0]
+        const uploadedAt = moment().format('YYYY-MM-DD HH:mm:ss')
+        setUploadSheetCellPhotoStatus('PREPARING_UPLOAD')
+        storeFileToS3(file, () => setUploadSheetCellPhotoStatus('UPLOADING'), setUploadSheetCellPhotoProgress)
+          .then(s3PresignedUrlData => {
+            setUploadSheetCellPhotoStatus('SAVING_FILE_DATA')
+            mutation.createSheetCellPhoto(sheetId, cell.id, file.name, s3PresignedUrlData, uploadedAt).then(nextSheetCellPhotos => {
+              const newSheetCellPhoto = nextSheetCellPhotos[nextSheetCellPhotos.length - 1]
+              setUploadSheetCellPhotoStatus('UPLOADED')
+              setUploadSheetCellPhotoProgress(0)
+              dispatch(createSheetCellPhoto(cell.id, newSheetCellPhoto))
+              setTimeout(() => setActiveSheetCellPhotoIndex(0), 25)
+              setTimeout(() => setUploadSheetCellPhotoStatus('READY'), 1000)
+            })
           })
-        })
-        .catch(console.log.bind(console))
+          .catch(console.log.bind(console))
+      }
+    }
+    else {
+      setUploadSheetCellPhotoStatus('NEED_AN_ACCOUNT_TO_UPLOAD')
+      setTimeout(() => setUploadSheetCellPhotoStatus('READY'), 5000)
     }
   }
 
@@ -160,6 +173,7 @@ const SheetCellPhotos = ({
 //-----------------------------------------------------------------------------
 export type ISheetCellPhotosUploadStatus = 
   'READY' | 
+  'NEED_AN_ACCOUNT_TO_UPLOAD' |
   'PREPARING_UPLOAD' | 
   'UPLOADING' | 
   'SAVING_FILE_DATA' | 
@@ -167,6 +181,7 @@ export type ISheetCellPhotosUploadStatus =
 
 export type ISheetCellPhotosDeleteStatus = 
   'READY' |
+  'NEED_AN_ACCOUNT_TO_DELETE' |
   'DELETING' |
   'DELETED'
 

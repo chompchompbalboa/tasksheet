@@ -91,9 +91,9 @@ const SheetActions = ({
       <SheetActionCellStyleItalic sheetId={sheetId}/>
       <SheetActionCellStyleBackgroundColor sheetId={sheetId}/>
       <SheetActionCellStyleColor sheetId={sheetId}/>
-      <Divider />
       {!isDemoUser && 
         <>
+          <Divider />
           <SheetActionCreateSheet/>
           <SheetActionUploadCsv/>
           <Divider />

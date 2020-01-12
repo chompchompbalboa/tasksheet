@@ -36,6 +36,7 @@ const SheetCellFiles = ({
   
   // Redux
   const dispatch = useDispatch()
+  const isDemoUser = useSelector((state: IAppState) => state.user.tasksheetSubscription.type === 'DEMO')
   const sheetCellFiles = useSelector((state: IAppState) => state.sheet.allSheetCellFiles && state.sheet.allSheetCellFiles[cell.id] && state.sheet.allSheetCellFiles[cell.id].map((sheetFileId: ISheetFile['id']) => {
     return state.sheet.allSheetFiles[sheetFileId]
   }))
@@ -51,8 +52,8 @@ const SheetCellFiles = ({
   
   // Effects
   useEffect(() => {
-    if(sheetCellFiles && cell && cell.value && (sheetCellFiles.length + '') !== (cell.value + '')) {
-      dispatch(updateSheetCell(cell.id, { value: (sheetCellFiles && sheetCellFiles.length + '') || '0' }))
+    if(sheetCellFiles && cell && cell.value && (sheetCellFiles.length + '') !== (cell.value + '')) { // If the number of files has changed
+      dispatch(updateSheetCell(cell.id, { value: (sheetCellFiles && sheetCellFiles.length + '') || '0' })) // Update the cell value
     }
   })
 
@@ -74,30 +75,36 @@ const SheetCellFiles = ({
   
   // Upload Sheet Cell File
   const uploadSheetCellFile = (e: ChangeEvent<HTMLInputElement>) => {
-    const filesList = e.target.files
-    const filesIndexes = Object.keys(filesList)
-    const filesToUpload = filesIndexes.map((index: any) => filesList[index])
-    if(filesIndexes.length > 0) {
-      const file = filesToUpload[0]
-      setUploadSheetCellFileStatus('PREPARING_UPLOAD')
-      storeFileToS3(file, () => setUploadSheetCellFileStatus('UPLOADING'), setUploadSheetCellFileProgress)
-        .then(s3PresignedUrlData => {
-          const uploadedAt = moment().format('YYYY-MM-DD HH:mm:ss')
-          setUploadSheetCellFileStatus('SAVING_FILE_DATA')
-          mutation.createSheetCellFile(sheetId, cell.id, file.name, s3PresignedUrlData, uploadedAt).then(nextSheetCellFiles => {
-            const newSheetCellFile = nextSheetCellFiles[nextSheetCellFiles.length - 1]
-            dispatch(createSheetCellFile(newSheetCellFile.cellId, newSheetCellFile))
-            setUploadSheetCellFileProgress(0)
-            if(nextSheetCellFiles.length === 1) {
-              setUploadSheetCellFileStatus('READY')
-            }
-            else {
-              setUploadSheetCellFileStatus('UPLOADED')
-              setTimeout(() => setUploadSheetCellFileStatus('READY'), 1000)
-            }
+    if(!isDemoUser) {
+      const filesList = e.target.files
+      const filesIndexes = Object.keys(filesList)
+      const filesToUpload = filesIndexes.map((index: any) => filesList[index])
+      if(filesIndexes.length > 0) {
+        const file = filesToUpload[0]
+        setUploadSheetCellFileStatus('PREPARING_UPLOAD')
+        storeFileToS3(file, () => setUploadSheetCellFileStatus('UPLOADING'), setUploadSheetCellFileProgress)
+          .then(s3PresignedUrlData => {
+            const uploadedAt = moment().format('YYYY-MM-DD HH:mm:ss')
+            setUploadSheetCellFileStatus('SAVING_FILE_DATA')
+            mutation.createSheetCellFile(sheetId, cell.id, file.name, s3PresignedUrlData, uploadedAt).then(nextSheetCellFiles => {
+              const newSheetCellFile = nextSheetCellFiles[nextSheetCellFiles.length - 1]
+              dispatch(createSheetCellFile(newSheetCellFile.cellId, newSheetCellFile))
+              setUploadSheetCellFileProgress(0)
+              if(nextSheetCellFiles.length === 1) {
+                setUploadSheetCellFileStatus('READY')
+              }
+              else {
+                setUploadSheetCellFileStatus('UPLOADED')
+                setTimeout(() => setUploadSheetCellFileStatus('READY'), 1000)
+              }
+            })
           })
-        })
-        .catch(console.log.bind(console))
+          .catch(console.log.bind(console))
+      }
+    }
+    else {
+      setUploadSheetCellFileStatus('NEED_AN_ACCOUNT_TO_UPLOAD')
+      setTimeout(() => setUploadSheetCellFileStatus('READY'), 5000)
     }
   }
 
@@ -136,6 +143,7 @@ const SheetCellFiles = ({
 //-----------------------------------------------------------------------------
 export type ISheetCellFilesUploadStatus = 
   'READY' | 
+  'NEED_AN_ACCOUNT_TO_UPLOAD' |
   'PREPARING_UPLOAD' | 
   'UPLOADING'| 
   'SAVING_FILE_DATA' | 
