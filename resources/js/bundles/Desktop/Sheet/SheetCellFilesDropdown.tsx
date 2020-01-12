@@ -27,7 +27,7 @@ const SheetCellFilesDropdown = ({
   
   const uploadSheetCellFileStatusMessages = {
     READY: 'Click here to upload a file',
-    NEED_AN_ACCOUNT_TO_UPLOAD: 'Uh oh! You need to be logged in to an account to upload files',
+    NEED_AN_ACCOUNT_TO_UPLOAD: 'Please sign in to an account to upload files',
     PREPARING_UPLOAD: 'Preparing Upload',
     SAVING_FILE_DATA: 'Saving File Data...',
     UPLOADING: 'Uploading',
