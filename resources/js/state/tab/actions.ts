@@ -105,7 +105,7 @@ export const updateActiveTab = (nextActiveTab: string): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
 		dispatch(updateActiveTabReducer(nextActiveTab))
     const tab = getState().tab
-    if(![ 'FOLDERS', 'SETTINGS' ].includes(tab.activeTab)) {
+    if(![ 'FOLDERS', 'HELP', 'SETTINGS' ].includes(tab.activeTab)) {
       dispatch(updateUserActive({ tab: tab.activeTab, tabs: tab.tabs }))
     }
 	}

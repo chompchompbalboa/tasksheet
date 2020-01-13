@@ -13,17 +13,18 @@ import { updateSheet } from '@/state/sheet/actions'
 export const preventSelectedCellEditing = (sheetId: ISheet['id']): IThunkAction => {
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
-      allSheets: {
-        [sheetId]: { 
-          selections
-        }
-      }
+      allSheets
     } = getState().sheet
-    dispatch(updateSheet(sheetId, {
-      selections: {
-        ...selections,
-        isSelectedCellEditingPrevented: true
-      }
-    }, true))
+    if(allSheets) {
+      const {
+        selections
+      } = allSheets[sheetId]
+      dispatch(updateSheet(sheetId, {
+        selections: {
+          ...selections,
+          isSelectedCellEditingPrevented: true
+        }
+      }, true))
+    }
   }
 }

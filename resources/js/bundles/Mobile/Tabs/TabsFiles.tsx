@@ -33,7 +33,7 @@ const TabsFiles = () => {
 
   // Local state
   const [ isFilesDropdownVisible, setIsFilesDropdownVisible ] = useState(false)
-  const [ localActiveFileId, setLocalActiveFileId ] = useState(activeFile.id)
+  const [ localActiveFileId, setLocalActiveFileId ] = useState(activeFile && activeFile.id)
   const [ localFileIds, setLocalFileIds ] = useState(fileIds)
 
   // Add mousedown listener to close the files dropdown on click outside
@@ -57,7 +57,7 @@ const TabsFiles = () => {
     setIsFilesDropdownVisible(false)
     fileIds.includes(nextActiveFileId)
       ? setTimeout(() => dispatch(updateActiveTab(nextActiveFileId)), 10)
-      : !['FOLDERS', 'SETTINGS'].includes(nextActiveFileId)
+      : ![ 'FOLDERS', 'HELP', 'SETTINGS'].includes(nextActiveFileId)
         ? (
             setLocalFileIds([ ...localFileIds, nextActiveFileId]),
             setTimeout(() => dispatch(openFileInNewTab(nextActiveFileId)), 10)
@@ -74,9 +74,11 @@ const TabsFiles = () => {
       <ActiveFile
         isFilesDropdownVisible={isFilesDropdownVisible}
         onClick={() => setIsFilesDropdownVisible(true)}>
-        <ActiveFileName>
-          {activeFile.name}
-        </ActiveFileName>
+        {activeFile &&
+          <ActiveFileName>
+            {activeFile.name}
+          </ActiveFileName>
+        }
         <Icon icon={CHEVRON_DOWN}/>
       </ActiveFile>
       <FilesDropdown
