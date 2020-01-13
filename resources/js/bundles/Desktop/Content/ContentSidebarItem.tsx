@@ -14,7 +14,9 @@ const ContentSidebarItem = ({
   isActive,
   onClick,
   text,
-}: ContentSidebarItemProps) => {
+  textFontWeight = 'normal',
+  textMarginLeft = '0.625rem'
+}: IContentSidebarItem) => {
 
   return (
     <Container
@@ -25,7 +27,9 @@ const ContentSidebarItem = ({
           icon={icon} 
           size="0.85rem"/>
       </IconContainer>
-      <TextContainer>
+      <TextContainer
+        textFontWeight={textFontWeight}
+        textMarginLeft={textMarginLeft}>
         {text}
       </TextContainer>
     </Container>
@@ -35,11 +39,13 @@ const ContentSidebarItem = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface ContentSidebarItemProps {
+interface IContentSidebarItem {
   icon?: string
   isActive: boolean
   onClick(...args: any): void
   text: string
+  textFontWeight?: 'normal' | 'bold'
+  textMarginLeft?: '0.625rem' | '0.3rem'
 }
 
 //-----------------------------------------------------------------------------
@@ -67,13 +73,18 @@ const IconContainer = styled.span`
 `
 
 const TextContainer = styled.span`
-  margin-left: 0.625rem;
+  margin-left: ${ ({ textMarginLeft }: ITextContainer) => textMarginLeft };
   width: 100%;
   display: flex;
   align-items: center;
   white-space: nowrap;
   font-size: 0.75rem;
+  font-weight: ${ ({ textFontWeight }: ITextContainer) => textFontWeight };
 `
+interface ITextContainer {
+  textFontWeight: IContentSidebarItem['textFontWeight']
+  textMarginLeft: IContentSidebarItem['textMarginLeft']
+}
 
 //-----------------------------------------------------------------------------
 // Export

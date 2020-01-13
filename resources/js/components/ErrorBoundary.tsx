@@ -37,7 +37,7 @@ export default class ErrorBoundary extends Component {
               </ErrorIconContainer>
               <ErrorMessage>
                 Something has gone wrong. Please refresh the page.<br/><br/>
-                If you continue to see this error, please send me an email at <a href="mailto: rocky@tasksheet.app">rocky@tasksheet.app</a>.
+                If you continue to see this error, please send me an email at <a href="mailto: eastmanrjr@gmail.com">eastmanrjr@gmail.com</a>.
               </ErrorMessage>
             </ErrorContainer>
           : children
