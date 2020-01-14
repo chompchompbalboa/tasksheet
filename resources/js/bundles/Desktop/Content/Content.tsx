@@ -75,7 +75,7 @@ const ContentHeader = styled.div`
 `
 
 const ContentItems = styled.div`
-  height: calc(100% - 2.5rem);
+  height: calc(100% - 4rem);
   width: 100%;
   overflow-y: scroll;
   background-color: rgb(254, 254, 254);

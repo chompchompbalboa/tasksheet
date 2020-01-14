@@ -7,10 +7,13 @@ import styled from 'styled-components'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const ContentContent = ({ children }: IContentContent) => {
-
+const HelpColumns = ({
+  children,
+  containerWidth = '100%'
+}: IHelpColumns) => {
   return (
-    <Container>
+    <Container
+      containerWidth={containerWidth}>
       {children}
     </Container>
   )
@@ -19,18 +22,28 @@ const ContentContent = ({ children }: IContentContent) => {
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface IContentContent {
-  children: any
+interface IHelpColumns {
+  children?: any
+  containerWidth?: string
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 0.75rem;
+  width: ${ ({ containerWidth }: IContainer ) => containerWidth };
+  margin-bottom: 0.75rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border: 1px solid rgb(220, 220, 220);
+  border-radius: 5px;
 `
+interface IContainer {
+  containerWidth: IHelpColumns['containerWidth']
+}
 
-
-export default ContentContent
+//-----------------------------------------------------------------------------
+// Export
+//-----------------------------------------------------------------------------
+export default HelpColumns
