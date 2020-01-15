@@ -54,6 +54,7 @@ const Header = styled.div`
   background-color: rgb(225, 225, 225);
   color: rgb(10, 10, 10);
   font-size: 0.95rem;
+  font-weight: bold;
   border: 1px solid rgb(175, 175, 175);
   border-bottom: ${ ({ isContentVisible }: IHeader ) => isContentVisible ? 'none' : '1px solid rgb(175, 175, 175)' };
   border-top-left-radius: 3px;

@@ -32,12 +32,9 @@ interface IHelpColumns {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   width: ${ ({ containerWidth }: IContainer ) => containerWidth };
-  margin-bottom: 0.75rem;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  border: 1px solid rgb(220, 220, 220);
-  border-radius: 5px;
 `
 interface IContainer {
   containerWidth: IHelpColumns['containerWidth']
