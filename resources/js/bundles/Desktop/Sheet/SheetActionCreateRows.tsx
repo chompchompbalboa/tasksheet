@@ -101,7 +101,7 @@ const SheetCreateRows = ({
           onFocus={() => handleAutosizeInputFocus()}
           inputStyle={{
             padding: '0.4rem 0.5rem',
-            minWidth: '0.5rem',
+            minWidth: '0.625rem',
             border: 'none',
             borderTop: '0.5px solid rgb(175, 175, 175)',
             borderBottom: '0.5px solid rgb(175, 175, 175)',

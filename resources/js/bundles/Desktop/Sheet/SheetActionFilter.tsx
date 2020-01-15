@@ -323,7 +323,7 @@ const SheetActionFilter = ({
                 marginRight: '0.25rem',
                 padding: '0.125rem 0',
                 height: '100%',
-                minWidth: '4rem',
+                minWidth: '4.25rem',
                 border: 'none',
                 backgroundColor: 'transparent',
                 outline: 'none',
