@@ -70,16 +70,14 @@ const SheetActionSheetViewsSheetView = ({
       text={sheetView.name}
       textPlaceholder="New View..."
       updateText={nextSheetViewName => dispatch(updateSheetView(sheetView.id, { name: nextSheetViewName }, true))}>
+      <SheetActionButtonDropdownItemAction
+        icon={EDIT}
+        onClick={() => setIsSheetViewRenaming(true)}/>
       {!isActiveSheetView && 
-        <>
-          <SheetActionButtonDropdownItemAction
-            icon={EDIT}
-            onClick={() => setIsSheetViewRenaming(true)}/>
-          <SheetActionButtonDropdownItemAction
-            icon={TRASH_CAN}
-            isLast
-            onClick={() => dispatch(deleteSheetView(sheetId, sheetViewId))}/>
-        </>
+        <SheetActionButtonDropdownItemAction
+          icon={TRASH_CAN}
+          isLast
+          onClick={() => dispatch(deleteSheetView(sheetId, sheetViewId))}/>
       }
     </SheetActionButtonDropdownItem>
   )

@@ -40,6 +40,7 @@ const SheetActionSheetViews = ({
   return (
     <SheetActionButton
       closeDropdown={() => setIsDropdownVisible(false)}
+      containerWidth="9.5rem"
       isDropdownVisible={isDropdownVisible}
       onClick={() => setIsDropdownVisible(true)}
       openDropdown={() => setIsDropdownVisible(true)}

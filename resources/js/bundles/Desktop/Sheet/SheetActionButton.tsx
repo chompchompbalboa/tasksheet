@@ -23,6 +23,7 @@ const SheetActionButton = ({
   containerHoverBackgroundColor,
   containerHoverColor = 'rgb(240, 240, 240)',
   dropdownToggleBackgroundColor = 'rgb(220, 220, 220)',
+  containerWidth = 'auto',
   icon,
   iconPadding = '0.4rem 0.4rem',
   iconSize = '1.1rem',
@@ -46,10 +47,10 @@ const SheetActionButton = ({
   useEffect(() => {
     if(isDropdownVisible) { 
       clearTimeout(tooltipTimer.current)
-      setTimeout(() => addEventListener('click', e => closeOnClickOutside(e)), 10) 
+      setTimeout(() => addEventListener('mousedown', e => closeOnClickOutside(e)), 10) 
     }
-    else { removeEventListener('click', e => closeOnClickOutside(e)) }
-    return () => removeEventListener('click', e => closeOnClickOutside(e))
+    else { removeEventListener('mousedown', e => closeOnClickOutside(e)) }
+    return () => removeEventListener('mousedown', e => closeOnClickOutside(e))
   }, [ isDropdownVisible ])
 
   const closeOnClickOutside = (e: MouseEvent) => {
@@ -80,6 +81,7 @@ const SheetActionButton = ({
         containerColor={containerColor}
         containerHoverBackgroundColor={containerHoverBackgroundColor || userColorPrimary}
         containerHoverColor={containerHoverColor}
+        containerWidth={containerWidth}
         hasDropdown={typeof(children) !== 'undefined'}
         iconPadding={iconPadding}
         onClick={() => {
@@ -138,6 +140,7 @@ interface SheetActionButtonProps {
   containerColor?: string
   containerHoverBackgroundColor?: string
   containerHoverColor?: string
+  containerWidth?: string
   closeDropdown?(): void
   dropdownToggleBackgroundColor?: string
   icon?: string
@@ -175,8 +178,9 @@ interface IContainer {
 
 const IconContainer = styled.div`
   cursor: pointer;  
+  width: ${ ({ containerWidth }: IIconContainer) => containerWidth };
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   padding: ${ ({ iconPadding }: IIconContainer ) => iconPadding };
   transition: all 0.05s;
@@ -196,13 +200,16 @@ interface IIconContainer {
   containerColor: string
   containerHoverBackgroundColor: string
   containerHoverColor: string
+  containerWidth: string
   hasDropdown: boolean
   iconPadding: string
 }
 
 const IconText = styled.div`
-  white-space: nowrap;
   margin-left: 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: ${ ({ iconTextSize }: IIconText ) => iconTextSize };
 `
 interface IIconText {

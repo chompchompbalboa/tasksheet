@@ -42,6 +42,7 @@ const SheetActionSheetCellPriorities = ({
     <SheetActionButton
       containerBackgroundColor={activeSheetPriority ? activeSheetPriority.backgroundColor : undefined}
       containerColor={activeSheetPriority ? activeSheetPriority.color : undefined}
+      containerWidth="5rem"
       closeDropdown={() => setIsDropdownVisible(false)}
       isDropdownVisible={isDropdownVisible}
       marginLeft="0"
