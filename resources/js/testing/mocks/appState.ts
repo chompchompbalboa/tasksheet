@@ -191,6 +191,7 @@ export const appStateFactory = ({
         filters: newSheetFromDatabaseFilters.map(filter => filter.id),
         groups: newSheetFromDatabaseGroups.map(group => group.id),
         sorts: newSheetFromDatabaseSorts.map(sort => sort.id),
+        searchValue: null
       }
       newSheetFromDatabaseViews.push({
         ...activeSheetView,

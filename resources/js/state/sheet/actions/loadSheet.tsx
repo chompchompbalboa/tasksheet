@@ -103,7 +103,8 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         ...sheetView,
         filters: sheetViewFilterIds,
         groups: sheetViewGroupIds,
-        sorts: sheetViewSortIds
+        sorts: sheetViewSortIds,
+        searchValue: null
       }
       sheetViews.push(sheetView.id)
     })

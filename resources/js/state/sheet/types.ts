@@ -98,6 +98,7 @@ export interface ISheetView {
   filters: ISheetFilter['id'][]
   groups: ISheetGroup['id'][]
   sorts: ISheetSort['id'][]
+  searchValue: string
 }
 
 export interface ISheetViewFromDatabase {
@@ -129,6 +130,7 @@ export interface ISheetViewUpdates {
   filters?: ISheetFilter['id'][]
   groups?: ISheetGroup['id'][]
   sorts?: ISheetSort['id'][]
+  searchValue?: string
 }
 
 //-----------------------------------------------------------------------------

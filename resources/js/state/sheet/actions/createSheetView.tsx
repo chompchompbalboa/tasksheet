@@ -116,7 +116,8 @@ export const createSheetView = (sheetId: ISheet['id']): IThunkAction => {
       visibleColumns: activeSheetView.visibleColumns,
       filters: nextSheetFilters,
       groups: nextSheetGroups,
-      sorts: nextSheetSorts
+      sorts: nextSheetSorts,
+      searchValue: null
     }
 
     const newSheetViewToDataBase: ISheetViewToDatabase = {
