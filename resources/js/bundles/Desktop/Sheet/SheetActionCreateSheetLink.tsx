@@ -1,14 +1,13 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { SHEET_LINK } from '@/assets/icons' 
 
-import { updateIsSavingNewFile } from '@/state/folder/actions'
+import { IAppState } from '@/state'
 import { createSheetLink } from '@/state/sheet/actions'
-import { updateActiveTab } from '@/state/tab/actions'
 
 import SheetActionButton from '@desktop/Sheet/SheetActionButton'
 
@@ -19,26 +18,34 @@ const SheetActionCreateSheetLink = ({
   sheetId
 }: ISheetActionCreateSheetLink) => {
 
+  // Redux
   const dispatch = useDispatch()
+  const userFolderId = useSelector((state: IAppState) => state.user.folderId)
+  
+  // State
+  const [ isSheetLinkCurrentlyBeingCreated, setIsSheetLinkCurrentlyBeingCreated ] = useState(false)
 
+  // Handle Click
   const handleClick = () => {
-    dispatch(updateActiveTab('FOLDERS'))
-    dispatch(updateIsSavingNewFile(true, (newViewName: string) => {
-      dispatch(createSheetLink(sheetId, newViewName))
-      dispatch(updateIsSavingNewFile(false, null))
-    }))
+    setIsSheetLinkCurrentlyBeingCreated(true)
+    setTimeout(() => {
+      dispatch(createSheetLink(sheetId, userFolderId))
+    }, 25)
+    setTimeout(() => {
+      setIsSheetLinkCurrentlyBeingCreated(false)
+    }, 2000)
   }
 
   return (
     <SheetActionButton
       icon={SHEET_LINK}
-      iconPadding="0.225rem 0.4rem"
-      iconTextSize="1rem"
+      iconPadding={isSheetLinkCurrentlyBeingCreated ? "0.4rem 0.4rem" : "0.225rem 0.4rem"}
+      iconTextSize={isSheetLinkCurrentlyBeingCreated ? "0.78rem" : "1rem"}
       marginLeft="0"
       marginRight="0"
       onClick={() => handleClick()}
       tooltip="Create a linked sheet"
-      text="+"/>
+      text={isSheetLinkCurrentlyBeingCreated ? "Creating..." : "+"}/>
   )
 }
 

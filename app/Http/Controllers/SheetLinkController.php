@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 
 use App\Models\Sheet;
 use App\Models\SheetStyles;
+use App\Models\SheetPriority;
 use App\Models\SheetView;
 
 class SheetLinkController extends Controller
@@ -36,6 +37,23 @@ class SheetLinkController extends Controller
       $newSheet->save();
 
       $newSheetStyles = SheetStyles::create([ 'id' => Str::uuid()->toString(), 'sheetId' => $newSheetId ]);
+    
+      // Create the default sheet priorities
+      $prioritiesToCreate = [
+        [ 'name' => 'Now', 'backgroundColor' => 'rgb(255, 150, 150)', 'color' => 'black', 'order' => 1 ],
+        [ 'name' => 'Soon', 'backgroundColor' => 'rgb(255, 205, 155)', 'color' => 'black', 'order' => 2 ],
+        [ 'name' => 'Flagged', 'backgroundColor' => 'rgb(255, 255, 160)', 'color' => 'black', 'order' => 3 ],
+      ];
+      foreach($prioritiesToCreate as $priorityToCreate) {
+        SheetPriority::create([
+          'id' => Str::uuid()->toString(),
+          'sheetId' => $newSheet->id,
+          'name' => $priorityToCreate['name'],
+          'backgroundColor' => $priorityToCreate['backgroundColor'],
+          'color' => $priorityToCreate['color'],
+          'order' => $priorityToCreate['order'],
+        ]);
+      }
 
       return response()->json(null, 200);
     }

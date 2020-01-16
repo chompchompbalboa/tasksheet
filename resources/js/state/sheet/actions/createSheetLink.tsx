@@ -16,18 +16,17 @@ import {
 
 import { loadSheetReducer } from '@/state/sheet/actions'
 import { updateFiles, updateFolders } from '@/state/folder/actions'
-import { updateTabs } from '@/state/tab/actions'
+import { openFileInNewTab, updateTabs } from '@/state/tab/actions'
 
 import { defaultSheetSelections, defaultSheetStyles } from '@/state/sheet/defaults'
 
 //-----------------------------------------------------------------------------
 // Create Sheet Link
 //-----------------------------------------------------------------------------
-export const createSheetLink = (sheetId: string, newSheetLinkName: string): IThunkAction => {
+export const createSheetLink = (sheetId: string, folderId: string): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
       folder: { 
-        activeFolderPath, 
         files, 
         folders 
       },
@@ -43,8 +42,9 @@ export const createSheetLink = (sheetId: string, newSheetLinkName: string): IThu
     const sourceSheetActiveSheetView = allSheetViews[sourceSheet.activeSheetViewId]
 
     const fileId = Object.keys(files).find(fileId => files[fileId].typeId === sheetId)
-    const folderId = activeFolderPath[activeFolderPath.length - 1]
     const newFileId = createUuid()
+    
+    const newSheetLinkFileName = files[fileId].name + ' - Linked'
 
     const newLinkedSheetId = createUuid()
     const newLinkedSheetActiveSheetView: ISheetView = {
@@ -95,7 +95,7 @@ export const createSheetLink = (sheetId: string, newSheetLinkName: string): IThu
       id: newFileId,
       folderId: folderId,
       type: 'SHEET' as IFileType, 
-      name: newSheetLinkName,
+      name: newSheetLinkFileName,
       typeId: newLinkedSheetId
     }
     dispatch(updateFiles({
@@ -112,14 +112,16 @@ export const createSheetLink = (sheetId: string, newSheetLinkName: string): IThu
     // Update open tabs
     dispatch(updateTabs([ ...tabs, newFileId ]))
     // Create the file on the server
-    mutation.createFile(newFile)
+    await mutation.createFile(newFile)
     // Create the sheet view on the server
-    mutation.createSheetLink({
+    await mutation.createSheetLink({
       id: newLinkedSheetId,
       sourceSheetId: sourceSheet.sourceSheetId || sourceSheet.id,
       activeSheetViewId: newLinkedSheetActiveSheetView.id,
-      activeSheetViewName: newSheetLinkName,
+      activeSheetViewName: newSheetLinkFileName,
       activeSheetViewVisibleColumns: newLinkedSheetActiveSheetView.visibleColumns,
     })
+    
+    dispatch(openFileInNewTab(newFile.id))
 	}
 }
