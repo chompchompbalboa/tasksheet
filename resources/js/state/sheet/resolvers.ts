@@ -121,14 +121,18 @@ export const resolveSheetVisibleRows = (
   }
   
   // Bail out if there aren't any filters, groups or sorts
-  if(filterIds.length === 0 && groupIds.length === 0 && sortIds.length === 0) {
+  if(filterIds.length === 0 && groupIds.length === 0 && sortIds.length === 0 && ['', null].includes(activeSheetView.searchValue)) {
     return [ ...rowIds.sort(sortByPriority), 'ROW_BREAK' ]
   }
 
-  // Filter
+  // Filter (using both the filters and the searchValue)
   const filteredRowIds: string[] = !allSheetFilters ? rowIds : rowIds.map(rowId => {
+
+    // Get the row
     const row = allSheetRows[rowId]
-    return filterIds.every(filterId => {
+
+    // Does the row pass all the filters?
+    const doesRowPassFilters = filterIds.every(filterId => {
       const filter = allSheetFilters[filterId]
       if(filter) {
         const cell = allSheetCells[row.cells[filter.columnId]]
@@ -139,7 +143,20 @@ export const resolveSheetVisibleRows = (
         return true
       }
       return true
-    }) ? row.id : undefined
+    }) 
+
+    // If there's a search value, does one of the cell values contain the search value?
+    const doesRowPassSearchValue = 
+      activeSheetView.searchValue === '' || activeSheetView.searchValue === null
+        ? true
+        : Object.values(row.cells)
+            .map(cellId => allSheetCells[cellId].value ? allSheetCells[cellId].value : '')
+            .join('')
+            .toLocaleLowerCase()
+            .includes(activeSheetView.searchValue.toLocaleLowerCase())
+
+    return doesRowPassFilters && doesRowPassSearchValue ? row.id : undefined
+
   }).filter(Boolean)
 
   // Sort

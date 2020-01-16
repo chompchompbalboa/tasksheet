@@ -11,6 +11,7 @@ import {
   allowSelectedCellNavigation,
   preventSelectedCellEditing,
   preventSelectedCellNavigation,
+  refreshSheetVisibleRows,
   updateSheetView
 } from '@/state/sheet/actions'
 
@@ -36,12 +37,15 @@ const SheetActionSearch = ({
   // Effects
   useEffect(() => {
     clearTimeout(updateSheetViewSearchValueTimeout.current)
-    if(searchValue !== '') {
-      updateSheetViewSearchValueTimeout.current = setTimeout(() => updateSheetViewSearchValue(searchValue), 1000)
+    if(searchValue === '') { // Immediately refresh the view if the user has deleted the search value
+      updateSheetViewSearchValue(searchValue)
+    }
+    else { // Otherwise, set the timeout 
+      updateSheetViewSearchValueTimeout.current = setTimeout(() => updateSheetViewSearchValue(searchValue), 500)
     }
   }, [ searchValue ])
 
-  // Handle Autosize Input Change
+  // Handle Autosize Input Blur
   const handleAutosizeInputBlur = () => {
     dispatch(allowSelectedCellEditing(sheetId))
     dispatch(allowSelectedCellNavigation(sheetId))
@@ -52,7 +56,7 @@ const SheetActionSearch = ({
     setSearchValue(nextSearchValue)
   }
 
-  // Handle Autosize Input Change
+  // Handle Autosize Input Focus
   const handleAutosizeInputFocus = () => {
     dispatch(preventSelectedCellEditing(sheetId))
     dispatch(preventSelectedCellNavigation(sheetId))
@@ -63,6 +67,9 @@ const SheetActionSearch = ({
     dispatch(updateSheetView(activeSheetViewId, {
       searchValue: nextSearchValue
     }, true))
+    setTimeout(() => {
+      dispatch(refreshSheetVisibleRows(sheetId))
+    }, 25)
   }
 
   return (
