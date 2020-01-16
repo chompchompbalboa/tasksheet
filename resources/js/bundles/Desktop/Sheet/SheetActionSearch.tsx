@@ -33,6 +33,7 @@ const SheetActionSearch = ({
   
   // State
   const [ hasLoaded, setHasLoaded ] = useState(false)
+  const [ isInputFocused, setIsInputFocused ] = useState(false)
   const [ searchValue, setSearchValue ] = useState(null)
 
   // Effects
@@ -45,26 +46,46 @@ const SheetActionSearch = ({
       updateSheetViewSearchValueTimeout.current = setTimeout(() => updateSheetViewSearchValue(searchValue), 500)
     }
   }, [ searchValue ])
+  
+  useEffect(() => {
+    if(isInputFocused) {
+      addEventListener('keydown', handleKeydownWhileInputIsFocused)
+    }
+    else {
+      removeEventListener('keydown', handleKeydownWhileInputIsFocused)
+    }
+    return () => removeEventListener('keydown', handleKeydownWhileInputIsFocused)
+  }, [ isInputFocused, searchValue ])
 
   useEffect(() => {
     setHasLoaded(true)
   }, [])
 
-  // Handle Autosize Input Blur
-  const handleAutosizeInputBlur = () => {
+  // Handle  Input Blur
+  const handleInputBlur = () => {
+    setIsInputFocused(false)
     dispatch(allowSelectedCellEditing(sheetId))
     dispatch(allowSelectedCellNavigation(sheetId))
   }
 
-  // Handle Autosize Input Change
-  const handleAutosizeInputChange = (nextSearchValue: string) => {
+  // Handle  Input Change
+  const handleInputChange = (nextSearchValue: string) => {
     setSearchValue(nextSearchValue)
   }
 
-  // Handle Autosize Input Focus
-  const handleAutosizeInputFocus = () => {
+  // Handle  Input Focus
+  const handleInputFocus = () => {
+    setIsInputFocused(true)
     dispatch(preventSelectedCellEditing(sheetId))
     dispatch(preventSelectedCellNavigation(sheetId))
+  }
+  
+  // Handle Keydown While Input Is Focused
+  const handleKeydownWhileInputIsFocused = (e: KeyboardEvent) => {
+    if(e.key === 'Enter') {
+      clearTimeout(updateSheetViewSearchValueTimeout.current)
+      updateSheetViewSearchValue(searchValue)
+    }
   }
 
   // Update Sheet View Search Value
@@ -81,9 +102,9 @@ const SheetActionSearch = ({
     <AutosizeInput
       placeholder="Search..."
       value={searchValue || ''}
-      onBlur={handleAutosizeInputBlur}
-      onChange={e => handleAutosizeInputChange(e.target.value)}
-      onFocus={handleAutosizeInputFocus}
+      onBlur={handleInputBlur}
+      onChange={e => handleInputChange(e.target.value)}
+      onFocus={handleInputFocus}
       inputStyle={{
         padding: '0.375rem',
         height: '100%',
