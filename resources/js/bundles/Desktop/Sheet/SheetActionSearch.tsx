@@ -108,7 +108,7 @@ const SheetActionSearch = ({
       inputStyle={{
         padding: '0.375rem',
         height: '100%',
-        minWidth: '5rem',
+        minWidth: '6.5rem',
         border: '0.5px solid rgb(180, 180, 180)',
         borderRadius: '5px',
         backgroundColor: 'transparent',
