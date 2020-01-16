@@ -27,8 +27,7 @@ class SheetBuilder
     'BOOLEAN',
     'NUMBER', 
     'PHOTOS', 
-    'FILES',
-    'TEAM_MEMBERS'
+    'FILES'
   ];
 
 
@@ -73,9 +72,9 @@ class SheetBuilder
     
       // Create the default sheet priorities
       $prioritiesToCreate = [
-        [ 'name' => 'Now', 'backgroundColor' => 'rgba(255, 0, 0, 0.25)', 'color' => 'black', 'order' => 1 ],
-        [ 'name' => 'Soon', 'backgroundColor' => 'rgba(255, 127, 0, 0.25)', 'color' => 'black', 'order' => 2 ],
-        [ 'name' => 'Flagged', 'backgroundColor' => 'rgba(255, 255, 0, 0.25)', 'color' => 'black', 'order' => 3 ],
+        [ 'name' => 'Now', 'backgroundColor' => 'rgb(255, 150, 150)', 'color' => 'black', 'order' => 1 ],
+        [ 'name' => 'Soon', 'backgroundColor' => 'rgb(255, 205, 155)', 'color' => 'black', 'order' => 2 ],
+        [ 'name' => 'Flagged', 'backgroundColor' => 'rgb(255, 255, 160)', 'color' => 'black', 'order' => 3 ],
       ];
       foreach($prioritiesToCreate as $priorityToCreate) {
         SheetPriority::create([
