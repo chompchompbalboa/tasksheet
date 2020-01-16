@@ -27,6 +27,7 @@ import SheetActionFilter from '@desktop/Sheet/SheetActionFilter'
 import SheetActionGroup from '@desktop/Sheet/SheetActionGroup'
 import SheetActionRefreshVisibleRows from '@desktop/Sheet/SheetActionRefreshVisibleRows'
 import SheetActionPriorities from '@desktop/Sheet/SheetActionPriorities'
+import SheetActionSearch from '@desktop/Sheet/SheetActionSearch'
 import SheetActionSort from '@desktop/Sheet/SheetActionSort'
 import SheetActionUploadCsv from '@desktop/Sheet/SheetActionUploadCsv'
 
@@ -84,6 +85,8 @@ const SheetActions = ({
       }
       <Divider />
       <SheetActionPriorities sheetId={sheetId}/>
+      <Divider />
+      <SheetActionSearch sheetId={sheetId}/>
       <Divider />
       <SheetActionCreateRows sheetId={sheetId}/>
       <Divider />
