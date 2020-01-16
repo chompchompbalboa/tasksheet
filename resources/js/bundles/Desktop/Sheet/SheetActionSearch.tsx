@@ -32,18 +32,23 @@ const SheetActionSearch = ({
   const activeSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
   
   // State
-  const [ searchValue, setSearchValue ] = useState('')
+  const [ hasLoaded, setHasLoaded ] = useState(false)
+  const [ searchValue, setSearchValue ] = useState(null)
 
   // Effects
   useEffect(() => {
     clearTimeout(updateSheetViewSearchValueTimeout.current)
-    if(searchValue === '') { // Immediately refresh the view if the user has deleted the search value
+    if(hasLoaded && searchValue === '') { // Immediately refresh the view if the user has deleted the search value
       updateSheetViewSearchValue(searchValue)
     }
-    else { // Otherwise, set the timeout 
+    else if(hasLoaded) { // Otherwise, set the timeout 
       updateSheetViewSearchValueTimeout.current = setTimeout(() => updateSheetViewSearchValue(searchValue), 500)
     }
   }, [ searchValue ])
+
+  useEffect(() => {
+    setHasLoaded(true)
+  }, [])
 
   // Handle Autosize Input Blur
   const handleAutosizeInputBlur = () => {
@@ -75,7 +80,7 @@ const SheetActionSearch = ({
   return (
     <AutosizeInput
       placeholder="Search..."
-      value={searchValue}
+      value={searchValue || ''}
       onBlur={handleAutosizeInputBlur}
       onChange={e => handleAutosizeInputChange(e.target.value)}
       onFocus={handleAutosizeInputFocus}
