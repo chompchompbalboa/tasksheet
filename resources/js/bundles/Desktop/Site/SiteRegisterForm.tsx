@@ -31,7 +31,7 @@ const SiteRegisterForm = () => {
     e.preventDefault()
     if(isEmail(emailInputValue) && passwordInputValue === confirmPasswordInputValue && startTrialCheckboxValue) {
       setRegisterStatus('REGISTERING')
-      if(accessCodeInputValue === 'FRIENDS_AND_FAMILY') {
+      if(accessCodeInputValue === 'EARLY_ACCESS') {
         action.userRegister(nameInputValue, emailInputValue, passwordInputValue, accessCodeInputValue).then(
           response => {
             if(response.status === 200) {
@@ -56,7 +56,7 @@ const SiteRegisterForm = () => {
   const statusMessages = {
     READY: "",
     REGISTERING: "",
-    INCORRECT_ACCESS_CODE: "Your access code is incorrect. Tasksheet is in closed beta and requires an access code to sign up for an account. Please email eastmanrjr@gmail.com if you're interested in joining the beta - we'd love to have you!",
+    INCORRECT_ACCESS_CODE: "Your access code is incorrect. Tasksheet is in closed beta and requires an access code to sign up for an account.",
     ERROR_DURING_REGISTRATION: "We were unable to sign you up for an account. Please make sure you have entered all of your information correctly and try again."
   }
   

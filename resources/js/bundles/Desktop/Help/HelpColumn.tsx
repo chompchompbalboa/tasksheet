@@ -9,10 +9,12 @@ import styled from 'styled-components'
 //-----------------------------------------------------------------------------
 const HelpColumn = ({
   children,
+  containerAlignItems = 'center',
   containerWidth = '50%'
 }: IHelpColumn) => {
   return (
     <Container
+      containerAlignItems={containerAlignItems}
       containerWidth={containerWidth}>
       {children}
     </Container>
@@ -25,6 +27,7 @@ const HelpColumn = ({
 interface IHelpColumn {
   children?: any
   containerWidth?: string
+  containerAlignItems?: 'flex-start' | 'center'
 }
 
 //-----------------------------------------------------------------------------
@@ -35,10 +38,11 @@ const Container = styled.div`
   padding: 1rem;
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: ${ ({ containerAlignItems }: IContainer ) => containerAlignItems };
 `
 interface IContainer {
   containerWidth: IHelpColumn['containerWidth']
+  containerAlignItems: IHelpColumn['containerAlignItems']
 }
 
 //-----------------------------------------------------------------------------

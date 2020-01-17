@@ -68,7 +68,7 @@ class RegisterController extends Controller
         $accessCode = $request->input('accessCode');
     
         // If the access code is correct
-        if($accessCode === 'FRIENDS_AND_FAMILY') {
+        if($accessCode === 'EARLY_ACCESS') {
 
           // Validate the inputs and get the new user's information
           $newUserInfo = $request->validate([

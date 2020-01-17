@@ -5,7 +5,7 @@ import React from 'react'
 
 import { IHelpContent } from '@desktop/Help/Help'
 
-import AboutTasksheet from '@desktop/Help/Topics/AboutTasksheet'
+import FAQ from '@desktop/Help/Topics/FAQ'
 import Filters from '@desktop/Help/Topics/Filters'
 import GettingStarted from '@desktop/Help/Topics/GettingStarted'
 import HelpfulTips from '@desktop/Help/Topics/HelpfulTips'
@@ -23,9 +23,9 @@ const HelpContent = ({
 
   const content = {
     WELCOME: Welcome,
-      ABOUT_TASKSHEET: AboutTasksheet,
       GETTING_STARTED: GettingStarted,
       HELPFUL_TIPS: HelpfulTips,
+      FAQ: FAQ,
     VIEWS: Views,
       FILTERS: Filters,
       GROUPS: Groups,

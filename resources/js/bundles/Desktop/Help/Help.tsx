@@ -9,9 +9,9 @@ import HelpSidebar from '@desktop/Help/HelpSidebar'
 
 export type IHelpContent = 
   'WELCOME' |
-    'ABOUT_TASKSHEET' |
     'GETTING_STARTED' |
     'HELPFUL_TIPS' |
+    'FAQ' |
   'VIEWS' |
     'FILTERS' |
     'GROUPS' |
@@ -21,13 +21,13 @@ export type IHelpContent =
 //-----------------------------------------------------------------------------
 const Help = () => {
 
-  const [ activeContent, setActiveContent ] = useState('WELCOME' as IHelpContent)
+  const [ activeContent, setActiveContent ] = useState('GETTING_STARTED' as IHelpContent)
 
   const headers = {
     WELCOME: 'Welcome',
-      ABOUT_TASKSHEET: 'About Tasksheet',
       GETTING_STARTED: 'Getting Started',
       HELPFUL_TIPS: 'Helpful Tips',
+      FAQ: 'FAQ',
     VIEWS: 'Views',
       FILTERS: 'Filters',
       GROUPS: 'Groups',

@@ -14,13 +14,13 @@ const Welcome = () => {
   return (
     <ContentContent>
       <HelpText>
-        Hi there. Welcome to Tasksheet! We're glad you're here.
+        Hi there. Welcome to Tasksheet!
       </HelpText>
       <HelpText>
-        The information in the help topics below have been organized to give you a quick - but thorough - understanding of how to use Tasksheet. We will also discuss best practices that we have found helpful as we've used Tasksheet internally.
+        The information in the topics below have been organized to help you get started using Tasksheet. There are also examples of the recommended best practices.
       </HelpText>
       <HelpText>
-        If you have any questions as you learn Tasksheet, please don't hesitate to reach out to our support team: <a href="mailto: support@tasksheet.app">support@tasksheet.app</a>
+        Keeping things simple is a core part of our development philosophy. We hope that Tasksheet is intuitive enough to use that this documentation isn't necessary - but if you're stuck, odds are the answers are here!
       </HelpText>
     </ContentContent>
   )

@@ -19,12 +19,12 @@ const GettingStarted = () => {
   return (
     <ContentContent>
       <SettingsGroup
-        header="1. Open the registration form">
+        header="Sign Up For An Account">
         <HelpColumns>
           <HelpColumn>
             <HelpText
               containerMarginBottom="0">
-              If you haven't signed up for an account yet, please start by clicking on the link in the top right of the window.
+              <b>1)</b> If you haven't signed up for an account yet, please start by clicking on the link in the top right of the window.
             </HelpText>
           </HelpColumn>
           <HelpColumn>
@@ -34,18 +34,13 @@ const GettingStarted = () => {
               src={environment.assetUrl + 'images/help/getting-started/register-link.png'}/>
           </HelpColumn>
         </HelpColumns>
-      </SettingsGroup>
-      <SettingsGroup
-        header="2. Sign up for an account">
-        <HelpColumns>
-          <HelpColumn>
+        <HelpColumns
+          containerAlignItems="flex-start">
+          <HelpColumn
+            containerAlignItems="flex-start">
             <HelpText
               containerMarginBottom="0">
-              This will open the form to register for an account.
-              <br/><br/>
-              Tasksheet is currently in an early-access beta, and new registrations require an access code. 
-              <br/>
-              The access code is: <b>FRIENDS_AND_FAMILY</b>
+              <b>2)</b> This will open the form to register for an account. Tasksheet is currently in an early-access beta and new registrations require an access code. The access code is <b>EARLY_ACCESS</b>
             </HelpText>
           </HelpColumn>
           <HelpColumn>
