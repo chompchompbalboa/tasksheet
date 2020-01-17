@@ -69,7 +69,8 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
     } = this.state
     if(isActiveFile &&
       (previousProps.sheetVisibleRows !== this.props.sheetVisibleRows 
-      || previousProps.allSheetColumns !== this.props.allSheetColumns)
+      || previousProps.allSheetColumns !== this.props.allSheetColumns
+      || previousProps.sheetViewVisibleColumns !== this.props.sheetViewVisibleColumns)
     ) {
       const sheetDimensionsState = this.calculateSheetDimensionsState()
       this.setState(sheetDimensionsState)
@@ -380,7 +381,7 @@ interface ISheetWindowState {
 const Container = styled.div`
   position: absolute;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 0.25rem);
   overflow: scroll;
 `
 
@@ -388,12 +389,13 @@ const ScrollContainer = styled.div`
   z-index: 1;
   position: absolute;
   width: 100%;
+  height: 100
   pointer-events: none;
 `
 
 const Scroller = styled.div`
-width: ${( { widthPx }: IScroll ) => widthPx + 'px'};
-height: ${( { heightPx }: IScroll ) => heightPx + 'px'};
+  width: ${( { widthPx }: IScroll ) => widthPx + 'px'};
+  height: ${( { heightPx }: IScroll ) => heightPx + 'px'};
 `
 interface IScroll {
   widthPx: number
