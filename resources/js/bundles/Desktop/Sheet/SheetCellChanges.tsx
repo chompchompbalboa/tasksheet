@@ -53,7 +53,10 @@ export const SheetCellChanges = ({
             <Change
               key={sheetCellChange.id}>
               <ChangeValue>
-                {sheetCellChange.value}
+                {![null, ''].includes(sheetCellChange.value)
+                  ? sheetCellChange.value
+                  : <EmptyChangeValue>Empty</EmptyChangeValue>
+                }
               </ChangeValue>
               <ChangeDetailsAndActions>
                 <ChangeDetails>
@@ -126,6 +129,11 @@ const ChangeValue = styled.div`
   white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
+`
+
+const EmptyChangeValue = styled(ChangeValue)`
+  font-style: italic;
+  color: rgb(150, 150, 150);
 `
 
 const ChangeDetailsAndActions = styled.div`

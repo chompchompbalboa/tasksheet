@@ -45,7 +45,7 @@ export const createSheetCellChange = (
         columnId: sheetCell.columnId,
         rowId: sheetCell.rowId,
         cellId: cellId,
-        value: value,
+        value: value || '',
         createdBy: userName,
         createdAt: moment().format('YYYY-MM-DD HH:mm:ss')
       }
