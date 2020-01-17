@@ -33,6 +33,7 @@ export interface ISheet {
   views: ISheetView['id'][]
   visibleRows: ISheetRow['id'][]
   visibleRowLeaders: ISheetRowLeader[]
+  isCellEditing: boolean
 }
 
 export interface ISheetUpdates {
@@ -46,6 +47,7 @@ export interface ISheetUpdates {
   views?: ISheetView['id'][]
   visibleRows?: ISheetRow['id'][]
   visibleRowLeaders?: ISheetRowLeader[]
+  isCellEditing?: boolean
 }
 
 export interface ISheetFromDatabase {

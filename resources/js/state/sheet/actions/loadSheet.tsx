@@ -187,7 +187,8 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       },
       views: sheetViews,
       priorities: sheetPriorities,
-      cellPriorities: sheetCellPriorities
+      cellPriorities: sheetCellPriorities,
+      isCellEditing: false
     }
 
     // Sheet's Visible Rows and Row Leaders

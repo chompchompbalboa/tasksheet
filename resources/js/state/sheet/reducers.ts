@@ -84,7 +84,17 @@ export const initialSheetState: ISheetState = {
   clipboard: {
     sheetId: null,
     cutOrCopy: null,
-    selections: null
+    selections: {
+      rangeCellIds: null,
+      rangeStartColumnId: null,
+      rangeStartRowId: null,
+      rangeStartCellId: null,
+      rangeEndColumnId: null,
+      rangeEndRowId: null,
+      rangeEndCellId: null,
+      visibleColumns: null,
+      visibleRows: null
+    }
   },
 }
 

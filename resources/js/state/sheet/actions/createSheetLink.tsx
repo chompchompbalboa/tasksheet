@@ -69,7 +69,8 @@ export const createSheetLink = (sheetId: string, folderId: string): IThunkAction
         styles: defaultSheetStyles,
         views: [],
         priorities: [],
-        cellPriorities: {}
+        cellPriorities: {},
+        isCellEditing: false
       },
       null, // Cells
       null, // Columns

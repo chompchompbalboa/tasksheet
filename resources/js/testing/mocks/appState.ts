@@ -213,7 +213,8 @@ export const appStateFactory = ({
         selections: defaultSheetSelections,
         views: newSheetFromDatabaseViews.map(view => view.id),
         priorities: newSheetFromDatabasePriorities.map(priority => priority.id),
-        cellPriorities: newSheetCellPriorities
+        cellPriorities: newSheetCellPriorities,
+        isCellEditing: false
       }
 
       newSheet.visibleRows = resolveSheetVisibleRows(

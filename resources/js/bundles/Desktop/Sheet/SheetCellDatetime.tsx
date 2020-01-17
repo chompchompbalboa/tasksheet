@@ -10,6 +10,7 @@ import { ISheetCellTypesSharedProps } from '@desktop/Sheet/SheetCell'
 import { 
   addSheetColumnAllCellValue,
   createSheetCellChange,
+  updateSheet,
   updateSheetCell,
   updateSheetCellValues
 } from '@/state/sheet/actions'
@@ -38,6 +39,7 @@ export const SheetCellDatetime = ({
   const beginEditing = (value: string = null) => {
     const nextSheetCellValue = value === null ? cell.value : value
     setSheetCellPreviousValue(cell.value)
+    dispatch(updateSheet(sheetId, { isCellEditing: true }, true))
     if(isCellInRange) {
       dispatch(updateSheetCell(cell.id, { isCellEditing: true }, null, true ))
       dispatch(updateSheetCellValues(sheetId, nextSheetCellValue))
@@ -50,6 +52,7 @@ export const SheetCellDatetime = ({
   // Complete Editing
   const completeEditing = () => {
     dispatch(updateSheetCell(cell.id, { isCellEditing: false }, null, true))
+    dispatch(updateSheet(sheetId, { isCellEditing: false }, true))
     setTimeout(() => {          
       setSheetCellPreviousValue(null)
       const nextSheetCellValue = formatDate(cell.value)
