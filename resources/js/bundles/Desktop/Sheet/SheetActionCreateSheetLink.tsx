@@ -4,7 +4,7 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { SHEET_LINK } from '@/assets/icons' 
+import { PLUS_SIGN } from '@/assets/icons' 
 
 import { IAppState } from '@/state'
 import { createSheetLink } from '@/state/sheet/actions'
@@ -38,14 +38,12 @@ const SheetActionCreateSheetLink = ({
 
   return (
     <SheetActionButton
-      icon={SHEET_LINK}
-      iconPadding={isSheetLinkCurrentlyBeingCreated ? "0.4rem 0.4rem" : "0.225rem 0.4rem"}
-      iconTextSize={isSheetLinkCurrentlyBeingCreated ? "0.78rem" : "1rem"}
-      marginLeft="0"
+      icon={PLUS_SIGN}
+      iconSize="0.85rem"
       marginRight="0"
       onClick={() => handleClick()}
-      tooltip="Create a linked sheet"
-      text={isSheetLinkCurrentlyBeingCreated ? "Creating..." : "+"}/>
+      text={isSheetLinkCurrentlyBeingCreated ? "Creating..." : "Link"}
+      tooltip="Create a linked sheet"/>
   )
 }
 

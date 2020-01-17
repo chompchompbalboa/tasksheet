@@ -156,7 +156,7 @@ const SheetActionDownloadCsv = ({
       icon={DOWNLOAD}
       iconSize="0.85rem"
       isDropdownVisible={isDropdownVisible}
-      marginLeft="0"
+      marginRight="0"
       openDropdown={() => setIsDropdownVisible(true)}
       text='.csv'
       tooltip='Download this sheet as a .csv file'>

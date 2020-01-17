@@ -37,7 +37,7 @@ const SheetActionUploadCsv = () => {
       icon={UPLOAD}
       iconSize="0.85rem"
       isDropdownVisible={isDropdownVisible}
-      marginRight="0"
+      marginLeft="0"
       onClick={() => handleButtonClick()}
       openDropdown={() => setIsDropdownVisible(true)}
       text='.csv'

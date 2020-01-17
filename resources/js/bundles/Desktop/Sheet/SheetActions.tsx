@@ -98,12 +98,13 @@ const SheetActions = ({
         <>
           <Divider />
           <SheetActionCreateSheet/>
-          <SheetActionUploadCsv/>
-          <Divider />
           <SheetActionCreateSheetLink sheetId={sheetId}/>
         </>
       }
       <Divider />
+      {!isDemoUser &&
+        <SheetActionUploadCsv/>
+      }
       <SheetActionDownloadCsv sheetId={sheetId}/>
     </Container>
   )

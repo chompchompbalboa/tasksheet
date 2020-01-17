@@ -42,6 +42,7 @@ const SheetActionSheetViews = ({
       closeDropdown={() => setIsDropdownVisible(false)}
       containerWidth="9.5rem"
       isDropdownVisible={isDropdownVisible}
+      marginLeft="0"
       onClick={() => setIsDropdownVisible(true)}
       openDropdown={() => setIsDropdownVisible(true)}
       text={sheetActiveSheetViewId && allSheetViews[sheetActiveSheetViewId] && allSheetViews[sheetActiveSheetViewId].name ? allSheetViews[sheetActiveSheetViewId].name : 'Views'}
