@@ -24,7 +24,7 @@ export const addSheetColumnAllCellValue = (columnId: ISheetColumn['id'], value: 
       }
     } = getState().sheet
 
-    const nextSheetColumnAllCellValues = new Set([ ...sheetColumnAllCellValues, value ])
+    const nextSheetColumnAllCellValues = new Set([ ...sheetColumnAllCellValues, value.trim() ])
 
     dispatch(updateSheetColumn(columnId, { allCellValues: nextSheetColumnAllCellValues }, null, true))
 	}
