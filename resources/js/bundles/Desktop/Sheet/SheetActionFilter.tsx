@@ -132,7 +132,7 @@ const SheetActionFilter = ({
             id: validCellValue,
             value: validColumn.name + ' ' + (filterType || filterFilterType) + ' ' + validCellValue
           }
-        }).sort((a, b) => b.value.localeCompare(a.value))
+        }).sort((a, b) => b.value.localeCompare(a.value, undefined, { numeric: true }))
       }
     }
     // Filter the available dropdown options to only display ones the current input value matches
