@@ -112,6 +112,7 @@ export const createSheetRows = (
           visibleRowLeaders: nextSheetRowLeaders,
           rows: nextSheetRows,
           visibleRows: nextSheetVisibleRows,
+          selections: sheet.selections
         }, true))
         sheet.sourceSheetId && dispatch(updateSheet(sheet.sourceSheetId, {
           rows: nextSheetRows
@@ -133,7 +134,8 @@ export const createSheetRows = (
         dispatch(updateSheet(sheetId, {
           visibleRowLeaders: sheet.visibleRowLeaders,
           rows: sheet.rows,
-          visibleRows: sheet.visibleRows
+          visibleRows: sheet.visibleRows,
+          selections: sheet.selections
         }, true))
         sheet.sourceSheetId && dispatch(updateSheet(sheet.sourceSheetId, {
           rows: sheet.rows
