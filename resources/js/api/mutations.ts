@@ -265,6 +265,12 @@ export const deleteSheetFilter = async (filterId: string) => {
 	}).catch(console.log.bind(console))
 }
 
+export const restoreSheetFilter = async (filterId: ISheetFilter['id']) => {
+	return axios.post('/app/sheets/filters/restore/' + filterId).then(response => {
+		return response.data
+	}).catch(console.log.bind(console))
+}
+
 export const createSheetGroup = async (group: ISheetGroup) => {
 	return axios.post('/app/sheets/groups', group).then(response => {
 		return response.data

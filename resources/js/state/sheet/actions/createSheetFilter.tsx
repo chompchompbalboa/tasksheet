@@ -14,6 +14,7 @@ import {
   updateSheet,
   updateSheetView
 } from '@/state/sheet/actions'
+import { createHistoryStep } from '@/state/history/actions'
 
 import { 
   resolveSheetRowLeaders,
@@ -62,19 +63,43 @@ export const createSheetFilter = (sheetId: string, newFilter: ISheetFilter): ITh
     )
     const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
 
-    batch(() => {
-      dispatch(clearSheetSelection(sheetId))
-      dispatch(setAllSheetFilters(nextAllSheetFilters))
-      dispatch(updateSheet(sheetId, {
-        visibleRows: nextSheetVisibleRows,
-        visibleRowLeaders: nextSheetVisibleRowLeaders,
-      }, true))
-      dispatch(updateSheetView(activeSheetView.id, {
-        filters: nextSheetViewFilters
-      }, true))
-    })
+    const actions = (isHistoryStep: boolean = false) => {
+      batch(() => {
+        dispatch(clearSheetSelection(sheetId))
+        dispatch(setAllSheetFilters(nextAllSheetFilters))
+        dispatch(updateSheet(sheetId, {
+          visibleRows: nextSheetVisibleRows,
+          visibleRowLeaders: nextSheetVisibleRowLeaders,
+        }, true))
+        dispatch(updateSheetView(activeSheetView.id, {
+          filters: nextSheetViewFilters
+        }, true))
+      })
+      if(!isHistoryStep) {
+        mutation.createSheetFilter(newFilter)
+      }
+      else {
+        mutation.restoreSheetFilter(newFilter.id)
+      }
+    }
 
-    mutation.createSheetFilter(newFilter)
+    const undoActions = () => {
+      batch(() => {
+        dispatch(clearSheetSelection(sheetId))
+        dispatch(setAllSheetFilters(allSheetFilters))
+        dispatch(updateSheet(sheetId, {
+          visibleRows: sheet.visibleRows,
+          visibleRowLeaders: sheet.visibleRowLeaders,
+        }, true))
+        dispatch(updateSheetView(activeSheetView.id, {
+          filters: activeSheetView.filters
+        }, true))
+      })
+  
+      mutation.deleteSheetFilter(newFilter.id)
+    }
 
+    dispatch(createHistoryStep({ actions, undoActions }))
+    actions()
   }
 }

@@ -70,6 +70,7 @@ Route::group([
   Route::post('/folders/restore/{folder}', 'FolderController@restore');
   Route::post('/files/restore/{file}', 'FileController@restore');
   Route::post('/sheets/columns/restore/{column}', 'SheetColumnController@restore');
+  Route::post('/sheets/filters/restore/{filter}', 'SheetFilterController@restore');
   Route::post('/sheets/rows/restore', 'SheetRowController@restore');
 
   // Batch actions

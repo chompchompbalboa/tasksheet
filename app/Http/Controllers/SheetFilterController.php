@@ -18,4 +18,14 @@ class SheetFilterController extends Controller
       $filter->delete();
       return response()->json(null, 204);
     }
+
+    public function restore(string $filterId)
+    {
+      $filter = SheetFilter::withTrashed()->where('id', $filterId)->first();
+      if($filter) {
+        $filter->restore();
+        return response()->json(true, 200);
+      }
+      return response()->json(false, 404);
+    }
 }
