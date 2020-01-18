@@ -97,7 +97,7 @@ const SheetCreateRows = ({
           ref={autosizeInput}
           value={inputValue === 0 ? '' : inputValue}
           onBlur={() => handleAutosizeInputBlur()}
-          onChange={e => setInputValue(Math.min(Number(e.target.value), 25))}
+          onChange={e => !isNaN(Number(e.target.value)) && setInputValue(Math.min(Number(e.target.value), 25))}
           onFocus={() => handleAutosizeInputFocus()}
           inputStyle={{
             padding: '0.4rem 0.5rem',
