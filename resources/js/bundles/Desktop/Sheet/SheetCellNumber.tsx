@@ -46,9 +46,7 @@ const SheetCellNumber = ({
   
   // Begin Editing
   const beginEditing = (value: string = null) => {
-    console.log(value)
     const nextSheetCellValue = value === null ? cell.value : value
-    console.log(nextSheetCellValue)
     setSheetCellPreviousValue(cell.value)
     dispatch(updateSheet(sheetId, { isCellEditing: true }, true))
     if(isCellInRange) {
@@ -88,7 +86,7 @@ const SheetCellNumber = ({
       dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }, null, true))
     }
   }
-console.log(cell.value)
+  
   return (
     <SheetCellContainer
       testId="SheetCellNumber"
