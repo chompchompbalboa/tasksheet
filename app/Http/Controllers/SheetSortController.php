@@ -24,4 +24,14 @@ class SheetSortController extends Controller
       $sort->delete();
       return response()->json(null, 204);
     }
+
+    public function restore(string $sortId)
+    {
+      $sort = SheetSort::withTrashed()->where('id', $sortId)->first();
+      if($sort) {
+        $sort->restore();
+        return response()->json(true, 200);
+      }
+      return response()->json(false, 404);
+    }
 }

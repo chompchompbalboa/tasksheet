@@ -14,6 +14,7 @@ import {
   updateSheet,
   updateSheetView
 } from '@/state/sheet/actions'
+import { createHistoryStep } from '@/state/history/actions'
 
 import { 
   resolveSheetRowLeaders,
@@ -63,17 +64,37 @@ export const deleteSheetGroup = (sheetId: string, groupId: string): IThunkAction
       )
     const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
 
-    batch(() => {
-      dispatch(clearSheetSelection(sheetId))
-      dispatch(setAllSheetGroups(nextAllSheetGroups))
-      dispatch(updateSheet(sheetId, {
-        visibleRows: nextSheetVisibleRows,
-        visibleRowLeaders: nextSheetVisibleRowLeaders
-      }))
-      dispatch(updateSheetView(activeSheetView.id, {
-        groups: nextSheetViewGroups
-      }))
-    })
-    mutation.deleteSheetGroup(groupId)
+    const actions = () => {
+      batch(() => {
+        dispatch(clearSheetSelection(sheetId))
+        dispatch(setAllSheetGroups(nextAllSheetGroups))
+        dispatch(updateSheet(sheetId, {
+          visibleRows: nextSheetVisibleRows,
+          visibleRowLeaders: nextSheetVisibleRowLeaders
+        }, true))
+        dispatch(updateSheetView(activeSheetView.id, {
+          groups: nextSheetViewGroups
+        }, true))
+      })
+      mutation.deleteSheetGroup(groupId)
+    }
+
+    const undoActions = () => {
+      batch(() => {
+        dispatch(clearSheetSelection(sheetId))
+        dispatch(setAllSheetGroups(allSheetGroups))
+        dispatch(updateSheet(sheetId, {
+          visibleRows: sheet.visibleRows,
+          visibleRowLeaders: sheet.visibleRowLeaders
+        }, true))
+        dispatch(updateSheetView(activeSheetView.id, {
+          groups: activeSheetView.groups
+        }, true))
+      })
+      mutation.restoreSheetGroup(groupId)
+    }
+
+    dispatch(createHistoryStep({ actions, undoActions }))
+    actions()
 	}
 }

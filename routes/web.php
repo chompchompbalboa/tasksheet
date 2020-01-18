@@ -70,8 +70,10 @@ Route::group([
   Route::post('/folders/restore/{folder}', 'FolderController@restore');
   Route::post('/files/restore/{file}', 'FileController@restore');
   Route::post('/sheets/columns/restore/{column}', 'SheetColumnController@restore');
-  Route::post('/sheets/filters/restore/{filter}', 'SheetFilterController@restore');
   Route::post('/sheets/rows/restore', 'SheetRowController@restore');
+  Route::post('/sheets/filters/restore/{filter}', 'SheetFilterController@restore');
+  Route::post('/sheets/groups/restore/{group}', 'SheetGroupController@restore');
+  Route::post('/sheets/sorts/restore/{sort}', 'SheetSortController@restore');
 
   // Batch actions
   Route::patch('/sheets/cells/batch/update', 'SheetCellController@batchUpdate');

@@ -24,4 +24,14 @@ class SheetGroupController extends Controller
       $group->delete();
       return response()->json(null, 204);
     }
+
+    public function restore(string $groupId)
+    {
+      $group = SheetGroup::withTrashed()->where('id', $groupId)->first();
+      if($group) {
+        $group->restore();
+        return response()->json(true, 200);
+      }
+      return response()->json(false, 404);
+    }
 }

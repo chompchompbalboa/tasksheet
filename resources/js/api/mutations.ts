@@ -283,6 +283,12 @@ export const deleteSheetGroup = async (groupId: string) => {
 	}).catch(console.log.bind(console))
 }
 
+export const restoreSheetGroup = async (groupId: ISheetGroup['id']) => {
+	return axios.post('/app/sheets/groups/restore/' + groupId).then(response => {
+		return response.data
+	}).catch(console.log.bind(console))
+}
+
 export const updateSheetGroup = async (id: string, updates: ISheetGroupUpdates) => {
 	return axios.patch('/app/sheets/groups/' + id, updates).then(response => {
 		return response.data
@@ -316,7 +322,6 @@ export const restoreSheetRows = async (rowIds: ISheetRow['id'][], cellIds: IShee
 	}).catch(console.log.bind(console))
 }
 
-
 export const createSheetSort = async (sort: ISheetSort) => {
 	return axios.post('/app/sheets/sorts', sort).then(response => {
 		return response.data
@@ -325,6 +330,12 @@ export const createSheetSort = async (sort: ISheetSort) => {
 
 export const deleteSheetSort = async (sortId: string) => {
 	return axios.delete('/app/sheets/sorts/' + sortId).then(response => {
+		return response.data
+	}).catch(console.log.bind(console))
+}
+
+export const restoreSheetSort = async (sortId: ISheetSort['id']) => {
+	return axios.post('/app/sheets/sorts/restore/' + sortId).then(response => {
 		return response.data
 	}).catch(console.log.bind(console))
 }
