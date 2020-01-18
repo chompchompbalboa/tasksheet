@@ -18,7 +18,6 @@ import {
 
 import { createHistoryStep } from '@/state/history/actions'
 import { 
-  clearSheetSelection,
   setAllSheetCells,
   setAllSheetColumns,
   setAllSheetRows,
@@ -34,8 +33,6 @@ import { defaultCell, defaultColumn } from '@/state/sheet/defaults'
 export const createSheetColumn = (sheetId: ISheet['id'], newColumnVisibleColumnsIndex: number): IThunkAction => {
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
 
-    dispatch(clearSheetSelection(sheetId))
-
     const {
       allSheets,
       allSheetColumns,
@@ -44,25 +41,29 @@ export const createSheetColumn = (sheetId: ISheet['id'], newColumnVisibleColumns
       allSheetViews
     } = getState().sheet
 
+    // Variables
     const sheet = allSheets[sheetId]
     const activeSheetView = allSheetViews[sheet.activeSheetViewId]
     const sheetViewVisibleColumns = activeSheetView.visibleColumns.length === 0 ? clone(sheet.columns) : clone(activeSheetView.visibleColumns)
-
     const newColumn = defaultColumn(sheetId)
     const newCells: ISheetCell[] = []
+    const nextAllSheetCells: IAllSheetCells = clone(allSheetCells)
+    const nextAllSheetRows: IAllSheetRows = clone(allSheetRows)
 
+    // Get the next sheet visible columns
     const nextSheetVisibleColumns = [
       ...sheetViewVisibleColumns.slice(0, newColumnVisibleColumnsIndex),
       newColumn.id,
       ...sheetViewVisibleColumns.slice(newColumnVisibleColumnsIndex)
     ]
+
+    // Get the next sheet columns
     const nextSheetColumns = [
       ...sheet.columns,
       newColumn.id
     ]
-    const nextAllSheetCells: IAllSheetCells = clone(allSheetCells)
-    const nextAllSheetRows: IAllSheetRows = clone(allSheetRows)
 
+    // Create the new cells for each row
     sheet.rows.forEach(rowId => {
       const newCell = defaultCell(sheetId, rowId, newColumn.id, createUuid())
       nextAllSheetCells[newCell.id] = newCell
@@ -70,30 +71,39 @@ export const createSheetColumn = (sheetId: ISheet['id'], newColumnVisibleColumns
       newCells.push(newCell)
     })
 
-    const actions = () => {
+    // Actions
+    const actions = (isHistoryStep: boolean = false) => {
       batch(() => {
         dispatch(setAllSheetColumns({
           ...allSheetColumns,
           [newColumn.id]: newColumn
         }))
         dispatch(updateSheet(sheetId, {
-          columns: nextSheetColumns
-        }))
+          columns: nextSheetColumns,
+          selections: sheet.selections
+        }, true))
         dispatch(updateSheetView(activeSheetView.id, {
           visibleColumns: nextSheetVisibleColumns
         }))
         dispatch(setAllSheetCells(nextAllSheetCells))
         dispatch(setAllSheetRows(nextAllSheetRows))
       })
-      mutation.createSheetColumn(newColumn, newCells)
+      if(!isHistoryStep) {
+        mutation.createSheetColumn(newColumn, newCells)
+      }
+      else {
+        mutation.restoreSheetColumn(newColumn.id)
+      }
     }
 
+    // Undo Actions
     const undoActions = () => {
       batch(() => {
         dispatch(setAllSheetColumns(allSheetColumns))
         dispatch(updateSheet(sheetId, {
-          columns: sheet.columns
-        }))
+          columns: sheet.columns,
+          selections: sheet.selections
+        }, true))
         dispatch(updateSheetView(activeSheetView.id, {
           visibleColumns: sheetViewVisibleColumns
         }))
@@ -103,8 +113,8 @@ export const createSheetColumn = (sheetId: ISheet['id'], newColumnVisibleColumns
       mutation.deleteSheetColumn(newColumn.id)
     }
 
+    // Dispatch the history step and call the actions
     dispatch(createHistoryStep({actions, undoActions}))
-
     actions()
   }
 }
