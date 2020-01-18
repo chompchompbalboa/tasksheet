@@ -38,8 +38,13 @@ export const deleteSheetRows = (sheetId: ISheet['id'], rowId: ISheetRow['id']): 
     let cellIdsToDelete: ISheetCell['id'][] = []
     
     
-    const firstSelectedRowIdVisibleRowsIndex = sheetVisibleRows.indexOf(sheetSelections.rangeStartRowId)
-    const lastSelectedRowIdVisibleRowsIndex = sheetVisibleRows.indexOf(sheetSelections.rangeEndRowId)
+    const firstSelectedRowIdVisibleRowsIndex = sheetVisibleRows.indexOf(sheetSelections.rangeStartRowId) > -1
+      ? sheetVisibleRows.indexOf(sheetSelections.rangeStartRowId)
+      : sheetVisibleRows.indexOf(rowId)
+    
+    const lastSelectedRowIdVisibleRowsIndex = sheetVisibleRows.indexOf(sheetSelections.rangeEndRowId) > -1
+      ? sheetVisibleRows.indexOf(sheetSelections.rangeEndRowId)
+      : sheetVisibleRows.indexOf(rowId)
     
     if(lastSelectedRowIdVisibleRowsIndex > -1) {
       for(let currentIndex = firstSelectedRowIdVisibleRowsIndex; currentIndex <= lastSelectedRowIdVisibleRowsIndex; currentIndex++) {
@@ -64,10 +69,12 @@ export const deleteSheetRows = (sheetId: ISheet['id'], rowId: ISheetRow['id']): 
       }
     })
     
-    const nextSheetVisibleRows = [ 
-      ...([ ...sheetVisibleRows ].splice(0, firstSelectedRowIdVisibleRowsIndex)),
-      ...([ ...sheetVisibleRows ].slice(lastSelectedRowIdVisibleRowsIndex + 1)) 
-    ]
+    const nextSheetVisibleRows = sheetVisibleRows.map((visibleRowId, index) => {
+      if(index < firstSelectedRowIdVisibleRowsIndex || index > lastSelectedRowIdVisibleRowsIndex) {
+        return visibleRowId
+      }
+    }).filter(Boolean)
+
     const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
 
     const actions = () => {
