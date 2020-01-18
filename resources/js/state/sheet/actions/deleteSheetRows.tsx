@@ -32,12 +32,12 @@ export const deleteSheetRows = (sheetId: ISheet['id'], rowId: ISheetRow['id']): 
       allSheetRows
     } = getState().sheet
     
-    //const sheetRowsForUndoActionsDatabaseUpdate: ISheetRowToDatabase[] = []
+    // Variables
     let nextSheetRows = [ ...sheetRows ]
     let rowIdsToDelete: ISheetRow['id'][] = []
     let cellIdsToDelete: ISheetCell['id'][] = []
     
-    
+    // Get the index of the first and last rows to delete
     const firstSelectedRowIdVisibleRowsIndex = sheetVisibleRows.indexOf(sheetSelections.rangeStartRowId) > -1
       ? sheetVisibleRows.indexOf(sheetSelections.rangeStartRowId)
       : sheetVisibleRows.indexOf(rowId)
@@ -46,6 +46,7 @@ export const deleteSheetRows = (sheetId: ISheet['id'], rowId: ISheetRow['id']): 
       ? sheetVisibleRows.indexOf(sheetSelections.rangeEndRowId)
       : sheetVisibleRows.indexOf(rowId)
     
+    // Get the ids for the rows that will be deleted
     if(lastSelectedRowIdVisibleRowsIndex > -1) {
       for(let currentIndex = firstSelectedRowIdVisibleRowsIndex; currentIndex <= lastSelectedRowIdVisibleRowsIndex; currentIndex++) {
         const currentRowId = sheetVisibleRows[currentIndex]
@@ -58,6 +59,7 @@ export const deleteSheetRows = (sheetId: ISheet['id'], rowId: ISheetRow['id']): 
       rowIdsToDelete.push(rowId)
     }
     
+    // Get the ids for the cells that will be deleted
     rowIdsToDelete.forEach(rowIdToDelete => {
       const sheetRow = allSheetRows[rowIdToDelete]
       if(sheetRow) {
@@ -69,14 +71,17 @@ export const deleteSheetRows = (sheetId: ISheet['id'], rowId: ISheetRow['id']): 
       }
     })
     
+    // Remove the deleted rows from the visible rows
     const nextSheetVisibleRows = sheetVisibleRows.map((visibleRowId, index) => {
       if(index < firstSelectedRowIdVisibleRowsIndex || index > lastSelectedRowIdVisibleRowsIndex) {
         return visibleRowId
       }
     }).filter(Boolean)
 
+    // Calculate the next row leaders
     const nextSheetVisibleRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
 
+    // Actions
     const actions = () => {
       batch(() => {
         dispatch(updateSheet(sheetId, {
@@ -88,6 +93,7 @@ export const deleteSheetRows = (sheetId: ISheet['id'], rowId: ISheetRow['id']): 
       mutation.deleteSheetRows(rowIdsToDelete)
     }
     
+    // Undo Actions
     const undoActions = () => {
       batch(() => {
         dispatch(updateSheet(sheetId, {
@@ -98,6 +104,8 @@ export const deleteSheetRows = (sheetId: ISheet['id'], rowId: ISheetRow['id']): 
       })
       mutation.restoreSheetRows(rowIdsToDelete, cellIdsToDelete)
     }
+
+    // Create the history step and call the actions
     dispatch(createHistoryStep({ actions, undoActions }))
     actions()
 	}

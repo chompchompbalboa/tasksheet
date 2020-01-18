@@ -15,7 +15,6 @@ import {
 } from '@/state/sheet/types'
 
 import { 
-  clearSheetSelection,
   setAllSheetCells,
   setAllSheetRows,
   updateSheet
@@ -33,12 +32,9 @@ export const createSheetRows = (
   sheetId: string, 
   numberOfRowsToAdd: number, 
   insertAtRowId: ISheetRow['id'], 
-  aboveOrBelow: 'ABOVE' | 'BELOW' = 'ABOVE',
-  keepSheetSelection: boolean = false
+  aboveOrBelow: 'ABOVE' | 'BELOW' = 'ABOVE'
 ): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
-
-    !keepSheetSelection && dispatch(clearSheetSelection(sheetId))
     
     const {
       allSheets,
@@ -57,6 +53,7 @@ export const createSheetRows = (
     const nextSheetVisibleRows = [ ...sheet.visibleRows ]
     const newRowsToDatabase: ISheetRowToDatabase[] = []
     const newRowIds: ISheetRow['id'][] = []
+    const newCellIds: ISheetCell['id'][] = []
     
     // Get any open sheets this is a source sheet for
     const childSheets: ISheet['id'][] = []
@@ -78,8 +75,7 @@ export const createSheetRows = (
     // Get the correct sheetId for the new rows
     const newRowSheetId = sheet.sourceSheetId !== null ? sheet.sourceSheetId : sheetId
     
-    // If the rows belong to a group, get all the unique column values for that group
-    // and set the default value for those columns to that unique value
+    // Get the unique column values for the group the row belongs to
     let columnCellValues: { [columnId: string]: Set<string> } = {}
     activeSheetView.visibleColumns.forEach(columnId => {
       columnCellValues[columnId] = new Set() as Set<string>
@@ -104,9 +100,7 @@ export const createSheetRows = (
         groupEndIndex++
       }
     }
-
-    // Loop through each of the group rows and add the cell values to the columnCellValues
-    for(let i = groupStartIndex; i <= groupEndIndex; i++) {
+    for(let i = groupStartIndex; i <= groupEndIndex; i++) { // Loop through each of the group rows and add the cell values to the columnCellValues
       const currentRowId = sheet.visibleRows[i]
       if(currentRowId !== 'ROW_BREAK') {
         const currentRow = allSheetRows[currentRowId]
@@ -116,10 +110,8 @@ export const createSheetRows = (
         })
       }
     }
-    
-    // Find the columns with a unique value
     let columnsWithUniqueValue: { [columnId: string]: string } = {}
-    Object.keys(columnCellValues).forEach(columnId => {
+    Object.keys(columnCellValues).forEach(columnId => { // Find the columns with a unique value
       const currentColumn = allSheetColumns[columnId]
       const currentColumnValues =  columnCellValues[columnId]
       if(currentColumnValues.size === 1 && !['FILES', 'PHOTOS'].includes(currentColumn.cellType)) {
@@ -138,6 +130,7 @@ export const createSheetRows = (
         const newCell = defaultCell(sheetId, newRow.id, columnId, cellId, columnDefaultValue)
         nextAllSheetCells[cellId] = newCell
         newRowCellsToDatabase.push(newCell)
+        newCellIds.push(newCell.id)
       })
       nextAllSheetRows[newRow.id] = newRow
       nextSheetRows.push(newRow.id)
@@ -155,7 +148,7 @@ export const createSheetRows = (
     const nextSheetRowLeaders = resolveSheetRowLeaders(nextSheetVisibleRows)
 
     // Actions
-    const actions = () => {
+    const actions = (isHistoryStep: boolean = false) => {
       batch(() => {
         dispatch(setAllSheetCells(nextAllSheetCells))
         dispatch(setAllSheetRows(nextAllSheetRows))
@@ -174,7 +167,12 @@ export const createSheetRows = (
           }, true))
         })
       })
-      mutation.createSheetRows(newRowsToDatabase)
+      if(!isHistoryStep) {
+        mutation.createSheetRows(newRowsToDatabase)
+      }
+      else {
+        mutation.restoreSheetRows(newRowIds, newCellIds)
+      }
     }
 
     // Undo actions

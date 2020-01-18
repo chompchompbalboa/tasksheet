@@ -63,8 +63,7 @@ const SheetCreateRows = ({
         sheetId, 
         inputValue, 
         sheetSelections.rangeStartRowId, 
-        aboveOrBelow === 'ABOVE' ? 'ABOVE' : 'BELOW',
-        true
+        aboveOrBelow === 'ABOVE' ? 'ABOVE' : 'BELOW'
       ))
     }, 10)
   }
