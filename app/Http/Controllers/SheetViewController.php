@@ -77,15 +77,41 @@ class SheetViewController extends Controller
 
     public function restore(string $sheetViewId)
     {
+      // Get the sheet view
       $sheetView = SheetView::withTrashed()
                 ->where('id', $sheetViewId)
                 ->first();
 
+      // Make sure the sheet view exists
       if($sheetView) {
+        
+        // Get the deleted at timestamp before restoring the sheet view
+        // We need to query the related models by the deleted_at timestamp
+        // to ensure that we're not restoring items that were deleted prior
+        // to the sheet view being deleted
+        $deletedAt = $sheetView->deleted_at->toDateTimeString();
+
+        // Restore the sheet view
         $sheetView->restore();
-        SheetFilter::withTrashed()->where('sheetViewId', $sheetViewId)->restore();
-        SheetGroup::withTrashed()->where('sheetViewId', $sheetViewId)->restore();
-        SheetSort::withTrashed()->where('sheetViewId', $sheetViewId)->restore();
+
+        // Restore the filters
+        SheetFilter::withTrashed()
+          ->where('columnId', $columnId)
+          ->where('deleted_at', $deletedAt)
+          ->restore();
+
+        // Restore the groups
+        SheetGroup::withTrashed()
+          ->where('columnId', $columnId)
+          ->where('deleted_at', $deletedAt)
+          ->restore();
+
+        // Restore the sorts
+        SheetSort::withTrashed()
+          ->where('columnId', $columnId)
+          ->where('deleted_at', $deletedAt)
+          ->restore();
+          
         return response()->json(true, 200);
       }
       return response()->json(false, 404);

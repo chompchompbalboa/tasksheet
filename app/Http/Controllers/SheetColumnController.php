@@ -51,26 +51,46 @@ class SheetColumnController extends Controller
 
     public function restore(string $columnId)
     {
-      // Get the deleted column
+      // Get the column
       $column = SheetColumn::withTrashed()
                 ->where('id', $columnId)
                 ->first();
 
+      // Make sure the column exists
       if($column) {
+        
+        // Get the deleted at timestamp before restoring the column
+        // We need to query the related models by the deleted_at timestamp
+        // to ensure that we're not restoring items that were deleted prior
+        // to the column being deleted
+        $deletedAt = $column->deleted_at->toDateTimeString();
+
         // Restore the column
         $column->restore();
 
-        // Restore the cells
-        SheetCell::withTrashed()->where('columnId', $columnId)->restore();
+        // Restore the cells 
+        SheetCell::withTrashed()
+          ->where('columnId', $columnId)
+          ->where('deleted_at', $deletedAt)
+          ->restore();
 
         // Restore the filters
-        SheetFilter::withTrashed()->where('columnId', $columnId)->restore();
+        SheetFilter::withTrashed()
+          ->where('columnId', $columnId)
+          ->where('deleted_at', $deletedAt)
+          ->restore();
 
         // Restore the groups
-        SheetGroup::withTrashed()->where('columnId', $columnId)->restore();
+        SheetGroup::withTrashed()
+          ->where('columnId', $columnId)
+          ->where('deleted_at', $deletedAt)
+          ->restore();
 
         // Restore the sorts
-        SheetSort::withTrashed()->where('columnId', $columnId)->restore();
+        SheetSort::withTrashed()
+          ->where('columnId', $columnId)
+          ->where('deleted_at', $deletedAt)
+          ->restore();
 
         return response()->json(true, 200);
       }
