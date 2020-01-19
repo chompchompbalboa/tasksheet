@@ -80,11 +80,10 @@ export const SheetHeader = ({
   
   // Handle Container Mouse Down
   const handleContainerMouseDown = (e: MouseEvent) => {
-    if(e.shiftKey && !isRenaming) {
+    if(!isColumnBreak && e.shiftKey && !isRenaming) {
       dispatch(selectSheetColumns(sheetId, rangeStartColumnId, sheetColumn.id))
     }
-    else if (!isRenaming) {
-
+    else if (!isColumnBreak && !isRenaming) {
       dispatch(selectSheetColumns(sheetId, sheetColumn.id))
     } 
   }
