@@ -145,15 +145,18 @@ export const resolveSheetVisibleRows = (
       return true
     }) 
 
-    // If there's a search value, does one of the cell values contain the search value?
-    const doesRowPassSearchValue = 
-      activeSheetView.searchValue === '' || activeSheetView.searchValue === null
-        ? true
-        : Object.values(row.cells)
-            .map(cellId => allSheetCells[cellId].value ? allSheetCells[cellId].value : '')
-            .join('')
-            .toLocaleLowerCase()
-            .includes(activeSheetView.searchValue.toLocaleLowerCase())
+    // If all the filters pass and if there's a search value, does one of the cell values contain the search value?
+    let doesRowPassSearchValue = false
+    if(doesRowPassFilters) {
+      doesRowPassSearchValue = 
+        activeSheetView.searchValue === '' || activeSheetView.searchValue === null
+          ? true
+          : Object.values(row.cells)
+              .map(cellId => allSheetCells[cellId].value ? allSheetCells[cellId].value : '')
+              .join('')
+              .toLocaleLowerCase()
+              .includes(activeSheetView.searchValue.toLocaleLowerCase())
+    }
 
     return doesRowPassFilters && doesRowPassSearchValue ? row.id : undefined
 
@@ -170,8 +173,11 @@ export const resolveSheetVisibleRows = (
       }
       return ''
     }
-  })
-  const sortOrder = sortIds && sortIds.map(sortId => allSheetSorts[sortId].order === 'ASC' ? 'asc' : 'desc')
+  }) 
+  // TODO: figure out why the sort order needs to be flipped for the rows to sort correctly?? 
+  // Flipping the sort order in the following ternary leads to the rows being displayed in the 
+  // correct order but I don't understand why.
+  const sortOrder = sortIds && sortIds.map(sortId => allSheetSorts[sortId].order === 'ASC' ? 'desc' : 'asc')
   const filteredSortedRowIds = orderBy(filteredRowIds, sortByValue, sortOrder)
 
   // Group

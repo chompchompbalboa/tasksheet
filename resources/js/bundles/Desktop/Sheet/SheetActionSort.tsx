@@ -58,7 +58,7 @@ const SheetActionSort = ({
       sheetId: sheetActiveSheetViewId ? null : sheetId,
       sheetViewId: sheetActiveSheetViewId, 
       columnId: selectedOption.value, 
-      order: 'ASC', 
+      order: 'ASC',
       isLocked: false 
     }
   }
