@@ -33,24 +33,23 @@ export const updateSheetCellPriorities = (sheetId: ISheet['id'], sheetPriorityId
       allSheetPriorities
     } = getState().sheet
 
+    // Variables
     const selectedCellId = sheetSelections.rangeStartCellId
-
     let nextSheetCellPriorities = { ...sheetCellPriorities }
     const newSheetCellPrioritiesToDatabase: ISheetCellPriority[] = []
     const newSheetCellPrioritiesIds: ISheetCellPriority['id'][] = []
-      
     const nextSheetStylesBackgroundColor = new Set(sheetStyles.backgroundColor)
     const nextSheetStylesBackgroundColorReference = { ...sheetStyles.backgroundColorReference }
     const nextSheetStylesColor = new Set(sheetStyles.color)
     const nextSheetStylesColorReference = { ...sheetStyles.colorReference }
-    
-    let actions: () => void, undoActions: () => void
 
+    // If we are adding priority to the selected cells
     if(sheetPriorityId) {
 
+      // Get the currently selected sheet priority
       const sheetPriority = allSheetPriorities[sheetPriorityId]
   
-      // Selected cell
+      // Assign priority to the selected cell, updating the sheet styles as well
       const newSheetCellPriority: ISheetCellPriority = {
         id: nextSheetCellPriorities[selectedCellId] ? nextSheetCellPriorities[selectedCellId].id : createUuid(),
         sheetId: sheetId,
@@ -60,16 +59,15 @@ export const updateSheetCellPriorities = (sheetId: ISheet['id'], sheetPriorityId
       nextSheetCellPriorities[selectedCellId] = newSheetCellPriority
       newSheetCellPrioritiesToDatabase.push(newSheetCellPriority)
       newSheetCellPrioritiesIds.push(newSheetCellPriority.id)
-
       nextSheetStylesBackgroundColor.add(selectedCellId)
       nextSheetStylesBackgroundColorReference[selectedCellId] = sheetPriority.backgroundColor
       nextSheetStylesColor.add(selectedCellId)
       nextSheetStylesColorReference[selectedCellId] = sheetPriority.color
   
-      // Selected range
+      // Assign priority to the cells in the selected range
       sheetSelections.rangeCellIds.forEach(sheetCellId => {
-        if(sheetCellId !== selectedCellId) {
-          // Priorities
+        if(sheetCellId !== selectedCellId) { // Skip the currently selected cell since we just assigned priority to it
+          // Assign priority to the current cell, updating the sheet styles as well 
           const newSheetCellPriority: ISheetCellPriority = {
             id: nextSheetCellPriorities[sheetCellId] ? nextSheetCellPriorities[sheetCellId].id : createUuid(),
             sheetId: sheetId,
@@ -79,7 +77,6 @@ export const updateSheetCellPriorities = (sheetId: ISheet['id'], sheetPriorityId
           nextSheetCellPriorities[sheetCellId] = newSheetCellPriority
           newSheetCellPrioritiesToDatabase.push(newSheetCellPriority)
           newSheetCellPrioritiesIds.push(newSheetCellPriority.id)
-          // Sheet Styles
           nextSheetStylesBackgroundColor.add(sheetCellId)
           nextSheetStylesBackgroundColorReference[sheetCellId] = sheetPriority.backgroundColor
           nextSheetStylesColor.add(sheetCellId)
@@ -87,38 +84,50 @@ export const updateSheetCellPriorities = (sheetId: ISheet['id'], sheetPriorityId
         }
       })
       
-      actions = () => {
+      // Actions
+      const actions = (isHistoryStep: boolean = false) => {
         dispatch(updateSheet(sheetId, {
           cellPriorities: nextSheetCellPriorities
         }, true))
-
         dispatch(updateSheetStyles(sheetId, {
           ...sheetStyles,
           backgroundColor: nextSheetStylesBackgroundColor,
           backgroundColorReference: nextSheetStylesBackgroundColorReference
         }, true))
-
-        mutation.createSheetCellPriorities(newSheetCellPrioritiesToDatabase)
+        if(!isHistoryStep) {
+          mutation.createSheetCellPriorities(newSheetCellPrioritiesToDatabase)
+        }
+        else {
+          mutation.restoreSheetCellPriorities(newSheetCellPrioritiesIds)
+        }
       }
       
-      undoActions = () => {
+      // Undo Actions
+      const undoActions = () => {
         dispatch(updateSheet(sheetId, {
           cellPriorities: sheetCellPriorities
         }, true))
-
         dispatch(updateSheetStyles(sheetId, sheetStyles, true))
-
         mutation.deleteSheetCellPriorities(newSheetCellPrioritiesIds)
       }
+
+      // Create the history step and call the actions
+      dispatch(createHistoryStep({actions, undoActions}))
+      actions()
     }
+
+    // If we are removing priority from the selected cells
     else {
 
+      // Variables
       const deletedSheetCellPriorities: ISheetCellPriority[] = []
       const sheetCellPriorityIdsToDelete: ISheetCellPriority['id'][] = []
       
+      // Remove any styles from the selected cell
       nextSheetStylesBackgroundColor.delete(selectedCellId)
       nextSheetStylesColor.delete(selectedCellId)
       
+      // If the selected cell has priority, remove it
       if(sheetCellPriorities[selectedCellId]) {
         const sheetCellPriority = sheetCellPriorities[selectedCellId]
         nextSheetCellPriorities = _.omit(nextSheetCellPriorities, selectedCellId)
@@ -126,6 +135,7 @@ export const updateSheetCellPriorities = (sheetId: ISheet['id'], sheetPriorityId
         deletedSheetCellPriorities.push(sheetCellPriority)
       }
 
+      // Remove priority from cells in the range
       sheetSelections.rangeCellIds.forEach(sheetCellId => {
         if(sheetCellId !== selectedCellId) {
           nextSheetStylesBackgroundColor.delete(sheetCellId)
@@ -139,35 +149,32 @@ export const updateSheetCellPriorities = (sheetId: ISheet['id'], sheetPriorityId
         }
       })
       
-      actions = () => {
+      // Actions
+      const actions = () => {
         dispatch(updateSheet(sheetId, {
           cellPriorities: nextSheetCellPriorities
         }, true))
-
         dispatch(updateSheetStyles(sheetId, {
           ...sheetStyles,
           backgroundColor: nextSheetStylesBackgroundColor,
           backgroundColorReference: nextSheetStylesBackgroundColorReference
         }, true))
-        
         mutation.deleteSheetCellPriorities(sheetCellPriorityIdsToDelete)
       }
       
-      undoActions = () => {
-        console.log('undoDeleteSheetCellPriority')
+      // Undo Actions
+      const undoActions = () => {
         dispatch(updateSheet(sheetId, {
           cellPriorities: sheetCellPriorities
         }, true))
-
         dispatch(updateSheetStyles(sheetId, sheetStyles, true))
-        
-        mutation.createSheetCellPriorities(deletedSheetCellPriorities)
+        mutation.restoreSheetCellPriorities(sheetCellPriorityIdsToDelete)
       }
-    }
 
-    dispatch(createHistoryStep({actions, undoActions}))
-    
-    actions()
+      // Create the history step and call the actions
+      dispatch(createHistoryStep({actions, undoActions}))
+      actions()
+    }
 
 	}
 }

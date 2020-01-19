@@ -74,6 +74,7 @@ Route::group([
   Route::post('/sheets/filters/restore/{filter}', 'SheetFilterController@restore');
   Route::post('/sheets/groups/restore/{group}', 'SheetGroupController@restore');
   Route::post('/sheets/sorts/restore/{sort}', 'SheetSortController@restore');
+  Route::post('/sheets/cells/priorities/restore', 'SheetCellPriorityController@restore');
 
   // Batch actions
   Route::patch('/sheets/cells/batch/update', 'SheetCellController@batchUpdate');

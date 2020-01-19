@@ -412,3 +412,11 @@ export const deleteSheetCellPriorities = async (sheetCellPriorityIdsToDelete: IS
 	}).catch(console.log.bind(console))
 }
 
+export const restoreSheetCellPriorities = async (sheetCellPriorityIds: ISheetCellPriority['id'][]) => {
+	return axios.post('/app/sheets/cells/priorities/restore', {
+    sheetCellPriorityIds
+  }).then(response => {
+		return response.data
+	}).catch(console.log.bind(console))
+}
+

@@ -49,6 +49,6 @@ class SheetRowController extends Controller
       // Restore the cells
       SheetCell::withTrashed()->whereIn('id', $cellIds)->restore();
       
-      return response()->json(null, 204);
+      return response()->json(null, 200);
     }
 }
