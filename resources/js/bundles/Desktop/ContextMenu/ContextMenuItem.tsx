@@ -13,6 +13,8 @@ import Icon from '@/components/Icon'
 //-----------------------------------------------------------------------------
 const ContextMenuItem = ({
   children,
+  containerBackgroundColor = 'transparent',
+  containerHoverBackgroundColor = 'rgb(242, 242, 242)',
   decorator = null,
   isFirstItem = false,
   isLastItem = false,
@@ -20,13 +22,15 @@ const ContextMenuItem = ({
   onClick,
   testId = 'ContextMenuItem',
   text
-}: ContextMenuItemProps) => {
+}: IContextMenuItem) => {
   
   const [ isSubItemsVisible, setIsSubItemsVisible ] = useState(false)
 
   return (
     <Container
       data-testid={testId}
+      containerBackgroundColor={containerBackgroundColor}
+      containerHoverBackgroundColor={containerHoverBackgroundColor}
       isFirstItem={isFirstItem}
       isLastItem={isLastItem}
       onClick={onClick}
@@ -49,8 +53,10 @@ const ContextMenuItem = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface ContextMenuItemProps {
+interface IContextMenuItem {
   children?: any
+  containerBackgroundColor?: string
+  containerHoverBackgroundColor?: string
   decorator?: string
   isFirstItem?: boolean
   isLastItem?: boolean
@@ -71,15 +77,18 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: ${ ({ containerBackgroundColor }: IContainer ) => containerBackgroundColor };
   font-size: 1rem;
   transition: background-color 0.05s;
   border-radius: ${ ({ isFirstItem, isLastItem }: IContainer ) => isFirstItem ? '3px 3px 0 0' : (isLastItem ? '0 0 3px 3px' : 'none') };
   &:hover {
-    background-color: rgb(242, 242, 242);
+    background-color: ${ ({ containerHoverBackgroundColor }: IContainer ) => containerHoverBackgroundColor };
   }
 `
 
 interface IContainer {
+  containerBackgroundColor: IContextMenuItem['containerBackgroundColor']
+  containerHoverBackgroundColor: IContextMenuItem['containerHoverBackgroundColor']
   isFirstItem: boolean
   isLastItem: boolean
 }

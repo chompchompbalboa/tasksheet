@@ -111,7 +111,7 @@ export const SheetColumnContextMenu = ({
     const moveFromIndex = sheetViewVisibleColumns.findIndex(sheetVisibleColumnId => sheetVisibleColumnId === moveFromColumnId)
     const nextVisibleColumns = arrayMove(sheetViewVisibleColumns, moveFromIndex, (moveToIndex > moveFromIndex ? moveToIndex - 1 : moveToIndex))
     closeContextMenuOnClick(() => {
-      dispatch(updateSheetView(sheetActiveSheetViewId, { visibleColumns: nextVisibleColumns }))
+      dispatch(updateSheetView(sheetActiveSheetViewId, { visibleColumns: nextVisibleColumns }, false, true))
     })
   }
   
@@ -143,7 +143,9 @@ export const SheetColumnContextMenu = ({
             {sheetViewVisibleColumns.map((sheetColumnId, index) => (
               <ContextMenuItem 
                 key={sheetColumnId === 'COLUMN_BREAK' ? sheetColumnId + index : sheetColumnId}
-                text={sheetColumnId === 'COLUMN_BREAK' ? '-- Column Break --' : allSheetColumns[sheetColumnId].name} 
+                containerBackgroundColor={sheetColumnId === 'COLUMN_BREAK' ? 'rgb(220, 220, 220)' : 'transparent'} 
+                containerHoverBackgroundColor={sheetColumnId === 'COLUMN_BREAK' ? 'rgb(190, 190, 190)' : 'rgb(242, 242, 242)'} 
+                text={sheetColumnId === 'COLUMN_BREAK' ? '' : allSheetColumns[sheetColumnId].name} 
                 onClick={() => handleColumnMoveClick(columnId, index)}/>
             ))}
           </ContextMenuItem>
