@@ -10,12 +10,14 @@ import Icon from '@/components/Icon'
 // Component
 //-----------------------------------------------------------------------------
 const SheetActionButtonDropdownItem = ({
+  cursor = "pointer",
   icon,
   iconSize = "0.88rem",
   onClick,
   isLast = false
 }: ISheetActionButtonDropdownItem) => (
   <Container
+    cursor={cursor}
     isLast={isLast}
     onClick={onClick}>
     <Icon
@@ -28,6 +30,7 @@ const SheetActionButtonDropdownItem = ({
 // Props
 //-----------------------------------------------------------------------------
 interface ISheetActionButtonDropdownItem {
+  cursor?: "pointer" | "not-allowed"
   icon: string
   iconSize?: string
   onClick(...args: any): void
@@ -38,7 +41,7 @@ interface ISheetActionButtonDropdownItem {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  cursor: pointer;
+  cursor: ${ ({ cursor }: IContainer ) => cursor };
   padding: 0 0.125rem;
   margin-right: ${ ({ isLast }: IContainer ) => isLast ? '0' : '0.1875rem' };
   display: flex;
@@ -49,6 +52,7 @@ const Container = styled.div`
   }
 `
 interface IContainer {
+  cursor: ISheetActionButtonDropdownItem['cursor']
   isLast: boolean
 }
 

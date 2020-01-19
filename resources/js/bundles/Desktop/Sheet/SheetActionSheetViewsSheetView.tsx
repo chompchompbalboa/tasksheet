@@ -28,7 +28,8 @@ const SheetActionSheetViewsSheetView = ({
   sheetId,
   sheetViewId,
   closeDropdown,
-  isFirst
+  isFirst,
+  isOnlySheetView
 }: ISheetActionSheetViewsSheetViewProps) => {
 
   const dispatch = useDispatch()
@@ -73,12 +74,10 @@ const SheetActionSheetViewsSheetView = ({
       <SheetActionButtonDropdownItemAction
         icon={EDIT}
         onClick={() => setIsSheetViewRenaming(true)}/>
-      {!isActiveSheetView && 
-        <SheetActionButtonDropdownItemAction
-          icon={TRASH_CAN}
-          isLast
-          onClick={() => dispatch(deleteSheetView(sheetId, sheetViewId))}/>
-      }
+      <SheetActionButtonDropdownItemAction
+        cursor={isOnlySheetView ? 'not-allowed' : 'pointer'}
+        icon={TRASH_CAN}
+        onClick={!isOnlySheetView ? () => dispatch(deleteSheetView(sheetId, sheetViewId)) : () => null}/>
     </SheetActionButtonDropdownItem>
   )
 }
@@ -91,6 +90,7 @@ interface ISheetActionSheetViewsSheetViewProps {
   sheetViewId: ISheetView['id'],
   closeDropdown(): void
   isFirst: boolean
+  isOnlySheetView: boolean
 }
 
 //-----------------------------------------------------------------------------

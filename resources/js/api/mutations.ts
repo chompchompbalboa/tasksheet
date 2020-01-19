@@ -382,6 +382,12 @@ export const resetSheetView = async (sheetId: string) => {
 	}).catch(console.log.bind(console))
 }
 
+export const restoreSheetView = async (sheetViewId: string) => {
+	return axios.post('/app/sheets/views/restore/' + sheetViewId).then(response => {
+		return response.data
+	}).catch(console.log.bind(console))
+}
+
 export const createSheetPriority = async (priority: ISheetPriority) => {
 	return axios.post('/app/sheets/priorities', priority).then(response => {
 		return response.data

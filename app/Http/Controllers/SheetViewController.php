@@ -72,6 +72,22 @@ class SheetViewController extends Controller
       SheetFilter::where('sheetViewId', $sheetViewId)->delete();
       SheetGroup::where('sheetViewId', $sheetViewId)->delete();
       SheetSort::where('sheetViewId', $sheetViewId)->delete();
-      return response()->json(null, 204);
+      return response()->json(null, 200);
+    }
+
+    public function restore(string $sheetViewId)
+    {
+      $sheetView = SheetView::withTrashed()
+                ->where('id', $sheetViewId)
+                ->first();
+
+      if($sheetView) {
+        $sheetView->restore();
+        SheetFilter::withTrashed()->where('sheetViewId', $sheetViewId)->restore();
+        SheetGroup::withTrashed()->where('sheetViewId', $sheetViewId)->restore();
+        SheetSort::withTrashed()->where('sheetViewId', $sheetViewId)->restore();
+        return response()->json(true, 200);
+      }
+      return response()->json(false, 404);
     }
 }

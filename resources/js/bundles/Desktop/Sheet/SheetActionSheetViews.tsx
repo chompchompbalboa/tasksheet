@@ -54,7 +54,8 @@ const SheetActionSheetViews = ({
             sheetId={sheetId}
             sheetViewId={sheetViewId}
             closeDropdown={() => setIsDropdownVisible(false)}
-            isFirst={index === 0}/>
+            isFirst={index === 0}
+            isOnlySheetView={sheetViews.length === 1}/>
         ))}
         <SheetActionButtonDropdownItem
           sheetId={sheetId}
