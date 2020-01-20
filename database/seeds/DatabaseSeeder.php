@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+use App\Models\FolderPermission;
 use App\Models\SheetView;
 
 use App\Utils\Csv;
@@ -29,21 +30,18 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
-      // Teams
-      $teams = [
+      // The source folders
+      $allSourceFolders = [
         [ 'name' => 'Tasksheet',
-          'sourceFolder' => 'Tasksheet',
           'users' => [
             [ 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.app' ],
         ]],
         [ 'name' => 'Demos',
-          'sourceFolder' => 'Demos',
           'users' => [
             [ 'name' => 'Demo', 'email' => 'demo@tasksheet.app' ],
             [ 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.app' ],
         ]],
         [ 'name' => 'Dillon Works',
-          'sourceFolder' => 'Dillon Works',
           'users' => [
             [ 'name' => 'Rocky Eastman', 'email' => 'rockye@dillonworks.com' ],
             [ 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.app' ],
@@ -54,25 +52,18 @@ class DatabaseSeeder extends Seeder
       $newUsers = collect();
 
       // Seed each team
-      foreach($teams as $seedTeam) {
+      foreach($allSourceFolders as $currentSourceFolder) {
 
-        // Team Root Folder
-        $teamFolder = factory(App\Models\Folder::class)->create([ 
-          'name' => $seedTeam['sourceFolder'] 
-        ]);
-
-        // Team
-        $team = factory(App\Models\Team::class)->create([
-          'id' => Str::uuid()->toString(),
-          'name' => $seedTeam['name'],
-          'folderId' => $teamFolder->id
+        // Source Folder
+        $currentSourceFolderModel = factory(App\Models\Folder::class)->create([ 
+          'name' => $currentSourceFolder['name'] 
         ]);
 
         // Seed each user
-        foreach($seedTeam['users'] as $seedUser) {
+        foreach($currentSourceFolder['users'] as $currentSourceFolderUser) {
 
           // Make sure we haven't already seeded the user
-          if(!$newUsers->contains('email', $seedUser['email'])) {
+          if(!$newUsers->contains('email', $currentSourceFolderUser['email'])) {
 
             // User Root Folder
             $userFolder = factory(App\Models\Folder::class)->create([ 
@@ -80,12 +71,18 @@ class DatabaseSeeder extends Seeder
             ]);
 
             // User
-            $userId = isset($seedUser['id']) ? $seedUser['id'] : Str::uuid()->toString();
             $user = factory(App\Models\User::class)->create([ 
-              'id' => $userId,
+              'id' => Str::uuid()->toString(),
+              'name' => $currentSourceFolderUser['name'],
+              'email' => $currentSourceFolderUser['email']
+            ]);
+
+            // Assign the user to the new folder
+            FolderPermission::create([
+              'id' => Str::uuid()->toString(),
+              'userId' => $user->id,
               'folderId' => $userFolder->id,
-              'name' => $seedUser['name'],
-              'email' => $seedUser['email']
+              'role' => 'OWNER'
             ]);
 
             // UserActive
@@ -96,7 +93,7 @@ class DatabaseSeeder extends Seeder
 
             // UserSubscription
             $user->tasksheetSubscription()->save(factory(App\Models\UserTasksheetSubscription::class)->make([
-              'type' => $seedUser['email'] === 'demo@tasksheet.app' ? 'DEMO' : 'LIFETIME',
+              'type' => $currentSourceFolderUser['email'] === 'demo@tasksheet.app' ? 'DEMO' : 'LIFETIME',
               'startDate' => Carbon::now(),
               'endDate' => Carbon::now()->addDays(30),
             ]));
@@ -109,22 +106,25 @@ class DatabaseSeeder extends Seeder
           }
           // If we have already seeded the user, get the user
           else {
-            $user = $newUsers->firstWhere('email', $seedUser['email']);
+            $user = $newUsers->firstWhere('email', $currentSourceFolderUser['email']);
           }
 
-          // Add the user to the team
-          $user->teams()->attach($team->id, [
-            'id' => Str::uuid()->toString()
+          // Assign the user to the new folder
+          FolderPermission::create([
+            'id' => Str::uuid()->toString(),
+            'userId' => $user->id,
+            'folderId' => $currentSourceFolderModel->id,
+            'role' => 'OWNER'
           ]);
         }
 
         // Get all of the folders from the 'database/sources' directory
         $sourceFolders = Storage::disk('sources')->allDirectories();
-        
+
         // Filter that folder list so only the current team's folders are included
         $seedFolders = [];
         foreach($sourceFolders as $sourceFolder) {
-          if(Str::startsWith($sourceFolder, $seedTeam['sourceFolder'])) {
+          if(Str::startsWith($sourceFolder, $currentSourceFolder['name'])) {
             array_push($seedFolders, $sourceFolder);
           }
         }
@@ -135,7 +135,7 @@ class DatabaseSeeder extends Seeder
         // Filter that file list so only the current team's files are included
         $seedFiles = [];
         foreach($sourceFiles as $sourceFile) {
-          if(Str::startsWith($sourceFile, $seedTeam['sourceFolder'])) {
+          if(Str::startsWith($sourceFile, $currentSourceFolder['name'])) {
             array_push($seedFiles, $sourceFile);
           }
         }
@@ -167,11 +167,11 @@ class DatabaseSeeder extends Seeder
         }
 
         // Recursively create the folders
-        $createFolders = function($level, $path, $parentFolderId, $folderItems) use(&$createFolders, $seedTeam) {
+        $createFolders = function($level, $path, $parentFolderId, $folderItems) use(&$createFolders, $currentSourceFolder) {
           
           // Skip the root folder since we previously created it while creating the team
           if($level === 0) {
-            $createFolders(1, $seedTeam['sourceFolder'].'/', $parentFolderId, $folderItems[$seedTeam['sourceFolder']]);
+            $createFolders(1, $currentSourceFolder['name'].'/', $parentFolderId, $folderItems[$currentSourceFolder['name']]);
           }
           
           else  {
@@ -238,9 +238,6 @@ class DatabaseSeeder extends Seeder
                 ]);
                 $newSheet->activeSheetViewId = $newSheetView->id;
                 $newSheet->save();
-                
-                // Load the CSV we'll create the sheet from
-                //$csvFile = Storage::disk('sources')->get($path.$folderItem);
 
                 // Get rows from the csv
                 $csvRows = $this->sheetBuilder->getCsvRows('database/sources/'.$path.$folderItem);
@@ -276,7 +273,7 @@ class DatabaseSeeder extends Seeder
             } 
           }
         };
-        $createFolders(0, null, $teamFolder->id, $structuredSeedFolders);
+        $createFolders(0, null, $currentSourceFolderModel->id, $structuredSeedFolders);
       }
     }
 }
