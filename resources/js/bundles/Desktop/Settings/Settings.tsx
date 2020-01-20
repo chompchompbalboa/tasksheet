@@ -7,10 +7,7 @@ import Content from '@desktop/Content/Content'
 import SettingsContent from '@desktop/Settings/SettingsContent'
 import SettingsSidebar from '@desktop/Settings/SettingsSidebar'
 
-export type ISettingsContent = 
-  'TEAMS' |
-  'USER' |
-  'BILLING'
+export type ISettingsContent = 'USER'
 //-----------------------------------------------------------------------------
 // Components
 //-----------------------------------------------------------------------------
@@ -19,9 +16,7 @@ const Settings = () => {
   const [ activeContent, setActiveContent ] = useState('USER' as ISettingsContent)
 
   const headers = {
-    BILLING: 'Billing',
-    TEAMS: 'Teams',
-    USER: 'User',
+    USER: 'User'
   }
   const SettingsHeader = () => headers[activeContent]
 

@@ -5,7 +5,7 @@ import React from 'react'
 
 import { ISettingsContent } from '@desktop/Settings/Settings'
 
-import { USER, TEAM } from '@/assets/icons'
+import { USER } from '@/assets/icons'
  
 import Logout from '@desktop/Settings/SettingsLogout'
 import ContentSidebarItem from '@desktop/Content/ContentSidebarItem'
@@ -24,11 +24,6 @@ const SettingsSidebar = ({
         isActive={activeContent === 'USER'}
         onClick={() => setActiveContent('USER')}
         text="User"/>
-      <ContentSidebarItem
-        icon={TEAM}
-        isActive={activeContent === 'TEAMS'}
-        onClick={() => setActiveContent('TEAMS')}
-        text="Teams"/>
       <Logout />
     </>
   )

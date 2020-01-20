@@ -20,7 +20,6 @@
       }
       const initialData = {
         user: @json($user),
-        teams: @json($teams),
         folders: @json($folders),
       }
     </script>

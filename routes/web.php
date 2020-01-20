@@ -26,23 +26,14 @@ Route::group([], function () {
       ]);
       $user = Auth::user();
     }
-    
-    $teams = $user->teams;
 
     $folders = [];
-    foreach($teams as $team) {
-      $teamFolders = $team->folder()->get();
-      foreach($teamFolders as $teamFolder) {
-        array_push($folders, $teamFolder);
-      }
-    }
-    foreach($user->folder()->get() as $userFolder) {
+    foreach($user->folders()->orderBy('name')->get() as $userFolder) {
       array_push($folders, $userFolder);
     }
 
     return view('app')->with([
       'user' => $user,
-      'teams' => $teams,
       'folders' => $folders
     ]);
   })->name('site');

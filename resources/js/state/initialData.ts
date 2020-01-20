@@ -1,5 +1,4 @@
 import { IUser, IUserActive, IUserColor, IUserTasksheetSubscription } from '@/state/user/types'
-import { ITeamFromDatabase } from '@/state/team/types'
 
 const initalData: IInitialData = {
 	user: <IUser> {
@@ -20,11 +19,6 @@ const initalData: IInitialData = {
       type: 'LIFETIME'
     }
   },
-  teams: <ITeamFromDatabase[]> [{
-    id: 'team-uuid',
-    name: 'Team',
-    members: []
-  }],
 	folders: [
 		{
 			id: 'uuid',

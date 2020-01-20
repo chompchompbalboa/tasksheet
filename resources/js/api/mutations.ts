@@ -28,9 +28,6 @@ import {
   IUserColorUpdates,
   IUserTasksheetSubscriptionUpdates
 } from '@/state/user/types'
-import { 
-  ITeam, ITeamMember, ITeamUpdates
-} from '@/state/team/types'
 
 //-----------------------------------------------------------------------------
 // User
@@ -54,27 +51,6 @@ export const updateUserColor = async (id: string, updates: IUserColorUpdates) =>
 
 export const updateUserSubscription = async (id: string, updates: IUserTasksheetSubscriptionUpdates) => {
 	return axios.patch('/app/user/subscription/' + id, updates).then(response => {
-		return response.data
-	}).catch(console.log.bind(console))
-}
-
-//-----------------------------------------------------------------------------
-// Team
-//-----------------------------------------------------------------------------
-export const updateTeam = async (userId: ITeam['id'], updates: ITeamUpdates) => {
-	return axios.patch('/app/team/' + userId, updates).then(response => {
-		return response.data
-	}).catch(console.log.bind(console))
-}
-
-export const createTeamMember = async (teamId: ITeam['id'], newMemberEmail: string) => {
-	return axios.post('/app/team/member/create', { teamId, newMemberEmail }).then(response => {
-		return response.data
-	}).catch(console.log.bind(console))
-}
-
-export const deleteTeamMember = async (teamId: ITeam['id'], teamMemberId: ITeamMember['id']) => {
-	return axios.post('/app/team/member/delete', { teamId, teamMemberId }).then(response => {
 		return response.data
 	}).catch(console.log.bind(console))
 }

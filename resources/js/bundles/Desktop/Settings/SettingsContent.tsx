@@ -5,9 +5,7 @@ import React from 'react'
 
 import { ISettingsContent } from '@desktop/Settings/Settings'
 
-import SettingsBilling from '@desktop/Settings/SettingsBilling'
 import SettingsUser from '@desktop/Settings/SettingsUser'
-import SettingsTeams from '@desktop/Settings/SettingsTeams'
 
 //-----------------------------------------------------------------------------
 // Components
@@ -17,9 +15,7 @@ const SettingsContent = ({
 }: SettingsContentProps) => {
 
   const content = {
-    BILLING: SettingsBilling,
-    TEAMS: SettingsTeams,
-    USER: SettingsUser,
+    USER: SettingsUser
   }
 
   const ContentComponent = activeContent ? content[activeContent] : null

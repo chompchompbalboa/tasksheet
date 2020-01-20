@@ -10,7 +10,6 @@ import modalReducer from '@/state/modal/reducers'
 import sheetReducer from '@/state/sheet/reducers'
 import sheetSettingsReducer from '@/state/sheetSettings/reducers'
 import tabReducer from '@/state/tab/reducers'
-import teamsReducer from '@/state/team/reducers'
 import userReducer from '@/state/user/reducers'
 
 //-----------------------------------------------------------------------------
@@ -22,7 +21,6 @@ export const appReducer = combineReducers({
 	folder: folderReducer,
   messenger: messengerReducer,
   modal: modalReducer,
-  teams: teamsReducer,
 	sheet: sheetReducer,
 	sheetSettings: sheetSettingsReducer,
 	tab: tabReducer,

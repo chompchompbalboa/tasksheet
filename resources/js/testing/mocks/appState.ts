@@ -20,7 +20,6 @@ import { initialFolderState } from '@/state/folder/reducers'
 import { initialHistoryState } from '@/state/history/reducers'
 import { initialModalState } from '@/state/modal/reducers'
 import { initialSheetState } from '@/state/sheet/reducers'
-import { initialTeamState } from '@/state/team/reducers'
 import { initialUserState } from '@/state/user/reducers'
 
 import { defaultSheetSelections, defaultSheetStyles } from '@/state/sheet/defaults'
@@ -305,7 +304,6 @@ export const appState: IAppState = {
   messenger: {
     messages: []
   },
-  teams: initialTeamState,
   sheet: {
     ...initialSheetState,
     allSheets,
