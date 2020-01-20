@@ -24,7 +24,6 @@ import {
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
-console.log(initialData)
 const initialFolderData = typeof initialData !== 'undefined' ? initialData.folders : defaultInitialData.folders
 const normalizedFolders = normalizer(initialFolderData)
 export const initialFolderState: IFolderState = {

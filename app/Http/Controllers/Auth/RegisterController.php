@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 
 use App\Models\Folder;
+use App\Models\FolderPermission;
 use App\Models\File;
 use App\Models\User;
 use App\Models\UserActive;
@@ -87,8 +88,15 @@ class RegisterController extends Controller
           $newUser = User::create([
             'name' => $newUserInfo['name'],
             'email' => $newUserInfo['email'],
-            'password' => Hash::make($newUserInfo['password']),
-            'folderId' => $newUserFolder->id
+            'password' => Hash::make($newUserInfo['password'])
+          ]);
+
+          // Assign the user to the new folder
+          FolderPermission::create([
+            'id' => Str::uuid()->toString(),
+            'userId' => $newUser->id,
+            'folderId' => $newUserFolder->id,
+            'role' => 'OWNER'
           ]);
 
           // Create the Stripe subscription
