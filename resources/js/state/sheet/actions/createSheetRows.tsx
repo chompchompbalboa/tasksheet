@@ -104,9 +104,11 @@ export const createSheetRows = (
       const currentRowId = sheet.visibleRows[i]
       if(currentRowId !== 'ROW_BREAK') {
         const currentRow = allSheetRows[currentRowId]
-        Object.keys(currentRow.cells).forEach(columnId => {
-          const currentCell = allSheetCells[currentRow.cells[columnId]]
-          columnCellValues[columnId].add(currentCell.value)
+        activeSheetView.visibleColumns.forEach(columnId => {
+          if(columnId !== 'COLUMN_BREAK') {
+            const currentCell = allSheetCells[currentRow.cells[columnId]]
+            columnCellValues[columnId].add(currentCell.value)
+          }
         })
       }
     }
