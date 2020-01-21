@@ -12,7 +12,7 @@ declare global {
 	const initialData: IInitialData
 	interface IInitialData {
     user: IUser
-    folders: IFolder[]
+    folders: IFolderFromDatabase[]
 	}
 }
 export {} // Typescript needs this file to be a module

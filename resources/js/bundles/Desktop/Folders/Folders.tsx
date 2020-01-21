@@ -2,54 +2,41 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useState } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { IAppState } from '@/state'
-import { IThunkDispatch } from '@/state/types'
-import { IFiles, IFolders } from '@/state/folder/types'
 import { 
   updateActiveFolderPath as updateActiveFolderPathAction 
 } from '@/state/folder/actions'
-import { selectActiveFolderPath, selectFiles, selectFolders, selectIsSavingNewFile, selectOnFileSave, selectRootFolderIds } from '@/state/folder/selectors'
 
 import Content from '@desktop/Content/Content'
 import FoldersFolder from '@desktop/Folders/FoldersFolder'
 import FoldersHeader from '@desktop/Folders/FoldersHeader'
+import FoldersProperties from '@desktop/Folders/FoldersProperties'
 import FoldersSidebar from '@desktop/Folders/FoldersSidebar'
-
-//-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapStateToProps = (state: IAppState) => ({
-  activeFolderPath: selectActiveFolderPath(state),
-  files: selectFiles(state),
-  folders: selectFolders(state),
-  isSavingNewFile: selectIsSavingNewFile(state),
-  onFileSave: selectOnFileSave(state),
-  rootFolderIds: selectRootFolderIds(state)
-})
-
-const mapDispatchToProps = (dispatch: IThunkDispatch) => ({
-  updateActiveFolderPath: (level: number, nextActiveFolderId: string) => dispatch(updateActiveFolderPathAction(level, nextActiveFolderId))
-})
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const Folders = ({
-  activeFolderPath,
-  files,
-  folders,
   handleFileOpen,
-  isActiveTab,
-  isSavingNewFile,
-  onFileSave,
-  rootFolderIds,
-  updateActiveFolderPath
-}: FoldersProps) => {
+  isActiveTab
+}: IFolders) => {
 
+  // Redux
+  const dispatch = useDispatch()
+  const activeFolderPath = useSelector((state: IAppState) => state.folder.activeFolderPath)
+  const files = useSelector((state: IAppState) => state.folder.files)
+  const folders = useSelector((state: IAppState) => state.folder.folders)
+  const isSavingNewFile = useSelector((state: IAppState) => state.folder.isSavingNewFile)
+  const onFileSave = useSelector((state: IAppState) => state.folder.onFileSave)
+  const rootFolderIds = useSelector((state: IAppState) => state.folder.rootFolderIds)
+  const updateActiveFolderPath = (level: number, nextActiveFolderId: string) => dispatch(updateActiveFolderPathAction(level, nextActiveFolderId))
+  
+  // State
   const [ isSheetCurrentlyBeingCreated, setIsSheetCurrentlyBeingCreated ] = useState(false)
 
+  // Sidebar
   const Sidebar = () => {
     return (
       <FoldersSidebar
@@ -58,6 +45,7 @@ const Folders = ({
      )
   }
 
+  // Header
   const Header = () => {
     return (
       <FoldersHeader
@@ -69,6 +57,7 @@ const Folders = ({
     )
   }
 
+  // Content
   const FoldersContent = () => {
     return (
       <>
@@ -93,6 +82,7 @@ const Folders = ({
               level={index + 1}
               rootFolderIds={rootFolderIds}
               updateActiveFolderPath={updateActiveFolderPath}/>))}
+        <FoldersProperties />
       </>
     )
   }
@@ -111,22 +101,12 @@ const Folders = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface FoldersProps {
-  activeFolderPath: string[]
-  files: IFiles
-  folders: IFolders
+interface IFolders {
   handleFileOpen(nextActiveTabId: string): void
   isActiveTab: boolean
-  isSavingNewFile: boolean
-  onFileSave: () => void
-  rootFolderIds: string[]
-  updateActiveFolderPath(level: number, nextActiveFolderId: string): void
 }
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Folders)
+export default Folders

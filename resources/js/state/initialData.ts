@@ -1,5 +1,5 @@
+import { IFolderUser } from '@/state/folder/types'
 import { IUser, IUserActive, IUserColor, IUserTasksheetSubscription } from '@/state/user/types'
-
 const initalData: IInitialData = {
 	user: <IUser> {
 		id: 'uuid',
@@ -25,6 +25,7 @@ const initalData: IInitialData = {
 			name: 'name',
 			folders: <string[]>[],
 			files: <string[]>[],
+			users: <IFolderUser[]>[],
 		},
   ]
 }

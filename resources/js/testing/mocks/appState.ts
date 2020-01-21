@@ -261,7 +261,8 @@ export const appStateFactory = ({
       id: folderId,
       name: folderId,
       folders: [],
-      files: folderFiles
+      files: folderFiles,
+      users: []
     }
   }
   

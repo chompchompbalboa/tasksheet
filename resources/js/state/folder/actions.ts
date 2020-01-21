@@ -36,6 +36,7 @@ const defaultFolder = (folderId: string): IFolder => {
     name: null,
     files: [],
     folders: [],
+    users: []
   }
 }
 

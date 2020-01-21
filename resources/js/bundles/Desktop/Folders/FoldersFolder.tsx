@@ -23,10 +23,10 @@ const FoldersFolder = ({
   updateActiveFolderPath
 }: FoldersFolderProps) => {
 
-
   const folder = folders[folderId]
   const folderIds: string[] = folderId !== "ROOT" ? folder.folders : rootFolderIds
   const fileIds: string[] = folderId !== "ROOT" ? folder.files : []
+  
   return (
     <Container>
       <ItemsContainer>
@@ -83,6 +83,7 @@ const Container = styled.div`
 
 const ItemsContainer = styled.div`
   width: 100%;
+  min-height: 100%;
 `
 
 //-----------------------------------------------------------------------------

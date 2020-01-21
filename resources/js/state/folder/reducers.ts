@@ -4,10 +4,9 @@
 import defaultInitialData from '@/state/initialData'
 import { 
   IFile, IFiles, 
-  IFolder, IFolders,
+  IFolder, IFolderFromDatabase, IFolders,
   IFolderClipboard, 
 } from '@/state/folder/types'
-import normalizer from '@/state/folder/normalizer'
 import {
   IFolderActions,
   CREATE_FILE,
@@ -25,15 +24,60 @@ import {
 // Initial
 //-----------------------------------------------------------------------------
 const initialFolderData = typeof initialData !== 'undefined' ? initialData.folders : defaultInitialData.folders
-const normalizedFolders = normalizer(initialFolderData)
+
+// Function to set the normalized folders and files
+const setNormalizedFoldersAndFiles = () => {
+  // Variables
+  const allFolders: IFolders = {}
+  const allFiles: IFiles = {}
+  const rootFolderIds = initialFolderData.map(folder => folder.id)
+  
+  // Get Folders and Files From Folder
+  const getFolderAndFilesFromFolder = (folder: IFolderFromDatabase, parentFolder?: IFolderFromDatabase) => {
+    allFolders[folder.id] = {
+      id: folder.id,
+      name: folder.name,
+      folderId: folder.folderId,
+      folders: folder.folders.map(folder => folder.id),
+      files: folder.files.map(file => file.id),
+      users: parentFolder ? [ ...parentFolder.users, ...folder.users ] : folder.users
+    }
+    folder.files.forEach(file => {
+      allFiles[file.id] = {
+        id: file.id,
+        folderId: file.folderId,
+        name: file.name,
+        type: file.type,
+        typeId: file.typeId,
+        isPreventedFromSelecting: false
+      }
+    })
+    folder.folders.forEach(currentFolder => getFolderAndFilesFromFolder(currentFolder, folder))
+  }
+  
+  // Get the folders and files for each of the root folders
+  initialFolderData.forEach(currentFolder => getFolderAndFilesFromFolder(currentFolder, null))
+  
+  // Return the normalized objects
+  return { allFolders, allFiles, rootFolderIds }
+}
+
+// Get the normalized folders and files
+const { allFolders, allFiles, rootFolderIds } = setNormalizedFoldersAndFiles()
+
+// Initial Folder State
 export const initialFolderState: IFolderState = {
   activeFolderPath: [initialFolderData[0].id],
-  clipboard: { itemId: null, cutOrCopy: null, folderOrFile: null },
-	folders: <IFolders>normalizedFolders.entities.folder,
-  files: <IFiles>normalizedFolders.entities.file,
+  clipboard: { 
+    itemId: null, 
+    cutOrCopy: null, 
+    folderOrFile: null 
+  },
+	folders: allFolders,
+  files: allFiles,
   isSavingNewFile: false,
   onFileSave: null,
-	rootFolderIds: normalizedFolders.result,
+	rootFolderIds: rootFolderIds,
 }
 export type IFolderState = {
   activeFolderPath: string[]
