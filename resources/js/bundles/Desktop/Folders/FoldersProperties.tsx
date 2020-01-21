@@ -48,7 +48,7 @@ const Container = styled.div`
 `
 
 const Wrapper = styled.div`
-  width: 60%;
+  width: 65%;
 `
 
 const FolderName = styled.div`

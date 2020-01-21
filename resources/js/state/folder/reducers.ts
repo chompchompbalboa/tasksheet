@@ -33,14 +33,15 @@ const setNormalizedFoldersAndFiles = () => {
   const rootFolderIds = initialFolderData.map(folder => folder.id)
   
   // Get Folders and Files From Folder
-  const getFolderAndFilesFromFolder = (folder: IFolderFromDatabase, parentFolder?: IFolderFromDatabase) => {
+  const getFolderAndFilesFromFolder = (folder: IFolderFromDatabase, parentFolderUsers?: IFolderFromDatabase['users']) => {
+    const folderUsers = parentFolderUsers ? [ ...parentFolderUsers, ...folder.users ] : folder.users
     allFolders[folder.id] = {
       id: folder.id,
       name: folder.name,
       folderId: folder.folderId,
       folders: folder.folders.map(folder => folder.id),
       files: folder.files.map(file => file.id),
-      users: parentFolder ? [ ...parentFolder.users, ...folder.users ] : folder.users
+      users: folderUsers
     }
     folder.files.forEach(file => {
       allFiles[file.id] = {
@@ -52,7 +53,7 @@ const setNormalizedFoldersAndFiles = () => {
         isPreventedFromSelecting: false
       }
     })
-    folder.folders.forEach(currentFolder => getFolderAndFilesFromFolder(currentFolder, folder))
+    folder.folders.forEach(currentFolder => getFolderAndFilesFromFolder(currentFolder, folderUsers))
   }
   
   // Get the folders and files for each of the root folders

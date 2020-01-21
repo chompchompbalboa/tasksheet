@@ -9,6 +9,7 @@ import { CLOSE } from '@/assets/icons'
 import { IFolderUser } from '@/state/folder/types'
 
 import Icon from '@/components/Icon'
+import FoldersPropertiesUsersUserRoles from '@desktop/Folders/FoldersPropertiesUsersUserRoles'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -16,13 +17,15 @@ import Icon from '@/components/Icon'
 const FoldersPropertiesUsersUser = ({
   user
 }: IFoldersPropertiesUsersUser) => {  
+
   return (
     <Container>
       <Name>{user.name}</Name>
       <Email>{user.email}</Email>
       <Actions>
-        <Role>{user.role}</Role>
-        <Delete><Icon icon={CLOSE} size="0.75rem"/></Delete>
+        <FoldersPropertiesUsersUserRoles
+          activeRole={user.role}/>
+        <Delete><Icon icon={CLOSE} size="0.7rem"/></Delete>
       </Actions>
     </Container>
   )
@@ -43,12 +46,9 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.125rem 0.5rem;
-  border-radius: 4px;
+  padding: 0.125rem 0;
   font-size: 0.9rem;
-  &:hover {
-    background-color: rgb(240, 240, 240);
-  }
+  border-bottom: 1px dashed rgb(175, 175, 175);
 `
 
 const Name = styled.div`
@@ -66,16 +66,14 @@ const Actions = styled.div`
   justify-content: flex-end;
 `
 
-const Role = styled.div``
-
 const Delete = styled.div`
   cursor: pointer;
-  padding: 0.125rem;
+  padding: 0.0625rem;
   margin-left: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 3px;
+  border-radius: 5px;
   background-color: rgb(225, 225, 225);
   opacity: 0.8;
   &:hover {

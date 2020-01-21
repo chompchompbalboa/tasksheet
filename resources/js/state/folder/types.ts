@@ -35,7 +35,7 @@ export interface IFolderUser {
   id: string
   name: string
   email: string
-  role: string
+  role: 'OWNER' | 'ADMINISTRATOR' | 'USER'
 }
 
 export interface IFile {
