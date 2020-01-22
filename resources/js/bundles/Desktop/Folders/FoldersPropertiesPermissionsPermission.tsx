@@ -20,6 +20,7 @@ const FoldersPropertiesPermissionsPermission = ({
   folderPermissionId
 }: IFoldersPropertiesPermissionsPermission) => {
   
+  // Redux
   const folderPermission = useSelector((state: IAppState) => state.folder.allFolderPermissions && state.folder.allFolderPermissions[folderPermissionId])
 
   return (
@@ -30,7 +31,8 @@ const FoldersPropertiesPermissionsPermission = ({
           <Email>{folderPermission.userEmail}</Email>
           <Actions>
             <FoldersPropertiesPermissionsPermissionRoles
-              activeRole={folderPermission.role}/>
+              activeRole={folderPermission.role}
+              folderPermissionId={folderPermissionId}/>
             <Delete><Icon icon={CLOSE} size="0.7rem"/></Delete>
           </Actions>
         </>

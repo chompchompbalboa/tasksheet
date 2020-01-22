@@ -10,7 +10,7 @@ import { IAppState } from '@/state'
 import { IThunkAction, IThunkDispatch } from '@/state/types'
 import { 
   IFile, IAllFiles, IFileUpdates, 
-  IFolder, IAllFolders, IFolderUpdates,
+  IFolder, IFolderPermission, IFolderPermissionUpdates, IAllFolders, IFolderUpdates,
   IFolderClipboardUpdates, 
 } from '@/state/folder/types'
 import { createHistoryStep } from '@/state/history/actions'
@@ -22,9 +22,9 @@ import { closeTab } from '@/state/tab/actions'
 export type IFolderActions = 
   IUpdateActiveFolderPath | 
   IUpdateClipboard |
-  ICreateFolder | IUpdateFolder | IUpdateFolders | 
+  ICreateFolder | IUpdateFolder | IUpdateFolderPermission | IUpdateFolders | 
   ICreateFile | IUpdateFile | IUpdateFiles |
-  IUpdateUserFileIds
+  IUpdateUserFileIds 
 
 //-----------------------------------------------------------------------------
 // Defaults
@@ -347,6 +347,31 @@ export const updateFolderReducer = (id: string, updates: IFolderUpdates): IFolde
 		type: UPDATE_FOLDER,
 		id: id,
 		updates: updates,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Folder Permissions
+//-----------------------------------------------------------------------------
+export const UPDATE_FOLDER_PERMISSION = 'UPDATE_FOLDER_PERMISSION'
+interface IUpdateFolderPermission {
+	type: typeof UPDATE_FOLDER_PERMISSION
+  folderPermissionId: IFolderPermission['id']
+  updates: IFolderPermissionUpdates
+}
+
+export const updateFolderPermission = (folderPermissionId: IFolderPermission['id'], updates: IFolderPermissionUpdates) => {	
+  return async (dispatch: IThunkDispatch) => {
+    dispatch(updateFolderPermissionReducer(folderPermissionId, updates))
+    mutation.updateFolderPermission(folderPermissionId, updates)
+  }
+}
+
+export const updateFolderPermissionReducer = (folderPermissionId: IFolderPermission['id'], updates: IFolderPermissionUpdates): IFolderActions => {
+	return {
+		type: UPDATE_FOLDER_PERMISSION,
+    folderPermissionId,
+    updates
 	}
 }
 

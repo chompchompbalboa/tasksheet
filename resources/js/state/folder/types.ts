@@ -44,6 +44,10 @@ export interface IFolderPermission {
   role: 'OWNER' | 'ADMINISTRATOR' | 'USER'
 }
 
+export interface IFolderPermissionUpdates {
+  role?: 'OWNER' | 'ADMINISTRATOR' | 'USER'
+}
+
 export interface IFile {
 	id: string
   folderId: IFolder['id']

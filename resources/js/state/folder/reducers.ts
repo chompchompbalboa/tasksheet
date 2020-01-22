@@ -15,6 +15,7 @@ import {
   UPDATE_ACTIVE_FOLDER_PATH,
   UPDATE_CLIPBOARD,
 	UPDATE_FOLDER,
+	UPDATE_FOLDER_PERMISSION,
   UPDATE_FILE,
   UPDATE_FILES,
   UPDATE_FOLDERS,
@@ -206,6 +207,20 @@ export const folderReducer = (state = initialFolderState, action: IFolderActions
 			return {
 				...state,
         allFiles: nextFiles
+			}
+		}
+
+		case UPDATE_FOLDER_PERMISSION: {
+      const { folderPermissionId, updates } = action
+			return {
+        ...state,
+        allFolderPermissions: {
+          ...state.allFolderPermissions,
+          [folderPermissionId]: {
+            ...state.allFolderPermissions[folderPermissionId],
+            ...updates
+          }
+        }
 			}
 		}
 

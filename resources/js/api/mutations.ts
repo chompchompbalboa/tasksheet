@@ -6,7 +6,7 @@ import { IS3PresignedUrlData } from '@/api/vapor'
 
 import { 
   IFile, IFileUpdates, 
-  IFolder, IFolderUpdates 
+  IFolder, IFolderPermissionUpdates, IFolderUpdates 
 } from '@/state/folder/types'
 import { 
   ISheet, ISheetUpdates,
@@ -93,6 +93,12 @@ export const createFolder = async (newFolder: IFolder) => {
 
 export const updateFolder = async (id: string, updates: IFolderUpdates) => {
 	return axios.patch('/app/folders/' + id, updates).then(response => {
+		return response.data
+	}).catch(console.log.bind(console))
+}
+
+export const updateFolderPermission = async (id: string, updates: IFolderPermissionUpdates) => {
+	return axios.patch('/app/folders/permissions/' + id, updates).then(response => {
 		return response.data
 	}).catch(console.log.bind(console))
 }

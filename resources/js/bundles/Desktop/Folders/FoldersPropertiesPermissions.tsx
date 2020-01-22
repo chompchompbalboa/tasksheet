@@ -11,9 +11,9 @@ import FoldersPropertiesPermissionsPermission from '@desktop/Folders/FoldersProp
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const FoldersPropertiesUsers = ({
+const FoldersPropertiesPermissions = ({
   folderPermissions
-}: IFoldersPropertiesUsers) => {  
+}: IFoldersPropertiesPermissions) => {
   return (
     <Container>
       {folderPermissions && folderPermissions.map((folderPermissionId, index) => (
@@ -28,7 +28,7 @@ const FoldersPropertiesUsers = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface IFoldersPropertiesUsers {
+interface IFoldersPropertiesPermissions {
   folderPermissions: IFolder['permissions']
 }
 
@@ -40,4 +40,4 @@ const Container = styled.div``
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default FoldersPropertiesUsers
+export default FoldersPropertiesPermissions

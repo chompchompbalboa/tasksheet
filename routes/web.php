@@ -97,6 +97,7 @@ Route::group([
     'team' => 'TeamController',
     // Folders
     'folders' => 'FolderController',
+    'folders/permissions' => 'FolderPermissionController',
     'files' => 'FileController',
     // Sheet
     'sheets' => 'SheetController',

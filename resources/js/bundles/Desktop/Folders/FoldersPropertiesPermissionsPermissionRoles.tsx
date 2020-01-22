@@ -2,19 +2,26 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { IFolderPermission } from '@/state/folder/types'
+
+import { updateFolderPermission } from '@/state/folder/actions'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const FoldersPropertiesPermissionsPermissionRoles = ({
-  activeRole
+  activeRole,
+  folderPermissionId
 }: IFoldersPropertiesPermissionsPermissionRoles) => {  
 
   // Refs
   const container = useRef(null)
+
+  // Redux
+  const dispatch = useDispatch()
 
   // State
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
@@ -57,7 +64,11 @@ const FoldersPropertiesPermissionsPermissionRoles = ({
         {Object.keys(roles).map((role: IFolderPermission['role']) => (
           <Role
             key={role}
-            isActive={role === activeRole}>
+            isActive={role === activeRole}
+            onClick={() => {
+              dispatch(updateFolderPermission(folderPermissionId, { role: role }))
+              setIsDropdownVisible(false)
+            }}>
             {roles[role]}
           </Role>
         ))}
@@ -71,12 +82,14 @@ const FoldersPropertiesPermissionsPermissionRoles = ({
 //-----------------------------------------------------------------------------
 interface IFoldersPropertiesPermissionsPermissionRoles {
   activeRole: IFolderPermission['role']
+  folderPermissionId: IFolderPermission['id']
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  position: relative;
   z-index: ${ ({ isDropdownVisible }: IContainer ) => isDropdownVisible ? '1' : '0' };
 `
 interface IContainer {
@@ -95,6 +108,7 @@ const CurrentRole = styled.div`
 const Dropdown = styled.div`
   display: ${ ({ isDropdownVisible }: IDropdown ) => isDropdownVisible ? 'block' : 'none' };
   position: absolute;
+  right: 0;
   background-color: white;
   border-radius: 5px;
   background-color: rgb(250, 250, 250);
