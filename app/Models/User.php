@@ -40,11 +40,11 @@ class User extends Authenticatable
     }
     
     public function files() {
-      return $this->hasMany('App\Models\File', 'userId');
+      return $this->belongsToMany('App\Models\File', 'filePermissions', 'userId', 'fileId')->orderBy('name')->get();
     }
     
     public function folders() {
-      return $this->belongsToMany('App\Models\Folder', 'folderPermissions', 'userId', 'folderId');
+      return $this->belongsToMany('App\Models\Folder', 'folderPermissions', 'userId', 'folderId')->orderBy('name')->get();
     }
   
     public function tasksheetSubscription() {

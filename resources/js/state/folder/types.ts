@@ -14,8 +14,6 @@ export interface IFolderFromDatabase {
   id: string
   folderId?: string
 	name: string
-	folders: IFolderFromDatabase[]
-	files: IFile[]
   permissions: IFolderPermission[]
 }
 

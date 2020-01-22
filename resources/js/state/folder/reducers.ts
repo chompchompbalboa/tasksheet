@@ -4,7 +4,7 @@
 import defaultInitialData from '@/state/initialData'
 import { 
   IAllFiles, IFile,
-  IAllFolders, IFolder, IFolderFromDatabase,
+  IAllFolders, IFolder,
   IAllFolderPermissions, 
   IFolderClipboard, 
 } from '@/state/folder/types'
@@ -30,62 +30,45 @@ const initialFileData = typeof initialData !== 'undefined' ? initialData.files :
 
 // Function to set the normalized folders and files
 const setNormalizedFoldersAndFiles = () => {
+  
   // Variables
   const allFolderPermissions: IAllFolderPermissions = {}
   const allFolders: IAllFolders = {}
   const allFiles: IAllFiles = {}
-  const rootFolderIds = initialFolderData.map(folder => folder.id)
-  const userFileIds = initialFileData.map(file => file.id)
+  const folderFolders: { [folderId: string]: IFolder['id'][] } = {}
+  const folderFiles: { [folderId: string]: IFile['id'][] } = {}
+  const rootFolderIds = initialFolderData.map(folder => folder.folderId === null ? folder.id : undefined).filter(Boolean)
+  const userFileIds = initialFileData.map(file => file.folderId === null ? file.id : undefined).filter(Boolean)
   
-  // Get Folders and Files From Folder
-  const getFolderAndFilesFromFolder = (
-    folder: IFolderFromDatabase, 
-    parentFolderPermissions?: IFolderFromDatabase['permissions']
-  ) => {
-    const folderPermissions = parentFolderPermissions ? [ ...parentFolderPermissions, ...folder.permissions ] : folder.permissions
-    const folderPermissionIds = folderPermissions.map(folderPermission => folderPermission.id)
-    
-    // Folder
+  // Set the child folder ids for each folder
+  initialFolderData.forEach(folder => {
+    if(folder.folderId) {
+      folderFolders[folder.folderId] = [ ...folderFolders[folder.folderId] || [], folder.id ]
+    }
+  })
+  
+  // Set the file ids for each folder and add files to allFiles
+  initialFileData.forEach(file => {
+    if(file.folderId) {
+      folderFiles[file.folderId] = [ ...folderFiles[file.folderId] || [], file.id ]
+    }
+    allFiles[file.id] = file
+  })
+  
+  // Add the folders to allFolders and permissions to allFolderPermissions
+  initialFolderData.forEach(folder => {
+    const folderPermissionIds = folder.permissions.map(folderPermission => folderPermission.id)
     allFolders[folder.id] = {
       id: folder.id,
       name: folder.name,
       folderId: folder.folderId,
-      folders: folder.folders.map(folder => folder.id),
-      files: folder.files.map(file => file.id),
+      folders: folderFolders[folder.id] || [],
+      files: folderFiles[folder.id] || [],
       permissions: folderPermissionIds
     }
-    
-    // Files
-    folder.files.forEach(file => {
-      allFiles[file.id] = {
-        id: file.id,
-        folderId: file.folderId,
-        userId: file.userId,
-        name: file.name,
-        type: file.type,
-        typeId: file.typeId,
-        isPreventedFromSelecting: false
-      }
-    })
-    
-    // Permissions
     folder.permissions.forEach(folderPermission => {
       allFolderPermissions[folderPermission.id] = folderPermission
     })
-    
-    // Subfolders
-    folder.folders.forEach(currentFolder => getFolderAndFilesFromFolder(currentFolder, folderPermissions))
-  }
-  
-  // Get the folders and files for each of the root folders
-  initialFolderData.forEach(currentFolder => getFolderAndFilesFromFolder(currentFolder, null))
-  
-  // Get the user files
-  initialFileData.forEach(currentFile => {
-    allFiles[currentFile.id] = { 
-      ...currentFile,
-      isPreventedFromSelecting: false
-    }
   })
   
   // Return the normalized objects

@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+use App\Models\FilePermission;
 use App\Models\FolderPermission;
 use App\Models\SheetView;
 
@@ -29,22 +30,28 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+      
+      $userIds = [
+        'rocky@tasksheet.app' => Str::uuid()->toString(),
+        'demo@tasksheet.app' => Str::uuid()->toString(),
+        'rockye@dillonworks.com' => Str::uuid()->toString(),
+      ];
 
       // The source folders
       $allSourceFolders = [
         [ 'name' => 'Tasksheet',
           'users' => [
-            [ 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.app' ],
+            [ 'id' => $userIds['rocky@tasksheet.app'], 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.app' ],
         ]],
         [ 'name' => 'Demos',
           'users' => [
-            [ 'name' => 'Demo', 'email' => 'demo@tasksheet.app' ],
-            [ 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.app' ],
+            [ 'id' => $userIds['demo@tasksheet.app'], 'name' => 'Demo', 'email' => 'demo@tasksheet.app' ],
+            [ 'id' => $userIds['rocky@tasksheet.app'], 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.app' ],
         ]],
         [ 'name' => 'Dillon Works',
           'users' => [
-            [ 'name' => 'Rocky Eastman', 'email' => 'rockye@dillonworks.com' ],
-            [ 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.app' ],
+            [ 'id' => $userIds['rockye@dillonworks.com'], 'name' => 'Rocky Eastman', 'email' => 'rockye@dillonworks.com' ],
+            [ 'id' => $userIds['rocky@tasksheet.app'], 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.app' ],
         ]],
       ];
 
@@ -72,7 +79,7 @@ class DatabaseSeeder extends Seeder
 
             // User
             $user = factory(App\Models\User::class)->create([ 
-              'id' => Str::uuid()->toString(),
+              'id' => $currentSourceFolderUser['id'],
               'name' => $currentSourceFolderUser['name'],
               'email' => $currentSourceFolderUser['email']
             ]);
@@ -192,6 +199,16 @@ class DatabaseSeeder extends Seeder
                   'name' => $folderName,
                   'folderId' => $parentFolderId
                 ]);
+                
+                // Create the folder permissions
+                foreach($currentSourceFolder['users'] as $currentUser) {
+                  FolderPermission::create([
+                    'id' => Str::uuid()->toString(),
+                    'userId' => $currentUser['id'],
+                    'folderId' => $newFolder->id,
+                    'role' => 'OWNER'
+                  ]);
+                }
 
                 // Create the subfolders
                 $createFolders($level + 1, $path.$folderName.'/', $newFolder->id, $folderItem);
@@ -217,6 +234,16 @@ class DatabaseSeeder extends Seeder
                   'typeId' => $newSheetId,
                   'name' => $newFileName,
                 ]);
+                
+                // Create the file permissions
+                foreach($currentSourceFolder['users'] as $currentUser) {
+                  FilePermission::create([
+                    'id' => Str::uuid()->toString(),
+                    'userId' => $currentUser['id'],
+                    'fileId' => $newFile->id,
+                    'role' => 'OWNER'
+                  ]);
+                }
 
                 // Create the sheet
                 $newSheet = factory(App\Models\Sheet::class)->create([

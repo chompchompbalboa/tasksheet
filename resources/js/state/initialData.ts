@@ -1,4 +1,4 @@
-import { IFile, IFolderFromDatabase, IFolderPermission } from '@/state/folder/types'
+import { IFolderPermission } from '@/state/folder/types'
 import { IUser, IUserActive, IUserColor, IUserTasksheetSubscription } from '@/state/user/types'
 
 const initalData: IInitialData = {
@@ -24,8 +24,6 @@ const initalData: IInitialData = {
 		{
 			id: 'uuid',
 			name: 'name',
-			folders: <IFolderFromDatabase[]>[],
-			files: <IFile[]>[],
 			permissions: <IFolderPermission[]>[],
 		},
   ],
