@@ -32,12 +32,10 @@ const SheetActionDownloadSheet = ({
 
   // Redux
   const dispatch = useDispatch()
-
-  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
-  
   const allSheets = useSelector((state: IAppState) => state.sheet.allSheets)
-  const activeFilename = useSelector((state: IAppState) => state.folder.files && state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].name)
+  const activeFilename = useSelector((state: IAppState) => state.folder.allFiles && state.folder.allFiles[state.tab.activeTab] && state.folder.allFiles[state.tab.activeTab].name)
   const sheet = allSheets && allSheets[sheetId]
+  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   const visibleRows = sheet && sheet.visibleRows
 
   // Dropdown

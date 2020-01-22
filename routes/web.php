@@ -32,8 +32,14 @@ Route::group([], function () {
       array_push($folders, $userFolder);
     }
 
+    $files = [];
+    foreach($user->files()->orderBy('name')->get() as $userFile) {
+      array_push($files, $userFile);
+    }
+
     return view('app')->with([
       'user' => $user,
+      'files' => $files,
       'folders' => $folders
     ]);
   })->name('site');

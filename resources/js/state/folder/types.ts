@@ -1,10 +1,14 @@
-export interface IFolders {
-	[key: string]: IFolder
-}
+//-----------------------------------------------------------------------------
+// Imports
+//-----------------------------------------------------------------------------
+import { IUser } from '@/state/user/types'
 
-export interface IFiles {
-	[key: string]: IFile
-}
+//-----------------------------------------------------------------------------
+// Types
+//-----------------------------------------------------------------------------
+export interface IAllFolders { [folderId: string]: IFolder }
+export interface IAllFiles { [fileId: string]: IFile }
+export interface IAllFolderPermissions { [folderPermissionId: string]: IFolderPermission }
 
 export interface IFolderFromDatabase {
   id: string
@@ -12,7 +16,7 @@ export interface IFolderFromDatabase {
 	name: string
 	folders: IFolderFromDatabase[]
 	files: IFile[]
-  users: IFolderUser[]
+  permissions: IFolderPermission[]
 }
 
 export interface IFolder {
@@ -21,7 +25,7 @@ export interface IFolder {
 	name: string
 	folders: IFolder['id'][]
 	files: IFile['id'][]
-  users: IFolderUser[]
+  permissions: IFolderPermission['id'][]
 }
 
 export interface IFolderUpdates {
@@ -31,21 +35,25 @@ export interface IFolderUpdates {
   folders?: string[]
 }
 
-export interface IFolderUser {
+export interface IFolderPermission {
   id: string
-  name: string
-  email: string
+  folderId: IFolder['id']
+  userId: IUser['id']
+  userName: string
+  userEmail: string
   role: 'OWNER' | 'ADMINISTRATOR' | 'USER'
 }
 
 export interface IFile {
 	id: string
-  folderId: string
+  folderId: IFolder['id']
+  userId: IUser['id']
 	name: string
 	type: IFileType
   typeId: string
   isPreventedFromSelecting?: boolean
 }
+
 export interface IFileUpdates {
   folderId?: string
   name?: string
@@ -60,6 +68,7 @@ export interface IFolderClipboard {
   cutOrCopy: 'CUT' | 'COPY'
   folderOrFile: 'FOLDER' | 'FILE'
 }
+
 export interface IFolderClipboardUpdates {
   itemId?: string
   cutOrCopy?: 'CUT' | 'COPY'

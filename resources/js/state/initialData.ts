@@ -1,5 +1,6 @@
-import { IFolderUser } from '@/state/folder/types'
+import { IFile, IFolderFromDatabase, IFolderPermission } from '@/state/folder/types'
 import { IUser, IUserActive, IUserColor, IUserTasksheetSubscription } from '@/state/user/types'
+
 const initalData: IInitialData = {
 	user: <IUser> {
 		id: 'uuid',
@@ -23,11 +24,12 @@ const initalData: IInitialData = {
 		{
 			id: 'uuid',
 			name: 'name',
-			folders: <string[]>[],
-			files: <string[]>[],
-			users: <IFolderUser[]>[],
+			folders: <IFolderFromDatabase[]>[],
+			files: <IFile[]>[],
+			permissions: <IFolderPermission[]>[],
 		},
-  ]
+  ],
+  files: []
 }
 
 export default initalData

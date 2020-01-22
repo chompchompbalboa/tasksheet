@@ -21,7 +21,7 @@ const Tab = ({
   handleTabClick
 }: TabProps) => {
 
-  const file = useSelector((state: IAppState) => state.folder.files && state.folder.files[fileId] )
+  const file = useSelector((state: IAppState) => state.folder.allFiles && state.folder.allFiles[fileId] )
   
   return (
     <Container

@@ -39,6 +39,10 @@ class User extends Authenticatable
       return $this->hasOne('App\Models\UserColor', 'userId');
     }
     
+    public function files() {
+      return $this->hasMany('App\Models\File', 'userId');
+    }
+    
     public function folders() {
       return $this->belongsToMany('App\Models\Folder', 'folderPermissions', 'userId', 'folderId');
     }

@@ -30,8 +30,8 @@ const SiteFormInput = ({
   // Redux
   const dispatch = useDispatch()
   const activeSheetId = useSelector((state: IAppState) => {
-    if(state.tab.activeTab && state.folder.files[state.tab.activeTab]) {
-      return state.folder.files[state.tab.activeTab].typeId
+    if(state.tab.activeTab && state.folder.allFiles[state.tab.activeTab]) {
+      return state.folder.allFiles[state.tab.activeTab].typeId
     }
     return null
   })

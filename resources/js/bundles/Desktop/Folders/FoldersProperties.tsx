@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { IAppState } from '@/state'
 
-import FoldersPropertiesUsers from '@desktop/Folders/FoldersPropertiesUsers'
+import FoldersPropertiesPermissions from '@desktop/Folders/FoldersPropertiesPermissions'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -16,10 +16,10 @@ const FoldersProperties = () => {
   
   // Redux
   const activeFolderPath = useSelector((state: IAppState) => state.folder.activeFolderPath)
-  const folders = useSelector((state: IAppState) => state.folder.folders)
+  const allFolders = useSelector((state: IAppState) => state.folder.allFolders)
   
   // Variables
-  const activeFolder = folders[activeFolderPath[activeFolderPath.length - 1]]
+  const activeFolder = allFolders[activeFolderPath[activeFolderPath.length - 1]]
   
   return (
     <Container>
@@ -28,8 +28,8 @@ const FoldersProperties = () => {
           {activeFolder.name}
         </FolderName>
         <Properties>
-          <FoldersPropertiesUsers
-            users={activeFolder.users}/>
+          <FoldersPropertiesPermissions
+            folderPermissions={activeFolder.permissions}/>
         </Properties>
       </Wrapper>
     </Container>

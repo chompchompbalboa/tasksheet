@@ -76,8 +76,8 @@ interface IOpenFileInNewTab {
 
 export const openFileInNewTab = (fileId: string): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
-		const files = getState().folder.files
-		if (Object.keys(files).includes(fileId)) { 
+		const allFiles = getState().folder.allFiles
+		if (Object.keys(allFiles).includes(fileId)) { 
       dispatch(openFileInNewTabReducer(fileId)) 
       const tab = getState().tab
       dispatch(updateUserActive({ tab: tab.activeTab, tabs: tab.tabs }))

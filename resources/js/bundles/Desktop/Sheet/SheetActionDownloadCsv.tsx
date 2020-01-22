@@ -39,7 +39,7 @@ const SheetActionDownloadCsv = ({
     allSheetSorts
   } = useSelector((state: IAppState) => state.sheet)
 
-  const activeFilename = useSelector((state: IAppState) => state.folder.files && state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].name)
+  const activeFilename = useSelector((state: IAppState) => state.folder.allFiles && state.folder.allFiles[state.tab.activeTab] && state.folder.allFiles[state.tab.activeTab].name)
   const sheet = allSheets && allSheets[sheetId]
   
   const activeSheetView = sheet && allSheetViews[sheet.activeSheetViewId]

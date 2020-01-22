@@ -20,7 +20,7 @@ const SheetActionCreateSheetLink = ({
 
   // Redux
   const dispatch = useDispatch()
-  const userFolderId = useSelector((state: IAppState) => state.user.folderId)
+  const folderId = useSelector((state: IAppState) => state.folder.rootFolderIds[0])
   
   // State
   const [ isSheetLinkCurrentlyBeingCreated, setIsSheetLinkCurrentlyBeingCreated ] = useState(false)
@@ -29,7 +29,7 @@ const SheetActionCreateSheetLink = ({
   const handleClick = () => {
     setIsSheetLinkCurrentlyBeingCreated(true)
     setTimeout(() => {
-      dispatch(createSheetLink(sheetId, userFolderId))
+      dispatch(createSheetLink(sheetId, folderId))
     }, 25)
     setTimeout(() => {
       setIsSheetLinkCurrentlyBeingCreated(false)

@@ -26,8 +26,8 @@ const TabsFiles = () => {
   // Redux
   const dispatch = useDispatch()
   const activeTab = useSelector((state: IAppState) => state.tab.activeTab)
-  const activeFile = useSelector((state: IAppState) => state.folder.files && state.folder.files[activeTab] )
-  const allFiles = useSelector((state: IAppState) => state.folder.files )
+  const activeFile = useSelector((state: IAppState) => state.folder.allFiles && state.folder.allFiles[activeTab] )
+  const allFiles = useSelector((state: IAppState) => state.folder.allFiles )
   const fileIds = useSelector((state: IAppState) => state.tab.tabs)
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 

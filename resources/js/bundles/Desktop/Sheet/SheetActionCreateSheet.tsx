@@ -20,7 +20,7 @@ const SheetActionCreateSheet = () => {
 
   // Redux
   const dispatch = useDispatch()
-  const userFolderId = useSelector((state: IAppState) => state.user.folderId)
+  const folderId = useSelector((state: IAppState) => state.folder.rootFolderIds[0])
   
   // State
   const [ isSheetCurrentlyBeingCreated, setIsSheetCurrentlyBeingCreated ] = useState(false)
@@ -28,7 +28,7 @@ const SheetActionCreateSheet = () => {
   // Handle Button Click
   const handleButtonClick = () => {
     setIsSheetCurrentlyBeingCreated(true)
-    dispatch(createSheet(userFolderId, 'New Sheet', true))
+    dispatch(createSheet(folderId, 'New Sheet', true))
     setTimeout(() => {
       setIsSheetCurrentlyBeingCreated(false)
     }, 2500)

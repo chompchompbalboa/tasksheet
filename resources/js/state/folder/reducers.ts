@@ -3,8 +3,9 @@
 //-----------------------------------------------------------------------------
 import defaultInitialData from '@/state/initialData'
 import { 
-  IFile, IFiles, 
-  IFolder, IFolderFromDatabase, IFolders,
+  IAllFiles,
+  IAllFolders, IFolderFromDatabase,
+  IAllFolderPermissions, 
   IFolderClipboard, 
 } from '@/state/folder/types'
 import {
@@ -16,55 +17,81 @@ import {
 	UPDATE_FOLDER,
   UPDATE_FILE,
   UPDATE_FILES,
-  UPDATE_FOLDERS,
-  UPDATE_IS_SAVING_NEW_FILE
+  UPDATE_FOLDERS
 } from '@/state/folder/actions'
 
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
 const initialFolderData = typeof initialData !== 'undefined' ? initialData.folders : defaultInitialData.folders
+const initialFileData = typeof initialData !== 'undefined' ? initialData.files : defaultInitialData.files
 
 // Function to set the normalized folders and files
 const setNormalizedFoldersAndFiles = () => {
   // Variables
-  const allFolders: IFolders = {}
-  const allFiles: IFiles = {}
+  const allFolderPermissions: IAllFolderPermissions = {}
+  const allFolders: IAllFolders = {}
+  const allFiles: IAllFiles = {}
   const rootFolderIds = initialFolderData.map(folder => folder.id)
+  const userFileIds = initialFileData.map(file => file.id)
   
   // Get Folders and Files From Folder
-  const getFolderAndFilesFromFolder = (folder: IFolderFromDatabase, parentFolderUsers?: IFolderFromDatabase['users']) => {
-    const folderUsers = parentFolderUsers ? [ ...parentFolderUsers, ...folder.users ] : folder.users
+  const getFolderAndFilesFromFolder = (
+    folder: IFolderFromDatabase, 
+    parentFolderPermissions?: IFolderFromDatabase['permissions']
+  ) => {
+    const folderPermissions = parentFolderPermissions ? [ ...parentFolderPermissions, ...folder.permissions ] : folder.permissions
+    const folderPermissionIds = folderPermissions.map(folderPermission => folderPermission.id)
+    
+    // Folder
     allFolders[folder.id] = {
       id: folder.id,
       name: folder.name,
       folderId: folder.folderId,
       folders: folder.folders.map(folder => folder.id),
       files: folder.files.map(file => file.id),
-      users: folderUsers
+      permissions: folderPermissionIds
     }
+    
+    // Files
     folder.files.forEach(file => {
       allFiles[file.id] = {
         id: file.id,
         folderId: file.folderId,
+        userId: file.userId,
         name: file.name,
         type: file.type,
         typeId: file.typeId,
         isPreventedFromSelecting: false
       }
     })
-    folder.folders.forEach(currentFolder => getFolderAndFilesFromFolder(currentFolder, folderUsers))
+    
+    // Permissions
+    folder.permissions.forEach(folderPermission => {
+      allFolderPermissions[folderPermission.id] = folderPermission
+    })
+    
+    // Subfolders
+    folder.folders.forEach(currentFolder => getFolderAndFilesFromFolder(currentFolder, folderPermissions))
   }
   
   // Get the folders and files for each of the root folders
   initialFolderData.forEach(currentFolder => getFolderAndFilesFromFolder(currentFolder, null))
   
+  // Get the user files
+  initialFileData.forEach(currentFile => {
+    allFiles[currentFile.id] = { 
+      ...currentFile,
+      isPreventedFromSelecting: false
+    }
+  })
+  
   // Return the normalized objects
-  return { allFolders, allFiles, rootFolderIds }
+  return { allFolderPermissions, allFolders, allFiles, rootFolderIds, userFolderIds }
 }
 
 // Get the normalized folders and files
-const { allFolders, allFiles, rootFolderIds } = setNormalizedFoldersAndFiles()
+const { allFolderPermissions, allFolders, allFiles, rootFolderIds } = setNormalizedFoldersAndFiles()
 
 // Initial Folder State
 export const initialFolderState: IFolderState = {
@@ -74,20 +101,19 @@ export const initialFolderState: IFolderState = {
     cutOrCopy: null, 
     folderOrFile: null 
   },
-	folders: allFolders,
-  files: allFiles,
-  isSavingNewFile: false,
-  onFileSave: null,
+  allFolderPermissions: allFolderPermissions,
+	allFolders: allFolders,
+  allFiles: allFiles,
 	rootFolderIds: rootFolderIds,
 }
 export type IFolderState = {
-  activeFolderPath: string[]
+  activeFolderPath: IFolder['id'][]
   clipboard: IFolderClipboard
-	folders: { [key: string]: IFolder }
-  files: { [key: string]: IFile }
-  onFileSave(...args: any): void
-  isSavingNewFile: boolean
-	rootFolderIds: string[]
+	allFolderPermissions: IAllFolderPermissions
+	allFolders: IAllFolders
+  allFiles: IAllFiles
+	rootFolderIds: IFolder['id'][]
+	userFileIds: IFile['id'][]
 }
 
 //-----------------------------------------------------------------------------
@@ -100,15 +126,15 @@ export const folderReducer = (state = initialFolderState, action: IFolderActions
       const { folderId, newFile } = action
       return {
         ...state,
-        files: {
-          ...state.files,
+        allFiles: {
+          ...state.allFiles,
           [newFile.id]: newFile
         },
-        folders: {
-          ...state.folders,
+        allFolders: {
+          ...state.allFolders,
           [folderId]: {
-            ...state.folders[folderId],
-            files: [ ...state.folders[folderId].files, newFile.id ]
+            ...state.allFolders[folderId],
+            files: [ ...state.allFolders[folderId].files, newFile.id ]
           }
         }
       }
@@ -118,11 +144,11 @@ export const folderReducer = (state = initialFolderState, action: IFolderActions
       const { folderId, newFolder, newFolderId } = action
 			return {
 				...state,
-				folders: {
-					...state.folders,
+				allFolders: {
+					...state.allFolders,
 					[folderId]: {
-						...state.folders[folderId],
-						folders: [ ...state.folders[folderId].folders, newFolderId],
+						...state.allFolders[folderId],
+						folders: [ ...state.allFolders[folderId].folders, newFolderId],
           },
           [newFolderId]: newFolder
 				},
@@ -149,10 +175,10 @@ export const folderReducer = (state = initialFolderState, action: IFolderActions
 			const { id, updates } = action
 			return {
 				...state,
-				folders: {
-					...state.folders,
+				allFolders: {
+					...state.allFolders,
 					[id]: {
-						...state.folders[id],
+						...state.allFolders[id],
 						...updates,
 					},
 				},
@@ -163,10 +189,10 @@ export const folderReducer = (state = initialFolderState, action: IFolderActions
 			const { id, updates } = action
 			return {
 				...state,
-				files: {
-					...state.files,
+				allFiles: {
+					...state.allFiles,
 					[id]: {
-						...state.files[id],
+						...state.allFiles[id],
 						...updates,
 					},
 				},
@@ -177,7 +203,7 @@ export const folderReducer = (state = initialFolderState, action: IFolderActions
       const { nextFiles } = action
 			return {
 				...state,
-        files: nextFiles
+        allFiles: nextFiles
 			}
 		}
 
@@ -185,16 +211,7 @@ export const folderReducer = (state = initialFolderState, action: IFolderActions
       const { nextFolders } = action
 			return {
 				...state,
-        folders: nextFolders
-			}
-		}
-
-		case UPDATE_IS_SAVING_NEW_FILE: {
-      const { nextIsSavingNewFile, onFileSave } = action
-			return {
-				...state,
-        isSavingNewFile: nextIsSavingNewFile,
-        onFileSave: onFileSave
+        allFolders: nextFolders
 			}
 		}
 

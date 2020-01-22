@@ -21,14 +21,14 @@ const SheetActionUploadCsv = () => {
 
   // Redux
   const dispatch = useDispatch()
-  const userFolderId = useSelector((state: IAppState) => state.user.folderId)
+  const folderId = useSelector((state: IAppState) => state.folder.rootFolderIds[0])
 
   // State
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
 
   // Handle Button Click
   const handleButtonClick = () => {
-    dispatch(updateModal({ activeModal: 'CREATE_SHEET_FROM_CSV', createSheetFolderId: userFolderId, openSheetAfterCreate: true }))
+    dispatch(updateModal({ activeModal: 'CREATE_SHEET_FROM_CSV', createSheetFolderId: folderId, openSheetAfterCreate: true }))
   }
 
   return (

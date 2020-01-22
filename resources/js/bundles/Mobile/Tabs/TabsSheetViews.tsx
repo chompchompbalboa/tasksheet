@@ -25,7 +25,7 @@ const TabsSheetViews = () => {
 
   // Redux
   const dispatch = useDispatch()
-  const activeSheetId = useSelector((state: IAppState) => state.user.active.tab && state.folder.files[state.user.active.tab] && state.folder.files[state.user.active.tab].typeId)
+  const activeSheetId = useSelector((state: IAppState) => state.user.active.tab && state.folder.allFiles[state.user.active.tab] && state.folder.allFiles[state.user.active.tab].typeId)
   const activeSheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[activeSheetId] && state.sheet.allSheets[activeSheetId].activeSheetViewId)
   const activeSheetSheetViewIds = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[activeSheetId] && state.sheet.allSheets[activeSheetId].views)
   const allSheetViews = useSelector((state: IAppState) => state.sheet.allSheetViews )

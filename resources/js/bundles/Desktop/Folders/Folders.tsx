@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useState } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { IAppState } from '@/state'
@@ -26,34 +26,22 @@ const Folders = ({
   // Redux
   const dispatch = useDispatch()
   const activeFolderPath = useSelector((state: IAppState) => state.folder.activeFolderPath)
-  const files = useSelector((state: IAppState) => state.folder.files)
-  const folders = useSelector((state: IAppState) => state.folder.folders)
-  const isSavingNewFile = useSelector((state: IAppState) => state.folder.isSavingNewFile)
-  const onFileSave = useSelector((state: IAppState) => state.folder.onFileSave)
+  const files = useSelector((state: IAppState) => state.folder.allFiles)
+  const folders = useSelector((state: IAppState) => state.folder.allFolders)
   const rootFolderIds = useSelector((state: IAppState) => state.folder.rootFolderIds)
   const updateActiveFolderPath = (level: number, nextActiveFolderId: string) => dispatch(updateActiveFolderPathAction(level, nextActiveFolderId))
-  
-  // State
-  const [ isSheetCurrentlyBeingCreated, setIsSheetCurrentlyBeingCreated ] = useState(false)
 
   // Sidebar
   const Sidebar = () => {
     return (
-      <FoldersSidebar
-         isSheetCurrentlyBeingCreated={isSheetCurrentlyBeingCreated}
-         setIsSheetCurrentlyBeingCreated={setIsSheetCurrentlyBeingCreated}/>
+      <FoldersSidebar />
      )
   }
 
   // Header
   const Header = () => {
     return (
-      <FoldersHeader
-        activeFolderPath={activeFolderPath}
-        files={files}
-        folders={folders}
-        isSavingNewFile={isSavingNewFile}
-        onFileSave={onFileSave}/>
+      <FoldersHeader />
     )
   }
 

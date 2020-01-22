@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -17,16 +17,17 @@ import Icon from '@/components/Icon'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const FoldersSidebar = ({
-  isSheetCurrentlyBeingCreated,
-  setIsSheetCurrentlyBeingCreated
-}: IFoldersSidebar) => {
+const FoldersSidebar = () => {
   
-  // Dispatch
+  // Redux
   const dispatch = useDispatch()
   const activeFolderPath = useSelector((state: IAppState) => state.folder.activeFolderPath)
   const rootFolderIds = useSelector((state: IAppState) => state.folder.rootFolderIds)
+  
+  // State
+  const [ isSheetCurrentlyBeingCreated, setIsSheetCurrentlyBeingCreated ] = useState(false)
 
+  // Variables
   const activeFolderId = activeFolderPath.length > 0 ? activeFolderPath[activeFolderPath.length - 1] : rootFolderIds[0]
 
   return (
@@ -51,14 +52,6 @@ const FoldersSidebar = ({
       </ActionsContainer>
     </Container>
   )
-}
-
-//-----------------------------------------------------------------------------
-// Props
-//-----------------------------------------------------------------------------
-interface IFoldersSidebar {
-  isSheetCurrentlyBeingCreated: boolean
-  setIsSheetCurrentlyBeingCreated(nextIsSheetCurrentlyBeingCreated: boolean): void
 }
 
 //-----------------------------------------------------------------------------

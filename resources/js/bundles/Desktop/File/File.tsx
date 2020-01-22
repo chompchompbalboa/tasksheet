@@ -17,7 +17,7 @@ const File = ({
   fileId
 }: FileProps) => {
 
-  const file = useSelector((state: IAppState) => state.folder.files[fileId])
+  const file = useSelector((state: IAppState) => state.folder.allFiles[fileId])
 
   const fileComponents = {
     SHEET: Sheet

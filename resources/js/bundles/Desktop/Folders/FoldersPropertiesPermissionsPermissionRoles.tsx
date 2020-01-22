@@ -4,14 +4,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { IFolderUser } from '@/state/folder/types'
+import { IFolderPermission } from '@/state/folder/types'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const FoldersPropertiesUsersUserRoles = ({
+const FoldersPropertiesPermissionsPermissionRoles = ({
   activeRole
-}: IFoldersPropertiesUsersUserRoles) => {  
+}: IFoldersPropertiesPermissionsPermissionRoles) => {  
 
   // Refs
   const container = useRef(null)
@@ -54,8 +54,9 @@ const FoldersPropertiesUsersUserRoles = ({
       </CurrentRole>
       <Dropdown
         isDropdownVisible={isDropdownVisible}>
-        {Object.keys(roles).map((role: IFolderUser['role']) => (
+        {Object.keys(roles).map((role: IFolderPermission['role']) => (
           <Role
+            key={role}
             isActive={role === activeRole}>
             {roles[role]}
           </Role>
@@ -68,8 +69,8 @@ const FoldersPropertiesUsersUserRoles = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface IFoldersPropertiesUsersUserRoles {
-  activeRole: IFolderUser['role']
+interface IFoldersPropertiesPermissionsPermissionRoles {
+  activeRole: IFolderPermission['role']
 }
 
 //-----------------------------------------------------------------------------
@@ -119,4 +120,4 @@ interface IRole {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default FoldersPropertiesUsersUserRoles
+export default FoldersPropertiesPermissionsPermissionRoles

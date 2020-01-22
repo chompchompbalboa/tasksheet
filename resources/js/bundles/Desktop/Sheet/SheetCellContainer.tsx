@@ -34,7 +34,7 @@ const SheetCellContainer = ({
   
   // Redux
   const dispatch = useDispatch()
-  const activeSheetId = useSelector((state: IAppState) => state.folder.files[state.tab.activeTab] && state.folder.files[state.tab.activeTab].typeId)
+  const activeSheetId = useSelector((state: IAppState) => state.folder.allFiles[state.tab.activeTab] && state.folder.allFiles[state.tab.activeTab].typeId)
   const isSelectedCellEditingPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellEditingPrevented)
   const isSelectedCellNavigationPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellNavigationPrevented)
   const sheetStyles = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].styles)

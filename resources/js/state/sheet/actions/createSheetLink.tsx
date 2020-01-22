@@ -27,8 +27,8 @@ export const createSheetLink = (sheetId: string, folderId: string): IThunkAction
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
       folder: { 
-        files, 
-        folders 
+        allFiles, 
+        allFolders
       },
       sheet: { 
         allSheets,
@@ -41,10 +41,10 @@ export const createSheetLink = (sheetId: string, folderId: string): IThunkAction
     const sourceSheet = allSheets[sheetId]
     const sourceSheetActiveSheetView = allSheetViews[sourceSheet.activeSheetViewId]
 
-    const fileId = Object.keys(files).find(fileId => files[fileId].typeId === sheetId)
+    const fileId = Object.keys(allFiles).find(fileId => allFiles[fileId].typeId === sheetId)
     const newFileId = createUuid()
     
-    const newSheetLinkFileName = files[fileId].name + ' - Linked'
+    const newSheetLinkFileName = allFiles[fileId].name + ' - Linked'
 
     const newLinkedSheetId = createUuid()
     const newLinkedSheetActiveSheetView: ISheetView = {
@@ -92,7 +92,7 @@ export const createSheetLink = (sheetId: string, folderId: string): IThunkAction
     ))
     // Update folders and files
     const newFile = {
-      ...files[fileId],
+      ...allFiles[fileId],
       id: newFileId,
       folderId: folderId,
       type: 'SHEET' as IFileType, 
@@ -100,14 +100,14 @@ export const createSheetLink = (sheetId: string, folderId: string): IThunkAction
       typeId: newLinkedSheetId
     }
     dispatch(updateFiles({
-      ...files,
+      ...allFiles,
       [newFileId]: newFile
     }))
     dispatch(updateFolders({
-      ...folders,
+      ...allFolders,
       [folderId]: {
-        ...folders[folderId],
-        files: [ ...folders[folderId].files, newFileId ]
+        ...allFolders[folderId],
+        files: [ ...allFolders[folderId].files, newFileId ]
       }
     }))
     // Update open tabs

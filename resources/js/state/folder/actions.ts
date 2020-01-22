@@ -9,8 +9,8 @@ import { mutation } from '@/api'
 import { IAppState } from '@/state'
 import { IThunkAction, IThunkDispatch } from '@/state/types'
 import { 
-  IFile, IFiles, IFileUpdates, 
-  IFolder, IFolders, IFolderUpdates,
+  IFile, IAllFiles, IFileUpdates, 
+  IFolder, IAllFolders, IFolderUpdates,
   IFolderClipboardUpdates, 
 } from '@/state/folder/types'
 import { createHistoryStep } from '@/state/history/actions'
@@ -23,8 +23,7 @@ export type IFolderActions =
   IUpdateActiveFolderPath | 
   IUpdateClipboard |
   ICreateFolder | IUpdateFolder | IUpdateFolders | 
-  ICreateFile | IUpdateFile | IUpdateFiles | 
-  IUpdateIsSavingNewFile
+  ICreateFile | IUpdateFile | IUpdateFiles
 
 //-----------------------------------------------------------------------------
 // Defaults
@@ -36,7 +35,7 @@ const defaultFolder = (folderId: string): IFolder => {
     name: null,
     files: [],
     folders: [],
-    users: []
+    permissions: []
   }
 }
 
@@ -93,14 +92,14 @@ export const pasteFromClipboard = (nextFolderId: string) => {
         cutOrCopy,
         folderOrFile
       },
-      files,
-      folders
+      allFiles,
+      allFolders
     } = getState().folder
-    const nextFolder = folders[nextFolderId]
+    const nextFolder = allFolders[nextFolderId]
     // File
     if(folderOrFile === 'FILE') {
-      const file = files[itemId]
-      const previousFolder = folders[file.folderId]
+      const file = allFiles[itemId]
+      const previousFolder = allFolders[file.folderId]
       if(previousFolder.id !== nextFolder.id) {
         // Cut
         if(cutOrCopy === 'CUT') {
@@ -118,8 +117,8 @@ export const pasteFromClipboard = (nextFolderId: string) => {
     }
     // Folder
     else if(folderOrFile === 'FOLDER') {
-      const folder = folders[itemId]
-      const previousFolder = folders[folder.folderId]
+      const folder = allFolders[itemId]
+      const previousFolder = allFolders[folder.folderId]
       if(previousFolder.id !== nextFolder.id) {
         // Cut
         if(cutOrCopy === 'CUT') {
@@ -199,16 +198,16 @@ export const deleteFile = (fileId: string) => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
       folder: {
-        files,
-        folders
+        allFiles,
+        allFolders
       },
       tab: {
         tabs
       }
     } = getState()
-    const file = files[fileId]
+    const file = allFiles[fileId]
     if(file) {
-      const folder = folders[file.folderId]
+      const folder = allFolders[file.folderId]
       const folderFiles = clone(folder.files)
       const nextFolderFiles = folder.files.filter(folderFileId => folderFileId !== fileId)
       const actions = () => {
@@ -237,12 +236,12 @@ export const deleteFolder = (folderId: string) => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
       folder: {
-        folders
+        allFolders
       }
     } = getState()
-    const folder = folders[folderId]
+    const folder = allFolders[folderId]
     if(folder) {
-      const parentFolder = folders[folder.folderId]
+      const parentFolder = allFolders[folder.folderId]
       if(parentFolder) {
         const nextParentFolderFolders = parentFolder.folders.filter(currentFolderId => currentFolderId !== folderId)
       const actions = () => {
@@ -295,10 +294,10 @@ export const updateFileReducer = (id: string, updates: IFileUpdates): IFolderAct
 export const UPDATE_FILES = 'UPDATE_FILES'
 interface IUpdateFiles {
 	type: typeof UPDATE_FILES
-  nextFiles: IFiles
+  nextFiles: IAllFiles
 }
 
-export const updateFiles = (nextFiles: IFiles): IFolderActions => {
+export const updateFiles = (nextFiles: IAllFiles): IFolderActions => {
 	return {
 		type: UPDATE_FILES,
 		nextFiles
@@ -336,31 +335,12 @@ export const updateFolderReducer = (id: string, updates: IFolderUpdates): IFolde
 export const UPDATE_FOLDERS = 'UPDATE_FOLDERS'
 interface IUpdateFolders {
 	type: typeof UPDATE_FOLDERS
-  nextFolders: IFolders
+  nextFolders: IAllFolders
 }
 
-export const updateFolders = (nextFolders: IFolders): IFolderActions => {
+export const updateFolders = (nextFolders: IAllFolders): IFolderActions => {
 	return {
 		type: UPDATE_FOLDERS,
 		nextFolders
-	}
-}
-
-
-//-----------------------------------------------------------------------------
-// Update Active File Id
-//-----------------------------------------------------------------------------
-export const UPDATE_IS_SAVING_NEW_FILE = 'UPDATE_IS_SAVING_NEW_FILE'
-interface IUpdateIsSavingNewFile {
-	type: typeof UPDATE_IS_SAVING_NEW_FILE
-  nextIsSavingNewFile: boolean
-  onFileSave: () => void
-}
-
-export const updateIsSavingNewFile = (nextIsSavingNewFile: boolean, onFileSave: (...args: any) => void): IFolderActions => {
-	return {
-		type: UPDATE_IS_SAVING_NEW_FILE,
-    nextIsSavingNewFile,
-    onFileSave
 	}
 }

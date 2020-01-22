@@ -6,20 +6,20 @@ import styled from 'styled-components'
 
 import { IFolder } from '@/state/folder/types'
 
-import FoldersPropertiesUsersUser from '@desktop/Folders/FoldersPropertiesUsersUser'
+import FoldersPropertiesPermissionsPermission from '@desktop/Folders/FoldersPropertiesPermissionsPermission'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const FoldersPropertiesUsers = ({
-  users
+  folderPermissions
 }: IFoldersPropertiesUsers) => {  
   return (
     <Container>
-      {users && users.map((user, index) => (
-        <FoldersPropertiesUsersUser
+      {folderPermissions && folderPermissions.map((folderPermissionId, index) => (
+        <FoldersPropertiesPermissionsPermission
           key={index}
-          user={user}/>
+          folderPermissionId={folderPermissionId}/>
       ))}
     </Container>
   )
@@ -29,7 +29,7 @@ const FoldersPropertiesUsers = ({
 // Props
 //-----------------------------------------------------------------------------
 interface IFoldersPropertiesUsers {
-  users: IFolder['users']
+  folderPermissions: IFolder['permissions']
 }
 
 //-----------------------------------------------------------------------------

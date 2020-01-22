@@ -2,31 +2,39 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { CLOSE } from '@/assets/icons'
 
-import { IFolderUser } from '@/state/folder/types'
+import { IAppState } from '@/state'
+import { IFolderPermission } from '@/state/folder/types'
 
 import Icon from '@/components/Icon'
-import FoldersPropertiesUsersUserRoles from '@desktop/Folders/FoldersPropertiesUsersUserRoles'
+import FoldersPropertiesPermissionsPermissionRoles from '@desktop/Folders/FoldersPropertiesPermissionsPermissionRoles'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const FoldersPropertiesUsersUser = ({
-  user
-}: IFoldersPropertiesUsersUser) => {  
+const FoldersPropertiesPermissionsPermission = ({
+  folderPermissionId
+}: IFoldersPropertiesPermissionsPermission) => {
+  
+  const folderPermission = useSelector((state: IAppState) => state.folder.allFolderPermissions && state.folder.allFolderPermissions[folderPermissionId])
 
   return (
     <Container>
-      <Name>{user.name}</Name>
-      <Email>{user.email}</Email>
-      <Actions>
-        <FoldersPropertiesUsersUserRoles
-          activeRole={user.role}/>
-        <Delete><Icon icon={CLOSE} size="0.7rem"/></Delete>
-      </Actions>
+      {folderPermission &&
+        <>
+          <Name>{folderPermission.userName}</Name>
+          <Email>{folderPermission.userEmail}</Email>
+          <Actions>
+            <FoldersPropertiesPermissionsPermissionRoles
+              activeRole={folderPermission.role}/>
+            <Delete><Icon icon={CLOSE} size="0.7rem"/></Delete>
+          </Actions>
+        </>
+      }
     </Container>
   )
 }
@@ -34,8 +42,8 @@ const FoldersPropertiesUsersUser = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface IFoldersPropertiesUsersUser {
-  user: IFolderUser
+interface IFoldersPropertiesPermissionsPermission {
+  folderPermissionId: IFolderPermission['id']
 }
 
 //-----------------------------------------------------------------------------
@@ -86,4 +94,4 @@ const Delete = styled.div`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default FoldersPropertiesUsersUser
+export default FoldersPropertiesPermissionsPermission

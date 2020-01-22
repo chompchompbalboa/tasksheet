@@ -16,9 +16,9 @@ class Folder extends Model
   const CREATED_AT = 'createdAt';
   const UPDATED_AT = 'updatedAt';
 
-  protected $visible = ['id', 'name', 'folderId', 'folders', 'files', 'users'];
+  protected $visible = ['id', 'name', 'folderId', 'folders', 'files', 'permissions'];
   protected $fillable = ['id', 'name', 'folderId'];
-  protected $appends = ['folders', 'files', 'users'];
+  protected $appends = ['folders', 'files', 'permissions'];
 
   public function folder() {
     return $this->belongsTo('App\Models\Folder', 'folderId');
@@ -31,25 +31,30 @@ class Folder extends Model
     return $this->folders()->orderBy('name')->get();
   }
   
-  public function getUsersAttribute() {
-    $users = [];
+  public function getPermissionsAttribute() {
+    $permissions = [];
     $usersToGet = [];
-    $userRoles = [];
+    $userPermissions = [];
     $folderPermissions = FolderPermission::where('folderId', $this->id)->get();
     foreach($folderPermissions as $folderPermission) {
       array_push($usersToGet, $folderPermission->userId);
-      $userRoles[$folderPermission->userId] = $folderPermission->role;
+      $userPermissions[$folderPermission->userId] = [
+        'id' => $folderPermission->id,
+        'role' => $folderPermission->role
+      ];
     }
     $usersWithPermission = User::whereIn('id', $usersToGet)->get();
     foreach($usersWithPermission as $user) {
-      array_push($users, [
-        'id' => $user->id,
-        'name' => $user->name,
-        'email' => $user->email,
-        'role' => $userRoles[$user->id]
+      array_push($permissions, [
+        'id' => $userPermissions[$user->id]['id'],
+        'folderId' => $this->id,
+        'userId' => $user->id,
+        'userName' => $user->name,
+        'userEmail' => $user->email,
+        'role' => $userPermissions[$user->id]['role']
       ]);
     }
-    return $users;
+    return $permissions;
   }
   
   public function files() {

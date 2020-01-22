@@ -19,8 +19,8 @@ import { SheetCell } from '@desktop/Sheet/SheetCell'
 //-----------------------------------------------------------------------------
 const {
   folder: {
-    folders,
-    files
+    allFolders,
+    allFiles
   },
   sheet: {
     allSheets,
@@ -33,9 +33,9 @@ const {
   }
 } = mockAppState
 
-const folderId = Object.keys(folders)[0]
-const fileId = folders[folderId].files[0]
-const file = files[fileId]
+const folderId = Object.keys(allFolders)[0]
+const fileId = allFolders[folderId].files[0]
+const file = allFiles[fileId]
 const sheetId = file.typeId
 const sheet = allSheets[sheetId]
 const activeSheetView = allSheetViews[sheet.activeSheetViewId]

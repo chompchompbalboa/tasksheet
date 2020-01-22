@@ -22,6 +22,7 @@ export const createSheet = (folderId: IFolder['id'], newFileName?: string, openS
     const newFile: IFile = {
       id: createUuid(),
       folderId: folderId,
+      userId: null,
       name: newFileName || null,
       type: 'SHEET',
       typeId: newSheetId,

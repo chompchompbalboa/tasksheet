@@ -2,7 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import { IAppState } from '@/state'
-import { IFile, IFiles, IFolders, IFileType } from '@/state/folder/types'
+import { IFile, IAllFiles, IAllFolders, IFileType } from '@/state/folder/types'
 import { 
   IAllSheets, ISheet, ISheetFromDatabase,
   IAllSheetCells, ISheetCell,
@@ -61,8 +61,8 @@ export const appStateFactory = ({
 
   const numberOfColumnsPerSheet = columns.length
 
-  const allFolders: IFolders = {}
-  const allFiles: IFiles = {}
+  const allFolders: IAllFolders = {}
+  const allFiles: IAllFiles = {}
   const allFileIds: IFile['id'][] = []
 
   const allSheets: IAllSheets = {}
@@ -93,9 +93,10 @@ export const appStateFactory = ({
       const sheetId = sheetPrefix + fileSuffix
       const activeSheetViewId = sheetId + '.activeSheetViewId'
 
-      const newFile = {
+      const newFile: IFile = {
         id: fileId,
         folderId: folderId,
+        userId: null,
         name: fileId,
         type: 'SHEET' as IFileType,
         typeId: sheetId,
@@ -262,7 +263,7 @@ export const appStateFactory = ({
       name: folderId,
       folders: [],
       files: folderFiles,
-      users: []
+      permissions: []
     }
   }
   
@@ -298,8 +299,8 @@ export const appState: IAppState = {
   history: initialHistoryState,
   folder: {
     ...initialFolderState,
-    files: allFiles,
-    folders: allFolders,
+    allFiles: allFiles,
+    allFolders: allFolders,
   },
   modal: initialModalState,
   messenger: {
