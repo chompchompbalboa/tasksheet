@@ -3,8 +3,8 @@
 //-----------------------------------------------------------------------------
 import defaultInitialData from '@/state/initialData'
 import { 
-  IAllFiles,
-  IAllFolders, IFolderFromDatabase,
+  IAllFiles, IFile,
+  IAllFolders, IFolder, IFolderFromDatabase,
   IAllFolderPermissions, 
   IFolderClipboard, 
 } from '@/state/folder/types'
@@ -17,7 +17,8 @@ import {
 	UPDATE_FOLDER,
   UPDATE_FILE,
   UPDATE_FILES,
-  UPDATE_FOLDERS
+  UPDATE_FOLDERS,
+  UPDATE_USER_FILE_IDS
 } from '@/state/folder/actions'
 
 //-----------------------------------------------------------------------------
@@ -87,11 +88,11 @@ const setNormalizedFoldersAndFiles = () => {
   })
   
   // Return the normalized objects
-  return { allFolderPermissions, allFolders, allFiles, rootFolderIds, userFolderIds }
+  return { allFolderPermissions, allFolders, allFiles, rootFolderIds, userFileIds }
 }
 
 // Get the normalized folders and files
-const { allFolderPermissions, allFolders, allFiles, rootFolderIds } = setNormalizedFoldersAndFiles()
+const { allFolderPermissions, allFolders, allFiles, rootFolderIds, userFileIds } = setNormalizedFoldersAndFiles()
 
 // Initial Folder State
 export const initialFolderState: IFolderState = {
@@ -104,7 +105,8 @@ export const initialFolderState: IFolderState = {
   allFolderPermissions: allFolderPermissions,
 	allFolders: allFolders,
   allFiles: allFiles,
-	rootFolderIds: rootFolderIds,
+  rootFolderIds: rootFolderIds,
+  userFileIds: userFileIds
 }
 export type IFolderState = {
   activeFolderPath: IFolder['id'][]
@@ -212,6 +214,14 @@ export const folderReducer = (state = initialFolderState, action: IFolderActions
 			return {
 				...state,
         allFolders: nextFolders
+			}
+		}
+
+		case UPDATE_USER_FILE_IDS: {
+      const { nextUserFileIds } = action
+			return {
+				...state,
+        userFileIds: nextUserFileIds
 			}
 		}
 

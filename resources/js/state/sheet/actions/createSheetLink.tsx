@@ -9,13 +9,12 @@ import { mutation } from '@/api'
 
 import { IAppState } from '@/state'
 import { IThunkAction, IThunkDispatch } from '@/state/types'
-import { IFileType } from '@/state/folder/types'
-import { 
-  ISheetView
-} from '@/state/sheet/types'
+import { IFileType, IFolder } from '@/state/folder/types'
+import { ISheet, ISheetView } from '@/state/sheet/types'
+import { IUser } from '@/state/user/types'
 
 import { loadSheetReducer } from '@/state/sheet/actions'
-import { updateFiles, updateFolders } from '@/state/folder/actions'
+import { updateFiles, updateFolders, updateUserFileIds } from '@/state/folder/actions'
 import { openFileInNewTab, updateTabs } from '@/state/tab/actions'
 
 import { defaultSheetSelections, defaultSheetStyles } from '@/state/sheet/defaults'
@@ -23,12 +22,13 @@ import { defaultSheetSelections, defaultSheetStyles } from '@/state/sheet/defaul
 //-----------------------------------------------------------------------------
 // Create Sheet Link
 //-----------------------------------------------------------------------------
-export const createSheetLink = (sheetId: string, folderId: string): IThunkAction => {
+export const createSheetLink = (sheetId: ISheet['id'], folderId: IFolder['id'], userId: IUser['id'] = null): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
       folder: { 
         allFiles, 
-        allFolders
+        allFolders,
+        userFileIds
       },
       sheet: { 
         allSheets,
@@ -92,9 +92,9 @@ export const createSheetLink = (sheetId: string, folderId: string): IThunkAction
     ))
     // Update folders and files
     const newFile = {
-      ...allFiles[fileId],
       id: newFileId,
-      folderId: folderId,
+      folderId: userId ? null : folderId,
+      userId: userId,
       type: 'SHEET' as IFileType, 
       name: newSheetLinkFileName,
       typeId: newLinkedSheetId
@@ -103,13 +103,21 @@ export const createSheetLink = (sheetId: string, folderId: string): IThunkAction
       ...allFiles,
       [newFileId]: newFile
     }))
-    dispatch(updateFolders({
-      ...allFolders,
-      [folderId]: {
-        ...allFolders[folderId],
-        files: [ ...allFolders[folderId].files, newFileId ]
-      }
-    }))
+    if(folderId) {
+      dispatch(updateFolders({
+        ...allFolders,
+        [folderId]: {
+          ...allFolders[folderId],
+          files: [ ...allFolders[folderId].files, newFileId ]
+        }
+      }))
+    }
+    if(userId) {
+      dispatch(updateUserFileIds([
+        ...userFileIds,
+        newFile.id
+      ]))
+    }
     // Update open tabs
     dispatch(updateTabs([ ...tabs, newFileId ]))
     // Create the file on the server

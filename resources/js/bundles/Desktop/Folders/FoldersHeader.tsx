@@ -31,9 +31,10 @@ const FoldersHeader = () => {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   height: 100%;
-  background-color: rgb(240, 240, 240);
   display: flex;
   align-items: center;
+  font-size: 1rem;
+  font-weight: bold;
 `
 
 //-----------------------------------------------------------------------------

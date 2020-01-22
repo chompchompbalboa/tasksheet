@@ -2,12 +2,9 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import { IAppState } from '@/state'
-import { 
-  updateActiveFolderPath as updateActiveFolderPathAction 
-} from '@/state/folder/actions'
 
 import Content from '@desktop/Content/Content'
 import FoldersFolder from '@desktop/Folders/FoldersFolder'
@@ -24,12 +21,7 @@ const Folders = ({
 }: IFolders) => {
 
   // Redux
-  const dispatch = useDispatch()
   const activeFolderPath = useSelector((state: IAppState) => state.folder.activeFolderPath)
-  const files = useSelector((state: IAppState) => state.folder.allFiles)
-  const folders = useSelector((state: IAppState) => state.folder.allFolders)
-  const rootFolderIds = useSelector((state: IAppState) => state.folder.rootFolderIds)
-  const updateActiveFolderPath = (level: number, nextActiveFolderId: string) => dispatch(updateActiveFolderPathAction(level, nextActiveFolderId))
 
   // Sidebar
   const Sidebar = () => {
@@ -50,26 +42,15 @@ const Folders = ({
     return (
       <>
         <FoldersFolder
-          activeFolderPath={activeFolderPath}
-          files={files}
           folderId="ROOT"
-          folders={folders}
           handleFileOpen={handleFileOpen}
-          level={0}
-          rootFolderIds={rootFolderIds}
-          updateActiveFolderPath={updateActiveFolderPath}/>
-        {activeFolderPath.length > 0 && 
-          activeFolderPath.map((folderId: string, index: number) => (
+          level={0}/>
+        {activeFolderPath.length > 0 && activeFolderPath.map((folderId: string, index: number) => (
             <FoldersFolder 
               key={folderId}
-              activeFolderPath={activeFolderPath}
-              files={files}
               folderId={folderId}
-              folders={folders}
               handleFileOpen={handleFileOpen}
-              level={index + 1}
-              rootFolderIds={rootFolderIds}
-              updateActiveFolderPath={updateActiveFolderPath}/>))}
+              level={index + 1}/>))}
         <FoldersProperties />
       </>
     )

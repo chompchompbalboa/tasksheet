@@ -3,8 +3,11 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 import styled from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { IAllFiles, IAllFolders } from '@/state/folder/types'
+import { IAppState } from '@/state'
+
+import { updateActiveFolderPath } from '@/state/folder/actions'
 
 import FoldersFolderFile from '@desktop/Folders/FoldersFolderFile'
 import FoldersFolderFolder from '@desktop/Folders/FoldersFolderFolder'
@@ -13,36 +16,39 @@ import FoldersFolderFolder from '@desktop/Folders/FoldersFolderFolder'
 // Component
 //-----------------------------------------------------------------------------
 const FoldersFolder = ({
-  activeFolderPath,
-  files,
   folderId,
-  folders,
   handleFileOpen,
-  level,
-  rootFolderIds,
-  updateActiveFolderPath
+  level
 }: FoldersFolderProps) => {
 
-  const folder = folders[folderId]
+  // Redux
+  const dispatch = useDispatch()
+  const activeFolderPath = useSelector((state: IAppState) => state.folder.activeFolderPath)
+  const allFolders = useSelector((state: IAppState) => state.folder.allFolders)
+  const allFiles = useSelector((state: IAppState) => state.folder.allFiles)
+  const rootFolderIds = useSelector((state: IAppState) => state.folder.rootFolderIds)
+  const userFileIds = useSelector((state: IAppState) => state.folder.userFileIds)
+
+  const folder = allFolders[folderId]
   const folderIds: string[] = folderId !== "ROOT" ? folder.folders : rootFolderIds
-  const fileIds: string[] = folderId !== "ROOT" ? folder.files : []
+  const fileIds: string[] = folderId !== "ROOT" ? folder.files : userFileIds
   
   return (
     <Container>
       <ItemsContainer>
         {folderIds.map(folderId => {
-          const folderItem = folders[folderId]
+          const folderItem = allFolders[folderId]
           return (
             <FoldersFolderFolder
               key={folderId}
               activeFolderPath={activeFolderPath}
               folder={folderItem}
               level={level}
-              updateActiveFolderPath={updateActiveFolderPath}/>
+              updateActiveFolderPath={(level: number, nextActiveFolderId: string) => dispatch(updateActiveFolderPath(level, nextActiveFolderId))}/>
           )
         })}
         {fileIds.map(fileId => {
-          const fileItem = files[fileId]
+          const fileItem = allFiles[fileId]
           return (
             <FoldersFolderFile
               key={fileId}
@@ -59,14 +65,9 @@ const FoldersFolder = ({
 // Props
 //-----------------------------------------------------------------------------
 interface FoldersFolderProps {
-  activeFolderPath: string[]
-  files: IAllFiles
   folderId: string
-  folders: IAllFolders
   handleFileOpen(nextActiveTabId: string): void
   level: number
-  rootFolderIds: string[]
-  updateActiveFolderPath(level: number, nextActiveFolderId: string): void
 }
 
 //-----------------------------------------------------------------------------

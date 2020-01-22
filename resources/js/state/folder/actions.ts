@@ -23,7 +23,8 @@ export type IFolderActions =
   IUpdateActiveFolderPath | 
   IUpdateClipboard |
   ICreateFolder | IUpdateFolder | IUpdateFolders | 
-  ICreateFile | IUpdateFile | IUpdateFiles
+  ICreateFile | IUpdateFile | IUpdateFiles |
+  IUpdateUserFileIds
 
 //-----------------------------------------------------------------------------
 // Defaults
@@ -199,7 +200,8 @@ export const deleteFile = (fileId: string) => {
     const {
       folder: {
         allFiles,
-        allFolders
+        allFolders,
+        userFileIds
       },
       tab: {
         tabs
@@ -207,24 +209,43 @@ export const deleteFile = (fileId: string) => {
     } = getState()
     const file = allFiles[fileId]
     if(file) {
-      const folder = allFolders[file.folderId]
-      const folderFiles = clone(folder.files)
-      const nextFolderFiles = folder.files.filter(folderFileId => folderFileId !== fileId)
-      const actions = () => {
-        batch(() => {
-          if(tabs.includes(fileId)) {
-            dispatch(closeTab(fileId))
-          }
-          dispatch(updateFolder(folder.id, { files: nextFolderFiles }, true))
-        })
-        mutation.deleteFile(fileId)
+      if(file.folderId) {
+        const folder = allFolders[file.folderId]
+        const folderFiles = clone(folder.files)
+        const nextFolderFiles = folder.files.filter(folderFileId => folderFileId !== fileId)
+        const actions = () => {
+          batch(() => {
+            if(tabs.includes(fileId)) {
+              dispatch(closeTab(fileId))
+            }
+            dispatch(updateFolder(folder.id, { files: nextFolderFiles }, true))
+          })
+          mutation.deleteFile(fileId)
+        }
+        const undoActions = () => {
+          dispatch(updateFolder(folder.id, { files: folderFiles }, true))
+          mutation.restoreFile(fileId)
+        }
+        dispatch(createHistoryStep({actions, undoActions}))
+        actions()
       }
-      const undoActions = () => {
-        dispatch(updateFolder(folder.id, { files: folderFiles }, true))
-        mutation.restoreFile(fileId)
+      if(file.userId) {
+        const actions = () => {
+          batch(() => {
+            if(tabs.includes(fileId)) {
+              dispatch(closeTab(fileId))
+            }
+            dispatch(updateUserFileIds(userFileIds.filter(currentFileId => fileId !== currentFileId)))
+          })
+          mutation.deleteFile(fileId)
+        }
+        const undoActions = () => {
+          dispatch(updateUserFileIds(userFileIds))
+          mutation.restoreFile(fileId)
+        }
+        dispatch(createHistoryStep({actions, undoActions}))
+        actions()
       }
-      dispatch(createHistoryStep({actions, undoActions}))
-      actions()
     }
 	}
 }
@@ -342,5 +363,21 @@ export const updateFolders = (nextFolders: IAllFolders): IFolderActions => {
 	return {
 		type: UPDATE_FOLDERS,
 		nextFolders
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Folders
+//-----------------------------------------------------------------------------
+export const UPDATE_USER_FILE_IDS = 'UPDATE_USER_FILE_IDS'
+interface IUpdateUserFileIds {
+	type: typeof UPDATE_USER_FILE_IDS
+  nextUserFileIds: IFile['id'][]
+}
+
+export const updateUserFileIds = (nextUserFileIds: IFile['id'][]): IFolderActions => {
+	return {
+		type: UPDATE_USER_FILE_IDS,
+		nextUserFileIds
 	}
 }
