@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import { IFile, IFolderFromDatabase } from '@/state/folder/types'
+import { IFileFromDatabase, IFolderFromDatabase } from '@/state/folder/types'
 import { IAllSheetColumnTypes } from '@/state/sheet/types'
 import { IUser } from '@/state/user/types'
 
@@ -13,7 +13,7 @@ declare global {
 	interface IInitialData {
     user: IUser
     folders: IFolderFromDatabase[]
-    files: IFile[]
+    files: IFileFromDatabase[]
 	}
 }
 export {} // Typescript needs this file to be a module

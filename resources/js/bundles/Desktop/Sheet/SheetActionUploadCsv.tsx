@@ -21,7 +21,7 @@ const SheetActionUploadCsv = () => {
 
   // Redux
   const dispatch = useDispatch()
-  const folderId = useSelector((state: IAppState) => state.folder.rootFolderIds[0])
+  const folderId = useSelector((state: IAppState) => state.folder.userFolderIds[0])
 
   // State
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)

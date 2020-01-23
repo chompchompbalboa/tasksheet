@@ -9,8 +9,8 @@ import { mutation } from '@/api'
 import { IAppState } from '@/state'
 import { IThunkAction, IThunkDispatch } from '@/state/types'
 import { 
-  IFile, IAllFiles, IFileUpdates, 
-  IFolder, IFolderPermission, IFolderPermissionUpdates, IAllFolders, IFolderUpdates,
+  IFile, IAllFilePermissions, IAllFiles, IFileUpdates, 
+  IFolder, IAllFolderPermissions, IFolderPermission, IFolderPermissionUpdates, IAllFolders, IFolderUpdates,
   IFolderClipboardUpdates, 
 } from '@/state/folder/types'
 import { createHistoryStep } from '@/state/history/actions'
@@ -20,11 +20,13 @@ import { closeTab } from '@/state/tab/actions'
 // Exports
 //-----------------------------------------------------------------------------
 export type IFolderActions = 
+  ISetAllFolderPermissions | ISetAllFolders |
+  ISetAllFilePermissions | ISetAllFiles |
   IUpdateActiveFolderPath | 
   IUpdateClipboard |
   ICreateFolder | IUpdateFolder | IUpdateFolderPermission | IUpdateFolders | 
   ICreateFile | IUpdateFile | IUpdateFiles |
-  IUpdateUserFileIds 
+  IUpdateUserFileIds
 
 //-----------------------------------------------------------------------------
 // Defaults
@@ -39,6 +41,71 @@ const defaultFolder = (folderId: string): IFolder => {
     permissions: []
   }
 }
+
+//-----------------------------------------------------------------------------
+// Set All Folder Permissions
+//-----------------------------------------------------------------------------
+export const SET_ALL_FOLDER_PERMISSIONS = 'SET_ALL_FOLDER_PERMISSIONS'
+interface ISetAllFolderPermissions {
+  type: typeof SET_ALL_FOLDER_PERMISSIONS
+  nextAllFolderPermissions: IAllFolderPermissions
+}
+
+export const setAllFolderPermissions = (nextAllFolderPermissions: IAllFolderPermissions): IFolderActions => {
+	return {
+		type: SET_ALL_FOLDER_PERMISSIONS,
+    nextAllFolderPermissions
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Set All File Permissions
+//-----------------------------------------------------------------------------
+export const SET_ALL_FILE_PERMISSIONS = 'SET_ALL_FILE_PERMISSIONS'
+interface ISetAllFilePermissions {
+  type: typeof SET_ALL_FILE_PERMISSIONS
+  nextAllFilePermissions: IAllFilePermissions
+}
+
+export const setAllFilePermissions = (nextAllFilePermissions: IAllFilePermissions): IFolderActions => {
+	return {
+		type: SET_ALL_FILE_PERMISSIONS,
+    nextAllFilePermissions
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Set All Folders
+//-----------------------------------------------------------------------------
+export const SET_ALL_FOLDERS = 'SET_ALL_FOLDERS'
+interface ISetAllFolders {
+  type: typeof SET_ALL_FOLDERS
+  nextAllFolders: IAllFolders
+}
+
+export const setAllFolders = (nextAllFolders: IAllFolders): IFolderActions => {
+	return {
+		type: SET_ALL_FOLDERS,
+    nextAllFolders
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Set All Files
+//-----------------------------------------------------------------------------
+export const SET_ALL_FILES = 'SET_ALL_FILES'
+interface ISetAllFiles {
+  type: typeof SET_ALL_FILES
+  nextAllFiles: IAllFiles
+}
+
+export const setAllFiles = (nextAllFiles: IAllFiles): IFolderActions => {
+	return {
+		type: SET_ALL_FILES,
+    nextAllFiles
+	}
+}
+
 
 //-----------------------------------------------------------------------------
 // Update Active Folder Path

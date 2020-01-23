@@ -6,12 +6,17 @@ import {
   IAllFiles, IFile,
   IAllFolders, IFolder,
   IAllFolderPermissions, 
+  IAllFilePermissions, 
   IFolderClipboard, 
 } from '@/state/folder/types'
 import {
   IFolderActions,
   CREATE_FILE,
   CREATE_FOLDER,
+  SET_ALL_FOLDER_PERMISSIONS,
+  SET_ALL_FILE_PERMISSIONS,
+  SET_ALL_FOLDERS,
+  SET_ALL_FILES,
   UPDATE_ACTIVE_FOLDER_PATH,
   UPDATE_CLIPBOARD,
 	UPDATE_FOLDER,
@@ -33,11 +38,12 @@ const setNormalizedFoldersAndFiles = () => {
   
   // Variables
   const allFolderPermissions: IAllFolderPermissions = {}
+  const allFilePermissions: IAllFilePermissions = {}
   const allFolders: IAllFolders = {}
   const allFiles: IAllFiles = {}
   const folderFolders: { [folderId: string]: IFolder['id'][] } = {}
   const folderFiles: { [folderId: string]: IFile['id'][] } = {}
-  const rootFolderIds = initialFolderData.map(folder => folder.folderId === null ? folder.id : undefined).filter(Boolean)
+  const userFolderIds = initialFolderData.map(folder => folder.folderId === null ? folder.id : undefined).filter(Boolean)
   const userFileIds = initialFileData.map(file => file.folderId === null ? file.id : undefined).filter(Boolean)
   
   // Set the child folder ids for each folder
@@ -49,10 +55,17 @@ const setNormalizedFoldersAndFiles = () => {
   
   // Set the file ids for each folder and add files to allFiles
   initialFileData.forEach(file => {
+    const filePermissionIds = file.permissions.map(filePermission => filePermission.id)
     if(file.folderId) {
       folderFiles[file.folderId] = [ ...folderFiles[file.folderId] || [], file.id ]
     }
-    allFiles[file.id] = file
+    allFiles[file.id] = {
+      ...file,
+      permissions: filePermissionIds
+    }
+    file.permissions.forEach(filePermission => {
+      allFilePermissions[filePermission.id] = filePermission
+    })
   })
   
   // Add the folders to allFolders and permissions to allFolderPermissions
@@ -72,34 +85,36 @@ const setNormalizedFoldersAndFiles = () => {
   })
   
   // Return the normalized objects
-  return { allFolderPermissions, allFolders, allFiles, rootFolderIds, userFileIds }
+  return { allFolderPermissions, allFilePermissions, allFolders, allFiles, userFolderIds, userFileIds }
 }
 
 // Get the normalized folders and files
-const { allFolderPermissions, allFolders, allFiles, rootFolderIds, userFileIds } = setNormalizedFoldersAndFiles()
+const { allFolderPermissions, allFilePermissions, allFolders, allFiles, userFolderIds, userFileIds } = setNormalizedFoldersAndFiles()
 
 // Initial Folder State
 export const initialFolderState: IFolderState = {
   activeFolderPath: [initialFolderData[0].id],
+  allFolderPermissions: allFolderPermissions,
+  allFilePermissions: allFilePermissions,
+	allFolders: allFolders,
+  allFiles: allFiles,
+  userFolderIds: userFolderIds,
+  userFileIds: userFileIds,
   clipboard: { 
     itemId: null, 
     cutOrCopy: null, 
     folderOrFile: null 
-  },
-  allFolderPermissions: allFolderPermissions,
-	allFolders: allFolders,
-  allFiles: allFiles,
-  rootFolderIds: rootFolderIds,
-  userFileIds: userFileIds
+  }
 }
 export type IFolderState = {
   activeFolderPath: IFolder['id'][]
-  clipboard: IFolderClipboard
 	allFolderPermissions: IAllFolderPermissions
+	allFilePermissions: IAllFilePermissions
 	allFolders: IAllFolders
   allFiles: IAllFiles
-	rootFolderIds: IFolder['id'][]
+	userFolderIds: IFolder['id'][]
 	userFileIds: IFile['id'][]
+  clipboard: IFolderClipboard
 }
 
 //-----------------------------------------------------------------------------
@@ -107,6 +122,11 @@ export type IFolderState = {
 //-----------------------------------------------------------------------------
 export const folderReducer = (state = initialFolderState, action: IFolderActions): IFolderState => {
 	switch (action.type) {
+      
+		case SET_ALL_FOLDER_PERMISSIONS: { return { ...state, allFolderPermissions: action.nextAllFolderPermissions } }
+		case SET_ALL_FILE_PERMISSIONS: { return { ...state, allFilePermissions: action.nextAllFilePermissions } }
+		case SET_ALL_FOLDERS: { return { ...state, allFolders: action.nextAllFolders } }
+		case SET_ALL_FILES: { return { ...state, allFiles: action.nextAllFiles } }
 
     case CREATE_FILE: {
       const { folderId, newFile } = action

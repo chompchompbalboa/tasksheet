@@ -22,13 +22,13 @@ const FoldersSidebar = () => {
   // Redux
   const dispatch = useDispatch()
   const activeFolderPath = useSelector((state: IAppState) => state.folder.activeFolderPath)
-  const rootFolderIds = useSelector((state: IAppState) => state.folder.rootFolderIds)
+  const userFolderIds = useSelector((state: IAppState) => state.folder.userFolderIds)
   
   // State
   const [ isSheetCurrentlyBeingCreated, setIsSheetCurrentlyBeingCreated ] = useState(false)
 
   // Variables
-  const activeFolderId = activeFolderPath.length > 0 ? activeFolderPath[activeFolderPath.length - 1] : rootFolderIds[0]
+  const activeFolderId = activeFolderPath.length > 0 ? activeFolderPath[activeFolderPath.length - 1] : userFolderIds[0]
 
   return (
     <Container>

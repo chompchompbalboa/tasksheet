@@ -6,9 +6,10 @@ import { IUser } from '@/state/user/types'
 //-----------------------------------------------------------------------------
 // Types
 //-----------------------------------------------------------------------------
+export interface IAllFolderPermissions { [folderPermissionId: string]: IFolderPermission }
+export interface IAllFilePermissions { [filePermissionId: string]: IFilePermission }
 export interface IAllFolders { [folderId: string]: IFolder }
 export interface IAllFiles { [fileId: string]: IFile }
-export interface IAllFolderPermissions { [folderPermissionId: string]: IFolderPermission }
 
 export interface IFolderFromDatabase {
   id: string
@@ -46,6 +47,17 @@ export interface IFolderPermissionUpdates {
   role?: 'OWNER' | 'ADMINISTRATOR' | 'USER'
 }
 
+export interface IFileFromDatabase {
+	id: string
+  folderId: IFolder['id']
+  userId: IUser['id']
+	name: string
+	type: IFileType
+  typeId: string
+  permissions: IFilePermission[]
+  isPreventedFromSelecting?: boolean
+}
+
 export interface IFile {
 	id: string
   folderId: IFolder['id']
@@ -53,6 +65,7 @@ export interface IFile {
 	name: string
 	type: IFileType
   typeId: string
+  permissions: IFilePermission['id'][]
   isPreventedFromSelecting?: boolean
 }
 
@@ -61,6 +74,19 @@ export interface IFileUpdates {
   name?: string
   type?: IFileType
   isPreventedFromSelecting?: boolean
+}
+
+export interface IFilePermission {
+  id: string
+  fileId: IFile['id']
+  userId: IUser['id']
+  userName: string
+  userEmail: string
+  role: 'OWNER' | 'ADMINISTRATOR' | 'USER'
+}
+
+export interface IFilePermissionUpdates {
+  role?: 'OWNER' | 'ADMINISTRATOR' | 'USER'
 }
 
 export type IFileType = 'SHEET'

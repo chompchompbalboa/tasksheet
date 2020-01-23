@@ -26,11 +26,11 @@ const FoldersFolder = ({
   const activeFolderPath = useSelector((state: IAppState) => state.folder.activeFolderPath)
   const allFolders = useSelector((state: IAppState) => state.folder.allFolders)
   const allFiles = useSelector((state: IAppState) => state.folder.allFiles)
-  const rootFolderIds = useSelector((state: IAppState) => state.folder.rootFolderIds)
+  const userFolderIds = useSelector((state: IAppState) => state.folder.userFolderIds)
   const userFileIds = useSelector((state: IAppState) => state.folder.userFileIds)
 
   const folder = allFolders[folderId]
-  const folderIds: string[] = folderId !== "ROOT" ? folder.folders : rootFolderIds
+  const folderIds: string[] = folderId !== "ROOT" ? folder.folders : userFolderIds
   const fileIds: string[] = folderId !== "ROOT" ? folder.files : userFileIds
   
   return (

@@ -3,14 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 use App\Models\Folder;
+use App\Models\FolderPermission;
 
 class FolderController extends Controller
 {
     public function store(Request $request)
     {
       $folder = Folder::create($request->all());
+      $newFolderPermissions = [];
+      $folderFolderPermissions = FolderPermission::where('folderId', $folder->folderId)->get();
+      foreach($folderFolderPermissions as $folderPermission) {
+        array_push($newFolderPermissions, [
+          'id' => Str::uuid()->toString(),
+          'userId' => $folderPermission->userId,
+          'folderId' => $folder->id,
+          'role' => $folderPermission->role
+        ]);
+      }
+      FolderPermission::insert($newFolderPermissions);
       return response()->json($folder, 200);
     }
 

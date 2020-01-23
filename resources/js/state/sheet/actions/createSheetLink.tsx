@@ -9,7 +9,7 @@ import { mutation } from '@/api'
 
 import { IAppState } from '@/state'
 import { IThunkAction, IThunkDispatch } from '@/state/types'
-import { IFileType, IFolder } from '@/state/folder/types'
+import { IFile, IFileType, IFolder } from '@/state/folder/types'
 import { ISheet, ISheetView } from '@/state/sheet/types'
 import { IUser } from '@/state/user/types'
 
@@ -91,13 +91,14 @@ export const createSheetLink = (sheetId: ISheet['id'], folderId: IFolder['id'], 
       null // Cell photos
     ))
     // Update folders and files
-    const newFile = {
+    const newFile: IFile = {
       id: newFileId,
       folderId: userId ? null : folderId,
       userId: userId,
       type: 'SHEET' as IFileType, 
       name: newSheetLinkFileName,
-      typeId: newLinkedSheetId
+      typeId: newLinkedSheetId,
+      permissions: []
     }
     dispatch(updateFiles({
       ...allFiles,

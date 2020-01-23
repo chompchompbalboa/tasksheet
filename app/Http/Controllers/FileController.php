@@ -3,14 +3,40 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 use App\Models\File;
+use App\Models\FilePermission;
+use App\Models\FolderPermission;
 
 class FileController extends Controller
 {
     public function store(Request $request)
     {
       $file = File::create($request->all());
+      $newFilePermissions = [];
+      if(!is_null($file->folderId)) {
+        $fileFolderPermissions = FolderPermission::where('folderId', $file->folderId)->get();
+        foreach($fileFolderPermissions as $folderPermission) {
+          array_push($newFilePermissions, [
+            'id' => Str::uuid()->toString(),
+            'userId' => $folderPermission->userId,
+            'fileId' => $file->id,
+            'role' => $folderPermission->role
+          ]);
+        }
+      }
+      if(!is_null($file->userId)) {
+        $user = Auth::user();
+        array_push($newFilePermissions, [
+          'id' => Str::uuid()->toString(),
+          'userId' => $user->id,
+          'fileId' => $file->id,
+          'role' => 'OWNER'
+        ]);
+      }
+      FilePermission::insert($newFilePermissions);
       return response()->json(true, 200);
     }
 

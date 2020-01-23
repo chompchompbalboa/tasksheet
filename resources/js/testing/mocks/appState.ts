@@ -100,6 +100,7 @@ export const appStateFactory = ({
         name: fileId,
         type: 'SHEET' as IFileType,
         typeId: sheetId,
+        permissions: []
       }
 
       const newSheetSourceSheetId: ISheet['id'] = null
