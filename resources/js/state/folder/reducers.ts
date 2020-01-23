@@ -93,7 +93,7 @@ const { allFolderPermissions, allFilePermissions, allFolders, allFiles, userFold
 
 // Initial Folder State
 export const initialFolderState: IFolderState = {
-  activeFolderPath: [initialFolderData[0].id],
+  activeFolderPath: [ userFolderIds[0] ],
   allFolderPermissions: allFolderPermissions,
   allFilePermissions: allFilePermissions,
 	allFolders: allFolders,
