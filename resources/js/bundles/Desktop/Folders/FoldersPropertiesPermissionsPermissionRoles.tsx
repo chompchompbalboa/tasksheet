@@ -2,26 +2,20 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { IFolderPermission } from '@/state/folder/types'
-
-import { updateFolderPermission } from '@/state/folder/actions'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const FoldersPropertiesPermissionsPermissionRoles = ({
   activeRole,
-  folderPermissionId
+  onRoleChange
 }: IFoldersPropertiesPermissionsPermissionRoles) => {  
 
   // Refs
   const container = useRef(null)
-
-  // Redux
-  const dispatch = useDispatch()
 
   // State
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
@@ -66,7 +60,7 @@ const FoldersPropertiesPermissionsPermissionRoles = ({
             key={role}
             isActive={role === activeRole}
             onClick={() => {
-              dispatch(updateFolderPermission(folderPermissionId, { role: role }))
+              onRoleChange(role)
               setIsDropdownVisible(false)
             }}>
             {roles[role]}
@@ -82,7 +76,7 @@ const FoldersPropertiesPermissionsPermissionRoles = ({
 //-----------------------------------------------------------------------------
 interface IFoldersPropertiesPermissionsPermissionRoles {
   activeRole: IFolderPermission['role']
-  folderPermissionId: IFolderPermission['id']
+  onRoleChange(nextRole: IFolderPermission['role']): void
 }
 
 //-----------------------------------------------------------------------------

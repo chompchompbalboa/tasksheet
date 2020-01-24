@@ -2,18 +2,25 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { IAppState } from '@/state'
 import { IFolder } from '@/state/folder/types'
 
+import FoldersPropertiesPermissionsCreatePermission from '@desktop/Folders/FoldersPropertiesPermissionsCreatePermission'
 import FoldersPropertiesPermissionsPermission from '@desktop/Folders/FoldersPropertiesPermissionsPermission'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const FoldersPropertiesPermissions = ({
-  folderPermissions
+  folderId
 }: IFoldersPropertiesPermissions) => {
+  
+  // Redux
+  const folderPermissions = useSelector((state: IAppState) => state.folder.allFolders && state.folder.allFolders[folderId] && state.folder.allFolders[folderId].permissions)
+
   return (
     <Container>
       {folderPermissions && folderPermissions.map((folderPermissionId, index) => (
@@ -21,6 +28,8 @@ const FoldersPropertiesPermissions = ({
           key={index}
           folderPermissionId={folderPermissionId}/>
       ))}
+      <FoldersPropertiesPermissionsCreatePermission
+        folderId={folderId}/>
     </Container>
   )
 }
@@ -29,7 +38,7 @@ const FoldersPropertiesPermissions = ({
 // Props
 //-----------------------------------------------------------------------------
 interface IFoldersPropertiesPermissions {
-  folderPermissions: IFolder['permissions']
+  folderId: IFolder['id']
 }
 
 //-----------------------------------------------------------------------------

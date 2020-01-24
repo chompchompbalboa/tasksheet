@@ -2,13 +2,15 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { CLOSE } from '@/assets/icons'
 
 import { IAppState } from '@/state'
 import { IFolderPermission } from '@/state/folder/types'
+
+import { updateFolderPermission } from '@/state/folder/actions'
 
 import Icon from '@/components/Icon'
 import FoldersPropertiesPermissionsPermissionRoles from '@desktop/Folders/FoldersPropertiesPermissionsPermissionRoles'
@@ -21,6 +23,7 @@ const FoldersPropertiesPermissionsPermission = ({
 }: IFoldersPropertiesPermissionsPermission) => {
   
   // Redux
+  const dispatch = useDispatch()
   const folderPermission = useSelector((state: IAppState) => state.folder.allFolderPermissions && state.folder.allFolderPermissions[folderPermissionId])
 
   return (
@@ -32,7 +35,7 @@ const FoldersPropertiesPermissionsPermission = ({
           <Actions>
             <FoldersPropertiesPermissionsPermissionRoles
               activeRole={folderPermission.role}
-              folderPermissionId={folderPermissionId}/>
+              onRoleChange={(nextRole: IFolderPermission['role']) => dispatch(updateFolderPermission(folderPermissionId, { role: nextRole }))}/>
             <Delete><Icon icon={CLOSE} size="0.7rem"/></Delete>
           </Actions>
         </>
@@ -78,7 +81,7 @@ const Actions = styled.div`
 
 const Delete = styled.div`
   cursor: pointer;
-  padding: 0.0625rem;
+  padding: 0.06rem 0.15rem;
   margin-left: 0.5rem;
   display: flex;
   justify-content: center;

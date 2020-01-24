@@ -29,7 +29,7 @@ const FoldersProperties = () => {
         </FolderName>
         <Properties>
           <FoldersPropertiesPermissions
-            folderPermissions={activeFolder.permissions}/>
+            folderId={activeFolder.id}/>
         </Properties>
       </Wrapper>
     </Container>

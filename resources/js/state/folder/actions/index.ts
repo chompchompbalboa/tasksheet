@@ -29,6 +29,11 @@ export type IFolderActions =
   IUpdateUserFileIds
 
 //-----------------------------------------------------------------------------
+// Thunk Actions
+//-----------------------------------------------------------------------------
+export { createFolderPermission } from '@/state/folder/actions/createFolderPermission'
+
+//-----------------------------------------------------------------------------
 // Defaults
 //-----------------------------------------------------------------------------
 const defaultFolder = (folderId: string): IFolder => {
