@@ -113,6 +113,10 @@ export const deleteFolder = async (folderId: string) => {
 	}).catch(console.log.bind(console))
 }
 
+export const deleteFolderPermission = async (folderPermissionId: IFolderPermission['id']) => {
+	return axios.delete('/app/folders/permissions/' + folderPermissionId)
+}
+
 export const restoreFolder = async (folderId: string) => {
 	return axios.post('/app/folders/restore/' + folderId).then(response => {
 		return response.data

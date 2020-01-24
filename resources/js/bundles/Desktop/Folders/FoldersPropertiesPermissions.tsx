@@ -23,9 +23,9 @@ const FoldersPropertiesPermissions = ({
 
   return (
     <Container>
-      {folderPermissions && folderPermissions.map((folderPermissionId, index) => (
+      {folderPermissions && folderPermissions.map(folderPermissionId => (
         <FoldersPropertiesPermissionsPermission
-          key={index}
+          key={folderPermissionId}
           folderPermissionId={folderPermissionId}/>
       ))}
       <FoldersPropertiesPermissionsCreatePermission

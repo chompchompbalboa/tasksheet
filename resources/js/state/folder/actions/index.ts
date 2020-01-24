@@ -32,6 +32,7 @@ export type IFolderActions =
 // Thunk Actions
 //-----------------------------------------------------------------------------
 export { createFolderPermission } from '@/state/folder/actions/createFolderPermission'
+export { deleteFolderPermission } from '@/state/folder/actions/deleteFolderPermission'
 
 //-----------------------------------------------------------------------------
 // Defaults

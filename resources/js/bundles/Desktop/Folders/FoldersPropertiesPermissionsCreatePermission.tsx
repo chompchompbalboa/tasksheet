@@ -75,30 +75,32 @@ const FoldersPropertiesPermissionsCreatePermission = ({
       .then(response => { // Permission was sucessfully created
         setTimeout(() => {
           setCreatePermissionStatus('CREATED')
-        }, 500)
+        }, 250)
         setTimeout(() => {
           dispatch(createFolderPermission(response.data as IFolderPermission))
           setCreatePermissionStatus('READY')
           setCreatePermissionEmail('')
           setCreatePermissionRole('USER')
-        }, 1500)
+        }, 1250)
       })
       .catch(error => {
         if(error.response.status === 404) { // User not found
           setTimeout(() => {
             setIsErrorContainerVisible(true)
             setCreatePermissionStatus('USER_NOT_FOUND')
-          }, 500)
+          }, 250)
         }
         else if(error.response.status === 400) { // User already has permission
           setTimeout(() => {
             setIsErrorContainerVisible(true)
             setCreatePermissionStatus('USER_ALREADY_HAS_PERMISSION')
-          }, 500)
+          }, 250)
         }
         else { // Generic error
-          setIsErrorContainerVisible(true)
-          setCreatePermissionStatus('ERROR')
+          setTimeout(() => {
+            setIsErrorContainerVisible(true)
+            setCreatePermissionStatus('ERROR')
+          }, 250)
         }
       })
   }
@@ -113,7 +115,7 @@ const FoldersPropertiesPermissionsCreatePermission = ({
   // Create Permission Statuses
   const createPermissionStatuses = {
     READY: <Icon icon={PLUS_SIGN} size="0.7rem"/>,
-    CREATING: "Creating",
+    CREATING: "Creating...",
     USER_NOT_FOUND: <Icon icon={PLUS_SIGN} size="0.7rem"/>,
     USER_ALREADY_HAS_PERMISSION: <Icon icon={PLUS_SIGN} size="0.7rem"/>,
     ERROR: "Something went wrong. Please try again.",
@@ -200,12 +202,14 @@ const Email = styled.div`
   position: relative;
   width: 33%;
   text-align: center;
+  display: flex;
+  justify-content: center;
 `
 
 const ErrorContainer = styled.div`
   position: absolute;
   top: calc(100% + 0.25rem);
-  width: 100%;
+  width: 20rem;
   padding: 0.5rem 1rem;
   display: flex;
   flex-direction: column;

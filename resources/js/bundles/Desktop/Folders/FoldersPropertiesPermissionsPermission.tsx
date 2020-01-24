@@ -1,16 +1,21 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { CLOSE } from '@/assets/icons'
 
+import { mutation } from '@/api'
+
 import { IAppState } from '@/state'
 import { IFolderPermission } from '@/state/folder/types'
 
-import { updateFolderPermission } from '@/state/folder/actions'
+import { 
+  deleteFolderPermission,
+  updateFolderPermission
+} from '@/state/folder/actions'
 
 import Icon from '@/components/Icon'
 import FoldersPropertiesPermissionsPermissionRoles from '@desktop/Folders/FoldersPropertiesPermissionsPermissionRoles'
@@ -25,6 +30,42 @@ const FoldersPropertiesPermissionsPermission = ({
   // Redux
   const dispatch = useDispatch()
   const folderPermission = useSelector((state: IAppState) => state.folder.allFolderPermissions && state.folder.allFolderPermissions[folderPermissionId])
+  const userId = useSelector((state: IAppState) => state.user.id)
+
+  // State
+  const [ deleteFolderPermissionStatus, setDeleteFolderPermissionStatus ] = useState('READY' as IDeleteFolderPermissionStatus)
+
+  // Variables
+  const isCurrentUsersFolderPermission = folderPermission.userId === userId
+
+  // Handle Delete Folder Permission
+  const handleDeleteFolderPermission = () => {
+    setDeleteFolderPermissionStatus('DELETING')
+    mutation.deleteFolderPermission(folderPermissionId)
+      .then(() => {
+        setTimeout(() => {
+          setDeleteFolderPermissionStatus('DELETED')
+        }, 250)
+        setTimeout(() => {
+          dispatch(deleteFolderPermission(folderPermission.folderId, folderPermission.id))
+        }, 1250)
+      })
+      .catch(() => {
+        setTimeout(() => {
+          setDeleteFolderPermissionStatus('ERROR')
+        }, 250)
+        setTimeout(() => {
+          setDeleteFolderPermissionStatus('READY')
+        }, 2000)
+      })
+  }
+
+  const deleteFolderPermissionStatusMessages = {
+    READY: <Icon icon={CLOSE} size="0.7rem"/>,
+    DELETING: "Deleting...",
+    DELETED: "Deleted!",
+    ERROR: "Error!"
+  }
 
   return (
     <Container>
@@ -36,7 +77,12 @@ const FoldersPropertiesPermissionsPermission = ({
             <FoldersPropertiesPermissionsPermissionRoles
               activeRole={folderPermission.role}
               onRoleChange={(nextRole: IFolderPermission['role']) => dispatch(updateFolderPermission(folderPermissionId, { role: nextRole }))}/>
-            <Delete><Icon icon={CLOSE} size="0.7rem"/></Delete>
+            <Delete
+              deleteFolderPermissionStatus={deleteFolderPermissionStatus}
+              isCurrentUsersFolderPermission={isCurrentUsersFolderPermission}
+              onClick={!isCurrentUsersFolderPermission ? () => handleDeleteFolderPermission() : () => null}>
+              {deleteFolderPermissionStatusMessages[deleteFolderPermissionStatus]}
+            </Delete>
           </Actions>
         </>
       }
@@ -50,6 +96,8 @@ const FoldersPropertiesPermissionsPermission = ({
 interface IFoldersPropertiesPermissionsPermission {
   folderPermissionId: IFolderPermission['id']
 }
+
+type IDeleteFolderPermissionStatus = 'READY' | 'DELETING' | 'DELETED' | 'ERROR'
 
 //-----------------------------------------------------------------------------
 // Styled Components
@@ -80,21 +128,26 @@ const Actions = styled.div`
 `
 
 const Delete = styled.div`
-  cursor: pointer;
-  padding: 0.06rem 0.15rem;
+  cursor: ${ ({ isCurrentUsersFolderPermission }: IDelete) => isCurrentUsersFolderPermission ? 'not-allowed' : 'pointer' };
+  padding: ${ ({ deleteFolderPermissionStatus }: IDelete) => ['DELETING', 'DELETED'].includes(deleteFolderPermissionStatus) ? '0.06rem 0.375rem' : '0.06rem 0.15rem' };
   margin-left: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 5px;
   background-color: rgb(225, 225, 225);
+  color: black;
   opacity: 0.8;
   &:hover {
     opacity: 1;
-    background-color: rgb(225, 0, 0);
-    color: white;
+    background-color: ${ ({ isCurrentUsersFolderPermission }: IDelete) => isCurrentUsersFolderPermission ? 'rgb(225, 225, 225)' : 'rgb(225, 0, 0)' };
+    color: ${ ({ isCurrentUsersFolderPermission }: IDelete) => isCurrentUsersFolderPermission ? 'black' : 'white' };
   }
 `
+interface IDelete {
+  deleteFolderPermissionStatus: IDeleteFolderPermissionStatus
+  isCurrentUsersFolderPermission: boolean
+}
 
 //-----------------------------------------------------------------------------
 // Export
