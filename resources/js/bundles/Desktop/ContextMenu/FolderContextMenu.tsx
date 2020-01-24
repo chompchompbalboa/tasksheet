@@ -21,7 +21,6 @@ const FolderContextMenu = ({
   closeContextMenu,
   contextMenuLeft,
   contextMenuTop,
-  isRootFolder = false,
   pasteFromClipboard,
   updateModal,
   updateClipboard,
@@ -39,12 +38,10 @@ const FolderContextMenu = ({
       closeContextMenu={closeContextMenu}
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}>
-      {!isRootFolder &&
-        <ContextMenuItem 
-          isFirstItem
-          text="Cut"
-          onClick={() => closeOnClick(() => updateClipboard({ itemId: folderId, folderOrFile: 'FOLDER', cutOrCopy: 'CUT' }))}/>
-      }
+      <ContextMenuItem
+        isFirstItem
+        text="Cut"
+        onClick={() => closeOnClick(() => updateClipboard({ itemId: folderId, folderOrFile: 'FOLDER', cutOrCopy: 'CUT' }))}/>
       <ContextMenuItem
         text="Paste"
         onClick={() => closeOnClick(() => pasteFromClipboard(folderId))}/>
@@ -59,19 +56,15 @@ const FolderContextMenu = ({
       <ContextMenuItem 
         text="New Folder"
         onClick={() => closeOnClick(() => createFolder(folderId))}/>
-      {!isRootFolder && 
-        <>
-          <ContextMenuDivider />
-          <ContextMenuItem 
-            text="Rename"
-            onClick={() => closeOnClick(() => setIsRenaming(true))}/>
-          <ContextMenuDivider />
-          <ContextMenuItem 
-            isLastItem
-            text="Delete" 
-            onClick={() => closeOnClick(() => deleteFolder(folderId))}/>
-        </>
-      }
+      <ContextMenuDivider />
+      <ContextMenuItem 
+        text="Rename"
+        onClick={() => closeOnClick(() => setIsRenaming(true))}/>
+      <ContextMenuDivider />
+      <ContextMenuItem 
+        isLastItem
+        text="Delete" 
+        onClick={() => closeOnClick(() => deleteFolder(folderId))}/>
     </ContextMenu>
   )
 }
@@ -87,7 +80,6 @@ interface FolderContextMenuProps {
   closeContextMenu(): void
   contextMenuLeft: number
   contextMenuTop: number
-  isRootFolder?: boolean
   pasteFromClipboard(folderId: string): void
   setIsRenaming(isRenaming: boolean): void
   updateModal(updates: IModalUpdates): void

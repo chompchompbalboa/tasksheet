@@ -60,10 +60,19 @@ const FoldersPropertiesPermissionsCreatePermission = ({
     return () => removeEventListener('click', handleClickWhileErrorContainerIsVisible)
   }, [ isErrorContainerVisible ])
   
-  // Handle Keydown While Email Input Is Focused
+  // Close the error container when its not needed
+  useEffect(() => {
+    if([ 'USER_NOT_FOUND', 'USER_ALREADY_HAS_PERMISSION', 'ERROR'].includes(createPermissionStatus)) {
+      setIsErrorContainerVisible(true)
+    }
+    else {
+      setIsErrorContainerVisible(false)
+    }
+  }, [ createPermissionStatus ])
+  
+  // Handle Click While Error Container Is Visible
   const handleClickWhileErrorContainerIsVisible = (e: MouseEvent) => {
     if(!errorContainer.current.contains(e.target)) {
-      setIsErrorContainerVisible(false)
       setCreatePermissionStatus('READY')
     }
   }
@@ -77,7 +86,7 @@ const FoldersPropertiesPermissionsCreatePermission = ({
           setCreatePermissionStatus('CREATED')
         }, 250)
         setTimeout(() => {
-          dispatch(createFolderPermission(response.data as IFolderPermission))
+          dispatch(createFolderPermission((response.data || []) as IFolderPermission[]))
           setCreatePermissionStatus('READY')
           setCreatePermissionEmail('')
           setCreatePermissionRole('USER')
@@ -86,19 +95,16 @@ const FoldersPropertiesPermissionsCreatePermission = ({
       .catch(error => {
         if(error.response.status === 404) { // User not found
           setTimeout(() => {
-            setIsErrorContainerVisible(true)
             setCreatePermissionStatus('USER_NOT_FOUND')
           }, 250)
         }
         else if(error.response.status === 400) { // User already has permission
           setTimeout(() => {
-            setIsErrorContainerVisible(true)
             setCreatePermissionStatus('USER_ALREADY_HAS_PERMISSION')
           }, 250)
         }
         else { // Generic error
           setTimeout(() => {
-            setIsErrorContainerVisible(true)
             setCreatePermissionStatus('ERROR')
           }, 250)
         }
@@ -118,7 +124,7 @@ const FoldersPropertiesPermissionsCreatePermission = ({
     CREATING: "Creating...",
     USER_NOT_FOUND: <Icon icon={PLUS_SIGN} size="0.7rem"/>,
     USER_ALREADY_HAS_PERMISSION: <Icon icon={PLUS_SIGN} size="0.7rem"/>,
-    ERROR: "Something went wrong. Please try again.",
+    ERROR: <Icon icon={PLUS_SIGN} size="0.7rem"/>,
     CREATED: "Created!",
   }
   

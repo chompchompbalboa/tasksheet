@@ -13,7 +13,7 @@ import { IAppState } from '@/state'
 import { IFolderPermission } from '@/state/folder/types'
 
 import { 
-  deleteFolderPermission,
+  deleteFolderPermissions,
   updateFolderPermission
 } from '@/state/folder/actions'
 
@@ -42,12 +42,12 @@ const FoldersPropertiesPermissionsPermission = ({
   const handleDeleteFolderPermission = () => {
     setDeleteFolderPermissionStatus('DELETING')
     mutation.deleteFolderPermission(folderPermissionId)
-      .then(() => {
+      .then(response => {
         setTimeout(() => {
           setDeleteFolderPermissionStatus('DELETED')
         }, 250)
         setTimeout(() => {
-          dispatch(deleteFolderPermission(folderPermission.folderId, folderPermission.id))
+          dispatch(deleteFolderPermissions(response.data as IFolderPermission['id'][]))
         }, 1250)
       })
       .catch(() => {

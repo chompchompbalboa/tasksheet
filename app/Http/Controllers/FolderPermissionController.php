@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
+use App\Models\Folder;
 use App\Models\FolderPermission;
 use App\Models\User;
 
@@ -20,22 +22,32 @@ class FolderPermissionController extends Controller
       if($doesUserAlreadyHavePermission) {
         return response(null, 400);
       }
-      else {
-        $folderPermission = FolderPermission::create([
-          'folderId' => $folderId,
-          'userId' => $user->id,
-          'userName' => $user->name,
-          'userEmail' => $user->email,
-          'role' => $role
-        ]);
-        return response()->json([
-          'id' => $folderPermission->id,
-          'folderId' => $folderPermission->folderId,
-          'userId' => $user->id,
-          'userName' => $user->name,
-          'userEmail' => $user->email,
-          'role' => $folderPermission->role,
-        ], 200);
+      else { // Create the new folder permissions        
+        $newFolderPermissionsFolderIds = array_merge( [ $folderId ], $this->getSubfolderIds($folderId));
+        $newFolderPermissions = [];
+        $newFolderPermissionsToReturn = [];
+
+        foreach($newFolderPermissionsFolderIds as $newFolderPermissionsFolderId) {
+          $newFolderPermissionId = Str::uuid()->toString();
+          array_push($newFolderPermissions, [
+            'id' => $newFolderPermissionId,
+            'folderId' => $newFolderPermissionsFolderId,
+            'userId' => $user->id,
+            'role' => $role
+          ]);
+          array_push($newFolderPermissionsToReturn, [ // The return array is slightly different to prevent having to refetch userName and userEmail
+            'id' => $newFolderPermissionId,
+            'folderId' => $newFolderPermissionsFolderId,
+            'userId' => $user->id,
+            'userName' => $user->name,
+            'userEmail' => $user->email,
+            'role' => $role
+          ]);
+        }
+        
+        FolderPermission::insert($newFolderPermissions);
+        
+        return response()->json($newFolderPermissionsToReturn, 200);
       }
     }
 
@@ -47,7 +59,31 @@ class FolderPermissionController extends Controller
 
     public function destroy(FolderPermission $permission)
     {
-      $permission->delete();
-      return response()->json(true, 200);
+      $user = User::where('id', $permission->userId)->firstOrFail(); // Return a 404 if the user can't be found
+      $subfolderIds = $this->getSubfolderIds($permission->folderId);
+      $permissionIdsToDelete = [ $permission->id ];
+      foreach($subfolderIds as $subfolderId) {
+        $permissionToDelete = FolderPermission::where('folderId', $subfolderId)->where('userId', $user->id)->first();
+        if($permissionToDelete) {
+          $permissionIdsToDelete[] = $permissionToDelete->id;
+        }
+      }
+      FolderPermission::destroy($permissionIdsToDelete);
+      return response()->json($permissionIdsToDelete, 200);
+    }
+  
+    private function getSubfolderIds(string $folderId) {
+      $subfolderIds = [];
+        
+      $fetchSubfolderIds = function ($folderId) use(&$fetchSubfolderIds, &$subfolderIds) {
+        $subfolders = Folder::where('folderId', $folderId)->get();
+        foreach($subfolders as $subfolder) {
+          $subfolderIds[] = $subfolder->id;
+          $fetchSubfolderIds($subfolder->id);
+        }
+      };
+
+      $fetchSubfolderIds($folderId);
+      return $subfolderIds;
     }
 }

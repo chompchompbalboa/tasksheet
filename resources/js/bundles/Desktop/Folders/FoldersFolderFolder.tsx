@@ -63,8 +63,6 @@ const FoldersFolderFolder = ({
   const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
   const [ isRenaming, setIsRenaming ] = useState(folder.name === null)
   
-  const isRootFolder = level === 0
-  
   useEffect(() => {
     if(isRenaming) {
       addEventListener('keypress', blurAutosizeInputOnEnter)
@@ -140,7 +138,6 @@ const FoldersFolderFolder = ({
           createFolder={createFolder}
           createSheet={createSheet}
           deleteFolder={deleteFolder}
-          isRootFolder={isRootFolder}
           pasteFromClipboard={pasteFromClipboard}
           setIsRenaming={setIsRenaming}
           updateModal={updateModal}

@@ -6,43 +6,37 @@ import { IThunkAction, IThunkDispatch } from '@/state/types'
 import { IFolderPermission } from '@/state/folder/types'
 
 import {
-  setAllFolderPermissions,
   setAllFolders
 } from '@/state/folder/actions'
 
 //-----------------------------------------------------------------------------
-// Create Folder Permission
+// Delete Folder Permissions
 //-----------------------------------------------------------------------------
-export const createFolderPermission = (newFolderPermissions: IFolderPermission[]): IThunkAction => {
+export const deleteFolderPermissions = (folderPermissionIdsToDelete: IFolderPermission['id'][]): IThunkAction => {
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
       allFolderPermissions,
       allFolders
     } = getState().folder
     
-    let nextAllFolderPermissions = { ...allFolderPermissions }
     let nextAllFolders = { ...allFolders }
     
-    newFolderPermissions.forEach(newFolderPermission => {
-      const folder = allFolders[newFolderPermission.folderId]
-      const nextFolderPermissions = [
-        ...folder.permissions,
-        newFolderPermission.id
-      ]
-      nextAllFolderPermissions = {
-        ...nextAllFolderPermissions,
-        [newFolderPermission.id]: newFolderPermission
-      }
-      nextAllFolders = {
-        ...nextAllFolders,
-        [folder.id]: {
-          ...nextAllFolders[folder.id],
-          permissions: nextFolderPermissions
+    folderPermissionIdsToDelete.forEach(folderPermissionId => {
+      const folderPermission = allFolderPermissions[folderPermissionId]
+      if(folderPermission) {
+        const folder = allFolders[folderPermission.folderId]
+        if(folder) {
+          nextAllFolders = {
+            ...nextAllFolders,
+            [folder.id]: {
+              ...nextAllFolders[folder.id],
+              permissions: folder.permissions.filter(currentFolderPermissionId => folderPermissionId !== currentFolderPermissionId)
+            }
+          }
         }
       }
     })
     
-    dispatch(setAllFolderPermissions(nextAllFolderPermissions))
     dispatch(setAllFolders(nextAllFolders))
   }
 }

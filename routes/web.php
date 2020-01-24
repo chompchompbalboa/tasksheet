@@ -27,18 +27,6 @@ Route::group([], function () {
       $user = Auth::user();
     }
 
-    /*
-    $folders = [];
-    foreach($user->folders()->orderBy('name')->get() as $userFolder) {
-      array_push($folders, $userFolder);
-    }
-
-    $files = [];
-    foreach($user->files()->orderBy('name')->get() as $userFile) {
-      array_push($files, $userFile);
-    }
-    */
-
     return view('app')->with([
       'user' => $user,
       'folders' => $user->folders(),
