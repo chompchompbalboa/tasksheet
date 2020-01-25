@@ -89,6 +89,7 @@ Route::group([
     'folders' => 'FolderController',
     'folders/permissions' => 'FolderPermissionController',
     'files' => 'FileController',
+    'files/permissions' => 'FilePermissionController',
     // Sheet
     'sheets' => 'SheetController',
     'sheets/cells' => 'SheetCellController',

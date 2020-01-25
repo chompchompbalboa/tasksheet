@@ -9,7 +9,7 @@ import { mutation } from '@/api'
 import { IAppState } from '@/state'
 import { IThunkAction, IThunkDispatch } from '@/state/types'
 import { 
-  IFile, IAllFilePermissions, IAllFiles, IFileUpdates, 
+  IFile, IAllFilePermissions, IFilePermission, IFilePermissionUpdates, IAllFiles, IFileUpdates, 
   IFolder, IAllFolderPermissions, IFolderPermission, IFolderPermissionUpdates, IAllFolders, IFolderUpdates,
   IFolderClipboardUpdates, 
 } from '@/state/folder/types'
@@ -22,10 +22,10 @@ import { closeTab } from '@/state/tab/actions'
 export type IFolderActions = 
   ISetAllFolderPermissions | ISetAllFolders |
   ISetAllFilePermissions | ISetAllFiles |
-  IUpdateActiveFolderPath | 
+  IUpdateActiveFileId | IUpdateActiveFolderPath | 
   IUpdateClipboard |
   ICreateFolder | IUpdateFolder | IUpdateFolderPermission | IUpdateFolders | 
-  ICreateFile | IUpdateFile | IUpdateFiles |
+  ICreateFile | IUpdateFile | IUpdateFilePermission | IUpdateFiles |
   IUpdateUserFileIds
 
 //-----------------------------------------------------------------------------
@@ -33,6 +33,8 @@ export type IFolderActions =
 //-----------------------------------------------------------------------------
 export { createFolderPermission } from '@/state/folder/actions/createFolderPermission'
 export { deleteFolderPermissions } from '@/state/folder/actions/deleteFolderPermissions'
+export { createFilePermission } from '@/state/folder/actions/createFilePermission'
+export { deleteFilePermissions } from '@/state/folder/actions/deleteFilePermissions'
 
 //-----------------------------------------------------------------------------
 // Defaults
@@ -109,6 +111,23 @@ export const setAllFiles = (nextAllFiles: IAllFiles): IFolderActions => {
 	return {
 		type: SET_ALL_FILES,
     nextAllFiles
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+// Update Active Folder Path
+//-----------------------------------------------------------------------------
+export const UPDATE_ACTIVE_FILE_ID = 'UPDATE_ACTIVE_FILE_ID'
+interface IUpdateActiveFileId {
+	type: typeof UPDATE_ACTIVE_FILE_ID
+	nextActiveFileId: IFile['id']
+}
+
+export const updateActiveFileId = (nextActiveFileId: IFile['id']): IFolderActions => {
+	return {
+		type: UPDATE_ACTIVE_FILE_ID,
+		nextActiveFileId: nextActiveFileId,
 	}
 }
 
@@ -379,6 +398,31 @@ export const updateFileReducer = (id: string, updates: IFileUpdates): IFolderAct
 		type: UPDATE_FILE,
 		id: id,
 		updates: updates,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update File Permissions
+//-----------------------------------------------------------------------------
+export const UPDATE_FILE_PERMISSION = 'UPDATE_FILE_PERMISSION'
+interface IUpdateFilePermission {
+	type: typeof UPDATE_FILE_PERMISSION
+  filePermissionId: IFilePermission['id']
+  updates: IFilePermissionUpdates
+}
+
+export const updateFilePermission = (filePermissionId: IFilePermission['id'], updates: IFilePermissionUpdates) => {	
+  return async (dispatch: IThunkDispatch) => {
+    dispatch(updateFilePermissionReducer(filePermissionId, updates))
+    mutation.updateFilePermission(filePermissionId, updates)
+  }
+}
+
+export const updateFilePermissionReducer = (filePermissionId: IFilePermission['id'], updates: IFilePermissionUpdates): IFolderActions => {
+	return {
+		type: UPDATE_FILE_PERMISSION,
+    filePermissionId,
+    updates
 	}
 }
 

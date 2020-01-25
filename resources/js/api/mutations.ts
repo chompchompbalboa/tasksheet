@@ -5,7 +5,7 @@ import axios from '@/api/axios'
 import { IS3PresignedUrlData } from '@/api/vapor'
 
 import { 
-  IFile, IFileUpdates, 
+  IFile, IFileUpdates, IFilePermission, IFilePermissionUpdates,
   IFolder, IFolderPermission, IFolderPermissionUpdates, IFolderUpdates 
 } from '@/state/folder/types'
 import { 
@@ -64,8 +64,22 @@ export const createFile = async (newFile: IFile) => {
 	}).catch(console.log.bind(console))
 }
 
+export const createFilePermission = async (fileId: IFile['id'], email: string, role: IFilePermission['role']) => {
+	return axios.post('/app/files/permissions', { fileId: fileId, email: email, role: role })
+}
+
 export const deleteFile = async (fileId: string) => {
 	return axios.delete('/app/files/' + fileId).then(response => {
+		return response.data
+	}).catch(console.log.bind(console))
+}
+
+export const deleteFilePermission = async (filePermissionId: IFilePermission['id']) => {
+	return axios.delete('/app/files/permissions/' + filePermissionId)
+}
+
+export const updateFilePermission = async (id: string, updates: IFilePermissionUpdates) => {
+	return axios.patch('/app/files/permissions/' + id, updates).then(response => {
 		return response.data
 	}).catch(console.log.bind(console))
 }

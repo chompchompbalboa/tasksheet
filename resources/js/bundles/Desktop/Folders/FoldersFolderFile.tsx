@@ -2,49 +2,64 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { MouseEvent, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { SHEET, SHEET_VIEW } from '@/assets/icons'
 
-import { IThunkDispatch } from '@/state/types'
+import { IAppState } from '@/state'
 import { 
-  IFile, IFileUpdates,
+  IFile,
   IFolderClipboardUpdates, 
 } from '@/state/folder/types'
 import { 
-  deleteFile as deleteFileAction,
-  updateClipboard as updateClipboardAction, 
-  updateFile as updateFileAction,
+  deleteFile,
+  updateActiveFileId,
+  updateClipboard, 
+  updateFile,
 } from '@/state/folder/actions'
 
 import AutosizeInput from 'react-input-autosize'
 import FileContextMenu from '@desktop/ContextMenu/FileContextMenu'
 import Icon from '@/components/Icon'
-
-//-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapDispatchToProps = (dispatch: IThunkDispatch) => ({
-  deleteFile: (fileId: string) => dispatch(deleteFileAction(fileId)),
-  updateClipboard: (updates: IFolderClipboardUpdates) => dispatch(updateClipboardAction(updates)),
-  updateFile: (fileId: string, updates: IFileUpdates) => dispatch(updateFileAction(fileId, updates))
-})
-
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const FoldersFolderFile = ({
-  deleteFile,
   file,
-  handleFileOpen,
-  updateClipboard,
-  updateFile
-}: FoldersFolderFileProps) => {
+  handleFileOpen
+}: IFoldersFolderFile) => {
   
+  // Redux
+  const dispatch = useDispatch()
+  const activeFileId = useSelector((state: IAppState) => state.folder.activeFileId)
+  
+  // State
   const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
   const [ contextMenuTop, setContextMenuTop ] = useState(null)
   const [ contextMenuLeft, setContextMenuLeft ] = useState(null)
+  const [ isRenaming, setIsRenaming ] = useState(file.name === null)
+  const [ fileName, setFileName ] = useState(file.name)
+  
+  // Listen for keypress while the input is active
+  useEffect(() => {
+    if(isRenaming) {
+      addEventListener('keypress', handleKeypressWhileInputIsFocused)
+    }
+    else {
+      removeEventListener('keypress', handleKeypressWhileInputIsFocused)
+    }
+    return () => removeEventListener('keypress', handleKeypressWhileInputIsFocused)
+  })
+  
+  // Handle Autosize Input Blur
+  const handleAutosizeInputBlur = () => {
+    if(fileName !== null) {
+      dispatch(updateFile(file.id, { name: fileName }))
+    }
+  }
+  
+  // Handle Context Menu
   const handleContextMenu = (e: MouseEvent) => {
     e.preventDefault()
     setIsContextMenuVisible(true)
@@ -52,35 +67,21 @@ const FoldersFolderFile = ({
     setContextMenuLeft(e.clientX)
   }
 
-  const [ isRenaming, setIsRenaming ] = useState(file.name === null)
-  const [ fileName, setFileName ] = useState(file.name)
-  const handleAutosizeInputBlur = () => {
-    if(fileName !== null) {
-      setIsRenaming(false)
-      updateFile(file.id, { name: fileName })
-    }
-  }
-
-  const blurAutosizeInputOnEnter = (e: KeyboardEvent) => {
+  // Handle Keypress While Input Is Focused
+  const handleKeypressWhileInputIsFocused = (e: KeyboardEvent) => {
     if(e.key === "Enter") {
       handleAutosizeInputBlur()
     }
   }
-  useEffect(() => {
-    if(isRenaming) {
-      addEventListener('keypress', blurAutosizeInputOnEnter)
-    }
-    else {
-      removeEventListener('keypress', blurAutosizeInputOnEnter)
-    }
-    return () => removeEventListener('keypress', blurAutosizeInputOnEnter)
-  })
 
   return (
     <>
       <Container
+        isHighlighted={activeFileId === file.id}
         isPreventedFromSelecting={file.isPreventedFromSelecting}
+        isRenaming={isRenaming}
         onContextMenu={e => handleContextMenu(e)}
+        onClick={() => dispatch(updateActiveFileId(file.id))}
         onDoubleClick={() => { if(!file.isPreventedFromSelecting) { handleFileOpen(file.id) }}}>
         <IconContainer
           isFile>
@@ -119,8 +120,8 @@ const FoldersFolderFile = ({
           closeContextMenu={() => setIsContextMenuVisible(false)}
           contextMenuLeft={contextMenuLeft}
           contextMenuTop={contextMenuTop}
-          deleteFile={deleteFile}
-          updateClipboard={updateClipboard}
+          deleteFile={(fileId: IFile['id']) => dispatch(deleteFile(file.id))}
+          updateClipboard={(updates: IFolderClipboardUpdates) => dispatch(updateClipboard(updates))}
           setIsRenaming={setIsRenaming}/>
       }
     </>
@@ -130,21 +131,14 @@ const FoldersFolderFile = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface FoldersFolderFileProps {
-  deleteFile(fileId: string): void
+interface IFoldersFolderFile {
   file: IFile
   handleFileOpen(nextActiveTabId: string): void
-  updateClipboard(updates: IFolderClipboardUpdates): void
-  updateFile(fileId: string, updates: IFileUpdates): void
 }
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-interface ContainerProps {
-  isPreventedFromSelecting: boolean
-}
-
 const Container = styled.div`
   justify-content: flex-start;
   cursor: ${ ({ isPreventedFromSelecting }: ContainerProps ) => isPreventedFromSelecting ? 'not-allowed' : 'default' };
@@ -152,12 +146,17 @@ const Container = styled.div`
   padding: 0.125rem 0 0.125rem 0.325rem;
   display: flex;
   align-items: center;
-  background-color: transparent;
+  background-color: ${ ({ isHighlighted }: ContainerProps ) => isHighlighted ? 'rgb(235, 235, 235)' : 'transparent' };
   color: rgb(20, 20, 20);
   &:hover {
-    background-color: rgb(235, 235, 235);
+    background-color: ${ ({ isRenaming }: ContainerProps ) => isRenaming ? 'transparent' : 'rgb(235, 235, 235)' };
   }
 `
+interface ContainerProps {
+  isHighlighted: boolean
+  isRenaming: boolean
+  isPreventedFromSelecting: boolean
+}
 
 const NameContainer = styled.div`
   padding: 0.05rem;
@@ -184,7 +183,4 @@ interface IconProps {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  null,
-  mapDispatchToProps
-)(FoldersFolderFile)
+export default FoldersFolderFile

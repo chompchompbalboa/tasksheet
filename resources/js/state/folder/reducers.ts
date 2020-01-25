@@ -17,6 +17,7 @@ import {
   SET_ALL_FILE_PERMISSIONS,
   SET_ALL_FOLDERS,
   SET_ALL_FILES,
+  UPDATE_ACTIVE_FILE_ID,
   UPDATE_ACTIVE_FOLDER_PATH,
   UPDATE_CLIPBOARD,
 	UPDATE_FOLDER,
@@ -93,6 +94,7 @@ const { allFolderPermissions, allFilePermissions, allFolders, allFiles, userFold
 
 // Initial Folder State
 export const initialFolderState: IFolderState = {
+  activeFileId: null,
   activeFolderPath: [ userFolderIds[0] ],
   allFolderPermissions: allFolderPermissions,
   allFilePermissions: allFilePermissions,
@@ -107,6 +109,7 @@ export const initialFolderState: IFolderState = {
   }
 }
 export type IFolderState = {
+  activeFileId: IFile['id']
   activeFolderPath: IFolder['id'][]
 	allFolderPermissions: IAllFolderPermissions
 	allFilePermissions: IAllFilePermissions
@@ -161,10 +164,19 @@ export const folderReducer = (state = initialFolderState, action: IFolderActions
 			}
 		}
       
+		case UPDATE_ACTIVE_FILE_ID: {
+      const { nextActiveFileId } = action
+			return {
+				...state,
+				activeFileId: nextActiveFileId,
+			}
+		}
+      
 		case UPDATE_ACTIVE_FOLDER_PATH: {
       const { nextActiveFolderPath } = action
 			return {
 				...state,
+        activeFileId: null,
 				activeFolderPath: nextActiveFolderPath,
 			}
 		}

@@ -10,19 +10,19 @@ import { PLUS_SIGN } from '@/assets/icons'
 import { mutation } from '@/api'
 
 import { IAppState } from '@/state'
-import { IFolder, IFolderPermission } from '@/state/folder/types'
+import { IFile, IFilePermission } from '@/state/folder/types'
 
-import { createFolderPermission } from '@/state/folder/actions'
+import { createFilePermission } from '@/state/folder/actions'
 
-import FoldersPropertiesPermissionsPermissionRoles from '@desktop/Folders/FoldersPropertiesPermissionsPermissionRoles'
+import FoldersPropertiesFilePermissionsPermissionRoles from '@desktop/Folders/FoldersPropertiesFilePermissionsPermissionRoles'
 import Icon from '@/components/Icon'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const FoldersPropertiesPermissionsCreatePermission = ({
-  folderId
-}: IFoldersPropertiesPermissionsCreatePermission) => {
+const FoldersPropertiesFilePermissionsCreatePermission = ({
+  fileId
+}: IFoldersPropertiesFilePermissionsCreatePermission) => {
   
   // Refs
   const errorContainer = useRef(null)
@@ -34,7 +34,7 @@ const FoldersPropertiesPermissionsCreatePermission = ({
   // State
   const [ createPermissionStatus, setCreatePermissionStatus ] = useState('READY' as ICreatePermissionStatus)
   const [ createPermissionEmail, setCreatePermissionEmail ] = useState('')
-  const [ createPermissionRole, setCreatePermissionRole ] = useState('USER' as IFolderPermission['role'])
+  const [ createPermissionRole, setCreatePermissionRole ] = useState('USER' as IFilePermission['role'])
   const [ isEmailInputFocused, setIsEmailInputFocused ] = useState(false)
   const [ isErrorContainerVisible, setIsErrorContainerVisible] = useState(false)
   
@@ -78,15 +78,15 @@ const FoldersPropertiesPermissionsCreatePermission = ({
   }
   
   // Handle Create Folder Permission
-  const handleCreateFolderPermission = () => {
+  const handleCreateFilePermission = () => {
     setCreatePermissionStatus('CREATING')
-    mutation.createFolderPermission(folderId, createPermissionEmail, createPermissionRole)
+    mutation.createFilePermission(fileId, createPermissionEmail, createPermissionRole)
       .then(response => { // Permission was sucessfully created
         setTimeout(() => {
           setCreatePermissionStatus('CREATED')
         }, 250)
         setTimeout(() => {
-          dispatch(createFolderPermission((response.data || []) as IFolderPermission[]))
+          dispatch(createFilePermission((response.data || []) as IFilePermission[]))
           setCreatePermissionStatus('READY')
           setCreatePermissionEmail('')
           setCreatePermissionRole('USER')
@@ -114,7 +114,7 @@ const FoldersPropertiesPermissionsCreatePermission = ({
   // Handle Keydown While Email Input Is Focused
   const handleKeydownWhilEmailInputIsFocused = (e: KeyboardEvent) => {
     if(e.key === 'Enter') {
-      handleCreateFolderPermission()
+      handleCreateFilePermission()
     }
   }
   
@@ -166,12 +166,12 @@ const FoldersPropertiesPermissionsCreatePermission = ({
         }
       </Email>
       <Actions>
-        <FoldersPropertiesPermissionsPermissionRoles
+        <FoldersPropertiesFilePermissionsPermissionRoles
           activeRole={createPermissionRole}
-          onRoleChange={(nextRole: IFolderPermission['role']) => setCreatePermissionRole(nextRole)}/>
+          onRoleChange={(nextRole: IFilePermission['role']) => setCreatePermissionRole(nextRole)}/>
         <Create
           createPermissionStatus={createPermissionStatus}
-          onClick={() => handleCreateFolderPermission()}>
+          onClick={() => handleCreateFilePermission()}>
           {createPermissionStatuses[createPermissionStatus]}
         </Create>
       </Actions>
@@ -182,8 +182,8 @@ const FoldersPropertiesPermissionsCreatePermission = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface IFoldersPropertiesPermissionsCreatePermission {
-  folderId: IFolder['id']
+interface IFoldersPropertiesFilePermissionsCreatePermission {
+  fileId: IFile['id']
 }
 
 type ICreatePermissionStatus = 'READY' | 'CREATING' | 'USER_NOT_FOUND' | 'USER_ALREADY_HAS_PERMISSION' |'ERROR' | 'CREATED'
@@ -293,4 +293,4 @@ interface ICreate {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default FoldersPropertiesPermissionsCreatePermission
+export default FoldersPropertiesFilePermissionsCreatePermission

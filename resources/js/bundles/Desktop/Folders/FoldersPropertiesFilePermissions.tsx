@@ -6,30 +6,30 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { IAppState } from '@/state'
-import { IFolder } from '@/state/folder/types'
+import { IFile } from '@/state/folder/types'
 
-import FoldersPropertiesPermissionsCreatePermission from '@desktop/Folders/FoldersPropertiesPermissionsCreatePermission'
-import FoldersPropertiesPermissionsPermission from '@desktop/Folders/FoldersPropertiesPermissionsPermission'
+import FoldersPropertiesFilePermissionsCreatePermission from '@desktop/Folders/FoldersPropertiesFilePermissionsCreatePermission'
+import FoldersPropertiesFilePermissionsPermission from '@desktop/Folders/FoldersPropertiesFilePermissionsPermission'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const FoldersPropertiesPermissions = ({
-  folderId
-}: IFoldersPropertiesPermissions) => {
+const FoldersPropertiesFilePermissions = ({
+  fileId
+}: IFoldersPropertiesFilePermissions) => {
   
   // Redux
-  const folderPermissions = useSelector((state: IAppState) => state.folder.allFolders && state.folder.allFolders[folderId] && state.folder.allFolders[folderId].permissions)
+  const filePermissions = useSelector((state: IAppState) => state.folder.allFiles && state.folder.allFiles[fileId] && state.folder.allFiles[fileId].permissions)
 
   return (
     <Container>
-      {folderPermissions && folderPermissions.map(folderPermissionId => (
-        <FoldersPropertiesPermissionsPermission
-          key={folderPermissionId}
-          folderPermissionId={folderPermissionId}/>
+      {filePermissions && filePermissions.map(filePermissionId => (
+        <FoldersPropertiesFilePermissionsPermission
+          key={filePermissionId}
+          filePermissionId={filePermissionId}/>
       ))}
-      <FoldersPropertiesPermissionsCreatePermission
-        folderId={folderId}/>
+      <FoldersPropertiesFilePermissionsCreatePermission
+        fileId={fileId}/>
     </Container>
   )
 }
@@ -37,8 +37,8 @@ const FoldersPropertiesPermissions = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface IFoldersPropertiesPermissions {
-  folderId: IFolder['id']
+interface IFoldersPropertiesFilePermissions {
+  fileId: IFile['id']
 }
 
 //-----------------------------------------------------------------------------
@@ -49,4 +49,4 @@ const Container = styled.div``
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default FoldersPropertiesPermissions
+export default FoldersPropertiesFilePermissions

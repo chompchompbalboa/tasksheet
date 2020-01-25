@@ -9,10 +9,10 @@ import { IFolderPermission } from '@/state/folder/types'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const FoldersPropertiesPermissionsPermissionRoles = ({
+const FoldersPropertiesFolderPermissionsPermissionRoles = ({
   activeRole,
   onRoleChange
-}: IFoldersPropertiesPermissionsPermissionRoles) => {  
+}: IFoldersPropertiesFolderPermissionsPermissionRoles) => {
 
   // Refs
   const container = useRef(null)
@@ -74,7 +74,7 @@ const FoldersPropertiesPermissionsPermissionRoles = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface IFoldersPropertiesPermissionsPermissionRoles {
+interface IFoldersPropertiesFolderPermissionsPermissionRoles {
   activeRole: IFolderPermission['role']
   onRoleChange(nextRole: IFolderPermission['role']): void
 }
@@ -128,4 +128,4 @@ interface IRole {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default FoldersPropertiesPermissionsPermissionRoles
+export default FoldersPropertiesFolderPermissionsPermissionRoles

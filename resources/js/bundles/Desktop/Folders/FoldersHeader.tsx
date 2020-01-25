@@ -14,14 +14,17 @@ const FoldersHeader = () => {
   
   // Redux
   const activeFolderPath = useSelector((state: IAppState) => state.folder.activeFolderPath)
+  const activeFileId = useSelector((state: IAppState) => state.folder.activeFileId)
   const allFolders = useSelector((state: IAppState) => state.folder.allFolders)
+  const allFiles = useSelector((state: IAppState) => state.folder.allFiles)
 
   // Variables
   const activeFolder = allFolders[activeFolderPath[activeFolderPath.length - 1]]
+  const activeFile = activeFileId && allFiles[activeFileId]
 
   return (
     <Container>
-      {activeFolder.name}
+      {activeFile && activeFile.name || activeFolder.name}
     </Container>
   )
 }

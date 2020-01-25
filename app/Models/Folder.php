@@ -20,6 +20,17 @@ class Folder extends Model
   protected $fillable = ['id', 'name', 'folderId'];
   protected $appends = ['permissions'];
   
+  // File Ids
+  public static function fileIds(string $folderId) {
+    $fileIds = [];
+    $files = File::where('folderId', $folderId)->get();
+    foreach($files as $file) {
+      $fileIds[] = $file->id;
+    }
+    return $fileIds;
+  }
+  
+  // Permissions
   public function getPermissionsAttribute() {
     $permissions = [];
     $usersToGet = [];
@@ -45,4 +56,36 @@ class Folder extends Model
     }
     return $permissions;
   }
+  
+  // Subfolder Ids
+  public static function subfolderIds(string $parentFolderId) {
+    $subfolderIds = [];
+    $fetchSubfolderIds = function ($folderId) use(&$fetchSubfolderIds, &$subfolderIds) {
+      $subfolders = self::where('folderId', $folderId)->get();
+      foreach($subfolders as $subfolder) {
+        $subfolderIds[] = $subfolder->id;
+        $fetchSubfolderIds($subfolder->id);
+      }
+    };
+    $fetchSubfolderIds($parentFolderId);
+    return $subfolderIds;
+  }
+  
+  // Subfolder File Ids
+  public static function subfolderFileIds(string $folderId) {
+    $fileIds = [];
+    $fetchSubfolderFileIds = function ($folderId) use(&$fetchSubfolderFileIds, &$fileIds) {
+      $subfolders = self::where('folderId', $folderId)->get();
+      foreach($subfolders as $subfolder) {
+        $subfolderFiles = File::where('folderId', $subfolder->id)->get();
+        foreach($subfolderFiles as $subfolderFile) {
+          $fileIds[] = $subfolderFile->id;
+        }
+        $fetchSubfolderFileIds($subfolder->id);
+      }
+    };
+    $fetchSubfolderFileIds($folderId);
+    return $fileIds;
+  }
+  
 }

@@ -7,7 +7,8 @@ import styled from 'styled-components'
 
 import { IAppState } from '@/state'
 
-import FoldersPropertiesPermissions from '@desktop/Folders/FoldersPropertiesPermissions'
+import FoldersPropertiesFolderPermissions from '@desktop/Folders/FoldersPropertiesFolderPermissions'
+import FoldersPropertiesFilePermissions from '@desktop/Folders/FoldersPropertiesFilePermissions'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -16,20 +17,25 @@ const FoldersProperties = () => {
   
   // Redux
   const activeFolderPath = useSelector((state: IAppState) => state.folder.activeFolderPath)
+  const activeFileId = useSelector((state: IAppState) => state.folder.activeFileId)
   const allFolders = useSelector((state: IAppState) => state.folder.allFolders)
+  const allFiles = useSelector((state: IAppState) => state.folder.allFiles)
   
   // Variables
   const activeFolder = allFolders[activeFolderPath[activeFolderPath.length - 1]]
+  const activeFile = activeFileId && allFiles[activeFileId]
   
   return (
     <Container>
       <Wrapper>
         <FolderName>
-          {activeFolder.name}
+          {activeFile && activeFile.name || activeFolder.name}
         </FolderName>
         <Properties>
-          <FoldersPropertiesPermissions
-            folderId={activeFolder.id}/>
+          {activeFile
+            ? <FoldersPropertiesFilePermissions fileId={activeFile.id}/>
+            : <FoldersPropertiesFolderPermissions folderId={activeFolder.id}/>
+          }
         </Properties>
       </Wrapper>
     </Container>

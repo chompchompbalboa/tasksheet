@@ -18,14 +18,14 @@ import {
 } from '@/state/folder/actions'
 
 import Icon from '@/components/Icon'
-import FoldersPropertiesPermissionsPermissionRoles from '@desktop/Folders/FoldersPropertiesPermissionsPermissionRoles'
+import FoldersPropertiesFolderPermissionsPermissionRoles from '@desktop/Folders/FoldersPropertiesFolderPermissionsPermissionRoles'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const FoldersPropertiesPermissionsPermission = ({
+const FoldersPropertiesFolderPermissionsPermission = ({
   folderPermissionId
-}: IFoldersPropertiesPermissionsPermission) => {
+}: IFoldersPropertiesFolderPermissionsPermission) => {
   
   // Redux
   const dispatch = useDispatch()
@@ -74,7 +74,7 @@ const FoldersPropertiesPermissionsPermission = ({
           <Name>{folderPermission.userName}</Name>
           <Email>{folderPermission.userEmail}</Email>
           <Actions>
-            <FoldersPropertiesPermissionsPermissionRoles
+            <FoldersPropertiesFolderPermissionsPermissionRoles
               activeRole={folderPermission.role}
               onRoleChange={(nextRole: IFolderPermission['role']) => dispatch(updateFolderPermission(folderPermissionId, { role: nextRole }))}/>
             <Delete
@@ -93,7 +93,7 @@ const FoldersPropertiesPermissionsPermission = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface IFoldersPropertiesPermissionsPermission {
+interface IFoldersPropertiesFolderPermissionsPermission {
   folderPermissionId: IFolderPermission['id']
 }
 
@@ -152,4 +152,4 @@ interface IDelete {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default FoldersPropertiesPermissionsPermission
+export default FoldersPropertiesFolderPermissionsPermission
