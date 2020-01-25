@@ -8,6 +8,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use App\Models\Folder;
+use App\Models\FolderPermission;
+use App\Models\FilePermission;
 
 class User extends Authenticatable
 {
@@ -42,9 +44,17 @@ class User extends Authenticatable
     public function files() {
       return $this->belongsToMany('App\Models\File', 'filePermissions', 'userId', 'fileId')->orderBy('name')->get();
     }
+
+    public function fileIds() {
+      return FilePermission::where('userId', $this->id)->pluck('fileId')->toArray();
+    }
     
     public function folders() {
       return $this->belongsToMany('App\Models\Folder', 'folderPermissions', 'userId', 'folderId')->orderBy('name')->get();
+    }
+
+    public function folderIds() {
+      return FolderPermission::where('userId', $this->id)->pluck('folderId')->toArray();
     }
   
     public function tasksheetSubscription() {

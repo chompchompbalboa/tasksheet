@@ -22,20 +22,22 @@ class FolderPermissionController extends Controller
       // Return a 404 if we can't find a user with that email
       $user = User::where('email', $email)->firstOrFail(); 
       
-      // Return a 400 if the user already has permission to the folder and its files
+      // Return a 400 if the user already has permission to the folder
       $doesUserAlreadyHaveFolderPermission = FolderPermission::where('userId', $user->id)->where('folderId', $folderId)->count() > 0;
-      $doesUserAlreadyHaveFilePermissions = true;
-      if($doesUserAlreadyHaveFolderPermission && $doesUserAlreadyHaveFilePermissions) {
+      if($doesUserAlreadyHaveFolderPermission) {
         return response(null, 400);
       }
       // Otherwise, create the folder and file permissions
-      else {    
+      else {
         // Get all of the subfolders we'll need to add permission to
-        $newFolderPermissionsFolderIds = array_merge( [ $folderId ], Folder::subfolderIds($folderId) );
-        $newFolderPermissions = [];
-        $newFolderPermissionsToReturn = [];
+        $newFolderPermissionsFolderIds = array_diff(
+          array_merge( [ $folderId ], Folder::subfolderIds($folderId) ), // All of the possible folderIds to add
+          $user->folderIds() // Remove the folderIds the user already has permission to
+        );
 
         // Add a new permission for each folder
+        $newFolderPermissions = [];
+        $newFolderPermissionsToReturn = []; // We need to add userName and userEmail to the returned folder permissions
         foreach($newFolderPermissionsFolderIds as $newFolderPermissionsFolderId) {
           $newFolderPermissionId = Str::uuid()->toString();
           array_push($newFolderPermissions, [
@@ -44,7 +46,7 @@ class FolderPermissionController extends Controller
             'userId' => $user->id,
             'role' => $role
           ]);
-          array_push($newFolderPermissionsToReturn, [ // The return array is slightly different to prevent having to refetch userName and userEmail
+          array_push($newFolderPermissionsToReturn, [
             'id' => $newFolderPermissionId,
             'folderId' => $newFolderPermissionsFolderId,
             'userId' => $user->id,
@@ -55,11 +57,14 @@ class FolderPermissionController extends Controller
         }
         
         // Get all of the files we'll need to add to permission to
-        $newFilePermissionFileIds = array_merge( Folder::fileIds($folderId), Folder::subfolderFileIds($folderId) );
-        $newFilePermissions = [];
-        $newFilePermissionsToReturn = [];
+        $newFilePermissionFileIds = array_diff(
+          array_merge( Folder::fileIds($folderId), Folder::subfolderFileIds($folderId) ), // All of the possible fileIds to add
+          $user->fileIds() // Remove the fileIds the user already has permission to
+        );
         
         // Add a new permission for each file
+        $newFilePermissions = [];
+        $newFilePermissionsToReturn = []; // We need to add userName and userEmail to the returned file permissions
         foreach($newFilePermissionFileIds as $newFilePermissionFileId) {
           $newFilePermissionId = Str::uuid()->toString();
           array_push($newFilePermissions, [
@@ -68,7 +73,7 @@ class FolderPermissionController extends Controller
             'userId' => $user->id,
             'role' => $role
           ]);
-          array_push($newFilePermissionsToReturn, [ // The return array is slightly different to prevent having to refetch userName and userEmail
+          array_push($newFilePermissionsToReturn, [
             'id' => $newFilePermissionId,
             'fileId' => $newFilePermissionFileId,
             'userId' => $user->id,
@@ -83,7 +88,10 @@ class FolderPermissionController extends Controller
         FilePermission::insert($newFilePermissions);
         
         // Return 200
-        return response()->json($newFolderPermissionsToReturn, 200);
+        return response()->json([
+          'folderPermissions' => $newFolderPermissionsToReturn,
+          'filePermissions' => $newFilePermissionsToReturn
+        ], 200);
       }
     }
 

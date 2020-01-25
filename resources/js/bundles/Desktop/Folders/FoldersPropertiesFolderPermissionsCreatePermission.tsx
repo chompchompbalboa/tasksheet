@@ -10,7 +10,10 @@ import { PLUS_SIGN } from '@/assets/icons'
 import { mutation } from '@/api'
 
 import { IAppState } from '@/state'
-import { IFolder, IFolderPermission } from '@/state/folder/types'
+import { 
+  IFolder, IFolderPermission,
+  IFilePermission
+} from '@/state/folder/types'
 
 import { createFolderPermission } from '@/state/folder/actions'
 
@@ -42,8 +45,7 @@ const FoldersPropertiesFolderPermissionsCreatePermission = ({
   useEffect(() => {
     if(isEmailInputFocused) {
       addEventListener('keydown', handleKeydownWhilEmailInputIsFocused)
-    }
-    else {
+    } else {
       removeEventListener('keydown', handleKeydownWhilEmailInputIsFocused)
     }
     return () => removeEventListener('keydown', handleKeydownWhilEmailInputIsFocused)
@@ -53,8 +55,7 @@ const FoldersPropertiesFolderPermissionsCreatePermission = ({
   useEffect(() => {
     if(isErrorContainerVisible) {
       addEventListener('click', handleClickWhileErrorContainerIsVisible)
-    }
-    else {
+    } else {
       removeEventListener('click', handleClickWhileErrorContainerIsVisible)
     }
     return () => removeEventListener('click', handleClickWhileErrorContainerIsVisible)
@@ -64,8 +65,7 @@ const FoldersPropertiesFolderPermissionsCreatePermission = ({
   useEffect(() => {
     if([ 'USER_NOT_FOUND', 'USER_ALREADY_HAS_PERMISSION', 'ERROR'].includes(createPermissionStatus)) {
       setIsErrorContainerVisible(true)
-    }
-    else {
+    } else {
       setIsErrorContainerVisible(false)
     }
   }, [ createPermissionStatus ])
@@ -86,7 +86,11 @@ const FoldersPropertiesFolderPermissionsCreatePermission = ({
           setCreatePermissionStatus('CREATED')
         }, 250)
         setTimeout(() => {
-          dispatch(createFolderPermission((response.data || []) as IFolderPermission[]))
+          const {
+            folderPermissions,
+            filePermissions
+          } = response.data as { folderPermissions: IFolderPermission[], filePermissions: IFilePermission[] }
+          dispatch(createFolderPermission(folderPermissions, filePermissions))
           setCreatePermissionStatus('READY')
           setCreatePermissionEmail('')
           setCreatePermissionRole('USER')
@@ -121,11 +125,11 @@ const FoldersPropertiesFolderPermissionsCreatePermission = ({
   // Create Permission Statuses
   const createPermissionStatuses = {
     READY: <Icon icon={PLUS_SIGN} size="0.7rem"/>,
-    CREATING: "Creating...",
+    CREATING: "Adding...",
     USER_NOT_FOUND: <Icon icon={PLUS_SIGN} size="0.7rem"/>,
     USER_ALREADY_HAS_PERMISSION: <Icon icon={PLUS_SIGN} size="0.7rem"/>,
     ERROR: <Icon icon={PLUS_SIGN} size="0.7rem"/>,
-    CREATED: "Created!",
+    CREATED: "Added!",
   }
   
   // Error Messages

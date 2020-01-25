@@ -3,25 +3,31 @@
 //-----------------------------------------------------------------------------
 import { IAppState } from '@/state'
 import { IThunkAction, IThunkDispatch } from '@/state/types'
-import { IFolderPermission } from '@/state/folder/types'
+import { IFolderPermission, IFilePermission } from '@/state/folder/types'
 
 import {
   setAllFolderPermissions,
-  setAllFolders
+  setAllFolders,
+  setAllFilePermissions,
+  setAllFiles
 } from '@/state/folder/actions'
 
 //-----------------------------------------------------------------------------
 // Create Folder Permission
 //-----------------------------------------------------------------------------
-export const createFolderPermission = (newFolderPermissions: IFolderPermission[]): IThunkAction => {
+export const createFolderPermission = (newFolderPermissions: IFolderPermission[], newFilePermissions: IFilePermission[]): IThunkAction => {
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
       allFolderPermissions,
-      allFolders
+      allFolders,
+      allFilePermissions,
+      allFiles
     } = getState().folder
     
     let nextAllFolderPermissions = { ...allFolderPermissions }
     let nextAllFolders = { ...allFolders }
+    let nextAllFilePermissions = { ...allFilePermissions }
+    let nextAllFiles = { ...allFiles }
     
     newFolderPermissions.forEach(newFolderPermission => {
       const folder = allFolders[newFolderPermission.folderId]
@@ -41,8 +47,29 @@ export const createFolderPermission = (newFolderPermissions: IFolderPermission[]
         }
       }
     })
+
+    newFilePermissions.forEach(newFilePermission => {
+      const file = allFiles[newFilePermission.fileId]
+      const nextFilePermissions = [
+        ...file.permissions,
+        newFilePermission.id
+      ]
+      nextAllFilePermissions = {
+        ...nextAllFilePermissions,
+        [newFilePermission.id]: newFilePermission
+      }
+      nextAllFiles = {
+        ...nextAllFiles,
+        [file.id]: {
+          ...nextAllFiles[file.id],
+          permissions: nextFilePermissions
+        }
+      }
+    })
     
     dispatch(setAllFolderPermissions(nextAllFolderPermissions))
+    dispatch(setAllFilePermissions(nextAllFilePermissions))
     dispatch(setAllFolders(nextAllFolders))
+    dispatch(setAllFiles(nextAllFiles))
   }
 }
