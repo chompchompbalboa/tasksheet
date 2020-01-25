@@ -29,7 +29,7 @@ import {
 } from '@/state/folder/actions'
 
 //-----------------------------------------------------------------------------
-// Initial
+// Initial  
 //-----------------------------------------------------------------------------
 const initialFolderData = typeof initialData !== 'undefined' ? initialData.folders : defaultInitialData.folders
 const initialFileData = typeof initialData !== 'undefined' ? initialData.files : defaultInitialData.files
@@ -42,11 +42,20 @@ const setNormalizedFoldersAndFiles = () => {
   const allFilePermissions: IAllFilePermissions = {}
   const allFolders: IAllFolders = {}
   const allFiles: IAllFiles = {}
+  const allFolderIds = new Set( initialFolderData.map(folder => folder.id) )
   const folderFolders: { [folderId: string]: IFolder['id'][] } = {}
   const folderFiles: { [folderId: string]: IFile['id'][] } = {}
-  const userFolderIds = initialFolderData.map(folder => folder.folderId === null ? folder.id : undefined).filter(Boolean)
-  const userFileIds = initialFileData.map(file => file.folderId === null ? file.id : undefined).filter(Boolean)
-  
+  const userFolderIds = initialFolderData.map(folder => 
+    (folder.folderId === null || !allFolderIds.has(folder.folderId)) 
+    ? folder.id 
+    : undefined
+  ).filter(Boolean)
+  const userFileIds = initialFileData.map(file => 
+    (file.folderId === null || !allFolderIds.has(file.folderId)) 
+    ? file.id 
+    : undefined
+  ).filter(Boolean)
+
   // Set the child folder ids for each folder
   initialFolderData.forEach(folder => {
     if(folder.folderId) {

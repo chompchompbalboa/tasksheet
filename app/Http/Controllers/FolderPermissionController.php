@@ -102,15 +102,33 @@ class FolderPermissionController extends Controller
     }
 
     public function destroy(FolderPermission $permission)
-    {
-      $user = User::where('id', $permission->userId)->firstOrFail(); // Return a 404 if the user can't be found
+    { 
+      // Return a 404 if the user can't be found
+      $user = User::where('id', $permission->userId)->firstOrFail();
+
+      // Get the folder permissions to delete
       $subfolderIds = Folder::subfolderIds($permission->folderId);
-      $permissionIdsToDelete = [ $permission->id ];
-      $permissionsToDelete = FolderPermission::where('userId', $user->id)->whereIn('folderId', $subfolderIds)->get();
-      foreach($permissionsToDelete as $permissionToDelete) {
-        $permissionIdsToDelete[] = $permissionToDelete->id;
+      $folderPermissionsToDelete = FolderPermission::where('userId', $user->id)->whereIn('folderId', $subfolderIds)->get();
+      $folderPermissionIdsToDelete = [ $permission->id ];
+      foreach($folderPermissionsToDelete as $folderPermissionToDelete) {
+        $folderPermissionIdsToDelete[] = $folderPermissionToDelete->id;
       }
-      FolderPermission::destroy($permissionIdsToDelete);
-      return response()->json($permissionIdsToDelete, 200);
+
+      // Get the file permissions to delete
+      $fileIds = array_merge ( Folder::fileIds($permission->folderId), Folder::subfolderFileIds($permission->folderId) );
+      $filePermissionsToDelete = FilePermission::where('userId', $user->id)->whereIn('fileId', $fileIds)->get();
+      $filePermissionIdsToDelete = [];
+      foreach($filePermissionsToDelete as $filePermissionToDelete) {
+        $filePermissionIdsToDelete[] = $filePermissionToDelete->id;
+      }
+
+      // Delete the permissions
+      FolderPermission::destroy($folderPermissionIdsToDelete);
+      FilePermission::destroy($filePermissionIdsToDelete);
+
+      return response()->json([
+        'deletedFolderPermissionIds' => $folderPermissionIdsToDelete,
+        'deletedFilePermissionIds' => $filePermissionIdsToDelete
+      ], 200);
     }
 }

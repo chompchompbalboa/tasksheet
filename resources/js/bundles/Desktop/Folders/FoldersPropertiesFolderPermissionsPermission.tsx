@@ -10,7 +10,7 @@ import { CLOSE } from '@/assets/icons'
 import { mutation } from '@/api'
 
 import { IAppState } from '@/state'
-import { IFolderPermission } from '@/state/folder/types'
+import { IFolderPermission, IFilePermission } from '@/state/folder/types'
 
 import { 
   deleteFolderPermissions,
@@ -47,7 +47,11 @@ const FoldersPropertiesFolderPermissionsPermission = ({
           setDeleteFolderPermissionStatus('DELETED')
         }, 250)
         setTimeout(() => {
-          dispatch(deleteFolderPermissions(response.data as IFolderPermission['id'][]))
+          const {
+            deletedFolderPermissionIds,
+            deletedFilePermissionIds
+          } = response.data as { deletedFolderPermissionIds: IFolderPermission['id'][], deletedFilePermissionIds: IFilePermission['id'][] }
+          dispatch(deleteFolderPermissions(deletedFolderPermissionIds, deletedFilePermissionIds))
         }, 1250)
       })
       .catch(() => {
