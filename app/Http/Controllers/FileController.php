@@ -14,9 +14,12 @@ class FileController extends Controller
 {
     public function store(Request $request)
     {
+      // Create the new file
       $file = File::create($request->all());
+
+      // Get the new file permissions to create
       $newFilePermissions = [];
-      if(!is_null($file->folderId)) {
+      if(!is_null($file->folderId)) { // If the file belongs to a folder
         $fileFolderPermissions = FolderPermission::where('folderId', $file->folderId)->get();
         foreach($fileFolderPermissions as $folderPermission) {
           array_push($newFilePermissions, [
@@ -27,7 +30,7 @@ class FileController extends Controller
           ]);
         }
       }
-      if(!is_null($file->userId)) {
+      if(!is_null($file->userId)) { // If the file belongs to a user
         $user = Auth::user();
         array_push($newFilePermissions, [
           'id' => Str::uuid()->toString(),
@@ -36,8 +39,16 @@ class FileController extends Controller
           'role' => 'OWNER'
         ]);
       }
+
+      // Create the new file permissions
       FilePermission::insert($newFilePermissions);
-      return response()->json(true, 200);
+
+      // Fetch the new file permissions (we need the userName and userEmail)
+      $newFilePermissions = FilePermission::where('fileId', $file->id)->get();
+
+      return response()->json([
+        'permissions' => $newFilePermissions
+      ], 200);
     }
 
     public function update(Request $request, File $file)

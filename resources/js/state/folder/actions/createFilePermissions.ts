@@ -3,11 +3,9 @@
 //-----------------------------------------------------------------------------
 import { IAppState } from '@/state'
 import { IThunkAction, IThunkDispatch } from '@/state/types'
-import { IFolderPermission, IFilePermission } from '@/state/folder/types'
+import { IFilePermission } from '@/state/folder/types'
 
 import {
-  setAllFolderPermissions,
-  setAllFolders,
   setAllFilePermissions,
   setAllFiles
 } from '@/state/folder/actions'
@@ -15,39 +13,16 @@ import {
 //-----------------------------------------------------------------------------
 // Create Folder Permission
 //-----------------------------------------------------------------------------
-export const createFolderPermission = (newFolderPermissions: IFolderPermission[], newFilePermissions: IFilePermission[]): IThunkAction => {
+export const createFilePermissions = (newFilePermissions: IFilePermission[]): IThunkAction => {
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
-      allFolderPermissions,
-      allFolders,
       allFilePermissions,
       allFiles
     } = getState().folder
     
-    let nextAllFolderPermissions = { ...allFolderPermissions }
-    let nextAllFolders = { ...allFolders }
     let nextAllFilePermissions = { ...allFilePermissions }
     let nextAllFiles = { ...allFiles }
     
-    newFolderPermissions.forEach(newFolderPermission => {
-      const folder = allFolders[newFolderPermission.folderId]
-      const nextFolderPermissions = [
-        ...folder.permissions,
-        newFolderPermission.id
-      ]
-      nextAllFolderPermissions = {
-        ...nextAllFolderPermissions,
-        [newFolderPermission.id]: newFolderPermission
-      }
-      nextAllFolders = {
-        ...nextAllFolders,
-        [folder.id]: {
-          ...nextAllFolders[folder.id],
-          permissions: nextFolderPermissions
-        }
-      }
-    })
-
     newFilePermissions.forEach(newFilePermission => {
       const file = allFiles[newFilePermission.fileId]
       const nextFilePermissions = [
@@ -67,9 +42,7 @@ export const createFolderPermission = (newFolderPermissions: IFolderPermission[]
       }
     })
     
-    dispatch(setAllFolderPermissions(nextAllFolderPermissions))
     dispatch(setAllFilePermissions(nextAllFilePermissions))
-    dispatch(setAllFolders(nextAllFolders))
     dispatch(setAllFiles(nextAllFiles))
   }
 }

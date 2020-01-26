@@ -11,20 +11,13 @@ import {
 } from '@/state/folder/types'
 import {
   IFolderActions,
-  CREATE_FILE,
-  CREATE_FOLDER,
-  SET_ALL_FOLDER_PERMISSIONS,
-  SET_ALL_FILE_PERMISSIONS,
-  SET_ALL_FOLDERS,
-  SET_ALL_FILES,
+  SET_ALL_FOLDER_PERMISSIONS, UPDATE_FOLDER_PERMISSION,
+  SET_ALL_FILE_PERMISSIONS, UPDATE_FILE_PERMISSION,
+  SET_ALL_FOLDERS, UPDATE_FOLDER,
+  SET_ALL_FILES, UPDATE_FILE,
   UPDATE_ACTIVE_FILE_ID,
   UPDATE_ACTIVE_FOLDER_PATH,
   UPDATE_CLIPBOARD,
-	UPDATE_FOLDER,
-	UPDATE_FOLDER_PERMISSION,
-  UPDATE_FILE,
-  UPDATE_FILES,
-  UPDATE_FOLDERS,
   UPDATE_USER_FILE_IDS
 } from '@/state/folder/actions'
 
@@ -139,39 +132,6 @@ export const folderReducer = (state = initialFolderState, action: IFolderActions
 		case SET_ALL_FILE_PERMISSIONS: { return { ...state, allFilePermissions: action.nextAllFilePermissions } }
 		case SET_ALL_FOLDERS: { return { ...state, allFolders: action.nextAllFolders } }
 		case SET_ALL_FILES: { return { ...state, allFiles: action.nextAllFiles } }
-
-    case CREATE_FILE: {
-      const { folderId, newFile } = action
-      return {
-        ...state,
-        allFiles: {
-          ...state.allFiles,
-          [newFile.id]: newFile
-        },
-        allFolders: {
-          ...state.allFolders,
-          [folderId]: {
-            ...state.allFolders[folderId],
-            files: [ ...state.allFolders[folderId].files, newFile.id ]
-          }
-        }
-      }
-    }
-
-		case CREATE_FOLDER: {
-      const { folderId, newFolder, newFolderId } = action
-			return {
-				...state,
-				allFolders: {
-					...state.allFolders,
-					[folderId]: {
-						...state.allFolders[folderId],
-						folders: [ ...state.allFolders[folderId].folders, newFolderId],
-          },
-          [newFolderId]: newFolder
-				},
-			}
-		}
       
 		case UPDATE_ACTIVE_FILE_ID: {
       const { nextActiveFileId } = action
@@ -225,15 +185,6 @@ export const folderReducer = (state = initialFolderState, action: IFolderActions
 				},
 			}
 		}
-
-		case UPDATE_FILES: {
-      const { nextFiles } = action
-			return {
-				...state,
-        allFiles: nextFiles
-			}
-		}
-
 		case UPDATE_FOLDER_PERMISSION: {
       const { folderPermissionId, updates } = action
 			return {
@@ -247,12 +198,17 @@ export const folderReducer = (state = initialFolderState, action: IFolderActions
         }
 			}
 		}
-
-		case UPDATE_FOLDERS: {
-      const { nextFolders } = action
+		case UPDATE_FILE_PERMISSION: {
+      const { filePermissionId, updates } = action
 			return {
-				...state,
-        allFolders: nextFolders
+        ...state,
+        allFilePermissions: {
+          ...state.allFilePermissions,
+          [filePermissionId]: {
+            ...state.allFilePermissions[filePermissionId],
+            ...updates
+          }
+        }
 			}
 		}
 

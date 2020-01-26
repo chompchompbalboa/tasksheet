@@ -12,8 +12,8 @@ import { IUser } from '@/state/user/types'
 
 import { 
   updateFile, 
-  updateFiles, 
-  updateFolders, 
+  setAllFiles, 
+  setAllFolders, 
   updateUserFileIds 
 } from '@/state/folder/actions'
 import { openFileInNewTab } from '@/state/tab/actions'
@@ -43,12 +43,13 @@ export const createSheet = (folderId: IFolder['id'], newFileName?: string, openS
       isPreventedFromSelecting: true
     }
 
-    dispatch(updateFiles({
+    dispatch(setAllFiles({
       ...allFiles,
       [newFile.id]: newFile
     }))
+
     if(folderId) {
-      dispatch(updateFolders({
+      dispatch(setAllFolders({
         ...allFolders,
         [folderId]: {
           ...allFolders[folderId],
@@ -56,6 +57,7 @@ export const createSheet = (folderId: IFolder['id'], newFileName?: string, openS
         }
       }))
     }
+    
     if(userId) {
       dispatch(updateUserFileIds([
         ...userFileIds,

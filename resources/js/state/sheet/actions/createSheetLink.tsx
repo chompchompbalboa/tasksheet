@@ -14,7 +14,7 @@ import { ISheet, ISheetView } from '@/state/sheet/types'
 import { IUser } from '@/state/user/types'
 
 import { loadSheetReducer } from '@/state/sheet/actions'
-import { updateFiles, updateFolders, updateUserFileIds } from '@/state/folder/actions'
+import { setAllFiles, setAllFolders, updateUserFileIds } from '@/state/folder/actions'
 import { openFileInNewTab, updateTabs } from '@/state/tab/actions'
 
 import { defaultSheetSelections, defaultSheetStyles } from '@/state/sheet/defaults'
@@ -46,8 +46,8 @@ export const createSheetLink = (sheetId: ISheet['id'], folderId: IFolder['id'], 
     
     const newSheetLinkFileName = allFiles[fileId].name + ' - Linked'
 
-    const newLinkedSheetId = createUuid()
-    const newLinkedSheetActiveSheetView: ISheetView = {
+    const newSheetLinkId = createUuid()
+    const newSheetLinkActiveSheetView: ISheetView = {
       ...sourceSheetActiveSheetView,
       id: createUuid(),
       filters: [],
@@ -58,9 +58,9 @@ export const createSheetLink = (sheetId: ISheet['id'], folderId: IFolder['id'], 
   // Update allSheets
     dispatch(loadSheetReducer(
       {
-        id: newLinkedSheetId,
+        id: newSheetLinkId,
         sourceSheetId: sourceSheet.sourceSheetId || sourceSheet.id,
-        activeSheetViewId: newLinkedSheetActiveSheetView.id,
+        activeSheetViewId: newSheetLinkActiveSheetView.id,
         columns: clone(sourceSheet.columns),
         rows: clone(sourceSheet.rows),
         visibleRowLeaders: clone(sourceSheet.visibleRowLeaders),
@@ -80,7 +80,7 @@ export const createSheetLink = (sheetId: ISheet['id'], folderId: IFolder['id'], 
       null, // Sorts
       {
         ...allSheetViews,
-        [newLinkedSheetActiveSheetView.id]: newLinkedSheetActiveSheetView
+        [newSheetLinkActiveSheetView.id]: newSheetLinkActiveSheetView
       },
       null, // Changes
       null, // Files
@@ -90,6 +90,7 @@ export const createSheetLink = (sheetId: ISheet['id'], folderId: IFolder['id'], 
       null, // Cell Files
       null // Cell photos
     ))
+
     // Update folders and files
     const newFile: IFile = {
       id: newFileId,
@@ -97,15 +98,17 @@ export const createSheetLink = (sheetId: ISheet['id'], folderId: IFolder['id'], 
       userId: userId,
       type: 'SHEET' as IFileType, 
       name: newSheetLinkFileName,
-      typeId: newLinkedSheetId,
+      typeId: newSheetLinkId,
       permissions: []
     }
-    dispatch(updateFiles({
+
+    dispatch(setAllFiles({
       ...allFiles,
       [newFileId]: newFile
     }))
+
     if(folderId) {
-      dispatch(updateFolders({
+      dispatch(setAllFolders({
         ...allFolders,
         [folderId]: {
           ...allFolders[folderId],
@@ -113,23 +116,27 @@ export const createSheetLink = (sheetId: ISheet['id'], folderId: IFolder['id'], 
         }
       }))
     }
+
     if(userId) {
       dispatch(updateUserFileIds([
         ...userFileIds,
         newFile.id
       ]))
     }
+
     // Update open tabs
     dispatch(updateTabs([ ...tabs, newFileId ]))
+
     // Create the file on the server
     await mutation.createFile(newFile)
+    
     // Create the sheet view on the server
     await mutation.createSheetLink({
-      id: newLinkedSheetId,
+      id: newSheetLinkId,
       sourceSheetId: sourceSheet.sourceSheetId || sourceSheet.id,
-      activeSheetViewId: newLinkedSheetActiveSheetView.id,
+      activeSheetViewId: newSheetLinkActiveSheetView.id,
       activeSheetViewName: newSheetLinkFileName,
-      activeSheetViewVisibleColumns: newLinkedSheetActiveSheetView.visibleColumns,
+      activeSheetViewVisibleColumns: newSheetLinkActiveSheetView.visibleColumns,
     })
     
     dispatch(openFileInNewTab(newFile.id))

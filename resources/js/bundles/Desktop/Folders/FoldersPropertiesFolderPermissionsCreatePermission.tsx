@@ -15,7 +15,7 @@ import {
   IFilePermission
 } from '@/state/folder/types'
 
-import { createFolderPermission } from '@/state/folder/actions'
+import { createFolderPermissions } from '@/state/folder/actions'
 
 import FoldersPropertiesFolderPermissionsPermissionRoles from '@desktop/Folders/FoldersPropertiesFolderPermissionsPermissionRoles'
 import Icon from '@/components/Icon'
@@ -90,7 +90,7 @@ const FoldersPropertiesFolderPermissionsCreatePermission = ({
             folderPermissions,
             filePermissions
           } = response.data as { folderPermissions: IFolderPermission[], filePermissions: IFilePermission[] }
-          dispatch(createFolderPermission(folderPermissions, filePermissions))
+          dispatch(createFolderPermissions(folderPermissions, filePermissions))
           setCreatePermissionStatus('READY')
           setCreatePermissionEmail('')
           setCreatePermissionRole('USER')

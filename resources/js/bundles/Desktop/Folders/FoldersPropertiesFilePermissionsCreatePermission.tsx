@@ -12,7 +12,7 @@ import { mutation } from '@/api'
 import { IAppState } from '@/state'
 import { IFile, IFilePermission } from '@/state/folder/types'
 
-import { createFilePermission } from '@/state/folder/actions'
+import { createFilePermissions } from '@/state/folder/actions'
 
 import FoldersPropertiesFilePermissionsPermissionRoles from '@desktop/Folders/FoldersPropertiesFilePermissionsPermissionRoles'
 import Icon from '@/components/Icon'
@@ -86,7 +86,7 @@ const FoldersPropertiesFilePermissionsCreatePermission = ({
           setCreatePermissionStatus('CREATED')
         }, 250)
         setTimeout(() => {
-          dispatch(createFilePermission((response.data || []) as IFilePermission[]))
+          dispatch(createFilePermissions((response.data || []) as IFilePermission[]))
           setCreatePermissionStatus('READY')
           setCreatePermissionEmail('')
           setCreatePermissionRole('USER')

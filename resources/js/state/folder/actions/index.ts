@@ -1,7 +1,6 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import { v4 as createUuid } from 'uuid'
 import { batch } from 'react-redux'
 
 import clone from '@/utils/clone'
@@ -10,7 +9,7 @@ import { IAppState } from '@/state'
 import { IThunkAction, IThunkDispatch } from '@/state/types'
 import { 
   IFile, IAllFilePermissions, IFilePermission, IFilePermissionUpdates, IAllFiles, IFileUpdates, 
-  IFolder, IAllFolderPermissions, IFolderPermission, IFolderPermissionUpdates, IAllFolders, IFolderUpdates,
+  IAllFolderPermissions, IFolderPermission, IFolderPermissionUpdates, IAllFolders, IFolderUpdates,
   IFolderClipboardUpdates, 
 } from '@/state/folder/types'
 import { createHistoryStep } from '@/state/history/actions'
@@ -20,35 +19,25 @@ import { closeTab } from '@/state/tab/actions'
 // Exports
 //-----------------------------------------------------------------------------
 export type IFolderActions = 
-  ISetAllFolderPermissions | ISetAllFolders |
-  ISetAllFilePermissions | ISetAllFiles |
-  IUpdateActiveFileId | IUpdateActiveFolderPath | 
+  ISetAllFolderPermissions | IUpdateFolderPermission |
+  ISetAllFolders | IUpdateFolder | 
+  ISetAllFilePermissions | IUpdateFilePermission |
+  ISetAllFiles | IUpdateFile | 
+  IUpdateActiveFolderPath | 
+  IUpdateActiveFileId | 
   IUpdateClipboard |
-  ICreateFolder | IUpdateFolder | IUpdateFolderPermission | IUpdateFolders | 
-  ICreateFile | IUpdateFile | IUpdateFilePermission | IUpdateFiles |
   IUpdateUserFileIds
 
 //-----------------------------------------------------------------------------
 // Thunk Actions
 //-----------------------------------------------------------------------------
-export { createFolderPermission } from '@/state/folder/actions/createFolderPermission'
-export { deleteFolderPermissions } from '@/state/folder/actions/deleteFolderPermissions'
-export { createFilePermission } from '@/state/folder/actions/createFilePermission'
-export { deleteFilePermissions } from '@/state/folder/actions/deleteFilePermissions'
+export { createFolder } from '@/state/folder/actions/createFolder'
+export { createFile } from '@/state/folder/actions/createFile'
 
-//-----------------------------------------------------------------------------
-// Defaults
-//-----------------------------------------------------------------------------
-const defaultFolder = (folderId: string): IFolder => {
-  return {
-    id: createUuid(),
-    folderId: folderId,
-    name: null,
-    files: [],
-    folders: [],
-    permissions: []
-  }
-}
+export { createFolderPermissions } from '@/state/folder/actions/createFolderPermissions'
+export { deleteFolderPermissions } from '@/state/folder/actions/deleteFolderPermissions'
+export { createFilePermissions } from '@/state/folder/actions/createFilePermissions'
+export { deleteFilePermissions } from '@/state/folder/actions/deleteFilePermissions'
 
 //-----------------------------------------------------------------------------
 // Set All Folder Permissions
@@ -231,60 +220,6 @@ export const pasteFromClipboard = (nextFolderId: string) => {
 }
 
 //-----------------------------------------------------------------------------
-// Create File
-//-----------------------------------------------------------------------------
-export const CREATE_FILE = 'CREATE_FILE'
-interface ICreateFile {
-	type: typeof CREATE_FILE
-  folderId: string
-  newFile: IFile
-}
-
-export const createFile = (folderId: string, newFile: IFile) => {
-	return async (dispatch: IThunkDispatch) => {
-    dispatch(createFileReducer(folderId, newFile))
-    mutation.createFile(newFile)
-	}
-}
-
-export const createFileReducer = (folderId: string, newFile: IFile): IFolderActions => {
-	return {
-    type: CREATE_FILE,
-    folderId,
-    newFile
-	}
-}
-
-
-//-----------------------------------------------------------------------------
-// Create Folder
-//-----------------------------------------------------------------------------
-export const CREATE_FOLDER = 'CREATE_FOLDER'
-interface ICreateFolder {
-	type: typeof CREATE_FOLDER
-  folderId: string
-  newFolderId: string
-  newFolder: IFolder
-}
-
-export const createFolder = (folderId: string) => {
-	return async (dispatch: IThunkDispatch) => {
-    const newFolder = defaultFolder(folderId)
-    dispatch(createFolderReducer(folderId, newFolder.id, newFolder))
-    mutation.createFolder(newFolder)
-	}
-}
-
-export const createFolderReducer = (folderId: string, newFolderId: string, newFolder: IFolder): IFolderActions => {
-	return {
-    type: CREATE_FOLDER,
-    folderId,
-    newFolderId,
-    newFolder
-	}
-}
-
-//-----------------------------------------------------------------------------
 // Delete File
 //-----------------------------------------------------------------------------
 export const deleteFile = (fileId: string) => {
@@ -427,22 +362,6 @@ export const updateFilePermissionReducer = (filePermissionId: IFilePermission['i
 }
 
 //-----------------------------------------------------------------------------
-// Update File
-//-----------------------------------------------------------------------------
-export const UPDATE_FILES = 'UPDATE_FILES'
-interface IUpdateFiles {
-	type: typeof UPDATE_FILES
-  nextFiles: IAllFiles
-}
-
-export const updateFiles = (nextFiles: IAllFiles): IFolderActions => {
-	return {
-		type: UPDATE_FILES,
-		nextFiles
-	}
-}
-
-//-----------------------------------------------------------------------------
 // Update Folder
 //-----------------------------------------------------------------------------
 export const UPDATE_FOLDER = 'UPDATE_FOLDER'
@@ -493,23 +412,7 @@ export const updateFolderPermissionReducer = (folderPermissionId: IFolderPermiss
 }
 
 //-----------------------------------------------------------------------------
-// Update Folders
-//-----------------------------------------------------------------------------
-export const UPDATE_FOLDERS = 'UPDATE_FOLDERS'
-interface IUpdateFolders {
-	type: typeof UPDATE_FOLDERS
-  nextFolders: IAllFolders
-}
-
-export const updateFolders = (nextFolders: IAllFolders): IFolderActions => {
-	return {
-		type: UPDATE_FOLDERS,
-		nextFolders
-	}
-}
-
-//-----------------------------------------------------------------------------
-// Update Folders
+// Update User File Ids
 //-----------------------------------------------------------------------------
 export const UPDATE_USER_FILE_IDS = 'UPDATE_USER_FILE_IDS'
 interface IUpdateUserFileIds {

@@ -513,7 +513,7 @@ export const updateSheetFilterReducer = (filterId: string, updates: ISheetFilter
 }
 
 //-----------------------------------------------------------------------------
-// Update Sheet Group - Moved
+// Update Sheet Group
 //-----------------------------------------------------------------------------
 export const UPDATE_SHEET_GROUP = 'UPDATE_SHEET_GROUP'
 interface IUpdateSheetGroup {
@@ -531,7 +531,7 @@ export const updateSheetGroupReducer = (groupId: string, updates: ISheetGroupUpd
 }
 
 //-----------------------------------------------------------------------------
-// Update Sheet Row - Keep
+// Update Sheet Row
 //-----------------------------------------------------------------------------
 export const UPDATE_SHEET_ROW = 'UPDATE_SHEET_ROW'
 interface IUpdateSheetRow {
@@ -549,7 +549,7 @@ export const updateSheetRow = (rowId: string, updates: ISheetRowUpdates): ISheet
 }
 
 //-----------------------------------------------------------------------------
-// Update Sheet Sort - Moved
+// Update Sheet Sort
 //-----------------------------------------------------------------------------
 export const UPDATE_SHEET_SORT = 'UPDATE_SHEET_SORT'
 interface IUpdateSheetSort {
@@ -567,7 +567,7 @@ export const updateSheetSortReducer = (sortId: string, updates: ISheetSortUpdate
 }
 
 //-----------------------------------------------------------------------------
-// Update Sheet Sort - Moved
+// Update Sheet Sort 
 //-----------------------------------------------------------------------------
 export const UPDATE_SHEET_VIEW = 'UPDATE_SHEET_VIEW'
 interface IUpdateSheetView {
