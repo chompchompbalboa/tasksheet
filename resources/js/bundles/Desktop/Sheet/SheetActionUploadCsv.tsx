@@ -2,11 +2,10 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { UPLOAD } from '@/assets/icons'
 
-import { IAppState } from '@/state'
 import {
   updateModal
 } from '@/state/modal/actions'
@@ -21,14 +20,13 @@ const SheetActionUploadCsv = () => {
 
   // Redux
   const dispatch = useDispatch()
-  const folderId = useSelector((state: IAppState) => state.folder.userFolderIds[0])
 
   // State
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
 
   // Handle Button Click
   const handleButtonClick = () => {
-    dispatch(updateModal({ activeModal: 'CREATE_SHEET_FROM_CSV', createSheetFolderId: folderId, openSheetAfterCreate: true }))
+    dispatch(updateModal({ activeModal: 'CREATE_SHEET_FROM_CSV', createSheetFolderId: null, openSheetAfterCreate: true }))
   }
 
   return (
