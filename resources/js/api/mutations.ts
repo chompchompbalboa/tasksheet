@@ -98,9 +98,7 @@ export const updateFile = async (id: string, updates: IFileUpdates) => {
 // Folder
 //-----------------------------------------------------------------------------
 export const createFolder = async (newFolder: IFolder) => {
-	return axios.post('/app/folders', newFolder).then(response => {
-		return response.data
-	}).catch(console.log.bind(console))
+	return axios.post('/app/folders', newFolder)
 }
 
 export const createFolderPermission = async (folderId: IFolder['id'], email: string, role: IFolderPermission['role']) => {

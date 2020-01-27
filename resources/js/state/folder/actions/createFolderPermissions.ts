@@ -32,8 +32,8 @@ export const createFolderPermissions = (
     let nextAllFilePermissions = { ...allFilePermissions }
     let nextAllFiles = { ...allFiles }
     
-    newFolderPermissions.forEach(newFolderPermission => {
-      const folder = allFolders[newFolderPermission.folderId]
+    newFolderPermissions && newFolderPermissions.forEach(newFolderPermission => {
+      const folder = nextAllFolders[newFolderPermission.folderId]
       const nextFolderPermissions = [
         ...folder.permissions,
         newFolderPermission.id
@@ -51,8 +51,8 @@ export const createFolderPermissions = (
       }
     })
 
-    newFilePermissions.forEach(newFilePermission => {
-      const file = allFiles[newFilePermission.fileId]
+    newFilePermissions && newFilePermissions.forEach(newFilePermission => {
+      const file = nextAllFiles[newFilePermission.fileId]
       const nextFilePermissions = [
         ...file.permissions,
         newFilePermission.id

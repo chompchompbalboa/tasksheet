@@ -5,9 +5,10 @@ import { mutation } from '@/api'
 
 import { IAppState } from '@/state'
 import { IThunkDispatch } from '@/state/types'
-import { IFolder } from '@/state/folder/types'
+import { IFolder, IFolderPermission } from '@/state/folder/types'
 
 import { 
+  createFolderPermissions,
   setAllFolders
 } from '@/state/folder/actions'
 import { defaultFolder } from '@/state/folder/defaults'
@@ -35,5 +36,9 @@ export const createFolder = (parentFolderId: IFolder['id']) => {
 
     dispatch(setAllFolders(nextAllFolders))
     mutation.createFolder(newFolder)
+      .then(response => {
+        dispatch(createFolderPermissions(response.data as IFolderPermission[], null))
+      })
+      .catch(console.log.bind(console))
 	}
 }

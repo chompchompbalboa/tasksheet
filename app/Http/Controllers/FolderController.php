@@ -7,24 +7,41 @@ use Illuminate\Support\Str;
 
 use App\Models\Folder;
 use App\Models\FolderPermission;
+use App\Models\User;
 
 class FolderController extends Controller
 {
     public function store(Request $request)
     {
       $folder = Folder::create($request->all());
+      
       $newFolderPermissions = [];
+      $newFolderPermissionsToReturn = [];
       $folderFolderPermissions = FolderPermission::where('folderId', $folder->folderId)->get();
       foreach($folderFolderPermissions as $folderPermission) {
-        array_push($newFolderPermissions, [
-          'id' => Str::uuid()->toString(),
-          'userId' => $folderPermission->userId,
-          'folderId' => $folder->id,
-          'role' => $folderPermission->role
-        ]);
+        $user = User::find($folderPermission->userId);
+        if($user) {
+          $newFolderPermissionId = Str::uuid()->toString();
+          array_push($newFolderPermissions, [
+            'id' => $newFolderPermissionId,
+            'userId' => $user->id,
+            'folderId' => $folder->id,
+            'role' => $folderPermission->role
+          ]);
+          array_push($newFolderPermissionsToReturn, [
+            'id' => $newFolderPermissionId,
+            'userId' => $user->id,
+            'userName' => $user->name,
+            'userEmail' => $user->email,
+            'folderId' => $folder->id,
+            'role' => $folderPermission->role
+          ]);
+        }
       }
+      
       FolderPermission::insert($newFolderPermissions);
-      return response()->json($folder, 200);
+      
+      return response()->json($newFolderPermissionsToReturn, 200);
     }
 
     public function update(Request $request, Folder $folder)
