@@ -30,12 +30,12 @@ export const createSheetFromCsv = (folderId: IFolder['id'], fileToUpload: File, 
       isPreventedFromSelecting: true
     }
 
-    dispatch(createFile(folderId, newFile))
+    dispatch(createFile(folderId, null, newFile))
 
-    mutation.createSheetFromCsv(newSheetId, fileToUpload).then(() => {
-      dispatch(updateFile(newFile.id, { isPreventedFromSelecting: false }, true))
-      openSheetAfterCreate && dispatch(openFileInNewTab(newFile.id))
-    })
+    await mutation.createSheetFromCsv(newSheetId, fileToUpload)
+
+    dispatch(updateFile(newFile.id, { isPreventedFromSelecting: false }, true))
+    openSheetAfterCreate && dispatch(openFileInNewTab(newFile.id))
 
   }
 }

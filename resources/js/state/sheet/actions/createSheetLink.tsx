@@ -14,7 +14,7 @@ import { ISheet, ISheetView } from '@/state/sheet/types'
 import { IUser } from '@/state/user/types'
 
 import { loadSheetReducer } from '@/state/sheet/actions'
-import { setAllFiles, setAllFolders, updateUserFileIds } from '@/state/folder/actions'
+import { createFile } from '@/state/folder/actions'
 import { openFileInNewTab, updateTabs } from '@/state/tab/actions'
 
 import { defaultSheetSelections, defaultSheetStyles } from '@/state/sheet/defaults'
@@ -26,9 +26,7 @@ export const createSheetLink = (sheetId: ISheet['id'], folderId: IFolder['id'], 
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
       folder: { 
-        allFiles, 
-        allFolders,
-        userFileIds
+        allFiles
       },
       sheet: { 
         allSheets,
@@ -102,34 +100,11 @@ export const createSheetLink = (sheetId: ISheet['id'], folderId: IFolder['id'], 
       permissions: []
     }
 
-    dispatch(setAllFiles({
-      ...allFiles,
-      [newFileId]: newFile
-    }))
-
-    if(folderId) {
-      dispatch(setAllFolders({
-        ...allFolders,
-        [folderId]: {
-          ...allFolders[folderId],
-          files: [ ...allFolders[folderId].files, newFileId ]
-        }
-      }))
-    }
-
-    if(userId) {
-      dispatch(updateUserFileIds([
-        ...userFileIds,
-        newFile.id
-      ]))
-    }
+    dispatch(createFile(folderId, userId, newFile))
 
     // Update open tabs
     dispatch(updateTabs([ ...tabs, newFileId ]))
 
-    // Create the file on the server
-    await mutation.createFile(newFile)
-    
     // Create the sheet view on the server
     await mutation.createSheetLink({
       id: newSheetLinkId,
