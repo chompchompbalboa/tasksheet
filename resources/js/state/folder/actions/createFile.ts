@@ -5,10 +5,11 @@ import { mutation } from '@/api'
 
 import { IAppState } from '@/state'
 import { IThunkDispatch } from '@/state/types'
-import { IFolder, IFile } from '@/state/folder/types'
+import { IFolder, IFile, IFilePermission } from '@/state/folder/types'
 import { IUser } from '@/state/user/types'
 
 import { 
+  createFilePermissions,
   setAllFolders,
   setAllFiles,
   updateUserFileIds
@@ -50,5 +51,9 @@ export const createFile = (folderId: IFolder['id'] = null, userId: IUser['id'] =
     }
 
     mutation.createFile(newFile)
+      .then(response => {
+        dispatch(createFilePermissions(response.data as IFilePermission[]))
+      })
+      .catch(console.log.bind(console))
 	}
 }

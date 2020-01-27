@@ -24,7 +24,7 @@ export const createFilePermissions = (newFilePermissions: IFilePermission[]): IT
     let nextAllFiles = { ...allFiles }
     
     newFilePermissions.forEach(newFilePermission => {
-      const file = allFiles[newFilePermission.fileId]
+      const file = nextAllFiles[newFilePermission.fileId]
       const nextFilePermissions = [
         ...file.permissions,
         newFilePermission.id

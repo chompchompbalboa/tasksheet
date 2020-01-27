@@ -59,9 +59,7 @@ export const updateUserSubscription = async (id: string, updates: IUserTasksheet
 // File
 //-----------------------------------------------------------------------------
 export const createFile = async (newFile: IFile) => {
-	return axios.post('/app/files', newFile).then(response => {
-		return response.data
-	}).catch(console.log.bind(console))
+	return axios.post('/app/files', newFile)
 }
 
 export const createFilePermission = async (fileId: IFile['id'], email: string, role: IFilePermission['role']) => {

@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use App\Models\File;
 use App\Models\FilePermission;
 use App\Models\FolderPermission;
+use App\Models\User;
 
 class FileController extends Controller
 {
@@ -19,22 +20,44 @@ class FileController extends Controller
 
       // Get the new file permissions to create
       $newFilePermissions = [];
+      $newFilePermissionsToReturn = [];
       if(!is_null($file->folderId)) { // If the file belongs to a folder
         $fileFolderPermissions = FolderPermission::where('folderId', $file->folderId)->get();
         foreach($fileFolderPermissions as $folderPermission) {
-          array_push($newFilePermissions, [
-            'id' => Str::uuid()->toString(),
-            'userId' => $folderPermission->userId,
-            'fileId' => $file->id,
-            'role' => $folderPermission->role
-          ]);
+          $user = User::find($folderPermission->userId);
+          if($user) {
+            $newFilePermissionId =  Str::uuid()->toString();
+            array_push($newFilePermissions, [
+              'id' => $newFilePermissionId,
+              'userId' => $user->id,
+              'fileId' => $file->id,
+              'role' => $folderPermission->role
+            ]);
+            array_push($newFilePermissionsToReturn, [
+              'id' => $newFilePermissionId,
+              'userId' => $user->id,
+              'userName' => $user->name,
+              'userEmail' => $user->email,
+              'fileId' => $file->id,
+              'role' => $folderPermission->role
+            ]);
+          }
         }
       }
       if(!is_null($file->userId)) { // If the file belongs to a user
         $user = Auth::user();
+        $newFilePermissionId = Str::uuid()->toString();
         array_push($newFilePermissions, [
-          'id' => Str::uuid()->toString(),
+          'id' => $newFilePermissionId,
           'userId' => $user->id,
+          'fileId' => $file->id,
+          'role' => 'OWNER'
+        ]);
+        array_push($newFilePermissionsToReturn, [
+          'id' => $newFilePermissionId,
+          'userId' => $user->id,
+          'userName' => $user->name,
+          'userEmail' => $user->email,
           'fileId' => $file->id,
           'role' => 'OWNER'
         ]);
@@ -43,12 +66,7 @@ class FileController extends Controller
       // Create the new file permissions
       FilePermission::insert($newFilePermissions);
 
-      // Fetch the new file permissions (we need the userName and userEmail)
-      $newFilePermissions = FilePermission::where('fileId', $file->id)->get();
-
-      return response()->json([
-        'permissions' => $newFilePermissions
-      ], 200);
+      return response()->json($newFilePermissionsToReturn, 200);
     }
 
     public function update(Request $request, File $file)
