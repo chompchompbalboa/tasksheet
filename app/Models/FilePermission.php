@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class FilePermission extends Model
+class FilePermission extends Pivot
 {
   use Traits\UsesUuid;
 

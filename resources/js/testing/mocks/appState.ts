@@ -100,6 +100,7 @@ export const appStateFactory = ({
         name: fileId,
         type: 'SHEET' as IFileType,
         typeId: sheetId,
+        role: 'OWNER',
         permissions: []
       }
 
@@ -264,6 +265,7 @@ export const appStateFactory = ({
       name: folderId,
       folders: [],
       files: folderFiles,
+      role: 'OWNER',
       permissions: []
     }
   }

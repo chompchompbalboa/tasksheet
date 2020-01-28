@@ -32,6 +32,7 @@ export const createSheetFromCsv = (folderId: IFolder['id'], fileToUpload: File, 
       name: fileToUpload.name.split('.').slice(0, -1).join(''), // Name without the extension
       type: 'SHEET',
       typeId: newSheetId,
+      role: 'OWNER',
       permissions: [],
       isPreventedFromSelecting: true
     }

@@ -15,6 +15,7 @@ export interface IFolderFromDatabase {
   id: string
   folderId?: string
 	name: string
+  role: IFolderPermission['role']
   permissions: IFolderPermission[]
 }
 
@@ -24,6 +25,7 @@ export interface IFolder {
 	name: string
 	folders: IFolder['id'][]
 	files: IFile['id'][]
+  role: IFolderPermission['role']
   permissions: IFolderPermission['id'][]
 }
 
@@ -55,6 +57,7 @@ export interface IFileFromDatabase {
 	name: string
 	type: IFileType
   typeId: string
+  role: IFilePermission['role']
   permissions: IFilePermission[]
   isPreventedFromSelecting?: boolean
 }
@@ -66,6 +69,7 @@ export interface IFile {
 	name: string
 	type: IFileType
   typeId: string
+  role: IFilePermission['role']
   permissions: IFilePermission['id'][]
   isPreventedFromSelecting?: boolean
 }

@@ -80,6 +80,7 @@ const setNormalizedFoldersAndFiles = () => {
       folderId: folder.folderId,
       folders: folderFolders[folder.id] || [],
       files: folderFiles[folder.id] || [],
+      role: folder.role,
       permissions: folderPermissionIds
     }
     folder.permissions.forEach(folderPermission => {

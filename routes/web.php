@@ -26,6 +26,7 @@ Route::group([], function () {
       ]);
       $user = Auth::user();
     }
+    //dd($user->files()->toArray());
 
     return view('app')->with([
       'user' => $user,

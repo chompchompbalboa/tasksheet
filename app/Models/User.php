@@ -6,6 +6,7 @@ use Laravel\Cashier\Billable;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Folder;
 use App\Models\FolderPermission;
@@ -42,7 +43,39 @@ class User extends Authenticatable
     }
     
     public function files() {
-      return $this->belongsToMany('App\Models\File', 'filePermissions', 'userId', 'fileId')->orderBy('name')->get();
+      // Get the files
+      $files = DB::table('filePermissions')
+        ->where('filePermissions.userId', '=', $this->id)
+        ->join('files', 'filePermissions.fileId', '=', 'files.id')
+        ->select(
+          'files.id', 
+          'files.folderId', 
+          'files.userId', 
+          'files.name',
+          'files.type',
+          'files.typeId',
+          'filePermissions.role'
+        )->get();
+      // Attach permissions
+      foreach($files as $file) {
+        $filePermissions = DB::table('filePermissions')
+          ->join('users', function ($join) use($file) {
+              $join->on('filePermissions.userId', '=', 'users.id')
+                   ->where('filePermissions.fileId', '=', $file->id);
+          })
+          ->select(
+            'filePermissions.id',
+            'filePermissions.fileId',
+            'filePermissions.userId',
+            'users.name AS userName',
+            'users.email AS userEmail',
+            'filePermissions.role'
+          )
+          ->orderBy('users.name', 'asc')
+          ->get();
+        $file->permissions = $filePermissions;
+      }
+      return $files;
     }
 
     public function fileIds() {
@@ -50,7 +83,37 @@ class User extends Authenticatable
     }
     
     public function folders() {
-      return $this->belongsToMany('App\Models\Folder', 'folderPermissions', 'userId', 'folderId')->orderBy('name')->get();
+      // Get the folders
+      $folders = DB::table('folderPermissions')
+        ->where('folderPermissions.userId', '=', $this->id)
+        ->join('folders', 'folderPermissions.folderId', '=', 'folders.id')
+        ->select(
+          'folders.id', 
+          'folders.folderId', 
+          'folders.name',
+          'folderPermissions.role'
+        )
+        ->get();
+      // Attach permissions
+      foreach($folders as $folder) {
+        $folderPermissions = DB::table('folderPermissions')
+          ->join('users', function ($join) use($folder) {
+              $join->on('folderPermissions.userId', '=', 'users.id')
+                   ->where('folderPermissions.folderId', '=', $folder->id);
+          })
+          ->select(
+            'folderPermissions.id',
+            'folderPermissions.folderId',
+            'folderPermissions.userId',
+            'users.name AS userName',
+            'users.email AS userEmail',
+            'folderPermissions.role'
+          )
+          ->orderBy('users.name', 'asc')
+          ->get();
+        $folder->permissions = $folderPermissions;
+      }
+      return $folders;
     }
 
     public function folderIds() {

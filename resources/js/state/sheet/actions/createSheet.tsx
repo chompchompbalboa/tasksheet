@@ -30,6 +30,7 @@ export const createSheet = (folderId: IFolder['id'], newFileName?: string, openS
       name: newFileName || null,
       type: 'SHEET',
       typeId: newSheetId,
+      role: 'OWNER',
       permissions: [],
       isPreventedFromSelecting: true
     }

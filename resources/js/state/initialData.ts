@@ -24,6 +24,7 @@ const initalData: IInitialData = {
 		{
 			id: 'uuid',
 			name: 'name',
+      role: 'OWNER',
 			permissions: <IFolderPermission[]>[],
 		},
   ],

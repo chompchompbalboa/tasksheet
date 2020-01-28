@@ -97,6 +97,7 @@ export const createSheetLink = (sheetId: ISheet['id'], folderId: IFolder['id'], 
       type: 'SHEET' as IFileType, 
       name: newSheetLinkFileName,
       typeId: newSheetLinkId,
+      role: 'OWNER',
       permissions: []
     }
 
