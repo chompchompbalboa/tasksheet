@@ -22,7 +22,7 @@ const SiteSplash = () => {
       </Header>
       <Splash>
         <Name>tasksheet</Name>
-        <Motto>Flexible and powerful, Tasksheet makes it easy to organize your to-dos</Motto>
+        <Motto>Flexible and powerful, Tasksheet is the spreadsheet specifically built for task-management</Motto>
         <Divider />
         <LoginRegisterContainer>
             <SiteLoginForm />
