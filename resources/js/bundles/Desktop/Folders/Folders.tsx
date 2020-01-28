@@ -42,6 +42,7 @@ const Folders = ({
     return (
       <>
         <FoldersFolder
+          key="ROOT"
           folderId="ROOT"
           handleFileOpen={handleFileOpen}
           level={0}/>

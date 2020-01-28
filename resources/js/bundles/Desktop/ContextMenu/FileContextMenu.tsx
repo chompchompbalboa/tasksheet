@@ -18,6 +18,7 @@ const FileContextMenu = ({
   closeContextMenu,
   contextMenuLeft,
   contextMenuTop,
+  handleFileOpen,
   setIsRenaming,
   updateClipboard
 }: FileContextMenuProps) => {
@@ -35,7 +36,8 @@ const FileContextMenu = ({
       contextMenuLeft={contextMenuLeft}>
       <ContextMenuItem 
         isFirstItem
-        text="Open" />
+        text="Open"
+        onClick={() => handleFileOpen(fileId)}/>
       <ContextMenuDivider />
       <ContextMenuItem 
         text="Cut"
@@ -61,6 +63,7 @@ interface FileContextMenuProps {
   fileId: string
   closeContextMenu(): void
   contextMenuLeft: number
+  handleFileOpen(nextActiveTabId: string): void
   contextMenuTop: number
   deleteFile(fileId: string): void
   setIsRenaming(isRenaming: boolean): void
