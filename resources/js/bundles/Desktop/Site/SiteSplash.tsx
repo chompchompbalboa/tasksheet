@@ -33,7 +33,7 @@ const SiteSplash = ({
       </Header>
       <Splash>
         <Name>tasksheet</Name>
-        <Motto>Flexible and powerful, Tasksheet is the spreadsheet specifically built for task-management</Motto>
+        <Motto>Flexible and powerful, Tasksheet is the spreadsheet specifically built for task management</Motto>
         <Divider />
         <LoginContainer>
           <SiteLoginForm
