@@ -37,23 +37,24 @@ const FoldersFolder = ({
     <Container>
       <ItemsContainer>
         {folderIds.map(folderId => {
-          const folderItem = allFolders[folderId]
+          const folder = allFolders[folderId]
           return (
             <FoldersFolderFolder
               key={folderId}
               activeFolderPath={activeFolderPath}
-              folder={folderItem}
+              folder={folder}
               level={level}
               updateActiveFolderPath={(level: number, nextActiveFolderId: string) => dispatch(updateActiveFolderPath(level, nextActiveFolderId))}/>
           )
         })}
         {fileIds.map(fileId => {
-          const fileItem = allFiles[fileId]
+          const file = allFiles[fileId]
           return (
             <FoldersFolderFile
               key={fileId}
               handleFileOpen={handleFileOpen}
-              file={fileItem}/>
+              level={level}
+              file={file}/>
           )
         })}
       </ItemsContainer>

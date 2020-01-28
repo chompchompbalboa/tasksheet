@@ -134,10 +134,11 @@ export const folderReducer = (state = initialFolderState, action: IFolderActions
 		case SET_ALL_FILES: { return { ...state, allFiles: action.nextAllFiles } }
       
 		case UPDATE_ACTIVE_FILE_ID: {
-      const { nextActiveFileId } = action
+      const { nextActiveFileId, nextActiveFolderPath } = action
 			return {
 				...state,
 				activeFileId: nextActiveFileId,
+        activeFolderPath: nextActiveFolderPath
 			}
 		}
       

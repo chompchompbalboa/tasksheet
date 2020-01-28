@@ -9,7 +9,7 @@ import { IAppState } from '@/state'
 import { IThunkAction, IThunkDispatch } from '@/state/types'
 import { 
   IFile, IAllFilePermissions, IFilePermission, IFilePermissionUpdates, IAllFiles, IFileUpdates, 
-  IAllFolderPermissions, IFolderPermission, IFolderPermissionUpdates, IAllFolders, IFolderUpdates,
+  IFolder, IAllFolderPermissions, IFolderPermission, IFolderPermissionUpdates, IAllFolders, IFolderUpdates,
   IFolderClipboardUpdates, 
 } from '@/state/folder/types'
 import { createHistoryStep } from '@/state/history/actions'
@@ -111,12 +111,14 @@ export const UPDATE_ACTIVE_FILE_ID = 'UPDATE_ACTIVE_FILE_ID'
 interface IUpdateActiveFileId {
 	type: typeof UPDATE_ACTIVE_FILE_ID
 	nextActiveFileId: IFile['id']
+	nextActiveFolderPath: IFolder['id'][]
 }
 
-export const updateActiveFileId = (nextActiveFileId: IFile['id']): IFolderActions => {
+export const updateActiveFileId = (nextActiveFileId: IFile['id'], nextActiveFolderPath: IFolder['id'][]): IFolderActions => {
 	return {
 		type: UPDATE_ACTIVE_FILE_ID,
 		nextActiveFileId: nextActiveFileId,
+    nextActiveFolderPath: nextActiveFolderPath
 	}
 }
 

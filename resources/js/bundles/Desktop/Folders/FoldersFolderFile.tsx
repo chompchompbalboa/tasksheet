@@ -27,12 +27,15 @@ import Icon from '@/components/Icon'
 //-----------------------------------------------------------------------------
 const FoldersFolderFile = ({
   file,
-  handleFileOpen
+  handleFileOpen,
+  level
 }: IFoldersFolderFile) => {
   
   // Redux
   const dispatch = useDispatch()
   const activeFileId = useSelector((state: IAppState) => state.folder.activeFileId)
+  const activeFolderPath = useSelector((state: IAppState) => state.folder.activeFolderPath)
+  const activeFolderPathOnFileClick = level === 0 ? [] : [ ...activeFolderPath.slice(0, level - 1), file.folderId ]
   
   // State
   const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
@@ -81,7 +84,7 @@ const FoldersFolderFile = ({
         isPreventedFromSelecting={file.isPreventedFromSelecting}
         isRenaming={isRenaming}
         onContextMenu={e => handleContextMenu(e)}
-        onClick={() => dispatch(updateActiveFileId(file.id))}
+        onClick={() => dispatch(updateActiveFileId(file.id, activeFolderPathOnFileClick))}
         onDoubleClick={() => { if(!file.isPreventedFromSelecting) { handleFileOpen(file.id) }}}>
         <IconContainer
           isFile>
@@ -134,6 +137,7 @@ const FoldersFolderFile = ({
 interface IFoldersFolderFile {
   file: IFile
   handleFileOpen(nextActiveTabId: string): void
+  level: number
 }
 
 //-----------------------------------------------------------------------------
