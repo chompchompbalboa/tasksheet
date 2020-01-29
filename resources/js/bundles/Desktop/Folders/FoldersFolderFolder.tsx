@@ -75,9 +75,9 @@ const FoldersFolderFolder = ({
   
   const handleAutosizeInputBlur = () => {
     if(folderName !== null) {
-      setIsRenaming(false)
       updateFolder(folder.id, { name: folderName })
     }
+    setIsRenaming(false)
   }
   
   const handleContextMenu = (e: MouseEvent) => {

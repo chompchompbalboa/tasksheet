@@ -65,11 +65,11 @@ const FoldersFolderFile = ({
         isPreventedFromSelecting={file.isPreventedFromSelecting}
         isRenaming={isRenaming}
         onContextMenu={e => handleContextMenu(e)}
-        onClick={handleContainerClick}>
+        onClick={isRenaming ? null : handleContainerClick}>
       <FoldersFolderFileInfo
         file={file}
         isRenaming={isRenaming}
-        level={level}/>
+        setIsRenaming={setIsRenaming}/>
       </Container>
       {isContextMenuVisible && 
         <FileContextMenu
@@ -104,6 +104,7 @@ const Container = styled.div`
   width: 100%;
   background-color: ${ ({ isHighlighted }: ContainerProps ) => isHighlighted ? 'rgb(235, 235, 235)' : 'transparent' };
   color: rgb(20, 20, 20);
+  user-select: none;
   &:hover {
     background-color: ${ ({ isRenaming }: ContainerProps ) => isRenaming ? 'transparent' : 'rgb(235, 235, 235)' };
   }

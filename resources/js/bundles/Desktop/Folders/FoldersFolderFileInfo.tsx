@@ -23,7 +23,7 @@ import Icon from '@/components/Icon'
 const FoldersFolderFileInfo = ({
   file,
   isRenaming,
-  level
+  setIsRenaming
 }: IFoldersFolderFileInfo) => {
   
   // Redux
@@ -48,6 +48,7 @@ const FoldersFolderFileInfo = ({
     if(fileName !== null) {
       dispatch(updateFile(file.id, { name: fileName }))
     }
+    setIsRenaming(false)
   }
   
   // Handle Keypress While Input Is Focused
@@ -99,7 +100,7 @@ const FoldersFolderFileInfo = ({
 interface IFoldersFolderFileInfo {
   file: IFile
   isRenaming: boolean
-  level: number
+  setIsRenaming(nextIsRenaming: boolean): void
 }
 
 //-----------------------------------------------------------------------------
