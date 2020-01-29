@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 
-import { IFolderClipboardUpdates } from '@/state/folder/types'
+import { IFolderPermission, IFolderClipboardUpdates } from '@/state/folder/types'
 import { IModalUpdates } from '@/state/modal/types'
 
 import ContextMenu from '@desktop/ContextMenu/ContextMenu'
@@ -22,6 +22,7 @@ const FolderContextMenu = ({
   contextMenuLeft,
   contextMenuTop,
   pasteFromClipboard,
+  role,
   updateModal,
   updateClipboard,
   setIsRenaming
@@ -38,10 +39,12 @@ const FolderContextMenu = ({
       closeContextMenu={closeContextMenu}
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}>
-      <ContextMenuItem
-        isFirstItem
-        text="Cut"
-        onClick={() => closeOnClick(() => updateClipboard({ itemId: folderId, folderOrFile: 'FOLDER', cutOrCopy: 'CUT' }))}/>
+      {['OWNER', 'ADMINISTRATOR'].includes(role) &&
+        <ContextMenuItem
+          isFirstItem
+          text="Cut"
+          onClick={() => closeOnClick(() => updateClipboard({ itemId: folderId, folderOrFile: 'FOLDER', cutOrCopy: 'CUT' }))}/>
+      }
       <ContextMenuItem
         text="Paste"
         onClick={() => closeOnClick(() => pasteFromClipboard(folderId))}/>
@@ -56,15 +59,23 @@ const FolderContextMenu = ({
       <ContextMenuItem 
         text="New Folder"
         onClick={() => closeOnClick(() => createFolder(folderId))}/>
-      <ContextMenuDivider />
-      <ContextMenuItem 
-        text="Rename"
-        onClick={() => closeOnClick(() => setIsRenaming(true))}/>
-      <ContextMenuDivider />
-      <ContextMenuItem 
-        isLastItem
-        text="Delete" 
-        onClick={() => closeOnClick(() => deleteFolder(folderId))}/>
+      {['OWNER', 'ADMINISTRATOR'].includes(role) && 
+        <>
+          <ContextMenuDivider />
+          <ContextMenuItem 
+            text="Rename"
+            onClick={() => closeOnClick(() => setIsRenaming(true))}/>
+        </>
+      }
+      {['OWNER', 'ADMINISTRATOR'].includes(role) && 
+        <>
+          <ContextMenuDivider />
+          <ContextMenuItem 
+            isLastItem
+            text="Delete" 
+            onClick={() => closeOnClick(() => deleteFolder(folderId))}/>
+        </>
+      }
     </ContextMenu>
   )
 }
@@ -81,6 +92,7 @@ interface FolderContextMenuProps {
   contextMenuLeft: number
   contextMenuTop: number
   pasteFromClipboard(folderId: string): void
+  role: IFolderPermission['role']
   setIsRenaming(isRenaming: boolean): void
   updateModal(updates: IModalUpdates): void
   updateClipboard(updates: IFolderClipboardUpdates): void

@@ -77,10 +77,11 @@ const FoldersFolderFile = ({
           closeContextMenu={() => setIsContextMenuVisible(false)}
           contextMenuLeft={contextMenuLeft}
           contextMenuTop={contextMenuTop}
-          handleFileOpen={handleFileOpen}
           deleteFile={(fileId: IFile['id']) => dispatch(deleteFile(file.id))}
-          updateClipboard={(updates: IFolderClipboardUpdates) => dispatch(updateClipboard(updates))}
-          setIsRenaming={setIsRenaming}/>
+          handleFileOpen={handleFileOpen}
+          role={file.role}
+          setIsRenaming={setIsRenaming}
+          updateClipboard={(updates: IFolderClipboardUpdates) => dispatch(updateClipboard(updates))}/>
       }
     </>
   )

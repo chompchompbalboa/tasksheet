@@ -139,6 +139,7 @@ const FoldersFolderFolder = ({
           createSheet={createSheet}
           deleteFolder={deleteFolder}
           pasteFromClipboard={pasteFromClipboard}
+          role={folder.role}
           setIsRenaming={setIsRenaming}
           updateModal={updateModal}
           updateClipboard={updateClipboard}/>

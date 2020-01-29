@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 
-import { IFolderClipboardUpdates } from '@/state/folder/types'
+import { IFilePermission, IFolderClipboardUpdates } from '@/state/folder/types'
 
 import ContextMenu from '@desktop/ContextMenu/ContextMenu'
 import ContextMenuDivider from '@desktop/ContextMenu/ContextMenuDivider'
@@ -19,6 +19,7 @@ const FileContextMenu = ({
   contextMenuLeft,
   contextMenuTop,
   handleFileOpen,
+  role,
   setIsRenaming,
   updateClipboard
 }: FileContextMenuProps) => {
@@ -38,20 +39,28 @@ const FileContextMenu = ({
         isFirstItem
         text="Open"
         onClick={() => handleFileOpen(fileId)}/>
-      <ContextMenuDivider />
-      <ContextMenuItem 
-        text="Cut"
-        onClick={() => closeOnClick(() => updateClipboard({ itemId: fileId, folderOrFile: 'FILE', cutOrCopy: 'CUT' }))}/>
-      <ContextMenuItem text="Copy"/>
-      <ContextMenuDivider />
-      <ContextMenuItem 
-        text="Rename"
-        onClick={() => closeOnClick(() => setIsRenaming(true))}/>
-      <ContextMenuDivider />
-      <ContextMenuItem 
-        isLastItem
-        text="Delete"
-        onClick={() => closeOnClick(() => deleteFile(fileId))}/>
+      {['OWNER', 'ADMINISTRATOR'].includes(role) &&
+        <>
+          <ContextMenuDivider />
+          <ContextMenuItem 
+            text="Cut"
+            onClick={() => closeOnClick(() => updateClipboard({ itemId: fileId, folderOrFile: 'FILE', cutOrCopy: 'CUT' }))}/>
+          <ContextMenuItem text="Copy"/>
+          <ContextMenuDivider />
+          <ContextMenuItem 
+            text="Rename"
+            onClick={() => closeOnClick(() => setIsRenaming(true))}/>
+        </>
+      }
+      {['OWNER'].includes(role) &&
+        <>
+          <ContextMenuDivider />
+          <ContextMenuItem 
+            isLastItem
+            text="Delete"
+            onClick={() => closeOnClick(() => deleteFile(fileId))}/>
+        </>
+      }
     </ContextMenu>
   )
 }
@@ -66,6 +75,7 @@ interface FileContextMenuProps {
   handleFileOpen(nextActiveTabId: string): void
   contextMenuTop: number
   deleteFile(fileId: string): void
+  role: IFilePermission['role']
   setIsRenaming(isRenaming: boolean): void
   updateClipboard(updates: IFolderClipboardUpdates): void
 }
