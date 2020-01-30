@@ -10,6 +10,7 @@ import Icon from '@/components/Icon'
 // Components
 //-----------------------------------------------------------------------------
 const ContentSidebarItem = ({
+  containerHoverBackgroundColor = 'rgb(220, 220, 220)',
   icon,
   isActive,
   onClick,
@@ -20,6 +21,7 @@ const ContentSidebarItem = ({
 
   return (
     <Container
+      containerHoverBackgroundColor={containerHoverBackgroundColor}
       isActive={isActive}
       onClick={onClick}>
       <IconContainer>
@@ -40,6 +42,7 @@ const ContentSidebarItem = ({
 // Props
 //-----------------------------------------------------------------------------
 interface IContentSidebarItem {
+  containerHoverBackgroundColor?: string
   icon?: string
   isActive: boolean
   onClick(...args: any): void
@@ -60,10 +63,11 @@ const Container = styled.div`
   padding: 0.375rem 1.5rem 0.375rem 0.5rem;
   background-color: ${ ({ isActive }: IContainer ) => isActive ? 'rgb(220, 220, 220)' : 'transparent' };
   &:hover {
-    background-color: rgb(220, 220, 220);
+    background-color: ${ ({ containerHoverBackgroundColor }: IContainer ) => containerHoverBackgroundColor };
   }
 `
 interface IContainer {
+  containerHoverBackgroundColor: IContentSidebarItem['containerHoverBackgroundColor']
   isActive: boolean
 }
 

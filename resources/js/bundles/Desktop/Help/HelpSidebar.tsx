@@ -17,23 +17,20 @@ const HelpSidebar = ({
   return (
     <>
       <ContentSidebarItem
-        isActive={activeContent === 'WELCOME'}
-        onClick={() => setActiveContent('WELCOME')}
+        containerHoverBackgroundColor="transparent"
+        isActive={activeContent === 'GETTING_STARTED'}
+        onClick={null}
         text="Welcome"
         textFontWeight="bold"
         textMarginLeft="0.3rem"/>
         <ContentSidebarItem
-          isActive={activeContent === 'GETTING_STARTED'}
-          onClick={() => setActiveContent('GETTING_STARTED')}
-          text="Getting Started"/>
+          isActive={activeContent === 'FAQ'}
+          onClick={() => setActiveContent('FAQ')}
+          text="FAQ"/>
         <ContentSidebarItem
           isActive={activeContent === 'HELPFUL_TIPS'}
           onClick={() => setActiveContent('HELPFUL_TIPS')}
           text="Helpful Tips"/>
-        <ContentSidebarItem
-          isActive={activeContent === 'FAQ'}
-          onClick={() => setActiveContent('FAQ')}
-          text="FAQ"/>
       <ContentSidebarItem
         isActive={activeContent === 'VIEWS'}
         onClick={() => setActiveContent('VIEWS')}

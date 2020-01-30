@@ -33,7 +33,7 @@ const SiteSplash = ({
       </Header>
       <Splash>
         <Name>sortsheet</Name>
-        <Motto>Fast, flexible, and familiar, Sortsheet was built to organize your data</Motto>
+        <Motto>Fast, flexible, and familiar, Sortsheet makes it easy to organize your data</Motto>
         <Divider />
         <LoginContainer>
           <SiteLoginForm

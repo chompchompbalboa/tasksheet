@@ -8,10 +8,9 @@ import HelpContent from '@desktop/Help/HelpContent'
 import HelpSidebar from '@desktop/Help/HelpSidebar'
 
 export type IHelpContent = 
-  'WELCOME' |
-    'GETTING_STARTED' |
-    'HELPFUL_TIPS' |
+  'GETTING_STARTED' |
     'FAQ' |
+    'HELPFUL_TIPS' |
   'VIEWS' |
     'FILTERS' |
     'GROUPS' |
@@ -21,13 +20,12 @@ export type IHelpContent =
 //-----------------------------------------------------------------------------
 const Help = () => {
 
-  const [ activeContent, setActiveContent ] = useState('GETTING_STARTED' as IHelpContent)
+  const [ activeContent, setActiveContent ] = useState('FAQ' as IHelpContent)
 
   const headers = {
-    WELCOME: 'Welcome',
-      GETTING_STARTED: 'Getting Started',
-      HELPFUL_TIPS: 'Helpful Tips',
+    GETTING_STARTED: 'Getting Started',
       FAQ: 'FAQ',
+      HELPFUL_TIPS: 'Helpful Tips',
     VIEWS: 'Views',
       FILTERS: 'Filters',
       GROUPS: 'Groups',

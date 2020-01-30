@@ -4,7 +4,7 @@
 import React from 'react'
 
 import ContentContent from '@desktop/Content/ContentContent'
-import HelpText from '@desktop/Help/HelpText'
+import SettingsGroup from '@desktop/Settings/SettingsGroup'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -12,12 +12,11 @@ import HelpText from '@desktop/Help/HelpText'
 const AboutSortsheet = () => {
   return (
     <ContentContent>
-      <HelpText>
-        Sortsheet was built to make it easy to organize information in the workplace.
-      </HelpText>
-      <HelpText>
-        Every decision we make when building Sortsheet and its features uses the sentence above to guide it - with particular empahsis on the words "easy" and "organize".
-      </HelpText>
+      <SettingsGroup
+        header="1. How is Sortsheet different from spreadsheets like Excel or Google Sheets?"
+        headerFontSize="0.85rem">
+        
+      </SettingsGroup>
     </ContentContent>
   )
 }

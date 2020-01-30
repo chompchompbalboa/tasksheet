@@ -10,6 +10,8 @@ import styled from 'styled-components'
 const SettingsGroup = ({
   children,
   header,
+  headerFontSize = '0.95rem',
+  headerFontWeight = 'bold',
   defaultIsContentVisible = true
 }: ISettingsGroup) => {
   
@@ -18,6 +20,8 @@ const SettingsGroup = ({
   return (
     <Container>
       <Header
+        headerFontSize={headerFontSize}
+        headerFontWeight={headerFontWeight}
         isContentVisible={isContentVisible}
         onClick={() => setIsContentVisible(!isContentVisible)}>
         &nbsp;&nbsp;{header}
@@ -30,9 +34,14 @@ const SettingsGroup = ({
   )
 }
 
+//-----------------------------------------------------------------------------
+// Props
+//-----------------------------------------------------------------------------
 export interface ISettingsGroup {
   children?: any
   header: string
+  headerFontSize?: string
+  headerFontWeight?: string
   defaultIsContentVisible?: boolean
 }
 
@@ -53,8 +62,8 @@ const Header = styled.div`
   align-items: center;
   background-color: rgb(225, 225, 225);
   color: rgb(10, 10, 10);
-  font-size: 0.95rem;
-  font-weight: bold;
+  font-size: ${ ({ headerFontSize }: IHeader ) => headerFontSize };
+  font-weight: ${ ({ headerFontWeight }: IHeader ) => headerFontWeight };
   border: 1px solid rgb(175, 175, 175);
   border-bottom: ${ ({ isContentVisible }: IHeader ) => isContentVisible ? 'none' : '1px solid rgb(175, 175, 175)' };
   border-top-left-radius: 3px;
@@ -63,6 +72,8 @@ const Header = styled.div`
   border-bottom-right-radius: ${ ({ isContentVisible }: IHeader ) => isContentVisible ? '0' : '3px' };
 `
 interface IHeader {
+  headerFontWeight: string
+  headerFontSize: string
   isContentVisible: boolean
 }
 

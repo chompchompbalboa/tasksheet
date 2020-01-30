@@ -7,12 +7,10 @@ import { IHelpContent } from '@desktop/Help/Help'
 
 import FAQ from '@desktop/Help/Topics/FAQ'
 import Filters from '@desktop/Help/Topics/Filters'
-import GettingStarted from '@desktop/Help/Topics/GettingStarted'
 import HelpfulTips from '@desktop/Help/Topics/HelpfulTips'
 import Groups from '@desktop/Help/Topics/Groups'
 import Sorts from '@desktop/Help/Topics/Sorts'
 import Views from '@desktop/Help/Topics/Views'
-import Welcome from '@desktop/Help/Topics/Welcome'
 
 //-----------------------------------------------------------------------------
 // Components
@@ -21,11 +19,12 @@ const HelpContent = ({
   activeContent
 }: HelpContentProps) => {
 
+  const EmptyElement = () => <></>
+
   const content = {
-    WELCOME: Welcome,
-      GETTING_STARTED: GettingStarted,
-      HELPFUL_TIPS: HelpfulTips,
+    GETTING_STARTED: EmptyElement,
       FAQ: FAQ,
+      HELPFUL_TIPS: HelpfulTips,
     VIEWS: Views,
       FILTERS: Filters,
       GROUPS: Groups,
