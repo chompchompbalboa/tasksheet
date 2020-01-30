@@ -36,7 +36,7 @@ const SheetCellPhotos = ({
   
   // Redux
   const dispatch = useDispatch()
-  const isDemoUser = useSelector((state: IAppState) => state.user.tasksheetSubscription.type === 'DEMO')
+  const isDemoUser = useSelector((state: IAppState) => state.user.sortsheetSubscription.type === 'DEMO')
   const sheetCellPhotos = useSelector((state: IAppState) => state.sheet.allSheetCellPhotos && state.sheet.allSheetCellPhotos[cell.id] && state.sheet.allSheetCellPhotos[cell.id].map((sheetPhotoId: ISheetPhoto['id']) => {
     return state.sheet.allSheetPhotos[sheetPhotoId]
   }))

@@ -17,7 +17,7 @@ import StripePurchaseSubscription from '@desktop/Stripe/StripePurchaseSubscripti
 const SettingsUserSubscriptionTrial = () => {
   
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
-  const userSubscriptionEndDate = useSelector((state: IAppState) => state.user.tasksheetSubscription.endDate)
+  const userSubscriptionEndDate = useSelector((state: IAppState) => state.user.sortsheetSubscription.endDate)
 
   const [ activeUserSubscriptionSelection, setActiveUserSubscriptionSelection ] = useState('MONTHLY' as 'MONTHLY' | 'LIFETIME')
   
@@ -25,8 +25,8 @@ const SettingsUserSubscriptionTrial = () => {
     <>
       <ExpirationDate>
         Your 30-day free trial expires on <b>{moment(userSubscriptionEndDate).format('MMMM Do, YYYY')}. </b>
-        If you'd like to continue using Tasksheet after that date, please choose one of our two subscription plans below.
-        Both plans include unlimited access to all Tasksheet features.
+        If you'd like to continue using Sortsheet after that date, please choose one of our two subscription plans below.
+        Both plans include unlimited access to all Sortsheet features.
       </ExpirationDate>
       <Container>
         <ContentContainer>
@@ -61,7 +61,7 @@ const SettingsUserSubscriptionTrial = () => {
               </SubscriptionTypePrice>
               <Divider />
               <SubscriptionTypeDescription>
-                Billed immediately, you'll have access to Tasksheet and all of its features forever.
+                Billed immediately, you'll have access to Sortsheet and all of its features forever.
               </SubscriptionTypeDescription>
             </SubscriptionType>
           </SubscriptionTypesContainer>

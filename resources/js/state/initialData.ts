@@ -1,5 +1,5 @@
 import { IFolderPermission } from '@/state/folder/types'
-import { IUser, IUserActive, IUserColor, IUserTasksheetSubscription } from '@/state/user/types'
+import { IUser, IUserActive, IUserColor, IUserSortsheetSubscription } from '@/state/user/types'
 
 const initalData: IInitialData = {
 	user: <IUser> {
@@ -15,7 +15,7 @@ const initalData: IInitialData = {
 			primary: '',
 			secondary: '',
     },
-    tasksheetSubscription: <IUserTasksheetSubscription> {
+    sortsheetSubscription: <IUserSortsheetSubscription> {
       id: 'userSubscriptionId',
       type: 'LIFETIME'
     }

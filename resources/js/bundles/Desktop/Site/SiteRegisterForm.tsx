@@ -56,7 +56,7 @@ const SiteRegisterForm = () => {
   const statusMessages = {
     READY: "",
     REGISTERING: "",
-    INCORRECT_ACCESS_CODE: "Your access code is incorrect. Tasksheet is in closed beta and requires an access code to sign up for an account.",
+    INCORRECT_ACCESS_CODE: "Your access code is incorrect. Sortsheet is in closed beta and requires an access code to sign up for an account.",
     ERROR_DURING_REGISTRATION: "We were unable to sign you up for an account. Please make sure you have entered all of your information correctly and try again."
   }
   
@@ -96,7 +96,7 @@ const SiteRegisterForm = () => {
         onChange={nextValue => setAccessCodeInputValue(nextValue)}
         isInputValueValid={true}/>
       <SiteFormCheckbox
-        label="I agree to start a 30-day free trial of Tasksheet (no credit card required)"
+        label="I agree to start a 30-day free trial of Sortsheet (no credit card required)"
         onChange={nextValue => setStartTrialCheckboxValue(nextValue)}
         checked={startTrialCheckboxValue} />
       <SiteFormButton

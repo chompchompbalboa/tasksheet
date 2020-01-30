@@ -18,10 +18,10 @@ public/mix-manifest.json
 .htaccess
 public/js/app.js
 public/js/site.js
-tasksheet.code-workspace
+sortsheet.code-workspace
 .vapor/
 .env.production
 .env.staging
-.env.tasksheet-staging
+.env.sortsheet-staging
 public/js/app.js.map
 public/js/site.js.map

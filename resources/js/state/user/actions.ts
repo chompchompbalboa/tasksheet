@@ -8,7 +8,7 @@ import {
   IUserUpdates,
   IUserActiveUpdates,
   IUserColorUpdates,
-  IUserTasksheetSubscriptionUpdates
+  IUserSortsheetSubscriptionUpdates
 } from './types'
 
 import { mutation } from '@/api'
@@ -19,7 +19,7 @@ import { createMessengerMessage } from '@/state/messenger/actions'
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-export type IUserActions = IUpdateUser | IUpdateUserActive | IUpdateUserColor | IUpdateUserTasksheetSubscription
+export type IUserActions = IUpdateUser | IUpdateUserActive | IUpdateUserColor | IUpdateUserSortsheetSubscription
 
 //-----------------------------------------------------------------------------
 // Update User
@@ -107,19 +107,19 @@ export const updateUserColorReducer = (updates: IUserColorUpdates): IUserActions
 // Update User Active
 //-----------------------------------------------------------------------------
 export const UPDATE_USER_TASKSHEET_SUBSCRIPTION = 'UPDATE_USER_TASKSHEET_SUBSCRIPTION'
-interface IUpdateUserTasksheetSubscription {
+interface IUpdateUserSortsheetSubscription {
 	type: typeof UPDATE_USER_TASKSHEET_SUBSCRIPTION
-	updates: IUserTasksheetSubscriptionUpdates
+	updates: IUserSortsheetSubscriptionUpdates
 }
 
 
-export const updateUserTasksheetSubscription = (updates: IUserTasksheetSubscriptionUpdates): IThunkAction => {
+export const updateUserSortsheetSubscription = (updates: IUserSortsheetSubscriptionUpdates): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
-		dispatch(updateUserTasksheetSubscriptionReducer(updates))
+		dispatch(updateUserSortsheetSubscriptionReducer(updates))
 	}
 }
 
-export const updateUserTasksheetSubscriptionReducer = (updates: IUserTasksheetSubscriptionUpdates): IUserActions => {
+export const updateUserSortsheetSubscriptionReducer = (updates: IUserSortsheetSubscriptionUpdates): IUserActions => {
 	return {
 		type: UPDATE_USER_TASKSHEET_SUBSCRIPTION,
 		updates: updates,

@@ -14,15 +14,15 @@ const SiteSplash = () => {
     <Container>
       <Header>
         <HeaderName>
-          tasksheet
+          sortsheet
         </HeaderName>
         <HeaderLinks>
           <HeaderLink>30-day free trial<br/>$5 per month or $100 for lifetime access</HeaderLink>
         </HeaderLinks>
       </Header>
       <Splash>
-        <Name>tasksheet</Name>
-        <Motto>Flexible and powerful, Tasksheet is the spreadsheet specifically built for task management</Motto>
+        <Name>sortsheet</Name>
+        <Motto>Flexible and powerful, Sortsheet is the spreadsheet specifically built for task management</Motto>
         <Divider />
         <LoginRegisterContainer>
             <SiteLoginForm />

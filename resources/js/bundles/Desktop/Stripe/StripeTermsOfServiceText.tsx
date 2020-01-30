@@ -10,14 +10,14 @@ import styled from 'styled-components'
 const StripeTermsAndConditionsText = () => {   
   return (
     <Container>
-      <Header>Tasksheet Terms of Service</Header>
+      <Header>Sortsheet Terms of Service</Header>
       <p><b>Last updated:</b> December 12, 2019</p>
       <br/>
-      <p>Please read these Terms of Service ("Terms", "Terms of Service") carefully before using the http://www.tasksheet.app website (the "Service") operated by Tasksheet ("us", "we", or "our").</p>
+      <p>Please read these Terms of Service ("Terms", "Terms of Service") carefully before using the http://www.sortsheet.com website (the "Service") operated by Sortsheet ("us", "we", or "our").</p>
       <br/>
       <p>Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all visitors, users and others who access or use the Service.</p>
       <br/>
-      <p>By accessing or using the Service you agree to be bound by these Terms. If you disagree with any part of the terms then you may not access the Service. The Terms of Service agreement  for Tasksheet has been created with the help of <a href="https://www.termsfeed.com/terms-service-generator/">Terms of Service Generator</a>.</p>
+      <p>By accessing or using the Service you agree to be bound by these Terms. If you disagree with any part of the terms then you may not access the Service. The Terms of Service agreement  for Sortsheet has been created with the help of <a href="https://www.termsfeed.com/terms-service-generator/">Terms of Service Generator</a>.</p>
 
       <br/>
       <h2>Accounts</h2>
@@ -29,9 +29,9 @@ const StripeTermsAndConditionsText = () => {
 
       <br/>
       <h2>Links To Other Web Sites</h2>
-      <p>Our Service may contain links to third-party web sites or services that are not owned or controlled by Tasksheet.</p>
+      <p>Our Service may contain links to third-party web sites or services that are not owned or controlled by Sortsheet.</p>
       <br/>
-      <p>Tasksheet has no control over, and assumes no responsibility for, the content, privacy policies, or practices of any third party web sites or services. You further acknowledge and agree that Tasksheet shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with use of or reliance on any such content, goods or services available on or through any such web sites or services.</p>
+      <p>Sortsheet has no control over, and assumes no responsibility for, the content, privacy policies, or practices of any third party web sites or services. You further acknowledge and agree that Sortsheet shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with use of or reliance on any such content, goods or services available on or through any such web sites or services.</p>
       <br/>
       <p>We strongly advise you to read the terms and conditions and privacy policies of any third-party web sites or services that you visit.</p>
 

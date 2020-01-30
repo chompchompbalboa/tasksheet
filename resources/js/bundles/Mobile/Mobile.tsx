@@ -16,7 +16,7 @@ import Tabs from '@mobile/Tabs/Tabs'
 //-----------------------------------------------------------------------------
 export const MobileApp = () => {
   
-  const isDemoUser = useSelector((state: IAppState) => state.user.tasksheetSubscription.type === 'DEMO')
+  const isDemoUser = useSelector((state: IAppState) => state.user.sortsheetSubscription.type === 'DEMO')
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   const openFiles = useSelector((state: IAppState) => state.user.active.tabs)
   const openFileId = useSelector((state: IAppState) => state.user.active.tab)

@@ -102,8 +102,8 @@ class RegisterController extends Controller
           // Create the Stripe subscription
           $newUser->newSubscription('Monthly', env('STRIPE_TASKSHEET_MONTHLY_PLAN_ID'))->trialDays(30)->create();
 
-          // Create the Tasksheet subscription
-          $newUser->tasksheetSubscription()->save(factory(\App\Models\UserTasksheetSubscription::class)->make([
+          // Create the Sortsheet subscription
+          $newUser->sortsheetSubscription()->save(factory(\App\Models\UserSortsheetSubscription::class)->make([
             'type' => 'TRIAL',
             'startDate' => Carbon::now(),
             'endDate' => Carbon::now()->addDays(30),
@@ -113,19 +113,19 @@ class RegisterController extends Controller
           $newUser->active()->save(factory(\App\Models\UserActive::class)->make());
           $newUser->color()->save(factory(\App\Models\UserColor::class)->make());
 
-          // Create "Your First Tasksheet"
-          $newUserFirstTasksheetSheetId = Str::uuid()->toString();
-          $this->sheetBuilder->createSheet($newUserFirstTasksheetSheetId);
-          $newUserFirstTasksheetFile = File::create([
+          // Create "Your First Sortsheet"
+          $newUserFirstSortsheetSheetId = Str::uuid()->toString();
+          $this->sheetBuilder->createSheet($newUserFirstSortsheetSheetId);
+          $newUserFirstSortsheetFile = File::create([
             'folderId' => $newUserFolder->id,
-            'name' => 'Your First Tasksheet',
+            'name' => 'Your First Sortsheet',
             'type' => 'SHEET',
-            'typeId' => $newUserFirstTasksheetSheetId
+            'typeId' => $newUserFirstSortsheetSheetId
           ]);
 
           // Set the active tabs
-          $newUser->active->tab = $newUserFirstTasksheetFile->id;
-          $newUser->active->tabs = [ $newUserFirstTasksheetFile->id ];
+          $newUser->active->tab = $newUserFirstSortsheetFile->id;
+          $newUser->active->tabs = [ $newUserFirstSortsheetFile->id ];
           $newUser->active->save();
 
           // Log the user in

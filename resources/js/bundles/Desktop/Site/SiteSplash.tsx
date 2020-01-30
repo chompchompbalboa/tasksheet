@@ -25,15 +25,15 @@ const SiteSplash = ({
       userColorPrimary={userColorPrimary}>
       <Header>
         <HeaderName>
-          tasksheet
+          sortsheet
         </HeaderName>
         <HeaderLinks>
           <HeaderLink>30-day free trial<br/>$5 per month or $100 for lifetime access</HeaderLink>
         </HeaderLinks>
       </Header>
       <Splash>
-        <Name>tasksheet</Name>
-        <Motto>Flexible and powerful, Tasksheet is the spreadsheet specifically built for task management</Motto>
+        <Name>sortsheet</Name>
+        <Motto>Fast, flexible, and familiar, Sortsheet was built to organize your data</Motto>
         <Divider />
         <LoginContainer>
           <SiteLoginForm

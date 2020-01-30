@@ -40,7 +40,7 @@ const GettingStarted = () => {
             containerAlignItems="flex-start">
             <HelpText
               containerMarginBottom="0">
-              <b>2)</b> This will open the form to register for an account. Tasksheet is currently in an early-access beta and new registrations require an access code. The access code is <b>EARLY_ACCESS</b>
+              <b>2)</b> This will open the form to register for an account. Sortsheet is currently in an early-access beta and new registrations require an access code. The access code is <b>EARLY_ACCESS</b>
             </HelpText>
           </HelpColumn>
           <HelpColumn>

@@ -45,7 +45,7 @@ const SheetActions = ({
     if(activeSheetViewId && state.sheet.allSheetViews && state.sheet.allSheetViews[activeSheetViewId]) {
       return state.sheet.allSheetViews[activeSheetViewId]
   }})
-  const isDemoUser = useSelector((state: IAppState) => state.user.tasksheetSubscription.type === 'DEMO')
+  const isDemoUser = useSelector((state: IAppState) => state.user.sortsheetSubscription.type === 'DEMO')
 
   // State
   const [ isSheetViewLocked, setIsSheetViewLocked ] = useState((activeSheetView && activeSheetView.isLocked) || true)
