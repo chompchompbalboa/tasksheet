@@ -34,7 +34,7 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
     // Bindings
     this.handleResize = this.handleResize.bind(this)
 		this.handleSheetScroll = this.handleSheetScroll.bind(this)
-    this.handleSheetScrollThrottled = _.throttle(this.handleSheetScroll, 75)
+    this.handleSheetScrollThrottled = _.throttle(this.handleSheetScroll, 16)
     // Initial State
 		this.state = {
       containerWidthPx: null,
