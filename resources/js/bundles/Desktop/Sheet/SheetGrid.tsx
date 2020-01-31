@@ -102,7 +102,7 @@ const SheetGrid = memo(({
           rowHeight={rowIndex => 24}
           rowCount={sheetVisibleRows.length}
           overscanColumnCount={sheetViewVisibleColumns.length}
-          overscanRowCount={3}>
+          overscanRowCount={2}>
           {Cell}
         </Grid>
       )}
@@ -114,6 +114,7 @@ const SheetGrid = memo(({
 // Props
 //-----------------------------------------------------------------------------
 interface SheetGridProps {
+  isActiveFile?: boolean
   handleContextMenu(e: MouseEvent, type: string, id: string): void
   sheetId: string
 }

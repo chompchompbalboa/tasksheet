@@ -24,7 +24,7 @@ import ErrorBoundary from '@/components/ErrorBoundary'
 import LoadingTimer from '@/components/LoadingTimer'
 import SheetActions from '@desktop/Sheet/SheetActions'
 import SheetContextMenus from '@desktop/Sheet/SheetContextMenus'
-import SheetWindow from '@desktop/Sheet/SheetWindow'
+import SheetWindow from '@desktop/Sheet/SheetGrid'
 
 //-----------------------------------------------------------------------------
 // Component
