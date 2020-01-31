@@ -16,7 +16,7 @@ const SiteActionsHeader = ({
 }: ISiteActionsHeader) => {
   return (
     <Container>
-      <Name>todosheet</Name>
+      <Name><Gray>todo</Gray>sheet</Name>
       <CloseSiteActions
         onClick={() => dockSiteActions()}>
         <Icon 
@@ -43,6 +43,10 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`
+
+const Gray = styled.span`
+  color: rgb(175, 175, 175);
 `
 
 const Name = styled.div`

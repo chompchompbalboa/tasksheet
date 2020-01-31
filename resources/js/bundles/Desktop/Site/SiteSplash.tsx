@@ -33,7 +33,7 @@ const SiteSplash = ({
       </Header>
       <Splash>
         <Name>todo<Gray>sheet</Gray></Name>
-        <Motto>The spreadsheet specifically built to keep track of your to-dos</Motto>
+        <Motto>The spreadsheet specifically built to be your to-do list</Motto>
         <Divider />
         <LoginContainer>
           <SiteLoginForm
