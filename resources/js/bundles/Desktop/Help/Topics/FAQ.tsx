@@ -9,11 +9,11 @@ import SettingsGroup from '@desktop/Settings/SettingsGroup'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const AboutSortsheet = () => {
+const AboutTodosheet = () => {
   return (
     <ContentContent>
       <SettingsGroup
-        header="1. How is Sortsheet different from spreadsheets like Excel or Google Sheets?"
+        header="1. How is Todosheet different from spreadsheets like Excel or Google Sheets?"
         headerFontSize="0.85rem">
         
       </SettingsGroup>
@@ -24,4 +24,4 @@ const AboutSortsheet = () => {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default AboutSortsheet
+export default AboutTodosheet

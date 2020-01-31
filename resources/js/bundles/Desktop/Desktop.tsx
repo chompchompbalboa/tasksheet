@@ -17,7 +17,7 @@ import Site from '@desktop/Site/Site'
 //-----------------------------------------------------------------------------
 export const App = () => {
 
-  const isDemoUser = useSelector((state: IAppState) => state.user.sortsheetSubscription.type === 'DEMO')
+  const isDemoUser = useSelector((state: IAppState) => state.user.todosheetSubscription.type === 'DEMO')
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 
   if(isDemoUser) {

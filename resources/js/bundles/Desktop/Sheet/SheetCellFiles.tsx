@@ -36,7 +36,7 @@ const SheetCellFiles = ({
   
   // Redux
   const dispatch = useDispatch()
-  const isDemoUser = useSelector((state: IAppState) => state.user.sortsheetSubscription.type === 'DEMO')
+  const isDemoUser = useSelector((state: IAppState) => state.user.todosheetSubscription.type === 'DEMO')
   const sheetCellFiles = useSelector((state: IAppState) => state.sheet.allSheetCellFiles && state.sheet.allSheetCellFiles[cell.id] && state.sheet.allSheetCellFiles[cell.id].map((sheetFileId: ISheetFile['id']) => {
     return state.sheet.allSheetFiles[sheetFileId]
   }))

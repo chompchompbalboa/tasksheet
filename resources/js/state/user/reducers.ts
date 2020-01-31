@@ -39,7 +39,7 @@ export const userReducer = (state = initialUserState, action: IUserActions): IUs
 
 		case UPDATE_USER_TASKSHEET_SUBSCRIPTION: {
 			const { updates } = action
-			return { ...state, sortsheetSubscription: { ...state.sortsheetSubscription, ...updates } }
+			return { ...state, todosheetSubscription: { ...state.todosheetSubscription, ...updates } }
 		}
 
 		default:

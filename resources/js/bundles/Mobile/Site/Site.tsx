@@ -14,15 +14,15 @@ const SiteSplash = () => {
     <Container>
       <Header>
         <HeaderName>
-          sortsheet
+          todo<Gray>sheet</Gray>
         </HeaderName>
         <HeaderLinks>
           <HeaderLink>30-day free trial<br/>$5 per month or $100 for lifetime access</HeaderLink>
         </HeaderLinks>
       </Header>
       <Splash>
-        <Name>sortsheet</Name>
-        <Motto>Fast, flexible, and familiar, Sortsheet makes it easy to organize your data</Motto>
+        <Name>todo<Gray>sheet</Gray></Name>
+        <Motto>The spreadsheet specifically built to keep track of your to-dos</Motto>
         <Divider />
         <LoginRegisterContainer>
             <SiteLoginForm />
@@ -49,6 +49,10 @@ const Container = styled.div`
     top: 0;
     left: 0;
   }
+`
+
+const Gray = styled.span`
+  color: rgb(175, 175, 175);
 `
 
 const Header = styled.div`

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserSortsheetSubscription extends Model
+class UserTodosheetSubscription extends Model
 {
   use Traits\UsesUuid;
 

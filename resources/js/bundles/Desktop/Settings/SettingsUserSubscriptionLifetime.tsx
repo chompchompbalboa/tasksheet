@@ -13,11 +13,11 @@ import { IAppState } from '@/state'
 //-----------------------------------------------------------------------------
 const SettingsUserSubscriptionLifetime = () => {
 
-  const userSubscriptionStartDate = useSelector((state: IAppState) => state.user.sortsheetSubscription.startDate)
+  const userSubscriptionStartDate = useSelector((state: IAppState) => state.user.todosheetSubscription.startDate)
   
   return (
     <Container>
-      Your lifetime subscription was succesfully purchased on <b>{moment(userSubscriptionStartDate).format('MMMM Do, YYYY')}</b>. Thank you for choosing Sortsheet!
+      Your lifetime subscription was succesfully purchased on <b>{moment(userSubscriptionStartDate).format('MMMM Do, YYYY')}</b>. Thank you for choosing Todosheet!
     </Container>
   )
 }

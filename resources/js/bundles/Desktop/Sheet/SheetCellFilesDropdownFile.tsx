@@ -23,7 +23,7 @@ const SheetCellFilesDropdown = ({
 }: ISheetCellFilesDropdown) => {
 
   // Redux
-  const isDemoUser = useSelector((state: IAppState) => state.user.sortsheetSubscription.type === 'DEMO')
+  const isDemoUser = useSelector((state: IAppState) => state.user.todosheetSubscription.type === 'DEMO')
 
   // State
   const [ deleteSheetCellFileStatus, setDeleteSheetCellFileStatus ] = useState('READY' as ISheetCellFileDeleteStatus)

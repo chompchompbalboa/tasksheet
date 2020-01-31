@@ -17,7 +17,7 @@ import SettingsUserSubscriptionLifetime from '@desktop/Settings/SettingsUserSubs
 //-----------------------------------------------------------------------------
 const SettingsUserSubscription = () => {
   
-  const userSubscriptionType = useSelector((state: IAppState) => state.user.sortsheetSubscription.type)
+  const userSubscriptionType = useSelector((state: IAppState) => state.user.todosheetSubscription.type)
   
   const userSubscriptionComponents = {
     DEMO: SettingsUserSubscriptionDemo,

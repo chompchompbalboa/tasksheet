@@ -32,26 +32,26 @@ class DatabaseSeeder extends Seeder
     {
       
       $userIds = [
-        'rocky@sortsheet.com' => Str::uuid()->toString(),
-        'demo@sortsheet.com' => Str::uuid()->toString(),
+        'rocky@todo-sheet.com' => Str::uuid()->toString(),
+        'demo@todo-sheet.com' => Str::uuid()->toString(),
         'rockye@dillonworks.com' => Str::uuid()->toString(),
       ];
 
       // The source folders
       $allSourceFolders = [
-        [ 'name' => 'Sortsheet',
+        [ 'name' => 'Todosheet',
           'users' => [
-            [ 'id' => $userIds['rocky@sortsheet.com'], 'name' => 'Rocky Eastman', 'email' => 'rocky@sortsheet.com' ],
+            [ 'id' => $userIds['rocky@todo-sheet.com'], 'name' => 'Rocky Eastman', 'email' => 'rocky@todo-sheet.com' ],
         ]],
         [ 'name' => 'Demos',
           'users' => [
-            [ 'id' => $userIds['demo@sortsheet.com'], 'name' => 'Demo', 'email' => 'demo@sortsheet.com' ],
-            [ 'id' => $userIds['rocky@sortsheet.com'], 'name' => 'Rocky Eastman', 'email' => 'rocky@sortsheet.com' ],
+            [ 'id' => $userIds['demo@todo-sheet.com'], 'name' => 'Demo', 'email' => 'demo@todo-sheet.com' ],
+            [ 'id' => $userIds['rocky@todo-sheet.com'], 'name' => 'Rocky Eastman', 'email' => 'rocky@todo-sheet.com' ],
         ]],
         [ 'name' => 'Dillon Works',
           'users' => [
             [ 'id' => $userIds['rockye@dillonworks.com'], 'name' => 'Rocky Eastman', 'email' => 'rockye@dillonworks.com' ],
-            [ 'id' => $userIds['rocky@sortsheet.com'], 'name' => 'Rocky Eastman', 'email' => 'rocky@sortsheet.com' ],
+            [ 'id' => $userIds['rocky@todo-sheet.com'], 'name' => 'Rocky Eastman', 'email' => 'rocky@todo-sheet.com' ],
         ]],
       ];
 
@@ -99,8 +99,8 @@ class DatabaseSeeder extends Seeder
             $user->color()->save(factory(App\Models\UserColor::class)->make());
 
             // UserSubscription
-            $user->sortsheetSubscription()->save(factory(App\Models\UserSortsheetSubscription::class)->make([
-              'type' => $currentSourceFolderUser['email'] === 'demo@sortsheet.com' ? 'DEMO' : 'LIFETIME',
+            $user->todosheetSubscription()->save(factory(App\Models\UserTodosheetSubscription::class)->make([
+              'type' => $currentSourceFolderUser['email'] === 'demo@todo-sheet.com' ? 'DEMO' : 'LIFETIME',
               'startDate' => Carbon::now(),
               'endDate' => Carbon::now()->addDays(30),
             ]));

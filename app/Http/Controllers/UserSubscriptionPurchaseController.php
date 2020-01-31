@@ -16,7 +16,7 @@ class UserSubscriptionPurchaseController extends Controller
       try {
         $stripeCharge = $user->charge(10000, $stripePaymentMethodId); // 10000 cents = $100
         if($stripeCharge->isSucceeded()) {
-          $userSubscription = $user->sortsheetSubscription()->first();
+          $userSubscription = $user->todosheetSubscription()->first();
           $userSubscription->type = 'LIFETIME';
           $userSubscription->startDate = Carbon::now();
           $userSubscription->endDate = null;
@@ -38,7 +38,7 @@ class UserSubscriptionPurchaseController extends Controller
       try {
         $user->addPaymentMethod($stripeSetupIntentPaymentMethodId);
         $user->save();
-        $userSubscription = $user->sortsheetSubscription()->first();
+        $userSubscription = $user->todosheetSubscription()->first();
         $userSubscription->type = 'MONTHLY';
         $userSubscription->save();
         return response ($userSubscription, 200);

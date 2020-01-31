@@ -8,9 +8,9 @@ import styled from 'styled-components'
 
 import { action } from '@/api'
 import { IAppState } from '@/state'
-import { IUserSortsheetSubscription } from '@/state/user/types'
+import { IUserTodosheetSubscription } from '@/state/user/types'
 import {
-  updateUserSortsheetSubscription
+  updateUserTodosheetSubscription
 } from '@/state/user/actions'
 
 import StripeAgreeToChargeCheckbox from '@desktop/Stripe/StripeAgreeToChargeCheckbox'
@@ -30,7 +30,7 @@ const StripePurchaseSubscription = ({
 
   const dispatch = useDispatch()
   const userId = useSelector((state: IAppState) => state.user.id)
-  const userSubscriptionStripePaymentIntentClientSecret = useSelector((state: IAppState) => state.user.sortsheetSubscription.stripeSetupIntentClientSecret)
+  const userSubscriptionStripePaymentIntentClientSecret = useSelector((state: IAppState) => state.user.todosheetSubscription.stripeSetupIntentClientSecret)
   
   const [ isChargeAgreedTo, setIsChargeAgreedTo ] = useState(false)
   const [ isTermsOfServiceAccepted, setIsTermsOfServiceAccepted ] = useState(false)
@@ -70,7 +70,7 @@ const StripePurchaseSubscription = ({
             setStripeErrorMessage(response.data.message || 'We were unable to process your card. Please try again.')
           }
           else {
-            dispatch(updateUserSortsheetSubscription({ type: 'MONTHLY' }))
+            dispatch(updateUserTodosheetSubscription({ type: 'MONTHLY' }))
           }
         })
       }
@@ -98,8 +98,8 @@ const StripePurchaseSubscription = ({
           }
           // If the purchase is successful, update the user subscription
           else {
-            const nextUserSubscription = response.data as IUserSortsheetSubscription
-            dispatch(updateUserSortsheetSubscription({ 
+            const nextUserSubscription = response.data as IUserTodosheetSubscription
+            dispatch(updateUserTodosheetSubscription({ 
               type: nextUserSubscription.type, 
               startDate: nextUserSubscription.startDate,
               endDate: nextUserSubscription.endDate

@@ -136,7 +136,7 @@ const FoldersPropertiesFolderPermissionsCreatePermission = ({
   const errorMessages = {
     READY: "",
     CREATING: "",
-    USER_NOT_FOUND: "We couldn't find a user with that email address. Would you like to send an email to " + createPermissionEmail + " inviting them to Sortsheet?",
+    USER_NOT_FOUND: "We couldn't find a user with that email address. Would you like to send an email to " + createPermissionEmail + " inviting them to Todosheet?",
     USER_ALREADY_HAS_PERMISSION: "That user already has the appropriate permissions to access this folder",
     ERROR: "Uh oh, something went wrong. Please try again.",
     CREATED: "",

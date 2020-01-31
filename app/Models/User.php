@@ -21,13 +21,13 @@ class User extends Authenticatable
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
   
-    protected $visible = [ 'id', 'name', 'email', 'active', 'color', 'sortsheetSubscription', 'stripeSubscription' ];
+    protected $visible = [ 'id', 'name', 'email', 'active', 'color', 'todosheetSubscription', 'stripeSubscription' ];
     protected $fillable = [ 'name', 'email', 'password' ];
     protected $with = [ 'active', 'color' ];
-    protected $appends = [ 'stripeSubscription', 'sortsheetSubscription' ];
+    protected $appends = [ 'stripeSubscription', 'todosheetSubscription' ];
   
-    public function getSortsheetSubscriptionAttribute() {
-      return $this->sortsheetSubscription()->first();
+    public function getTodosheetSubscriptionAttribute() {
+      return $this->todosheetSubscription()->first();
     }
   
     public function getStripeSubscriptionAttribute() {
@@ -120,7 +120,7 @@ class User extends Authenticatable
       return FolderPermission::where('userId', $this->id)->pluck('folderId')->toArray();
     }
   
-    public function sortsheetSubscription() {
-      return $this->hasOne('App\Models\UserSortsheetSubscription', 'userId');
+    public function todosheetSubscription() {
+      return $this->hasOne('App\Models\UserTodosheetSubscription', 'userId');
     }
 }
