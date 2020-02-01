@@ -16,7 +16,7 @@ const SiteActionsHeader = ({
 }: ISiteActionsHeader) => {
   return (
     <Container>
-      <Name><Gray>todo</Gray>sheet</Name>
+      <Name>todo<Gray>sheet</Gray></Name>
       <CloseSiteActions
         onClick={() => dockSiteActions()}>
         <Icon 
