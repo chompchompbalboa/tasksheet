@@ -15,6 +15,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Folder;
 use App\Models\FolderPermission;
 use App\Models\File;
+use App\Models\FilePermission;
 use App\Models\User;
 use App\Models\UserActive;
 use App\Models\UserColor;
@@ -64,78 +65,76 @@ class RegisterController extends Controller
         return response()->json(null, 200);
       }
       else {
-        
-        // Get the access code
-        $accessCode = $request->input('accessCode');
-    
-        // If the access code is correct
-        if($accessCode === 'EARLY_ACCESS') {
+        // Validate the inputs and get the new user's information
+        $newUserInfo = $request->validate([
+            'name' => ['required', 'string'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string'],
+        ]);
 
-          // Validate the inputs and get the new user's information
-          $newUserInfo = $request->validate([
-              'name' => ['required', 'string'],
-              'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-              'password' => ['required', 'string'],
-          ]);
+        // Create the user folder
+        $newUserFolder = Folder::create([
+          'id' => Str::uuid()->toString(),
+          'name' => 'Your First Folder'
+        ]);
 
-          // Create the user folder
-          $newUserFolder = Folder::create([
-            'id' => Str::uuid()->toString(),
-            'name' => 'Your First Folder'
-          ]);
+        // Create the new user
+        $newUser = User::create([
+          'name' => $newUserInfo['name'],
+          'email' => $newUserInfo['email'],
+          'password' => Hash::make($newUserInfo['password'])
+        ]);
 
-          // Create the new user
-          $newUser = User::create([
-            'name' => $newUserInfo['name'],
-            'email' => $newUserInfo['email'],
-            'password' => Hash::make($newUserInfo['password'])
-          ]);
+        // Assign the user to the new folder
+        FolderPermission::create([
+          'id' => Str::uuid()->toString(),
+          'userId' => $newUser->id,
+          'folderId' => $newUserFolder->id,
+          'role' => 'OWNER'
+        ]);
 
-          // Assign the user to the new folder
-          FolderPermission::create([
-            'id' => Str::uuid()->toString(),
-            'userId' => $newUser->id,
-            'folderId' => $newUserFolder->id,
-            'role' => 'OWNER'
-          ]);
+        // Create the Stripe subscription
+        $newUser->newSubscription('Monthly', env('STRIPE_TASKSHEET_MONTHLY_PLAN_ID'))->trialDays(30)->create();
 
-          // Create the Stripe subscription
-          $newUser->newSubscription('Monthly', env('STRIPE_TASKSHEET_MONTHLY_PLAN_ID'))->trialDays(30)->create();
+        // Create the Todosheet subscription
+        $newUser->todosheetSubscription()->save(factory(\App\Models\UserTodosheetSubscription::class)->make([
+          'type' => 'TRIAL',
+          'startDate' => Carbon::now(),
+          'endDate' => Carbon::now()->addDays(30),
+        ]));
 
-          // Create the Todosheet subscription
-          $newUser->todosheetSubscription()->save(factory(\App\Models\UserTodosheetSubscription::class)->make([
-            'type' => 'TRIAL',
-            'startDate' => Carbon::now(),
-            'endDate' => Carbon::now()->addDays(30),
-          ]));
+        // Create userActive and userColor
+        $newUser->active()->save(factory(\App\Models\UserActive::class)->make());
+        $newUser->color()->save(factory(\App\Models\UserColor::class)->make());
 
-          // Create userActive and userColor
-          $newUser->active()->save(factory(\App\Models\UserActive::class)->make());
-          $newUser->color()->save(factory(\App\Models\UserColor::class)->make());
+        // Create "Your First Sheet"
+        $newUserFirstSheetId = Str::uuid()->toString();
+        $this->sheetBuilder->createSheet($newUserFirstSheetId);
+        $newUserFirstFile = File::create([
+          'folderId' => $newUserFolder->id,
+          'name' => 'Your First Sheet',
+          'type' => 'SHEET',
+          'typeId' => $newUserFirstSheetId
+        ]);
 
-          // Create "Your First Todosheet"
-          $newUserFirstTodosheetSheetId = Str::uuid()->toString();
-          $this->sheetBuilder->createSheet($newUserFirstTodosheetSheetId);
-          $newUserFirstTodosheetFile = File::create([
-            'folderId' => $newUserFolder->id,
-            'name' => 'Your First Todosheet',
-            'type' => 'SHEET',
-            'typeId' => $newUserFirstTodosheetSheetId
-          ]);
+        // Assign "Your First Sheet" to the new user
+        FilePermission::create([
+          'id' => Str::uuid()->toString(),
+          'userId' => $newUser->id,
+          'fileId' => $newUserFirstFile->id,
+          'role' => 'OWNER'
+        ]);
 
-          // Set the active tabs
-          $newUser->active->tab = $newUserFirstTodosheetFile->id;
-          $newUser->active->tabs = [ $newUserFirstTodosheetFile->id ];
-          $newUser->active->save();
+        // Set the active tabs
+        $newUser->active->tab = $newUserFirstFile->id;
+        $newUser->active->tabs = [ $newUserFirstFile->id ];
+        $newUser->active->save();
 
-          // Log the user in
-          Auth::loginUsingId($newUser->id, true);
+        // Log the user in
+        Auth::loginUsingId($newUser->id, true);
 
-          // Return the response
-          return response()->json(null, 200);
-        }
-        // Return a 500 code if the access code is incorrect
-        return response()->json(null, 500);
+        // Return the response
+        return response()->json(null, 200);
       }
     }
 }

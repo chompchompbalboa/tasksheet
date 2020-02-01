@@ -13,7 +13,7 @@ const AboutTodosheet = () => {
   return (
     <ContentContent>
       <SettingsGroup
-        header="1. How is Todosheet different from spreadsheets like Excel or Google Sheets?"
+        header="1. What are the major things I need to know about using To-dosheet?"
         headerFontSize="0.85rem">
         
       </SettingsGroup>

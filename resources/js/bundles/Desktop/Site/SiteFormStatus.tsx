@@ -31,6 +31,7 @@ interface IISiteFormStatus {
 const Container = styled.div`
   margin-top: 0.5rem;
   text-align: ${ ({ statusTextAlign }: IContainer ) => statusTextAlign };
+  color: rgb(175, 0, 0);
 `
 interface IContainer {
   statusTextAlign: string

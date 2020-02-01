@@ -21,34 +21,30 @@ const SiteRegisterForm = () => {
   const [ nameInputValue, setNameInputValue ] = useState('')
   const [ emailInputValue, setEmailInputValue ] = useState('')
   const [ passwordInputValue, setPasswordInputValue ] = useState('')
-  const [ confirmPasswordInputValue, setConfirmPasswordInputValue ] = useState('')
-  const [ accessCodeInputValue, setAccessCodeInputValue ] = useState('')
   const [ startTrialCheckboxValue, setStartTrialCheckboxValue ] = useState(false)
   const [ registerStatus, setRegisterStatus ] = useState('READY' as IRegisterStatus)
   
   // Handle Register Attempt
   const handleRegisterAttempt = (e: FormEvent) => {
     e.preventDefault()
-    if(isEmail(emailInputValue) && passwordInputValue === confirmPasswordInputValue && startTrialCheckboxValue) {
-      setRegisterStatus('REGISTERING')
-      if(accessCodeInputValue === 'EARLY_ACCESS') {
-        action.userRegister(nameInputValue, emailInputValue, passwordInputValue, accessCodeInputValue).then(
-          response => {
-            if(response.status === 200) {
-              window.location = window.location.href as any
-            }
-            else {
-              setTimeout(() => {
-                setRegisterStatus('ERROR_DURING_REGISTRATION')
-              }, 500)
-            }
-        })
-      }
-      else {
-        setTimeout(() => {
-          setRegisterStatus('INCORRECT_ACCESS_CODE')
-        }, 500)
-      }
+    setRegisterStatus('REGISTERING')
+    if(!startTrialCheckboxValue) {
+      setTimeout(() => {
+        setRegisterStatus('START_TRIAL_CHECKBOX_NOT_CHECKED')
+      }, 500)
+    }
+    else if(isEmail(emailInputValue) && passwordInputValue) {
+      action.userRegister(nameInputValue, emailInputValue, passwordInputValue).then(
+        response => {
+          if(response.status === 200) {
+            window.location = window.location.href as any
+          }
+          else {
+            setTimeout(() => {
+              setRegisterStatus('ERROR_DURING_REGISTRATION')
+            }, 500)
+          }
+      })
     }
   }
   
@@ -56,7 +52,7 @@ const SiteRegisterForm = () => {
   const statusMessages = {
     READY: "",
     REGISTERING: "",
-    INCORRECT_ACCESS_CODE: "Your access code is incorrect. Todosheet is in closed beta and requires an access code to sign up for an account.",
+    START_TRIAL_CHECKBOX_NOT_CHECKED: "Please click the checkbox above to start your free trial",
     ERROR_DURING_REGISTRATION: "We were unable to sign you up for an account. Please make sure you have entered all of your information correctly and try again."
   }
   
@@ -82,19 +78,6 @@ const SiteRegisterForm = () => {
         value={passwordInputValue}
         onChange={nextValue => setPasswordInputValue(nextValue)}
         isInputValueValid={true}/>
-      <SiteFormInput
-        label="Confirm Password"
-        type="password"
-        placeholder="Confirm Password"
-        value={confirmPasswordInputValue}
-        onChange={nextValue => setConfirmPasswordInputValue(nextValue)}
-        isInputValueValid={confirmPasswordInputValue === '' || confirmPasswordInputValue === passwordInputValue}/>
-      <SiteFormInput
-        label="Access Code"
-        placeholder="Access Code"
-        value={accessCodeInputValue}
-        onChange={nextValue => setAccessCodeInputValue(nextValue)}
-        isInputValueValid={true}/>
       <SiteFormCheckbox
         label="I agree to start a 30-day free trial of Todosheet (no credit card required)"
         onChange={nextValue => setStartTrialCheckboxValue(nextValue)}
@@ -103,8 +86,10 @@ const SiteRegisterForm = () => {
         marginLeft="0"
         marginTop="0.5rem"
         text={!['REGISTERING'].includes(registerStatus) ? 'Sign Up' : 'Signing Up...'} />
-      <SiteFormStatus
-        status={statusMessages[registerStatus]}/>
+      {statusMessages[registerStatus] &&
+        <SiteFormStatus
+          status={statusMessages[registerStatus]}/>
+      }  
     </RegisterForm>
   )
 }
@@ -112,20 +97,13 @@ const SiteRegisterForm = () => {
 //-----------------------------------------------------------------------------
 // Types
 //-----------------------------------------------------------------------------
-type IRegisterStatus = 'READY' | 'REGISTERING' | 'INCORRECT_ACCESS_CODE' | 'ERROR_DURING_REGISTRATION'
+type IRegisterStatus = 'READY' | 'REGISTERING' | 'START_TRIAL_CHECKBOX_NOT_CHECKED' | 'ERROR_DURING_REGISTRATION'
 
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const RegisterForm = styled.form`
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  @media (max-width: 480px) {
-    flex-direction: column;
-  }
 `
 
 export default SiteRegisterForm

@@ -1,45 +1,68 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { ARROW_DOWN } from '@/assets/icons'
+
 import { IAppState } from '@/state'
 
-import SiteLoginForm from '@desktop/Site/SiteLoginForm'
+import Icon from '@/components/Icon'
+import SiteActionsChooseAction from '@desktop/Site/SiteActionsChooseAction'
+import SiteActionsLogin from '@desktop/Site/SiteActionsLogin'
+import SiteActionsPricing from '@desktop/Site/SiteActionsPricing'
+import SiteActionsRegister from '@desktop/Site/SiteActionsRegister'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SiteSplash = ({
-  isSiteSplashDocked
 }: ISiteSplash) => {
   
   // Redux
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 
+  // State
+  const [ activeSiteAction, setActiveSiteAction ] = useState('REGISTER' as IActiveSiteAction)
+
   return (
     <Container
-      isSiteSplashDocked={isSiteSplashDocked}
       userColorPrimary={userColorPrimary}>
       <Header>
         <HeaderName>
-          todo<Gray>sheet</Gray>
+          to-do<Gray>sheet</Gray>
         </HeaderName>
         <HeaderLinks>
           <HeaderLink>30-day free trial<br/>$5 per month or $100 for lifetime access</HeaderLink>
         </HeaderLinks>
       </Header>
       <Splash>
-        <Name>todo<Gray>sheet</Gray></Name>
-        <Motto>The spreadsheet specifically built to be your to-do list</Motto>
-        <Divider />
-        <LoginContainer>
-          <SiteLoginForm
-            inputsMarginLeft="0.375rem"
-            statusTextAlign="center"/>
-        </LoginContainer>
+        <LeftColumn>
+          <ShortText>The spreadsheet that's perfect for your workplace to-do lists</ShortText>
+          <LongText>To-dosheet is a spreadsheet fine-tuned for keeping track of your <NoWrap>to-dos</NoWrap>. Built around its ability to quickly and easily organize your tasks, <NoWrap>To-dosheet</NoWrap> is a uniquely flexible and powerful solution for managing life at work</LongText>
+          <ScrollDownToTry>
+            <ScrollDownToTryIcon>
+              <Icon icon={ARROW_DOWN}/>
+            </ScrollDownToTryIcon>
+            <ScrollDownToTryText>
+              Scroll down to try it out
+            </ScrollDownToTryText>
+          </ScrollDownToTry>
+        </LeftColumn>
+        <RightColumn>
+          <ActionsContainer>
+            <SiteActionsChooseAction
+              activeSiteAction={activeSiteAction}
+              setActiveSiteAction={setActiveSiteAction}/>
+            <Actions>
+              {activeSiteAction === 'REGISTER' && <SiteActionsRegister />}
+              {activeSiteAction === 'LOGIN' && <SiteActionsLogin />}
+              {activeSiteAction === 'PRICING' && <SiteActionsPricing />}
+            </Actions>
+          </ActionsContainer>
+        </RightColumn>
       </Splash>
       <SpreadsheetIcon
         src={environment.assetUrl + 'images/spreadsheet.png'}/>
@@ -50,9 +73,9 @@ const SiteSplash = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface ISiteSplash {
-  isSiteSplashDocked: boolean
-}
+interface ISiteSplash {}
+
+export type IActiveSiteAction = 'REGISTER' | 'LOGIN' | 'PRICING'
 
 //-----------------------------------------------------------------------------
 // Styled Components
@@ -65,10 +88,8 @@ const Container = styled.div`
   font-family: inherit;
   overflow: hidden;
   border-bottom: 1px solid rgb(150, 150, 150);
-  box-shadow: ${ ({ isSiteSplashDocked }: IContainer) => isSiteSplashDocked ? 'none' : '0px 3px 20px 0px rgba(0,0,0,0.75)'};
 `
 interface IContainer {
-  isSiteSplashDocked: boolean
   userColorPrimary: string
 }
 
@@ -89,7 +110,8 @@ const Header = styled.div`
   z-index: 10;
   position: relative;
   width: 100%;
-  padding: 2rem;
+  padding: 3rem;
+  padding-bottom: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -100,7 +122,7 @@ const Header = styled.div`
 `
 
 const HeaderName = styled.div`
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: bold;
   @media (max-width: 480px) {
     display: none;
@@ -123,49 +145,77 @@ const HeaderLink = styled.div`
 
 const Splash = styled.div`
   z-index: 10;
-  position: relative;
-  margin-top: 2rem;
+  width: 100%;
   height: calc(100% - 5.5rem);
+  position: relative;
 	display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
 `
 
-const Name = styled.div`
-  font-size: 3rem;
+const ShortText = styled.div`
+  width: 100%;
+  font-size: 2.5rem;
   font-weight: bold;
-  margin-top: 10%;
-  margin-bottom: 0.625rem;
-  display: flex;
-  align-items: flex-start;
+  margin-bottom: 1.5rem;
   @media (max-width: 480px) {
     margin-top: -10%;
   }
 `
 
-const Motto = styled.div`
+const LongText = styled.div`
   font-size: 1.125rem;
-  width: 80%;
-  text-align: center;
+  width: 90%;
 `
 
-const LoginContainer = styled.div`
-  width: 40rem;
-	display: flex;
+const Column = styled.div`
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+`
+
+const LeftColumn = styled(Column)`
+  width: 45%;
+  margin-right: 5%;
+  align-items: flex-start;
   justify-content: center;
-  align-items: center;
-  margin-bottom: 1rem;
-  @media (max-width: 480px) {
-    width: 80%;
-  }
 `
 
-const Divider = styled.div`
-  margin: 2rem 0;
-  width: 10rem;
-  height: 1px;
-  background-color: white;
+const RightColumn = styled(Column)`
+  width: 35%;
+  align-items: flex-start;
+  justify-content: center;
+`
+
+const ActionsContainer = styled.div`
+  width: 90%;
+  padding: 1rem;
+  color: black;
+`
+
+const Actions = styled.div`
+  padding: 1.5rem;
+  background-color: rgb(230, 230, 230);
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+`
+
+const ScrollDownToTry = styled.div`
+  position: absolute;
+  bottom: 5rem;
+  align-self: flex-start;
+  display: flex;
+`
+
+const ScrollDownToTryText = styled.div`
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+`
+
+const ScrollDownToTryIcon = styled.div``
+
+const NoWrap = styled.span`
+  white-space: nowrap;
 `
 
 export default SiteSplash
