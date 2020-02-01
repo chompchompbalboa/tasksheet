@@ -9,7 +9,7 @@
     @if($user->todosheetSubscription->type === 'TRIAL')
       <script src="https://js.stripe.com/v3/"></script>
     @endif
-    <title>To-dosheet</title>
+    <title>to-dosheet</title>
   </head>
   <body>
     <section id="react-container"></section>

@@ -21,7 +21,7 @@ Route::group([], function () {
     }
     else {
       Auth::attempt([
-        'email' => 'demo@todo-sheet.com',
+        'email' => 'demo@to-dosheet.com',
         'password' => 'secret'
       ]);
       $user = Auth::user();

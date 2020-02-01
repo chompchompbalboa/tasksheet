@@ -41,7 +41,7 @@ const SiteSplash = ({
       <Splash>
         <LeftColumn>
           <ShortText>The spreadsheet that's perfect for your workplace to-do lists</ShortText>
-          <LongText>To-dosheet is a spreadsheet fine-tuned for keeping track of your <NoWrap>to-dos</NoWrap>. Built around its ability to quickly and easily organize your tasks, <NoWrap>To-dosheet</NoWrap> is a uniquely flexible and powerful solution for managing life at work</LongText>
+          <LongText><ToDoSheet>to-do<Gray>sheet</Gray></ToDoSheet> is a spreadsheet fine-tuned for keeping track of your <NoWrap>to-dos</NoWrap>. Built around its ability to quickly and easily organize your tasks, <ToDoSheet>to-do<Gray>sheet</Gray></ToDoSheet> is a uniquely flexible and powerful solution for managing life at work</LongText>
           <ScrollDownToTry>
             <ScrollDownToTryIcon>
               <Icon icon={ARROW_DOWN}/>
@@ -94,7 +94,7 @@ interface IContainer {
 }
 
 const Gray = styled.span`
-  color: rgb(175, 175, 175);
+  color: rgb(190, 190, 190);
 `
 
 const SpreadsheetIcon = styled.img`
@@ -215,6 +215,11 @@ const ScrollDownToTryText = styled.div`
 const ScrollDownToTryIcon = styled.div``
 
 const NoWrap = styled.span`
+  white-space: nowrap;
+`
+
+const ToDoSheet = styled.span`
+  font-weight: bold;
   white-space: nowrap;
 `
 
