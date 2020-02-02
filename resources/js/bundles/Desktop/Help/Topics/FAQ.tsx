@@ -9,7 +9,7 @@ import SettingsGroup from '@desktop/Settings/SettingsGroup'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const AboutTodosheet = () => {
+const AboutTasksheet = () => {
   return (
     <ContentContent>
       <SettingsGroup
@@ -24,4 +24,4 @@ const AboutTodosheet = () => {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default AboutTodosheet
+export default AboutTasksheet

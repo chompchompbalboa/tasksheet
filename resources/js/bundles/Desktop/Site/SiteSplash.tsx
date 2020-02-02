@@ -32,7 +32,7 @@ const SiteSplash = ({
       userColorPrimary={userColorPrimary}>
       <Header>
         <HeaderName>
-          to-do<Gray>sheet</Gray>
+          task<Gray>sheet</Gray>
         </HeaderName>
         <HeaderLinks>
           <HeaderLink>30-day free trial<br/>$5 per month or $100 for lifetime access</HeaderLink>
@@ -41,7 +41,7 @@ const SiteSplash = ({
       <Splash>
         <LeftColumn>
           <ShortText>The spreadsheet that's perfect for your workplace to-do lists</ShortText>
-          <LongText><ToDoSheet>to-do<Gray>sheet</Gray></ToDoSheet> is a spreadsheet fine-tuned for keeping track of your <NoWrap>to-dos</NoWrap>. Built around its ability to quickly and easily organize your tasks, <ToDoSheet>to-do<Gray>sheet</Gray></ToDoSheet> is a uniquely flexible and powerful solution for managing life at work</LongText>
+          <LongText><ToDoSheet>Tasksheet</ToDoSheet> is a spreadsheet fine-tuned for task management. Built around its ability to quickly and easily organize your to-dos, it is a uniquely flexible and powerful solution for managing life at work</LongText>
           <ScrollDownToTry>
             <ScrollDownToTryIcon>
               <Icon icon={ARROW_DOWN}/>
@@ -213,10 +213,6 @@ const ScrollDownToTryText = styled.div`
 `
 
 const ScrollDownToTryIcon = styled.div``
-
-const NoWrap = styled.span`
-  white-space: nowrap;
-`
 
 const ToDoSheet = styled.span`
   font-weight: bold;

@@ -2,7 +2,7 @@ id: 2412
 name: tracksheet
 environments:
     production:
-        domain: to-dosheet.com
+        domain: tasksheet.co
         memory: 1024
         cli-memory: 512
         database: tasksheet-production

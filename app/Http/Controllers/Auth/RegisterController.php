@@ -96,8 +96,8 @@ class RegisterController extends Controller
         // Create the Stripe subscription
         $newUser->newSubscription('Monthly', env('STRIPE_TASKSHEET_MONTHLY_PLAN_ID'))->trialDays(30)->create();
 
-        // Create the Todosheet subscription
-        $newUser->todosheetSubscription()->save(factory(\App\Models\UserTodosheetSubscription::class)->make([
+        // Create the Tasksheet subscription
+        $newUser->tasksheetSubscription()->save(factory(\App\Models\UserTasksheetSubscription::class)->make([
           'type' => 'TRIAL',
           'startDate' => Carbon::now(),
           'endDate' => Carbon::now()->addDays(30),

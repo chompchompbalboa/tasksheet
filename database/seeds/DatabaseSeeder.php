@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
 
       // The source folders
       $allSourceFolders = [
-        [ 'name' => 'Todosheet',
+        [ 'name' => 'Tasksheet',
           'users' => [
             [ 'id' => $userIds['rocky@todo-sheet.com'], 'name' => 'Rocky Eastman', 'email' => 'rocky@todo-sheet.com' ],
         ]],
@@ -99,7 +99,7 @@ class DatabaseSeeder extends Seeder
             $user->color()->save(factory(App\Models\UserColor::class)->make());
 
             // UserSubscription
-            $user->todosheetSubscription()->save(factory(App\Models\UserTodosheetSubscription::class)->make([
+            $user->tasksheetSubscription()->save(factory(App\Models\UserTasksheetSubscription::class)->make([
               'type' => $currentSourceFolderUser['email'] === 'demo@todo-sheet.com' ? 'DEMO' : 'LIFETIME',
               'startDate' => Carbon::now(),
               'endDate' => Carbon::now()->addDays(30),

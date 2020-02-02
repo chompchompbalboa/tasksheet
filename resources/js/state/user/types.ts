@@ -7,7 +7,7 @@ export interface IUser {
 	email: string
 	active: IUserActive
 	color: IUserColor
-  todosheetSubscription: IUserTodosheetSubscription
+  tasksheetSubscription: IUserTasksheetSubscription
   stripeSubscription: IUserStripeSubscription
 }
 
@@ -16,7 +16,7 @@ export interface IUserUpdates {
   email?: string
 }
 
-export interface IUserTodosheetSubscription {
+export interface IUserTasksheetSubscription {
   id: string
   type: 'DEMO' | 'TRIAL' | 'MONTHLY' | 'LIFETIME'
   endDate: string
@@ -24,7 +24,7 @@ export interface IUserTodosheetSubscription {
   stripeSetupIntentClientSecret?: string // Only set for TRIAL users
 }
 
-export interface IUserTodosheetSubscriptionUpdates {
+export interface IUserTasksheetSubscriptionUpdates {
   type?: 'DEMO' | 'TRIAL' | 'MONTHLY' | 'LIFETIME'
   startDate?: string
   endDate?: string

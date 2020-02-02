@@ -14,14 +14,14 @@ const SiteSplash = () => {
     <Container>
       <Header>
         <HeaderName>
-          to-do<Gray>sheet</Gray>
+          task<Gray>sheet</Gray>
         </HeaderName>
         <HeaderLinks>
           <HeaderLink>30-day free trial<br/>$5 per month or $100 for lifetime access</HeaderLink>
         </HeaderLinks>
       </Header>
       <Splash>
-        <Name>to-do<Gray>sheet</Gray></Name>
+        <Name>task<Gray>sheet</Gray></Name>
         <Motto>The spreadsheet that's perfect for your workplace to-do lists</Motto>
         <Divider />
         <LoginRegisterContainer>

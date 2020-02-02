@@ -79,7 +79,7 @@ const SiteRegisterForm = () => {
         onChange={nextValue => setPasswordInputValue(nextValue)}
         isInputValueValid={true}/>
       <SiteFormCheckbox
-        label="I agree to start a 30-day free trial of Todosheet (no credit card required)"
+        label="I agree to start a 30-day free trial of Tasksheet (no credit card required)"
         onChange={nextValue => setStartTrialCheckboxValue(nextValue)}
         checked={startTrialCheckboxValue} />
       <SiteFormButton

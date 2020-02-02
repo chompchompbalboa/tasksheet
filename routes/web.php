@@ -21,12 +21,11 @@ Route::group([], function () {
     }
     else {
       Auth::attempt([
-        'email' => 'demo@to-dosheet.com',
-        'password' => 'secret'
+        'email' => 'demo@tasksheet.co',
+        'password' => env('APP_DEMO_PASSWORD')
       ]);
       $user = Auth::user();
     }
-    //dd($user->files()->toArray());
 
     return view('app')->with([
       'user' => $user,
