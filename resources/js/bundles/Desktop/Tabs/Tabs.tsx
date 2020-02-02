@@ -5,7 +5,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { FOLDER, HELP, USER } from '@/assets/icons'
+import { FOLDER, USER } from '@/assets/icons'
 
 import { IAppState } from '@/state'
 import {
@@ -16,7 +16,6 @@ import {
 
 import File from '@desktop/File/File'
 import Folders from '@desktop/Folders/Folders'
-import Help from '@desktop/Help/Help'
 import Icon from '@/components/Icon'
 import Settings from '@desktop/Settings/Settings'
 import Tab from '@desktop/Tabs/Tab'
@@ -92,13 +91,6 @@ const Tabs = () => {
             </MiniTab>
           </>
         }
-        <MiniTab
-          isActiveTab={localActiveTab === 'HELP'}
-          onClick={() => handleFileOpen('HELP')}>
-          <Icon
-            icon={HELP}
-            size="0.9rem"/>
-        </MiniTab>
       </TabsContainer>
       <FilesContainer>
         {localTabs.map((fileId) => (
@@ -113,7 +105,6 @@ const Tabs = () => {
           handleFileOpen={handleFileOpen}
           isActiveTab={localActiveTab === 'FOLDERS'}/>
         {localActiveTab === 'SETTINGS' && <Settings />}
-        {localActiveTab === 'HELP' && <Help />}
       </FilesContainer>
     </Container>
   )
