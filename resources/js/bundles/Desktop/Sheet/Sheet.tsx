@@ -39,8 +39,9 @@ export const Sheet = memo(({
   const activeTab = useSelector((state: IAppState) => state.tab.activeTab)
   const isTemporarySheet = useSelector((state: IAppState) => 
     state.user.tasksheetSubscription.type === 'DEMO' && 
+    state.sheet.allSheets && 
     Object.keys(state.sheet.allSheets).includes(sheetId)
-  )
+  ) 
 
   // State
   const [ hasLoaded, setHasLoaded ] = useState(isTemporarySheet ? true : false) // Temporary sheets are created on the front end and don't require loading
