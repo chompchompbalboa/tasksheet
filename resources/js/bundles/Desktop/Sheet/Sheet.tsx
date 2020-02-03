@@ -34,13 +34,17 @@ export const Sheet = memo(({
   id: sheetId,
 }: ISheetProps) => {
 
+  // Redux
   const dispatch = useDispatch()
-
   const activeTab = useSelector((state: IAppState) => state.tab.activeTab)
+  const hasSheetLoaded = useSelector((state: IAppState) => Object.keys(state.sheet.allSheets).includes(sheetId))
 
+  // State
+  const [ hasLoaded, setHasLoaded ] = useState(hasSheetLoaded)
+
+  // Variables
   const isActiveFile = fileId === activeTab
 
-  const [ hasLoaded, setHasLoaded ] = useState(false)
   useEffect(() => {
     if(!hasLoaded && isActiveFile) {
       query.getSheet(sheetId).then(sheet => {

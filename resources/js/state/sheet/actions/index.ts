@@ -26,6 +26,7 @@ import {
 export { loadSheet } from '@/state/sheet/actions/loadSheet'
 export { loadSheetView } from '@/state/sheet/actions/loadSheetView'
 
+export { createDemoSheet } from '@/state/sheet/actions/createDemoSheet'
 export { createSheet } from '@/state/sheet/actions/createSheet'
 export { createSheetFromCsv } from '@/state/sheet/actions/createSheetFromCsv'
 export { createSheetColumn } from '@/state/sheet/actions/createSheetColumn'

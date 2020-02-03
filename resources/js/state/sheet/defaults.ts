@@ -4,11 +4,30 @@
 import { v4 as createUuid } from 'uuid'
 
 import { 
+  ISheet,
   ISheetCell, 
   ISheetColumn, 
   ISheetRow, 
   ISheetSelections 
 } from '@/state/sheet/types'
+
+//-----------------------------------------------------------------------------
+// Default Column
+//-----------------------------------------------------------------------------
+export const defaultColumn = (sheetId: string): ISheetColumn => {
+  return {
+    id: createUuid(),
+    sheetId: sheetId, 
+    name: 'Column',
+    width: 100,
+    cellType: 'STRING',
+    defaultValue: '',
+    trackCellChanges: false,
+    showCellChanges: true,
+    allCellValues: new Set() as Set<string>
+  }
+}
+
 
 //-----------------------------------------------------------------------------
 // Default Row
@@ -37,24 +56,6 @@ export const defaultCell = (sheetId: string, rowId: ISheetRow['id'], columnId: s
     isCellSelectedSheetIds: new Set() as Set<string>
   }
 }
-
-//-----------------------------------------------------------------------------
-// Default Cell
-//-----------------------------------------------------------------------------
-export const defaultColumn = (sheetId: string): ISheetColumn => {
-  return {
-    id: createUuid(),
-    sheetId: sheetId, 
-    name: 'Column',
-    width: 100,
-    cellType: 'STRING',
-    defaultValue: '',
-    trackCellChanges: false,
-    showCellChanges: true,
-    allCellValues: new Set() as Set<string>
-  }
-}
-
 //-----------------------------------------------------------------------------
 // Default Sheet Selections
 //-----------------------------------------------------------------------------
@@ -83,4 +84,23 @@ export const defaultSheetStyles = {
   colorReference: {},
   bold: new Set as Set<string>,
   italic: new Set as Set<string>
+}
+
+//-----------------------------------------------------------------------------
+// Default Sheet
+//-----------------------------------------------------------------------------
+export const defaultSheet: ISheet = {
+  id: createUuid(),
+  sourceSheetId: null,
+  activeSheetViewId: null,
+  columns: [],
+  rows: [],
+  priorities: [],
+  cellPriorities: {},
+  styles: defaultSheetStyles,
+  selections: defaultSheetSelections,
+  views: [],
+  visibleRows: [],
+  visibleRowLeaders: [],
+  isCellEditing: false
 }

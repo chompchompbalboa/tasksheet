@@ -5,7 +5,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { FOLDER, USER } from '@/assets/icons'
+import { FOLDER, USER, PLUS_SIGN } from '@/assets/icons'
 
 import { IAppState } from '@/state'
 import {
@@ -13,6 +13,9 @@ import {
   openFileInNewTab,
   updateActiveTab 
 } from '@/state/tab/actions'
+import {
+  createDemoSheet
+} from '@/state/sheet/actions'
 
 import File from '@desktop/File/File'
 import Folders from '@desktop/Folders/Folders'
@@ -33,12 +36,14 @@ const Tabs = () => {
   const userSubscriptionType = useSelector((state: IAppState) => state.user.tasksheetSubscription.type)
 
   // Local state
+  const [ isCreatingDemoSheet, setIsCreatingDemoSheet ] = useState(false)
   const [ localActiveTab, setLocalActiveTab ] = useState(activeTab)
   const [ localTabs, setLocalTabs ] = useState(tabs)
   
   // Effects
   useEffect(() => {
     setLocalActiveTab(activeTab || 'FOLDERS')
+    setIsCreatingDemoSheet(false)
   }, [ activeTab ])
 
   useLayoutEffect(() => {
@@ -73,23 +78,38 @@ const Tabs = () => {
             closeTab={fileId => dispatch(closeTab(fileId))}
             handleTabClick={handleFileOpen}/>))
         }
-        {userSubscriptionType !== 'DEMO' &&
-          <>
-            <MiniTab
-              isActiveTab={localActiveTab === 'FOLDERS'}
-              onClick={() => handleFileOpen('FOLDERS')}>
-              <Icon
-                icon={FOLDER}
-                size="0.85rem"/>
+        {userSubscriptionType !== 'DEMO'
+          ? <>
+              <MiniTab
+                isActiveTab={localActiveTab === 'FOLDERS'}
+                onClick={() => handleFileOpen('FOLDERS')}>
+                <Icon
+                  icon={FOLDER}
+                  size="0.85rem"/>
+              </MiniTab>
+              <MiniTab
+                isActiveTab={localActiveTab === 'SETTINGS'}
+                onClick={() => handleFileOpen('SETTINGS')}>
+                <Icon
+                  icon={USER}
+                  size="0.825rem"/>
+              </MiniTab>
+            </>
+          : <MiniTab
+              isActiveTab={false}
+              onClick={() => {
+                setIsCreatingDemoSheet(true)
+                setTimeout(() => {
+                  dispatch(createDemoSheet())
+                }, 250)
+              }}>
+              {isCreatingDemoSheet
+                ? "Creating..."
+                : <Icon
+                    icon={PLUS_SIGN}
+                    size="0.825rem"/>
+              }
             </MiniTab>
-            <MiniTab
-              isActiveTab={localActiveTab === 'SETTINGS'}
-              onClick={() => handleFileOpen('SETTINGS')}>
-              <Icon
-                icon={USER}
-                size="0.825rem"/>
-            </MiniTab>
-          </>
         }
       </TabsContainer>
       <FilesContainer>

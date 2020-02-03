@@ -57,7 +57,7 @@ class SheetBuilder
       $newSheetView = SheetView::create([ 
         'id' => Str::uuid()->toString(), 
         'sheetId' => $newSheetId,
-        'name' => 'Default View',
+        'name' => 'All Rows',
         'visibleColumns' => [],
         'isLocked' => false
       ]);
