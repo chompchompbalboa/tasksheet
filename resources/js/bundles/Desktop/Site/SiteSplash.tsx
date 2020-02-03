@@ -40,7 +40,7 @@ const SiteSplash = ({
       </Header>
       <Splash>
         <LeftColumn>
-          <ShortText>The spreadsheet that's perfect for your workplace to-do lists</ShortText>
+          <ShortText>The spreadsheet that's perfect<br/>for your workplace to-do lists</ShortText>
           <LongText><ToDoSheet>Tasksheet</ToDoSheet> is a spreadsheet fine-tuned for task management. Built around its ability to quickly and easily organize your to-dos, it is a uniquely flexible and powerful solution for managing life at work</LongText>
           <ScrollDownToTry>
             <ScrollDownToTryIcon>

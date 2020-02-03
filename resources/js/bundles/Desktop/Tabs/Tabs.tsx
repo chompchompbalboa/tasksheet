@@ -2,6 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useLayoutEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -30,8 +31,8 @@ const Tabs = () => {
 
   // Redux
   const dispatch = useDispatch()
-
   const activeTab = useSelector((state: IAppState) => state.tab.activeTab)
+  const activeFileName = useSelector((state: IAppState) => state.folder.allFiles[state.tab.activeTab]?.name)
   const tabs = useSelector((state: IAppState) => state.tab.tabs)
   const userSubscriptionType = useSelector((state: IAppState) => state.user.tasksheetSubscription.type)
 
@@ -49,6 +50,19 @@ const Tabs = () => {
   useLayoutEffect(() => {
     setLocalTabs(tabs)
   }, [ tabs ])
+  
+  // Get Document Title
+  const getDocumentTitle = () => {
+    if(userSubscriptionType === 'DEMO') {
+      return "Home | Tasksheet"
+    }
+    else if(activeFileName) {
+      return activeFileName + " | Tasksheet"
+    }
+    else {
+      return "Tasksheet"
+    }
+  }
 
   // Handle file open
   const handleFileOpen = (nextActiveTab: string) => {
@@ -69,6 +83,9 @@ const Tabs = () => {
   // Render
   return (
     <Container>
+      <Helmet>
+        <title>{getDocumentTitle()}</title>
+      </Helmet>
       <TabsContainer>
         {localTabs.map((fileId) => (
           <Tab
