@@ -195,6 +195,9 @@ export const createDemoSheet = (): IThunkAction => {
         }
       })
     }
+    
+    // Add a row break to the bottom of the visible rows
+    newSheet.visibleRows.push('ROW_BREAK')
 
     batch(() => {
       dispatch(setAllFilePermissions({ ...allFilePermissions, [ newFilePermission.id]: newFilePermission }))

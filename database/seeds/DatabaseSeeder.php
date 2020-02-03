@@ -32,8 +32,8 @@ class DatabaseSeeder extends Seeder
     {
       
       $userIds = [
-        'rocky@todo-sheet.com' => Str::uuid()->toString(),
-        'demo@todo-sheet.com' => Str::uuid()->toString(),
+        'rocky@tasksheet.co' => Str::uuid()->toString(),
+        'demo@tasksheet.co' => Str::uuid()->toString(),
         'rockye@dillonworks.com' => Str::uuid()->toString(),
       ];
 
@@ -41,17 +41,17 @@ class DatabaseSeeder extends Seeder
       $allSourceFolders = [
         [ 'name' => 'Tasksheet',
           'users' => [
-            [ 'id' => $userIds['rocky@todo-sheet.com'], 'name' => 'Rocky Eastman', 'email' => 'rocky@todo-sheet.com' ],
+            [ 'id' => $userIds['rocky@tasksheet.co'], 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.co' ],
         ]],
         [ 'name' => 'Demos',
           'users' => [
-            [ 'id' => $userIds['demo@todo-sheet.com'], 'name' => 'Demo', 'email' => 'demo@todo-sheet.com' ],
-            [ 'id' => $userIds['rocky@todo-sheet.com'], 'name' => 'Rocky Eastman', 'email' => 'rocky@todo-sheet.com' ],
+            [ 'id' => $userIds['demo@tasksheet.co'], 'name' => 'Demo', 'email' => 'demo@tasksheet.co' ],
+            [ 'id' => $userIds['rocky@tasksheet.co'], 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.co' ],
         ]],
         [ 'name' => 'Dillon Works',
           'users' => [
             [ 'id' => $userIds['rockye@dillonworks.com'], 'name' => 'Rocky Eastman', 'email' => 'rockye@dillonworks.com' ],
-            [ 'id' => $userIds['rocky@todo-sheet.com'], 'name' => 'Rocky Eastman', 'email' => 'rocky@todo-sheet.com' ],
+            [ 'id' => $userIds['rocky@tasksheet.co'], 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.co' ],
         ]],
       ];
 
@@ -100,7 +100,7 @@ class DatabaseSeeder extends Seeder
 
             // UserSubscription
             $user->tasksheetSubscription()->save(factory(App\Models\UserTasksheetSubscription::class)->make([
-              'type' => $currentSourceFolderUser['email'] === 'demo@todo-sheet.com' ? 'DEMO' : 'LIFETIME',
+              'type' => $currentSourceFolderUser['email'] === 'demo@tasksheet.co' ? 'DEMO' : 'LIFETIME',
               'startDate' => Carbon::now(),
               'endDate' => Carbon::now()->addDays(30),
             ]));
