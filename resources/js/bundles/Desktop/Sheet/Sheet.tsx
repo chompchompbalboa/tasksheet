@@ -37,10 +37,13 @@ export const Sheet = memo(({
   // Redux
   const dispatch = useDispatch()
   const activeTab = useSelector((state: IAppState) => state.tab.activeTab)
-  const hasSheetLoaded = useSelector((state: IAppState) => Object.keys(state.sheet.allSheets).includes(sheetId))
+  const isTemporarySheet = useSelector((state: IAppState) => 
+    state.user.tasksheetSubscription.type === 'DEMO' && 
+    Object.keys(state.sheet.allSheets).includes(sheetId)
+  )
 
   // State
-  const [ hasLoaded, setHasLoaded ] = useState(hasSheetLoaded)
+  const [ hasLoaded, setHasLoaded ] = useState(isTemporarySheet ? true : false) // Temporary sheets are created on the front end and don't require loading
 
   // Variables
   const isActiveFile = fileId === activeTab
