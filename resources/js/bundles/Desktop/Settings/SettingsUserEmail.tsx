@@ -39,7 +39,7 @@ const UserProfileEmail = () => {
       onBlur={() => updateUserEmail()}
       onChange={nextUserEmail => setLocalUserEmail(nextUserEmail)}
       value={localUserEmail}
-      width="25%"/>
+      width="30%"/>
   )
 }
 

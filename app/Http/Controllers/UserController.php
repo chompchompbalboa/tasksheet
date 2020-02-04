@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -15,8 +17,13 @@ class UserController extends Controller
   
     public function updatePassword(Request $request, User $user)
     { 
-      dd('updatePassword');
-      $user->update($request->all());
-      return response()->json($user, 200);
+      if (Hash::check($request->input('currentPassword'), $user->password)) { // Verify current password
+        $user->password = Hash::make($request->input('newPassword'));
+        $user->save();
+        return response(null, 200);
+      }
+      else {
+        return response(null, 400);
+      }
     }
 }

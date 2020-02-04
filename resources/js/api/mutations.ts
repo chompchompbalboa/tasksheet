@@ -50,8 +50,8 @@ export const updateUserColor = async (id: string, updates: IUserColorUpdates) =>
 	}).catch(console.log.bind(console))
 }
 
-export const updateUserPassword = async (id: IUser['id'], currentPassword: string, nextPassword: string) => {
-	return axios.post('/app/user/password/' + id, { currentPassword, nextPassword })
+export const updateUserPassword = async (id: IUser['id'], currentPassword: string, newPassword: string) => {
+	return axios.post('/app/user/password/' + id, { currentPassword, newPassword })
 }
 
 export const updateUserSubscription = async (id: string, updates: IUserTasksheetSubscriptionUpdates) => {
