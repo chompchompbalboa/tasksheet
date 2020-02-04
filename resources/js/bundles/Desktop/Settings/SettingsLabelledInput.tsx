@@ -8,6 +8,8 @@ import styled from 'styled-components'
 // Component
 //-----------------------------------------------------------------------------
 const SettingsLabelledInput = ({
+  disabled = false,
+  inputType = "text",
   label,
   onBlur,
   onChange,
@@ -20,6 +22,8 @@ const SettingsLabelledInput = ({
       containerWidth={width}>
       <Label>{label}</Label>
       <StyledInput
+        type={inputType}
+        disabled={disabled}
         value={value}
         onBlur={onBlur}
         onChange={e => onChange(e.target.value)}/>
@@ -31,7 +35,9 @@ const SettingsLabelledInput = ({
 // Props
 //-----------------------------------------------------------------------------
 interface ISettingsLabelledInput {
+  disabled?: boolean
   label: string
+  inputType?: "text" | "password"
   onBlur?(): void
   onChange(nextValue: string): void
   value: string
@@ -59,6 +65,7 @@ const Label = styled.div`
   display: inline;
   font-weight: bold;
   font-size: 0.85rem;
+  white-space: nowrap;
 `
 
 const StyledInput = styled.input`
@@ -69,6 +76,7 @@ const StyledInput = styled.input`
   background-color: transparent;
   font-family: inherit;
   font-size: 0.8rem;
+  color: rgb(50, 50, 50);
 `
 
 export default SettingsLabelledInput

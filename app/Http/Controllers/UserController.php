@@ -12,4 +12,11 @@ class UserController extends Controller
       $user->update($request->all());
       return response()->json($user, 200);
     }
+  
+    public function updatePassword(Request $request, User $user)
+    { 
+      dd('updatePassword');
+      $user->update($request->all());
+      return response()->json($user, 200);
+    }
 }

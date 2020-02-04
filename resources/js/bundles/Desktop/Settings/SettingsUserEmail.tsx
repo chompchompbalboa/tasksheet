@@ -34,11 +34,12 @@ const UserProfileEmail = () => {
 
   return (
     <SettingsLabelledInput
+      disabled
       label="Email:"
       onBlur={() => updateUserEmail()}
       onChange={nextUserEmail => setLocalUserEmail(nextUserEmail)}
       value={localUserEmail}
-      width="20%"/>
+      width="25%"/>
   )
 }
 

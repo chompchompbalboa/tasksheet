@@ -38,7 +38,7 @@ const UserProfileName = () => {
       onBlur={() => updateUserName()}
       onChange={nextUserName => setLocalUserName(nextUserName)}
       value={localUserName}
-      width="20%"/>
+      width="25%"/>
   )
 }
 

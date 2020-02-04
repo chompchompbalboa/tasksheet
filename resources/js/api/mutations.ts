@@ -37,6 +37,7 @@ export const updateUser = async (userId: IUser['id'], updates: IUserUpdates) => 
 		return response.data
 	}).catch(console.log.bind(console))
 }
+
 export const updateUserActive = async (id: string, updates: IUserActiveUpdates) => {
 	return axios.patch('/app/user/active/' + id, updates).then(response => {
 		return response.data
@@ -47,6 +48,10 @@ export const updateUserColor = async (id: string, updates: IUserColorUpdates) =>
 	return axios.patch('/app/user/color/' + id, updates).then(response => {
 		return response.data
 	}).catch(console.log.bind(console))
+}
+
+export const updateUserPassword = async (id: IUser['id'], currentPassword: string, nextPassword: string) => {
+	return axios.post('/app/user/password/' + id, { currentPassword, nextPassword })
 }
 
 export const updateUserSubscription = async (id: string, updates: IUserTasksheetSubscriptionUpdates) => {

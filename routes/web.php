@@ -42,6 +42,7 @@ Route::group([
   'prefix' => 'app',
   'middleware' => [ 'auth' ]
 ], function () {
+  
   // Uploads
   Route::post('/sheets/upload/csv', 'SheetController@createFromCsv');
   Route::post('/sheets/cells/photos/upload', 'SheetCellPhotoController@uploadPhotos');
@@ -76,6 +77,9 @@ Route::group([
   // Team Members
   Route::post('/team/member/create', 'TeamMemberController@store');
   Route::post('/team/member/delete', 'TeamMemberController@destroy');
+  
+  // User Password
+  Route::post('/user/password/{user}', 'UserController@updatePassword');
 
   // User Subscriptions
   Route::post('/user/{user}/subscription/purchase/lifetime', 'UserSubscriptionPurchaseController@subscriptionPurchaseLifetime');
