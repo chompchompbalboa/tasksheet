@@ -72,25 +72,11 @@ class RegisterController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        // Create the user folder
-        $newUserFolder = Folder::create([
-          'id' => Str::uuid()->toString(),
-          'name' => 'Your First Folder'
-        ]);
-
         // Create the new user
         $newUser = User::create([
           'name' => $newUserInfo['name'],
           'email' => $newUserInfo['email'],
           'password' => Hash::make($newUserInfo['password'])
-        ]);
-
-        // Assign the user to the new folder
-        FolderPermission::create([
-          'id' => Str::uuid()->toString(),
-          'userId' => $newUser->id,
-          'folderId' => $newUserFolder->id,
-          'role' => 'OWNER'
         ]);
 
         // Create the Stripe subscription
@@ -106,6 +92,20 @@ class RegisterController extends Controller
         // Create userActive and userColor
         $newUser->active()->save(factory(\App\Models\UserActive::class)->make());
         $newUser->color()->save(factory(\App\Models\UserColor::class)->make());
+
+        // Create the user folder
+        $newUserFolder = Folder::create([
+          'id' => Str::uuid()->toString(),
+          'name' => 'Your First Folder'
+        ]);
+
+        // Assign the user to the new folder
+        FolderPermission::create([
+          'id' => Str::uuid()->toString(),
+          'userId' => $newUser->id,
+          'folderId' => $newUserFolder->id,
+          'role' => 'OWNER'
+        ]);
 
         // Create "Your First Sheet"
         $newUserFirstSheetId = Str::uuid()->toString();
