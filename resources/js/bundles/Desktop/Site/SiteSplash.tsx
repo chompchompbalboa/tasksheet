@@ -18,8 +18,7 @@ import SiteActionsRegister from '@desktop/Site/SiteActionsRegister'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SiteSplash = ({
-}: ISiteSplash) => {
+export const SiteSplash = () => {
   
   // Redux
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
@@ -71,10 +70,8 @@ const SiteSplash = ({
 }
 
 //-----------------------------------------------------------------------------
-// Props
+// Types
 //-----------------------------------------------------------------------------
-interface ISiteSplash {}
-
 export type IActiveSiteAction = 'REGISTER' | 'LOGIN' | 'PRICING'
 
 //-----------------------------------------------------------------------------
