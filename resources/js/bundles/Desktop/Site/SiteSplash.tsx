@@ -12,7 +12,6 @@ import { IAppState } from '@/state'
 import Icon from '@/components/Icon'
 import SiteActionsChooseAction from '@desktop/Site/SiteActionsChooseAction'
 import SiteActionsLogin from '@desktop/Site/SiteActionsLogin'
-import SiteActionsPricing from '@desktop/Site/SiteActionsPricing'
 import SiteActionsRegister from '@desktop/Site/SiteActionsRegister'
 
 //-----------------------------------------------------------------------------
@@ -58,7 +57,6 @@ export const SiteSplash = () => {
             <Actions>
               {activeSiteAction === 'REGISTER' && <SiteActionsRegister />}
               {activeSiteAction === 'LOGIN' && <SiteActionsLogin />}
-              {activeSiteAction === 'PRICING' && <SiteActionsPricing />}
             </Actions>
           </ActionsContainer>
         </RightColumn>
@@ -72,7 +70,7 @@ export const SiteSplash = () => {
 //-----------------------------------------------------------------------------
 // Types
 //-----------------------------------------------------------------------------
-export type IActiveSiteAction = 'REGISTER' | 'LOGIN' | 'PRICING'
+export type IActiveSiteAction = 'REGISTER' | 'LOGIN'
 
 //-----------------------------------------------------------------------------
 // Styled Components
