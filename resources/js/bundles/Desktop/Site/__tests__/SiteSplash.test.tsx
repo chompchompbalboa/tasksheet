@@ -66,8 +66,25 @@ describe('SiteSplash', () => {
   it("displays the login form after clicking the login link", async () => {
     const { getByText, queryByText } = renderWithRedux(<SiteSplash />)
     const loginLink = getByText('Login')
+    expect(queryByText('Sign Up')).toBeTruthy()
+    expect(queryByText('Log In')).toBeNull()
     loginLink.click()
+    expect(queryByText('Sign Up')).toBeNull()
     expect(queryByText('Log In')).toBeTruthy()
+  })
+  
+  it("displays the registration form after clicking the register link", async () => {
+    const { getByText, queryByText } = renderWithRedux(<SiteSplash />)
+    const loginLink = getByText('Login')
+    const registerLink = getByText('Register')
+    expect(queryByText('Sign Up')).toBeTruthy()
+    expect(queryByText('Log In')).toBeNull()
+    loginLink.click()
+    expect(queryByText('Sign Up')).toBeNull()
+    expect(queryByText('Log In')).toBeTruthy()
+    registerLink.click()
+    expect(queryByText('Sign Up')).toBeTruthy()
+    expect(queryByText('Log In')).toBeNull()
   })
 
 })
