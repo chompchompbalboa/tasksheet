@@ -12,7 +12,8 @@ import SiteSplash from '@desktop/Site/SiteSplash'
 const Site = () => {
   
   return (
-    <Container>
+    <Container
+      data-testid="DesktopSite">
       <SiteSplash />
       <AppOverlay />
     </Container>

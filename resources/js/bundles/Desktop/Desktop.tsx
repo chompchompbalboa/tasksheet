@@ -15,7 +15,7 @@ import Site from '@desktop/Site/Site'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-export const App = () => {
+export const Desktop = () => {
 
   const isDemoUser = useSelector((state: IAppState) => state.user.tasksheetSubscription.type === 'DEMO')
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
@@ -70,4 +70,4 @@ const AppContent = styled.div`
   min-height: 100vh;
 `
 
-export default App
+export default Desktop

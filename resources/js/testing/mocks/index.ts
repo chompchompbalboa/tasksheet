@@ -10,3 +10,8 @@ export { createMockStore } from '@/testing/mocks/createMockStore'
 
 export { useDispatch as mockUseDispatch } from '@/testing/mocks/useDispatch'
 export { useSelector as mockUseSelector } from '@/testing/mocks/useSelector'
+
+export const mockEnvironment = {
+  assetUrl: 'testAssetUrl',
+  s3Bucket: 'testS3Bucket'
+}
