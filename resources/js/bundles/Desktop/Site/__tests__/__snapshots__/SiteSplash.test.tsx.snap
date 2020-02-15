@@ -427,7 +427,7 @@ Object {
           class="c6"
         >
           <div
-            class="sc-fzXfME c7"
+            class="sc-fzXfMD c7"
           >
             <div
               class="c8"
@@ -471,7 +471,7 @@ Object {
             </div>
           </div>
           <div
-            class="sc-fzXfME c13"
+            class="sc-fzXfMD c13"
           >
             <div
               class="c14"
@@ -584,26 +584,26 @@ Object {
   </body>,
   "container": <div>
     <div
-      class="sc-fzXfLX xdSLm"
+      class="sc-fzXfLW hkpgsN"
     >
       <div
-        class="sc-fzXfMx hkAQnc"
+        class="sc-fzXfMw OcfVP"
       >
         <div
-          class="sc-fzXfMy kOnpWA"
+          class="sc-fzXfMx bNRorv"
         >
           task
           <span
-            class="sc-fzXfMv iTePDW"
+            class="sc-fzXfLX ftAFYT"
           >
             sheet
           </span>
         </div>
         <div
-          class="sc-fzXfMz kKfAxC"
+          class="sc-fzXfMy giIond"
         >
           <div
-            class="sc-fzXfMA hxCWSv"
+            class="sc-fzXfMz brAVDQ"
           >
             30-day free trial
             <br />
@@ -612,33 +612,33 @@ Object {
         </div>
       </div>
       <div
-        class="sc-fzXfMB gAOwiC"
+        class="sc-fzXfMA lnEjTh"
       >
         <div
-          class="sc-fzXfME sc-fzXfNc etpQBC"
+          class="sc-fzXfMD sc-fzXfME ejSLpD"
         >
           <div
-            class="sc-fzXfMC dqCJHQ"
+            class="sc-fzXfMB etfPJH"
           >
             The spreadsheet that's perfect
             <br />
             for your workplace to-do lists
           </div>
           <div
-            class="sc-fzXfMD hbojmO"
+            class="sc-fzXfMC gPhLYp"
           >
             <span
-              class="sc-fzXfNj dzepFP"
+              class="sc-fzXfNi bsKqQC"
             >
               Tasksheet
             </span>
              is a spreadsheet fine-tuned for task management. Built around its ability to quickly and easily organize your to-dos, it is a uniquely flexible and powerful solution for managing life at work
           </div>
           <div
-            class="sc-fzXfNg fyOASf"
+            class="sc-fzXfNf iqslNy"
           >
             <div
-              class="sc-fzXfNi heXMQw"
+              class="sc-fzXfNh gZFvIL"
             >
               <svg
                 height="NaN"
@@ -652,17 +652,17 @@ Object {
               </svg>
             </div>
             <div
-              class="sc-fzXfNh jeYXUJ"
+              class="sc-fzXfNg gYEZfw"
             >
               Scroll down to try it out
             </div>
           </div>
         </div>
         <div
-          class="sc-fzXfME sc-fzXfNd cQWLYE"
+          class="sc-fzXfMD sc-fzXfNc fOcQbb"
         >
           <div
-            class="sc-fzXfNe fNtFop"
+            class="sc-fzXfNd eQofkE"
           >
             <div
               class="sc-AykKC iprWqD"
@@ -682,13 +682,13 @@ Object {
               </div>
             </div>
             <div
-              class="sc-fzXfNf jauTFS"
+              class="sc-fzXfNe Ifojt"
             >
               <div
-                class="sc-fzXfLW jMNLRE"
+                class="sc-fzXfLV jHvuJT"
               >
                 <form
-                  class="sc-fzXfLV flWBvu"
+                  class="sc-fzXfLU iPSjt"
                 >
                   <div
                     class="sc-AykKG kgqMhc"
@@ -739,14 +739,14 @@ Object {
                     />
                   </div>
                   <div
-                    class="sc-fzXfLS ibghwj"
+                    class="sc-fzXfLR ciuGiq"
                   >
                     <input
-                      class="sc-fzXfLU vOFEB"
+                      class="sc-fzXfLT bRrXJw"
                       type="checkbox"
                     />
                     <label
-                      class="sc-fzXfLT lbXPsA"
+                      class="sc-fzXfLS drTbiH"
                     >
                       I agree to start a 30-day free trial of Tasksheet (no credit card required)
                     </label>
@@ -764,7 +764,7 @@ Object {
         </div>
       </div>
       <img
-        class="sc-fzXfMw fbMmJs"
+        class="sc-fzXfMv gCgdpX"
         src="testAssetUrlimages/spreadsheet.png"
       />
     </div>
