@@ -15,7 +15,7 @@ import SiteFormStatus from '@desktop/Site/SiteFormStatus'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SiteRegisterForm = () => {
+const SiteSplashRegisterForm = () => {
   
   // State
   const [ nameInputValue, setNameInputValue ] = useState('')
@@ -106,4 +106,4 @@ const RegisterForm = styled.form`
   width: 100%;
 `
 
-export default SiteRegisterForm
+export default SiteSplashRegisterForm

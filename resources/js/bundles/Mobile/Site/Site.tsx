@@ -4,7 +4,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import SiteLoginForm from '@desktop/Site/SiteLoginForm'
+import SiteSplashLoginForm from '@desktop/Site/SiteSplashLoginForm'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -25,7 +25,9 @@ const SiteSplash = () => {
         <Motto>The spreadsheet that's perfect for your workplace to-do lists</Motto>
         <Divider />
         <LoginRegisterContainer>
-            <SiteLoginForm />
+          <SiteSplashLoginForm 
+            flexDirection="row"
+            isDisplayLabels={false}/>
         </LoginRegisterContainer>
       </Splash>
     </Container>

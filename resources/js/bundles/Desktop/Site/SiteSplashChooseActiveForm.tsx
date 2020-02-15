@@ -4,15 +4,15 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { IActiveSiteAction } from '@desktop/Site/SiteSplash'
+import { ISiteSplashActiveForm } from '@desktop/Site/SiteSplash'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SiteActionsChooseAction = ({
+const SiteSplashChooseActiveForm = ({
   activeSiteAction,
   setActiveSiteAction
-}: ISiteActionsChooseAction) => {
+}: ISiteSplashChooseActiveForm) => {
   return (
     <Container>
       <ActionLink
@@ -33,9 +33,9 @@ const SiteActionsChooseAction = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface ISiteActionsChooseAction {
-  activeSiteAction: IActiveSiteAction,
-  setActiveSiteAction(nextActiveSiteAction: IActiveSiteAction): void
+interface ISiteSplashChooseActiveForm {
+  activeSiteAction: ISiteSplashActiveForm,
+  setActiveSiteAction(nextActiveSiteAction: ISiteSplashActiveForm): void
 }
 
 //-----------------------------------------------------------------------------
@@ -74,4 +74,4 @@ const ActionLinkDivider = styled.div`
   background-color: black;
 `
 
-export default SiteActionsChooseAction
+export default SiteSplashChooseActiveForm

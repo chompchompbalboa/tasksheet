@@ -10,9 +10,9 @@ import { ARROW_DOWN } from '@/assets/icons'
 import { IAppState } from '@/state'
 
 import Icon from '@/components/Icon'
-import SiteActionsChooseAction from '@desktop/Site/SiteActionsChooseAction'
-import SiteActionsLogin from '@desktop/Site/SiteActionsLogin'
-import SiteActionsRegister from '@desktop/Site/SiteActionsRegister'
+import SiteSplashChooseActiveForm from '@desktop/Site/SiteSplashChooseActiveForm'
+import SiteSplashLoginForm from '@desktop/Site/SiteSplashLoginForm'
+import SiteSplashRegisterForm from '@desktop/Site/SiteSplashRegisterForm'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -23,7 +23,7 @@ export const SiteSplash = () => {
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 
   // State
-  const [ activeSiteAction, setActiveSiteAction ] = useState('REGISTER' as IActiveSiteAction)
+  const [ activeSiteAction, setActiveSiteAction ] = useState('REGISTER' as ISiteSplashActiveForm)
 
   return (
     <Container
@@ -51,12 +51,12 @@ export const SiteSplash = () => {
         </LeftColumn>
         <RightColumn>
           <ActionsContainer>
-            <SiteActionsChooseAction
+            <SiteSplashChooseActiveForm
               activeSiteAction={activeSiteAction}
               setActiveSiteAction={setActiveSiteAction}/>
             <Actions>
-              {activeSiteAction === 'REGISTER' && <SiteActionsRegister />}
-              {activeSiteAction === 'LOGIN' && <SiteActionsLogin />}
+              {activeSiteAction === 'REGISTER' && <SiteSplashRegisterForm />}
+              {activeSiteAction === 'LOGIN' && <SiteSplashLoginForm />}
             </Actions>
           </ActionsContainer>
         </RightColumn>
@@ -70,7 +70,7 @@ export const SiteSplash = () => {
 //-----------------------------------------------------------------------------
 // Types
 //-----------------------------------------------------------------------------
-export type IActiveSiteAction = 'REGISTER' | 'LOGIN'
+export type ISiteSplashActiveForm = 'REGISTER' | 'LOGIN'
 
 //-----------------------------------------------------------------------------
 // Styled Components

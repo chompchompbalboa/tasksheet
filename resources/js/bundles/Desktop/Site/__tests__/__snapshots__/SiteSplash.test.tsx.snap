@@ -427,7 +427,7 @@ Object {
           class="c6"
         >
           <div
-            class="sc-fzXfMD c7"
+            class="sc-fzXfMB c7"
           >
             <div
               class="c8"
@@ -471,7 +471,7 @@ Object {
             </div>
           </div>
           <div
-            class="sc-fzXfMD c13"
+            class="sc-fzXfMB c13"
           >
             <div
               class="c14"
@@ -496,81 +496,77 @@ Object {
               <div
                 class="c19"
               >
-                <div
-                  class=""
+                <form
+                  class="c20"
                 >
-                  <form
-                    class="c20"
+                  <div
+                    class="c21"
                   >
-                    <div
-                      class="c21"
+                    <label
+                      class="c22"
                     >
-                      <label
-                        class="c22"
-                      >
-                        Name
-                        :
-                      </label>
-                      <input
-                        class="c23"
-                        placeholder="Name"
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                    <div
-                      class="c21"
+                      Name
+                      :
+                    </label>
+                    <input
+                      class="c23"
+                      placeholder="Name"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="c21"
+                  >
+                    <label
+                      class="c22"
                     >
-                      <label
-                        class="c22"
-                      >
-                        Email
-                        :
-                      </label>
-                      <input
-                        class="c23"
-                        placeholder="Email"
-                        type="email"
-                        value=""
-                      />
-                    </div>
-                    <div
-                      class="c21"
+                      Email
+                      :
+                    </label>
+                    <input
+                      class="c23"
+                      placeholder="Email"
+                      type="email"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="c21"
+                  >
+                    <label
+                      class="c22"
                     >
-                      <label
-                        class="c22"
-                      >
-                        Password
-                        :
-                      </label>
-                      <input
-                        class="c23"
-                        placeholder="Password"
-                        type="password"
-                        value=""
-                      />
-                    </div>
-                    <div
-                      class="c24"
+                      Password
+                      :
+                    </label>
+                    <input
+                      class="c23"
+                      placeholder="Password"
+                      type="password"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="c24"
+                  >
+                    <input
+                      class="c25"
+                      type="checkbox"
+                    />
+                    <label
+                      class="c26"
                     >
-                      <input
-                        class="c25"
-                        type="checkbox"
-                      />
-                      <label
-                        class="c26"
-                      >
-                        I agree to start a 30-day free trial of Tasksheet (no credit card required)
-                      </label>
-                    </div>
-                    <button
-                      class="c27"
-                    >
-                      Sign Up
-                    </button>
-                    
-                  </form>
-                </div>
+                      I agree to start a 30-day free trial of Tasksheet (no credit card required)
+                    </label>
+                  </div>
+                  <button
+                    class="c27"
+                  >
+                    Sign Up
+                  </button>
+                  
+                </form>
               </div>
             </div>
           </div>
@@ -584,26 +580,26 @@ Object {
   </body>,
   "container": <div>
     <div
-      class="sc-fzXfLW hkpgsN"
+      class="sc-fzXfLU jvpYiT"
     >
       <div
-        class="sc-fzXfMw OcfVP"
+        class="sc-fzXfLX hedHvX"
       >
         <div
-          class="sc-fzXfMx bNRorv"
+          class="sc-fzXfMv grQEfd"
         >
           task
           <span
-            class="sc-fzXfLX ftAFYT"
+            class="sc-fzXfLV eVfinF"
           >
             sheet
           </span>
         </div>
         <div
-          class="sc-fzXfMy giIond"
+          class="sc-fzXfMw ivjzrb"
         >
           <div
-            class="sc-fzXfMz brAVDQ"
+            class="sc-fzXfMx eBnBNG"
           >
             30-day free trial
             <br />
@@ -612,33 +608,33 @@ Object {
         </div>
       </div>
       <div
-        class="sc-fzXfMA lnEjTh"
+        class="sc-fzXfMy fpkgyZ"
       >
         <div
-          class="sc-fzXfMD sc-fzXfME ejSLpD"
+          class="sc-fzXfMB sc-fzXfMC kHlPLJ"
         >
           <div
-            class="sc-fzXfMB etfPJH"
+            class="sc-fzXfMz ceRLfX"
           >
             The spreadsheet that's perfect
             <br />
             for your workplace to-do lists
           </div>
           <div
-            class="sc-fzXfMC gPhLYp"
+            class="sc-fzXfMA gqURvr"
           >
             <span
-              class="sc-fzXfNi bsKqQC"
+              class="sc-fzXfNg ivscKY"
             >
               Tasksheet
             </span>
              is a spreadsheet fine-tuned for task management. Built around its ability to quickly and easily organize your to-dos, it is a uniquely flexible and powerful solution for managing life at work
           </div>
           <div
-            class="sc-fzXfNf iqslNy"
+            class="sc-fzXfNd cKdYfo"
           >
             <div
-              class="sc-fzXfNh gZFvIL"
+              class="sc-fzXfNf gOUNtp"
             >
               <svg
                 height="NaN"
@@ -652,17 +648,17 @@ Object {
               </svg>
             </div>
             <div
-              class="sc-fzXfNg gYEZfw"
+              class="sc-fzXfNe cLRbAW"
             >
               Scroll down to try it out
             </div>
           </div>
         </div>
         <div
-          class="sc-fzXfMD sc-fzXfNc fOcQbb"
+          class="sc-fzXfMB sc-fzXfMD cjxjTH"
         >
           <div
-            class="sc-fzXfNd eQofkE"
+            class="sc-fzXfME SEwbI"
           >
             <div
               class="sc-AykKC iprWqD"
@@ -682,89 +678,85 @@ Object {
               </div>
             </div>
             <div
-              class="sc-fzXfNe Ifojt"
+              class="sc-fzXfNc gCrwon"
             >
-              <div
-                class="sc-fzXfLV jHvuJT"
+              <form
+                class="sc-fzXfLT gveSwo"
               >
-                <form
-                  class="sc-fzXfLU iPSjt"
+                <div
+                  class="sc-AykKG kgqMhc"
                 >
-                  <div
-                    class="sc-AykKG kgqMhc"
+                  <label
+                    class="sc-AykKH bXEuhu"
                   >
-                    <label
-                      class="sc-AykKH bXEuhu"
-                    >
-                      Name
-                      :
-                    </label>
-                    <input
-                      class="sc-AykKI eNDOHp"
-                      placeholder="Name"
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                  <div
-                    class="sc-AykKG kgqMhc"
+                    Name
+                    :
+                  </label>
+                  <input
+                    class="sc-AykKI eNDOHp"
+                    placeholder="Name"
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <div
+                  class="sc-AykKG kgqMhc"
+                >
+                  <label
+                    class="sc-AykKH bXEuhu"
                   >
-                    <label
-                      class="sc-AykKH bXEuhu"
-                    >
-                      Email
-                      :
-                    </label>
-                    <input
-                      class="sc-AykKI eNDOHp"
-                      placeholder="Email"
-                      type="email"
-                      value=""
-                    />
-                  </div>
-                  <div
-                    class="sc-AykKG kgqMhc"
+                    Email
+                    :
+                  </label>
+                  <input
+                    class="sc-AykKI eNDOHp"
+                    placeholder="Email"
+                    type="email"
+                    value=""
+                  />
+                </div>
+                <div
+                  class="sc-AykKG kgqMhc"
+                >
+                  <label
+                    class="sc-AykKH bXEuhu"
                   >
-                    <label
-                      class="sc-AykKH bXEuhu"
-                    >
-                      Password
-                      :
-                    </label>
-                    <input
-                      class="sc-AykKI eNDOHp"
-                      placeholder="Password"
-                      type="password"
-                      value=""
-                    />
-                  </div>
-                  <div
-                    class="sc-fzXfLR ciuGiq"
+                    Password
+                    :
+                  </label>
+                  <input
+                    class="sc-AykKI eNDOHp"
+                    placeholder="Password"
+                    type="password"
+                    value=""
+                  />
+                </div>
+                <div
+                  class="sc-fzXfLQ hFeOtt"
+                >
+                  <input
+                    class="sc-fzXfLS dmVpOr"
+                    type="checkbox"
+                  />
+                  <label
+                    class="sc-fzXfLR gXjWxK"
                   >
-                    <input
-                      class="sc-fzXfLT bRrXJw"
-                      type="checkbox"
-                    />
-                    <label
-                      class="sc-fzXfLS drTbiH"
-                    >
-                      I agree to start a 30-day free trial of Tasksheet (no credit card required)
-                    </label>
-                  </div>
-                  <button
-                    class="sc-AykKF gFNNfV"
-                  >
-                    Sign Up
-                  </button>
-                  
-                </form>
-              </div>
+                    I agree to start a 30-day free trial of Tasksheet (no credit card required)
+                  </label>
+                </div>
+                <button
+                  class="sc-AykKF gFNNfV"
+                >
+                  Sign Up
+                </button>
+                
+              </form>
             </div>
           </div>
         </div>
       </div>
       <img
-        class="sc-fzXfMv gCgdpX"
+        class="sc-fzXfLW brNufP"
         src="testAssetUrlimages/spreadsheet.png"
       />
     </div>

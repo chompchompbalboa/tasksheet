@@ -14,12 +14,12 @@ import SiteFormStatus from '@desktop/Site/SiteFormStatus'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SiteLoginForm = ({
-  flexDirection = 'row',
+const SiteSplashLoginForm = ({
+  flexDirection = 'column',
   inputsMarginLeft = '0',
-  isDisplayLabels = false,
+  isDisplayLabels = true,
   statusTextAlign = 'left'
-}: ISiteLoginForm) => {
+}: ISiteSplashLoginForm) => {
 
   // State
   const [ emailInputValue, setEmailInputValue ] = useState('')
@@ -90,7 +90,7 @@ const SiteLoginForm = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface ISiteLoginForm {
+interface ISiteSplashLoginForm {
   flexDirection?: 'column' | 'row'
   isDisplayLabels?: boolean
   inputsMarginLeft?: string
@@ -128,4 +128,4 @@ const StatusContainer = styled.div`
   width: 100%;
 `
 
-export default SiteLoginForm
+export default SiteSplashLoginForm
