@@ -14,9 +14,8 @@ import {
 } from '@/testing/mocks'
 import { appStateFactory, IAppStateFactoryInput } from '@/testing/mocks/appState'
 
-import { IAppState } from '@/state'
-
 import { Desktop } from '@desktop/Desktop'
+import { IUserTasksheetSubscription } from '@/state/user/types'
 
 //-----------------------------------------------------------------------------
 // Setup
@@ -37,6 +36,17 @@ axiosMock.get.mockResolvedValue({ data: sheetFromDatabase })
 console.warn = jest.fn()
 console.error = jest.fn()
 
+const userAppState = (tasksheetSubscriptionType: IUserTasksheetSubscription['type']) => ({
+  ...mockAppState,
+  user: {
+    ...mockAppState.user,
+    tasksheetSubscription: {
+      ...mockAppState.user.tasksheetSubscription,
+      type: tasksheetSubscriptionType
+    }
+  }
+})
+
 //-----------------------------------------------------------------------------
 // Tests
 //-----------------------------------------------------------------------------
@@ -51,25 +61,29 @@ describe('Desktop', () => {
     const container = renderWithRedux(<Desktop />)
     expect(container).toMatchSnapshot()
   })
-  
-  it("does not show the desktop site when a 'TRIAL', 'MONTHLY' or 'LIFETIME' user is logged in", async () => {
-    const { queryByTestId } = renderWithRedux(<Desktop />)
+
+  it("does not show the desktop site when a 'LIFETIME' user is logged in", async () => {
+    const lifetimeUserAppState = userAppState('LIFETIME')
+    const { queryByTestId } = renderWithRedux(<Desktop />, { store: createMockStore(lifetimeUserAppState) })
+    expect(queryByTestId('DesktopSite')).toBeNull()
+  })
+
+  it("does not show the desktop site when a 'MONTHLY' user is logged in", async () => {
+    const monthlyUserAppState = userAppState('MONTHLY')
+    const { queryByTestId } = renderWithRedux(<Desktop />, { store: createMockStore(monthlyUserAppState) })
+    expect(queryByTestId('DesktopSite')).toBeNull()
+  })
+
+  it("does not show the desktop site when a 'TRIAL' user is logged in", async () => {
+    const trialUserAppState = userAppState('TRIAL')
+    const { queryByTestId } = renderWithRedux(<Desktop />, { store: createMockStore(trialUserAppState) })
     expect(queryByTestId('DesktopSite')).toBeNull()
   })
 
   it("shows the desktop site when a 'DEMO' user is logged in", async () => {
-    const demoUserAppState: IAppState = {
-      ...mockAppState,
-      user: {
-        ...mockAppState.user,
-        tasksheetSubscription: {
-          ...mockAppState.user.tasksheetSubscription,
-          type: 'DEMO'
-        }
-      }
-    }
-    const { getByTestId } = renderWithRedux(<Desktop />, { store: createMockStore(demoUserAppState) })
-    expect(getByTestId('DesktopSite')).toBeTruthy()
+    const demoUserAppState = userAppState('DEMO')
+    const { queryByTestId } = renderWithRedux(<Desktop />, { store: createMockStore(demoUserAppState) })
+    expect(queryByTestId('DesktopSite')).toBeTruthy()
   })
 
 })
