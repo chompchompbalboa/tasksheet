@@ -176,6 +176,16 @@ describe('SiteSplashRegisterForm', () => {
     expect(statusContainer.textContent).toBe(siteSplashRegisterFormStatusMessages['NOT_VALID_EMAIL'])
   })
   
+  it("displays an error message when the user tries to submit the form without checking the checkbox", async () => {
+    const { nameInput, emailInput, passwordInput, statusContainer, submitButton } = siteSplashRegisterForm()
+    fireEvent.change(nameInput, { target: { value: 'Name' }})
+    fireEvent.change(emailInput, { target: { value: 'test@test.com' }})
+    fireEvent.change(passwordInput, { target: { value: 'Password' }})
+    submitButton.click()
+    jest.advanceTimersByTime(500)
+    expect(statusContainer.textContent).toBe(siteSplashRegisterFormStatusMessages['START_TRIAL_CHECKBOX_NOT_CHECKED'])
+  })
+  
   it("attempts to register the user when all fields are completed, the email is valid and the checkbox is checked", async () => {
     const { nameInput, emailInput, passwordInput, checkboxInput, submitButton, statusContainer } = siteSplashRegisterForm()
     const name = 'Name'
