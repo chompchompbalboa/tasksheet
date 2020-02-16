@@ -38,8 +38,8 @@ export const SiteSplash = () => {
       </Header>
       <Splash>
         <LeftColumn>
-          <ShortText>The spreadsheet that's perfect<br/>for your workplace to-do lists</ShortText>
-          <LongText><ToDoSheet>Tasksheet</ToDoSheet> is a spreadsheet fine-tuned for task management. Built around its ability to quickly and easily organize your to-dos, it is a uniquely flexible and powerful solution for managing life at work</LongText>
+          <ShortText>The spreadsheet built for to-do lists</ShortText>
+          <LongText><ToDoSheet>Tasksheet</ToDoSheet> is a spreadsheet fine-tuned for task management. Built around its ability to quickly and easily organize your to-dos, it is a uniquely flexible and powerful solution for managing both your personal and your team tasks</LongText>
           <ScrollDownToTry>
             <ScrollDownToTryIcon>
               <Icon icon={ARROW_DOWN}/>
@@ -117,7 +117,7 @@ const Header = styled.div`
 `
 
 const HeaderName = styled.div`
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: bold;
   @media (max-width: 480px) {
     display: none;
@@ -150,7 +150,7 @@ const Splash = styled.div`
 
 const ShortText = styled.div`
   width: 100%;
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: bold;
   margin-bottom: 1.5rem;
   @media (max-width: 480px) {
@@ -160,7 +160,7 @@ const ShortText = styled.div`
 
 const LongText = styled.div`
   font-size: 1.125rem;
-  width: 90%;
+  width: 80%;
 `
 
 const Column = styled.div`
@@ -170,8 +170,7 @@ const Column = styled.div`
 `
 
 const LeftColumn = styled(Column)`
-  width: 45%;
-  margin-right: 5%;
+  width: 50%;
   align-items: flex-start;
   justify-content: center;
 `
