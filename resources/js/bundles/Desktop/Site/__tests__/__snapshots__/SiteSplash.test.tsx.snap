@@ -220,7 +220,7 @@ Object {
 }
 
 .c2 {
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: bold;
 }
 
@@ -270,14 +270,14 @@ Object {
 
 .c8 {
   width: 100%;
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: bold;
   margin-bottom: 1.5rem;
 }
 
 .c9 {
   font-size: 1.125rem;
-  width: 90%;
+  width: 80%;
 }
 
 .c7 {
@@ -289,8 +289,7 @@ Object {
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
-  width: 45%;
-  margin-right: 5%;
+  width: 50%;
   -webkit-align-items: flex-start;
   -webkit-box-align: flex-start;
   -ms-flex-align: flex-start;
@@ -438,9 +437,7 @@ Object {
             <div
               class="c8"
             >
-              The spreadsheet that's perfect
-              <br />
-              for your workplace to-do lists
+              The spreadsheet built for to-do lists
             </div>
             <div
               class="c9"
@@ -450,7 +447,7 @@ Object {
               >
                 Tasksheet
               </span>
-               is a spreadsheet fine-tuned for task management. Built around its ability to quickly and easily organize your to-dos, it is a uniquely flexible and powerful solution for managing life at work
+               is a spreadsheet fine-tuned for task management. Built around its ability to quickly and easily organize your to-dos, it is a uniquely flexible and powerful solution for managing both your personal and your team tasks
             </div>
             <div
               class="c11"
@@ -597,7 +594,7 @@ Object {
         class="sc-fzXfLX hedHvX"
       >
         <div
-          class="sc-fzXfMv grQEfd"
+          class="sc-fzXfMv gbCvsO"
         >
           task
           <span
@@ -622,24 +619,22 @@ Object {
         class="sc-fzXfMy fpkgyZ"
       >
         <div
-          class="sc-fzXfMB sc-fzXfMC kHlPLJ"
+          class="sc-fzXfMB sc-fzXfMC fphwsj"
         >
           <div
-            class="sc-fzXfMz ceRLfX"
+            class="sc-fzXfMz hMmyGI"
           >
-            The spreadsheet that's perfect
-            <br />
-            for your workplace to-do lists
+            The spreadsheet built for to-do lists
           </div>
           <div
-            class="sc-fzXfMA gqURvr"
+            class="sc-fzXfMA glCAnG"
           >
             <span
               class="sc-fzXfNg ivscKY"
             >
               Tasksheet
             </span>
-             is a spreadsheet fine-tuned for task management. Built around its ability to quickly and easily organize your to-dos, it is a uniquely flexible and powerful solution for managing life at work
+             is a spreadsheet fine-tuned for task management. Built around its ability to quickly and easily organize your to-dos, it is a uniquely flexible and powerful solution for managing both your personal and your team tasks
           </div>
           <div
             class="sc-fzXfNd cKdYfo"
