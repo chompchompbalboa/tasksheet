@@ -15,7 +15,7 @@ import SiteFormStatus from '@desktop/Site/SiteFormStatus'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SiteSplashRegisterForm = () => {
+export const SiteSplashRegisterForm = () => {
   
   // State
   const [ nameInputValue, setNameInputValue ] = useState('')
@@ -28,32 +28,32 @@ const SiteSplashRegisterForm = () => {
   const handleRegisterAttempt = (e: FormEvent) => {
     e.preventDefault()
     setRegisterStatus('REGISTERING')
-    if(!startTrialCheckboxValue) {
+    if(emailInputValue === '' || nameInputValue === '' || passwordInputValue === '') {
+      setTimeout(() => {
+        setRegisterStatus('NOT_ALL_FIELDS_ARE_COMPLETE')
+      }, 500)
+    }
+    else if(!isEmail(emailInputValue)) {
+      setTimeout(() => {
+        setRegisterStatus('NOT_VALID_EMAIL')
+      }, 500)
+    }
+    else if(!startTrialCheckboxValue) {
       setTimeout(() => {
         setRegisterStatus('START_TRIAL_CHECKBOX_NOT_CHECKED')
       }, 500)
     }
-    else if(isEmail(emailInputValue) && passwordInputValue) {
-      action.userRegister(nameInputValue, emailInputValue, passwordInputValue).then(
-        response => {
-          if(response.status === 200) {
-            window.location = window.location.href as any
-          }
-          else {
-            setTimeout(() => {
-              setRegisterStatus('ERROR_DURING_REGISTRATION')
-            }, 500)
-          }
-      })
+    else {
+      action.userRegister(nameInputValue, emailInputValue, passwordInputValue)
+        .then(() => {
+          window.location.reload()
+        })
+        .catch(() => {
+          setTimeout(() => {
+            setRegisterStatus('ERROR_DURING_REGISTRATION')
+          }, 500)
+        })
     }
-  }
-  
-  // Status Messages
-  const statusMessages = {
-    READY: "",
-    REGISTERING: "",
-    START_TRIAL_CHECKBOX_NOT_CHECKED: "Please click the checkbox above to start your free trial",
-    ERROR_DURING_REGISTRATION: "We were unable to sign you up for an account. Please make sure you have entered all of your information correctly and try again."
   }
   
   return (
@@ -86,10 +86,9 @@ const SiteSplashRegisterForm = () => {
         marginLeft="0"
         marginTop="0.5rem"
         text={!['REGISTERING'].includes(registerStatus) ? 'Sign Up' : 'Signing Up...'} />
-      {statusMessages[registerStatus] &&
-        <SiteFormStatus
-          status={statusMessages[registerStatus]}/>
-      }  
+      <SiteFormStatus
+        testId="SiteSplashRegisterFormStatus"
+        status={siteSplashRegisterFormStatusMessages[registerStatus]}/> 
     </RegisterForm>
   )
 }
@@ -97,7 +96,23 @@ const SiteSplashRegisterForm = () => {
 //-----------------------------------------------------------------------------
 // Types
 //-----------------------------------------------------------------------------
-type IRegisterStatus = 'READY' | 'REGISTERING' | 'START_TRIAL_CHECKBOX_NOT_CHECKED' | 'ERROR_DURING_REGISTRATION'
+type IRegisterStatus = 
+  'READY' | 
+  'REGISTERING' | 
+  'NOT_ALL_FIELDS_ARE_COMPLETE' |
+  'NOT_VALID_EMAIL' |
+  'START_TRIAL_CHECKBOX_NOT_CHECKED' | 
+  'ERROR_DURING_REGISTRATION'
+  
+// Status Messages
+export const siteSplashRegisterFormStatusMessages = {
+  READY: "",
+  REGISTERING: "",
+  NOT_ALL_FIELDS_ARE_COMPLETE: "Please enter your name, email, and password and click the checkbox above to start your free trial",
+  NOT_VALID_EMAIL: "Please enter a valid email address",
+  START_TRIAL_CHECKBOX_NOT_CHECKED: "Please click the checkbox above to start your free trial",
+  ERROR_DURING_REGISTRATION: "We were unable to sign you up for an account. Please make sure you have entered all of your information correctly and try again."
+}
 
 //-----------------------------------------------------------------------------
 // Styled Components

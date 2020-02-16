@@ -9,9 +9,11 @@ import styled from 'styled-components'
 //-----------------------------------------------------------------------------
 const ISiteFormStatus = ({
   status,
-  statusTextAlign = 'left'
+  statusTextAlign = 'left',
+  testId = 'SiteFormStatus'
 }: IISiteFormStatus) => (
   <Container
+    data-testid={testId}
     statusTextAlign={statusTextAlign}>
     {status}
   </Container>
@@ -23,6 +25,7 @@ const ISiteFormStatus = ({
 interface IISiteFormStatus {
   status: string
   statusTextAlign?: string
+  testId?: string
 }
 
 //-----------------------------------------------------------------------------

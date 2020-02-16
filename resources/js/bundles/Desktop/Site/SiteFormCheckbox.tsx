@@ -7,19 +7,23 @@ import styled from 'styled-components'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SiteFormInput = ({
+const SiteFormCheckbox = ({
   checked,
   label = null,
   onChange
-}: ISiteFormInput) => {
+}: ISiteFormCheckbox) => {
 
   return (
     <Container>
       <StyledInput
+        id="SiteFormCheckbox"
         type="checkbox"
         onChange={e => onChange(e.target.checked)}
         checked={checked}/>
-        <Label>{label}</Label>
+        <Label
+          htmlFor="SiteFormCheckbox">
+          {label}
+        </Label>
     </Container>
   )
 }
@@ -27,7 +31,7 @@ const SiteFormInput = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface ISiteFormInput {
+interface ISiteFormCheckbox {
   checked: boolean
   label: string
   onChange(nextValue: boolean): void
@@ -61,4 +65,4 @@ const StyledInput = styled.input`
   }
 `
 
-export default SiteFormInput
+export default SiteFormCheckbox

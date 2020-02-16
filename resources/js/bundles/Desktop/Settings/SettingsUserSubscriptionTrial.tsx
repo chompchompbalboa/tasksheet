@@ -70,7 +70,7 @@ const SettingsUserSubscriptionTrial = () => {
           <Header>
             Please enter your card information: 
           </Header>
-          <StripeProvider apiKey="pk_live_2LH3kWq1F0xiYkNHCTayunI3005AbgSfAw">
+          <StripeProvider apiKey={environment.stripeKey}>
             <Elements>
               <StripePurchaseSubscription
                 monthlyOrLifetimeSubscription={activeUserSubscriptionSelection}/>

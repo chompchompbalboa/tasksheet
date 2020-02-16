@@ -1,11 +1,7 @@
 export default {
-  // @ts-ignore
-  get: jest.fn().mockResolvedValue(),
-  // @ts-ignore
-  post: jest.fn().mockResolvedValue(),
-  // @ts-ignore
-  patch: jest.fn().mockResolvedValue(),
-  // @ts-ignore
-  delete: jest.fn().mockResolvedValue(),
+  get: jest.fn(),
+  post: jest.fn(),
+  patch: jest.fn(),
+  delete: jest.fn(),
   defaults: {}
 };

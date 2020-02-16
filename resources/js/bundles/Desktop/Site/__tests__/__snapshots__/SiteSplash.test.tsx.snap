@@ -136,6 +136,12 @@ Object {
   font-size: 0.9rem;
 }
 
+.c28 {
+  margin-top: 0.5rem;
+  text-align: left;
+  color: rgb(175,0,0);
+}
+
 .c24 {
   padding: 0.25rem 0;
   width: 100%;
@@ -184,7 +190,7 @@ Object {
   color: rgb(190,190,190);
 }
 
-.c28 {
+.c29 {
   position: absolute;
   top: 0;
   left: 0;
@@ -552,10 +558,12 @@ Object {
                   >
                     <input
                       class="c25"
+                      id="SiteFormCheckbox"
                       type="checkbox"
                     />
                     <label
                       class="c26"
+                      for="SiteFormCheckbox"
                     >
                       I agree to start a 30-day free trial of Tasksheet (no credit card required)
                     </label>
@@ -565,14 +573,17 @@ Object {
                   >
                     Sign Up
                   </button>
-                  
+                  <div
+                    class="c28"
+                    data-testid="SiteSplashRegisterFormStatus"
+                  />
                 </form>
               </div>
             </div>
           </div>
         </div>
         <img
-          class="c28"
+          class="c29"
           src="testAssetUrlimages/spreadsheet.png"
         />
       </div>
@@ -736,10 +747,12 @@ Object {
                 >
                   <input
                     class="sc-fzXfLS dmVpOr"
+                    id="SiteFormCheckbox"
                     type="checkbox"
                   />
                   <label
                     class="sc-fzXfLR gXjWxK"
+                    for="SiteFormCheckbox"
                   >
                     I agree to start a 30-day free trial of Tasksheet (no credit card required)
                   </label>
@@ -749,7 +762,10 @@ Object {
                 >
                   Sign Up
                 </button>
-                
+                <div
+                  class="sc-AykKJ jJgrwI"
+                  data-testid="SiteSplashRegisterFormStatus"
+                />
               </form>
             </div>
           </div>

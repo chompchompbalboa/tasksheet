@@ -36,7 +36,8 @@
     <script>
       const environment = {
         assetUrl: "{{ asset('') }}",
-        s3Bucket: "{{ env('AWS_BUCKET') }}"
+        s3Bucket: "{{ env('AWS_BUCKET') }}",
+        stripeKey: "{{ env('STRIPE_KEY') }}"
       }
       const initialData = {
         user: @json($user),

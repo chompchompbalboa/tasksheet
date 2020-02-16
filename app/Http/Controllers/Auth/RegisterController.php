@@ -134,7 +134,7 @@ class RegisterController extends Controller
         Auth::loginUsingId($newUser->id, true);
 
         // Return the response
-        return response()->json(null, 200);
+        return response(null, 200);
       }
     }
 }

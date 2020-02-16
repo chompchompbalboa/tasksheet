@@ -27,11 +27,7 @@ export const userLogout = async () => {
 export const userRegister = async (name: string, email: string, password: string) => {
 	return axios.post('/user/register', {
     name, email, password
-  }).then(
-    response => response
-  ).catch(
-    error => error.response
-  )
+  })
 }
 
 export const userSubscriptionPurchaseLifetime = async (userId: IUser['id'], stripePaymentMethodId: string) => {
