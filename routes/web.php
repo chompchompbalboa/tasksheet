@@ -22,7 +22,7 @@ Route::group([], function () {
     else {
       Auth::attempt([
         'email' => 'demo@tasksheet.co',
-        'password' => env('APP_DEMO_PASSWORD')
+        'password' => env('APP_DEFAULT_PASSWORD')
       ]);
       $user = Auth::user();
     }

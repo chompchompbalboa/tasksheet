@@ -192,7 +192,9 @@ class DatabaseSeeder extends Seeder
               if($isFolderOrFile === 'FOLDER') {
 
                 // Echo the folder name
-                echo(str_repeat('--', $level).$folderName).PHP_EOL;
+                if(env('APP_ENV') !== 'testing') {
+                  echo(str_repeat('--', $level).$folderName).PHP_EOL;
+                }
 
                 // Create the folder
                 $newFolder = factory(App\Models\Folder::class)->create([ 
@@ -225,7 +227,9 @@ class DatabaseSeeder extends Seeder
                 $newFileName = implode('.', $newFileNameArray);
 
                 // Echo the file name
-                echo(str_repeat('--', $level).$newFileName).PHP_EOL;
+                if(env('APP_ENV') !== 'testing') {
+                  echo(str_repeat('--', $level).$newFileName).PHP_EOL;
+                }
 
                 // Create the file
                 $newFile = factory(App\Models\File::class)->create([

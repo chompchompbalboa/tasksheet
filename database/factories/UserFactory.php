@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
 
 $factory->define(App\Models\User::class, function (Faker $faker) {
     return [
-        'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm',
+        'password' => Hash::make(env('APP_DEFAULT_PASSWORD')),
         'remember_token' => Str::random(10)
     ];
 });

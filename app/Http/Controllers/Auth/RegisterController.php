@@ -62,7 +62,7 @@ class RegisterController extends Controller
         'email' => $request->input('email'),
         'password' => $request->input('password')
       ])) {
-        return response()->json(null, 200);
+        return response(null, 200);
       }
       else {
         // Validate the inputs and get the new user's information
@@ -134,7 +134,7 @@ class RegisterController extends Controller
         Auth::loginUsingId($newUser->id, true);
 
         // Return the response
-        return response(null, 200);
+        return response(null, 201);
       }
     }
 }
