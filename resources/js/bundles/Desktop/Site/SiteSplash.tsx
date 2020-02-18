@@ -39,7 +39,7 @@ export const SiteSplash = () => {
       <Splash>
         <LeftColumn>
           <ShortText>The spreadsheet built for to-do lists</ShortText>
-          <LongText><ToDoSheet>Tasksheet</ToDoSheet> is a spreadsheet fine-tuned for task management. Built around its ability to quickly and easily organize your to-dos, it is a uniquely flexible and powerful solution for managing both your personal and your team tasks</LongText>
+          <LongText><ToDoSheet>Tasksheet</ToDoSheet> is a spreadsheet fine-tuned for task management. Built around its ability to quickly and easily organize your to-dos, it is a uniquely flexible and powerful solution for managing both your personal and team tasks</LongText>
           <ScrollDownToTry>
             <ScrollDownToTryIcon>
               <Icon icon={ARROW_DOWN}/>
