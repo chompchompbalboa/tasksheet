@@ -52,6 +52,11 @@ jest:
   stage: test
   script:
     - npm test
+    
+phpunit: 
+  stage: test
+  script:
+    - vendor/bin/phpunit
 
 #-------------------------------------------------------------------------------
 # Deploy
@@ -60,4 +65,3 @@ vapor:
   stage: deploy
   script:
     - vapor deploy production
-    - curl https://forge.laravel.com/servers/341748/sites/926776/deploy/http?token=ZNwrQKHODKztiQ6NaZtZDro3qOMY02pHHv2a0vu2
