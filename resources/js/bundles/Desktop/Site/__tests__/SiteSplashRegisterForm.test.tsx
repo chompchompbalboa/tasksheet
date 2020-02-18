@@ -201,8 +201,26 @@ describe('SiteSplashRegisterForm', () => {
     expect(axiosMock.post).toHaveBeenCalledWith('/user/register', { name: name, email: email, password: password })
   })
   
+  it("displays an error message when the email address is already in use", async () => {
+    (axiosMock.post as jest.Mock).mockRejectedValueOnce({ response: { status: 409 } })
+    const { nameInput, emailInput, passwordInput, checkboxInput, submitButton, statusContainer } = siteSplashRegisterForm()
+    expect(window.location.reload).not.toHaveBeenCalled()
+    const name = 'Name'
+    const email = 'test@test.com'
+    const password = 'Password'
+    fireEvent.change(nameInput, { target: { value: name }})
+    fireEvent.change(emailInput, { target: { value: email }})
+    fireEvent.change(passwordInput, { target: { value: password }})
+    fireEvent.click(checkboxInput)
+    submitButton.click()
+    await flushPromises()
+    expect(window.location.reload).not.toHaveBeenCalled()
+    jest.advanceTimersByTime(500)
+    expect(statusContainer.textContent).toBe(siteSplashRegisterFormStatusMessages['EMAIL_ALREADY_IN_USE'])
+  })
+  
   it("displays an error message when the registration is not successful", async () => {
-    (axiosMock.post as jest.Mock).mockRejectedValueOnce({})
+    (axiosMock.post as jest.Mock).mockRejectedValueOnce({ response: { status: 500 } })
     const { nameInput, emailInput, passwordInput, checkboxInput, submitButton, statusContainer } = siteSplashRegisterForm()
     expect(window.location.reload).not.toHaveBeenCalled()
     const name = 'Name'

@@ -57,12 +57,18 @@ class RegisterController extends Controller
      */
     protected function register(Request $request)
     {
-      // Log an existing user in
-      if(Auth::attempt([
-        'email' => $request->input('email'),
-        'password' => $request->input('password')
-      ])) {
-        return response(null, 200);
+      // Is the email address already in use?
+      if(User::where('email', '=', $request->input('email'))->exists()) {
+        // Attempt to log them in
+        if(Auth::attempt([
+          'email' => $request->input('email'),
+          'password' => $request->input('password')
+        ])) {
+          return response(null, 200);
+        }
+        else {
+          return response(null, 409);
+        }
       }
       else {
         // Validate the inputs and get the new user's information

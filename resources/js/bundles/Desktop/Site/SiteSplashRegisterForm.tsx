@@ -48,10 +48,17 @@ export const SiteSplashRegisterForm = () => {
         .then(() => {
           window.location.reload()
         })
-        .catch(() => {
-          setTimeout(() => {
-            setRegisterStatus('ERROR_DURING_REGISTRATION')
-          }, 500)
+        .catch(error => {
+          if(error.response.status === 409) {
+            setTimeout(() => {
+              setRegisterStatus('EMAIL_ALREADY_IN_USE')
+            }, 500)
+          }
+          else {
+            setTimeout(() => {
+              setRegisterStatus('ERROR_DURING_REGISTRATION')
+            }, 500)
+          }
         })
     }
   }
@@ -102,6 +109,7 @@ type IRegisterStatus =
   'NOT_ALL_FIELDS_ARE_COMPLETE' |
   'NOT_VALID_EMAIL' |
   'START_TRIAL_CHECKBOX_NOT_CHECKED' | 
+  'EMAIL_ALREADY_IN_USE' |
   'ERROR_DURING_REGISTRATION'
   
 // Status Messages
@@ -111,6 +119,7 @@ export const siteSplashRegisterFormStatusMessages = {
   NOT_ALL_FIELDS_ARE_COMPLETE: "Please enter your name, email, and password and click the checkbox above to start your free trial",
   NOT_VALID_EMAIL: "Please enter a valid email address",
   START_TRIAL_CHECKBOX_NOT_CHECKED: "Please click the checkbox above to start your free trial",
+  EMAIL_ALREADY_IN_USE: "That email address is already in use",
   ERROR_DURING_REGISTRATION: "We were unable to sign you up for an account. Please make sure you have entered all of your information correctly and try again."
 }
 
