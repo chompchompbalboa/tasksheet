@@ -30,10 +30,10 @@ class LoginController extends Controller
     {
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
-            return response()->json(true, 200);
+            return response(null, 200);
         }
         else {
-          return response()->json(false, 404);
+          return response(null, 404);
         }
     }
 
@@ -46,10 +46,10 @@ class LoginController extends Controller
     {
       Auth::logout();
       if(!Auth::check()) {
-        return response()->json(true, 200);
+        return response(null, 200);
       }
       else {
-        return response()->json(false, 200);
+        return response(null, 500);
       }
     }
 }

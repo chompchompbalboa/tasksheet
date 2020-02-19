@@ -9,13 +9,7 @@ import { IUser } from '@/state/user/types'
 // Queries
 //-----------------------------------------------------------------------------
 export const userLogin = async (email: string, password: string) => {
-	return axios.post('/user/login', {
-    email, password
-  }).then(
-    response => response
-  ).catch(
-    error => error.response
-  )
+	return axios.post('/user/login', { email, password })
 }
 
 export const userLogout = async () => {
@@ -25,9 +19,7 @@ export const userLogout = async () => {
 }
 
 export const userRegister = async (name: string, email: string, password: string) => {
-	return axios.post('/user/register', {
-    name, email, password
-  })
+	return axios.post('/user/register', { name, email, password })
 }
 
 export const userSubscriptionPurchaseLifetime = async (userId: IUser['id'], stripePaymentMethodId: string) => {

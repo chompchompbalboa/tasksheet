@@ -14,7 +14,7 @@ import SiteFormStatus from '@desktop/Site/SiteFormStatus'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SiteSplashLoginForm = ({
+export const SiteSplashLoginForm = ({
   flexDirection = 'column',
   inputsMarginLeft = '0',
   isDisplayLabels = true,
@@ -29,27 +29,28 @@ const SiteSplashLoginForm = ({
   // Handle Login Attempt
   const handleLoginAttempt = (e: FormEvent) => {
     e.preventDefault()
-    if(isEmail(emailInputValue)) {
-      setLoginStatus('LOGGING_IN')
-      action.userLogin(emailInputValue, passwordInputValue).then(
-        response => {
-          if(response.status === 200) {
-            window.location = window.location.href as any
-          }
-          else {
-            setTimeout(() => {
-              setLoginStatus('ERROR_DURING_LOGIN')
-            }, 500)
-          }
-      })
+    setLoginStatus('LOGGING_IN')
+    if(emailInputValue === '' || passwordInputValue === '') {
+      setTimeout(() => {
+        setLoginStatus('NOT_ALL_FIELDS_ARE_COMPLETE')
+      }, 500)
     }
-  }
-  
-  // Status Messages
-  const statusMessages = {
-    READY: "",
-    LOGGING_IN: "",
-    ERROR_DURING_LOGIN: "We were unable to log you in. Please check your username and password and try again."
+    else if (!isEmail(emailInputValue)) {
+      setTimeout(() => {
+        setLoginStatus('NOT_VALID_EMAIL')
+      }, 500)
+    }
+    else {
+      action.userLogin(emailInputValue, passwordInputValue)
+        .then(() => {
+          window.location.reload()
+        })
+        .catch(() => {
+          setTimeout(() => {
+            setLoginStatus('ERROR_DURING_LOGIN')
+          }, 500)
+        })
+    }
   }
   
   return (
@@ -80,7 +81,8 @@ const SiteSplashLoginForm = ({
       </InputsContainer>
       <StatusContainer>
         <SiteFormStatus
-          status={statusMessages[loginStatus]}
+          testId="SiteSplashLoginFormStatus"
+          status={siteSplashLoginFormStatusMessages[loginStatus]}
           statusTextAlign={statusTextAlign}/>
       </StatusContainer>
     </LoginForm>
@@ -97,7 +99,22 @@ interface ISiteSplashLoginForm {
   statusTextAlign?: string
 }
 
-type ILoginStatus = 'READY' | 'LOGGING_IN' | 'ERROR_DURING_LOGIN'
+type ILoginStatus = 
+  'READY' | 
+  'NOT_ALL_FIELDS_ARE_COMPLETE' |
+  'NOT_VALID_EMAIL' |
+  'LOGGING_IN' | 
+  'ERROR_DURING_LOGIN'
+
+  
+// Status Messages
+export const siteSplashLoginFormStatusMessages = {
+  READY: "",
+  NOT_ALL_FIELDS_ARE_COMPLETE: "Please enter your email and password to login",
+  NOT_VALID_EMAIL: "Please enter a valid email address",
+  LOGGING_IN: "",
+  ERROR_DURING_LOGIN: "We were unable to log you in. Please check your username and password and try again."
+}
 
 //-----------------------------------------------------------------------------
 // Styled Components

@@ -17,12 +17,10 @@ const UserLogout = () => {
 
   const handleLogoutButtonClick = () => {
     setIsLoggingOut(true)
-    action.userLogout().then(
-      success => { if(success) { window.location = window.location.href as any } },
-      err => {
-        setIsLoggingOut(false)
-       }
-    )
+    action.userLogout()
+      .then(() => {
+        window.location = window.location.href as any
+      })
   }
 
   return (
