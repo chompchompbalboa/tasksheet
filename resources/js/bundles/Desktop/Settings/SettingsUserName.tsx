@@ -33,11 +33,7 @@ const SettingsUserName = () => {
   // Update User Name
   const updateUserName = () => {
     if(userName !== localUserName) {
-      dispatch(updateUser(
-        userId, 
-        { name: localUserName },
-        'USER_UPDATE_USER_NAME_ERROR'
-      ))
+      dispatch(updateUser(userId, { name: localUserName }))
     }
   }
 
