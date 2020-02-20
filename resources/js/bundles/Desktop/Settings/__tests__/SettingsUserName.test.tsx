@@ -34,15 +34,20 @@ console.error = jest.fn()
 // Tests
 //-----------------------------------------------------------------------------
 describe('SettingsUserName', () => {
-  
-  it("renders without crashing", async () => {
-    const container = renderWithRedux(<SettingsUserName />)
-    expect(container).toMatchSnapshot()
-  })
+
+  const settingsUserName = () => {
+    const { 
+      getByLabelText
+    } = renderWithRedux(<SettingsUserName />)
+    const nameInput = getByLabelText('Name:') as HTMLInputElement
+    return {
+      nameInput
+    }
+  }
   
   it("display a 'Name:' input", async () => {
-    const { queryByLabelText } = renderWithRedux(<SettingsUserName />)
-    expect(queryByLabelText('Name:')).toBeTruthy()
+    const { nameInput } = settingsUserName()
+    expect(nameInput).toBeTruthy()
   })
 
 })

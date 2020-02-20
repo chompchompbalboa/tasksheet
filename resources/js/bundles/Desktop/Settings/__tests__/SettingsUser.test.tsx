@@ -35,11 +35,6 @@ console.error = jest.fn()
 //-----------------------------------------------------------------------------
 describe('SettingsUser', () => {
   
-  it("renders without crashing", async () => {
-    const container = renderWithRedux(<SettingsUser />)
-    expect(container).toMatchSnapshot()
-  })
-  
   it("displays the 'Profile' section", async () => {
     const { queryByText } = renderWithRedux(<SettingsUser />)
     expect(queryByText('Profile')).toBeTruthy()

@@ -43,11 +43,6 @@ describe('SiteSplash', () => {
     global.environment = mockEnvironment
   })
   
-  it("renders without crashing", async () => {
-    const container = renderWithRedux(<SiteSplash />)
-    expect(container).toMatchSnapshot()
-  })
-  
   it("displays a link to the registration form", async () => {
     const { queryByText } = renderWithRedux(<SiteSplash />)
     expect(queryByText('Register')).toBeTruthy()

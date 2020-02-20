@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { IAppState } from '@/state'
@@ -22,6 +22,13 @@ const SettingsUserName = () => {
 
   // State
   const [ localUserName, setLocalUserName ] = useState(userName)
+
+  // Effects
+  useEffect(() => {
+    if(userName !== localUserName) {
+      setLocalUserName(userName)
+    }
+  }, [ userName ])
 
   // Update User Name
   const updateUserName = () => {

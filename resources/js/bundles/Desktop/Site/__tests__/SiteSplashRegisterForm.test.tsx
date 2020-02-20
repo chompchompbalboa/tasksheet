@@ -86,11 +86,6 @@ describe('SiteSplashRegisterForm', () => {
     }
   }
   
-  it("renders without crashing", async () => {
-    const container = renderWithRedux(<SiteSplashRegisterForm />)
-    expect(container).toMatchSnapshot()
-  })
-  
   it("displays a 'Name' input", async () => {
     const { nameInput } = siteSplashRegisterForm()
     expect(nameInput).toBeTruthy()

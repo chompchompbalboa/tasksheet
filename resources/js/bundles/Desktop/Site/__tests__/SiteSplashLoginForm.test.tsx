@@ -81,11 +81,6 @@ describe('SiteSplashLoginForm', () => {
     }
   }
   
-  it("renders without crashing", async () => {
-    const container = renderWithRedux(<SiteSplashLoginForm />)
-    expect(container).toMatchSnapshot()
-  })
-  
   it("displays an 'Email' input", async () => {
     const { emailInput } = siteSplashLoginForm()
     expect(emailInput).toBeTruthy()

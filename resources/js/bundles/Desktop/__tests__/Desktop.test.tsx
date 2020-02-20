@@ -56,11 +56,6 @@ describe('Desktop', () => {
     // @ts-ignore
     global.environment = mockEnvironment
   })
-  
-  it("renders without crashing", async () => {
-    const container = renderWithRedux(<Desktop />)
-    expect(container).toMatchSnapshot()
-  })
 
   it("does not show the desktop site when a 'LIFETIME' user is logged in", async () => {
     const lifetimeUserAppState = userAppState('LIFETIME')
