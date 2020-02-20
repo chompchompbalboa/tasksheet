@@ -33,9 +33,7 @@ import {
 // User
 //-----------------------------------------------------------------------------
 export const updateUser = async (userId: IUser['id'], updates: IUserUpdates) => {
-	return axios.patch('/app/user/' + userId, updates).then(response => {
-		return response.data
-	}).catch(console.log.bind(console))
+	return axios.patch('/app/user/' + userId, updates)
 }
 
 export const updateUserActive = async (id: string, updates: IUserActiveUpdates) => {
