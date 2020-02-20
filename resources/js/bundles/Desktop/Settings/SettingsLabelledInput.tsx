@@ -20,13 +20,15 @@ const SettingsLabelledInput = ({
   return (
     <Container
       containerWidth={width}>
-      <Label>{label}</Label>
-      <StyledInput
-        type={inputType}
-        disabled={disabled}
-        value={value}
-        onBlur={onBlur}
-        onChange={e => onChange(e.target.value)}/>
+      <Label>
+        <LabelText>{label}</LabelText>
+        <StyledInput
+          type={inputType}
+          disabled={disabled}
+          value={value}
+          onBlur={onBlur}
+          onChange={e => onChange(e.target.value)}/>
+      </Label>
     </Container>
   )
 }
@@ -61,8 +63,12 @@ interface IContainer {
   containerWidth: string
 }
 
-const Label = styled.div`
-  display: inline;
+const Label = styled.label`
+  width: 100%;
+  display: flex;
+`
+
+const LabelText = styled.span`
   font-weight: bold;
   font-size: 0.85rem;
   white-space: nowrap;

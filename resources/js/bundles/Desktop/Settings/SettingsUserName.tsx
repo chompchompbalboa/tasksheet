@@ -13,15 +13,17 @@ import SettingsLabelledInput from '@desktop/Settings/SettingsLabelledInput'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const UserProfileName = () => {
+const SettingsUserName = () => {
 
+  // Redux
   const dispatch = useDispatch()
-
   const userId = useSelector((state: IAppState) => state.user.id)
   const userName = useSelector((state: IAppState) => state.user.name)
 
+  // State
   const [ localUserName, setLocalUserName ] = useState(userName)
 
+  // Update User Name
   const updateUserName = () => {
     if(userName !== localUserName) {
       dispatch(updateUser(
@@ -45,4 +47,4 @@ const UserProfileName = () => {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default UserProfileName
+export default SettingsUserName

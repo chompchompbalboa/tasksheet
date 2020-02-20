@@ -149,11 +149,11 @@ Object {
             <div
               class="c4"
             >
-              <div
+              <label
                 class="c5"
               >
                 Name:
-              </div>
+              </label>
               <input
                 class="c6"
                 type="text"
@@ -163,11 +163,11 @@ Object {
             <div
               class="c4"
             >
-              <div
+              <label
                 class="c5"
               >
                 Email:
-              </div>
+              </label>
               <input
                 class="c6"
                 disabled=""
@@ -179,11 +179,11 @@ Object {
               <div
                 class="c4"
               >
-                <div
+                <label
                   class="c5"
                 >
                   Enter Current Password:
-                </div>
+                </label>
                 <input
                   class="c6"
                   type="password"
@@ -193,11 +193,11 @@ Object {
               <div
                 class="c4"
               >
-                <div
+                <label
                   class="c5"
                 >
                   Enter New Password:
-                </div>
+                </label>
                 <input
                   class="c6"
                   type="password"
@@ -207,11 +207,11 @@ Object {
               <div
                 class="c4"
               >
-                <div
+                <label
                   class="c5"
                 >
                   Confirm New Password:
-                </div>
+                </label>
                 <input
                   class="c6"
                   type="password"
@@ -286,11 +286,11 @@ Object {
           <div
             class="sc-AykKG hTatXH"
           >
-            <div
+            <label
               class="sc-AykKH byzbga"
             >
               Name:
-            </div>
+            </label>
             <input
               class="sc-AykKI cJyGpj"
               type="text"
@@ -300,11 +300,11 @@ Object {
           <div
             class="sc-AykKG hTatXH"
           >
-            <div
+            <label
               class="sc-AykKH byzbga"
             >
               Email:
-            </div>
+            </label>
             <input
               class="sc-AykKI cJyGpj"
               disabled=""
@@ -316,11 +316,11 @@ Object {
             <div
               class="sc-AykKG hTatXH"
             >
-              <div
+              <label
                 class="sc-AykKH byzbga"
               >
                 Enter Current Password:
-              </div>
+              </label>
               <input
                 class="sc-AykKI cJyGpj"
                 type="password"
@@ -330,11 +330,11 @@ Object {
             <div
               class="sc-AykKG hTatXH"
             >
-              <div
+              <label
                 class="sc-AykKH byzbga"
               >
                 Enter New Password:
-              </div>
+              </label>
               <input
                 class="sc-AykKI cJyGpj"
                 type="password"
@@ -344,11 +344,11 @@ Object {
             <div
               class="sc-AykKG hTatXH"
             >
-              <div
+              <label
                 class="sc-AykKH byzbga"
               >
                 Confirm New Password:
-              </div>
+              </label>
               <input
                 class="sc-AykKI cJyGpj"
                 type="password"
