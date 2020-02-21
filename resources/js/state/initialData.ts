@@ -23,7 +23,10 @@ const initalData: IInitialData = {
     },
     tasksheetSubscription: <IUserTasksheetSubscription> {
       id: 'userSubscriptionId',
-      type: 'LIFETIME'
+      type: 'LIFETIME',
+      startDate: '2020-01-01 12:00:00',
+      endDate: null,
+      stripeSetupIntentClientSecret: null
     },
     stripeSubscription: <IUserStripeSubscription> {
       stripe_status: null,
