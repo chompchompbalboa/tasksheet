@@ -29,61 +29,50 @@ const SettingsUserChangePassword = () => {
   // Update User Password
   const updateUserPassword = (e: FormEvent) => {
     e.preventDefault()
+    setNewPasswordSaveStatus('SAVING')
     if(!currentPasswordValue || !newPasswordValue || !confirmNewPasswordValue) {
-      setNewPasswordSaveStatus('SOME_FIELDS_ARE_EMPTY')
+      setTimeout(() => {
+        setNewPasswordSaveStatus('SOME_FIELDS_ARE_EMPTY')
+      }, 500)
     }
     else if(currentPasswordValue === newPasswordValue) {
-      setNewPasswordSaveStatus('NEW_PASSWORD_IS_SAME_AS_CURRENT_PASSWORD')
+      setTimeout(() => {
+        setNewPasswordSaveStatus('NEW_PASSWORD_IS_SAME_AS_CURRENT_PASSWORD')
+      }, 500)
     }
     else if(newPasswordValue !== confirmNewPasswordValue) {
-      setNewPasswordSaveStatus('NEW_PASSWORDS_DONT_MATCH')
+      setTimeout(() => {
+        setNewPasswordSaveStatus('NEW_PASSWORDS_DONT_MATCH')
+      }, 500)
     }
     else {
-      setNewPasswordSaveStatus('SAVING')
       mutation.updateUserPassword(userId, currentPasswordValue, newPasswordValue)
         .then(() => {
           setTimeout(() => {
-            (document.activeElement as HTMLElement).blur();
+            (document.activeElement as HTMLElement).blur()
             setNewPasswordSaveStatus('SAVED')
             setCurrentPasswordValue('')
             setNewPasswordValue('')
             setConfirmNewPasswordValue('')
-          }, 350)
+          }, 500)
           setTimeout(() => {
             setNewPasswordSaveStatus('READY')
-          }, 1850)
+          }, 2500)
         })
         .catch(error => {
           if(error.response.status === 400) { // Incorrect password
-            setNewPasswordSaveStatus('CURRENT_PASSWORD_INCORRECT')
+            setTimeout(() => {
+              setNewPasswordSaveStatus('CURRENT_PASSWORD_INCORRECT')
+              setCurrentPasswordValue('')
+            }, 500)
           }
           else { // Generic Error
-            setNewPasswordSaveStatus('ERROR')
+            setTimeout(() => {
+              setNewPasswordSaveStatus('ERROR')
+            }, 500)
           }
         })
      }
-  }
-  
-  const submitButtonMessages = {
-    READY: "Change Password",
-    SAVING: "Saving...",
-    SAVED: "Saved!",
-    SOME_FIELDS_ARE_EMPTY: "Change Password",
-    NEW_PASSWORDS_DONT_MATCH: "Change Password",
-    CURRENT_PASSWORD_INCORRECT: "Change Password",
-    NEW_PASSWORD_IS_SAME_AS_CURRENT_PASSWORD: "Change Password",
-    ERROR: "Change Password"
-  }
-  
-  const errorMessages = {
-    READY: "",
-    SAVING: "",
-    SAVED: "",
-    SOME_FIELDS_ARE_EMPTY: "You haven't completed all the fields",
-    NEW_PASSWORDS_DONT_MATCH: "Your passwords do not match",
-    CURRENT_PASSWORD_INCORRECT: "Your current password is incorrect",
-    NEW_PASSWORD_IS_SAME_AS_CURRENT_PASSWORD: "Your new password is the same as your current password",
-    ERROR: "There was a problem changing your password. Please try again."
   }
 
   return (
@@ -107,13 +96,15 @@ const SettingsUserChangePassword = () => {
         value={confirmNewPasswordValue}
         width="30%"/>
       <SubmitContainer>
-        <ErrorMessage>
+        <ErrorMessageContainer
+          data-testid="SettingsUserChangePasswordErrorMessageContainer">
           {errorMessages[newPasswordSaveStatus]}
-        </ErrorMessage>
-        <ButtonContainer>
+        </ErrorMessageContainer>
+        <SubmitButtonContainer>
           <SettingsSubmitButton
+            testId="SettingsUserChangePasswordSubmitButton"
             text={submitButtonMessages[newPasswordSaveStatus]}/>
-        </ButtonContainer>
+        </SubmitButtonContainer>
       </SubmitContainer>
     </form>
   )
@@ -133,6 +124,31 @@ type INewPasswordSaveStatus =
   'ERROR'
 
 //-----------------------------------------------------------------------------
+// Messages
+//-----------------------------------------------------------------------------
+export const submitButtonMessages = {
+  READY: "Change Password",
+  SAVING: "Saving...",
+  SAVED: "Saved!",
+  SOME_FIELDS_ARE_EMPTY: "Change Password",
+  NEW_PASSWORDS_DONT_MATCH: "Change Password",
+  CURRENT_PASSWORD_INCORRECT: "Change Password",
+  NEW_PASSWORD_IS_SAME_AS_CURRENT_PASSWORD: "Change Password",
+  ERROR: "Change Password"
+}
+
+export const errorMessages = {
+  READY: "",
+  SAVING: "",
+  SAVED: "",
+  SOME_FIELDS_ARE_EMPTY: "You haven't completed all the fields",
+  NEW_PASSWORDS_DONT_MATCH: "Your passwords do not match",
+  CURRENT_PASSWORD_INCORRECT: "Your current password is incorrect",
+  NEW_PASSWORD_IS_SAME_AS_CURRENT_PASSWORD: "Your new password is the same as your current password",
+  ERROR: "There was a problem changing your password. Please try again."
+}
+
+//-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
 const SubmitContainer = styled.div`
@@ -141,12 +157,12 @@ const SubmitContainer = styled.div`
   justify-content: space-between;
 `
 
-const ErrorMessage = styled.div`
+const ErrorMessageContainer = styled.div`
   color: rgb(200, 0, 0);
   padding-right: 0.5rem;
 `
 
-const ButtonContainer = styled.div`
+const SubmitButtonContainer = styled.div`
 `
 
 //-----------------------------------------------------------------------------

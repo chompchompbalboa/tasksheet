@@ -11,6 +11,7 @@ import { IAppState } from '@/state'
 // Component
 //-----------------------------------------------------------------------------
 const SettingsSubmitButton = ({
+  testId = "SettingsSubmitButton",
   isDisabled = false,
   text
 }: ISettingsSubmitButton) => { 
@@ -19,6 +20,7 @@ const SettingsSubmitButton = ({
   
   return (
     <StyledButton
+      data-testid={testId}
       disabled={isDisabled}
       isDisabled={isDisabled}
       userColorPrimary={userColorPrimary}>
@@ -31,6 +33,7 @@ const SettingsSubmitButton = ({
 // Props
 //-----------------------------------------------------------------------------
 interface ISettingsSubmitButton {
+  testId?: string
   isDisabled?: boolean
   text: string
 }
