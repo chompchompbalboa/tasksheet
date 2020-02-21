@@ -13,7 +13,6 @@ export interface IUser {
 
 export interface IUserUpdates {
   name?: string
-  email?: string
 }
 
 export interface IUserTasksheetSubscription {

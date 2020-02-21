@@ -4,7 +4,6 @@
 import { IAppState } from '@/state'
 import { IThunkAction, IThunkDispatch } from '@/state/types'
 import {
-  IUser,
   IUserUpdates,
   IUserActiveUpdates,
   IUserColorUpdates,
@@ -27,18 +26,7 @@ interface IUpdateUser {
 	updates: IUserUpdates
 }
 
-
-export const updateUser = (
-  userId: IUser['id'], 
-  updates: IUserUpdates
-): IThunkAction => {
-	return async (dispatch: IThunkDispatch) => {
-		dispatch(updateUserReducer(updates))
-		mutation.updateUser(userId, updates)
-	}
-}
-
-export const updateUserReducer = (updates: IUserUpdates): IUserActions => {
+export const updateUser = (updates: IUserUpdates): IUserActions => {
 	return {
 		type: UPDATE_USER,
 		updates: updates,

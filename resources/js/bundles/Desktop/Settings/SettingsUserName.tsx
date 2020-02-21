@@ -1,8 +1,10 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
+import { mutation } from '@/api'
 
 import { IAppState } from '@/state'
 
@@ -22,18 +24,31 @@ const SettingsUserName = () => {
 
   // State
   const [ localUserName, setLocalUserName ] = useState(userName)
-
-  // Effects
-  useEffect(() => {
-    if(userName !== localUserName) {
-      setLocalUserName(userName)
-    }
-  }, [ userName ])
+  const [ updateUserNameStatus, setUpdateUserNameStatus ] = useState('READY' as IUpdateUserNameStatus)
 
   // Update User Name
   const updateUserName = () => {
     if(userName !== localUserName) {
-      dispatch(updateUser(userId, { name: localUserName }))
+      setUpdateUserNameStatus('UPDATING')
+      mutation.updateUser(userId, { name: localUserName })
+        .then(() => {
+          dispatch(updateUser({ name: localUserName }))
+          setTimeout(() => {
+            setUpdateUserNameStatus('UPDATED')
+          }, 500)
+          setTimeout(() => {
+            setUpdateUserNameStatus('READY')
+          }, 2500)
+        })
+        .catch(() => {
+          setTimeout(() => {
+            setLocalUserName(userName)
+            setUpdateUserNameStatus('ERROR_UPDATING')
+          }, 500)
+          setTimeout(() => {
+            setUpdateUserNameStatus('READY')
+          }, 2500)
+        })
     }
   }
 
@@ -42,9 +57,31 @@ const SettingsUserName = () => {
       label="Name:"
       onBlur={() => updateUserName()}
       onChange={nextUserName => setLocalUserName(nextUserName)}
+      status={settingsUserNameStatusMessages[updateUserNameStatus]}
+      statusColor={updateUserNameStatus === 'ERROR_UPDATING' ? 'rgb(200, 0, 0)' : 'black'}
+      statusContainerTestId="SettingsUserNameStatusContainer"
       value={localUserName}
       width="30%"/>
   )
+}
+
+//-----------------------------------------------------------------------------
+// Types
+//-----------------------------------------------------------------------------
+type IUpdateUserNameStatus = 
+  'READY' |
+  'UPDATING' |
+  'UPDATED' |
+  'ERROR_UPDATING'
+
+//-----------------------------------------------------------------------------
+// Status Messages
+//-----------------------------------------------------------------------------
+export const settingsUserNameStatusMessages = {
+  READY: '',
+  UPDATING: 'Saving...',
+  UPDATED: "Saved!",
+  ERROR_UPDATING: "Uh oh, there was a problem saving your name. Please try again."
 }
 
 //-----------------------------------------------------------------------------
