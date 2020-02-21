@@ -16,7 +16,8 @@ const SettingsUserSubscriptionLifetime = () => {
   const userSubscriptionStartDate = useSelector((state: IAppState) => state.user.tasksheetSubscription.startDate)
   
   return (
-    <Container>
+    <Container
+      data-testid="SettingsUserSubscriptionLifetime">
       Your lifetime subscription was succesfully purchased on <b>{moment(userSubscriptionStartDate).format('MMMM Do, YYYY')}</b>. Thank you for choosing Tasksheet!
     </Container>
   )

@@ -10,7 +10,8 @@ import styled from 'styled-components'
 const SettingsUserSubscriptionDemo = () => {
   
   return (
-    <Container>
+    <Container
+      data-testid="SettingsUserSubscriptionDemo">
       Click the link in the top right to start your 30-day free trial
     </Container>
   )

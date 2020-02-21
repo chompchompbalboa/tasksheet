@@ -14,6 +14,7 @@ import {
   IAllSheetViews, ISheetView, ISheetViewFromDatabase,
   ISheetPriority
 } from '@/state/sheet/types'
+import { IUserTasksheetSubscription } from '@/state/user/types'
 
 import { initialActiveState } from '@/state/active/reducers'
 import { initialFolderState } from '@/state/folder/reducers'
@@ -378,3 +379,17 @@ export const getCellAndCellProps = ({
     props
   }
 }
+
+//-----------------------------------------------------------------------------
+// Get App State By Tasksheet Subscription Type
+//-----------------------------------------------------------------------------
+export const getMockAppStateByTasksheetSubscriptionType = (tasksheetSubscriptionType: IUserTasksheetSubscription['type']) => ({
+  ...appState,
+  user: {
+    ...appState.user,
+    tasksheetSubscription: {
+      ...appState.user.tasksheetSubscription,
+      type: tasksheetSubscriptionType
+    }
+  }
+})

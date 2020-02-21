@@ -20,7 +20,7 @@ const SettingsUserSubscriptionTrial = () => {
   const userSubscriptionEndDate = useSelector((state: IAppState) => state.user.tasksheetSubscription.endDate)
 
   const [ activeUserSubscriptionSelection, setActiveUserSubscriptionSelection ] = useState('MONTHLY' as 'MONTHLY' | 'LIFETIME')
-  
+
   return (
     <>
       <ExpirationDate>
@@ -28,7 +28,8 @@ const SettingsUserSubscriptionTrial = () => {
         If you'd like to continue using Tasksheet after that date, please choose one of our two subscription plans below.
         Both plans include unlimited access to all Tasksheet features.
       </ExpirationDate>
-      <Container>
+      <Container
+      data-testid="SettingsUserSubscriptionTrial">
         <ContentContainer>
           <Header>
             Please choose a plan: 

@@ -5,13 +5,22 @@
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-export { appState as mockAppState, appStateFactoryColumns as mockAppStateColumnTypes, getCellAndCellProps, IGetCellAndCellProps } from '@/testing/mocks/appState'
-export { createMockStore } from '@/testing/mocks/createMockStore'
+export { 
+  appState as mockAppState, 
+  appStateFactory as mockAppStateFactory,
+  appStateFactoryColumns as mockAppStateColumnTypes, 
+  getCellAndCellProps, 
+  getMockAppStateByTasksheetSubscriptionType,
+  IAppStateFactoryInput as IMockAppStateFactoryInput,
+  IGetCellAndCellProps 
+} from '@/testing/mocks/appState'
 
-export { useDispatch as mockUseDispatch } from '@/testing/mocks/useDispatch'
-export { useSelector as mockUseSelector } from '@/testing/mocks/useSelector'
+export { createMockStore } from '@/testing/mocks/createMockStore'
 
 export const mockEnvironment = {
   assetUrl: 'testAssetUrl',
-  s3Bucket: 'testS3Bucket'
+  s3Bucket: 'testS3Bucket',
+  stripeKey: 'pk_test_8At8pLHxkRH0MLAwBVTtT5eW00maMxOdQH'
 }
+
+export { stripeMock } from '@/testing/mocks/stripe'

@@ -23,7 +23,8 @@ const SettingsUserSubscriptionMonthly = () => {
     : moment(stripeSubscriptionEndsAt).format('MMMM Do, YYYY')
   
   return (
-    <Container>
+    <Container
+      data-testid="SettingsUserSubscriptionMonthly">
       Thank you for your monthly subscription! Your {firstBillingOrNextBilling} billing will occur on <b>{billingDate}.</b>
     </Container>
   )

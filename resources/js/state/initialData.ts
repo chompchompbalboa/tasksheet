@@ -1,5 +1,11 @@
 import { IFolderPermission } from '@/state/folder/types'
-import { IUser, IUserActive, IUserColor, IUserTasksheetSubscription } from '@/state/user/types'
+import { 
+  IUser, 
+  IUserActive, 
+  IUserColor, 
+  IUserStripeSubscription,
+  IUserTasksheetSubscription 
+} from '@/state/user/types'
 
 const initalData: IInitialData = {
 	user: <IUser> {
@@ -18,6 +24,11 @@ const initalData: IInitialData = {
     tasksheetSubscription: <IUserTasksheetSubscription> {
       id: 'userSubscriptionId',
       type: 'LIFETIME'
+    },
+    stripeSubscription: <IUserStripeSubscription> {
+      stripe_status: null,
+      trial_ends_at: null,
+      ends_at: null
     }
   },
 	folders: [
