@@ -10,8 +10,6 @@ import { fireEvent,  renderWithRedux } from '@/testing/library'
 import { flushPromises } from '@/testing/utils'
 import { appStateFactory, IAppStateFactoryInput } from '@/testing/mocks/appState'
 
-import { updateUser } from '@/state/user/actions'
-
 import SettingsUserName, { settingsUserNameStatusMessages } from '@desktop/Settings/SettingsUserName'
 
 //-----------------------------------------------------------------------------
@@ -89,15 +87,15 @@ describe('SettingsUserName', () => {
   })
   
   it("attempts to update the user name in the database when then 'Name:' value changes and the user blurs the input", async () => {
-    const { getState, nameInput, statusContainer } = settingsUserName()
+    const { getState, nameInput } = settingsUserName()
     const nextName = 'Next Name 2'
     fireEvent.change(nameInput, { target: { value: nextName }})
     fireEvent.blur(nameInput)
     expect(axiosMock.patch).toHaveBeenCalledWith('/app/user/' + getState().user.id, { name: nextName })
   })
   
-  it("updates the app state and shows the status message '" + settingsUserNameStatusMessages['UPDATED'] + "' when the user name was succesfully updated in the database", async () => {
-    axiosMock.patch.mockResolvedValue({})
+  it("updates the app state and shows the status message '" + settingsUserNameStatusMessages['UPDATED'] + "' when the attempt to update the database is successful", async () => {
+    (axiosMock.patch as jest.Mock).mockResolvedValueOnce({})
     const { getState, nameInput, statusContainer } = settingsUserName()
     const nextName = 'Next Name 3'
     expect(getState().user.name).not.toEqual(nextName)
@@ -107,6 +105,22 @@ describe('SettingsUserName', () => {
     expect(getState().user.name).toEqual(nextName)
     jest.advanceTimersByTime(500)
     expect(statusContainer.textContent).toBe(settingsUserNameStatusMessages['UPDATED'])
+    jest.advanceTimersByTime(2000)
+    expect(statusContainer.textContent).toBe(settingsUserNameStatusMessages['READY'])
+  })
+  
+  it("shows an error message and reverts the changes in the 'Name:' input when the attempt to update the database is unsuccessful", async () => {
+    (axiosMock.patch as jest.Mock).mockRejectedValueOnce({})
+    const { getState, nameInput, statusContainer } = settingsUserName()
+    const name = getState().user.name
+    const nextName = 'Next Name 4'
+    fireEvent.change(nameInput, { target: { value: nextName }})
+    fireEvent.blur(nameInput)
+    await flushPromises()
+    jest.advanceTimersByTime(500)
+    expect(statusContainer.textContent).toBe(settingsUserNameStatusMessages['ERROR_UPDATING'])
+    expect(nameInput.value).toBe(name)
+    expect(getState().user.name).toBe(name)
     jest.advanceTimersByTime(2000)
     expect(statusContainer.textContent).toBe(settingsUserNameStatusMessages['READY'])
   })

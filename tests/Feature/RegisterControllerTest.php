@@ -27,7 +27,7 @@ class RegisterControllerTest extends TestCase
      *
      * @return void
      */
-    public function testLoginIfUserExistsAndPasswordIsCorrect()
+    public function testLoginAndReturn200IfUserExistsAndPasswordIsCorrect()
     {
       $user = User::first();
       $response = $this->postJson('/user/register', [
