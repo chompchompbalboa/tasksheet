@@ -13,9 +13,9 @@ import { IAppState } from '@/state'
 //-----------------------------------------------------------------------------
 const SettingsUserSubscriptionMonthly = () => {
   
-  const stripeSubscriptionStatus = useSelector((state: IAppState) => state.user.stripeSubscription.stripe_status)
-  const stripeSubscriptionTrialEndsAt = useSelector((state: IAppState) => state.user.stripeSubscription.trial_ends_at)
-  const stripeSubscriptionEndsAt = useSelector((state: IAppState) => state.user.stripeSubscription.ends_at)
+  const stripeSubscriptionStatus = useSelector((state: IAppState) => state.user.stripeSubscription.stripeStatus)
+  const stripeSubscriptionTrialEndsAt = useSelector((state: IAppState) => state.user.stripeSubscription.endsAt)
+  const stripeSubscriptionEndsAt = useSelector((state: IAppState) => state.user.stripeSubscription.endsAt)
   
   const firstBillingOrNextBilling = stripeSubscriptionStatus === 'trialing' ? 'first' : 'next'
   const billingDate = stripeSubscriptionStatus === 'trialing' 

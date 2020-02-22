@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+
 use Laravel\Cashier\Billable;
 
 use Illuminate\Notifications\Notifiable;
@@ -31,7 +33,14 @@ class User extends Authenticatable
     }
   
     public function getStripeSubscriptionAttribute() {
-      return $this->subscriptions()->first();
+      $localSubscription = $this->subscriptions()->first();
+      $stripeSubscription = $localSubscription->asStripeSubscription();
+      $subscription = [
+        'stripeStatus' => $localSubscription->stripe_status,
+        'trialEndsAt' => Carbon::parse($localSubscription->trial_ends_at),
+        'endsAt' => Carbon::parse($stripeSubscription->current_period_end)
+      ];
+      return $subscription;
     }
   
     public function active() {

@@ -29,9 +29,9 @@ const initalData: IInitialData = {
       stripeSetupIntentClientSecret: null
     },
     stripeSubscription: <IUserStripeSubscription> {
-      stripe_status: null,
-      trial_ends_at: null,
-      ends_at: null
+      stripeStatus: null,
+      trialEndsAt: null,
+      endsAt: null
     }
   },
 	folders: [

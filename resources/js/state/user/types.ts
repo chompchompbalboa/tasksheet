@@ -30,9 +30,9 @@ export interface IUserTasksheetSubscriptionUpdates {
 }
 
 export interface IUserStripeSubscription {
-  stripe_status: 'trialing' | 'active' | 'incomplete' | 'incomplete_expired' | 'past_due' | 'canceled' | 'unpaid'
-  trial_ends_at: string
-  ends_at: string
+  stripeStatus: 'trialing' | 'active' | 'incomplete' | 'incomplete_expired' | 'past_due' | 'canceled' | 'unpaid'
+  trialEndsAt: string
+  endsAt: string
 }
 
 export interface IUserActive {
