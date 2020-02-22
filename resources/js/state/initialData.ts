@@ -29,9 +29,9 @@ const initalData: IInitialData = {
       stripeSetupIntentClientSecret: null
     },
     stripeSubscription: <IUserStripeSubscription> {
-      stripeStatus: null,
-      trialEndsAt: null,
-      endsAt: null
+      stripeStatus: 'canceled',
+      trialEndsAt: '2020-02-01 12:00:00',
+      endsAt: '2020-03-01 12:00:00'
     }
   },
 	folders: [

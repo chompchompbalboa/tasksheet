@@ -383,7 +383,7 @@ export const getCellAndCellProps = ({
 //-----------------------------------------------------------------------------
 // Get App State By Tasksheet Subscription Type
 //-----------------------------------------------------------------------------
-export const getMockAppStateByTasksheetSubscriptionType = (tasksheetSubscriptionType: IUserTasksheetSubscription['type']) => ({
+export const getMockAppStateByTasksheetSubscriptionType = (tasksheetSubscriptionType: IUserTasksheetSubscription['type']): IAppState => ({
   ...appState,
   user: {
     ...appState.user,
