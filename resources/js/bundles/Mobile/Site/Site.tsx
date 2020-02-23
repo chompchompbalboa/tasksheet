@@ -22,7 +22,7 @@ const SiteSplash = () => {
       </Header>
       <Splash>
         <Name>task<Gray>sheet</Gray></Name>
-        <Motto>The spreadsheet built for to-do lists</Motto>
+        <Motto>The spreadsheet built for productivity</Motto>
         <Divider />
         <LoginRegisterContainer>
           <SiteSplashLoginForm 
