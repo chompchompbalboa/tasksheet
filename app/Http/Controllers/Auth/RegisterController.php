@@ -91,8 +91,10 @@ class RegisterController extends Controller
         // Create the Tasksheet subscription
         $newUser->tasksheetSubscription()->save(factory(\App\Models\UserTasksheetSubscription::class)->make([
           'type' => 'TRIAL',
-          'startDate' => Carbon::now(),
-          'endDate' => Carbon::now()->addDays(30),
+          'subscriptionStartDate' => null,
+          'subscriptionEndDate' => null,
+          'trialStartDate' => Carbon::now(),
+          'trialEndDate' => Carbon::now()->addDays(30),
         ]));
 
         // Create userActive and userColor

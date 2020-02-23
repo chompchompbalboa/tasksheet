@@ -22,7 +22,13 @@ const SettingsUserSubscription = () => {
   const userSubscriptionComponents = {
     DEMO: SettingsUserSubscriptionDemo,
     TRIAL: SettingsUserSubscriptionTrial,
+    TRIAL_EXPIRED: SettingsUserSubscriptionTrial,
+    MONTHLY_STILL_IN_TRIAL: SettingsUserSubscriptionMonthly,
     MONTHLY: SettingsUserSubscriptionMonthly,
+    MONTHLY_PAST_DUE: SettingsUserSubscriptionMonthly,
+    MONTHLY_EXPIRED: SettingsUserSubscriptionMonthly,
+    MONTHLY_CANCELLED: SettingsUserSubscriptionMonthly,
+    MONTHLY_CANCELLED_STILL_IN_SUBSCRIPTION: SettingsUserSubscriptionMonthly,
     LIFETIME: SettingsUserSubscriptionLifetime
   }
   

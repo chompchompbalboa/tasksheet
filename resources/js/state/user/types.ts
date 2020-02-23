@@ -8,7 +8,6 @@ export interface IUser {
 	active: IUserActive
 	color: IUserColor
   tasksheetSubscription: IUserTasksheetSubscription
-  stripeSubscription: IUserStripeSubscription
 }
 
 export interface IUserUpdates {
@@ -17,22 +16,29 @@ export interface IUserUpdates {
 
 export interface IUserTasksheetSubscription {
   id: string
-  type: 'DEMO' | 'TRIAL' | 'MONTHLY' | 'LIFETIME'
-  endDate: string
-  startDate: string
-  stripeSetupIntentClientSecret?: string // Only set for TRIAL users
+  type: 
+    'DEMO' | 
+    'TRIAL' | 
+    'TRIAL_EXPIRED' |
+    'MONTHLY_STILL_IN_TRIAL' |
+    'MONTHLY' | 
+    'MONTHLY_PAST_DUE' |
+    'MONTHLY_EXPIRED' |
+    'MONTHLY_CANCELLED' |
+    'MONTHLY_CANCELLED_STILL_IN_SUBSCRIPTION' |
+    'LIFETIME'
+  nextBillingDate: string
+  subscriptionStartDate: string
+  subscriptionEndDate: string
+  trialStartDate: string
+  trialEndDate: string
+  stripeSetupIntentClientSecret?: string // Only set for TRIAL, TRIAL_EXPIRED, MONTHLY, and MONTHLY_EXPIRED users
 }
 
 export interface IUserTasksheetSubscriptionUpdates {
-  type?: 'DEMO' | 'TRIAL' | 'MONTHLY' | 'LIFETIME'
-  startDate?: string
-  endDate?: string
-}
-
-export interface IUserStripeSubscription {
-  stripeStatus: 'trialing' | 'active' | 'incomplete' | 'incomplete_expired' | 'past_due' | 'canceled' | 'unpaid'
-  trialEndsAt: string
-  endsAt: string
+  type?: IUserTasksheetSubscription['type']
+  subscriptionStartDate?: IUserTasksheetSubscription['subscriptionStartDate']
+  subscriptionEndDate?: IUserTasksheetSubscription['subscriptionEndDate']
 }
 
 export interface IUserActive {

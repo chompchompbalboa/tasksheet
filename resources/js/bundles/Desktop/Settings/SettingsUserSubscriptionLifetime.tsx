@@ -13,7 +13,7 @@ import { IAppState } from '@/state'
 //-----------------------------------------------------------------------------
 const SettingsUserSubscriptionLifetime = () => {
 
-  const userSubscriptionStartDate = useSelector((state: IAppState) => state.user.tasksheetSubscription.startDate)
+  const userSubscriptionStartDate = useSelector((state: IAppState) => state.user.tasksheetSubscription.subscriptionStartDate)
   
   return (
     <Container

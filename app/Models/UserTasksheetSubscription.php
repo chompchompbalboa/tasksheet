@@ -13,10 +13,29 @@ class UserTasksheetSubscription extends Model
   const CREATED_AT = 'createdAt';
   const UPDATED_AT = 'updatedAt';
   
-  protected $visible = [ 'id', 'type', 'startDate', 'endDate', 'stripeSetupIntentClientSecret' ];
-  protected $fillable = [ 'type', 'startDate', 'endDate' ];
-  protected $dates = [ 'startDate', 'endDate' ];
-  protected $appends = [ 'stripeSetupIntentClientSecret' ];
+  protected $visible = [ 
+    'id', 
+    'type', 
+    'subscriptionStartDate',
+    'subscriptionEndDate',
+    'trialStartDate', 
+    'trialEndDate', 
+    'stripeSetupIntentClientSecret' 
+  ];
+  protected $fillable = [ 
+    'type', 
+    'subscriptionStartDate', 
+    'subscriptionEndDate' 
+  ];
+  protected $dates = [ 
+    'subscriptionStartDate', 
+    'subscriptionEndDate', 
+    'trialStartDate', 
+    'trialEndDate' 
+  ];
+  protected $appends = [ 
+    'stripeSetupIntentClientSecret' 
+  ];
   
   public function getStripeSetupIntentClientSecretAttribute() {
     if($this->type === 'TRIAL') {

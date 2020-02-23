@@ -10,7 +10,7 @@ import {
   getMockAppStateByTasksheetSubscriptionType
 } from '@/testing/mocks'
 
-import { IUserStripeSubscription } from '@/state/user/types'
+import { IUserTasksheetSubscription } from '@/state/user/types'
 
 import SettingsUserSubscriptionMonthly from '@desktop/Settings/SettingsUserSubscriptionMonthly'
 
@@ -19,15 +19,15 @@ import SettingsUserSubscriptionMonthly from '@desktop/Settings/SettingsUserSubsc
 //-----------------------------------------------------------------------------
 describe('SettingsUserSubscriptionMonthly', () => {
   
-  const settingsUserSubscriptionMonthly = (stripeSubscriptionStatus: IUserStripeSubscription['stripeStatus']) => {
+  const settingsUserSubscriptionMonthly = (tasksheetSubscriptionType: IUserTasksheetSubscription['type']) => {
     const monthlyUserAppState = getMockAppStateByTasksheetSubscriptionType('MONTHLY')
     const mockAppState = {
       ...monthlyUserAppState,
       user: {
         ...monthlyUserAppState.user,
-        stripeSubscription: {
-          ...monthlyUserAppState.user.stripeSubscription,
-          stripeStatus: stripeSubscriptionStatus
+        tasksheetSubscription: {
+          ...monthlyUserAppState.user.tasksheetSubscription,
+          type: tasksheetSubscriptionType
         }
       }
     }
@@ -45,15 +45,15 @@ describe('SettingsUserSubscriptionMonthly', () => {
   }
 
   it("displays the next billing date correctly for a MONTHLY user whose subscription is active, but whose trial has not expired", () => {
-    const { container, getState } = settingsUserSubscriptionMonthly('trialing')
-    const expectedBillingDate = moment(getState().user.stripeSubscription.trialEndsAt).format('MMMM Do, YYYY')
+    const { container, getState } = settingsUserSubscriptionMonthly('MONTHLY_STILL_IN_TRIAL')
+    const expectedBillingDate = moment(getState().user.tasksheetSubscription.trialEndDate).format('MMMM Do, YYYY')
     expect(container.textContent).toContain('first')
     expect(container.textContent).toContain(expectedBillingDate)
   })
 
   it("displays the next billing date correctly for a MONTHLY user whose subscription is active", () => {
-    const { container, getState } = settingsUserSubscriptionMonthly('active')
-    const expectedBillingDate = moment(getState().user.stripeSubscription.endsAt).format('MMMM Do, YYYY')
+    const { container, getState } = settingsUserSubscriptionMonthly('MONTHLY')
+    const expectedBillingDate = moment(getState().user.tasksheetSubscription.subscriptionEndDate).format('MMMM Do, YYYY')
     expect(container.textContent).toContain('next')
     expect(container.textContent).toContain(expectedBillingDate)
   })

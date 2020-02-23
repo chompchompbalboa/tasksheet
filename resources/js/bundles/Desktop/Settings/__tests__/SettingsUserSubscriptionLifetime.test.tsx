@@ -24,7 +24,7 @@ describe('SettingsUserSubscriptionLifetime', () => {
       }, 
       queryByText
     } = renderWithRedux(<SettingsUserSubscriptionLifetime />, { store: createMockStore(getMockAppStateByTasksheetSubscriptionType('LIFETIME')) })
-    expect(queryByText(moment(getState().user.tasksheetSubscription.startDate).format('MMMM Do, YYYY'))).toBeTruthy()
+    expect(queryByText(moment(getState().user.tasksheetSubscription.subscriptionStartDate).format('MMMM Do, YYYY'))).toBeTruthy()
   })
 
 })

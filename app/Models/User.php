@@ -23,15 +23,16 @@ class User extends Authenticatable
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
   
-    protected $visible = [ 'id', 'name', 'email', 'active', 'color', 'tasksheetSubscription', 'stripeSubscription' ];
+    protected $visible = [ 'id', 'name', 'email', 'active', 'color', 'tasksheetSubscription' ];
     protected $fillable = [ 'name', 'email', 'password' ];
     protected $with = [ 'active', 'color' ];
-    protected $appends = [ 'stripeSubscription', 'tasksheetSubscription' ];
+    protected $appends = [ 'tasksheetSubscription' ];
   
     public function getTasksheetSubscriptionAttribute() {
       return $this->tasksheetSubscription()->first();
     }
   
+    /*
     public function getStripeSubscriptionAttribute() {
       $localSubscription = $this->subscriptions()->first();
       $stripeSubscription = $localSubscription->asStripeSubscription();
@@ -42,6 +43,7 @@ class User extends Authenticatable
       ];
       return $subscription;
     }
+    */
   
     public function active() {
       return $this->hasOne('App\Models\UserActive', 'userId');

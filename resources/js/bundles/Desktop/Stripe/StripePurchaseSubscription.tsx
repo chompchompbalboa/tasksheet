@@ -101,8 +101,8 @@ const StripePurchaseSubscription = ({
             const nextUserSubscription = response.data as IUserTasksheetSubscription
             dispatch(updateUserTasksheetSubscription({ 
               type: nextUserSubscription.type, 
-              startDate: nextUserSubscription.startDate,
-              endDate: nextUserSubscription.endDate
+              subscriptionStartDate: nextUserSubscription.subscriptionStartDate,
+              subscriptionEndDate: nextUserSubscription.subscriptionEndDate
             }))
           }
         })

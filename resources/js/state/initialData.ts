@@ -3,7 +3,6 @@ import {
   IUser, 
   IUserActive, 
   IUserColor, 
-  IUserStripeSubscription,
   IUserTasksheetSubscription 
 } from '@/state/user/types'
 
@@ -24,14 +23,12 @@ const initalData: IInitialData = {
     tasksheetSubscription: <IUserTasksheetSubscription> {
       id: 'userSubscriptionId',
       type: 'LIFETIME',
-      startDate: '2020-01-01 12:00:00',
-      endDate: null,
+      nextBillingDate: '2020-02-05 12:00:00',
+      subscriptionStartDate: '2019-01-05 12:00:00',
+      subscriptionEndDate: '2020-01-01 12:00:00',
+      trialStartDate: '2020-01-01 12:00:00',
+      trialEndDate: '2020-01-01 12:00:00',
       stripeSetupIntentClientSecret: null
-    },
-    stripeSubscription: <IUserStripeSubscription> {
-      stripeStatus: 'canceled',
-      trialEndsAt: '2020-02-01 12:00:00',
-      endsAt: '2020-03-01 12:00:00'
     }
   },
 	folders: [

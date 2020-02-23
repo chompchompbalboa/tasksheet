@@ -101,8 +101,10 @@ class DatabaseSeeder extends Seeder
             // UserSubscription
             $user->tasksheetSubscription()->save(factory(App\Models\UserTasksheetSubscription::class)->make([
               'type' => $currentSourceFolderUser['email'] === 'demo@tasksheet.co' ? 'DEMO' : 'LIFETIME',
-              'startDate' => Carbon::now(),
-              'endDate' => Carbon::now()->addDays(30),
+              'subscriptionStartDate' => Carbon::now(),
+              'subscriptionEndDate' => Carbon::now()->addDays(30),
+              'trialStartDate' => Carbon::now(),
+              'trialEndDate' => Carbon::now()->addDays(30),
             ]));
 
             // Stripe Subscription

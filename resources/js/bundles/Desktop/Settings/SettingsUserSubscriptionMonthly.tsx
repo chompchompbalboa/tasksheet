@@ -13,14 +13,14 @@ import { IAppState } from '@/state'
 //-----------------------------------------------------------------------------
 const SettingsUserSubscriptionMonthly = () => {
   
-  const stripeSubscriptionStatus = useSelector((state: IAppState) => state.user.stripeSubscription.stripeStatus)
-  const stripeSubscriptionTrialEndsAt = useSelector((state: IAppState) => state.user.stripeSubscription.trialEndsAt)
-  const stripeSubscriptionEndsAt = useSelector((state: IAppState) => state.user.stripeSubscription.endsAt)
+  const userSubscriptionType = useSelector((state: IAppState) => state.user.tasksheetSubscription.type)
+  const userSubscriptionSubscriptionEndDate = useSelector((state: IAppState) => state.user.tasksheetSubscription.subscriptionEndDate)
+  const userSubscriptionTrialEndDate = useSelector((state: IAppState) => state.user.tasksheetSubscription.trialEndDate)
 
-  const firstBillingOrNextBilling = stripeSubscriptionStatus === 'trialing' ? 'first' : 'next'
-  const billingDate = stripeSubscriptionStatus === 'trialing' 
-    ? moment(stripeSubscriptionTrialEndsAt).format('MMMM Do, YYYY')
-    : moment(stripeSubscriptionEndsAt).format('MMMM Do, YYYY')
+  const firstBillingOrNextBilling = userSubscriptionType === 'MONTHLY_STILL_IN_TRIAL' ? 'first' : 'next'
+  const billingDate = userSubscriptionType === 'MONTHLY_STILL_IN_TRIAL' 
+    ? moment(userSubscriptionTrialEndDate).format('MMMM Do, YYYY')
+    : moment(userSubscriptionSubscriptionEndDate).format('MMMM Do, YYYY')
   
   return (
     <Container

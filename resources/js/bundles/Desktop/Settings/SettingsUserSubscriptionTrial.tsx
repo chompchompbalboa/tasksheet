@@ -17,7 +17,7 @@ import StripePurchaseSubscription from '@desktop/Stripe/StripePurchaseSubscripti
 const SettingsUserSubscriptionTrial = () => {
   
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
-  const userSubscriptionEndDate = useSelector((state: IAppState) => state.user.tasksheetSubscription.endDate)
+  const userSubscriptionEndDate = useSelector((state: IAppState) => state.user.tasksheetSubscription.subscriptionEndDate)
 
   const [ activeUserSubscriptionSelection, setActiveUserSubscriptionSelection ] = useState('MONTHLY' as 'MONTHLY' | 'LIFETIME')
 
