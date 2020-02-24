@@ -20,18 +20,7 @@ import SettingsUserSubscriptionMonthly from '@desktop/Settings/SettingsUserSubsc
 describe('SettingsUserSubscriptionMonthly', () => {
   
   const settingsUserSubscriptionMonthly = (tasksheetSubscriptionType: IUserTasksheetSubscription['type']) => {
-    const monthlyUserAppState = getMockAppStateByTasksheetSubscriptionType('MONTHLY')
-    const mockAppState = {
-      ...monthlyUserAppState,
-      user: {
-        ...monthlyUserAppState.user,
-        tasksheetSubscription: {
-          ...monthlyUserAppState.user.tasksheetSubscription,
-          type: tasksheetSubscriptionType
-        }
-      }
-    }
-  
+    const mockAppState = getMockAppStateByTasksheetSubscriptionType(tasksheetSubscriptionType)
     const {
       container, 
       store: { 
