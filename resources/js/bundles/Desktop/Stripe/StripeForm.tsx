@@ -12,7 +12,9 @@ const StripeForm = ({
   onSubmit
 }: IStripeForm) => {
   return (
-    <StyledForm onSubmit={onSubmit}>
+    <StyledForm 
+      data-testid="StripeForm"
+      onSubmit={onSubmit}>
       {children}
     </StyledForm>
   )

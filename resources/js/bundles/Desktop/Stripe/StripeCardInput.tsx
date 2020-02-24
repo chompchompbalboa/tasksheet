@@ -33,21 +33,27 @@ const StripeCardInput = () => {
       <CardNumberContainer>
         <CardDetailContainer
           width="100%">
-          <label>Number:</label>
-          <CardNumberElement {...cardElementOptions}/>
+          <label>
+            Number:
+            <CardNumberElement {...cardElementOptions}/>
+          </label>
         </CardDetailContainer>
       </CardNumberContainer>
       <CardDetailsContainer>
         <CardDetailContainer
           width="20%">
-          <label>CVC:</label>
-          <CardCvcElement {...cardElementOptions}/>
+          <label>
+            CVC:
+            <CardCvcElement {...cardElementOptions}/>
+          </label>
         </CardDetailContainer>
         &nbsp;&nbsp;
         <CardDetailContainer
           width="40%">
-          <label>Expiration:</label>
-          <CardExpiryElement {...cardElementOptions}/>
+          <label>
+            Expiration:
+            <CardExpiryElement {...cardElementOptions}/>
+          </label>
         </CardDetailContainer>
       </CardDetailsContainer>
     </Container>

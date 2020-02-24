@@ -24,3 +24,6 @@ export const mockEnvironment = {
 }
 
 export { stripeMock } from '@/testing/mocks/stripe'
+export const stripeCardNumbers = {
+  TEST: '4242 4242 4242 4242'
+}
