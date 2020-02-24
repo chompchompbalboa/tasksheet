@@ -22,7 +22,7 @@ const SiteSplash = () => {
       </Header>
       <Splash>
         <Name>task<Gray>sheet</Gray></Name>
-        <Motto>The spreadsheet for today's workplace</Motto>
+        <Motto>The spreadsheet built for task management</Motto>
         <Divider />
         <LoginRegisterContainer>
           <SiteSplashLoginForm 
@@ -113,7 +113,7 @@ const Name = styled.div`
 `
 
 const Motto = styled.div`
-  font-size: 1.125rem;
+  font-size: 1.5rem;
   width: 80%;
   text-align: center;
 `
