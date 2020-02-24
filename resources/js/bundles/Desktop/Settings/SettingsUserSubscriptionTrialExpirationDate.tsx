@@ -11,7 +11,7 @@ import { IAppState } from '@/state'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SettingsUserSubscriptionTrial = () => {
+const SettingsUserSubscriptionTrialExpirationDate = () => {
 
   // Redux
   const userSubscriptionTrialEndDate = useSelector((state: IAppState) => state.user.tasksheetSubscription.trialEndDate)
@@ -35,4 +35,4 @@ const Container = styled.div`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SettingsUserSubscriptionTrial
+export default SettingsUserSubscriptionTrialExpirationDate
