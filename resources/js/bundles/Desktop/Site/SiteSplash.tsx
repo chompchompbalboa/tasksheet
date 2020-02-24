@@ -38,8 +38,8 @@ export const SiteSplash = () => {
       </Header>
       <Splash>
         <LeftColumn>
-          <ShortText>The spreadsheet built for productivity</ShortText>
-          <LongText><ToDoSheet>Tasksheet</ToDoSheet> is a spreadsheet fine-tuned for day-to-day use in the workplace. Built around its ability to quickly and easily organize any type of information, it is a uniquely flexible and powerful solution to simplify everyday life.</LongText>
+          <ShortText>The spreadsheet for today's workplace</ShortText>
+          <LongText><ToDoSheet>Tasksheet</ToDoSheet> is a spreadsheet fine-tuned for everyday use at work. Built around its ability to quickly and easily organize any type of information, it is a uniquely flexible and powerful solution to simplify everyday life.</LongText>
           <ScrollDownToTry>
             <ScrollDownToTryIcon>
               <Icon icon={ARROW_DOWN}/>
