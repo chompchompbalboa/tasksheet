@@ -11,11 +11,16 @@
   }
 
   export const stripeMock = jest.fn().mockReturnValue({
-    elements: jest.fn().mockReturnValue(elementsMock),
-    createPaymentMethod: jest.fn(() => Promise.resolve({
+    elements: jest.fn().mockReturnValue(elementsMock), // Required to pass isStripe check in @stripe/stripe-js
+    confirmCardPayment: jest.fn(() => Promise.resolve()), // Required to pass isStripe check in @stripe/stripe-js
+    confirmCardSetup: jest.fn(() => Promise.resolve({
+      setupIntent: { paymentMethod: 'mockStripePaymentMethodId' },
+      error: null
+    })),
+    createPaymentMethod: jest.fn(() => Promise.resolve({ // Required to pass isStripe check in @stripe/stripe-js
       paymentMethod: { id: 'mockStripePaymentMethodId' },
       error: {}
     })),
     createSource: jest.fn(() => Promise.resolve()),
-    createToken: jest.fn(() => Promise.resolve()),
+    createToken: jest.fn(() => Promise.resolve()), // Required to pass isStripe check in @stripe/stripe-js
   })

@@ -3,7 +3,6 @@
 //-----------------------------------------------------------------------------
 import React, { useMemo } from 'react'
 import { Elements } from '@stripe/react-stripe-js'
-import {loadStripe } from '@stripe/stripe-js'
 import styled from 'styled-components'
 
 import StripePurchaseSubscriptionPaymentFormElements from '@desktop/Stripe/StripePurchaseSubscriptionPaymentFormElements'
@@ -15,7 +14,7 @@ const StripePurchaseSubscriptionPaymentForm = ({
   monthlyOrLifetime
 }: IStripePurchaseSubscriptionPaymentForm) => {
 
-  const stripe = useMemo(() => loadStripe(environment.stripeKey), [])
+  const stripe = useMemo(() => window.Stripe(environment.stripeKey), [])
 
   return (
     <Container>

@@ -47,6 +47,7 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
     e.preventDefault()
     setStripeErrorMessage(null)
     setIsChargeBeingProcessed(true)
+
     const cardNumberElement = stripeElements.getElement('cardNumber')
     // Purchase a monthly susbcription
     if(monthlyOrLifetimeSubscription === 'MONTHLY') {

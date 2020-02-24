@@ -2,11 +2,13 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
+import axiosMock from 'axios'
 
 import { fireEvent, renderWithRedux } from '@/testing/library'
 import { 
   createMockStore,
   getMockAppStateByTasksheetSubscriptionType,
+  mockEnvironment,
   stripeMock
 } from '@/testing/mocks'
 
@@ -46,7 +48,9 @@ describe('StripePurchaseSubscription', () => {
     }
   }
          
-  it("correctly submits the Stripe form", () => {
+  it("correctly submits the Stripe form", async () => {
+    // @ts-ignore
+    axiosMock.post.mockResolvedValueOnce({})
     const { stripeForm } = stripePurchaseSubscription('LIFETIME')
     fireEvent.submit(stripeForm)
   })
