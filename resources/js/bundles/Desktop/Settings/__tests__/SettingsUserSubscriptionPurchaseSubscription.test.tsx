@@ -57,4 +57,10 @@ describe('SettingsUserSubscriptionPurchaseSubscription', () => {
     expect(container.textContent).toContain('Subscribe To Monthly Access')
   })
 
+  it("displays the form to purchase a LIFETIME subscription when the user selects the LIFETIME option", () => {
+    const { container, selectLifetimeSubscriptionType } = settingsUserSubscriptionPurchaseSubscription()
+    selectLifetimeSubscriptionType.click()
+    expect(container.textContent).toContain('Purchase Lifetime Access')
+  })
+
 })
