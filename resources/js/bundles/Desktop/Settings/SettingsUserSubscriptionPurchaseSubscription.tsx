@@ -1,27 +1,19 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
-import SettingsUserSubscriptionPurchaseSubscriptionStripe from '@desktop/Settings/SettingsUserSubscriptionPurchaseSubscriptionStripe'
-import SettingsUserSubscriptionPurchaseSubscriptionSubscriptionTypes from '@desktop/Settings/SettingsUserSubscriptionPurchaseSubscriptionSubscriptionTypes'
+import StripePurchaseSubscription from '@desktop/Stripe/StripePurchaseSubscription'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SettingsUserSubscriptionPurchaseSubscription = () => {
 
-  // State
-  const [ monthlyOrLifetime, setMonthlyOrLifetime ] = useState('MONTHLY' as 'MONTHLY' | 'LIFETIME')
-
   return (
     <Container>
-      <SettingsUserSubscriptionPurchaseSubscriptionSubscriptionTypes
-        monthlyOrLifetime={monthlyOrLifetime}
-        setMonthlyOrLifetime={setMonthlyOrLifetime}/>
-      <SettingsUserSubscriptionPurchaseSubscriptionStripe
-        monthlyOrLifetime={monthlyOrLifetime}/>
+      <StripePurchaseSubscription />
     </Container>
   )
 }
@@ -29,11 +21,7 @@ const SettingsUserSubscriptionPurchaseSubscription = () => {
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-`
+const Container = styled.div``
 
 //-----------------------------------------------------------------------------
 // Export

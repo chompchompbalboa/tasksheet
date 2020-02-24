@@ -1,30 +1,32 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
-import { Elements, StripeProvider } from 'react-stripe-elements'
+import React, { useMemo } from 'react'
+import { Elements } from '@stripe/react-stripe-js'
+import {loadStripe } from '@stripe/stripe-js'
 import styled from 'styled-components'
 
-import StripePurchaseSubscription from '@desktop/Stripe/StripePurchaseSubscription'
+import StripePurchaseSubscriptionPaymentFormElements from '@desktop/Stripe/StripePurchaseSubscriptionPaymentFormElements'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SettingsUserSubscriptionPurchaseSubscriptionStripe = ({
+const StripePurchaseSubscriptionPaymentForm = ({
   monthlyOrLifetime
-}: ISettingsUserSubscriptionPurchaseSubscriptionStripe) => {
+}: IStripePurchaseSubscriptionPaymentForm) => {
+
+  const stripe = useMemo(() => loadStripe(environment.stripeKey), [])
 
   return (
     <Container>
       <Header>
         Please enter your card information: 
       </Header>
-      <StripeProvider apiKey={environment.stripeKey}>
-        <Elements>
-          <StripePurchaseSubscription
-            monthlyOrLifetimeSubscription={monthlyOrLifetime}/>
-        </Elements>
-      </StripeProvider>
+      <Elements
+        stripe={stripe}>
+        <StripePurchaseSubscriptionPaymentFormElements
+          monthlyOrLifetimeSubscription={monthlyOrLifetime}/>
+      </Elements>
     </Container>
   )
 }
@@ -32,7 +34,7 @@ const SettingsUserSubscriptionPurchaseSubscriptionStripe = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface ISettingsUserSubscriptionPurchaseSubscriptionStripe {
+interface IStripePurchaseSubscriptionPaymentForm {
   monthlyOrLifetime: 'MONTHLY' | 'LIFETIME'
 }
 
@@ -54,4 +56,4 @@ const Header = styled.div`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SettingsUserSubscriptionPurchaseSubscriptionStripe
+export default StripePurchaseSubscriptionPaymentForm

@@ -8,15 +8,15 @@ import styled from 'styled-components'
 
 import { IAppState } from '@/state'
 
-import SubscriptionType from '@desktop/Settings/SettingsUserSubscriptionPurchaseSubscriptionSubscriptionType'
+import SubscriptionType from '@desktop/Stripe/StripePurchaseSubscriptionSubscriptionType'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SettingsUserSubscriptionPurchaseSubscriptionSubscriptionTypes = ({
+const StripePurchaseSubscriptionSubscriptionTypes = ({
   monthlyOrLifetime,
   setMonthlyOrLifetime
-}: ISettingsUserSubscriptionPurchaseSubscriptionSubscriptionTypes) => {
+}: IStripePurchaseSubscriptionSubscriptionTypes) => {
 
   // Redux
   const userSubscriptionTrialEndDate = useSelector((state: IAppState) => state.user.tasksheetSubscription.trialEndDate)
@@ -47,7 +47,7 @@ const SettingsUserSubscriptionPurchaseSubscriptionSubscriptionTypes = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface ISettingsUserSubscriptionPurchaseSubscriptionSubscriptionTypes {
+interface IStripePurchaseSubscriptionSubscriptionTypes {
   monthlyOrLifetime: 'MONTHLY' | 'LIFETIME'
   setMonthlyOrLifetime(nextMonthlyOrLifetime: 'MONTHLY' | 'LIFETIME'): void
 }
@@ -77,4 +77,4 @@ const SubscriptionTypesContainer = styled.div`
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SettingsUserSubscriptionPurchaseSubscriptionSubscriptionTypes
+export default StripePurchaseSubscriptionSubscriptionTypes

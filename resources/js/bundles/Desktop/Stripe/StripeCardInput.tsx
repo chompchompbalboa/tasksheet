@@ -2,7 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { CardCvcElement, CardExpiryElement, CardNumberElement } from 'react-stripe-elements'
+import { CardCvcElement, CardExpiryElement, CardNumberElement } from '@stripe/react-stripe-js'
 import styled from 'styled-components'
 
 //-----------------------------------------------------------------------------
@@ -35,7 +35,8 @@ const StripeCardInput = () => {
           width="100%">
           <label>
             Number:
-            <CardNumberElement {...cardElementOptions}/>
+            <CardNumberElement 
+              options={cardElementOptions}/>
           </label>
         </CardDetailContainer>
       </CardNumberContainer>
@@ -44,7 +45,8 @@ const StripeCardInput = () => {
           width="20%">
           <label>
             CVC:
-            <CardCvcElement {...cardElementOptions}/>
+            <CardCvcElement
+              options={cardElementOptions}/>
           </label>
         </CardDetailContainer>
         &nbsp;&nbsp;
@@ -52,7 +54,8 @@ const StripeCardInput = () => {
           width="40%">
           <label>
             Expiration:
-            <CardExpiryElement {...cardElementOptions}/>
+            <CardExpiryElement
+              options={cardElementOptions}/>
           </label>
         </CardDetailContainer>
       </CardDetailsContainer>
