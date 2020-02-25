@@ -17,11 +17,6 @@ import StripePurchaseSubscription from '@desktop/Stripe/StripePurchaseSubscripti
 //-----------------------------------------------------------------------------
 // Tests
 //-----------------------------------------------------------------------------
-// A note on these tests:
-// react-stripe-elements doesn't provide access to the invididual inputs (all I 
-// was able to get while writing the tests was an empty <div>). Therefore, we 
-// need to trust that the inputs work correctly and instead focus on testing the 
-// app's response to Stripe's success / error codes.
 describe('StripePurchaseSubscription', () => {
 
   beforeAll(() => {
@@ -31,7 +26,7 @@ describe('StripePurchaseSubscription', () => {
     global.Stripe = stripeMock
   })
   
-  const stripePurchaseSubscription = (monthlyOrLifetime: 'MONTHLY' | 'LIFETIME') => {
+  const stripePurchaseSubscription = () => {
     const mockAppState = getMockAppStateByTasksheetSubscriptionType('TRIAL')
     const {
       //container,
@@ -51,7 +46,7 @@ describe('StripePurchaseSubscription', () => {
   it("correctly submits the Stripe form", async () => {
     // @ts-ignore
     axiosMock.post.mockResolvedValueOnce({})
-    const { stripeForm } = stripePurchaseSubscription('LIFETIME')
+    const { stripeForm } = stripePurchaseSubscription()
     fireEvent.submit(stripeForm)
   })
 

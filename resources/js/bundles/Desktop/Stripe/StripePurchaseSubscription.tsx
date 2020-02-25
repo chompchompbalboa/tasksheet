@@ -35,6 +35,8 @@ const Container = styled.div`
   align-items: flex-start;
 `
 
+export type ITasksheetSubscriptionType = 'MONTHLY' | 'LIFETIME'
+
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------

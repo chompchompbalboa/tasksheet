@@ -41,6 +41,8 @@ export interface IUserTasksheetSubscriptionUpdates {
   subscriptionEndDate?: IUserTasksheetSubscription['subscriptionEndDate']
 }
 
+export type ITasksheetSubscription = 'MONTHLY' | 'LIFETIME'
+
 export interface IUserActive {
 	id: string
 	tab: string
