@@ -5,13 +5,15 @@ import React, { useMemo } from 'react'
 import { Elements } from '@stripe/react-stripe-js'
 import styled from 'styled-components'
 
+import { ITasksheetSubscriptionPlan } from '@/state/user/types'
+
 import StripePurchaseSubscriptionPaymentFormElements from '@desktop/Stripe/StripePurchaseSubscriptionPaymentFormElements'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const StripePurchaseSubscriptionPaymentForm = ({
-  monthlyOrLifetime
+  activeSubscriptionPlan
 }: IStripePurchaseSubscriptionPaymentForm) => {
 
   const stripe = useMemo(() => window.Stripe(environment.stripeKey), [])
@@ -24,7 +26,7 @@ const StripePurchaseSubscriptionPaymentForm = ({
       <Elements
         stripe={stripe}>
         <StripePurchaseSubscriptionPaymentFormElements
-          monthlyOrLifetimeSubscription={monthlyOrLifetime}/>
+          subscriptionPlan={activeSubscriptionPlan}/>
       </Elements>
     </Container>
   )
@@ -34,7 +36,7 @@ const StripePurchaseSubscriptionPaymentForm = ({
 // Props
 //-----------------------------------------------------------------------------
 interface IStripePurchaseSubscriptionPaymentForm {
-  monthlyOrLifetime: 'MONTHLY' | 'LIFETIME'
+  activeSubscriptionPlan: ITasksheetSubscriptionPlan
 }
 
 //-----------------------------------------------------------------------------

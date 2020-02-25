@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { IAppState } from '@/state'
+import { ITasksheetSubscriptionPlan } from '@/state/user/types'
 
 import SubscriptionType from '@desktop/Stripe/StripePurchaseSubscriptionSubscriptionType'
 
@@ -14,8 +15,8 @@ import SubscriptionType from '@desktop/Stripe/StripePurchaseSubscriptionSubscrip
 // Component
 //-----------------------------------------------------------------------------
 const StripePurchaseSubscriptionSubscriptionTypes = ({
-  monthlyOrLifetime,
-  setMonthlyOrLifetime
+  activeSubscriptionPlan,
+  setActiveSubscriptionPlan
 }: IStripePurchaseSubscriptionSubscriptionTypes) => {
 
   // Redux
@@ -30,14 +31,14 @@ const StripePurchaseSubscriptionSubscriptionTypes = ({
         <SubscriptionType
           description={"Your first billing will occur on " + moment(userSubscriptionTrialEndDate).format('MMMM Do, YYYY') + " and repeat every month on the " + moment(userSubscriptionTrialEndDate).format('Do')}
           header="Monthly"
-          isSelected={monthlyOrLifetime === 'MONTHLY'}
-          onClick={() => setMonthlyOrLifetime('MONTHLY')}
+          isSelected={activeSubscriptionPlan === 'MONTHLY'}
+          onClick={() => setActiveSubscriptionPlan('MONTHLY')}
           price="$5"/>
         <SubscriptionType
           description="Billed immediately, you'll have access to Tasksheet and all of its features forever."
           header="Lifetime"
-          isSelected={monthlyOrLifetime === 'LIFETIME'}
-          onClick={() => setMonthlyOrLifetime('LIFETIME')}
+          isSelected={activeSubscriptionPlan === 'LIFETIME'}
+          onClick={() => setActiveSubscriptionPlan('LIFETIME')}
           price="$100"/>
       </SubscriptionTypesContainer>
     </Container>
@@ -48,8 +49,8 @@ const StripePurchaseSubscriptionSubscriptionTypes = ({
 // Props
 //-----------------------------------------------------------------------------
 interface IStripePurchaseSubscriptionSubscriptionTypes {
-  monthlyOrLifetime: 'MONTHLY' | 'LIFETIME'
-  setMonthlyOrLifetime(nextMonthlyOrLifetime: 'MONTHLY' | 'LIFETIME'): void
+  activeSubscriptionPlan: ITasksheetSubscriptionPlan
+  setActiveSubscriptionPlan(nextActiveSubscriptionPlan: ITasksheetSubscriptionPlan): void
 }
 
 //-----------------------------------------------------------------------------

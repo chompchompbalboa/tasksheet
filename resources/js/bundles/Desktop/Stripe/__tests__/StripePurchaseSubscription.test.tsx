@@ -29,16 +29,22 @@ describe('StripePurchaseSubscription', () => {
   const stripePurchaseSubscription = () => {
     const mockAppState = getMockAppStateByTasksheetSubscriptionType('TRIAL')
     const {
-      //container,
+      container,
       //debug,
       getByTestId,
+      getByText,
       queryByText
     } = renderWithRedux(
       <StripePurchaseSubscription />, 
     { store: createMockStore(mockAppState) })
     const stripeForm = getByTestId('StripeForm')
+    const selectMonthlySubscriptionType = getByText('Monthly')
+    const selectLifetimeSubscriptionType = getByText('Lifetime')
     return {
+      container,
       queryByText,
+      selectMonthlySubscriptionType,
+      selectLifetimeSubscriptionType,
       stripeForm
     }
   }
@@ -48,6 +54,18 @@ describe('StripePurchaseSubscription', () => {
     axiosMock.post.mockResolvedValueOnce({})
     const { stripeForm } = stripePurchaseSubscription()
     fireEvent.submit(stripeForm)
+  })
+
+  it("displays the form to purchase a MONTHLY subscription when the user selects the MONTHLY option", () => {
+    const { container, selectMonthlySubscriptionType } = stripePurchaseSubscription()
+    selectMonthlySubscriptionType.click()
+    expect(container.textContent).toContain('Subscribe To Monthly Access')
+  })
+
+  it("displays the form to purchase a LIFETIME subscription when the user selects the LIFETIME option", () => {
+    const { container, selectLifetimeSubscriptionType } = stripePurchaseSubscription()
+    selectLifetimeSubscriptionType.click()
+    expect(container.textContent).toContain('Purchase Lifetime Access')
   })
 
 })

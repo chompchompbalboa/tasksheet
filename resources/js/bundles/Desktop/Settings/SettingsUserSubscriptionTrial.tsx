@@ -4,8 +4,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import SettingsUserSubscriptionPurchaseSubscription from '@desktop/Settings/SettingsUserSubscriptionPurchaseSubscription'
 import SettingsUserSubscriptionTrialExpirationDate from '@desktop/Settings/SettingsUserSubscriptionTrialExpirationDate'
+import StripePurchaseSubscription from '@desktop/Stripe/StripePurchaseSubscription'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -16,7 +16,7 @@ const SettingsUserSubscriptionTrial = () => {
     <Container
       data-testid="SettingsUserSubscriptionTrial">
       <SettingsUserSubscriptionTrialExpirationDate />
-      <SettingsUserSubscriptionPurchaseSubscription />
+      <StripePurchaseSubscription />
     </Container>
   )
 }

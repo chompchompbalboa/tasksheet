@@ -4,6 +4,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
+import { ITasksheetSubscriptionPlan } from '@/state/user/types'
+
 import StripePurchaseSubscriptionPaymentForm from '@desktop/Stripe/StripePurchaseSubscriptionPaymentForm'
 import StripePurchaseSubscriptionSubscriptionTypes from '@desktop/Stripe/StripePurchaseSubscriptionSubscriptionTypes'
 
@@ -13,15 +15,15 @@ import StripePurchaseSubscriptionSubscriptionTypes from '@desktop/Stripe/StripeP
 const StripePurchaseSubscription = () => {
 
   // State
-  const [ monthlyOrLifetime, setMonthlyOrLifetime ] = useState('MONTHLY' as 'MONTHLY' | 'LIFETIME')
+  const [ activeSubscriptionPlan, setActiveSubscriptionPlan ] = useState('MONTHLY' as ITasksheetSubscriptionPlan)
 
   return (
     <Container>
       <StripePurchaseSubscriptionSubscriptionTypes
-        monthlyOrLifetime={monthlyOrLifetime}
-        setMonthlyOrLifetime={setMonthlyOrLifetime}/>
+        activeSubscriptionPlan={activeSubscriptionPlan}
+        setActiveSubscriptionPlan={setActiveSubscriptionPlan}/>
       <StripePurchaseSubscriptionPaymentForm
-        monthlyOrLifetime={monthlyOrLifetime}/>
+        activeSubscriptionPlan={activeSubscriptionPlan}/>
     </Container>
   )
 }
@@ -34,8 +36,6 @@ const Container = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
 `
-
-export type ITasksheetSubscriptionType = 'MONTHLY' | 'LIFETIME'
 
 //-----------------------------------------------------------------------------
 // Export

@@ -7,24 +7,33 @@ import moment from 'moment'
 import { renderWithRedux } from '@/testing/library'
 import { 
   createMockStore,
-  getMockAppStateByTasksheetSubscriptionType
+  getMockAppStateByTasksheetSubscriptionType,
+  mockEnvironment,
+  stripeMock
 } from '@/testing/mocks'
 
-import SettingsUserSubscriptionTrialExpirationDate from '@desktop/Settings/SettingsUserSubscriptionTrialExpirationDate'
+import SettingsUserSubscriptionTrial from '@desktop/Settings/SettingsUserSubscriptionTrial'
 
 //-----------------------------------------------------------------------------
 // Tests
 //-----------------------------------------------------------------------------
-describe('SettingsUserSubscriptionTrialExpirationDate', () => {
+describe('SettingsUserSubscriptionTrial', () => {
+
+  beforeAll(() => {
+    // @ts-ignore
+    global.environment = mockEnvironment
+    // @ts-ignore
+    global.Stripe = stripeMock
+  })
   
-  const settingsUserSubscriptionMonthly = () => {
+  const settingsUserSubscriptionTrial = () => {
     const mockAppState = getMockAppStateByTasksheetSubscriptionType('TRIAL')
     const {
       container, 
       store: { 
         getState 
       }
-    } = renderWithRedux(<SettingsUserSubscriptionTrialExpirationDate />, { store: createMockStore(mockAppState) })
+    } = renderWithRedux(<SettingsUserSubscriptionTrial />, { store: createMockStore(mockAppState) })
     return {
       container,
       getState
@@ -32,7 +41,7 @@ describe('SettingsUserSubscriptionTrialExpirationDate', () => {
   }
 
   it("displays the expiration date correctly", () => {
-    const { container, getState } = settingsUserSubscriptionMonthly()
+    const { container, getState } = settingsUserSubscriptionTrial()
     const trialEndDate = moment(getState().user.tasksheetSubscription.trialEndDate).format('MMMM Do, YYYY')
     expect(container.textContent).toContain(trialEndDate)
   })

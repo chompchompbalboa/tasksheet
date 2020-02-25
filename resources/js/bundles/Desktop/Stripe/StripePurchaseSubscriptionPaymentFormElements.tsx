@@ -8,7 +8,10 @@ import styled from 'styled-components'
 
 import { action } from '@/api'
 import { IAppState } from '@/state'
-import { IUserTasksheetSubscription } from '@/state/user/types'
+import { 
+  IUserTasksheetSubscription,
+  ITasksheetSubscriptionPlan
+} from '@/state/user/types'
 import {
   updateUserTasksheetSubscription
 } from '@/state/user/actions'
@@ -23,7 +26,7 @@ import StripeTermsOfServiceCheckbox from '@desktop/Stripe/StripeTermsOfServiceCh
 // Component
 //-----------------------------------------------------------------------------
 const StripePurchaseSubscriptionPaymentFormElements = ({
-  monthlyOrLifetimeSubscription
+  subscriptionPlan
 }: IStripePurchaseSubscriptionPaymentFormElements) => { 
   
   const stripeElements = useElements()
@@ -41,7 +44,7 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
   useEffect(() => {
     setIsChargeAgreedTo(false)
     setStripeErrorMessage(null)
-  }, [ monthlyOrLifetimeSubscription ])
+  }, [ subscriptionPlan ])
   
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -50,7 +53,7 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
 
     const cardNumberElement = stripeElements.getElement('cardNumber')
     // Purchase a monthly susbcription
-    if(monthlyOrLifetimeSubscription === 'MONTHLY') {
+    if(subscriptionPlan === 'MONTHLY') {
       // Get the Stripe setupIntent
       const { setupIntent, error } = await stripe.confirmCardSetup(userSubscriptionStripePaymentIntentClientSecret, {
         payment_method: {
@@ -78,7 +81,7 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
       }
     }
     // Purchase a lifetime subscription
-    if(monthlyOrLifetimeSubscription === 'LIFETIME') {
+    if(subscriptionPlan === 'LIFETIME') {
       // Get the Stripe paymentMethod
       const { paymentMethod, error } = await stripe.createPaymentMethod({
         type: 'card',
@@ -133,10 +136,10 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
         <StripeAgreeToChargeCheckbox
           checkboxValue={isChargeAgreedTo}
           updateCheckboxValue={setIsChargeAgreedTo}
-          text={text[monthlyOrLifetimeSubscription].agreeToCharge}/>
+          text={text[subscriptionPlan].agreeToCharge}/>
         <StripeSubmitButton 
           isDisabled={!isChargeAgreedTo || !isTermsOfServiceAccepted}
-          text={isChargeBeingProcessed ? 'Processing...' : text[monthlyOrLifetimeSubscription].submitButton}/>
+          text={isChargeBeingProcessed ? 'Processing...' : text[subscriptionPlan].submitButton}/>
         {stripeErrorMessage && 
           <StripeErrorMessage>
             {stripeErrorMessage}
@@ -150,7 +153,7 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
 // Props
 //-----------------------------------------------------------------------------
 interface IStripePurchaseSubscriptionPaymentFormElements {
-  monthlyOrLifetimeSubscription: 'MONTHLY' | 'LIFETIME'
+  subscriptionPlan: ITasksheetSubscriptionPlan
 }
 
 //-----------------------------------------------------------------------------
