@@ -4,26 +4,42 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import StripePurchaseSubscription from '@desktop/Stripe/StripePurchaseSubscription'
-
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SettingsUserSubscriptionPurchaseSubscription = () => {
-
+const StripeErrorMessage = ({
+  errorCode
+}: IStripeErrorMessage) => { 
+  
   return (
     <Container>
-      <StripePurchaseSubscription />
+      {stripeErrorMessages[errorCode] || errorCode && stripeErrorMessages['GENERIC_ERROR']}
     </Container>
   )
 }
 
 //-----------------------------------------------------------------------------
-// Styled Components
+// Props
 //-----------------------------------------------------------------------------
-const Container = styled.div``
+interface IStripeErrorMessage {
+  errorCode: IStripeErrorCode
+}
+
+export type IStripeErrorCode =
+  'GENERIC_ERROR'
 
 //-----------------------------------------------------------------------------
-// Export
+// Error Messages
 //-----------------------------------------------------------------------------
-export default SettingsUserSubscriptionPurchaseSubscription
+export const stripeErrorMessages = {
+  GENERIC_ERROR: 'There was a problem processing your payment. Please try again.'
+}
+
+//-----------------------------------------------------------------------------
+// Styled Components
+//-----------------------------------------------------------------------------
+const Container = styled.div`
+  color: rgb(150, 0, 0);
+`
+
+export default StripeErrorMessage

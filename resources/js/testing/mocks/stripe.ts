@@ -23,4 +23,13 @@
     })),
     createSource: jest.fn(() => Promise.resolve()),
     createToken: jest.fn(() => Promise.resolve()), // Required to pass isStripe check in @stripe/stripe-js
-  })
+  }) as () => IStripeMock
+
+  export interface IStripeMock {
+    elements(): void
+    confirmCardPayment(): void
+    confirmCardSetup: jest.Mock<Promise<{ setupIntent: any, error: any}>>
+    createPaymentMethod(): void
+    createSource(): void
+    createToken(): void
+  }

@@ -4,7 +4,6 @@
 import React, { FormEvent, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useElements, useStripe } from '@stripe/react-stripe-js'
-import styled from 'styled-components'
 
 import { action } from '@/api'
 import { IAppState } from '@/state'
@@ -18,6 +17,7 @@ import {
 
 import StripeAgreeToChargeCheckbox from '@desktop/Stripe/StripeAgreeToChargeCheckbox'
 import StripeCardInput from '@desktop/Stripe/StripeCardInput'
+import StripeErrorMessage, { IStripeErrorCode } from '@desktop/Stripe/StripeErrorMessage'
 import StripeForm from '@desktop/Stripe/StripeForm'
 import StripeSubmitButton from '@desktop/Stripe/StripeSubmitButton'
 import StripeTermsOfServiceCheckbox from '@desktop/Stripe/StripeTermsOfServiceCheckbox'
@@ -39,16 +39,16 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
   const [ isChargeAgreedTo, setIsChargeAgreedTo ] = useState(false)
   const [ isTermsOfServiceAccepted, setIsTermsOfServiceAccepted ] = useState(false)
   const [ isChargeBeingProcessed, setIsChargeBeingProcessed ] = useState(false)
-  const [ stripeErrorMessage, setStripeErrorMessage] = useState(null)
-  
+  const [ stripeErrorCode, setStripeErrorCode] = useState(null as IStripeErrorCode)
+
   useEffect(() => {
     setIsChargeAgreedTo(false)
-    setStripeErrorMessage(null)
+    setStripeErrorCode(null)
   }, [ subscriptionPlan ])
   
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    setStripeErrorMessage(null)
+    setStripeErrorCode(null)
     setIsChargeBeingProcessed(true)
 
     const cardNumberElement = stripeElements.getElement('cardNumber')
@@ -62,9 +62,9 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
       })
       if(error) {
         setTimeout(() => {
-          setStripeErrorMessage(error.message)
+          setStripeErrorCode(error.code as IStripeErrorCode)
           setIsChargeBeingProcessed(false)
-        }, 350)
+        }, 500)
       }
       else {
         // Send the setupIntent to the backend to process the subscription
@@ -72,7 +72,7 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
           const error = response.status === 500
           if(error) {
             setIsChargeBeingProcessed(false)
-            setStripeErrorMessage(response.data.message || 'We were unable to process your card. Please try again.')
+            setStripeErrorCode(response.data.message || 'We were unable to process your card. Please try again.')
           }
           else {
             dispatch(updateUserTasksheetSubscription({ type: 'MONTHLY' }))
@@ -89,9 +89,9 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
       })
       if(error) {
         setTimeout(() => {
-          setStripeErrorMessage(error.message)
+          setStripeErrorCode(error.code as IStripeErrorCode)
           setIsChargeBeingProcessed(false)
-        }, 350)
+        }, 500)
       }
       else {
         // Send the payment method to the backend to be processed
@@ -99,7 +99,7 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
           const error = response.status === 500
           if(error) {
             setIsChargeBeingProcessed(false)
-            setStripeErrorMessage(response.data.message || 'We were unable to process your card. Please try again.')
+            setStripeErrorCode(response.data.message || 'We were unable to process your card. Please try again.')
           }
           // If the purchase is successful, update the user subscription
           else {
@@ -140,11 +140,8 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
         <StripeSubmitButton 
           isDisabled={!isChargeAgreedTo || !isTermsOfServiceAccepted}
           text={isChargeBeingProcessed ? 'Processing...' : text[subscriptionPlan].submitButton}/>
-        {stripeErrorMessage && 
-          <StripeErrorMessage>
-            {stripeErrorMessage}
-          </StripeErrorMessage>
-        }
+        <StripeErrorMessage
+          errorCode={stripeErrorCode}/>
       </StripeForm>
   )
 }
@@ -155,12 +152,5 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
 interface IStripePurchaseSubscriptionPaymentFormElements {
   subscriptionPlan: ITasksheetSubscriptionPlan
 }
-
-//-----------------------------------------------------------------------------
-// Styled Components
-//-----------------------------------------------------------------------------
-const StripeErrorMessage = styled.div`
-  color: rgb(150, 0, 0);
-`
 
 export default StripePurchaseSubscriptionPaymentFormElements
