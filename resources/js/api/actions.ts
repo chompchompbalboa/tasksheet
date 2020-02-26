@@ -33,11 +33,5 @@ export const userSubscriptionPurchaseLifetime = async (userId: IUser['id'], stri
 }
 
 export const userSubscriptionPurchaseMonthly = async (userId: IUser['id'], stripeSetupIntentPaymentMethodId: string) => {
-  return axios.post('/app/user/' + userId + '/subscription/purchase/monthly', {
-    stripeSetupIntentPaymentMethodId
-  }).then(response => {
-    return response
-  }).catch(
-    error => error.response
-  )
+  return axios.post('/app/user/' + userId + '/subscription/purchase/monthly', { stripeSetupIntentPaymentMethodId })
 }

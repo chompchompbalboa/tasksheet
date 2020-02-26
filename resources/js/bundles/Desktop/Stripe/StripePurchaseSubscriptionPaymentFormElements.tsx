@@ -17,7 +17,7 @@ import {
 
 import StripeAgreeToChargeCheckbox from '@desktop/Stripe/StripeAgreeToChargeCheckbox'
 import StripeCardInput from '@desktop/Stripe/StripeCardInput'
-import StripeErrorMessage, { IStripeErrorCode } from '@desktop/Stripe/StripeErrorMessage'
+import StripeErrorMessage, { IStripeError } from '@desktop/Stripe/StripeErrorMessage'
 import StripeForm from '@desktop/Stripe/StripeForm'
 import StripeSubmitButton from '@desktop/Stripe/StripeSubmitButton'
 import StripeTermsOfServiceCheckbox from '@desktop/Stripe/StripeTermsOfServiceCheckbox'
@@ -29,88 +29,93 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
   subscriptionPlan
 }: IStripePurchaseSubscriptionPaymentFormElements) => { 
   
+  // Stripe
   const stripeElements = useElements()
   const stripe = useStripe()
 
+  // Redux
   const dispatch = useDispatch()
   const userId = useSelector((state: IAppState) => state.user.id)
   const userSubscriptionStripePaymentIntentClientSecret = useSelector((state: IAppState) => state.user.tasksheetSubscription.stripeSetupIntentClientSecret)
   
+  // State
   const [ isChargeAgreedTo, setIsChargeAgreedTo ] = useState(false)
   const [ isTermsOfServiceAccepted, setIsTermsOfServiceAccepted ] = useState(false)
   const [ isChargeBeingProcessed, setIsChargeBeingProcessed ] = useState(false)
-  const [ stripeErrorCode, setStripeErrorCode] = useState(null as IStripeErrorCode)
+  const [ stripeError, setStripeError] = useState(null as IStripeError)
 
+  // Effects
   useEffect(() => {
     setIsChargeAgreedTo(false)
-    setStripeErrorCode(null)
+    setStripeError(null)
   }, [ subscriptionPlan ])
   
+  // Handle Submit
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    setStripeErrorCode(null)
-    setIsChargeBeingProcessed(true)
+    if(isChargeAgreedTo && isTermsOfServiceAccepted) {
+      setStripeError(null)
+      setIsChargeBeingProcessed(true)
 
-    const cardNumberElement = stripeElements.getElement('cardNumber')
-    // Purchase a monthly susbcription
-    if(subscriptionPlan === 'MONTHLY') {
-      // Get the Stripe setupIntent
-      const { setupIntent, error } = await stripe.confirmCardSetup(userSubscriptionStripePaymentIntentClientSecret, {
-        payment_method: {
-          card: cardNumberElement,
+      const cardNumberElement = stripeElements.getElement('cardNumber')
+      // Purchase a monthly susbcription
+      if(subscriptionPlan === 'MONTHLY') {
+        // Get the Stripe setupIntent
+        const { setupIntent, error } = await stripe.confirmCardSetup(userSubscriptionStripePaymentIntentClientSecret, {
+          payment_method: {
+            card: cardNumberElement,
+          }
+        })
+        if(error) {
+          setTimeout(() => {
+            setStripeError(error as IStripeError)
+            setIsChargeBeingProcessed(false)
+          }, 500)
         }
-      })
-      if(error) {
-        setTimeout(() => {
-          setStripeErrorCode(error.code as IStripeErrorCode)
-          setIsChargeBeingProcessed(false)
-        }, 500)
+        else {
+          // Send the setupIntent to the backend to process the subscription
+          action.userSubscriptionPurchaseMonthly(userId, setupIntent.payment_method)
+            .then(() => {
+              dispatch(updateUserTasksheetSubscription({ type: 'MONTHLY' }))
+            })
+            .catch(() => {
+              setIsChargeBeingProcessed(false)
+              setStripeError({ code: 'error', message: null }) // This will display a generic error message in StripeErrorMessage
+            })
+        }
       }
-      else {
-        // Send the setupIntent to the backend to process the subscription
-        action.userSubscriptionPurchaseMonthly(userId, setupIntent.payment_method).then(response => {
-          const error = response.status === 500
-          if(error) {
-            setIsChargeBeingProcessed(false)
-            setStripeErrorCode(response.data.message || 'We were unable to process your card. Please try again.')
-          }
-          else {
-            dispatch(updateUserTasksheetSubscription({ type: 'MONTHLY' }))
-          }
+      // Purchase a lifetime subscription
+      if(subscriptionPlan === 'LIFETIME') {
+        // Get the Stripe paymentMethod
+        const { paymentMethod, error } = await stripe.createPaymentMethod({
+          type: 'card',
+          card: cardNumberElement
         })
-      }
-    }
-    // Purchase a lifetime subscription
-    if(subscriptionPlan === 'LIFETIME') {
-      // Get the Stripe paymentMethod
-      const { paymentMethod, error } = await stripe.createPaymentMethod({
-        type: 'card',
-        card: cardNumberElement
-      })
-      if(error) {
-        setTimeout(() => {
-          setStripeErrorCode(error.code as IStripeErrorCode)
-          setIsChargeBeingProcessed(false)
-        }, 500)
-      }
-      else {
-        // Send the payment method to the backend to be processed
-        action.userSubscriptionPurchaseLifetime(userId, paymentMethod.id).then(response => {
-          const error = response.status === 500
-          if(error) {
+        if(error) {
+          setTimeout(() => {
+            setStripeError(error as IStripeError)
             setIsChargeBeingProcessed(false)
-            setStripeErrorCode(response.data.message || 'We were unable to process your card. Please try again.')
-          }
-          // If the purchase is successful, update the user subscription
-          else {
-            const nextUserSubscription = response.data as IUserTasksheetSubscription
-            dispatch(updateUserTasksheetSubscription({ 
-              type: nextUserSubscription.type, 
-              subscriptionStartDate: nextUserSubscription.subscriptionStartDate,
-              subscriptionEndDate: nextUserSubscription.subscriptionEndDate
-            }))
-          }
-        })
+          }, 500)
+        }
+        else {
+          // Send the payment method to the backend to be processed
+          action.userSubscriptionPurchaseLifetime(userId, paymentMethod.id).then(response => {
+            const error = response.status === 500
+            if(error) {
+              setIsChargeBeingProcessed(false)
+              setStripeError(response.data.message || 'We were unable to process your card. Please try again.')
+            }
+            // If the purchase is successful, update the user subscription
+            else {
+              const nextUserSubscription = response.data as IUserTasksheetSubscription
+              dispatch(updateUserTasksheetSubscription({ 
+                type: nextUserSubscription.type, 
+                subscriptionStartDate: nextUserSubscription.subscriptionStartDate,
+                subscriptionEndDate: nextUserSubscription.subscriptionEndDate
+              }))
+            }
+          })
+        }
       }
     }
   }
@@ -141,7 +146,7 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
           isDisabled={!isChargeAgreedTo || !isTermsOfServiceAccepted}
           text={isChargeBeingProcessed ? 'Processing...' : text[subscriptionPlan].submitButton}/>
         <StripeErrorMessage
-          errorCode={stripeErrorCode}/>
+          error={stripeError}/>
       </StripeForm>
   )
 }

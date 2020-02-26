@@ -40,6 +40,7 @@ const StripeTermsAndConditionsCheckbox = ({
     <Container>
       <CheckboxContainer>
         <StyledInput
+          data-testid="StripeTermsOfServiceCheckbox"
           type='checkbox'
           checked={checkboxValue}
           onChange={e => updateCheckboxValue(e.target.checked)}/>

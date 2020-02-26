@@ -8,12 +8,15 @@ import styled from 'styled-components'
 // Component
 //-----------------------------------------------------------------------------
 const StripeErrorMessage = ({
-  errorCode
+  error
 }: IStripeErrorMessage) => { 
-  
   return (
     <Container>
-      {stripeErrorMessages[errorCode] || errorCode && stripeErrorMessages['GENERIC_ERROR']}
+      {error && error.code && (
+        stripeErrorCodeWhitelist.includes(error.code)
+        ? error.message
+        : stripeGenericErrorMessage
+      )}
     </Container>
   )
 }
@@ -22,18 +25,28 @@ const StripeErrorMessage = ({
 // Props
 //-----------------------------------------------------------------------------
 interface IStripeErrorMessage {
-  errorCode: IStripeErrorCode
+  error: IStripeError
 }
 
-export type IStripeErrorCode =
-  'GENERIC_ERROR'
+export interface IStripeError {
+  code: string
+  message: string
+}
 
 //-----------------------------------------------------------------------------
 // Error Messages
 //-----------------------------------------------------------------------------
-export const stripeErrorMessages = {
-  GENERIC_ERROR: 'There was a problem processing your payment. Please try again.'
-}
+export const stripeErrorCodeWhitelist = [
+  'card_declined',
+  'expired_card',
+  'generic_error',
+  'incomplete_cvc',
+  'incomplete_expiry',
+  'incomplete_number', 
+  'incorrect_cvc'
+]
+
+export const stripeGenericErrorMessage = 'There was a problem processing your payment. Please try again.'
 
 //-----------------------------------------------------------------------------
 // Styled Components

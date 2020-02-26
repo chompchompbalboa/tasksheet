@@ -17,6 +17,7 @@ const StripeAgreeToChargeCheckbox = ({
     <Container>
       <CheckboxContainer>
         <StyledInput
+          data-testid="StripeAgreeToChargeCheckbox"
           type='checkbox'
           checked={checkboxValue}
           onChange={e => updateCheckboxValue(e.target.checked)}/>

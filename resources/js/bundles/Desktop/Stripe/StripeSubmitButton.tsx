@@ -19,6 +19,7 @@ const StripeSubmitButton = ({
   
   return (
     <StyledButton
+      data-testid="StripeSubmitButton"
       disabled={isDisabled}
       isDisabled={isDisabled}
       userColorPrimary={userColorPrimary}>
