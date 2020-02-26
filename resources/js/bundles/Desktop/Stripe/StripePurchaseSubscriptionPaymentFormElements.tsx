@@ -99,22 +99,19 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
         }
         else {
           // Send the payment method to the backend to be processed
-          action.userSubscriptionPurchaseLifetime(userId, paymentMethod.id).then(response => {
-            const error = response.status === 500
-            if(error) {
-              setIsChargeBeingProcessed(false)
-              setStripeError(response.data.message || 'We were unable to process your card. Please try again.')
-            }
-            // If the purchase is successful, update the user subscription
-            else {
+          action.userSubscriptionPurchaseLifetime(userId, paymentMethod.id)
+            .then(response => {
               const nextUserSubscription = response.data as IUserTasksheetSubscription
               dispatch(updateUserTasksheetSubscription({ 
                 type: nextUserSubscription.type, 
                 subscriptionStartDate: nextUserSubscription.subscriptionStartDate,
                 subscriptionEndDate: nextUserSubscription.subscriptionEndDate
               }))
-            }
-          })
+            })
+            .catch(() => {
+              setIsChargeBeingProcessed(false)
+              setStripeError({ code: 'error', message: null }) // This will display a generic error message in StripeErrorMessage
+            })
         }
       }
     }
