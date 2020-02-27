@@ -29,30 +29,38 @@ class DatabaseSeeder extends Seeder
      * @return void
      */
     public function run()
-    {
-      
-      $userIds = [
-        'rocky@tasksheet.co' => Str::uuid()->toString(),
-        'demo@tasksheet.co' => Str::uuid()->toString(),
-        'rockye@dillonworks.com' => Str::uuid()->toString(),
+    {      
+      $users = [
+        'rocky@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'rocky@tasksheet.co', 'name' => 'Rocky Eastman', 'subscriptionType' => 'LIFETIME' ],
+        'rocky@dillonworks.com' => [ 'id' => Str::uuid()->toString(), 'email' => 'rocky@dillonworks.com', 'name' => 'Rocky Eastman', 'subscriptionType' => 'LIFETIME' ],
+        'demo@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'demo@tasksheet.co', 'name' => 'Demo', 'subscriptionType' => 'DEMO' ],
+        'trial@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'trial@tasksheet.co', 'name' => 'Trial', 'subscriptionType' => 'TRIAL' ],
+        'monthly@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'monthly@tasksheet.co', 'name' => 'Monthly', 'subscriptionType' => 'MONTHLY' ],
+        'lifetime@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'lifetime@tasksheet.co', 'name' => 'Lifetime', 'subscriptionType' => 'LIFETIME' ],
       ];
 
       // The source folders
       $allSourceFolders = [
         [ 'name' => 'Tasksheet',
           'users' => [
-            [ 'id' => $userIds['rocky@tasksheet.co'], 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.co' ],
-        ]],
+            'rocky@tasksheet.co'
+          ]
+        ],
         [ 'name' => 'Demos',
           'users' => [
-            [ 'id' => $userIds['demo@tasksheet.co'], 'name' => 'Demo', 'email' => 'demo@tasksheet.co' ],
-            [ 'id' => $userIds['rocky@tasksheet.co'], 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.co' ],
-        ]],
+            'rocky@tasksheet.co',
+            'demo@tasksheet.co',
+            'trial@tasksheet.co',
+            'monthly@tasksheet.co',
+            'lifetime@tasksheet.co'
+          ]
+        ],
         [ 'name' => 'Dillon Works',
           'users' => [
-            [ 'id' => $userIds['rockye@dillonworks.com'], 'name' => 'Rocky Eastman', 'email' => 'rockye@dillonworks.com' ],
-            [ 'id' => $userIds['rocky@tasksheet.co'], 'name' => 'Rocky Eastman', 'email' => 'rocky@tasksheet.co' ],
-        ]],
+            'rocky@tasksheet.co',
+            'demo@tasksheet.co'
+          ]
+        ],
       ];
 
       // Keep track of already added users
@@ -70,7 +78,7 @@ class DatabaseSeeder extends Seeder
         foreach($currentSourceFolder['users'] as $currentSourceFolderUser) {
 
           // Make sure we haven't already seeded the user
-          if(!$newUsers->contains('email', $currentSourceFolderUser['email'])) {
+          if(!$newUsers->contains('email', $users[$currentSourceFolderUser]['email'])) {
 
             // User Root Folder
             $userFolder = factory(App\Models\Folder::class)->create([ 
@@ -79,9 +87,9 @@ class DatabaseSeeder extends Seeder
 
             // User
             $user = factory(App\Models\User::class)->create([ 
-              'id' => $currentSourceFolderUser['id'],
-              'name' => $currentSourceFolderUser['name'],
-              'email' => $currentSourceFolderUser['email']
+              'id' => $users[$currentSourceFolderUser]['id'],
+              'name' => $users[$currentSourceFolderUser]['name'],
+              'email' => $users[$currentSourceFolderUser]['email']
             ]);
 
             // Assign the user to the new folder
@@ -100,7 +108,7 @@ class DatabaseSeeder extends Seeder
 
             // UserSubscription
             $user->tasksheetSubscription()->save(factory(App\Models\UserTasksheetSubscription::class)->make([
-              'type' => $currentSourceFolderUser['email'] === 'demo@tasksheet.co' ? 'DEMO' : 'LIFETIME',
+              'type' => $users[$currentSourceFolderUser]['subscriptionType'],
               'subscriptionStartDate' => Carbon::now(),
               'subscriptionEndDate' => Carbon::now()->addDays(30),
               'trialStartDate' => Carbon::now(),
@@ -115,7 +123,7 @@ class DatabaseSeeder extends Seeder
           }
           // If we have already seeded the user, get the user
           else {
-            $user = $newUsers->firstWhere('email', $currentSourceFolderUser['email']);
+            $user = $newUsers->firstWhere('email', $users[$currentSourceFolderUser]['email']);
           }
 
           // Assign the user to the new folder
@@ -176,7 +184,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // Recursively create the folders
-        $createFolders = function($level, $path, $parentFolderId, $folderItems) use(&$createFolders, $currentSourceFolder) {
+        $createFolders = function($level, $path, $parentFolderId, $folderItems) use(&$createFolders, $currentSourceFolder, $users) {
           
           // Skip the root folder since we previously created it while creating the team
           if($level === 0) {
@@ -208,7 +216,7 @@ class DatabaseSeeder extends Seeder
                 foreach($currentSourceFolder['users'] as $currentUser) {
                   FolderPermission::create([
                     'id' => Str::uuid()->toString(),
-                    'userId' => $currentUser['id'],
+                    'userId' => $users[$currentUser]['id'],
                     'folderId' => $newFolder->id,
                     'role' => 'OWNER'
                   ]);
@@ -245,7 +253,7 @@ class DatabaseSeeder extends Seeder
                 foreach($currentSourceFolder['users'] as $currentUser) {
                   FilePermission::create([
                     'id' => Str::uuid()->toString(),
-                    'userId' => $currentUser['id'],
+                    'userId' => $users[$currentUser]['id'],
                     'fileId' => $newFile->id,
                     'role' => 'OWNER'
                   ]);
