@@ -39,14 +39,20 @@ class UserSubscriptionPurchaseController extends Controller
     {
       $stripeSetupIntentPaymentMethodId = $request->input('stripeSetupIntentPaymentMethodId');
       try {
-        $user->addPaymentMethod($stripeSetupIntentPaymentMethodId);
-        $user->save();
-        $userSubscription = $user->tasksheetSubscription()->first();
-        $userSubscription->type = 'MONTHLY';
-        $userSubscription->save();
-        return response ($userSubscription, 200);
+        if($user->addPaymentMethod($stripeSetupIntentPaymentMethodId)) {
+          $this->subscriptionPurchaseMonthlySuccess($user, Carbon::now());
+        }
       } catch (Exception $e) {
         return($e);
       }
+    }
+
+    public function subscriptionPurchaseMonthlySuccess(User $user, $subscriptionStartDate) {
+      $userSubscription = $user->tasksheetSubscription()->first();
+      $userSubscription->type = 'MONTHLY';
+      $userSubscription->subscriptionStartDate = $subscriptionStartDate;
+      $userSubscription->subscriptionEndDate = $subscriptionStartDate->addMonths(1);
+      $userSubscription->save();
+      return response ($userSubscription, 200);
     }
 }
