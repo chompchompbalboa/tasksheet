@@ -18,6 +18,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        '\Laravel\Cashier\Events\WebhookHandled' => [
+          'App\Listeners\StripeWebhookHandled'
+        ]
     ];
 
     /**
