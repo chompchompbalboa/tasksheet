@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 
-use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Str;
 
 use App\Models\User;
@@ -30,23 +30,25 @@ class UserSubscriptionPurchaseControllerTest extends TestCase
         'type' => 'TRIAL',
         'subscriptionStartDate' => null,
         'subscriptionEndDate' => null,
-        'trialStartDate' => Carbon::now()->addDays(-15),
-        'trialEndDate' => Carbon::now()->addDays(15),
+        'trialStartDate' => CarbonImmutable::now()->addDays(-15),
+        'trialEndDate' => CarbonImmutable::now()->addDays(15),
       ]));
       $purchaseController = new UserSubscriptionPurchaseController;
-      $subscriptionStartDate = Carbon::now();
+      $subscriptionStartDate = CarbonImmutable::now();
       
       $purchaseController->subscriptionPurchaseLifetimeSuccess($user, $subscriptionStartDate);
       
       $this->assertSame($user->tasksheetSubscription->type, 'LIFETIME');
-      $this->assertSame($user->tasksheetSubscription->subscriptionEndDate, null);
-      $subscriptionStartDate = new Carbon($user->tasksheetSubscription->subscriptionStartDate);
-      $expectedSubscriptionStartDate = new Carbon($subscriptionStartDate); 
+      $this->assertSame($user->tasksheetSubscription->nextBillingDate, null);
+      $userSubscriptionStartDate = new CarbonImmutable($user->tasksheetSubscription->subscriptionStartDate);
+      $expectedUserSubscriptionStartDate = new CarbonImmutable($subscriptionStartDate); 
       $this->assertSame(
-        $subscriptionStartDate->dayOfYear, 
-        $expectedSubscriptionStartDate->dayOfYear
+        $userSubscriptionStartDate->dayOfYear, 
+        $expectedUserSubscriptionStartDate->dayOfYear
       );
+      $this->assertSame($user->tasksheetSubscription->subscriptionEndDate, null);
     }
+  
     /**
      * When the user successfully purchases a monthly subscription
      * we need to update their Tasksheet subscription info.
@@ -64,27 +66,27 @@ class UserSubscriptionPurchaseControllerTest extends TestCase
         'type' => 'TRIAL',
         'subscriptionStartDate' => null,
         'subscriptionEndDate' => null,
-        'trialStartDate' => Carbon::now()->addDays(-15),
-        'trialEndDate' => Carbon::now()->addDays(15),
+        'trialStartDate' => CarbonImmutable::now()->addDays(-15),
+        'trialEndDate' => CarbonImmutable::now()->addDays(15),
       ]));
       $purchaseController = new UserSubscriptionPurchaseController;
-      $subscriptionStartDate = Carbon::now();
-      $subscriptionEndDateDate = new Carbon($subscriptionStartDate->addMonths(1));
+      $subscriptionStartDate = CarbonImmutable::now();
       
       $purchaseController->subscriptionPurchaseMonthlySuccess($user, $subscriptionStartDate);
-      
+
       $this->assertSame($user->tasksheetSubscription->type, 'MONTHLY');
-      $subscriptionStartDate = new Carbon($user->tasksheetSubscription->subscriptionStartDate);
-      $expectedSubscriptionStartDate = new Carbon($subscriptionStartDate); 
+      $userSubscriptionStartDate = new CarbonImmutable($user->tasksheetSubscription->subscriptionStartDate);
+      $expectedUserSubscriptionStartDate = new CarbonImmutable($subscriptionStartDate); 
       $this->assertSame(
-        $subscriptionStartDate->dayOfYear, 
-        $expectedSubscriptionStartDate->dayOfYear
+        $userSubscriptionStartDate->dayOfYear, 
+        $expectedUserSubscriptionStartDate->dayOfYear
       );
-      $subscriptionEndDate = new Carbon($user->tasksheetSubscription->subscriptionEndDate);
-      $expectedSubscriptionEndDate = new Carbon($subscriptionEndDate); 
+      $userSubscriptionNextBillingDate = new CarbonImmutable($user->tasksheetSubscription->nextBillingDate);
+      $expectedUserSubscriptionNextBillingDate = new CarbonImmutable($subscriptionStartDate->addMonths(1)); 
       $this->assertSame(
-        $subscriptionEndDate->dayOfYear, 
-        $expectedSubscriptionEndDate->dayOfYear
+        $userSubscriptionNextBillingDate->dayOfYear, 
+        $expectedUserSubscriptionNextBillingDate->dayOfYear
       );
+      $this->assertSame($user->tasksheetSubscription->subscriptionEndDate, null);
     }
 }

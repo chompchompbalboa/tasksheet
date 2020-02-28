@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 
 use App\Models\User;
 use App\Models\UserSubscription;
@@ -16,7 +16,7 @@ class UserSubscriptionPurchaseController extends Controller
       try {
         $stripeCharge = $user->charge(10000, $stripePaymentMethodId); // 10000 cents = $100
         if($stripeCharge->isSucceeded()) {
-          $this->subscriptionPurchaseLifetimeSuccess($user, Carbon::now());
+          $this->subscriptionPurchaseLifetimeSuccess($user, CarbonImmutable::now());
         }
         else {
           return response('', 500);
@@ -29,6 +29,7 @@ class UserSubscriptionPurchaseController extends Controller
     public function subscriptionPurchaseLifetimeSuccess(User $user, $subscriptionStartDate) {
         $userSubscription = $user->tasksheetSubscription()->first();
         $userSubscription->type = 'LIFETIME';
+        $userSubscription->nextBillingDate = null;
         $userSubscription->subscriptionStartDate = $subscriptionStartDate;
         $userSubscription->subscriptionEndDate = null;
         $userSubscription->save();
@@ -40,7 +41,7 @@ class UserSubscriptionPurchaseController extends Controller
       $stripeSetupIntentPaymentMethodId = $request->input('stripeSetupIntentPaymentMethodId');
       try {
         if($user->addPaymentMethod($stripeSetupIntentPaymentMethodId)) {
-          $this->subscriptionPurchaseMonthlySuccess($user, Carbon::now());
+          $this->subscriptionPurchaseMonthlySuccess($user, CarbonImmutable::now());
         }
       } catch (Exception $e) {
         return($e);
@@ -50,8 +51,9 @@ class UserSubscriptionPurchaseController extends Controller
     public function subscriptionPurchaseMonthlySuccess(User $user, $subscriptionStartDate) {
       $userSubscription = $user->tasksheetSubscription()->first();
       $userSubscription->type = 'MONTHLY';
+      $userSubscription->nextBillingDate = $subscriptionStartDate->addMonths(1);
       $userSubscription->subscriptionStartDate = $subscriptionStartDate;
-      $userSubscription->subscriptionEndDate = $subscriptionStartDate->addMonths(1);
+      $userSubscription->subscriptionEndDate = null;
       $userSubscription->save();
       return response ($userSubscription, 200);
     }
