@@ -75,8 +75,14 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
         else {
           // Send the setupIntent to the backend to process the subscription
           action.userSubscriptionPurchaseMonthly(userId, setupIntent.payment_method)
-            .then(() => {
-              dispatch(updateUserTasksheetSubscription({ type: 'MONTHLY' }))
+            .then(response => {
+              const nextUserSubscription = response.data as IUserTasksheetSubscription
+              dispatch(updateUserTasksheetSubscription({ 
+                type: 'MONTHLY', 
+                billingDayOfMonth: nextUserSubscription.billingDayOfMonth,
+                subscriptionStartDate: nextUserSubscription.subscriptionStartDate,
+                subscriptionEndDate: nextUserSubscription.subscriptionEndDate
+              }))
             })
             .catch(() => {
               setIsChargeBeingProcessed(false)
@@ -103,7 +109,8 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
             .then(response => {
               const nextUserSubscription = response.data as IUserTasksheetSubscription
               dispatch(updateUserTasksheetSubscription({ 
-                type: nextUserSubscription.type, 
+                type: 'LIFETIME', 
+                billingDayOfMonth: nextUserSubscription.billingDayOfMonth,
                 subscriptionStartDate: nextUserSubscription.subscriptionStartDate,
                 subscriptionEndDate: nextUserSubscription.subscriptionEndDate
               }))

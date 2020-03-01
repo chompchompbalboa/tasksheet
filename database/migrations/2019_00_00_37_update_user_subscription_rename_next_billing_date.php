@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateUserSubscriptionRenameDateColumns extends Migration
+class UpdateUserSubscriptionRenameNextBillingDate extends Migration
 {
     /**
      * Run the migrations.
@@ -14,16 +14,11 @@ class UpdateUserSubscriptionRenameDateColumns extends Migration
     public function up()
     {
       Schema::table('userSubscription', function (Blueprint $table) {
-        $table->renameColumn('startDate', 'subscriptionStartDate');
+        $table->renameColumn('nextBillingDate', 'billingDayOfMonth');
       });
 
       Schema::table('userSubscription', function (Blueprint $table) {
-        $table->renameColumn('endDate', 'subscriptionEndDate');
-      });
-
-      Schema::table('userSubscription', function (Blueprint $table) {
-        $table->timestamp('trialStartDate')->nullable();
-        $table->timestamp('trialEndDate')->nullable();
+        $table->integer('billingDayOfMonth')->change();
       });
     }
 
@@ -35,15 +30,11 @@ class UpdateUserSubscriptionRenameDateColumns extends Migration
     public function down()
     {
       Schema::table('userSubscription', function (Blueprint $table) {
-        $table->renameColumn('subscriptionStartDate', 'startDate');
+        $table->renameColumn('billingDayOfMonth', 'subscriptionStartDate');
       });
 
       Schema::table('userSubscription', function (Blueprint $table) {
-        $table->renameColumn('subscriptionEndDate', 'endDate');
-      });
-
-      Schema::table('userSubscription', function (Blueprint $table) {
-        $table->dropColumn([ 'trialStartDate', 'trialEndDate' ]);
+        $table->timestamps('subscriptionStartDate')->change();
       });
     }
 }

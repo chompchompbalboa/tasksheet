@@ -31,12 +31,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {      
       $users = [
-        'rocky@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'rocky@tasksheet.co', 'name' => 'Rocky Eastman', 'subscriptionType' => 'LIFETIME' ],
-        'rocky@dillonworks.com' => [ 'id' => Str::uuid()->toString(), 'email' => 'rocky@dillonworks.com', 'name' => 'Rocky Eastman', 'subscriptionType' => 'LIFETIME' ],
-        'demo@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'demo@tasksheet.co', 'name' => 'Demo', 'subscriptionType' => 'DEMO' ],
-        'trial@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'trial@tasksheet.co', 'name' => 'Trial', 'subscriptionType' => 'TRIAL' ],
-        'monthly@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'monthly@tasksheet.co', 'name' => 'Monthly', 'subscriptionType' => 'MONTHLY' ],
-        'lifetime@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'lifetime@tasksheet.co', 'name' => 'Lifetime', 'subscriptionType' => 'LIFETIME' ],
+        'rocky@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'rocky@tasksheet.co', 'name' => 'Rocky Eastman', 'subscriptionType' => 'LIFETIME', 'billingDayOfMonth' => null ],
+        'rocky@dillonworks.com' => [ 'id' => Str::uuid()->toString(), 'email' => 'rocky@dillonworks.com', 'name' => 'Rocky Eastman', 'subscriptionType' => 'LIFETIME', 'billingDayOfMonth' => null ],
+        'demo@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'demo@tasksheet.co', 'name' => 'Demo', 'subscriptionType' => 'DEMO', 'billingDayOfMonth' => null ],
+        'trial@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'trial@tasksheet.co', 'name' => 'Trial', 'subscriptionType' => 'TRIAL', 'billingDayOfMonth' => null ],
+        'monthly@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'monthly@tasksheet.co', 'name' => 'Monthly', 'subscriptionType' => 'MONTHLY', 'billingDayOfMonth' => 15 ],
+        'lifetime@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'lifetime@tasksheet.co', 'name' => 'Lifetime', 'subscriptionType' => 'LIFETIME', 'billingDayOfMonth' => null ],
       ];
 
       // The source folders
@@ -109,6 +109,7 @@ class DatabaseSeeder extends Seeder
             // UserSubscription
             $user->tasksheetSubscription()->save(factory(App\Models\UserTasksheetSubscription::class)->make([
               'type' => $users[$currentSourceFolderUser]['subscriptionType'],
+              'billingDayOfMonth' => $users[$currentSourceFolderUser]['billingDayOfMonth'],
               'subscriptionStartDate' => Carbon::now(),
               'subscriptionEndDate' => Carbon::now()->addDays(30),
               'trialStartDate' => Carbon::now(),

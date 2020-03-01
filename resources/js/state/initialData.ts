@@ -23,7 +23,7 @@ const initalData: IInitialData = {
     tasksheetSubscription: <IUserTasksheetSubscription> {
       id: 'userSubscriptionId',
       type: 'LIFETIME',
-      nextBillingDate: '2020-02-05 12:00:00',
+      billingDayOfMonth: 15,
       subscriptionStartDate: '2019-01-05 12:00:00',
       subscriptionEndDate: '2020-01-01 12:00:00',
       trialStartDate: '2020-01-01 12:00:00',

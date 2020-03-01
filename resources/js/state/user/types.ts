@@ -20,14 +20,11 @@ export interface IUserTasksheetSubscription {
     'DEMO' | 
     'TRIAL' | 
     'TRIAL_EXPIRED' |
-    'MONTHLY_STILL_IN_TRIAL' |
     'MONTHLY' | 
     'MONTHLY_PAST_DUE' |
     'MONTHLY_EXPIRED' |
-    'MONTHLY_CANCELLED' |
-    'MONTHLY_CANCELLED_STILL_IN_SUBSCRIPTION' |
     'LIFETIME'
-  nextBillingDate: string
+  billingDayOfMonth: number
   subscriptionStartDate: string
   subscriptionEndDate: string
   trialStartDate: string
@@ -37,6 +34,7 @@ export interface IUserTasksheetSubscription {
 
 export interface IUserTasksheetSubscriptionUpdates {
   type?: IUserTasksheetSubscription['type']
+  billingDayOfMonth?: IUserTasksheetSubscription['billingDayOfMonth']
   subscriptionStartDate?: IUserTasksheetSubscription['subscriptionStartDate']
   subscriptionEndDate?: IUserTasksheetSubscription['subscriptionEndDate']
 }

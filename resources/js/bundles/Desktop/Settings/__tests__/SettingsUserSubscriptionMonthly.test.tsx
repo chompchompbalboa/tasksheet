@@ -33,17 +33,9 @@ describe('SettingsUserSubscriptionMonthly', () => {
     }
   }
 
-  it("displays the next billing date correctly for a MONTHLY user whose subscription is active, but whose trial has not expired", () => {
-    const { container, getState } = settingsUserSubscriptionMonthly('MONTHLY_STILL_IN_TRIAL')
-    const expectedBillingDate = moment(getState().user.tasksheetSubscription.trialEndDate).format('MMMM Do, YYYY')
-    expect(container.textContent).toContain('first')
-    expect(container.textContent).toContain(expectedBillingDate)
-  })
-
   it("displays the next billing date correctly for a MONTHLY user whose subscription is active", () => {
     const { container, getState } = settingsUserSubscriptionMonthly('MONTHLY')
-    const expectedBillingDate = moment(getState().user.tasksheetSubscription.subscriptionEndDate).format('MMMM Do, YYYY')
-    expect(container.textContent).toContain('next')
+    const expectedBillingDate = moment.localeData().ordinal(getState().user.tasksheetSubscription.billingDayOfMonth)
     expect(container.textContent).toContain(expectedBillingDate)
   })
 

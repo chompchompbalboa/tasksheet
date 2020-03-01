@@ -16,7 +16,8 @@ class UserSubscriptionPurchaseController extends Controller
       try {
         $stripeCharge = $user->charge(10000, $stripePaymentMethodId); // 10000 cents = $100
         if($stripeCharge->isSucceeded()) {
-          $this->subscriptionPurchaseLifetimeSuccess($user, CarbonImmutable::now());
+          $userSubscription = $this->subscriptionPurchaseLifetimeSuccess($user, CarbonImmutable::now());
+          return response()->json($userSubscription->toArray(), 200);
         }
         else {
           return response('', 500);
@@ -29,11 +30,11 @@ class UserSubscriptionPurchaseController extends Controller
     public function subscriptionPurchaseLifetimeSuccess(User $user, $subscriptionStartDate) {
         $userSubscription = $user->tasksheetSubscription()->first();
         $userSubscription->type = 'LIFETIME';
-        $userSubscription->nextBillingDate = null;
+        $userSubscription->billingDayOfMonth = null;
         $userSubscription->subscriptionStartDate = $subscriptionStartDate;
         $userSubscription->subscriptionEndDate = null;
         $userSubscription->save();
-        return response($userSubscription, 200);
+        return $userSubscription;
     }
 
     public function subscriptionPurchaseMonthly(Request $request, User $user)
@@ -41,7 +42,8 @@ class UserSubscriptionPurchaseController extends Controller
       $stripeSetupIntentPaymentMethodId = $request->input('stripeSetupIntentPaymentMethodId');
       try {
         if($user->addPaymentMethod($stripeSetupIntentPaymentMethodId)) {
-          $this->subscriptionPurchaseMonthlySuccess($user, CarbonImmutable::now());
+          $userSubscription = $this->subscriptionPurchaseMonthlySuccess($user, CarbonImmutable::now());
+          return response()->json($userSubscription->toArray(), 200);
         }
       } catch (Exception $e) {
         return($e);
@@ -51,10 +53,10 @@ class UserSubscriptionPurchaseController extends Controller
     public function subscriptionPurchaseMonthlySuccess(User $user, $subscriptionStartDate) {
       $userSubscription = $user->tasksheetSubscription()->first();
       $userSubscription->type = 'MONTHLY';
-      $userSubscription->nextBillingDate = $subscriptionStartDate->addMonths(1);
+      $userSubscription->billingDayOfMonth = $subscriptionStartDate->day;
       $userSubscription->subscriptionStartDate = $subscriptionStartDate;
       $userSubscription->subscriptionEndDate = null;
       $userSubscription->save();
-      return response ($userSubscription, 200);
+      return $userSubscription;
     }
 }

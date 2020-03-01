@@ -23,7 +23,7 @@ import { stripeGenericErrorMessage } from '@desktop/Stripe/StripeErrorMessage'
 //-----------------------------------------------------------------------------
 // @ts-ignore
 axiosMock.post.mockResolvedValue({})
-
+console.error = jest.fn()
 //-----------------------------------------------------------------------------
 // Tests
 //-----------------------------------------------------------------------------
@@ -44,6 +44,7 @@ describe('StripePurchaseSubscription', () => {
   const stripePurchaseSubscription = () => {
     const mockAppState = getMockAppStateByTasksheetSubscriptionType('TRIAL')
     const {
+      debug,
       container,
       getByTestId,
       getByText,
@@ -61,6 +62,7 @@ describe('StripePurchaseSubscription', () => {
     const selectMonthlySubscriptionType = getByText('Monthly')
     const selectLifetimeSubscriptionType = getByText('Lifetime')
     return {
+      debug,
       container,
       getState,
       queryByText,
@@ -99,7 +101,7 @@ describe('StripePurchaseSubscription', () => {
     expect(stripeSubmitButton.textContent).not.toContain('Processing...')
   })
          
-  it("submits the form if the user has agreed to the Terms of Service and agreed to the charge", () => {
+  it("submits the form if the user has agreed to the Terms of Service and agreed to the charge", async () => {
     const { stripeAgreeToChargeCheckbox, stripeTermsOfServiceCheckbox, stripeForm, stripeSubmitButton } = stripePurchaseSubscription()
     fireEvent.click(stripeTermsOfServiceCheckbox)
     fireEvent.click(stripeAgreeToChargeCheckbox)
@@ -107,12 +109,14 @@ describe('StripePurchaseSubscription', () => {
     expect(stripeSubmitButton.textContent).toContain('Processing...')
   })
          
-  it("attempts to create a Stripe SetupIntent when purchasing a MONTHLY subscription", () => {
+  it("attempts to create a Stripe SetupIntent when purchasing a MONTHLY subscription", async () => {
     const { selectMonthlySubscriptionType, stripeAgreeToChargeCheckbox, stripeTermsOfServiceCheckbox, stripeForm } = stripePurchaseSubscription()
     fireEvent.click(selectMonthlySubscriptionType)
     fireEvent.click(stripeTermsOfServiceCheckbox)
     fireEvent.click(stripeAgreeToChargeCheckbox)
-    fireEvent.submit(stripeForm)
+    await act(async () => {
+      fireEvent.submit(stripeForm)
+    })
     expect(stripeMock().confirmCardSetup).toHaveBeenCalled()
   })
          
@@ -179,8 +183,19 @@ describe('StripePurchaseSubscription', () => {
   
   it("updates the user tasksheetSubscription type to MONTHLY when a MONTHLY subscription is succesfully purchased", async () => {
     const { getState, selectMonthlySubscriptionType, stripeAgreeToChargeCheckbox, stripeTermsOfServiceCheckbox, stripeForm } = stripePurchaseSubscription()
+    const newTasksheetSubscription: IUserTasksheetSubscription = {
+      id: 'id',
+      type: 'MONTHLY',
+      billingDayOfMonth: 15,
+      subscriptionStartDate: '2020-01-01 12:00:00',
+      subscriptionEndDate: null,
+      trialStartDate: '2020-01-01 12:00:00',
+      trialEndDate: '2020-01-01 12:00:00',
+    }
     // @ts-ignore
-    axiosMock.post.mockResolvedValueOnce({})
+    axiosMock.post.mockResolvedValueOnce({
+      data: newTasksheetSubscription
+    })
     const setupIntent = { 
       payment_method: 'stripeSetupIntentPaymentMethod' 
     }
@@ -197,6 +212,8 @@ describe('StripePurchaseSubscription', () => {
       await flushPromises()
     })
     expect(getState().user.tasksheetSubscription.type).toBe('MONTHLY')
+    expect(getState().user.tasksheetSubscription.billingDayOfMonth).toBe(15)
+    expect(getState().user.tasksheetSubscription.subscriptionEndDate).toBeNull()
   })
          
   it("attempts to create a Stripe PaymentMethod when purchasing a LIFETIME subscription", async () => {
@@ -273,9 +290,9 @@ describe('StripePurchaseSubscription', () => {
     const newTasksheetSubscription: IUserTasksheetSubscription = {
       id: 'id',
       type: 'LIFETIME',
-      nextBillingDate: null,
+      billingDayOfMonth: null,
       subscriptionStartDate: '2020-01-01 12:00:00',
-      subscriptionEndDate: '2020-02-01 12:00:00',
+      subscriptionEndDate: null,
       trialStartDate: '2020-01-01 12:00:00',
       trialEndDate: '2020-01-01 12:00:00',
     }

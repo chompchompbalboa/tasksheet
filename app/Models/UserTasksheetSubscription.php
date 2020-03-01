@@ -15,15 +15,19 @@ class UserTasksheetSubscription extends Model
   
   protected $visible = [ 
     'id', 
+    'userId',
     'type', 
+    'billingDayOfMonth',
     'subscriptionStartDate',
     'subscriptionEndDate',
     'trialStartDate', 
     'trialEndDate', 
     'stripeSetupIntentClientSecret' 
   ];
-  protected $fillable = [ 
+  protected $fillable = [
+    'userId',
     'type', 
+    'billingDayOfMonth',
     'subscriptionStartDate', 
     'subscriptionEndDate' 
   ];
@@ -39,8 +43,10 @@ class UserTasksheetSubscription extends Model
   
   public function getStripeSetupIntentClientSecretAttribute() {
     if($this->type === 'TRIAL') {
-      $stripeSetupIntent = $this->user()->first()->createSetupIntent();
-      return $stripeSetupIntent->client_secret;
+      if($user = $this->user()->first()) {
+        $stripeSetupIntent = $user->createSetupIntent();
+        return $stripeSetupIntent->client_secret;
+      }
     }
     return null;
   }

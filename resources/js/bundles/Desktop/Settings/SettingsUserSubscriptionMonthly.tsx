@@ -13,19 +13,20 @@ import { IAppState } from '@/state'
 //-----------------------------------------------------------------------------
 const SettingsUserSubscriptionMonthly = () => {
   
-  const userSubscriptionType = useSelector((state: IAppState) => state.user.tasksheetSubscription.type)
-  const userSubscriptionSubscriptionEndDate = useSelector((state: IAppState) => state.user.tasksheetSubscription.subscriptionEndDate)
-  const userSubscriptionTrialEndDate = useSelector((state: IAppState) => state.user.tasksheetSubscription.trialEndDate)
+  const userSubscriptionBillingDayOfMonth = useSelector((state: IAppState) => 
+    state.user.tasksheetSubscription.billingDayOfMonth &&
+    moment.localeData().ordinal(state.user.tasksheetSubscription.billingDayOfMonth)
+  )
 
-  const firstBillingOrNextBilling = userSubscriptionType === 'MONTHLY_STILL_IN_TRIAL' ? 'first' : 'next'
-  const billingDate = userSubscriptionType === 'MONTHLY_STILL_IN_TRIAL' 
-    ? moment(userSubscriptionTrialEndDate).format('MMMM Do, YYYY')
-    : moment(userSubscriptionSubscriptionEndDate).format('MMMM Do, YYYY')
-  
   return (
     <Container
       data-testid="SettingsUserSubscriptionMonthly">
-      Thank you for your monthly subscription! Your {firstBillingOrNextBilling} billing will occur on <b>{billingDate}.</b>
+      Your monthly subscription is active
+      {userSubscriptionBillingDayOfMonth 
+        ? <span> and your card will be charged each month on the <b>{userSubscriptionBillingDayOfMonth}</b>. </span>
+        : '. '
+      }
+      Thank you for choosing Tasksheet!
     </Container>
   )
 }
