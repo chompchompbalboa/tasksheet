@@ -65,7 +65,21 @@ class StripeWebhookHandledListenerTest extends TestCase
 
       // Get and return the UserTasksheetSubscription
       $userTasksheetSubscription = UserTasksheetSubscription::where('userId', $userId)->first();
-      return [ $userTasksheetSubscription ];
+      return [ $userTasksheetSubscription, $payload ];
+    }
+
+    /**
+     * Does the Cashier WebhookHandled event trigger the StripeWebhookHandledListener
+     *
+     * @return void
+     */
+    public function testListenerIsCalledByCashierWebhookHandled()
+    {
+      // Make a call to the webhook URL
+      $response = $this->post('/stripe/webhook');
+      dump($response);
+      // Assert that the listener was called
+      $response->assertStatus(200);
     }
 
     /**
