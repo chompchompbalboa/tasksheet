@@ -11,18 +11,10 @@ use Illuminate\Queue\InteractsWithQueue;
 use App\Models\User;
 use App\Models\UserTasksheetSubscription;
 
+use Illuminate\Support\Facades\Log;
+
 class StripeWebhookHandledListener
 {
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * Handle the event.
      *

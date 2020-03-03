@@ -7,6 +7,9 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
+use App\Listeners\StripeWebhookHandledListener;
+use Laravel\Cashier\Events\WebhookHandled;
+
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -18,8 +21,8 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        '\Laravel\Cashier\Events\WebhookHandled' => [
-          'App\Listeners\StripeWebhookHandledListener'
+        WebhookHandled::class => [
+          StripeWebhookHandledListener::class
         ]
     ];
 

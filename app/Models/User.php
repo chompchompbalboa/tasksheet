@@ -29,7 +29,8 @@ class User extends Authenticatable
       'email', 
       'active', 
       'color', 
-      'tasksheetSubscription' 
+      'tasksheetSubscription',
+      'stripe_id'
     ];
     protected $fillable = [ 
       'name', 

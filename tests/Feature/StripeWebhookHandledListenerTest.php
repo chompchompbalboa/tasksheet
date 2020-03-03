@@ -17,12 +17,12 @@ use App\Models\UserTasksheetSubscription;
 class StripeWebhookHandledListenerTest extends TestCase
 {
     /**
-     * Fire the event listener
+     * Get the mock payload
      *
      * @return $user User
      * @return $payload Stripe's Event object
      */
-    private function fireListener(
+    private function getMockUserAndPayload(
       string $userType,
       string $stripeEventType,
       string $stripeCustomerStatus
@@ -32,7 +32,7 @@ class StripeWebhookHandledListenerTest extends TestCase
       $userId = Str::uuid()->toString();
       $userStripeId = Str::uuid()->toString();
       $currentDate = CarbonImmutable::now();
-      factory(\App\Models\User::class)->create([
+      $user = factory(\App\Models\User::class)->create([
         'id' => $userId,
         'stripe_id' => $userStripeId,
         'name' => ucfirst(strtolower($userType)).' User',
@@ -47,7 +47,7 @@ class StripeWebhookHandledListenerTest extends TestCase
         'trialStartDate' => $currentDate,
         'trialEndDate' => $currentDate,
       ]);
-
+      
       // Mock the event payload (the Stripe Event object (https://stripe.com/docs/api/events/object))
       $payload = [
         'type' => $stripeEventType,
@@ -58,13 +58,31 @@ class StripeWebhookHandledListenerTest extends TestCase
           ]
         ]
       ];
+      
+      return [ $user, $payload ];
+    }
+  
+    /**
+     * Fire the event listener
+     *
+     * @return $user User
+     * @return $payload Stripe's Event object
+     */
+    private function fireListener(
+      string $userType,
+      string $stripeEventType,
+      string $stripeCustomerStatus
+    )
+    {
+      // Get the user and the paylod
+      [ $user, $payload ] = $this->getMockUserAndPayload($userType, $stripeEventType, $stripeCustomerStatus);
 
       // Fire the listener
       $listener = new StripeWebhookHandledListener();
       $listener->handle(new WebhookHandled($payload));
 
       // Get and return the UserTasksheetSubscription
-      $userTasksheetSubscription = UserTasksheetSubscription::where('userId', $userId)->first();
+      $userTasksheetSubscription = UserTasksheetSubscription::where('userId', $user->id)->first();
       return [ $userTasksheetSubscription, $payload ];
     }
 
@@ -75,10 +93,21 @@ class StripeWebhookHandledListenerTest extends TestCase
      */
     public function testListenerIsCalledByCashierWebhookHandled()
     {
+      // Get the user and the paylod
+      [ $user, $payload ] = $this->getMockUserAndPayload(
+        'TRIAL', 
+        'customer.subscription.updated',
+        'active'
+      );
+
       // Make a call to the webhook URL
-      $response = $this->post('/stripe/webhook');
-      dump($response);
+      $response = $this->postJson('/stripe/webhook', $payload);
+
+      // Get and return the UserTasksheetSubscription
+      $userTasksheetSubscription = UserTasksheetSubscription::where('userId', $user->id)->first();
+      
       // Assert that the listener was called
+      $this->assertSame('MONTHLY', $userTasksheetSubscription->type);
       $response->assertStatus(200);
     }
 
