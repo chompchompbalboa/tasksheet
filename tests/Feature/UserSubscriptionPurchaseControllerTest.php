@@ -86,7 +86,7 @@ class UserSubscriptionPurchaseControllerTest extends TestCase
       $subscriptionStartDate = CarbonImmutable::now();
 
       $purchaseController = new UserSubscriptionPurchaseController;
-      $purchaseController->subscriptionPurchaseMonthlySuccess($user, $subscriptionStartDate);
+      $purchaseController->subscriptionPurchaseMonthlySuccess($user, $subscriptionStartDate, null);
 
       $userSubscriptionStartDate = new CarbonImmutable($user->tasksheetSubscription->subscriptionStartDate);
       $expectedUserSubscriptionStartDate = new CarbonImmutable($subscriptionStartDate); 

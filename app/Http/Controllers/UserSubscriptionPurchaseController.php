@@ -42,7 +42,7 @@ class UserSubscriptionPurchaseController extends Controller
       $stripeSetupIntentPaymentMethodId = $request->input('stripeSetupIntentPaymentMethodId');
       try {
         if($user->addPaymentMethod($stripeSetupIntentPaymentMethodId)) {
-          $userSubscription = $this->subscriptionPurchaseMonthlySuccess($user, CarbonImmutable::now());
+          $userSubscription = $this->subscriptionPurchaseMonthlySuccess($user, CarbonImmutable::now(), $stripeSetupIntentPaymentMethodId);
           return response()->json($userSubscription->toArray(), 200);
         }
       } catch (Exception $e) {
@@ -50,8 +50,12 @@ class UserSubscriptionPurchaseController extends Controller
       }
     }
 
-    public function subscriptionPurchaseMonthlySuccess(User $user, $subscriptionStartDate) {
+    public function subscriptionPurchaseMonthlySuccess(User $user, $subscriptionStartDate, $paymentMethodId) {
       $userSubscription = $user->tasksheetSubscription()->first();
+      if(in_array($userSubscription->type, [ 'TRIAL_EXPIRED', 'MONTHLY_EXPIRED' ])) {
+        $user->newSubscription('Monthly', env('STRIPE_TASKSHEET_MONTHLY_PLAN_ID'))
+             ->create($paymentMethodId);
+      }
       $userSubscription->type = 'MONTHLY';
       $userSubscription->billingDayOfMonth = $subscriptionStartDate->day;
       $userSubscription->subscriptionStartDate = $subscriptionStartDate;

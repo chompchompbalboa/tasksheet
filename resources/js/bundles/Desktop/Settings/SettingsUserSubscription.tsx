@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { IAppState } from '@/state'
 
 import SettingsUserSubscriptionDemo from '@desktop/Settings/SettingsUserSubscriptionDemo'
+import SettingsUserSubscriptionExpired from '@desktop/Settings/SettingsUserSubscriptionExpired'
 import SettingsUserSubscriptionTrial from '@desktop/Settings/SettingsUserSubscriptionTrial'
 import SettingsUserSubscriptionMonthly from '@desktop/Settings/SettingsUserSubscriptionMonthly'
 import SettingsUserSubscriptionLifetime from '@desktop/Settings/SettingsUserSubscriptionLifetime'
@@ -22,13 +23,10 @@ const SettingsUserSubscription = () => {
   const userSubscriptionComponents = {
     DEMO: SettingsUserSubscriptionDemo,
     TRIAL: SettingsUserSubscriptionTrial,
-    TRIAL_EXPIRED: SettingsUserSubscriptionTrial,
-    MONTHLY_STILL_IN_TRIAL: SettingsUserSubscriptionMonthly,
+    TRIAL_EXPIRED: SettingsUserSubscriptionExpired,
     MONTHLY: SettingsUserSubscriptionMonthly,
     MONTHLY_PAST_DUE: SettingsUserSubscriptionMonthly,
-    MONTHLY_EXPIRED: SettingsUserSubscriptionMonthly,
-    MONTHLY_CANCELLED: SettingsUserSubscriptionMonthly,
-    MONTHLY_CANCELLED_STILL_IN_SUBSCRIPTION: SettingsUserSubscriptionMonthly,
+    MONTHLY_EXPIRED: SettingsUserSubscriptionExpired,
     LIFETIME: SettingsUserSubscriptionLifetime
   }
   

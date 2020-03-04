@@ -42,7 +42,7 @@ class UserTasksheetSubscription extends Model
   ];
   
   public function getStripeSetupIntentClientSecretAttribute() {
-    if($this->type === 'TRIAL') {
+    if(in_array($this->type, ['TRIAL', 'TRIAL_EXPIRED', 'MONTHLY_PAST_DUE', 'MONTHLY_EXPIRED'])) {
       if($user = $this->user()->first()) {
         $stripeSetupIntent = $user->createSetupIntent();
         return $stripeSetupIntent->client_secret;

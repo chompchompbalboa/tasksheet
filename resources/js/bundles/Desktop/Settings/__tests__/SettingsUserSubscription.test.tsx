@@ -35,9 +35,19 @@ describe('SettingsUserSubscription', () => {
     expect(queryByTestId('SettingsUserSubscriptionTrial')).toBeTruthy()
   })
   
+  it("renders the correct children for 'TRIAL_EXPIRED' users", async () => {
+    const { queryByTestId } = renderWithRedux(<SettingsUserSubscription />, { store: createMockStore(getMockAppStateByTasksheetSubscriptionType('TRIAL_EXPIRED')) })
+    expect(queryByTestId('SettingsUserSubscriptionExpired')).toBeTruthy()
+  })
+  
   it("renders the correct children for 'MONTHLY' users", async () => {
     const { queryByTestId } = renderWithRedux(<SettingsUserSubscription />, { store: createMockStore(getMockAppStateByTasksheetSubscriptionType('MONTHLY')) })
     expect(queryByTestId('SettingsUserSubscriptionMonthly')).toBeTruthy()
+  })
+  
+  it("renders the correct children for 'MONTHLY_EXPIRED' users", async () => {
+    const { queryByTestId } = renderWithRedux(<SettingsUserSubscription />, { store: createMockStore(getMockAppStateByTasksheetSubscriptionType('MONTHLY_EXPIRED')) })
+    expect(queryByTestId('SettingsUserSubscriptionExpired')).toBeTruthy()
   })
   
   it("renders the correct children for 'LIFETIME' users", async () => {
