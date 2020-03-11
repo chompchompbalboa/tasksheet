@@ -35,7 +35,10 @@ class DatabaseSeeder extends Seeder
         'rocky@dillonworks.com' => [ 'id' => Str::uuid()->toString(), 'email' => 'rocky@dillonworks.com', 'name' => 'Rocky Eastman', 'subscriptionType' => 'LIFETIME', 'billingDayOfMonth' => null ],
         'demo@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'demo@tasksheet.co', 'name' => 'Demo', 'subscriptionType' => 'DEMO', 'billingDayOfMonth' => null ],
         'trial@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'trial@tasksheet.co', 'name' => 'Trial', 'subscriptionType' => 'TRIAL', 'billingDayOfMonth' => null ],
+        'trialexpired@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'trialexpired@tasksheet.co', 'name' => 'Trial Expired', 'subscriptionType' => 'TRIAL_EXPIRED', 'billingDayOfMonth' => null ],
         'monthly@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'monthly@tasksheet.co', 'name' => 'Monthly', 'subscriptionType' => 'MONTHLY', 'billingDayOfMonth' => 15 ],
+        'monthlyexpired@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'monthlyexpired@tasksheet.co', 'name' => 'Monthly Expired', 'subscriptionType' => 'MONTHLY_EXPIRED', 'billingDayOfMonth' => null ],
+        'monthlypastdue@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'monthlypastdue@tasksheet.co', 'name' => 'Monthly Past Due', 'subscriptionType' => 'MONTHLY_PAST_DUE', 'billingDayOfMonth' => null ],
         'lifetime@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'lifetime@tasksheet.co', 'name' => 'Lifetime', 'subscriptionType' => 'LIFETIME', 'billingDayOfMonth' => null ],
       ];
 
@@ -51,8 +54,11 @@ class DatabaseSeeder extends Seeder
             'rocky@tasksheet.co',
             'demo@tasksheet.co',
             'trial@tasksheet.co',
+            'trialexpired@tasksheet.co',
             'monthly@tasksheet.co',
-            'lifetime@tasksheet.co'
+            'monthlyexpired@tasksheet.co',
+            'monthlypastdue@tasksheet.co',
+            'lifetime@tasksheet.co',
           ]
         ],
         [ 'name' => 'Dillon Works',

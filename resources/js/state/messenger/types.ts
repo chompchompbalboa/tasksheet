@@ -5,4 +5,5 @@ export type IMessengerMessageType =
 export interface IMessengerMessage {
   type: IMessengerMessageType
   message: string
+  timeout?: number
 }

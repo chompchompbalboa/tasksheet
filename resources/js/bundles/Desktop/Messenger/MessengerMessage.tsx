@@ -5,8 +5,12 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
+import { CLOSE } from '@/assets/icons'
+
 import { IMessengerMessage } from '@/state/messenger/types'
 import { deleteMessengerMessage } from '@/state/messenger/actions'
+
+import Icon from '@/components/Icon'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -39,7 +43,7 @@ const Messenger = ({
     }, 150)
     setTimeout(() => {
       dispatch(deleteMessengerMessage(messageIndex))
-    }, 5000)
+    }, message.timeout || 5000)
   })
 
   return (
@@ -47,7 +51,14 @@ const Messenger = ({
       messageBackgroundColor={messageType.backgroundColor}
       messageColor={messageType.color}
       messageOpacity={messageOpacity}>
-      {message.message}
+      <Message>
+        {message.message}
+      </Message>
+      <DeleteButton
+        onClick={() => dispatch(deleteMessengerMessage(messageIndex))}>
+        <Icon
+          icon={CLOSE}/>
+      </DeleteButton>
     </Container>
   )
 }
@@ -75,11 +86,22 @@ const Container = styled.div`
   border-radius: 5px;
   box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.5);
   transition: opacity 0.5s;
+  pointer-events: auto;
 `
 interface IContainer {
   messageBackgroundColor: string
   messageColor: string
   messageOpacity: string
 }
+
+const Message = styled.div``
+
+const DeleteButton = styled.div`
+  cursor: pointer;
+  margin-left: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
 
 export default Messenger
