@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { IAppState } from '@/state'
 
 import History from '@desktop/History/History'
+import Messenger from '@desktop/Messenger/Messenger'
 import Modals from '@desktop/Modal/Modals'
 import Tabs from '@desktop/Tabs/Tabs'
 import Site from '@desktop/Site/Site'
@@ -40,6 +41,7 @@ export const Desktop = () => {
       <AppContent>
         <History />
         <Modals />
+        <Messenger />
         <Tabs />
       </AppContent>
     </AppContainer>

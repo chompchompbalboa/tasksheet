@@ -6,7 +6,7 @@ import {
   CREATE_MESSENGER_MESSAGE,
   DELETE_MESSENGER_MESSAGE
 } from '@/state/messenger/actions'
-import { IMessengerMessageKey } from '@/state/messenger/types'
+import { IMessengerMessage } from '@/state/messenger/types'
 //-----------------------------------------------------------------------------
 // Initial
 //-----------------------------------------------------------------------------
@@ -14,7 +14,7 @@ export const initialMessengerState: IMessengerState = {
   messages: []
 }
 export type IMessengerState = {
-  messages: IMessengerMessageKey[]
+  messages: IMessengerMessage[]
 }
 
 //-----------------------------------------------------------------------------
@@ -31,9 +31,9 @@ export const userReducer = (state = initialMessengerState, action: IMessengerAct
     }
 
     case DELETE_MESSENGER_MESSAGE: {
-      const { messageToDelete } = action
+      const { messageIndex } = action
       return {
-        messages: state.messages.filter(message => message !== messageToDelete)
+        messages: state.messages.filter((message, index) => index !== messageIndex)
       }
     }
 

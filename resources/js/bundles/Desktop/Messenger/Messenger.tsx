@@ -22,7 +22,8 @@ const Messenger = () => {
       {messages.map((message, index) => (
         <MessengerMessage
           key={index}
-          message={message}/>
+          message={message}
+          messageIndex={index}/>
       ))}
     </Container>
   )
