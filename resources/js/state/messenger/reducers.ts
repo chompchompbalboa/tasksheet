@@ -46,8 +46,14 @@ export const userReducer = (state = initialMessengerState, action: IMessengerAct
 
     case CREATE_MESSENGER_MESSAGE: {
       const { newMessage } = action
-      return {
-        messages: [ newMessage, ...state.messages ]
+      const allMessengerMessages = state.messages.map(message => message.message)
+      if(!allMessengerMessages.includes(newMessage.message)) {
+        return {
+          messages: [ newMessage, ...state.messages ]
+        }
+      }
+      else {
+        return state
       }
     }
 

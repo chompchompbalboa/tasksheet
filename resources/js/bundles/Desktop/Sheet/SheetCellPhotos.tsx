@@ -36,7 +36,7 @@ const SheetCellPhotos = ({
   
   // Redux
   const dispatch = useDispatch()
-  const isDemoUser = useSelector((state: IAppState) => state.user.tasksheetSubscription.type === 'DEMO')
+  const isUploadingAndDeletingPrevented = useSelector((state: IAppState) => ['DEMO', 'MONTHLY_EXPIRED', 'TRIAL_EXPIRED'].includes(state.user.tasksheetSubscription.type))
   const sheetCellPhotos = useSelector((state: IAppState) => state.sheet.allSheetCellPhotos && state.sheet.allSheetCellPhotos[cell.id] && state.sheet.allSheetCellPhotos[cell.id].map((sheetPhotoId: ISheetPhoto['id']) => {
     return state.sheet.allSheetPhotos[sheetPhotoId]
   }))
@@ -77,7 +77,7 @@ const SheetCellPhotos = ({
   
   // Delete Photo
   const deleteActiveSheetCellPhoto = () => {
-    if(!isDemoUser) {
+    if(!isUploadingAndDeletingPrevented) {
       setDeleteActiveSheetCellPhotoStatus('DELETING')
       beforePhotoDeleteTimeout.current = setTimeout(() => setActiveSheetCellPhotoIndex(Math.max(0, activeSheetCellPhotoIndex - 1)), 250)
       deleteActiveSheetCellPhotoTimeout.current = setTimeout(() => dispatch(deleteSheetCellPhoto(activeSheetCellPhoto.cellId, activeSheetCellPhoto.id)), 350)
@@ -103,7 +103,7 @@ const SheetCellPhotos = ({
   
   // Upload Photo
   const uploadSheetCellPhoto = (e: ChangeEvent<HTMLInputElement>) => {
-    if(!isDemoUser) {
+    if(!isUploadingAndDeletingPrevented) {
       const photosList = e.target.files
       const photosIndexes = Object.keys(photosList)
       const photosToUpload = photosIndexes.map((index: any) => photosList[index])

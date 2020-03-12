@@ -36,7 +36,7 @@ const SheetCellFiles = ({
   
   // Redux
   const dispatch = useDispatch()
-  const isDemoUser = useSelector((state: IAppState) => state.user.tasksheetSubscription.type === 'DEMO')
+  const isUploadingAndDeletingPrevented = useSelector((state: IAppState) => ['DEMO', 'MONTHLY_EXPIRED', 'TRIAL_EXPIRED'].includes(state.user.tasksheetSubscription.type))
   const sheetCellFiles = useSelector((state: IAppState) => state.sheet.allSheetCellFiles && state.sheet.allSheetCellFiles[cell.id] && state.sheet.allSheetCellFiles[cell.id].map((sheetFileId: ISheetFile['id']) => {
     return state.sheet.allSheetFiles[sheetFileId]
   }))
@@ -75,7 +75,7 @@ const SheetCellFiles = ({
   
   // Upload Sheet Cell File
   const uploadSheetCellFile = (e: ChangeEvent<HTMLInputElement>) => {
-    if(!isDemoUser) {
+    if(!isUploadingAndDeletingPrevented) {
       const filesList = e.target.files
       const filesIndexes = Object.keys(filesList)
       const filesToUpload = filesIndexes.map((index: any) => filesList[index])

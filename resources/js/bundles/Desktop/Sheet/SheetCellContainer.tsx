@@ -12,8 +12,13 @@ import {
   ISheetStyles 
 } from '@/state/sheet/types'
 import {
+  createMessengerMessage
+} from '@/state/messenger/actions'
+import {
   updateSheetSelectionFromArrowKey
 } from '@/state/sheet/actions'
+
+import { SUBSCRIPTION_EXPIRED_MESSAGE } from '@/state/messenger/messages'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -35,6 +40,7 @@ const SheetCellContainer = ({
   // Redux
   const dispatch = useDispatch()
   const activeSheetId = useSelector((state: IAppState) => state.folder.allFiles[state.tab.activeTab] && state.folder.allFiles[state.tab.activeTab].typeId)
+  const isSheetEditingPrevented = useSelector((state: IAppState) => ['MONTHLY_EXPIRED', 'TRIAL_EXPIRED'].includes(state.user.tasksheetSubscription.type))
   const isSelectedCellEditingPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellEditingPrevented)
   const isSelectedCellNavigationPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellNavigationPrevented)
   const sheetStyles = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].styles)
@@ -74,7 +80,15 @@ const SheetCellContainer = ({
   // component can't handle both events wihout unexpected behavior.
   const beginEditingOnDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
-    beginEditing()
+    if(isSheetEditingPrevented) {
+      dispatch(createMessengerMessage({ 
+        ...SUBSCRIPTION_EXPIRED_MESSAGE,
+        timeout: 5000
+      }))
+    }
+    else {
+      beginEditing()
+    }
   }
 
   // Complete Editing On Click Outside
@@ -116,7 +130,15 @@ const SheetCellContainer = ({
       && !onlyRenderChildren
     ) {
       e.preventDefault()
-      beginEditing(e.key)
+      if(isSheetEditingPrevented) {
+        dispatch(createMessengerMessage({ 
+          ...SUBSCRIPTION_EXPIRED_MESSAGE,
+          timeout: 5000
+        }))
+      }
+      else {
+        beginEditing(e.key)
+      }
     }
     if(!isSelectedCellNavigationPrevented) {
       // Otherwise, navigate to an adjacent cell on an arrow or enter press
@@ -138,7 +160,15 @@ const SheetCellContainer = ({
       }
       if((e.key === 'Delete' || e.key === 'Backspace') && !onlyRenderChildren) {
         e.preventDefault()
-        beginEditing('')
+        if(isSheetEditingPrevented) {
+          dispatch(createMessengerMessage({ 
+            ...SUBSCRIPTION_EXPIRED_MESSAGE,
+            timeout: 5000
+          }))
+        }
+        else {
+          beginEditing('')
+        }
       }
     }
   }

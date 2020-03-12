@@ -31,7 +31,7 @@ const SheetCellPhotosDropdownHeader = ({
   // Delete Sheet Cell Photo Status Messages
   const deleteSheetCellPhotoStatusMessages = {
     READY: <Icon icon={TRASH_CAN} size="0.85rem"/>,
-    NEED_AN_ACCOUNT_TO_DELETE: 'Please sign in to delete this photo',
+    NEED_AN_ACCOUNT_TO_DELETE: 'You need an active subscription to delete this photo',
     DELETING: 'Deleting...',
     DELETED: 'Deleted!',
   }
@@ -39,7 +39,7 @@ const SheetCellPhotosDropdownHeader = ({
   // Upload Sheet Cell Photo Status Messages
   const uploadSheetCellPhotoStatusMessages = {
     READY: <Icon icon={PLUS_SIGN} size="0.85rem"/>,
-    NEED_AN_ACCOUNT_TO_UPLOAD: 'Please sign in to upload a photo',
+    NEED_AN_ACCOUNT_TO_UPLOAD: 'You need an active subscription to upload a photo',
     PREPARING_UPLOAD: 'Preparing Upload...',
     UPLOADING: 'Uploading',
     SAVING_FILE_DATA: 'Saving File Data...',
