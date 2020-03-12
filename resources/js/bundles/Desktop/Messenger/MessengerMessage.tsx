@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
@@ -19,11 +19,32 @@ const Messenger = ({
   message,
   messageIndex
 }: IMessengerMessageProps) => {
-  
+
+  // Refs
+  const deleteMessageTimeout = useRef(0)
+  const setMessageOpacityTimeout = useRef(0)
+
+  // Redux
   const dispatch = useDispatch()
 
+  // State
   const [ messageOpacity, setMessageOpacity ] = useState('0')
 
+  // Effects
+  useEffect(() => {
+    setMessageOpacityTimeout.current = setTimeout(() => {
+      setMessageOpacity('1')
+    }, 150)
+    deleteMessageTimeout.current = setTimeout(() => {
+      dispatch(deleteMessengerMessage(messageIndex))
+    }, message.timeout || 5000)
+    return () => {
+      clearTimeout(deleteMessageTimeout.current)
+      clearTimeout(setMessageOpacityTimeout.current)
+    }
+  }, [ deleteMessageTimeout, message, setMessageOpacityTimeout ])
+
+  // Message Types
   const messageTypes = {
     ERROR: {
       color: 'white',
@@ -37,15 +58,6 @@ const Messenger = ({
 
   const messageType = messageTypes[message.type]
 
-  useEffect(() => {
-    setTimeout(() => {
-      setMessageOpacity('1')
-    }, 150)
-    setTimeout(() => {
-      dispatch(deleteMessengerMessage(messageIndex))
-    }, message.timeout || 5000)
-  })
-
   return (
     <Container
       messageBackgroundColor={messageType.backgroundColor}
@@ -55,6 +67,7 @@ const Messenger = ({
         {message.message}
       </Message>
       <DeleteButton
+        data-testid="MessengerMessageDeleteButton"
         onClick={() => dispatch(deleteMessengerMessage(messageIndex))}>
         <Icon
           icon={CLOSE}/>

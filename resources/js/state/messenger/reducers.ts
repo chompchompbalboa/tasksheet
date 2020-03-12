@@ -10,36 +10,30 @@ import {
 import { IMessengerMessage } from '@/state/messenger/types'
 import { IUser } from '@/state/user/types'
 
-//-----------------------------------------------------------------------------
-// Initial
-//-----------------------------------------------------------------------------
-const initialUserState: IUser = typeof initialData !== 'undefined' ? initialData.user : defaultInitialData.user
+import {
+  SUBSCRIPTION_EXPIRED_MESSAGE,
+  SUBSCRIPTION_PAST_DUE_MESSAGE
+} from '@/state/messenger/messages'
 
-const getInitialMessages = (): IMessengerMessage[] => {
+//-----------------------------------------------------------------------------
+// Initial State
+//-----------------------------------------------------------------------------
+const getInitialMessages = () => {
+  const initialUserState: IUser = typeof initialData !== 'undefined' ? initialData.user : defaultInitialData.user
   const userTasksheetSubscriptionType = initialUserState.tasksheetSubscription.type
   if(['TRIAL_EXPIRED', 'MONTHLY_EXPIRED'].includes(userTasksheetSubscriptionType)) {
-    return [
-      { 
-        type: 'ERROR',
-        message: 'Your subscription has expired. Please renew your subscription to enable sheet editing.',
-        timeout: 60000
-      }
-    ]
+    return [ SUBSCRIPTION_EXPIRED_MESSAGE ]
   }
   if(userTasksheetSubscriptionType === 'MONTHLY_PAST_DUE') {
-    return [
-      { 
-        type: 'ERROR',
-        message: "Your most recent payment attempt failed. Please ensure your credit card information is valid. We'll attempt to charge your card again soon.",
-        timeout: 60000
-      }
-    ]
+    return [ SUBSCRIPTION_PAST_DUE_MESSAGE ]
   }
   return []
 }
+
 export const initialMessengerState: IMessengerState = {
   messages: getInitialMessages()
 }
+
 export type IMessengerState = {
   messages: IMessengerMessage[]
 }

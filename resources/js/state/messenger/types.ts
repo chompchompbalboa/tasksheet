@@ -1,6 +1,4 @@
-export type IMessengerMessageType = 
-  'MESSAGE' |
-  'ERROR'
+export type IMessengerMessageType = 'ERROR'
 
 export interface IMessengerMessage {
   type: IMessengerMessageType
