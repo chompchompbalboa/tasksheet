@@ -76,7 +76,7 @@ export const SheetCell = memo(({
 
     return (
       <Container
-        data-testid="SheetCellContainer"
+        data-testid="SheetCell"
         ref={cellContainer}
         cellId={cellId}
         cellType={cellType}

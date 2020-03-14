@@ -42,12 +42,12 @@ jest.setTimeout(10000)
 //-----------------------------------------------------------------------------
 // Tests
 //-----------------------------------------------------------------------------
-describe('SheetCell', () => {
+describe('SheetCellString', () => {
   
   it("renders without crashing", async () => {
     const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'STRING' })
     const { getByTestId } = renderWithRedux(<SheetCell {...props}/>, { store: createMockStore(mockAppState) })
-    expect(getByTestId('SheetCellContainer')).toHaveTextContent(cell.value)
+    expect(getByTestId('SheetCell')).toHaveTextContent(cell.value)
   })
 
   it("correctly renders the SheetCellString Component", async () => {

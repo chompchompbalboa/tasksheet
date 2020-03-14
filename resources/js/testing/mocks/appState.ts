@@ -2,7 +2,15 @@
 // Imports
 //-----------------------------------------------------------------------------
 import { IAppState } from '@/state'
-import { IFile, IAllFiles, IAllFolders, IFileType } from '@/state/folder/types'
+import { 
+  IFile, 
+  IAllFiles, 
+  IAllFolders, 
+  IAllFilePermissions,
+  IAllUserFilePermissionsByFileTypeId,
+  IFilePermission,
+  IFileType,
+} from '@/state/folder/types'
 import { 
   IAllSheets, ISheet, ISheetFromDatabase,
   IAllSheetCells, ISheetCell,
@@ -23,6 +31,7 @@ import { initialModalState } from '@/state/modal/reducers'
 import { initialSheetState } from '@/state/sheet/reducers'
 import { initialUserState } from '@/state/user/reducers'
 
+import defaultInitialData from '@/state/initialData'
 import { defaultSheetSelections, defaultSheetStyles } from '@/state/sheet/defaults'
 
 import { resolveSheetVisibleRows, resolveSheetRowLeaders } from '@/state/sheet/resolvers'
@@ -65,6 +74,8 @@ export const appStateFactory = ({
   const allFolders: IAllFolders = {}
   const allFiles: IAllFiles = {}
   const allFileIds: IFile['id'][] = []
+  const allFilePermissions: IAllFilePermissions = {}
+  const allUserFilePermissionsByFileTypeId: IAllUserFilePermissionsByFileTypeId = {}
 
   const allSheets: IAllSheets = {}
   const allSheetsFromDatabase: { [sheetId: string]: ISheetFromDatabase } = {}
@@ -91,8 +102,18 @@ export const appStateFactory = ({
       const fileSuffix = 'Folder' + currentFolderNumber + '.File' + currentFileNumber
       const sheetSuffix = fileSuffix + '.Sheet' + currentFileNumber
       const fileId = filePrefix + fileSuffix
+      const filePermissionId = fileId + '.Permission'
       const sheetId = sheetPrefix + fileSuffix
       const activeSheetViewId = sheetId + '.activeSheetViewId'
+
+      const newFilePermission: IFilePermission = {
+        id: filePermissionId,
+        fileId: fileId,
+        userId: defaultInitialData.user.id,
+        userEmail: defaultInitialData.user.email,
+        userName: defaultInitialData.user.name,
+        role: 'OWNER'
+      }
 
       const newFile: IFile = {
         id: fileId,
@@ -257,6 +278,8 @@ export const appStateFactory = ({
       allFiles[newFile.id] = newFile
       allFileIds.push(newFile.id)
       allSheets[newSheet.id] = newSheet
+      allFilePermissions[newFilePermission.id] = newFilePermission
+      allUserFilePermissionsByFileTypeId[sheetId] = newFilePermission.id
       folderFiles.push(newFile.id)
       allSheetsFromDatabase[newSheetFromDatabase.id] = newSheetFromDatabase
     }
@@ -275,6 +298,8 @@ export const appStateFactory = ({
     allFolders,
     allFiles,
     allFileIds,
+    allFilePermissions,
+    allUserFilePermissionsByFileTypeId,
     allSheets,
     allSheetsFromDatabase,
     allSheetRows,
@@ -291,6 +316,8 @@ const {
   allFiles,
   allFileIds,
   allFolders,
+  allFilePermissions,
+  allUserFilePermissionsByFileTypeId,
   allSheets,
   allSheetColumns,
   allSheetRows,
@@ -304,7 +331,9 @@ export const appState: IAppState = {
   folder: {
     ...initialFolderState,
     allFiles: allFiles,
+    allFilePermissions: allFilePermissions,
     allFolders: allFolders,
+    allUserFilePermissionsByFileTypeId: allUserFilePermissionsByFileTypeId
   },
   modal: initialModalState,
   messenger: {
@@ -377,6 +406,26 @@ export const getCellAndCellProps = ({
   return {
     cell,
     props
+  }
+}
+
+//-----------------------------------------------------------------------------
+// Get App State By User Sheet Permission
+//-----------------------------------------------------------------------------
+export const getMockAppStateByUsersFilePermissionRole = (filePermissionRole: IFilePermission['role']): IAppState => {
+  const filePermissionId = Object.keys(appState.folder.allFilePermissions)[0]
+  return {
+    ...appState,
+    folder: {
+      ...appState.folder,
+      allFilePermissions: {
+        ...appState.folder.allFilePermissions,
+        [filePermissionId]: {
+          ...appState.folder.allFilePermissions[filePermissionId],
+          role: filePermissionRole
+        }
+      }
+    }
   }
 }
 

@@ -93,7 +93,7 @@ describe('SheetRowContextMenu', () => {
     const AddRowsAboveContextMenuItem = within(SheetRowContextMenuContainer).getByText('row above')
     fireEvent.click(AddRowsAboveContextMenuItem)
 
-    const SheetCellContainers = await waitForElement(() => getAllByTestId('SheetCellContainer'))
+    const SheetCellContainers = await waitForElement(() => getAllByTestId('SheetCell'))
     const NewR1C1Cell = SheetCellContainers[0]
     expect(store.getState().sheet.allSheets[sheetId].visibleRows.length).toEqual(sheet.visibleRows.length + 1)
     expect(within(NewR1C1Cell).queryByText(R1C1Cell.value)).not.toBeTruthy()
@@ -112,7 +112,7 @@ describe('SheetRowContextMenu', () => {
     const AddRowsBelowContextMenuItem = within(SheetRowContextMenuContainer).getByText('row below')
     fireEvent.click(AddRowsBelowContextMenuItem)
 
-    const SheetCellContainers = await waitForElement(() => getAllByTestId('SheetCellContainer'))
+    const SheetCellContainers = await waitForElement(() => getAllByTestId('SheetCell'))
     const NewRLastCLastCell = SheetCellContainers[SheetCellContainers.length - 1]
     expect(store.getState().sheet.allSheets[sheetId].visibleRows.length).toEqual(sheet.visibleRows.length + 1)
     expect(within(NewRLastCLastCell).queryByText(RLastCLastCell.value)).not.toBeTruthy()

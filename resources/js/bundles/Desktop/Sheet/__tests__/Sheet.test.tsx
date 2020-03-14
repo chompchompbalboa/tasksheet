@@ -69,8 +69,8 @@ describe('Sheet', () => {
     const { getAllByTestId, queryByTestId } = renderWithRedux(<Sheet {...props}/>)
     expect(axiosMock.get).toHaveBeenCalled()
     expect(axiosMock.get).toHaveBeenCalledWith(getSheetUrl)
-    expect(queryByTestId('SheetCellContainer')).not.toBeTruthy() 
-    const SheetCellContainers = await waitForElement(() => getAllByTestId('SheetCellContainer'))
+    expect(queryByTestId('SheetCell')).not.toBeTruthy() 
+    const SheetCellContainers = await waitForElement(() => getAllByTestId('SheetCell'))
     expect(SheetCellContainers.length).toBeGreaterThan(0)
   })
 

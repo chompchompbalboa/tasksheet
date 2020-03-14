@@ -9,10 +9,18 @@ import { cleanup, fireEvent, renderWithRedux } from '@/testing/library'
 import { 
   createMockStore,
   getCellAndCellProps,
+  getMockAppStateByTasksheetSubscriptionType,
+  getMockAppStateByUsersFilePermissionRole,
   mockAppState 
 } from '@/testing/mocks'
 
+import {
+  SUBSCRIPTION_EXPIRED_MESSAGE,
+  USER_DOESNT_HAVE_PERMISSION_TO_EDIT_SHEET_MESSAGE
+} from '@/state/messenger/messages'
+
 import { SheetCell } from '@desktop/Sheet/SheetCell'
+import Messenger from '@desktop/Messenger/Messenger'
 
 //-----------------------------------------------------------------------------
 // Setup
@@ -55,7 +63,7 @@ describe('SheetCell', () => {
   it("renders without crashing", async () => {
     const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1 })
     const { getByTestId } = renderWithRedux(<SheetCell {...props}/>, { store: createMockStore(mockAppState) })
-    expect(getByTestId('SheetCellContainer')).toHaveTextContent(cell.value)
+    expect(getByTestId('SheetCell')).toHaveTextContent(cell.value)
   })
 
   it("correctly renders SheetCellString", async () => {
@@ -97,7 +105,7 @@ describe('SheetCell', () => {
   it("changes background color on hover", async () => {
     const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1 })
     const { getByTestId } = renderWithRedux(<SheetCell {...props}/>, { store: createMockStore(mockAppState) })
-    const Container = getByTestId('SheetCellContainer')
+    const Container = getByTestId('SheetCell')
     const initialBackgroundColor = Container.style.backgroundColor
     fireEvent.mouseOver(Container)
     expect(Container).not.toHaveStyleRule('background-color', initialBackgroundColor)
@@ -106,9 +114,9 @@ describe('SheetCell', () => {
   it("selects when clicked", async () => {
     const { props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1 })
     const { getByTestId } = renderWithRedux(<SheetCell {...props}/>, { store: createMockStore(mockAppState) })
-    expect(getByTestId('SheetCellContainer')).toHaveStyleRule('box-shadow', 'none')
-    fireEvent.mouseDown(getByTestId('SheetCellContainer'))
-    expect(getByTestId('SheetCellContainer')).toHaveStyleRule('box-shadow', cellIsSelectedBoxShadow)
+    expect(getByTestId('SheetCell')).toHaveStyleRule('box-shadow', 'none')
+    fireEvent.mouseDown(getByTestId('SheetCell'))
+    expect(getByTestId('SheetCell')).toHaveStyleRule('box-shadow', cellIsSelectedBoxShadow)
   })
 
   it("when another cell is clicked, changes the selected cell to the clicked cell", async () => {
@@ -122,8 +130,8 @@ describe('SheetCell', () => {
       </>
     ,{ store: createMockStore(mockAppState) })
 
-    const R1C1Container = getAllByTestId('SheetCellContainer')[0]
-    const R2C2Container = getAllByTestId('SheetCellContainer')[1]
+    const R1C1Container = getAllByTestId('SheetCell')[0]
+    const R2C2Container = getAllByTestId('SheetCell')[1]
     
     expect(R1C1Container).toHaveStyleRule('box-shadow', 'none')
     expect(R2C2Container).toHaveStyleRule('box-shadow', 'none')
@@ -150,9 +158,9 @@ describe('SheetCell', () => {
       </>
     ,{ store: createMockStore(mockAppState) })
 
-    const R1C2Container = getAllByTestId('SheetCellContainer')[0]
-    const R2C1Container = getAllByTestId('SheetCellContainer')[1]
-    const R2C2Container = getAllByTestId('SheetCellContainer')[2]
+    const R1C2Container = getAllByTestId('SheetCell')[0]
+    const R2C1Container = getAllByTestId('SheetCell')[1]
+    const R2C2Container = getAllByTestId('SheetCell')[2]
 
     fireEvent.mouseDown(R2C2Container)
     expect(R2C2Container).toHaveStyleRule('box-shadow', cellIsSelectedBoxShadow)
@@ -189,7 +197,7 @@ describe('SheetCell', () => {
       </>
     ,{ store: createMockStore(mockAppState) })
 
-    const Containers = getAllByTestId('SheetCellContainer')
+    const Containers = getAllByTestId('SheetCell')
     const RFirstCFirstContainer = Containers[0]
     const RFirstCLastContainer = Containers[1]
     const RLastCFirstContainer = Containers[2]
@@ -233,9 +241,9 @@ describe('SheetCell', () => {
       </>
     ,{ store: createMockStore(mockAppState) })
 
-    const R1C1Container = getAllByTestId('SheetCellContainer')[0]
+    const R1C1Container = getAllByTestId('SheetCell')[0]
     const R1C1SheetRange = getAllByTestId('SheetCellSheetRange')[0]
-    const R2C2Container = getAllByTestId('SheetCellContainer')[1]
+    const R2C2Container = getAllByTestId('SheetCell')[1]
     const R2C2SheetRange = getAllByTestId('SheetCellSheetRange')[1]
     
     expect(R1C1Container).toHaveStyleRule('box-shadow', 'none')
@@ -269,11 +277,11 @@ describe('SheetCell', () => {
       </>
     ,{ store: createMockStore(mockAppState) })
 
-    const R1C1Container = getAllByTestId('SheetCellContainer')[0]
+    const R1C1Container = getAllByTestId('SheetCell')[0]
     const R1C1SheetRange = getAllByTestId('SheetCellSheetRange')[0]
-    const R2C2Container = getAllByTestId('SheetCellContainer')[1]
+    const R2C2Container = getAllByTestId('SheetCell')[1]
     const R2C2SheetRange = getAllByTestId('SheetCellSheetRange')[1]
-    const R3C3Container = getAllByTestId('SheetCellContainer')[2]
+    const R3C3Container = getAllByTestId('SheetCell')[2]
 
     fireEvent.mouseDown(R1C1Container)
     fireEvent.mouseDown(R2C2Container, { shiftKey: true })
@@ -290,27 +298,29 @@ describe('SheetCell', () => {
     expect(R3C3Container).toHaveStyleRule('box-shadow', cellIsSelectedBoxShadow)
   })
 
-  it("SheetCellString begins editing the cell when double clicked", async () => {
-    const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'STRING' })
-    const { getByText, getByTestId, queryByTestId } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
-    expect(queryByTestId('SheetCellStringInput')).toBeNull()
-    fireEvent.doubleClick(getByText(cell.value))
-    expect(getByTestId('SheetCellStringInput')).toBeTruthy()
+  it("displays an error message when a user with an expired subscription tries to edit a cell", () => {
+    const { props: R1C1Props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1 })
+    const { getByTestId, queryByText } = renderWithRedux(
+      <>
+        <SheetCell {...R1C1Props}/>
+        <Messenger />
+      </>
+    , { store: createMockStore(getMockAppStateByTasksheetSubscriptionType('TRIAL_EXPIRED')) })
+    const R1C1Container = getByTestId('SheetCellString')
+    fireEvent.doubleClick(R1C1Container)
+    expect(queryByText(SUBSCRIPTION_EXPIRED_MESSAGE.message)).toBeTruthy()
   })
 
-  it("SheetCellNumber begins editing the cell when double clicked", async () => {
-    const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'NUMBER' })
-    const { getByText, getByTestId, queryByTestId } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
-    expect(queryByTestId('SheetCellNumberInput')).toBeNull()
-    fireEvent.doubleClick(getByText(cell.value))
-    expect(getByTestId('SheetCellNumberInput')).toBeTruthy()
-  })
-
-  it("SheetCellDatetime begins editing the cell when double clicked", async () => {
-    const { cell, props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1, cellTypeOverride: 'DATETIME' })
-    const { getByText, getByTestId, queryByTestId } = renderWithRedux(<SheetCell {...props}/>,{ store: createMockStore(mockAppState) })
-    expect(queryByTestId('SheetCellDatetimeDatepickerInput')).toBeNull()
-    fireEvent.doubleClick(getByText(cell.value))
-    expect(getByTestId('SheetCellDatetimeDatepickerInput')).toBeTruthy()
+  it("displays an error message when a user without editing permission tries to edit a cell", () => {
+    const { props: R1C1Props } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1 })
+    const { getByTestId, queryByText } = renderWithRedux(
+      <>
+        <SheetCell {...R1C1Props}/>
+        <Messenger />
+      </>
+    , { store: createMockStore(getMockAppStateByUsersFilePermissionRole('VIEWER')) })
+    const R1C1Container = getByTestId('SheetCellString')
+    fireEvent.doubleClick(R1C1Container)
+    expect(queryByText(USER_DOESNT_HAVE_PERMISSION_TO_EDIT_SHEET_MESSAGE.message)).toBeTruthy()
   })
 })

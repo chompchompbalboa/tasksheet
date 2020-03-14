@@ -24,27 +24,28 @@ export const useSheetEditingPermissions = (sheetId: ISheet['id']): IReturnValue 
   if(!isUserTasksheetSubscriptionActive) {
     return {
       userHasPermissionToEditSheet: false,
-      userPermissionErrorMessage: SUBSCRIPTION_EXPIRED_MESSAGE
+      userHasPermissionToEditSheetErrorMessage: SUBSCRIPTION_EXPIRED_MESSAGE
     }
   }
   
   // Bail out if the user's role for the sheet doesn't grant them editing permission
   const allFilePermissions = useSelector((state: IAppState) => state.folder.allFilePermissions)
   const allUserFilePermissionsByFileTypeId = useSelector((state: IAppState) => state.folder.allUserFilePermissionsByFileTypeId)
-  const userRole = allFilePermissions[allUserFilePermissionsByFileTypeId[sheetId]].role
+  const filePermissionId = allUserFilePermissionsByFileTypeId[sheetId]
+  const userRole = allFilePermissions[filePermissionId] && allFilePermissions[filePermissionId].role
   const userRolesWithEditingPermission: IFilePermission['role'][] = ['OWNER', 'EDITOR']
-  const doesUserRoleGrantEditingPermission = userRolesWithEditingPermission.includes(userRole)
+  const doesUserRoleGrantEditingPermission = userRole ? userRolesWithEditingPermission.includes(userRole) : false
   if(!doesUserRoleGrantEditingPermission) {
     return {
       userHasPermissionToEditSheet: false,
-      userPermissionErrorMessage: USER_DOESNT_HAVE_PERMISSION_TO_EDIT_SHEET_MESSAGE
+      userHasPermissionToEditSheetErrorMessage: USER_DOESNT_HAVE_PERMISSION_TO_EDIT_SHEET_MESSAGE
     }
   }
   
   // The checks passed and the user does have permission to edit the sheet
   return {
     userHasPermissionToEditSheet: true,
-    userPermissionErrorMessage: null
+    userHasPermissionToEditSheetErrorMessage: null
   }
 }
 
@@ -53,5 +54,5 @@ export const useSheetEditingPermissions = (sheetId: ISheet['id']): IReturnValue 
 //-----------------------------------------------------------------------------
 interface IReturnValue {
   userHasPermissionToEditSheet: boolean
-  userPermissionErrorMessage: IMessengerMessage
+  userHasPermissionToEditSheetErrorMessage: IMessengerMessage
 }

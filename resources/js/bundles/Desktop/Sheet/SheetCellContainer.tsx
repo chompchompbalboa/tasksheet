@@ -47,7 +47,7 @@ const SheetCellContainer = ({
   // Permissions
   const { 
     userHasPermissionToEditSheet,
-    userPermissionErrorMessage
+    userHasPermissionToEditSheetErrorMessage
   } = useSheetEditingPermissions(sheetId)
   
   // Local Variables
@@ -86,7 +86,7 @@ const SheetCellContainer = ({
   const beginEditingOnDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
     if(!userHasPermissionToEditSheet) {
-      dispatch(createMessengerMessage(userPermissionErrorMessage))
+      dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
     }
     else {
       beginEditing()
@@ -133,7 +133,7 @@ const SheetCellContainer = ({
     ) {
       e.preventDefault()
       if(!userHasPermissionToEditSheet) {
-        dispatch(createMessengerMessage(userPermissionErrorMessage))
+        dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
       }
       else {
         beginEditing(e.key)
@@ -160,7 +160,7 @@ const SheetCellContainer = ({
       if((e.key === 'Delete' || e.key === 'Backspace') && !onlyRenderChildren) {
         e.preventDefault()
         if(!userHasPermissionToEditSheet) {
-          dispatch(createMessengerMessage(userPermissionErrorMessage))
+          dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
         }
         else {
           beginEditing('')

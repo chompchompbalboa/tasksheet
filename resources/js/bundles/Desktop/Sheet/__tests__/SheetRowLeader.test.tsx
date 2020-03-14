@@ -100,7 +100,7 @@ describe('SheetRowLeader', () => {
     const { cell: R1C1Cell } = getCellAndCellProps({ row: 1, column: 1 })
     const { cell: R1CLastCell } = getCellAndCellProps({ row: 1, column: activeSheetView.visibleColumns.length })
     const { getAllByTestId } = renderWithRedux(<Sheet {...sheetProps}/>)
-    const SheetCellContainers = await waitForElement(() => getAllByTestId('SheetCellContainer'))
+    const SheetCellContainers = await waitForElement(() => getAllByTestId('SheetCell'))
 
     const getSheetRange = (cell: ISheetCell) => {
       const SheetCellContainer = SheetCellContainers.find(SheetCellContainer => {
@@ -128,7 +128,7 @@ describe('SheetRowLeader', () => {
     const { cell: R3C1Cell } = getCellAndCellProps({ row: 3, column: 1 })
     const { cell: R3CLastCell } = getCellAndCellProps({ row: 3, column: activeSheetView.visibleColumns.length })
     const { getByTestId, getAllByTestId } = renderWithRedux(<Sheet {...sheetProps}/>)
-    const SheetCellContainers = await waitForElement(() => getAllByTestId('SheetCellContainer'))
+    const SheetCellContainers = await waitForElement(() => getAllByTestId('SheetCell'))
 
     const getSheetRange = (cell: ISheetCell) => {
       const SheetCellContainer = SheetCellContainers.find(SheetCellContainer => {

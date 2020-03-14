@@ -22,7 +22,7 @@ const getInitialMessages = () => {
   const initialUserState: IUser = typeof initialData !== 'undefined' ? initialData.user : defaultInitialData.user
   const userTasksheetSubscriptionType = initialUserState.tasksheetSubscription.type
   if(['TRIAL_EXPIRED', 'MONTHLY_EXPIRED'].includes(userTasksheetSubscriptionType)) {
-    return [ SUBSCRIPTION_EXPIRED_MESSAGE ]
+    return [ { ...SUBSCRIPTION_EXPIRED_MESSAGE, timeout: 60000 } ]
   }
   if(userTasksheetSubscriptionType === 'MONTHLY_PAST_DUE') {
     return [ SUBSCRIPTION_PAST_DUE_MESSAGE ]

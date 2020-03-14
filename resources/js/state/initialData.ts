@@ -8,7 +8,7 @@ import {
 
 const initalData: IInitialData = {
 	user: <IUser> {
-		id: 'uuid',
+		id: 'userId',
 		name: '',
 		email: '',
 		active: <IUserActive> {

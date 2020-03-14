@@ -11,6 +11,7 @@ export {
   appStateFactoryColumns as mockAppStateColumnTypes, 
   getCellAndCellProps, 
   getMockAppStateByTasksheetSubscriptionType,
+  getMockAppStateByUsersFilePermissionRole,
   IAppStateFactoryInput as IMockAppStateFactoryInput,
   IGetCellAndCellProps 
 } from '@/testing/mocks/appState'
