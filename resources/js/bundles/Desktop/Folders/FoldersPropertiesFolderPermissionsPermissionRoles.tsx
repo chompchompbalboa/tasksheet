@@ -41,8 +41,8 @@ const FoldersPropertiesFolderPermissionsPermissionRoles = ({
   // Roles
   const roles = {
     OWNER: "Owner",
-    ADMINISTRATOR: "Administrator",
-    USER: "User"
+    EDITOR: "Editor",
+    VIEWER: "Viewer"
   }
 
   return (

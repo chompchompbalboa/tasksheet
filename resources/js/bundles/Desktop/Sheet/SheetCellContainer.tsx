@@ -5,6 +5,8 @@ import React, { MouseEvent, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { useSheetEditingPermissions } from '@/hooks'
+
 import { IAppState } from '@/state'
 import { 
   ISheet,
@@ -17,8 +19,6 @@ import {
 import {
   updateSheetSelectionFromArrowKey
 } from '@/state/sheet/actions'
-
-import { SUBSCRIPTION_EXPIRED_MESSAGE } from '@/state/messenger/messages'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -40,10 +40,15 @@ const SheetCellContainer = ({
   // Redux
   const dispatch = useDispatch()
   const activeSheetId = useSelector((state: IAppState) => state.folder.allFiles[state.tab.activeTab] && state.folder.allFiles[state.tab.activeTab].typeId)
-  const isSheetEditingPrevented = useSelector((state: IAppState) => ['MONTHLY_EXPIRED', 'TRIAL_EXPIRED'].includes(state.user.tasksheetSubscription.type))
   const isSelectedCellEditingPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellEditingPrevented)
   const isSelectedCellNavigationPrevented = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.isSelectedCellNavigationPrevented)
   const sheetStyles = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].styles)
+  
+  // Permissions
+  const { 
+    userHasPermissionToEditSheet,
+    userPermissionErrorMessage
+  } = useSheetEditingPermissions(sheetId)
   
   // Local Variables
   const isActiveSheet = activeSheetId === sheetId
@@ -80,11 +85,8 @@ const SheetCellContainer = ({
   // component can't handle both events wihout unexpected behavior.
   const beginEditingOnDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
-    if(isSheetEditingPrevented) {
-      dispatch(createMessengerMessage({ 
-        ...SUBSCRIPTION_EXPIRED_MESSAGE,
-        timeout: 5000
-      }))
+    if(!userHasPermissionToEditSheet) {
+      dispatch(createMessengerMessage(userPermissionErrorMessage))
     }
     else {
       beginEditing()
@@ -130,11 +132,8 @@ const SheetCellContainer = ({
       && !onlyRenderChildren
     ) {
       e.preventDefault()
-      if(isSheetEditingPrevented) {
-        dispatch(createMessengerMessage({ 
-          ...SUBSCRIPTION_EXPIRED_MESSAGE,
-          timeout: 5000
-        }))
+      if(!userHasPermissionToEditSheet) {
+        dispatch(createMessengerMessage(userPermissionErrorMessage))
       }
       else {
         beginEditing(e.key)
@@ -160,11 +159,8 @@ const SheetCellContainer = ({
       }
       if((e.key === 'Delete' || e.key === 'Backspace') && !onlyRenderChildren) {
         e.preventDefault()
-        if(isSheetEditingPrevented) {
-          dispatch(createMessengerMessage({ 
-            ...SUBSCRIPTION_EXPIRED_MESSAGE,
-            timeout: 5000
-          }))
+        if(!userHasPermissionToEditSheet) {
+          dispatch(createMessengerMessage(userPermissionErrorMessage))
         }
         else {
           beginEditing('')

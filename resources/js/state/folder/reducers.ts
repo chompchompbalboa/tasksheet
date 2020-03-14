@@ -7,6 +7,7 @@ import {
   IAllFolders, IFolder,
   IAllFolderPermissions, 
   IAllFilePermissions, 
+  IAllUserFilePermissionsByFileTypeId,
   IFolderClipboard, 
 } from '@/state/folder/types'
 import {
@@ -26,6 +27,7 @@ import {
 //-----------------------------------------------------------------------------
 const initialFolderData = typeof initialData !== 'undefined' ? initialData.folders : defaultInitialData.folders
 const initialFileData = typeof initialData !== 'undefined' ? initialData.files : defaultInitialData.files
+const initialUserData = typeof initialData !== 'undefined' ? initialData.user : defaultInitialData.user
 
 // Function to set the normalized folders and files
 const setNormalizedFoldersAndFiles = () => {
@@ -33,6 +35,7 @@ const setNormalizedFoldersAndFiles = () => {
   // Variables
   const allFolderPermissions: IAllFolderPermissions = {}
   const allFilePermissions: IAllFilePermissions = {}
+  const allUserFilePermissionsByFileTypeId: IAllUserFilePermissionsByFileTypeId = {}
   const allFolders: IAllFolders = {}
   const allFiles: IAllFiles = {}
   const allFolderIds = new Set( initialFolderData.map(folder => folder.id) )
@@ -68,6 +71,9 @@ const setNormalizedFoldersAndFiles = () => {
     }
     file.permissions.forEach(filePermission => {
       allFilePermissions[filePermission.id] = filePermission
+      if(filePermission.userId === initialUserData.id) {
+        allUserFilePermissionsByFileTypeId[file.typeId] = filePermission.id
+      }
     })
   })
   
@@ -89,11 +95,27 @@ const setNormalizedFoldersAndFiles = () => {
   })
   
   // Return the normalized objects
-  return { allFolderPermissions, allFilePermissions, allFolders, allFiles, userFolderIds, userFileIds }
+  return { 
+    allFolderPermissions, 
+    allFilePermissions, 
+    allFolders, 
+    allFiles,
+    allUserFilePermissionsByFileTypeId,
+    userFolderIds, 
+    userFileIds 
+  }
 }
 
 // Get the normalized folders and files
-const { allFolderPermissions, allFilePermissions, allFolders, allFiles, userFolderIds, userFileIds } = setNormalizedFoldersAndFiles()
+const { 
+  allFolderPermissions, 
+  allFilePermissions, 
+  allFolders, 
+  allFiles,
+  allUserFilePermissionsByFileTypeId,
+  userFolderIds, 
+  userFileIds 
+} = setNormalizedFoldersAndFiles()
 
 // Initial Folder State
 export const initialFolderState: IFolderState = {
@@ -103,6 +125,7 @@ export const initialFolderState: IFolderState = {
   allFilePermissions: allFilePermissions,
 	allFolders: allFolders,
   allFiles: allFiles,
+  allUserFilePermissionsByFileTypeId: allUserFilePermissionsByFileTypeId,
   userFolderIds: userFolderIds,
   userFileIds: userFileIds,
   clipboard: { 
@@ -118,6 +141,7 @@ export type IFolderState = {
 	allFilePermissions: IAllFilePermissions
 	allFolders: IAllFolders
   allFiles: IAllFiles
+  allUserFilePermissionsByFileTypeId: IAllUserFilePermissionsByFileTypeId
 	userFolderIds: IFolder['id'][]
 	userFileIds: IFile['id'][]
   clipboard: IFolderClipboard

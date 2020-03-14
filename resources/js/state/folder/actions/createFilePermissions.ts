@@ -16,15 +16,25 @@ import {
 export const createFilePermissions = (newFilePermissions: IFilePermission[]): IThunkAction => {
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
-      allFilePermissions,
-      allFiles
-    } = getState().folder
+      folder: {
+        allFilePermissions,
+        allFiles,
+        allUserFilePermissionsByFileTypeId
+      },
+      user: {
+        id: userId
+      }
+    } = getState()
     
     let nextAllFilePermissions = { ...allFilePermissions }
     let nextAllFiles = { ...allFiles }
+    let nextAllUserFilePermissionsByFileTypeId = { ...allUserFilePermissionsByFileTypeId }
     
     newFilePermissions.forEach(newFilePermission => {
+      // Get the file
       const file = nextAllFiles[newFilePermission.fileId]
+      
+      // Create the file permissions
       const nextFilePermissions = [
         ...file.permissions,
         newFilePermission.id
@@ -39,6 +49,11 @@ export const createFilePermissions = (newFilePermissions: IFilePermission[]): IT
           ...nextAllFiles[file.id],
           permissions: nextFilePermissions
         }
+      }
+      
+      // Add the permissions to the user's file permissions
+      if(newFilePermission.userId === userId) {
+        nextAllUserFilePermissionsByFileTypeId[file.typeId] = newFilePermission.id
       }
     })
     

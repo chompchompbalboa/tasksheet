@@ -8,6 +8,7 @@ import { IUser } from '@/state/user/types'
 //-----------------------------------------------------------------------------
 export interface IAllFolderPermissions { [folderPermissionId: string]: IFolderPermission }
 export interface IAllFilePermissions { [filePermissionId: string]: IFilePermission }
+export interface IAllUserFilePermissionsByFileTypeId { [fileTypeId: string]: IFilePermission['id'] }
 export interface IAllFolders { [folderId: string]: IFolder }
 export interface IAllFiles { [fileId: string]: IFile }
 
@@ -43,11 +44,11 @@ export interface IFolderPermission {
   userId: IUser['id']
   userName: string
   userEmail: string
-  role: 'OWNER' | 'ADMINISTRATOR' | 'USER'
+  role: 'OWNER' | 'EDITOR' | 'VIEWER'
 }
 
 export interface IFolderPermissionUpdates {
-  role?: 'OWNER' | 'ADMINISTRATOR' | 'USER'
+  role?: IFolderPermission['role']
 }
 
 export interface IFileFromDatabase {
@@ -87,11 +88,11 @@ export interface IFilePermission {
   userId: IUser['id']
   userName: string
   userEmail: string
-  role: 'OWNER' | 'ADMINISTRATOR' | 'USER'
+  role: 'OWNER' | 'EDITOR' | 'VIEWER'
 }
 
 export interface IFilePermissionUpdates {
-  role?: 'OWNER' | 'ADMINISTRATOR' | 'USER'
+  role?: IFilePermission['role']
 }
 
 export type IFileType = 'SHEET'

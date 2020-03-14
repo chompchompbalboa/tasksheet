@@ -37,7 +37,7 @@ const FoldersPropertiesFolderPermissionsCreatePermission = ({
   // State
   const [ createPermissionStatus, setCreatePermissionStatus ] = useState('READY' as ICreatePermissionStatus)
   const [ createPermissionEmail, setCreatePermissionEmail ] = useState('')
-  const [ createPermissionRole, setCreatePermissionRole ] = useState('USER' as IFolderPermission['role'])
+  const [ createPermissionRole, setCreatePermissionRole ] = useState('EDITOR' as IFolderPermission['role'])
   const [ isEmailInputFocused, setIsEmailInputFocused ] = useState(false)
   const [ isErrorContainerVisible, setIsErrorContainerVisible] = useState(false)
   
@@ -93,7 +93,7 @@ const FoldersPropertiesFolderPermissionsCreatePermission = ({
           dispatch(createFolderPermissions(folderPermissions, filePermissions))
           setCreatePermissionStatus('READY')
           setCreatePermissionEmail('')
-          setCreatePermissionRole('USER')
+          setCreatePermissionRole('EDITOR')
         }, 1250)
       })
       .catch(error => {
