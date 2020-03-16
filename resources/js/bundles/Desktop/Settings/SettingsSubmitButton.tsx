@@ -12,7 +12,9 @@ import { IAppState } from '@/state'
 //-----------------------------------------------------------------------------
 const SettingsSubmitButton = ({
   testId = "SettingsSubmitButton",
+  className,
   isDisabled = false,
+  onClick,
   text
 }: ISettingsSubmitButton) => { 
   
@@ -21,8 +23,10 @@ const SettingsSubmitButton = ({
   return (
     <StyledButton
       data-testid={testId}
+      className={className}
       disabled={isDisabled}
       isDisabled={isDisabled}
+      onClick={onClick}
       userColorPrimary={userColorPrimary}>
       {text}
     </StyledButton>
@@ -34,7 +38,9 @@ const SettingsSubmitButton = ({
 //-----------------------------------------------------------------------------
 interface ISettingsSubmitButton {
   testId?: string
+  className?: string
   isDisabled?: boolean
+  onClick?(...args: any): void
   text: string
 }
 
@@ -50,7 +56,7 @@ const StyledButton = styled.button`
   outline: 0;
   background-color: ${ ({ isDisabled, userColorPrimary }: IStyledButton) => isDisabled ? 'rgb(175, 175, 175)' : userColorPrimary };
   color: white;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   border-radius: 4px;
   text-decoration: none;
   transition: all 0.15s;

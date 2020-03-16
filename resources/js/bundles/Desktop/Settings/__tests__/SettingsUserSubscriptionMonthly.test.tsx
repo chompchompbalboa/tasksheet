@@ -23,13 +23,15 @@ describe('SettingsUserSubscriptionMonthly', () => {
     const mockAppState = getMockAppStateByTasksheetSubscriptionType(tasksheetSubscriptionType)
     const {
       container, 
+      queryByTestId,
       store: { 
         getState 
       }
     } = renderWithRedux(<SettingsUserSubscriptionMonthly />, { store: createMockStore(mockAppState) })
     return {
       container,
-      getState
+      getState,
+      queryByTestId
     }
   }
 
@@ -37,6 +39,11 @@ describe('SettingsUserSubscriptionMonthly', () => {
     const { container, getState } = settingsUserSubscriptionMonthly('MONTHLY')
     const expectedBillingDate = moment.localeData().ordinal(getState().user.tasksheetSubscription.billingDayOfMonth)
     expect(container.textContent).toContain(expectedBillingDate)
+  })
+
+  it("displays a button allowing the user to cancel their subscription", () => {
+    const { queryByTestId } = settingsUserSubscriptionMonthly('MONTHLY')
+    expect(queryByTestId('SettingsUserSubscriptionMonthlyCancelSubscription')).toBeTruthy()
   })
 
 })

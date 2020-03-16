@@ -8,6 +8,8 @@ import styled from 'styled-components'
 
 import { IAppState } from '@/state'
 
+import SettingsUserSubscriptionMonthlyCancelSubscription from '@desktop/Settings/SettingsUserSubscriptionMonthlyCancelSubscription'
+
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
@@ -21,12 +23,15 @@ const SettingsUserSubscriptionMonthly = () => {
   return (
     <Container
       data-testid="SettingsUserSubscriptionMonthly">
-      Your monthly subscription is active
-      {userSubscriptionBillingDayOfMonth 
-        ? <span> and your card will be charged each month on the <b>{userSubscriptionBillingDayOfMonth}</b>. </span>
-        : '. '
-      }
-      Thank you for choosing Tasksheet!
+      <SubscriptionStatus>
+        Your monthly subscription is active
+        {userSubscriptionBillingDayOfMonth 
+          ? <span> and your card will be charged each month on the <b>{userSubscriptionBillingDayOfMonth}</b>. </span>
+          : '. '
+        }
+        Thank you for choosing Tasksheet!
+      </SubscriptionStatus>
+      <SettingsUserSubscriptionMonthlyCancelSubscription />
     </Container>
   )
 }
@@ -34,7 +39,13 @@ const SettingsUserSubscriptionMonthly = () => {
 //-----------------------------------------------------------------------------
 // Styled Components
 //-----------------------------------------------------------------------------
-const Container = styled.div``
+const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const SubscriptionStatus = styled.div``
 
 //-----------------------------------------------------------------------------
 // Export
