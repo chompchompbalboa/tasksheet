@@ -23,15 +23,21 @@ describe('SettingsUserSubscriptionMonthly', () => {
     const mockAppState = getMockAppStateByTasksheetSubscriptionType(tasksheetSubscriptionType)
     const {
       container, 
-      queryByTestId,
+      debug,
+      getByText,
+      queryByPlaceholderText,
+      queryByText,
       store: { 
         getState 
       }
     } = renderWithRedux(<SettingsUserSubscriptionMonthly />, { store: createMockStore(mockAppState) })
     return {
       container,
+      debug,
+      getByText,
       getState,
-      queryByTestId
+      queryByPlaceholderText,
+      queryByText
     }
   }
 
@@ -41,9 +47,17 @@ describe('SettingsUserSubscriptionMonthly', () => {
     expect(container.textContent).toContain(expectedBillingDate)
   })
 
-  it("displays a button allowing the user to cancel their subscription", () => {
-    const { queryByTestId } = settingsUserSubscriptionMonthly('MONTHLY')
-    expect(queryByTestId('SettingsUserSubscriptionMonthlyCancelSubscription')).toBeTruthy()
+  it("displays a 'Cancel Subscription' button", () => {
+    const { queryByText } = settingsUserSubscriptionMonthly('MONTHLY')
+    expect(queryByText("Cancel Subscription")).toBeTruthy()
+  })
+
+  it("displays an input prompting users to enter their password to confirm cancellation when the 'Cancel Subscription' button is clicked", () => {
+    const { getByText, queryByPlaceholderText } = settingsUserSubscriptionMonthly('MONTHLY')
+    const cancelSubscriptionButton = getByText("Cancel Subscription")
+    cancelSubscriptionButton.click()
+    expect(queryByPlaceholderText("Enter your password")).toBeTruthy()
+    expect(cancelSubscriptionButton.textContent).toContain("Confirm Cancellation")
   })
 
 })
