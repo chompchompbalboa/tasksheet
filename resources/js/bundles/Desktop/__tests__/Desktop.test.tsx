@@ -2,8 +2,6 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import 'jest-styled-components'
-import '@testing-library/jest-dom/extend-expect'
 import axiosMock from 'axios'
 
 import { renderWithRedux } from '@/testing/library'

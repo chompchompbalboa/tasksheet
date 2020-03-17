@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Carbon\CarbonImmutable;
 
+use Illuminate\Support\Facades\Hash;
+
 use App\Models\User;
 use App\Models\UserSubscription;
 use Illuminate\Http\Request;
@@ -62,5 +64,15 @@ class UserSubscriptionPurchaseController extends Controller
       $userSubscription->subscriptionEndDate = null;
       $userSubscription->save();
       return $userSubscription;
+    }
+
+    public function subscriptionCancelMonthly(Request $request, User $user)
+    {
+      if(Hash::check($request->input('password'), $user->password)) {
+        dd('success');
+      }
+      else {
+        return response(null, 401);
+      }
     }
 }

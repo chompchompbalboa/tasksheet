@@ -2,9 +2,14 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { action } from '@/api'
+
 import { CLOSE } from '@/assets/icons'
+
+import { IAppState } from '@/state'
 
 import Icon from '@/components/Icon'
 import SettingsButton from '@desktop/Settings/SettingsButton'
@@ -14,38 +19,66 @@ import SettingsButton from '@desktop/Settings/SettingsButton'
 //-----------------------------------------------------------------------------
 const SettingsUserSubscriptionMonthlyCancelSubscription = () => {
 
-  const [ cancelSubscriptionStatus, setCancelSubscriptionStatus ] = useState('READY' as ICancelSubscriptionStatus)
-  const [ cancelSubscriptionConfirmEmailValue, setCancelSubscriptionConfirmEmailValue ] = useState('')
+  // Redux
+  const userId = useSelector((state: IAppState) => state.user.id)
 
-  const cancelSubscriptionStatusOnClicks = {
+  // State
+  const [ cancelSubscriptionStatus, setCancelSubscriptionStatus ] = useState('READY' as ICancelSubscriptionStatus)
+  const [ passwordInputValue, setPasswordInputValue ] = useState('')
+
+  // Cancel Subscription 
+  const cancelSubscriptionButtonOnClicks = {
     READY: () => {
-      setCancelSubscriptionConfirmEmailValue('')
+      setPasswordInputValue('')
       setCancelSubscriptionStatus('CONFIRM_CANCELLATION')
     },
-    CONFIRM_CANCELLATION: () => {
-      setCancelSubscriptionStatus('CANCELLING')
-    },
+    CONFIRM_CANCELLATION: () => handleCancelSubscription(),
     CANCELLING: () => {},
+    INCORRECT_PASSWORD: () => handleCancelSubscription(),
+    ERROR: () => handleCancelSubscription()
+  }
+
+  // Handle Cancel Subscription
+  const handleCancelSubscription = () => {
+    setCancelSubscriptionStatus('CANCELLING')
+    action.userSubscriptionCancelMonthly(userId, passwordInputValue)
+      .then()
+      .catch(error => {
+        if(error.response.status === 401) {
+          setTimeout(() => {
+            setPasswordInputValue('')
+            setCancelSubscriptionStatus('INCORRECT_PASSWORD')
+          }, 500)
+        }
+        else {
+          setTimeout(() => {
+            setCancelSubscriptionStatus('ERROR')
+          }, 500)
+        }
+      })
   }
 
   return (
     <Container>
-      <ConfirmCancellationInput
+      <PasswordInput
+        type="password"
         cancelSubscriptionStatus={cancelSubscriptionStatus}
-        onChange={e => setCancelSubscriptionConfirmEmailValue(e.target.value)}
-        placeholder="Enter your password"
-        value={cancelSubscriptionConfirmEmailValue}/>
-      <CloseInputButton
+        onChange={e => setPasswordInputValue(e.target.value)}
+        placeholder={cancelSubscriptionStatus === 'INCORRECT_PASSWORD' ? "Incorrect Password" : "Enter your password"}
+        value={passwordInputValue}/>
+      <ClosePasswordInputButton
+        testId="ClosePasswordInputButton"
         backgroundColorHover="red"
         cancelSubscriptionStatus={cancelSubscriptionStatus}
         onClick={() => setCancelSubscriptionStatus('READY')}>
         <Icon
           icon={CLOSE}
-          size="1.25rem"/>
-      </CloseInputButton>
+          size="1.125rem"/>
+      </ClosePasswordInputButton>
       <CancelSubscriptionButton
-        onClick={cancelSubscriptionStatusOnClicks[cancelSubscriptionStatus]}
-        text={cancelSubscriptionStatusButtonText[cancelSubscriptionStatus]}/>
+        isDisabled={cancelSubscriptionStatus === 'CONFIRM_CANCELLATION' && passwordInputValue === ''}
+        onClick={cancelSubscriptionButtonOnClicks[cancelSubscriptionStatus]}
+        text={cancelSubscriptionButtonText[cancelSubscriptionStatus]}/>
     </Container>
   )
 }
@@ -53,10 +86,12 @@ const SettingsUserSubscriptionMonthlyCancelSubscription = () => {
 //-----------------------------------------------------------------------------
 // Messages
 //-----------------------------------------------------------------------------
-export const cancelSubscriptionStatusButtonText = {
+export const cancelSubscriptionButtonText = {
   READY: "Cancel Subscription",
   CONFIRM_CANCELLATION: "Confirm Cancellation",
-  CANCELLING: "Cancelling..."
+  CANCELLING: "Cancelling...",
+  INCORRECT_PASSWORD: "Confirm Cancellation",
+  ERROR: "Confirm Cancellation",
 }
 
 //-----------------------------------------------------------------------------
@@ -65,7 +100,9 @@ export const cancelSubscriptionStatusButtonText = {
 type ICancelSubscriptionStatus = 
   'READY' |
   'CONFIRM_CANCELLATION' |
-  'CANCELLING'
+  'CANCELLING' |
+  'INCORRECT_PASSWORD' |
+  'ERROR'
 
 //-----------------------------------------------------------------------------
 // Styled Components
@@ -80,23 +117,25 @@ const CancelSubscriptionButton = styled(SettingsButton)`
   margin-left: 0.25rem;
 `
 
-const CloseInputButton = styled(SettingsButton)`
-  display: ${ ({ cancelSubscriptionStatus }: ICloseInputButton) => ['CONFIRM_CANCELLATION', 'CANCELLING'].includes(cancelSubscriptionStatus) ? 'block' : 'none'};
+const ClosePasswordInputButton = styled(SettingsButton)`
+  display: ${ ({ cancelSubscriptionStatus }: IClosePasswordInputButton) => ['CONFIRM_CANCELLATION', 'INCORRECT_PASSWORD', 'ERROR'].includes(cancelSubscriptionStatus) ? 'block' : 'none'};
   margin-left: 0.25rem;
-  padding: 0.25rem;
+  padding: 0.3125rem;
 `
-interface ICloseInputButton {
+interface IClosePasswordInputButton {
   cancelSubscriptionStatus: ICancelSubscriptionStatus
 }
 
-const ConfirmCancellationInput = styled.input`
-  display: ${ ({ cancelSubscriptionStatus }: IConfirmCancellationInput) => ['CONFIRM_CANCELLATION', 'CANCELLING'].includes(cancelSubscriptionStatus) ? 'block' : 'none'};
+const PasswordInput = styled.input`
+  display: ${ ({ cancelSubscriptionStatus }: IPasswordInput) => ['CONFIRM_CANCELLATION', 'INCORRECT_PASSWORD', 'ERROR'].includes(cancelSubscriptionStatus) ? 'block' : 'none'};
   padding: 0.5rem;
+  min-width: 10rem;
+  font-size: 0.8rem;
   border-radius: 5px;
-  border: 1px solid rgb(150, 150, 150);
+  border: ${ ({ cancelSubscriptionStatus }: IPasswordInput) => ['INCORRECT_PASSWORD', 'ERROR'].includes(cancelSubscriptionStatus) ? '1px solid red' : '1px solid rgb(150, 150, 150)'};
   outline: none;
 `
-interface IConfirmCancellationInput {
+interface IPasswordInput {
   cancelSubscriptionStatus: ICancelSubscriptionStatus
 }
 

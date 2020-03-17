@@ -84,6 +84,7 @@ Route::group([
   // User Subscriptions
   Route::post('/user/{user}/subscription/purchase/lifetime', 'UserSubscriptionPurchaseController@subscriptionPurchaseLifetime');
   Route::post('/user/{user}/subscription/purchase/monthly', 'UserSubscriptionPurchaseController@subscriptionPurchaseMonthly');
+  Route::post('/user/{user}/subscription/cancel/monthly', 'UserSubscriptionPurchaseController@subscriptionCancelMonthly');
   
   // Resource Controllers
   Route::resources([
