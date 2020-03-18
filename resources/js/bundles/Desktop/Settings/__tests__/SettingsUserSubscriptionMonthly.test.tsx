@@ -6,11 +6,12 @@ import axiosMock from 'axios'
 import moment from 'moment'
 import 'jest-styled-components'
 
-import { renderWithRedux, fireEvent } from '@/testing/library'
+import { act, renderWithRedux, fireEvent } from '@/testing/library'
 import { 
   createMockStore,
   getMockAppStateByTasksheetSubscriptionType
 } from '@/testing/mocks'
+import { flushPromises } from '@/testing/utils'
 
 import { IUserTasksheetSubscription } from '@/state/user/types'
 
@@ -20,6 +21,14 @@ import SettingsUserSubscriptionMonthly from '@desktop/Settings/SettingsUserSubsc
 // Tests
 //-----------------------------------------------------------------------------
 describe('SettingsUserSubscriptionMonthly', () => {
+
+  beforeAll(() => {
+    jest.useFakeTimers()
+  })
+
+  afterAll(() => {
+    jest.useRealTimers()
+  })
   
   const settingsUserSubscriptionMonthly = (tasksheetSubscriptionType: IUserTasksheetSubscription['type']) => {
     const mockAppState = getMockAppStateByTasksheetSubscriptionType(tasksheetSubscriptionType)
@@ -94,6 +103,41 @@ describe('SettingsUserSubscriptionMonthly', () => {
     fireEvent.change(passwordInput, { target: { value: testPassword } })
     cancelSubscriptionButton.click()
     expect(axiosMock.post).toHaveBeenCalledWith('/app/user/' + getState().user.id + '/subscription/cancel/monthly', { password: testPassword })
+  })
+
+  it("displays an error message when the user has submitted an incorrect password", async () => {
+    (axiosMock.post as jest.Mock).mockRejectedValueOnce({ response: { status: 401 } })
+    const { cancelSubscriptionButton, passwordInput } = settingsUserSubscriptionMonthly('MONTHLY')
+    const testPassword = "Test Password"
+    cancelSubscriptionButton.click()
+    fireEvent.change(passwordInput, { target: { value: testPassword } })
+    expect(passwordInput.placeholder).not.toEqual("Incorrect Password")
+    expect(passwordInput.placeholder).not.toHaveStyleRule("1px solid red")
+    await act(async () => {
+      cancelSubscriptionButton.click()
+      await flushPromises()
+      jest.advanceTimersByTime(500)
+    })
+    expect(passwordInput.value).toEqual("")
+    expect(passwordInput.placeholder).toEqual("Incorrect Password")
+    expect(passwordInput).toHaveStyleRule("1px solid red")
+  })
+
+  it("displays a generic error message when the cancellation request returns an error", async () => {
+    (axiosMock.post as jest.Mock).mockRejectedValueOnce({ response: { status: 500 } })
+    const { cancelSubscriptionButton, passwordInput } = settingsUserSubscriptionMonthly('MONTHLY')
+    const testPassword = "Test Password"
+    cancelSubscriptionButton.click()
+    fireEvent.change(passwordInput, { target: { value: testPassword } })
+    expect(passwordInput.placeholder).not.toHaveStyleRule("1px solid red")
+    await act(async () => {
+      cancelSubscriptionButton.click()
+      await flushPromises()
+      jest.advanceTimersByTime(500)
+    })
+    expect(passwordInput.value).toEqual("")
+    expect(passwordInput.placeholder).toEqual("Enter your password")
+    expect(passwordInput).toHaveStyleRule("1px solid red")
   })
 
 })

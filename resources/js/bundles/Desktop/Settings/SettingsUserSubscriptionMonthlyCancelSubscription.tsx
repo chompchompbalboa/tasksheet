@@ -52,6 +52,7 @@ const SettingsUserSubscriptionMonthlyCancelSubscription = () => {
         }
         else {
           setTimeout(() => {
+            setPasswordInputValue('')
             setCancelSubscriptionStatus('ERROR')
           }, 500)
         }
@@ -60,25 +61,30 @@ const SettingsUserSubscriptionMonthlyCancelSubscription = () => {
 
   return (
     <Container>
-      <PasswordInput
-        type="password"
-        cancelSubscriptionStatus={cancelSubscriptionStatus}
-        onChange={e => setPasswordInputValue(e.target.value)}
-        placeholder={cancelSubscriptionStatus === 'INCORRECT_PASSWORD' ? "Incorrect Password" : "Enter your password"}
-        value={passwordInputValue}/>
-      <ClosePasswordInputButton
-        testId="ClosePasswordInputButton"
-        backgroundColorHover="red"
-        cancelSubscriptionStatus={cancelSubscriptionStatus}
-        onClick={() => setCancelSubscriptionStatus('READY')}>
-        <Icon
-          icon={CLOSE}
-          size="1.125rem"/>
-      </ClosePasswordInputButton>
-      <CancelSubscriptionButton
-        isDisabled={cancelSubscriptionStatus === 'CONFIRM_CANCELLATION' && passwordInputValue === ''}
-        onClick={cancelSubscriptionButtonOnClicks[cancelSubscriptionStatus]}
-        text={cancelSubscriptionButtonText[cancelSubscriptionStatus]}/>
+      <InputContainer>
+        <PasswordInput
+          type="password"
+          cancelSubscriptionStatus={cancelSubscriptionStatus}
+          onChange={e => setPasswordInputValue(e.target.value)}
+          placeholder={cancelSubscriptionStatus === 'INCORRECT_PASSWORD' ? "Incorrect Password" : "Enter your password"}
+          value={passwordInputValue}/>
+        <ClosePasswordInputButton
+          testId="ClosePasswordInputButton"
+          backgroundColorHover="red"
+          cancelSubscriptionStatus={cancelSubscriptionStatus}
+          onClick={() => setCancelSubscriptionStatus('READY')}>
+          <Icon
+            icon={CLOSE}
+            size="1.125rem"/>
+        </ClosePasswordInputButton>
+        <CancelSubscriptionButton
+          isDisabled={cancelSubscriptionStatus === 'CONFIRM_CANCELLATION' && passwordInputValue === ''}
+          onClick={cancelSubscriptionButtonOnClicks[cancelSubscriptionStatus]}
+          text={cancelSubscriptionButtonText[cancelSubscriptionStatus]}/>
+      </InputContainer>
+      <CancelSubscriptionMessage>
+        {cancelSubscriptionMessages[cancelSubscriptionStatus]}
+      </CancelSubscriptionMessage>
     </Container>
   )
 }
@@ -92,6 +98,14 @@ export const cancelSubscriptionButtonText = {
   CANCELLING: "Cancelling...",
   INCORRECT_PASSWORD: "Confirm Cancellation",
   ERROR: "Confirm Cancellation",
+}
+
+export const cancelSubscriptionMessages = {
+  READY: "",
+  CONFIRM_CANCELLATION: "Your subscription will be cancelled immediately. You will still have access all of your sheets, but will no longer be able to edit or add to them. You can restart your subscription at any time.",
+  CANCELLING: "Your subscription will be cancelled immediately. You will still have access all of your sheets, but will no longer be able to edit or add to them. You can restart your subscription at any time.",
+  INCORRECT_PASSWORD: "Your password was incorrect. Please try again.",
+  ERROR: "There was a problem processing your cancellation. Please try again.",
 }
 
 //-----------------------------------------------------------------------------
@@ -109,16 +123,22 @@ type ICancelSubscriptionStatus =
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   margin-left: 1rem;
+  width: 25rem;
+`
+
+const InputContainer = styled.div`
   display: flex;
+  justify-content: flex-end;
   align-items: center;
 `
 
 const CancelSubscriptionButton = styled(SettingsButton)`
   margin-left: 0.25rem;
+  width: 10rem;
 `
 
 const ClosePasswordInputButton = styled(SettingsButton)`
-  display: ${ ({ cancelSubscriptionStatus }: IClosePasswordInputButton) => ['CONFIRM_CANCELLATION', 'INCORRECT_PASSWORD', 'ERROR'].includes(cancelSubscriptionStatus) ? 'block' : 'none'};
+  display: ${ ({ cancelSubscriptionStatus }: IClosePasswordInputButton) => cancelSubscriptionStatus !== 'READY' ? 'block' : 'none'};
   margin-left: 0.25rem;
   padding: 0.3125rem;
 `
@@ -127,9 +147,9 @@ interface IClosePasswordInputButton {
 }
 
 const PasswordInput = styled.input`
-  display: ${ ({ cancelSubscriptionStatus }: IPasswordInput) => ['CONFIRM_CANCELLATION', 'INCORRECT_PASSWORD', 'ERROR'].includes(cancelSubscriptionStatus) ? 'block' : 'none'};
+  display: ${ ({ cancelSubscriptionStatus }: IPasswordInput) => cancelSubscriptionStatus !== 'READY' ? 'block' : 'none'};
   padding: 0.5rem;
-  min-width: 10rem;
+  width: 12.5rem;
   font-size: 0.8rem;
   border-radius: 5px;
   border: ${ ({ cancelSubscriptionStatus }: IPasswordInput) => ['INCORRECT_PASSWORD', 'ERROR'].includes(cancelSubscriptionStatus) ? '1px solid red' : '1px solid rgb(150, 150, 150)'};
@@ -138,6 +158,11 @@ const PasswordInput = styled.input`
 interface IPasswordInput {
   cancelSubscriptionStatus: ICancelSubscriptionStatus
 }
+
+const CancelSubscriptionMessage = styled.div`
+  margin-top: 0.5rem;
+  text-align: right;
+`
 
 //-----------------------------------------------------------------------------
 // Export
