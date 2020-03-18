@@ -2,6 +2,13 @@ let mix = require('laravel-mix')
 
 mix.disableNotifications()
 
+mix.options({
+	hmrOptions: {
+		host: 'tasksheet.dev',
+		port: '8080'
+	}
+})
+
 mix.webpackConfig({
 	resolve: {
 		alias: {
