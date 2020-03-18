@@ -82,9 +82,12 @@ const SettingsUserSubscriptionMonthlyCancelSubscription = () => {
           onClick={cancelSubscriptionButtonOnClicks[cancelSubscriptionStatus]}
           text={cancelSubscriptionButtonText[cancelSubscriptionStatus]}/>
       </InputContainer>
-      <CancelSubscriptionMessage>
-        {cancelSubscriptionMessages[cancelSubscriptionStatus]}
-      </CancelSubscriptionMessage>
+      {cancelSubscriptionMessages[cancelSubscriptionStatus] &&
+        <CancelSubscriptionMessage
+          data-testid="CancelSubscriptionMessage">
+          {cancelSubscriptionMessages[cancelSubscriptionStatus]}
+        </CancelSubscriptionMessage>
+      }
     </Container>
   )
 }

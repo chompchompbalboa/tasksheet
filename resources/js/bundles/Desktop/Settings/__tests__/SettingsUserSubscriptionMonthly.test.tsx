@@ -45,8 +45,10 @@ describe('SettingsUserSubscriptionMonthly', () => {
     const cancelSubscriptionButton = getByText("Cancel Subscription")
     const passwordInput = getByPlaceholderText("Enter your password") as HTMLInputElement
     const closePasswordInputButton = getByTestId("ClosePasswordInputButton")
+    const cancelSubscriptionMessage = getByTestId("CancelSubscriptionMessage")
     return {
       cancelSubscriptionButton,
+      cancelSubscriptionMessage,
       closePasswordInputButton,
       container,
       debug,
@@ -123,7 +125,7 @@ describe('SettingsUserSubscriptionMonthly', () => {
     expect(passwordInput).toHaveStyleRule("1px solid red")
   })
 
-  it("displays a generic error message when the cancellation request returns an error", async () => {
+  it("displays a generic error message when the cancellation request returns an unknown error", async () => {
     (axiosMock.post as jest.Mock).mockRejectedValueOnce({ response: { status: 500 } })
     const { cancelSubscriptionButton, passwordInput } = settingsUserSubscriptionMonthly('MONTHLY')
     const testPassword = "Test Password"
