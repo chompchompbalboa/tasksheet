@@ -69,7 +69,9 @@ class UserSubscriptionPurchaseController extends Controller
     public function subscriptionCancelMonthly(Request $request, User $user)
     {
       if(Hash::check($request->input('password'), $user->password)) {
-        dd('success');
+        // Cancel the subscription in Stripe
+        // If the cancellation succeeds
+          // Update the tasksheet subscription
       }
       else {
         return response(null, 401);

@@ -16,6 +16,10 @@ import { flushPromises } from '@/testing/utils'
 import { IUserTasksheetSubscription } from '@/state/user/types'
 
 import SettingsUserSubscriptionMonthly from '@desktop/Settings/SettingsUserSubscriptionMonthly'
+import { 
+  cancelSubscriptionMessages, 
+  cancelSubscriptionButtonText, 
+} from '@desktop/Settings/SettingsUserSubscriptionMonthlyCancelSubscription'
 
 //-----------------------------------------------------------------------------
 // Tests
@@ -42,7 +46,7 @@ describe('SettingsUserSubscriptionMonthly', () => {
         getState 
       }
     } = renderWithRedux(<SettingsUserSubscriptionMonthly />, { store: createMockStore(mockAppState) })
-    const cancelSubscriptionButton = getByText("Cancel Subscription")
+    const cancelSubscriptionButton = getByText(cancelSubscriptionButtonText['READY'])
     const passwordInput = getByPlaceholderText("Enter your password") as HTMLInputElement
     const closePasswordInputButton = getByTestId("ClosePasswordInputButton")
     const cancelSubscriptionMessage = getByTestId("CancelSubscriptionMessage")
@@ -69,21 +73,26 @@ describe('SettingsUserSubscriptionMonthly', () => {
   })
 
   it("displays an 'Enter your password' input when the 'Cancel Subscription' button is clicked", () => {
-    const { cancelSubscriptionButton, passwordInput } = settingsUserSubscriptionMonthly('MONTHLY')
+    const { cancelSubscriptionButton, cancelSubscriptionMessage, passwordInput } = settingsUserSubscriptionMonthly('MONTHLY')
+    expect(cancelSubscriptionButton.textContent).toContain(cancelSubscriptionButtonText['READY'])
+    expect(cancelSubscriptionMessage.textContent).toContain(cancelSubscriptionMessages['READY'])
     expect(passwordInput).toHaveStyleRule('display', 'none')
     cancelSubscriptionButton.click()
+    expect(cancelSubscriptionButton.textContent).toContain(cancelSubscriptionButtonText['CONFIRM_CANCELLATION'])
+    expect(cancelSubscriptionMessage.textContent).toContain(cancelSubscriptionMessages['CONFIRM_CANCELLATION'])
     expect(passwordInput).toHaveStyleRule('display', 'block')
-    expect(cancelSubscriptionButton.textContent).toContain("Confirm Cancellation")
   })
 
   it("displays a button that hides the 'Enter your password' input when clicked", () => {
-    const { cancelSubscriptionButton, closePasswordInputButton, passwordInput  } = settingsUserSubscriptionMonthly('MONTHLY')
-    expect(closePasswordInputButton).toHaveStyleRule('display', 'none')
-    expect(passwordInput).toHaveStyleRule('display', 'none')
+    const { cancelSubscriptionButton, cancelSubscriptionMessage, closePasswordInputButton, passwordInput  } = settingsUserSubscriptionMonthly('MONTHLY')
     cancelSubscriptionButton.click()
+    expect(cancelSubscriptionButton.textContent).toContain(cancelSubscriptionButtonText['CONFIRM_CANCELLATION'])
+    expect(cancelSubscriptionMessage.textContent).toContain(cancelSubscriptionMessages['CONFIRM_CANCELLATION'])
     expect(closePasswordInputButton).toHaveStyleRule('display', 'block')
     expect(passwordInput).toHaveStyleRule('display', 'block')
     closePasswordInputButton.click()
+    expect(cancelSubscriptionButton.textContent).toContain(cancelSubscriptionButtonText['READY'])
+    expect(cancelSubscriptionMessage.textContent).toContain(cancelSubscriptionMessages['READY'])
     expect(closePasswordInputButton).toHaveStyleRule('display', 'none')
     expect(passwordInput).toHaveStyleRule('display', 'none')
   })
@@ -99,27 +108,31 @@ describe('SettingsUserSubscriptionMonthly', () => {
 
   it("attempts to submit the cancellation request when 'Confirm Cancellation' is clicked", () => {
     (axiosMock.post as jest.Mock).mockResolvedValueOnce({})
-    const { cancelSubscriptionButton, getState, passwordInput } = settingsUserSubscriptionMonthly('MONTHLY')
+    const { cancelSubscriptionButton, cancelSubscriptionMessage, getState, passwordInput } = settingsUserSubscriptionMonthly('MONTHLY')
     const testPassword = "Test Password"
     cancelSubscriptionButton.click()
     fireEvent.change(passwordInput, { target: { value: testPassword } })
     cancelSubscriptionButton.click()
+    expect(cancelSubscriptionButton.textContent).toContain(cancelSubscriptionButtonText['CANCELLING'])
+    expect(cancelSubscriptionMessage.textContent).toContain(cancelSubscriptionMessages['CANCELLING'])
     expect(axiosMock.post).toHaveBeenCalledWith('/app/user/' + getState().user.id + '/subscription/cancel/monthly', { password: testPassword })
   })
 
   it("displays an error message when the user has submitted an incorrect password", async () => {
     (axiosMock.post as jest.Mock).mockRejectedValueOnce({ response: { status: 401 } })
-    const { cancelSubscriptionButton, passwordInput } = settingsUserSubscriptionMonthly('MONTHLY')
+    const { cancelSubscriptionButton, cancelSubscriptionMessage, passwordInput } = settingsUserSubscriptionMonthly('MONTHLY')
     const testPassword = "Test Password"
     cancelSubscriptionButton.click()
     fireEvent.change(passwordInput, { target: { value: testPassword } })
     expect(passwordInput.placeholder).not.toEqual("Incorrect Password")
-    expect(passwordInput.placeholder).not.toHaveStyleRule("1px solid red")
+    expect(passwordInput).not.toHaveStyleRule("1px solid red")
     await act(async () => {
       cancelSubscriptionButton.click()
       await flushPromises()
       jest.advanceTimersByTime(500)
     })
+    expect(cancelSubscriptionButton.textContent).toContain(cancelSubscriptionButtonText['INCORRECT_PASSWORD'])
+    expect(cancelSubscriptionMessage.textContent).toContain(cancelSubscriptionMessages['INCORRECT_PASSWORD'])
     expect(passwordInput.value).toEqual("")
     expect(passwordInput.placeholder).toEqual("Incorrect Password")
     expect(passwordInput).toHaveStyleRule("1px solid red")
@@ -127,16 +140,17 @@ describe('SettingsUserSubscriptionMonthly', () => {
 
   it("displays a generic error message when the cancellation request returns an unknown error", async () => {
     (axiosMock.post as jest.Mock).mockRejectedValueOnce({ response: { status: 500 } })
-    const { cancelSubscriptionButton, passwordInput } = settingsUserSubscriptionMonthly('MONTHLY')
+    const { cancelSubscriptionButton, cancelSubscriptionMessage, passwordInput } = settingsUserSubscriptionMonthly('MONTHLY')
     const testPassword = "Test Password"
     cancelSubscriptionButton.click()
     fireEvent.change(passwordInput, { target: { value: testPassword } })
-    expect(passwordInput.placeholder).not.toHaveStyleRule("1px solid red")
     await act(async () => {
       cancelSubscriptionButton.click()
       await flushPromises()
       jest.advanceTimersByTime(500)
     })
+    expect(cancelSubscriptionButton.textContent).toContain(cancelSubscriptionButtonText['ERROR'])
+    expect(cancelSubscriptionMessage.textContent).toContain(cancelSubscriptionMessages['ERROR'])
     expect(passwordInput.value).toEqual("")
     expect(passwordInput.placeholder).toEqual("Enter your password")
     expect(passwordInput).toHaveStyleRule("1px solid red")

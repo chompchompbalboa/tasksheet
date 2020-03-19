@@ -82,12 +82,11 @@ const SettingsUserSubscriptionMonthlyCancelSubscription = () => {
           onClick={cancelSubscriptionButtonOnClicks[cancelSubscriptionStatus]}
           text={cancelSubscriptionButtonText[cancelSubscriptionStatus]}/>
       </InputContainer>
-      {cancelSubscriptionMessages[cancelSubscriptionStatus] &&
-        <CancelSubscriptionMessage
-          data-testid="CancelSubscriptionMessage">
-          {cancelSubscriptionMessages[cancelSubscriptionStatus]}
-        </CancelSubscriptionMessage>
-      }
+      <CancelSubscriptionMessage
+        data-testid="CancelSubscriptionMessage"
+        cancelSubscriptionStatus={cancelSubscriptionStatus}>
+        {cancelSubscriptionMessages[cancelSubscriptionStatus]}
+      </CancelSubscriptionMessage>
     </Container>
   )
 }
@@ -106,7 +105,7 @@ export const cancelSubscriptionButtonText = {
 export const cancelSubscriptionMessages = {
   READY: "",
   CONFIRM_CANCELLATION: "Your subscription will be cancelled immediately. You will still have access all of your sheets, but will no longer be able to edit or add to them. You can restart your subscription at any time.",
-  CANCELLING: "Your subscription will be cancelled immediately. You will still have access all of your sheets, but will no longer be able to edit or add to them. You can restart your subscription at any time.",
+  CANCELLING: "Your cancellation is being processed...",
   INCORRECT_PASSWORD: "Your password was incorrect. Please try again.",
   ERROR: "There was a problem processing your cancellation. Please try again.",
 }
@@ -163,7 +162,7 @@ interface IPasswordInput {
 }
 
 const CancelSubscriptionMessage = styled.div`
-  margin-top: 0.5rem;
+  margin-top: ${ ({ cancelSubscriptionStatus }: IPasswordInput) => cancelSubscriptionStatus !== 'READY' ? '0.5rem' : '0'};
   text-align: right;
 `
 
