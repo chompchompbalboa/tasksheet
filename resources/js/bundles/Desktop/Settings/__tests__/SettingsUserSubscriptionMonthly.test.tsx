@@ -174,6 +174,7 @@ describe('SettingsUserSubscriptionMonthly', () => {
     await act(async () => {
       cancelSubscriptionButton.click()
       await flushPromises()
+      jest.advanceTimersByTime(300)
     })
     expect(getState().user.tasksheetSubscription.type).toBe(nextUserTasksheetSubscription.type)
     expect(getState().user.tasksheetSubscription.billingDayOfMonth).toBe(nextUserTasksheetSubscription.billingDayOfMonth)

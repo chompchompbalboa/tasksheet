@@ -49,11 +49,13 @@ const SettingsUserSubscriptionMonthlyCancelSubscription = () => {
       .then(response => {
         if(response && response.data) {
           const nextUserSubscription = response.data as IUserTasksheetSubscription
-          dispatch(updateUserTasksheetSubscription({ 
-            type: nextUserSubscription.type, 
-            billingDayOfMonth: nextUserSubscription.billingDayOfMonth,
-            subscriptionEndDate: nextUserSubscription.subscriptionEndDate
-          }))
+          setTimeout(() => {
+            dispatch(updateUserTasksheetSubscription({ 
+              type: nextUserSubscription.type, 
+              billingDayOfMonth: nextUserSubscription.billingDayOfMonth,
+              subscriptionEndDate: nextUserSubscription.subscriptionEndDate
+            }))
+          }, 300)
         }
       })
       .catch(error => {
