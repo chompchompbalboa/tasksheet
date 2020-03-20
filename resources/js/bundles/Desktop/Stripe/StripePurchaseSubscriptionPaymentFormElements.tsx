@@ -60,34 +60,42 @@ const StripePurchaseSubscriptionPaymentFormElements = ({
       const cardNumberElement = stripeElements.getElement('cardNumber')
       // Purchase a monthly susbcription
       if(subscriptionPlan === 'MONTHLY') {
-        // Get the Stripe setupIntent
-        const { setupIntent, error } = await stripe.confirmCardSetup(userSubscriptionStripePaymentIntentClientSecret, {
-          payment_method: {
-            card: cardNumberElement,
+        if(userSubscriptionStripePaymentIntentClientSecret) {
+          // Get the Stripe setupIntent
+          const { setupIntent, error } = await stripe.confirmCardSetup(userSubscriptionStripePaymentIntentClientSecret, {
+            payment_method: {
+              card: cardNumberElement,
+            }
+          })
+          if(error) {
+            setTimeout(() => {
+              setStripeError(error as IStripeError)
+              setIsChargeBeingProcessed(false)
+            }, 500)
           }
-        })
-        if(error) {
-          setTimeout(() => {
-            setStripeError(error as IStripeError)
-            setIsChargeBeingProcessed(false)
-          }, 500)
+          else {
+            // Send the setupIntent to the backend to process the subscription
+            action.userSubscriptionPurchaseMonthly(userId, setupIntent.payment_method)
+              .then(response => {
+                const nextUserSubscription = response.data as IUserTasksheetSubscription
+                dispatch(updateUserTasksheetSubscription({ 
+                  type: 'MONTHLY', 
+                  billingDayOfMonth: nextUserSubscription.billingDayOfMonth,
+                  subscriptionStartDate: nextUserSubscription.subscriptionStartDate,
+                  subscriptionEndDate: nextUserSubscription.subscriptionEndDate
+                }))
+              })
+              .catch(() => {
+                setIsChargeBeingProcessed(false)
+                setStripeError({ code: 'error', message: null }) // This will display a generic error message in StripeErrorMessage
+              })
+          }
         }
         else {
-          // Send the setupIntent to the backend to process the subscription
-          action.userSubscriptionPurchaseMonthly(userId, setupIntent.payment_method)
-            .then(response => {
-              const nextUserSubscription = response.data as IUserTasksheetSubscription
-              dispatch(updateUserTasksheetSubscription({ 
-                type: 'MONTHLY', 
-                billingDayOfMonth: nextUserSubscription.billingDayOfMonth,
-                subscriptionStartDate: nextUserSubscription.subscriptionStartDate,
-                subscriptionEndDate: nextUserSubscription.subscriptionEndDate
-              }))
-            })
-            .catch(() => {
-              setIsChargeBeingProcessed(false)
-              setStripeError({ code: 'error', message: null }) // This will display a generic error message in StripeErrorMessage
-            })
+          setTimeout(() => {
+            setIsChargeBeingProcessed(false)
+            setStripeError({ code: 'error', message: null }) // This will display a generic error message in StripeErrorMessage
+          }, 500)
         }
       }
       // Purchase a lifetime subscription

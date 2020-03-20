@@ -18,6 +18,9 @@ class UserSubscriptionPurchaseController extends Controller
       try {
         $stripeCharge = $user->charge(10000, $stripePaymentMethodId); // 10000 cents = $100
         if($stripeCharge->isSucceeded()) {
+          if($user->subscribed('Monthly')) {
+            $user->subscription('Monthly')->cancelNow();
+          }
           $userSubscription = $this->subscriptionPurchaseLifetimeSuccess($user, CarbonImmutable::now());
           return response()->json($userSubscription->toArray(), 200);
         }
@@ -70,6 +73,7 @@ class UserSubscriptionPurchaseController extends Controller
     {
       if(Hash::check($request->input('password'), $user->password)) {
         if($user->subscription('Monthly')->cancelNow()) {
+          $user->deletePaymentMethods();
           $userSubscription = $this->subscriptionCancelMonthlySuccess($user, CarbonImmutable::now());
           return response($userSubscription, 200);
         }

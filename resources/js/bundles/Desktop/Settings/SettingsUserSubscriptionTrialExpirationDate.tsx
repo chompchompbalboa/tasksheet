@@ -29,6 +29,7 @@ const SettingsUserSubscriptionTrialExpirationDate = () => {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  width: 60%;
   margin-bottom: 1rem;
 `
 

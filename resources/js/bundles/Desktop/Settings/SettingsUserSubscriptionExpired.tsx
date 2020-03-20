@@ -31,7 +31,7 @@ const Container = styled.div`
 `
 
 const SubscriptionExpiredMessage= styled.div`
-  width: 50%;
+  width: 60%;
   margin-bottom: 1rem;
 `
 

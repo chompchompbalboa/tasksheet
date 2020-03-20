@@ -28,7 +28,7 @@ const initalData: IInitialData = {
       subscriptionEndDate: '2020-01-01 12:00:00',
       trialStartDate: '2020-01-01 12:00:00',
       trialEndDate: '2020-01-01 12:00:00',
-      stripeSetupIntentClientSecret: null
+      stripeSetupIntentClientSecret: 'stripeSetupIntentClientSecret'
     }
   },
 	folders: [
