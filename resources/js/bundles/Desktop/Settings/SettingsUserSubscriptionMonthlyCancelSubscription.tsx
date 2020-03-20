@@ -2,7 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { action } from '@/api'
@@ -10,6 +10,9 @@ import { action } from '@/api'
 import { CLOSE } from '@/assets/icons'
 
 import { IAppState } from '@/state'
+import { IUserTasksheetSubscription } from '@/state/user/types'
+
+import { updateUserTasksheetSubscription } from '@/state/user/actions'
 
 import Icon from '@/components/Icon'
 import SettingsButton from '@desktop/Settings/SettingsButton'
@@ -20,6 +23,7 @@ import SettingsButton from '@desktop/Settings/SettingsButton'
 const SettingsUserSubscriptionMonthlyCancelSubscription = () => {
 
   // Redux
+  const dispatch = useDispatch()
   const userId = useSelector((state: IAppState) => state.user.id)
 
   // State
@@ -42,7 +46,16 @@ const SettingsUserSubscriptionMonthlyCancelSubscription = () => {
   const handleCancelSubscription = () => {
     setCancelSubscriptionStatus('CANCELLING')
     action.userSubscriptionCancelMonthly(userId, passwordInputValue)
-      .then()
+      .then(response => {
+        if(response && response.data) {
+          const nextUserSubscription = response.data as IUserTasksheetSubscription
+          dispatch(updateUserTasksheetSubscription({ 
+            type: nextUserSubscription.type, 
+            billingDayOfMonth: nextUserSubscription.billingDayOfMonth,
+            subscriptionEndDate: nextUserSubscription.subscriptionEndDate
+          }))
+        }
+      })
       .catch(error => {
         if(error.response.status === 401) {
           setTimeout(() => {

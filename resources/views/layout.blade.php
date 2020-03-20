@@ -27,7 +27,7 @@
     <meta name="msapplication-TileImage" content="{{ asset('images/icons/ms-icon-144x144.png', env('ASSETS_REQUIRE_HTTP') !== null ? !env('ASSETS_REQUIRE_HTTP') : true) }}">
     <meta name="theme-color" content="#ffffff">
     
-    @if(in_array($user->tasksheetSubscription->type, ['TRIAL', 'TRIAL_EXPIRED', 'MONTHLY_PAST_DUE', 'MONTHLY_EXPIRED']))
+    @if(!in_array($user->tasksheetSubscription->type, ['DEMO', 'LIFETIME']))
       <script src="https://js.stripe.com/v3/"></script>
     @endif
   </head>

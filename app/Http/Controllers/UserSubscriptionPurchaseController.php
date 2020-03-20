@@ -69,12 +69,25 @@ class UserSubscriptionPurchaseController extends Controller
     public function subscriptionCancelMonthly(Request $request, User $user)
     {
       if(Hash::check($request->input('password'), $user->password)) {
-        // Cancel the subscription in Stripe
-        // If the cancellation succeeds
-          // Update the tasksheet subscription
+        if($user->subscription('Monthly')->cancelNow()) {
+          $userSubscription = $this->subscriptionCancelMonthlySuccess($user, CarbonImmutable::now());
+          return response($userSubscription, 200);
+        }
+        else {
+          return response(null, 500);
+        }
       }
       else {
         return response(null, 401);
       }
+    }
+
+    public function subscriptionCancelMonthlySuccess(User $user, $subscriptionEndDate) {
+      $userSubscription = $user->tasksheetSubscription()->first();
+      $userSubscription->type = 'MONTHLY_EXPIRED';
+      $userSubscription->billingDayOfMonth = null;
+      $userSubscription->subscriptionEndDate = $subscriptionEndDate;
+      $userSubscription->save();
+      return $userSubscription;
     }
 }

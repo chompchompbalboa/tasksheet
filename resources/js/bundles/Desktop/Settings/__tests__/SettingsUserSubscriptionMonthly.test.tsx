@@ -156,4 +156,27 @@ describe('SettingsUserSubscriptionMonthly', () => {
     expect(passwordInput).toHaveStyleRule("1px solid red")
   })
 
+  it("successfully updates the app state when the cancellation request succeeds", async () => {
+    const nextUserTasksheetSubscription: IUserTasksheetSubscription = {
+      id: 'id',
+      type: 'MONTHLY_EXPIRED',
+      billingDayOfMonth: null,
+      subscriptionStartDate: '2020-01-01 12:00:00',
+      subscriptionEndDate:'2020-02-01 12:00:00',
+      trialStartDate: '2020-01-01 12:00:00',
+      trialEndDate: '2020-01-01 12:00:00',
+    };
+    (axiosMock.post as jest.Mock).mockResolvedValueOnce({ data: nextUserTasksheetSubscription })
+    const { cancelSubscriptionButton, getState, passwordInput } = settingsUserSubscriptionMonthly('MONTHLY')
+    const testPassword = "Test Password"
+    cancelSubscriptionButton.click()
+    fireEvent.change(passwordInput, { target: { value: testPassword } })
+    await act(async () => {
+      cancelSubscriptionButton.click()
+      await flushPromises()
+    })
+    expect(getState().user.tasksheetSubscription.type).toBe(nextUserTasksheetSubscription.type)
+    expect(getState().user.tasksheetSubscription.billingDayOfMonth).toBe(nextUserTasksheetSubscription.billingDayOfMonth)
+    expect(getState().user.tasksheetSubscription.subscriptionEndDate).toBe(nextUserTasksheetSubscription.subscriptionEndDate)
+  })
 })
