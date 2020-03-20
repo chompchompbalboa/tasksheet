@@ -5,7 +5,7 @@ import { IMessengerMessage } from '@/state/messenger/types'
 
 export const SUBSCRIPTION_EXPIRED_MESSAGE: IMessengerMessage = {
   type: 'ERROR',
-  message: "Your subscription has expired. Please renew your subscription to enable sheet editing.",
+  message: "Your subscription is no longer active. Please renew your subscription to enable sheet editing.",
   timeout: 5000
 }
 

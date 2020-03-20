@@ -43,7 +43,7 @@ class UserSubscriptionPurchaseController extends Controller
     {
       $stripeSetupIntentPaymentMethodId = $request->input('stripeSetupIntentPaymentMethodId');
       try {
-        if($user->addPaymentMethod($stripeSetupIntentPaymentMethodId)) {
+        if($user->updateDefaultPaymentMethod($stripeSetupIntentPaymentMethodId)) {
           $userSubscription = $this->subscriptionPurchaseMonthlySuccess($user, CarbonImmutable::now(), $stripeSetupIntentPaymentMethodId);
           return response()->json($userSubscription->toArray(), 200);
         }
