@@ -7,8 +7,11 @@ import styled from 'styled-components'
 
 import { ARROW_DOWN, ARROW_UP } from '@/assets/icons'
 
+import { useSheetEditingPermissions } from '@/hooks'
+
 import { IAppState } from '@/state'
 import { ISheet } from '@/state/sheet/types'
+import { createMessengerMessage } from '@/state/messenger/actions'
 import {  
   allowSelectedCellEditing,
   allowSelectedCellNavigation,
@@ -17,68 +20,63 @@ import {
   preventSelectedCellNavigation
 } from '@/state/sheet/actions'
 
-import AutosizeInput from 'react-input-autosize'
 import Icon from '@/components/Icon'
+import Tooltip from '@/components/Tooltip'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetCreateRows = ({
+const SheetActionCreateRows = ({
   sheetId
-}: ISheetCreateRowsProps) => {
+}: ISheetActionCreateRows) => {
 
-  const dispatch = useDispatch()
-  
+  // Refs
   const autosizeInput = useRef(null)
-  
-  const [ insertAboveOrBelowSelectedRow, setInsertAboveOrBelowSelectedRow ] = useState('ABOVE')
+  const tooltipTimer = useRef(null)
 
+  // Redux
+  const dispatch = useDispatch()
   const sheetSelections = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections)
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
-  
+
+  // State
+  const [ insertAboveOrBelowSelectedRow, setInsertAboveOrBelowSelectedRow ] = useState('ABOVE' as 'ABOVE' | 'BELOW')
   const [ isEditingInputValue, setIsEditingInputValue ] = useState(false)
   const [ inputValue, setInputValue ] = useState(1)
-
-  // Tooltip
   const [ isTooltipVisible, setIsTooltipVisible ] = useState(false)
-  const tooltipTimer = useRef(null)
-  const handleMouseEnter = () => {
-    tooltipTimer.current = setTimeout(() => setIsTooltipVisible(true), 600)
-  }
-  const handleMouseLeave = () => {
-    clearTimeout(tooltipTimer.current)
-    setIsTooltipVisible(false)
-  }
   
+  // Permissions
+  const { 
+    userHasPermissionToEditSheet,
+    userHasPermissionToEditSheetErrorMessage
+  } = useSheetEditingPermissions(sheetId)
+  
+  // Effects
   useEffect(() => {
     if(isEditingInputValue) { window.addEventListener('keydown', createRowsOnKeydownEnter) }
     else { window.removeEventListener('keydown', createRowsOnKeydownEnter) }
     return () => window.removeEventListener('keydown', createRowsOnKeydownEnter)
   }, [ inputValue, isEditingInputValue ])
 
+  // Create Rows
   const createRows = (aboveOrBelow: 'ABOVE' | 'BELOW') => {
-    setInsertAboveOrBelowSelectedRow(aboveOrBelow)
-    setTimeout(() => {
-      dispatch(createSheetRows(
-        sheetId, 
-        inputValue, 
-        sheetSelections.rangeStartRowId, 
-        aboveOrBelow === 'ABOVE' ? 'ABOVE' : 'BELOW'
-      ))
-    }, 10)
+    if(!userHasPermissionToEditSheet) {
+      dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
+    }
+    else {
+      setInsertAboveOrBelowSelectedRow(aboveOrBelow)
+      setTimeout(() => {
+        dispatch(createSheetRows(
+          sheetId, 
+          inputValue, 
+          sheetSelections.rangeStartRowId, 
+          aboveOrBelow
+        ))
+      }, 10)
+    }
   }
   
-  const handleAutosizeInputFocus = () => {
-    setIsEditingInputValue(true)
-    dispatch(preventSelectedCellEditing(sheetId))
-    dispatch(preventSelectedCellNavigation(sheetId))
-  }
-  const handleAutosizeInputBlur = () => {
-    setIsEditingInputValue(false)
-    dispatch(allowSelectedCellEditing(sheetId))
-    dispatch(allowSelectedCellNavigation(sheetId))
-  }
-  
+  // Create Rows On Keydown Enter
   const createRowsOnKeydownEnter = (e: KeyboardEvent) => { 
     if(e.key === 'Enter') { 
       autosizeInput.current.blur()
@@ -87,35 +85,48 @@ const SheetCreateRows = ({
     } 
   }
 
+  // Handle Autosize Input Blur
+  const handleAutosizeInputBlur = () => {
+    setIsEditingInputValue(false)
+    dispatch(allowSelectedCellEditing(sheetId))
+    dispatch(allowSelectedCellNavigation(sheetId))
+  }
+
+  // Handle Autosize Input Focus
+  const handleAutosizeInputFocus = () => {
+    setIsEditingInputValue(true)
+    dispatch(preventSelectedCellEditing(sheetId))
+    dispatch(preventSelectedCellNavigation(sheetId))
+  }
+
+  // Handle Mouse Enter
+  const handleMouseEnter = () => {
+    tooltipTimer.current = setTimeout(() => setIsTooltipVisible(true), 600)
+  }
+
+  // Handle Mouse Leave
+  const handleMouseLeave = () => {
+    clearTimeout(tooltipTimer.current)
+    setIsTooltipVisible(false)
+  }
+
   return (
     <Container
+      data-testid="SheetActionCreateRows"
       onMouseEnter={() => handleMouseEnter()}
       onMouseLeave={() => handleMouseLeave()}>
-      <AddContainer>
-        <AutosizeInput
+      <InputContainer>
+        <StyledInput
+          data-testid="SheetActionCreateRowsInput"
           ref={autosizeInput}
           value={inputValue === 0 ? '' : inputValue}
           onBlur={() => handleAutosizeInputBlur()}
           onChange={e => !isNaN(Number(e.target.value)) && setInputValue(Math.min(Number(e.target.value), 25))}
-          onFocus={() => handleAutosizeInputFocus()}
-          inputStyle={{
-            padding: '0.4rem 0.5rem',
-            minWidth: '0.625rem',
-            border: 'none',
-            borderTop: '0.5px solid rgb(175, 175, 175)',
-            borderBottom: '0.5px solid rgb(175, 175, 175)',
-            borderLeft: '0.5px solid rgb(175, 175, 175)',
-            borderTopLeftRadius: '3px',
-            borderBottomLeftRadius: '3px',
-            color: 'rgb(110, 110, 110)',
-            backgroundColor: 'transparent',
-            outline: 'none',
-            fontFamily: 'inherit',
-            fontSize: '0.9rem',
-            fontWeight: 'inherit'}}/>
-      </AddContainer>
+          onFocus={() => handleAutosizeInputFocus()}/>
+      </InputContainer>
       <AboveOrBelowButtons>
         <AboveButton
+          data-testid="SheetActionCreateRowsAboveButton"
           isSelected={insertAboveOrBelowSelectedRow === 'ABOVE'}
           onClick={() => createRows('ABOVE')}
           userColorPrimary={userColorPrimary}>
@@ -124,6 +135,7 @@ const SheetCreateRows = ({
             size="0.95rem"/>
         </AboveButton>
         <BelowButton
+          data-testid="SheetActionCreateRowsBelowButton"
           isSelected={insertAboveOrBelowSelectedRow === 'BELOW'}
           onClick={() => createRows('BELOW')}
           userColorPrimary={userColorPrimary}>
@@ -133,7 +145,7 @@ const SheetCreateRows = ({
         </BelowButton>
       </AboveOrBelowButtons>
       <Tooltip
-        isTooltipVisible={isTooltipVisible}>
+        isVisible={isTooltipVisible}>
         Insert rows above or below the selected cell
       </Tooltip>
     </Container>
@@ -143,7 +155,7 @@ const SheetCreateRows = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface ISheetCreateRowsProps {
+export interface ISheetActionCreateRows {
   sheetId: ISheet['id']
 }
 
@@ -156,6 +168,24 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`
+
+const StyledInput = styled.input`
+  padding: 0.4rem 0.5rem;
+  width: 2rem;
+  border: none;
+  border-top: 0.5px solid rgb(175, 175, 175);
+  border-bottom: 0.5px solid rgb(175, 175, 175);
+  border-left: 0.5px solid rgb(175, 175, 175);
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  color: rgb(110, 110, 110);
+  background-color: transparent;
+  outline: none;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: inherit;
+  text-align: center;
 `
 
 const AboveOrBelowButtons = styled.div`
@@ -196,29 +226,12 @@ const BelowButton = styled(AboveOrBelowButton)`
   border-bottom-right-radius: 3px;
 `
 
-const AddContainer = styled.div`
+const InputContainer = styled.div`
   display: flex;
   align-items: center;
 `
 
-const Tooltip = styled.div`
-  cursor: default;
-  display: ${ ({ isTooltipVisible }: ITooltip) => isTooltipVisible ? 'block' : 'none' };
-  position: absolute;
-  left: -1px;
-  top: 100%;
-  padding: 0.25rem;
-  background-color: rgb(250, 250, 250);
-  border: 1px solid rgb(175, 175, 175);
-  border-radius: 3px;
-  box-shadow: 2px 2px 15px 0px rgba(0,0,0,0.3);
-  white-space: nowrap;
-`
-interface ITooltip {
-  isTooltipVisible: boolean
-}
-
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetCreateRows
+export default SheetActionCreateRows
