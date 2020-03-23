@@ -2,15 +2,34 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import 'jest-styled-components'
-import '@testing-library/jest-dom/extend-expect'
 import axiosMock from 'axios'
 
-import { fireEvent, renderWithRedux, waitForElement, within } from '@/testing/library'
-import { appStateFactory, IAppStateFactoryInput, getCellAndCellProps } from '@/testing/mocks/appState'
+import { 
+  act,
+  fireEvent,
+  renderWithRedux
+} from '@/testing/library'
+import {
+  createMockStore,
+  getMockAppStateByTasksheetSubscriptionType,
+  getMockAppStateByUsersFilePermissionRole,
+  mockAppState,
+  mockAppStateFactory,
+  IMockAppStateFactoryInput
+} from '@/testing/mocks'
+import {
+  flushPromises
+} from '@/testing/utils'
 
-import { Sheet, ISheetProps } from '@desktop/Sheet/Sheet'
-import { SheetRowContextMenu, ISheetRowContextMenuProps } from '@desktop/Sheet/SheetRowContextMenu'
+import { IAppState } from '@/state'
+
+import {
+  SUBSCRIPTION_EXPIRED_MESSAGE,
+  USER_DOESNT_HAVE_PERMISSION_TO_EDIT_SHEET_MESSAGE
+} from '@/state/messenger/messages'
+
+import Messenger from '@desktop/Messenger/Messenger'
+import SheetRowContextMenu, { ISheetRowContextMenuProps } from '@desktop/Sheet/SheetRowContextMenu'
 
 //-----------------------------------------------------------------------------
 // Mocks
@@ -18,39 +37,18 @@ import { SheetRowContextMenu, ISheetRowContextMenuProps } from '@desktop/Sheet/S
 const {
   allFiles,
   allFileIds,
-  allSheets,
-  allSheetsFromDatabase,
-  allSheetViews
-} = appStateFactory({} as IAppStateFactoryInput)
+  allSheets
+} = mockAppStateFactory({} as IMockAppStateFactoryInput)
 
 const fileId = allFileIds[0]
 const sheetId = allFiles[fileId].typeId
 const sheet = allSheets[sheetId]
-const activeSheetView = allSheetViews[sheet.activeSheetViewId]
 const sheetRowId = sheet.visibleRows[0]
-
-console.warn = jest.fn()
-
-const sheetFromDatabase = allSheetsFromDatabase[sheetId]
-
-// @ts-ignore
-axiosMock.get.mockResolvedValue({ data: sheetFromDatabase })
-// @ts-ignore
-axiosMock.post.mockResolvedValue({ data: null })
-// @ts-ignore
-axiosMock.patch.mockResolvedValue({ data: null })
-
-jest.setTimeout(10000)
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-const sheetProps: ISheetProps = {
-  fileId: fileId,
-  id: sheetId
-}
-
-const sheetRowContextMenuProps: ISheetRowContextMenuProps = {
+const props: ISheetRowContextMenuProps = {
   sheetId: sheetId,
   rowId: sheetRowId,
   closeContextMenu: jest.fn(),
@@ -63,60 +61,151 @@ const sheetRowContextMenuProps: ISheetRowContextMenuProps = {
 //-----------------------------------------------------------------------------
 describe('SheetRowContextMenu', () => {
 
-  // JSDom returns 0 for all getBoundingClientRect values (since its not actually
-  // rendering anything). SheetWindow relies on the width and height property to
-  // calculate the sheet size, so we need to mock those vaulues in.
-  beforeAll(() => {
-    Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', { writable: true, value: () => ({
-      width: 1024,
-      height: 768
-    }) })
+  const sheetRowContextMenu = (appState: IAppState = mockAppState) => {
+    const { 
+      getByTestId,
+      store: {
+        getState
+      },
+      queryByText
+     } = renderWithRedux(
+      <>
+        <SheetRowContextMenu {...props}/>
+        <Messenger />
+      </>
+    , {
+       store: createMockStore(appState)
+     })
+    
+    const insertRowsAboveContainer = getByTestId("SheetRowContextMenuCreateRowsAboveContainer")
+    const insertRowsBelowContainer = getByTestId("SheetRowContextMenuCreateRowsBelowContainer")
+    const insertRowsAboveInput = getByTestId("SheetRowContextMenuCreateRowsAboveInput") as HTMLInputElement
+    const insertRowsBelowInput = getByTestId("SheetRowContextMenuCreateRowsBelowInput") as HTMLInputElement
+    const deleteRowsContainer = getByTestId("SheetRowContextMenuDeleteRows") as HTMLInputElement
+    return {
+      deleteRowsContainer,
+      getState,
+      insertRowsAboveContainer,
+      insertRowsAboveInput,
+      insertRowsBelowContainer,
+      insertRowsBelowInput,
+      queryByText
+    }
+  }
+
+  it("displays a menu item with an input to insert rows above the current row", () => {
+    const { insertRowsAboveContainer, insertRowsAboveInput } = sheetRowContextMenu()
+    expect(insertRowsAboveContainer).toBeTruthy()
+    expect(insertRowsAboveInput).toBeTruthy()
+  })
+
+  it("correctly updates the input to insert rows above the current row", () => {
+    const { insertRowsAboveInput } = sheetRowContextMenu()
+    const nextValue = "5"
+    fireEvent.change(insertRowsAboveInput, { target: { value: nextValue } })
+    expect(insertRowsAboveInput.value).toBe(nextValue)
+  })
+
+  it("displays a menu item with an input to insert rows below the current row", () => {
+    const { insertRowsBelowContainer, insertRowsBelowInput } = sheetRowContextMenu()
+    expect(insertRowsBelowContainer).toBeTruthy()
+    expect(insertRowsBelowInput).toBeTruthy()
+  })
+
+  it("correctly updates the input to insert rows below the current row", () => {
+    const { insertRowsBelowInput } = sheetRowContextMenu()
+    const nextValue = "5"
+    fireEvent.change(insertRowsBelowInput, { target: { value: nextValue } })
+    expect(insertRowsBelowInput.value).toBe(nextValue)
   })
   
-  it("renders without crashing", async () => {
-    const { getByTestId } = renderWithRedux(<SheetRowContextMenu {...sheetRowContextMenuProps}/>)
-    const SheetRowContextMenuContainer = getByTestId('SheetRowContextMenu')
-    expect(SheetRowContextMenuContainer).toBeTruthy()
-    expect(SheetRowContextMenuContainer).toHaveStyleRule('top', '100px')
-    expect(SheetRowContextMenuContainer).toHaveStyleRule('left', '50px')
+  it("limits the input values to a maximum of 25", () => {
+    const { insertRowsAboveInput, insertRowsBelowInput } = sheetRowContextMenu()
+    fireEvent.change(insertRowsAboveInput, { target: { value: "50" } })
+    expect(insertRowsAboveInput.value).toBe("25")
+    fireEvent.change(insertRowsBelowInput, { target: { value: "50" } })
+    expect(insertRowsBelowInput.value).toBe("25")
+  })
+  
+  it("correctly inserts rows above the selected cell", async () => {
+    (axiosMock.post as jest.Mock).mockResolvedValue({})
+    const { getState, insertRowsAboveInput } = sheetRowContextMenu()
+    const sheetNumberOfRows = sheet.visibleRows.length
+    const sheetSelectedRowVisibleRowsIndex = sheet.visibleRows.indexOf(sheetRowId)
+    const numberOfRowsToInsert = 5
+    fireEvent.change(insertRowsAboveInput, { target: { value: numberOfRowsToInsert } })
+    await act(async() => {
+      fireEvent.keyPress(insertRowsAboveInput, { key: "Enter", charCode: 13 })
+      await flushPromises()
+    })
+    expect(getState().sheet.allSheets[sheetId].visibleRows.length).toBe(sheetNumberOfRows + numberOfRowsToInsert)
+    expect(getState().sheet.allSheets[sheetId].visibleRows.indexOf(sheetRowId)).toBe(sheetSelectedRowVisibleRowsIndex + numberOfRowsToInsert)
+  })
+  
+  it("correctly inserts rows below the selected cell", async () => {
+    (axiosMock.post as jest.Mock).mockResolvedValue({})
+    const { getState, insertRowsBelowInput } = sheetRowContextMenu()
+    const sheetNumberOfRows = sheet.visibleRows.length
+    const sheetSelectedRowVisibleRowsIndex = sheet.visibleRows.indexOf(sheetRowId)
+    const numberOfRowsToInsert = 5
+    fireEvent.change(insertRowsBelowInput, { target: { value: numberOfRowsToInsert } })
+    await act(async() => {
+      fireEvent.keyPress(insertRowsBelowInput, { key: "Enter", charCode: 13 })
+      await flushPromises()
+    })
+    expect(getState().sheet.allSheets[sheetId].visibleRows.length).toBe(sheetNumberOfRows + numberOfRowsToInsert)
+    expect(getState().sheet.allSheets[sheetId].visibleRows.indexOf(sheetRowId)).toBe(sheetSelectedRowVisibleRowsIndex)
   })
 
-  it("creates sheet rows above the current row", async () => {
-    const { cell: R1C1Cell } = getCellAndCellProps({ row: 1, column: 1 })
-    const { getAllByTestId, getByTestId, store } = renderWithRedux(<Sheet {...sheetProps}/>)
-    const SheetRowLeaders = await waitForElement(() => getAllByTestId('SheetRowLeader'))
-    const R1SheetRowLeader = SheetRowLeaders[0]
-
-    fireEvent.contextMenu(R1SheetRowLeader)
-
-    const SheetRowContextMenuContainer = await waitForElement(() => getByTestId('SheetRowContextMenu'))
-    const AddRowsAboveContextMenuItem = within(SheetRowContextMenuContainer).getByText('row above')
-    fireEvent.click(AddRowsAboveContextMenuItem)
-
-    const SheetCellContainers = await waitForElement(() => getAllByTestId('SheetCell'))
-    const NewR1C1Cell = SheetCellContainers[0]
-    expect(store.getState().sheet.allSheets[sheetId].visibleRows.length).toEqual(sheet.visibleRows.length + 1)
-    expect(within(NewR1C1Cell).queryByText(R1C1Cell.value)).not.toBeTruthy()
-    expect(axiosMock.post).toHaveBeenCalled()
+  it("displays a menu item to delete the current row", () => {
+    const { deleteRowsContainer } = sheetRowContextMenu()
+    expect(deleteRowsContainer).toBeTruthy()
   })
 
-  it("creates sheet rows below the current row", async () => {
-    const { cell: RLastCLastCell } = getCellAndCellProps({ row: sheet.visibleRows.length - 2, column: activeSheetView.visibleColumns.length - 1 })
-    const { getAllByTestId, getByTestId, store } = renderWithRedux(<Sheet {...sheetProps}/>)
-    const SheetRowLeaders = await waitForElement(() => getAllByTestId('SheetRowLeader'))
-    const RLastSheetRowLeader = SheetRowLeaders[SheetRowLeaders.length - 2]
-
-    fireEvent.contextMenu(RLastSheetRowLeader)
-
-    const SheetRowContextMenuContainer = await waitForElement(() => getByTestId('SheetRowContextMenu'))
-    const AddRowsBelowContextMenuItem = within(SheetRowContextMenuContainer).getByText('row below')
-    fireEvent.click(AddRowsBelowContextMenuItem)
-
-    const SheetCellContainers = await waitForElement(() => getAllByTestId('SheetCell'))
-    const NewRLastCLastCell = SheetCellContainers[SheetCellContainers.length - 1]
-    expect(store.getState().sheet.allSheets[sheetId].visibleRows.length).toEqual(sheet.visibleRows.length + 1)
-    expect(within(NewRLastCLastCell).queryByText(RLastCLastCell.value)).not.toBeTruthy()
-    expect(axiosMock.post).toHaveBeenCalled()
+  it("correctly deletes the current row", async () => {
+    const { deleteRowsContainer, getState } = sheetRowContextMenu()
+    const sheetNumberOfRows = sheet.visibleRows.length
+    await act(async() => {
+      deleteRowsContainer.click()
+      await flushPromises()
+    })
+    expect(getState().sheet.allSheets[sheetId].visibleRows.length).toBe(sheetNumberOfRows - 1)
+    expect(getState().sheet.allSheets[sheetId].visibleRows.indexOf(sheetRowId)).toBe(-1)
   })
 
+  it("displays an error message when a user with an expired subscription tries to insert new rows", () => {
+    const appState = getMockAppStateByTasksheetSubscriptionType('TRIAL_EXPIRED')
+    const { insertRowsAboveInput, queryByText } = sheetRowContextMenu(appState)
+    fireEvent.keyPress(insertRowsAboveInput, { key: "Enter", charCode: 13 })
+    expect(queryByText(SUBSCRIPTION_EXPIRED_MESSAGE.message)).toBeTruthy()
+  })
+
+
+  it("displays an error message when the user tries to insert new rows without permission", () => {
+    const appState = getMockAppStateByUsersFilePermissionRole('VIEWER')
+    const { insertRowsAboveInput, queryByText } = sheetRowContextMenu(appState)
+    fireEvent.keyPress(insertRowsAboveInput, { key: "Enter", charCode: 13 })
+    expect(queryByText(USER_DOESNT_HAVE_PERMISSION_TO_EDIT_SHEET_MESSAGE.message)).toBeTruthy()
+  })
+
+  it("displays an error message when a user with an expired subscription tries to delete the row", async () => {
+    const appState = getMockAppStateByTasksheetSubscriptionType('TRIAL_EXPIRED')
+    const { deleteRowsContainer, queryByText } = sheetRowContextMenu(appState)
+    await act(async() => {
+      deleteRowsContainer.click()
+      await flushPromises()
+    })
+    expect(queryByText(SUBSCRIPTION_EXPIRED_MESSAGE.message)).toBeTruthy()
+  })
+
+
+  it("displays an error message when the user tries to delete the row without permission", async () => {
+    const appState = getMockAppStateByUsersFilePermissionRole('VIEWER')
+    const { deleteRowsContainer, queryByText } = sheetRowContextMenu(appState)
+    await act(async() => {
+      deleteRowsContainer.click()
+      await flushPromises()
+    })
+    expect(queryByText(USER_DOESNT_HAVE_PERMISSION_TO_EDIT_SHEET_MESSAGE.message)).toBeTruthy()
+  })
 })

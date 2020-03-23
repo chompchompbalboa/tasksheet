@@ -1,14 +1,19 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { useEffect, useState } from 'react'
+import React, { KeyboardEvent, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
+
+import { useSheetEditingPermissions } from '@/hooks'
 
 import { 
   ISheet, 
   ISheetRow 
 } from '@/state/sheet/types'
+import { 
+  createMessengerMessage
+} from '@/state/messenger/actions'
 import {  
   allowSelectedCellEditing,
   allowSelectedCellNavigation,
@@ -17,22 +22,30 @@ import {
   preventSelectedCellNavigation
 } from '@/state/sheet/actions'
 
-import AutosizeInput from 'react-input-autosize'
-
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetRowContextMenuCreateRows = ({
+  testId,
   sheetId,
   sheetRowId,
   aboveOrBelow,
   closeOnClick
 }: ISheetRowContextMenuCreateRowsProps) => {
 
+  // Redux
   const dispatch = useDispatch()
 
-  const [ inputValue, setInputValue ] = useState(1)
+  // State
+  const [ inputValue, setInputValue ] = useState(1)  
 
+  // Permissions
+  const { 
+    userHasPermissionToEditSheet,
+    userHasPermissionToEditSheetErrorMessage
+  } = useSheetEditingPermissions(sheetId)
+
+  // Effects
   useEffect(() => {
     return () => {
       dispatch(allowSelectedCellEditing(sheetId))
@@ -40,48 +53,56 @@ const SheetRowContextMenuCreateRows = ({
     }
   }, [])
 
+  // Create Rows
   const createRows = () => {
-    closeOnClick(() => {
-      dispatch(allowSelectedCellEditing(sheetId))
-      dispatch(allowSelectedCellNavigation(sheetId))
-      dispatch(createSheetRows(sheetId, inputValue, sheetRowId, aboveOrBelow))
-    })
+    if(!userHasPermissionToEditSheet) {
+      dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
+    }
+    else {
+      closeOnClick(() => {
+        dispatch(allowSelectedCellEditing(sheetId))
+        dispatch(allowSelectedCellNavigation(sheetId))
+        dispatch(createSheetRows(sheetId, inputValue, sheetRowId, aboveOrBelow))
+      })
+    }
   }
   
-  const handleAutosizeInputFocus = () => {
-    dispatch(preventSelectedCellEditing(sheetId))
-    dispatch(preventSelectedCellNavigation(sheetId))
-  }
-  const handleAutosizeInputBlur = () => {
+  // Handle Input Blur
+  const handleInputBlur = () => {
     dispatch(allowSelectedCellEditing(sheetId))
     dispatch(allowSelectedCellNavigation(sheetId))
   }
+  
+  // Handle Input Focus
+  const handleInputFocus = () => {
+    dispatch(preventSelectedCellEditing(sheetId))
+    dispatch(preventSelectedCellNavigation(sheetId))
+  }
+
+  // Handle Input Key Press
+  const handleInputKeyPress = (e: KeyboardEvent) => {
+    if(e.key === "Enter") {
+      createRows()
+    }
+  }
 
   return (
-    <Container>
+    <Container
+      data-testid={testId + "Container"}>
       <LeftPadding  />
-      <TextContainer onClick={() => createRows()}>
+      <TextContainer 
+        onClick={() => createRows()}>
         Add
       </TextContainer>
-      <AutosizeInput
+      <StyledInput
+        data-testid={testId + "Input"}
         value={inputValue === 0 ? '' : inputValue}
-        onBlur={() => handleAutosizeInputBlur()}
-        onChange={e => setInputValue(Math.min(Number(e.target.value), 10))}
-        onFocus={() => handleAutosizeInputFocus()}
-        inputStyle={{
-          margin: '0 0.25rem',
-          padding: '0.125rem 0.125rem 0.125rem 0.25rem',
-          height: '100%',
-          minWidth: '0.5rem',
-          border: '0.5px solid rgb(180, 180, 180)',
-          borderRadius: '3px',
-          color: 'rgb(110, 110, 110)',
-          backgroundColor: 'transparent',
-          outline: 'none',
-          fontFamily: 'inherit',
-          fontSize: 'inherit',
-          fontWeight: 'inherit'}}/>
-      <TextContainer onClick={() => createRows()}>
+        onBlur={handleInputBlur}
+        onChange={e => setInputValue(Math.min(Number(e.target.value), 25))}
+        onFocus={handleInputFocus}
+        onKeyPress={handleInputKeyPress}/>
+      <TextContainer 
+        onClick={() => createRows()}>
         row{inputValue > 1 ? 's' : ''} {aboveOrBelow.toLowerCase()}
       </TextContainer>
     </Container>
@@ -92,6 +113,7 @@ const SheetRowContextMenuCreateRows = ({
 // Props
 //-----------------------------------------------------------------------------
 interface ISheetRowContextMenuCreateRowsProps {
+  testId: string
   sheetId: ISheet['id']
   sheetRowId: ISheetRow['id']
   aboveOrBelow: 'ABOVE' | 'BELOW'
@@ -114,6 +136,22 @@ const Container = styled.div`
   &:hover {
     background-color: rgb(242, 242, 242);
   }
+`
+
+const StyledInput = styled.input`
+  margin: 0 0.25rem;
+  padding: 0.125rem 0.05rem;
+  height: 100%;
+  width: 1.5rem;
+  border: none;
+  border-bottom: 0.5px solid rgb(180, 180, 180);
+  color: rgb(110, 110, 110);
+  background-color: transparent;
+  outline: none;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  text-align: center;
 `
 
 const LeftPadding = styled.div`
