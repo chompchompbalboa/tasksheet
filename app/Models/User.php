@@ -75,6 +75,7 @@ class User extends Authenticatable
       // Get the files
       $files = DB::table('filePermissions')
         ->where('filePermissions.userId', '=', $this->id)
+        ->whereNull('files.deleted_at')
         ->join('files', 'filePermissions.fileId', '=', 'files.id')
         ->select(
           'files.id', 
@@ -115,6 +116,7 @@ class User extends Authenticatable
       // Get the folders
       $folders = DB::table('folderPermissions')
         ->where('folderPermissions.userId', '=', $this->id)
+        ->whereNull('folders.deleted_at')
         ->join('folders', 'folderPermissions.folderId', '=', 'folders.id')
         ->select(
           'folders.id', 
