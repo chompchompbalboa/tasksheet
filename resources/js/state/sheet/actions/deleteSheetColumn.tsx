@@ -130,7 +130,7 @@ export const deleteSheetColumn = (sheetId: string, columnId: string): IThunkActi
         dispatch(setAllSheetGroups(nextAllSheetGroups))
         dispatch(setAllSheetSorts(nextAllSheetSorts))
       })
-      mutation.deleteSheetColumn(columnId)
+      mutation.deleteSheetColumns([ columnId ])
     }
     
     const undoActions = () => {
@@ -144,7 +144,7 @@ export const deleteSheetColumn = (sheetId: string, columnId: string): IThunkActi
         dispatch(setAllSheetGroups(allSheetGroups))
         dispatch(setAllSheetSorts(allSheetSorts))
       })
-      mutation.restoreSheetColumn(deletedColumn.id)
+      mutation.restoreSheetColumns([ columnId ])
     }
     
     dispatch(createHistoryStep({ actions, undoActions }))

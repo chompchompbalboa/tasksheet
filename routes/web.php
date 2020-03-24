@@ -57,7 +57,7 @@ Route::group([
   // Restore soft deleted models
   Route::post('/folders/restore/{folder}', 'FolderController@restore');
   Route::post('/files/restore/{file}', 'FileController@restore');
-  Route::post('/sheets/columns/restore/{column}', 'SheetColumnController@restore');
+  Route::post('/sheets/columns/restore', 'SheetColumnController@restore');
   Route::post('/sheets/rows/restore', 'SheetRowController@restore');
   Route::post('/sheets/views/restore/{sheetView}', 'SheetViewController@restore');
   Route::post('/sheets/filters/restore/{filter}', 'SheetFilterController@restore');
@@ -69,6 +69,7 @@ Route::group([
   Route::patch('/sheets/cells/batch/update', 'SheetCellController@batchUpdate');
   Route::post('/sheets/cells/priorities', 'SheetCellPriorityController@batchCreate');
   Route::post('/sheets/cells/priorities/delete', 'SheetCellPriorityController@batchDelete');
+  Route::post('/sheets/columns/batch/delete', 'SheetColumnController@batchDestroy');
   Route::post('/sheets/rows/batch/delete', 'SheetRowController@batchDestroy');
 
   // Reset Sheet View

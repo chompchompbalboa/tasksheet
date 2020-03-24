@@ -226,28 +226,30 @@ export const deleteSheetCellChange = async (sheetCellChangeId: string) => {
 	}).catch(console.log.bind(console))
 }
 
-export const createSheetColumn = async (
-  newColumn: ISheetColumn, 
+export const createSheetColumns = async (
+  newColumns: ISheetColumn[], 
   newCells: ISheetCell[]
 ) => {
 	return axios.post('/app/sheets/columns', {
-    newColumn: newColumn,
-    newCells: newCells
-  }).then(response => {
-		return response.data
-	}).catch(console.log.bind(console))
+    newColumns,
+    newCells
+  })
 }
 
-export const deleteSheetColumn = async (columnId: string) => {
-	return axios.delete('/app/sheets/columns/' + columnId).then(response => {
-		return response.data
-	}).catch(console.log.bind(console))
+export const deleteSheetColumns = async (
+	columnIds: ISheetColumn['id'][]
+) => {
+	return axios.post('/app/sheets/columns/batch/delete', {
+		columnIds
+	})
 }
 
-export const restoreSheetColumn = async (columnId: string) => {
-	return axios.post('/app/sheets/columns/restore/' + columnId).then(response => {
-		return response.data
-	}).catch(console.log.bind(console))
+export const restoreSheetColumns = async (
+	columnIds: ISheetColumn['id'][]
+) => {
+	return axios.post('/app/sheets/columns/restore', { 
+		columnIds 
+	})
 }
 
 export const updateSheetColumn = async (id: string, updates: ISheetColumnUpdates) => {

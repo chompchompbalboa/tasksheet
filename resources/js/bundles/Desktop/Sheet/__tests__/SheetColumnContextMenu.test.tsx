@@ -4,15 +4,18 @@
 import React from 'react'
 import 'jest-styled-components'
 import '@testing-library/jest-dom/extend-expect'
-import axiosMock from 'axios'
 
-//import { fireEvent, renderWithRedux, waitForElement } from '@/testing/library'
 import { renderWithRedux } from '@/testing/library'
-import { appStateFactory, IAppStateFactoryInput } from '@/testing/mocks/appState'
-import { createMockStore, mockAppState } from '@/testing/mocks'
+import { 
+  createMockStore, 
+  IMockAppStateFactoryInput,
+  mockAppState,
+  mockAppStateFactory
+} from '@/testing/mocks'
 
-//import { App } from '@app/App'
-import { SheetColumnContextMenu, ISheetColumnContextMenuProps } from '@desktop/Sheet/SheetColumnContextMenu'
+import { IAppState } from '@/state'
+
+import SheetColumnContextMenu, { ISheetColumnContextMenuProps } from '@desktop/Sheet/SheetColumnContextMenu'
 
 //-----------------------------------------------------------------------------
 // Mocks
@@ -21,9 +24,8 @@ const {
   allFiles,
   allFileIds,
   allSheets,
-  allSheetsFromDatabase,
   allSheetViews
-} = appStateFactory({} as IAppStateFactoryInput)
+} = mockAppStateFactory({} as IMockAppStateFactoryInput)
 
 const fileId = allFileIds[0]
 const sheetId = allFiles[fileId].typeId
@@ -31,23 +33,10 @@ const sheet = allSheets[sheetId]
 const activeSheetView = allSheetViews[sheet.activeSheetViewId]
 const sheetColumnId = activeSheetView.visibleColumns[0]
 
-console.warn = jest.fn()
-
-const sheetFromDatabase = allSheetsFromDatabase[sheetId]
-
-// @ts-ignore
-axiosMock.get.mockResolvedValue({ data: sheetFromDatabase })
-// @ts-ignore
-axiosMock.post.mockResolvedValue({ data: null })
-// @ts-ignore
-axiosMock.patch.mockResolvedValue({ data: null })
-
-jest.setTimeout(10000)
-
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-const sheetColumnContextMenuProps: ISheetColumnContextMenuProps = {
+const props: ISheetColumnContextMenuProps = {
   sheetId: sheetId,
   columnId: sheetColumnId,
   columnIndex: 0,
@@ -62,21 +51,19 @@ const sheetColumnContextMenuProps: ISheetColumnContextMenuProps = {
 //-----------------------------------------------------------------------------
 describe('SheetColumnContextMenu', () => {
 
-  // JSDom returns 0 for all getBoundingClientRect values (since its not actually
-  // rendering anything). SheetWindow relies on the width and height property to
-  // calculate the sheet size, so we need to mock those vaulues in.
-  beforeAll(() => {
-    Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', { writable: true, value: () => ({
-      width: 1024,
-      height: 768
-    }) })
-  })
+  const sheetColumnContextMenu = (appState: IAppState = mockAppState) => {
+    const {
+      getByTestId
+    } = renderWithRedux(<SheetColumnContextMenu {...props} />, { store: createMockStore(appState) })
+    const insertColumn = getByTestId("SheetColumnContextMenuInsertColumnContainer")
+    return {
+      insertColumn
+    }
+  }
   
-  it("renders without crashing", async () => {
-    const { getByTestId } = renderWithRedux(<SheetColumnContextMenu {...sheetColumnContextMenuProps}/>, { store: createMockStore(mockAppState) })
-    const SheetColumnContextMenuContainer = getByTestId('SheetColumnContextMenu')
-    expect(SheetColumnContextMenuContainer).toBeTruthy()
-    expect(SheetColumnContextMenuContainer).toHaveStyleRule('top', '100px')
-    expect(SheetColumnContextMenuContainer).toHaveStyleRule('left', '50px')
+  it("displays a menu item to insert a new column", () => {
+    const { insertColumn } = sheetColumnContextMenu()
+    expect(insertColumn).toBeTruthy()
   })
+
 })

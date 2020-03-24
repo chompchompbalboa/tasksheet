@@ -12,8 +12,9 @@ import { IAppState } from '@/state'
 import { IThunkAction, IThunkDispatch } from '@/state/types'
 import { 
   ISheet, 
+  IAllSheetColumns, ISheetColumn,
+  IAllSheetRows,
   IAllSheetCells, ISheetCell,
-  IAllSheetRows
 } from '@/state/sheet/types'
 
 import { createHistoryStep } from '@/state/history/actions'
@@ -30,7 +31,11 @@ import { defaultCell, defaultColumn } from '@/state/sheet/defaults'
 //-----------------------------------------------------------------------------
 // Create Sheet Column
 //-----------------------------------------------------------------------------
-export const createSheetColumn = (sheetId: ISheet['id'], newColumnVisibleColumnsIndex: number): IThunkAction => {
+export const createSheetColumns = (
+  sheetId: ISheet['id'],
+  insertAtVisibleColumnIndex: number,
+  numberOfColumnsToCreate: number = 1
+): IThunkAction => {
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
 
     const {
@@ -44,55 +49,58 @@ export const createSheetColumn = (sheetId: ISheet['id'], newColumnVisibleColumns
     // Variables
     const sheet = allSheets[sheetId]
     const activeSheetView = allSheetViews[sheet.activeSheetViewId]
-    const sheetViewVisibleColumns = activeSheetView.visibleColumns.length === 0 ? clone(sheet.columns) : clone(activeSheetView.visibleColumns)
-    const newColumn = defaultColumn(sheetId)
-    const newCells: ISheetCell[] = []
-    const nextAllSheetCells: IAllSheetCells = clone(allSheetCells)
+    let nextSheetColumns = clone(sheet.columns)
+    let nextSheetViewVisibleColumns = activeSheetView.visibleColumns.length === 0 
+      ? clone(sheet.columns) 
+      : clone(activeSheetView.visibleColumns)
+    const nextAllSheetColumns: IAllSheetColumns = clone(allSheetColumns)
     const nextAllSheetRows: IAllSheetRows = clone(allSheetRows)
+    const nextAllSheetCells: IAllSheetCells = clone(allSheetCells)
+    const newColumns: ISheetColumn[] = []
+    const newColumnIds: ISheetColumn['id'][] = []
+    const newCells: ISheetCell[] = []
 
-    // Get the next sheet visible columns
-    const nextSheetVisibleColumns = [
-      ...sheetViewVisibleColumns.slice(0, newColumnVisibleColumnsIndex),
-      newColumn.id,
-      ...sheetViewVisibleColumns.slice(newColumnVisibleColumnsIndex)
-    ]
+    // For each new column
+    for(let i = 0; i < numberOfColumnsToCreate; i++) {
 
-    // Get the next sheet columns
-    const nextSheetColumns = [
-      ...sheet.columns,
-      newColumn.id
-    ]
+      // Get the new column
+      const newColumn = defaultColumn(sheetId)
 
-    // Create the new cells for each row
-    sheet.rows.forEach(rowId => {
-      const newCell = defaultCell(sheetId, rowId, newColumn.id, createUuid())
-      nextAllSheetCells[newCell.id] = newCell
-      nextAllSheetRows[rowId].cells = { ...nextAllSheetRows[rowId].cells, [newCell.columnId]: newCell.id }
-      newCells.push(newCell)
-    })
+      // Add the new columns to the sheet
+      nextAllSheetColumns[newColumn.id] = newColumn
+      nextSheetViewVisibleColumns.splice(insertAtVisibleColumnIndex + i, 0, newColumn.id)
+      nextSheetColumns.push(newColumn.id)
+      newColumns.push(newColumn)
+      newColumnIds.push(newColumn.id)
+
+      // Create the new cells for each row
+      sheet.rows.forEach(rowId => {
+        const newCell = defaultCell(sheetId, rowId, newColumn.id, createUuid())
+        nextAllSheetCells[newCell.id] = newCell
+        nextAllSheetRows[rowId].cells = { ...nextAllSheetRows[rowId].cells, [newCell.columnId]: newCell.id }
+        newCells.push(newCell)
+      })
+    }
 
     // Actions
     const actions = (isHistoryStep: boolean = false) => {
       batch(() => {
-        dispatch(setAllSheetColumns({
-          ...allSheetColumns,
-          [newColumn.id]: newColumn
-        }))
+        dispatch(setAllSheetColumns(nextAllSheetColumns))
         dispatch(updateSheet(sheetId, {
           columns: nextSheetColumns,
           selections: sheet.selections
         }, true))
         dispatch(updateSheetView(activeSheetView.id, {
-          visibleColumns: nextSheetVisibleColumns
+          visibleColumns: nextSheetViewVisibleColumns
         }))
         dispatch(setAllSheetCells(nextAllSheetCells))
         dispatch(setAllSheetRows(nextAllSheetRows))
       })
       if(!isHistoryStep) {
-        mutation.createSheetColumn(newColumn, newCells)
+        mutation.createSheetColumns(newColumns, newCells)
       }
       else {
-        mutation.restoreSheetColumn(newColumn.id)
+        mutation.restoreSheetColumns(newColumnIds)
       }
     }
 
@@ -105,12 +113,12 @@ export const createSheetColumn = (sheetId: ISheet['id'], newColumnVisibleColumns
           selections: sheet.selections
         }, true))
         dispatch(updateSheetView(activeSheetView.id, {
-          visibleColumns: sheetViewVisibleColumns
+          visibleColumns: activeSheetView.visibleColumns
         }))
         dispatch(setAllSheetCells(allSheetCells))
         dispatch(setAllSheetRows(allSheetRows))
       })
-      mutation.deleteSheetColumn(newColumn.id)
+      mutation.deleteSheetColumns(newColumnIds)
     }
 
     // Dispatch the history step and call the actions

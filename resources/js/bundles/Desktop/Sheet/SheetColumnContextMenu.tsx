@@ -14,7 +14,6 @@ import {
   ISheetCellType
 } from '@/state/sheet/types'
 import { 
-  createSheetColumn,
   createSheetColumnBreak,
   deleteSheetColumn,
   deleteSheetColumnBreak,
@@ -28,6 +27,7 @@ import {
 import ContextMenu from '@desktop/ContextMenu/ContextMenu'
 import ContextMenuDivider from '@desktop/ContextMenu/ContextMenuDivider'
 import ContextMenuItem from '@desktop/ContextMenu/ContextMenuItem'
+import SheetColumnContextMenuInsertColumns from '@/bundles/Desktop/Sheet/SheetColumnContextMenuInsertColumns'
 import SheetColumnContextMenuSettings from '@desktop/Sheet/SheetColumnContextMenuSettings'
 
 //-----------------------------------------------------------------------------
@@ -125,13 +125,10 @@ export const SheetColumnContextMenu = ({
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}
       contextMenuRight={contextMenuRight}>
-      <ContextMenuItem 
-        isFirstItem 
-        text="Insert Column" 
-        onClick={() => {
-          dispatch(createSheetColumn(sheetId, columnIndex))
-          closeContextMenu()
-        }}/>
+      <SheetColumnContextMenuInsertColumns
+        sheetId={sheetId}
+        closeContextMenu={closeContextMenu}
+        columnIndex={columnIndex}/>
       {sheetColumnCellType !== 'COLUMN_BREAK' && 
         <>
           <ContextMenuItem 
