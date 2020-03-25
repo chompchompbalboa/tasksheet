@@ -4,12 +4,11 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { 
-  ISheet
-} from '@/state/sheet/types'
-import { 
-  createSheetColumns
-} from '@/state/sheet/actions'
+import { useSheetEditingPermissions } from '@/hooks'
+
+import { ISheet } from '@/state/sheet/types'
+import { createMessengerMessage } from '@/state/messenger/actions'
+import { createSheetColumns } from '@/state/sheet/actions'
 
 import ContextMenuItemWithInput from '@desktop/ContextMenu/ContextMenuItemWithInput'
 
@@ -28,10 +27,21 @@ export const SheetColumnContextMenuInsertColumn = ({
   // State
   const [ inputValue, setInputValue ] = useState(0)
 
+  // Permissions
+  const {
+    userHasPermissionToEditSheet,
+    userHasPermissionToEditSheetErrorMessage
+  } = useSheetEditingPermissions(sheetId)
+
   // Create Columns
   const createColumns = () => {
-    dispatch(createSheetColumns(sheetId, columnIndex, Math.max(1, inputValue)))
-    closeContextMenu()
+    if(!userHasPermissionToEditSheet) {
+      dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
+    }
+    else {
+      dispatch(createSheetColumns(sheetId, columnIndex, Math.max(1, inputValue)))
+      closeContextMenu()
+    }
   }
 
   // Handle Input Change
@@ -53,7 +63,7 @@ export const SheetColumnContextMenuInsertColumn = ({
 
   return (
     <ContextMenuItemWithInput
-      testId="SheetColumnContextMenuInsertColumn"
+      testId="SheetColumnContextMenuInsertColumns"
       sheetId={sheetId}
       inputPlaceholder={"1"}
       inputValue={inputValue === 0 ? '' : inputValue + ''}

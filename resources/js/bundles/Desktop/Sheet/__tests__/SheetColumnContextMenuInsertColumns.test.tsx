@@ -11,6 +11,8 @@ import {
 } from '@/testing/library'
 import { 
   createMockStore, 
+  getMockAppStateByTasksheetSubscriptionType,
+  getMockAppStateByUsersFilePermissionRole,
   IMockAppStateFactoryInput,
   mockAppState,
   mockAppStateFactory
@@ -18,7 +20,13 @@ import {
 
 import { IAppState } from '@/state'
 
-import SheetColumnContextMenuInsertColumns, { ISheetColumnContextMenuInsertColumnsProps } from '@/bundles/Desktop/Sheet/SheetColumnContextMenuInsertColumns'
+import {
+  SUBSCRIPTION_EXPIRED_MESSAGE,
+  USER_DOESNT_HAVE_PERMISSION_TO_EDIT_SHEET_MESSAGE
+} from '@/state/messenger/messages'
+
+import Messenger from '@desktop/Messenger/Messenger'
+import SheetColumnContextMenuInsertColumns, { ISheetColumnContextMenuInsertColumnsProps } from '@desktop/Sheet/SheetColumnContextMenuInsertColumns'
 
 //-----------------------------------------------------------------------------
 // Mocks
@@ -56,44 +64,64 @@ describe('SheetColumnContextMenuInsertColumn', () => {
     (axiosMock.patch as jest.Mock).mockResolvedValueOnce({});
   })
 
-  const sheetColumnContextMenu = (appState: IAppState = mockAppState) => {
+  const sheetColumnContextMenuInsertColumns = (appState: IAppState = mockAppState) => {
     const {
       getByPlaceholderText,
       getByText,
       store: {
         getState
-      }
-    } = renderWithRedux(<SheetColumnContextMenuInsertColumns {...props} />, { store: createMockStore(appState) })
+      },
+      queryByText
+    } = renderWithRedux(
+      <>
+        <SheetColumnContextMenuInsertColumns {...props} />
+        <Messenger />
+      </>, { store: createMockStore(appState) })
     const insertColumnText = getByText("Insert")
     const insertColumnInput = getByPlaceholderText("1") as HTMLInputElement
     return {
       getState,
       insertColumnInput,
-      insertColumnText
+      insertColumnText,
+      queryByText
     }
   }
   
   it("displays a menu item with an input to insert columns before the current column", () => {
-    const { insertColumnInput, insertColumnText } = sheetColumnContextMenu()
+    const { insertColumnInput, insertColumnText } = sheetColumnContextMenuInsertColumns()
     expect(insertColumnInput).toBeTruthy()
     expect(insertColumnText).toBeTruthy()
   })
   
   it("correctly updates the input value", () => {
-    const { insertColumnInput } = sheetColumnContextMenu()
+    const { insertColumnInput } = sheetColumnContextMenuInsertColumns()
     const nextInputValue = "6"
     fireEvent.change(insertColumnInput, { target: { value: nextInputValue } })
     expect(insertColumnInput.value).toBe(nextInputValue)
   })
   
   it("limits the input value to a maximum of 10", () => {
-    const { insertColumnInput } = sheetColumnContextMenu()
+    const { insertColumnInput } = sheetColumnContextMenuInsertColumns()
     fireEvent.change(insertColumnInput, { target: { value: "11" } })
     expect(insertColumnInput.value).toBe("10")
   })
+
+  it("displays an error message if a user with an expired subscription attempts to insert new colums", () => {
+    const appState = getMockAppStateByTasksheetSubscriptionType("TRIAL_EXPIRED")
+    const { insertColumnText, queryByText } = sheetColumnContextMenuInsertColumns(appState)
+    insertColumnText.click()
+    expect(queryByText(SUBSCRIPTION_EXPIRED_MESSAGE.message)).toBeTruthy()
+  })
+
+  it("displays an error message if the user doesn't have permission to edit the sheet and attempts to insert new colums", () => {
+    const appState = getMockAppStateByUsersFilePermissionRole("VIEWER")
+    const { insertColumnText, queryByText } = sheetColumnContextMenuInsertColumns(appState)
+    insertColumnText.click()
+    expect(queryByText(USER_DOESNT_HAVE_PERMISSION_TO_EDIT_SHEET_MESSAGE.message)).toBeTruthy()
+  })
   
   it("correctly inserts 1 column", () => {
-    const { getState, insertColumnInput, insertColumnText } = sheetColumnContextMenu()
+    const { getState, insertColumnInput, insertColumnText } = sheetColumnContextMenuInsertColumns()
     const visibleColumnsCount = activeSheetView.visibleColumns.length
     fireEvent.change(insertColumnInput, { target: { value: "1" } })
     insertColumnText.click()
@@ -102,7 +130,7 @@ describe('SheetColumnContextMenuInsertColumn', () => {
   })
   
   it("correctly inserts 5 columns", () => {
-    const { getState, insertColumnInput, insertColumnText } = sheetColumnContextMenu()
+    const { getState, insertColumnInput, insertColumnText } = sheetColumnContextMenuInsertColumns()
     const visibleColumnsCount = activeSheetView.visibleColumns.length
     fireEvent.change(insertColumnInput, { target: { value: "5" } })
     insertColumnText.click()
