@@ -16,6 +16,7 @@ import {
   SET_ALL_FILE_PERMISSIONS, UPDATE_FILE_PERMISSION,
   SET_ALL_FOLDERS, UPDATE_FOLDER,
   SET_ALL_FILES, UPDATE_FILE,
+  SET_ALL_USER_FILE_PERMISSIONS_BY_TYPE_ID,
   UPDATE_ACTIVE_FILE_ID,
   UPDATE_ACTIVE_FOLDER_PATH,
   UPDATE_CLIPBOARD,
@@ -157,6 +158,7 @@ export const folderReducer = (state = initialFolderState, action: IFolderActions
 		case SET_ALL_FILE_PERMISSIONS: { return { ...state, allFilePermissions: action.nextAllFilePermissions } }
 		case SET_ALL_FOLDERS: { return { ...state, allFolders: action.nextAllFolders } }
 		case SET_ALL_FILES: { return { ...state, allFiles: action.nextAllFiles } }
+		case SET_ALL_USER_FILE_PERMISSIONS_BY_TYPE_ID: { return { ...state, allUserFilePermissionsByFileTypeId: action.nextAllUserFilePermissionsByFileTypeId } }
       
 		case UPDATE_ACTIVE_FILE_ID: {
       const { nextActiveFileId, nextActiveFolderPath } = action

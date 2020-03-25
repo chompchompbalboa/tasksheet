@@ -7,7 +7,8 @@ import { IFilePermission } from '@/state/folder/types'
 
 import {
   setAllFilePermissions,
-  setAllFiles
+  setAllFiles,
+  setAllUserFilePermissionsByFileTypeId,
 } from '@/state/folder/actions'
 
 //-----------------------------------------------------------------------------
@@ -50,7 +51,7 @@ export const createFilePermissions = (newFilePermissions: IFilePermission[]): IT
           permissions: nextFilePermissions
         }
       }
-      
+
       // Add the permissions to the user's file permissions
       if(newFilePermission.userId === userId) {
         nextAllUserFilePermissionsByFileTypeId[file.typeId] = newFilePermission.id
@@ -59,5 +60,6 @@ export const createFilePermissions = (newFilePermissions: IFilePermission[]): IT
     
     dispatch(setAllFilePermissions(nextAllFilePermissions))
     dispatch(setAllFiles(nextAllFiles))
+    dispatch(setAllUserFilePermissionsByFileTypeId(nextAllUserFilePermissionsByFileTypeId))
   }
 }

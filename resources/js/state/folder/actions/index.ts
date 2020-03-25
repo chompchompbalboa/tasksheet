@@ -8,8 +8,11 @@ import { mutation } from '@/api'
 import { IAppState } from '@/state'
 import { IThunkAction, IThunkDispatch } from '@/state/types'
 import { 
-  IFile, IAllFilePermissions, IFilePermission, IFilePermissionUpdates, IAllFiles, IFileUpdates, 
-  IFolder, IAllFolderPermissions, IFolderPermission, IFolderPermissionUpdates, IAllFolders, IFolderUpdates,
+  IAllFiles, IFile, IFileUpdates, 
+  IAllFilePermissions, IFilePermission, IFilePermissionUpdates,
+  IAllFolders, IFolder, IFolderUpdates,
+  IAllFolderPermissions, IFolderPermission, IFolderPermissionUpdates, 
+  IAllUserFilePermissionsByFileTypeId,
   IFolderClipboardUpdates, 
 } from '@/state/folder/types'
 import { createHistoryStep } from '@/state/history/actions'
@@ -23,6 +26,7 @@ export type IFolderActions =
   ISetAllFolders | IUpdateFolder | 
   ISetAllFilePermissions | IUpdateFilePermission |
   ISetAllFiles | IUpdateFile | 
+  ISetAllUserFilePermissionsByFileTypeId |
   IUpdateActiveFolderPath | 
   IUpdateActiveFileId | 
   IUpdateClipboard |
@@ -68,6 +72,22 @@ export const setAllFilePermissions = (nextAllFilePermissions: IAllFilePermission
 	return {
 		type: SET_ALL_FILE_PERMISSIONS,
     nextAllFilePermissions
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Set All File Permissions
+//-----------------------------------------------------------------------------
+export const SET_ALL_USER_FILE_PERMISSIONS_BY_TYPE_ID = 'SET_ALL_USER_FILE_PERMISSIONS_BY_TYPE_ID'
+interface ISetAllUserFilePermissionsByFileTypeId {
+  type: typeof SET_ALL_USER_FILE_PERMISSIONS_BY_TYPE_ID
+  nextAllUserFilePermissionsByFileTypeId: IAllUserFilePermissionsByFileTypeId
+}
+
+export const setAllUserFilePermissionsByFileTypeId = (nextAllUserFilePermissionsByFileTypeId: IAllUserFilePermissionsByFileTypeId): IFolderActions => {
+	return {
+		type: SET_ALL_USER_FILE_PERMISSIONS_BY_TYPE_ID,
+    nextAllUserFilePermissionsByFileTypeId
 	}
 }
 
