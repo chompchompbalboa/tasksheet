@@ -239,7 +239,7 @@ export const createSheetColumns = async (
 export const deleteSheetColumns = async (
 	columnIds: ISheetColumn['id'][]
 ) => {
-	return axios.post('/app/sheets/columns/batch/delete', {
+	return axios.post('/app/sheets/columns/delete', {
 		columnIds
 	})
 }

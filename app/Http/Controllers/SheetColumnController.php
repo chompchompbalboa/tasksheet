@@ -21,34 +21,13 @@ class SheetColumnController extends Controller
       foreach($request->input('newCells') as $newCell) {
         SheetCell::create($newCell);
       }
-      return response()->json(null, 200);
+      return response(null, 200);
     }
 
     public function update(Request $request, SheetColumn $column)
     {
       $column->update($request->all());
-      return response()->json($column, 200);
-    }
-
-    public function destroy(SheetColumn $column)
-    {
-      // Delete the filters, groups and sorts that reference this column
-      SheetFilter::where('columnId', $column->id)->delete();
-      SheetGroup::where('columnId', $column->id)->delete();
-      SheetSort::where('columnId', $column->id)->delete();
-
-      // Delete all of the cells belonging to this column
-      SheetCell::where('columnId', $column->id)->delete();
-
-      // If deleting the sheet's only column, delete any rows as well
-      $columnCount = SheetColumn::where('sheetId', $column->sheetId)->count();
-      if($columnCount === 1) {
-        SheetRow::where('sheetId', $column->sheetId)->delete();
-      }
-
-      // Delete the column
-      SheetColumn::destroy($column->id);
-      return response()->json(null, 200);
+      return response($column, 200);
     }
 
     public function batchDestroy(Request $request)
@@ -76,7 +55,7 @@ class SheetColumnController extends Controller
         // Delete the column
         SheetColumn::destroy($column->id);
       }
-      return response()->json(null, 200);
+      return response(null, 200);
     }
 
     public function restore(Request $request)
@@ -125,9 +104,9 @@ class SheetColumnController extends Controller
             ->restore();
         }
         else {
-          return response()->json(false, 404);
+          return response(false, 404);
         }
       }
-      return response()->json(true, 200);
+      return response(true, 200);
     }
 }

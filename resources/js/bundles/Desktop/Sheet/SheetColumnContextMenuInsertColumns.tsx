@@ -30,7 +30,7 @@ export const SheetColumnContextMenuInsertColumn = ({
 
   // Create Columns
   const createColumns = () => {
-    dispatch(createSheetColumns(sheetId, columnIndex, inputValue))
+    dispatch(createSheetColumns(sheetId, columnIndex, Math.max(1, inputValue)))
     closeContextMenu()
   }
 

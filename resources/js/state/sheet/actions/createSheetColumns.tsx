@@ -88,7 +88,11 @@ export const createSheetColumns = (
         dispatch(setAllSheetColumns(nextAllSheetColumns))
         dispatch(updateSheet(sheetId, {
           columns: nextSheetColumns,
-          selections: sheet.selections
+          selections: {
+            ...sheet.selections,
+            isSelectedCellEditingPrevented: false,
+            isSelectedCellNavigationPrevented: false
+          }
         }, true))
         dispatch(updateSheetView(activeSheetView.id, {
           visibleColumns: nextSheetViewVisibleColumns
@@ -110,7 +114,11 @@ export const createSheetColumns = (
         dispatch(setAllSheetColumns(allSheetColumns))
         dispatch(updateSheet(sheetId, {
           columns: sheet.columns,
-          selections: sheet.selections
+          selections: {
+            ...sheet.selections,
+            isSelectedCellEditingPrevented: false,
+            isSelectedCellNavigationPrevented: false
+          }
         }, true))
         dispatch(updateSheetView(activeSheetView.id, {
           visibleColumns: activeSheetView.visibleColumns

@@ -50,19 +50,6 @@ class User extends Authenticatable
       return $this->tasksheetSubscription()->first();
     }
   
-    /*
-    public function getStripeSubscriptionAttribute() {
-      $localSubscription = $this->subscriptions()->first();
-      $stripeSubscription = $localSubscription->asStripeSubscription();
-      $subscription = [
-        'stripeStatus' => $localSubscription->stripe_status,
-        'trialEndsAt' => Carbon::parse($localSubscription->trial_ends_at),
-        'endsAt' => Carbon::parse($stripeSubscription->current_period_end)
-      ];
-      return $subscription;
-    }
-    */
-  
     public function active() {
       return $this->hasOne('App\Models\UserActive', 'userId');
     }
@@ -153,5 +140,14 @@ class User extends Authenticatable
   
     public function tasksheetSubscription() {
       return $this->hasOne('App\Models\UserTasksheetSubscription', 'userId');
+    }
+
+    /*
+    * Test Sheet
+    * 
+    * A test helper that fetches a sheet belonging to the user
+    */
+    public function testSheet() {
+      return Sheet::find($this->files()[0]->typeId);
     }
 }
