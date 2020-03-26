@@ -13,7 +13,6 @@ import {
   ISheetCellType
 } from '@/state/sheet/types'
 import { 
-  hideSheetColumn,
   showSheetColumn,
   updateSheetActive,
   updateSheetColumn
@@ -23,6 +22,7 @@ import ContextMenu from '@desktop/ContextMenu/ContextMenu'
 import ContextMenuDivider from '@desktop/ContextMenu/ContextMenuDivider'
 import ContextMenuItem from '@desktop/ContextMenu/ContextMenuItem'
 import SheetColumnContextMenuDeleteColumns from '@/bundles/Desktop/Sheet/SheetColumnContextMenuDeleteColumns'
+import SheetColumnContextMenuHideColumns from '@/bundles/Desktop/Sheet/SheetColumnContextMenuHideColumns'
 import SheetColumnContextMenuInsertColumnBreak from '@/bundles/Desktop/Sheet/SheetColumnContextMenuInsertColumnBreak'
 import SheetColumnContextMenuInsertColumns from '@/bundles/Desktop/Sheet/SheetColumnContextMenuInsertColumns'
 import SheetColumnContextMenuMoveColumns from '@/bundles/Desktop/Sheet/SheetColumnContextMenuMoveColumns'
@@ -124,9 +124,9 @@ export const SheetColumnContextMenu = ({
             sheetId={sheetId}
             columnId={columnId}
             closeContextMenu={closeContextMenu}/>
-          <ContextMenuItem 
-            text="Hide" 
-            onClick={() => closeContextMenuOnClick(() => dispatch(hideSheetColumn(sheetId, columnIndex)))}/>
+          <SheetColumnContextMenuHideColumns
+            sheetId={sheetId}
+            closeContextMenu={closeContextMenu}/>
           {hiddenSheetColumns.length > 0 &&
             <ContextMenuItem 
               text="Show">

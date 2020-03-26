@@ -4,7 +4,7 @@
 import { batch } from 'react-redux'
 import { IAppState } from '@/state'
 import { IThunkAction, IThunkDispatch } from '@/state/types'
-import { ISheet, ISheetCell } from '@/state/sheet/types'
+import { ISheet, ISheetColumn, ISheetCell } from '@/state/sheet/types'
 
 import { updateSheet, updateSheetCellReducer } from '@/state/sheet/actions'
 
@@ -57,6 +57,7 @@ export const updateSheetSelectionFromCellClick = (sheetId: string, cellId: strin
             ...selections,
             isOneEntireColumnSelected: false,
             isOneEntireRowSelected: false,
+            rangeColumnIds: new Set() as Set<ISheetColumn['id']>,
             rangeCellIds: nextSelectionsRangeCellIds,
             rangeStartCellId: cell.id,
             rangeStartColumnId: cell.columnId,
@@ -105,6 +106,7 @@ export const updateSheetSelectionFromCellClick = (sheetId: string, cellId: strin
             ...selections,
             isOneEntireColumnSelected: false,
             isOneEntireRowSelected: false,
+            rangeColumnIds: new Set() as Set<ISheetColumn['id']>,
             rangeCellIds: nextSheetSelectionRangeCellIds,
             rangeEndCellId: cell.id,
             rangeEndColumnId: activeSheetView.visibleColumns[rangeEndColumnIndex],

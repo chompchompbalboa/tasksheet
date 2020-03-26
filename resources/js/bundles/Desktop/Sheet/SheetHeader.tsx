@@ -38,6 +38,7 @@ export const SheetHeader = ({
   // Redux
   const dispatch = useDispatch()
   const sheetColumn = useSelector((state: IAppState) => state.sheet.allSheetColumns && state.sheet.allSheetColumns[columnId])
+  const rangeColumnIds = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeColumnIds)
   const rangeStartColumnId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeStartColumnId)
   const columnRenamingId = useSelector((state: IAppState) => state.sheet.active.columnRenamingId)
 
@@ -80,14 +81,13 @@ export const SheetHeader = ({
   
   // Handle Container Mouse Down
   const handleContainerMouseDown = (e: MouseEvent) => {
-    if(e.button !== 2) { // If not right clicked
+    if(!(e.button === 2 && rangeColumnIds.has(columnId))) { // If not right clicked
       if(!isColumnBreak && !isRenaming && e.shiftKey) {
         dispatch(selectSheetColumns(sheetId, rangeStartColumnId, sheetColumn.id))
       }
       else if (!isColumnBreak && !isRenaming) {
         dispatch(selectSheetColumns(sheetId, sheetColumn.id))
       } 
-
     }
   }
   

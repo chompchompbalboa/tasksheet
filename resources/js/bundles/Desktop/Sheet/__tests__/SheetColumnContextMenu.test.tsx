@@ -74,5 +74,10 @@ describe('SheetColumnContextMenu', () => {
     const { queryByTestId } = sheetColumnContextMenu()
     expect(queryByTestId("SheetColumnContextMenuMoveColumns")).toBeTruthy()
   })
+  
+  it("displays a menu item to hide columns", () => {
+    const { queryByTestId } = sheetColumnContextMenu()
+    expect(queryByTestId("SheetColumnContextMenuHideColumns")).toBeTruthy()
+  })
 
 })

@@ -12,7 +12,7 @@ import { createHistoryStep } from '@/state/history/actions'
 //-----------------------------------------------------------------------------
 // Hide Sheet Column
 //-----------------------------------------------------------------------------
-export const hideSheetColumn = (sheetId: ISheet['id'], columnVisibleColumnsIndex: number): IThunkAction => {
+export const hideSheetColumns = (sheetId: ISheet['id']): IThunkAction => {
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     
     const {
@@ -23,7 +23,7 @@ export const hideSheetColumn = (sheetId: ISheet['id'], columnVisibleColumnsIndex
     const sheet = allSheets[sheetId]
     const activeSheetView = allSheetViews[sheet.activeSheetViewId]
 
-    const nextSheetViewVisibleColumns = activeSheetView.visibleColumns.filter((_, index) => index !== columnVisibleColumnsIndex)
+    const nextSheetViewVisibleColumns = activeSheetView.visibleColumns.filter(columnId => !sheet.selections.rangeColumnIds.has(columnId))
 
     const actions = () => {
       dispatch(updateSheetView(activeSheetView.id, { visibleColumns: nextSheetViewVisibleColumns }))

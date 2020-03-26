@@ -7,6 +7,7 @@ import { IAppState } from '@/state'
 import { IThunkAction, IThunkDispatch } from '@/state/types'
 import { 
   ISheet,
+  ISheetColumn,
   ISheetCell
 } from '@/state/sheet/types'
 
@@ -156,6 +157,7 @@ export const updateSheetSelectionFromArrowKey = (
               ...selections,
               isOneEntireColumnSelected: false,
               isOneEntireRowSelected: false,
+              rangeColumnIds: new Set as Set<ISheetColumn['id']>,
               rangeCellIds: nextSheetSelectionRangeCellIds,
               rangeEndCellId: cell.id,
               rangeEndColumnId: activeSheetView.visibleColumns[nextRangeEndColumnIndex],

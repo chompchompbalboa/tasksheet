@@ -5,6 +5,7 @@ import { IAppState } from '@/state'
 import { IThunkAction, IThunkDispatch } from '@/state/types'
 import { ISheet, ISheetColumn } from '@/state/sheet/types'
 
+import { createHistoryStep } from '@/state/history/actions'
 import { updateSheetView } from '@/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
@@ -51,9 +52,20 @@ export const moveSheetColumns = (
       ...activeSheetView.visibleColumns.filter((currentColumnId, index) => index >= moveToColumnIndex && !columnIdsToMove.includes(currentColumnId))
     ]
 
-    // Update the sheet view
-    dispatch(updateSheetView(activeSheetView.id, {
-      visibleColumns: nextVisibleColumns
-    }, false, true))
+    // Actions
+    const actions = () => {
+      dispatch(updateSheetView(activeSheetView.id, { visibleColumns: nextVisibleColumns }))
+    }
+
+    // Undo Actions
+    const undoActions = () => {
+      dispatch(updateSheetView(activeSheetView.id, { visibleColumns: activeSheetView.visibleColumns }))
+    }
+
+    // Create the history step
+    dispatch(createHistoryStep({ actions, undoActions }))
+
+    // Call the actions
+    actions()
 	}
 }

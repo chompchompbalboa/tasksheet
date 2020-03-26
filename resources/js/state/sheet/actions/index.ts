@@ -77,7 +77,7 @@ export { copySheetRange } from '@/state/sheet/actions/copySheetRange'
 export { cutSheetRange } from '@/state/sheet/actions/cutSheetRange'
 export { pasteSheetRange } from '@/state/sheet/actions/pasteSheetRange'
 
-export { hideSheetColumn } from '@/state/sheet/actions/hideSheetColumn'
+export { hideSheetColumns } from '@/state/sheet/actions/hideSheetColumns'
 export { showSheetColumn } from '@/state/sheet/actions/showSheetColumn'
 
 export { allowSelectedCellEditing } from '@/state/sheet/actions/allowSelectedCellEditing'
