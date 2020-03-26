@@ -34,7 +34,7 @@ import { createHistoryStep } from '@/state/history/actions'
 //-----------------------------------------------------------------------------
 // Delete Sheet Column
 //-----------------------------------------------------------------------------
-export const deleteSheetColumn = (sheetId: string, columnId: string): IThunkAction => {
+export const deleteSheetColumns = (sheetId: string, columnId: string): IThunkAction => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
 
     const {

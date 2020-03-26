@@ -69,5 +69,10 @@ describe('SheetColumnContextMenu', () => {
     const { queryByTestId } = sheetColumnContextMenu()
     expect(queryByTestId("SheetColumnContextMenuDeleteColumns")).toBeTruthy()
   })
+  
+  it("displays a menu item to move columns", () => {
+    const { queryByTestId } = sheetColumnContextMenu()
+    expect(queryByTestId("SheetColumnContextMenuMoveColumns")).toBeTruthy()
+  })
 
 })

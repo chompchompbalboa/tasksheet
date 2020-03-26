@@ -42,7 +42,7 @@ export { createSheetCellFile } from '@/state/sheet/actions/createSheetCellFile'
 export { createSheetCellPhoto } from '@/state/sheet/actions/createSheetCellPhoto'
 export { createSheetPriority } from '@/state/sheet/actions/createSheetPriority'
 
-export { deleteSheetColumn } from '@/state/sheet/actions/deleteSheetColumn'
+export { deleteSheetColumns } from '@/state/sheet/actions/deleteSheetColumns'
 export { deleteSheetColumnBreak } from '@/state/sheet/actions/deleteSheetColumnBreak'
 export { deleteSheetFilter } from '@/state/sheet/actions/deleteSheetFilter'
 export { deleteSheetGroup } from '@/state/sheet/actions/deleteSheetGroup'
@@ -67,6 +67,7 @@ export { updateSheetStyles } from '@/state/sheet/actions/updateSheetStyles'
 export { updateSheetView } from '@/state/sheet/actions/updateSheetView'
 
 export { addSheetColumnAllCellValue } from '@/state/sheet/actions/addSheetColumnAllCellValue'
+export { moveSheetColumns } from '@/state/sheet/actions/moveSheetColumns'
 
 export { resetSheetView } from '@/state/sheet/actions/resetSheetView'
 

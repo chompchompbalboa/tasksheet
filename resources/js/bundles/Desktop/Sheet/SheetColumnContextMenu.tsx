@@ -3,7 +3,6 @@
 //-----------------------------------------------------------------------------
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import arrayMove from 'array-move'
 
 import { CHECKMARK } from '@/assets/icons'
 
@@ -16,7 +15,6 @@ import {
 import { 
   hideSheetColumn,
   showSheetColumn,
-  updateSheetView,
   updateSheetActive,
   updateSheetColumn
 } from '@/state/sheet/actions'
@@ -27,6 +25,7 @@ import ContextMenuItem from '@desktop/ContextMenu/ContextMenuItem'
 import SheetColumnContextMenuDeleteColumns from '@/bundles/Desktop/Sheet/SheetColumnContextMenuDeleteColumns'
 import SheetColumnContextMenuInsertColumnBreak from '@/bundles/Desktop/Sheet/SheetColumnContextMenuInsertColumnBreak'
 import SheetColumnContextMenuInsertColumns from '@/bundles/Desktop/Sheet/SheetColumnContextMenuInsertColumns'
+import SheetColumnContextMenuMoveColumns from '@/bundles/Desktop/Sheet/SheetColumnContextMenuMoveColumns'
 import SheetColumnContextMenuSettings from '@desktop/Sheet/SheetColumnContextMenuSettings'
 
 //-----------------------------------------------------------------------------
@@ -100,15 +99,6 @@ export const SheetColumnContextMenu = ({
     setTimeout(() => thenCallThis(), 10)
   }
   
-  // Handle moving a column
-  const handleColumnMoveClick = (moveFromColumnId: ISheetColumn['id'], moveToIndex: number) => {
-    const moveFromIndex = sheetViewVisibleColumns.findIndex(sheetVisibleColumnId => sheetVisibleColumnId === moveFromColumnId)
-    const nextVisibleColumns = arrayMove(sheetViewVisibleColumns, moveFromIndex, (moveToIndex > moveFromIndex ? moveToIndex - 1 : moveToIndex))
-    closeContextMenuOnClick(() => {
-      dispatch(updateSheetView(sheetActiveSheetViewId, { visibleColumns: nextVisibleColumns }, false, true))
-    })
-  }
-  
   // Hidden sheet columns
   const hiddenSheetColumns = sheetColumns.filter(columnId => !sheetViewVisibleColumns.includes(columnId))
 
@@ -130,17 +120,10 @@ export const SheetColumnContextMenu = ({
             columnIndex={columnIndex}
             closeContextMenu={closeContextMenu}/>
           <ContextMenuDivider />
-          <ContextMenuItem 
-            text="Move Before">
-            {sheetViewVisibleColumns.map((sheetColumnId, index) => (
-              <ContextMenuItem 
-                key={sheetColumnId === 'COLUMN_BREAK' ? sheetColumnId + index : sheetColumnId}
-                containerBackgroundColor={sheetColumnId === 'COLUMN_BREAK' ? 'rgb(220, 220, 220)' : 'transparent'} 
-                containerHoverBackgroundColor={sheetColumnId === 'COLUMN_BREAK' ? 'rgb(190, 190, 190)' : 'rgb(242, 242, 242)'} 
-                text={sheetColumnId === 'COLUMN_BREAK' ? '' : allSheetColumns[sheetColumnId].name} 
-                onClick={() => handleColumnMoveClick(columnId, index)}/>
-            ))}
-          </ContextMenuItem>
+          <SheetColumnContextMenuMoveColumns
+            sheetId={sheetId}
+            columnId={columnId}
+            closeContextMenu={closeContextMenu}/>
           <ContextMenuItem 
             text="Hide" 
             onClick={() => closeContextMenuOnClick(() => dispatch(hideSheetColumn(sheetId, columnIndex)))}/>
