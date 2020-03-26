@@ -59,6 +59,7 @@ export const createSheetColumns = (
     const newColumns: ISheetColumn[] = []
     const newColumnIds: ISheetColumn['id'][] = []
     const newCells: ISheetCell[] = []
+    
     const isMultipleColumnsSelected = sheet.selections.rangeColumnIds.size > 1 && sheet.selections.rangeColumnIds.has(activeSheetView.visibleColumns[visibleColumnsIndex])
     const insertAtVisibleColumnsIndex = isMultipleColumnsSelected
       ? activeSheetView.visibleColumns.indexOf(sheet.selections.rangeStartColumnId)

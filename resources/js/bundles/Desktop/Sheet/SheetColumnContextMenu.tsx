@@ -14,7 +14,6 @@ import {
   ISheetCellType
 } from '@/state/sheet/types'
 import { 
-  createSheetColumnBreak,
   hideSheetColumn,
   showSheetColumn,
   updateSheetView,
@@ -26,6 +25,7 @@ import ContextMenu from '@desktop/ContextMenu/ContextMenu'
 import ContextMenuDivider from '@desktop/ContextMenu/ContextMenuDivider'
 import ContextMenuItem from '@desktop/ContextMenu/ContextMenuItem'
 import SheetColumnContextMenuDeleteColumns from '@/bundles/Desktop/Sheet/SheetColumnContextMenuDeleteColumns'
+import SheetColumnContextMenuInsertColumnBreak from '@/bundles/Desktop/Sheet/SheetColumnContextMenuInsertColumnBreak'
 import SheetColumnContextMenuInsertColumns from '@/bundles/Desktop/Sheet/SheetColumnContextMenuInsertColumns'
 import SheetColumnContextMenuSettings from '@desktop/Sheet/SheetColumnContextMenuSettings'
 
@@ -125,9 +125,10 @@ export const SheetColumnContextMenu = ({
         columnIndex={columnIndex}/>
       {sheetColumnCellType !== 'COLUMN_BREAK' && 
         <>
-          <ContextMenuItem 
-            text="Insert Column Break" 
-            onClick={() => closeContextMenuOnClick(() => dispatch(createSheetColumnBreak(sheetId, columnIndex)))}/>
+          <SheetColumnContextMenuInsertColumnBreak
+            sheetId={sheetId}
+            columnIndex={columnIndex}
+            closeContextMenu={closeContextMenu}/>
           <ContextMenuDivider />
           <ContextMenuItem 
             text="Move Before">

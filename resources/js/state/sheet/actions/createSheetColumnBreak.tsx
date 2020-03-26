@@ -17,7 +17,7 @@ import { updateSheetView } from '@/state/sheet/actions'
 //-----------------------------------------------------------------------------
 // Create Sheet Column Break
 //-----------------------------------------------------------------------------
-export const createSheetColumnBreak = (sheetId: ISheet['id'], newColumnVisibleColumnsIndex: number): IThunkAction => {
+export const createSheetColumnBreak = (sheetId: ISheet['id'], visibleColumnsIndex: number): IThunkAction => {
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
 
     const {
@@ -29,10 +29,15 @@ export const createSheetColumnBreak = (sheetId: ISheet['id'], newColumnVisibleCo
     const activeSheetView = allSheetViews[sheet.activeSheetViewId]
     const sheetViewVisibleColumns = activeSheetView.visibleColumns.length === 0 ? clone(sheet.columns) : clone(activeSheetView.visibleColumns)
 
+    const isMultipleColumnsSelected = sheet.selections.rangeColumnIds.size > 1 && sheet.selections.rangeColumnIds.has(activeSheetView.visibleColumns[visibleColumnsIndex])
+    const insertAtVisibleColumnsIndex = isMultipleColumnsSelected
+      ? activeSheetView.visibleColumns.indexOf(sheet.selections.rangeStartColumnId)
+      : visibleColumnsIndex
+
     const nextSheetViewVisibleColumns = [
-      ...sheetViewVisibleColumns.slice(0, newColumnVisibleColumnsIndex),
+      ...sheetViewVisibleColumns.slice(0, insertAtVisibleColumnsIndex),
       'COLUMN_BREAK',
-      ...sheetViewVisibleColumns.slice(newColumnVisibleColumnsIndex)
+      ...sheetViewVisibleColumns.slice(insertAtVisibleColumnsIndex)
     ]
 
     const actions = () => {
