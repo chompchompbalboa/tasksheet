@@ -80,12 +80,15 @@ export const SheetHeader = ({
   
   // Handle Container Mouse Down
   const handleContainerMouseDown = (e: MouseEvent) => {
-    if(!isColumnBreak && e.shiftKey && !isRenaming) {
-      dispatch(selectSheetColumns(sheetId, rangeStartColumnId, sheetColumn.id))
+    if(e.button !== 2) { // If not right clicked
+      if(!isColumnBreak && !isRenaming && e.shiftKey) {
+        dispatch(selectSheetColumns(sheetId, rangeStartColumnId, sheetColumn.id))
+      }
+      else if (!isColumnBreak && !isRenaming) {
+        dispatch(selectSheetColumns(sheetId, sheetColumn.id))
+      } 
+
     }
-    else if (!isColumnBreak && !isRenaming) {
-      dispatch(selectSheetColumns(sheetId, sheetColumn.id))
-    } 
   }
   
   // Handle Keypress While Column Is Renaming

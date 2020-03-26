@@ -15,8 +15,6 @@ import {
 } from '@/state/sheet/types'
 import { 
   createSheetColumnBreak,
-  deleteSheetColumn,
-  deleteSheetColumnBreak,
   hideSheetColumn,
   showSheetColumn,
   updateSheetView,
@@ -27,6 +25,7 @@ import {
 import ContextMenu from '@desktop/ContextMenu/ContextMenu'
 import ContextMenuDivider from '@desktop/ContextMenu/ContextMenuDivider'
 import ContextMenuItem from '@desktop/ContextMenu/ContextMenuItem'
+import SheetColumnContextMenuDeleteColumns from '@/bundles/Desktop/Sheet/SheetColumnContextMenuDeleteColumns'
 import SheetColumnContextMenuInsertColumns from '@/bundles/Desktop/Sheet/SheetColumnContextMenuInsertColumns'
 import SheetColumnContextMenuSettings from '@desktop/Sheet/SheetColumnContextMenuSettings'
 
@@ -94,11 +93,6 @@ export const SheetColumnContextMenu = ({
 
   // Is this is a column break?
   const sheetColumnCellType = columnId === 'COLUMN_BREAK' ? 'COLUMN_BREAK' : sheetColumn.cellType
-
-  // On Delete Click
-  const onDeleteClick = columnId === 'COLUMN_BREAK' 
-    ? () => dispatch(deleteSheetColumnBreak(sheetId, columnIndex))
-    : () => dispatch(deleteSheetColumn(sheetId, columnId))
 
   // Close the context menu before handling a click
   const closeContextMenuOnClick = (thenCallThis: (...args: any) => void) => {
@@ -187,11 +181,11 @@ export const SheetColumnContextMenu = ({
           <ContextMenuDivider />
         </>
       }
-        <ContextMenuItem 
-          isLastItem
-          text="Delete"
-          onClick={() => closeContextMenuOnClick(() => onDeleteClick())}>
-        </ContextMenuItem>
+      <SheetColumnContextMenuDeleteColumns 
+        sheetId={sheetId}
+        columnId={columnId}
+        columnIndex={columnIndex}
+        closeContextMenu={closeContextMenu}/>
     </ContextMenu>
   )
 }

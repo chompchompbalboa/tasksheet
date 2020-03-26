@@ -14,9 +14,7 @@ use App\Models\Sheet;
 class SheetColumnControllerTest extends TestCase
 {
     /**
-     * A basic feature test example.
-     *
-     * @return void
+     * Test the "store" method
      */
     public function testSheetColumnControllerStore()
     {
@@ -30,6 +28,9 @@ class SheetColumnControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
+    /**
+     * Get the new columns and cells for testing the "store" method
+     */
     private function getNewColumnsAndCells($sheet, $numberOfColumns)
     {
         $newColumns = [];
@@ -59,5 +60,25 @@ class SheetColumnControllerTest extends TestCase
         }
 
         return [ $newColumns, $newCells ];
+    }
+
+    /**
+     * Test the "batchDestroy" method and "restore" method
+     */
+    public function testSheetColumnControllerBatchDestroy()
+    {
+        $user = User::first();
+        $sheet = $user->testSheet();
+        $columnIds = [ $sheet->columns[0]->id, $sheet->columns[1]->id ];
+
+        $batchDestroyResponse = $this->actingAs($user)->postJson('/app/sheets/columns/delete', [
+            'columnIds' => $columnIds
+        ]);
+        $batchDestroyResponse->assertStatus(200);
+
+        $restore = $this->actingAs($user)->postJson('/app/sheets/columns/restore', [
+            'columnIds' => $columnIds
+        ]);
+        $restore->assertStatus(200);
     }
 }

@@ -53,17 +53,21 @@ describe('SheetColumnContextMenu', () => {
 
   const sheetColumnContextMenu = (appState: IAppState = mockAppState) => {
     const {
-      getByTestId
+      queryByTestId
     } = renderWithRedux(<SheetColumnContextMenu {...props} />, { store: createMockStore(appState) })
-    const insertColumn = getByTestId("SheetColumnContextMenuInsertColumnContainer")
     return {
-      insertColumn
+      queryByTestId
     }
   }
   
-  it("displays a menu item to insert a new column", () => {
-    const { insertColumn } = sheetColumnContextMenu()
-    expect(insertColumn).toBeTruthy()
+  it("displays a menu item to insert new columns", () => {
+    const { queryByTestId } = sheetColumnContextMenu()
+    expect(queryByTestId("SheetColumnContextMenuInsertColumnsContainer")).toBeTruthy()
+  })
+  
+  it("displays a menu item to delete columns", () => {
+    const { queryByTestId } = sheetColumnContextMenu()
+    expect(queryByTestId("SheetColumnContextMenuDeleteColumns")).toBeTruthy()
   })
 
 })

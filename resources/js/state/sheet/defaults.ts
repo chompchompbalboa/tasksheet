@@ -64,6 +64,7 @@ export const defaultSheetSelections: ISheetSelections = {
   isOneEntireRowSelected: false,
   isSelectedCellEditingPrevented: false,
   isSelectedCellNavigationPrevented: false,
+  rangeColumnIds: new Set() as Set<ISheetColumn['id']>,
   rangeCellIds: new Set() as Set<ISheetCell['id']>,
   rangeStartColumnId: null,
   rangeStartRowId: null,

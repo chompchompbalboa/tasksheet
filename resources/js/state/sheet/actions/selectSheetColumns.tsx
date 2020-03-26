@@ -13,7 +13,11 @@ import { updateSheet, updateSheetCell } from '@/state/sheet/actions'
 //-----------------------------------------------------------------------------
 // Action
 //-----------------------------------------------------------------------------
-export const selectSheetColumns = (sheetId: ISheet['id'], startColumnId: ISheetColumn['id'], endColumnId?: ISheetColumn['id']): IThunkAction => {
+export const selectSheetColumns = (
+  sheetId: ISheet['id'], 
+  startColumnId: ISheetColumn['id'], 
+  endColumnId?: ISheetColumn['id']
+  ): IThunkAction => {
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
     const {
       allSheetCells,
@@ -37,6 +41,14 @@ export const selectSheetColumns = (sheetId: ISheet['id'], startColumnId: ISheetC
       const nextRangeStartColumnId = activeSheetView.visibleColumns[startColumnIndex]
       const nextRangeEndColumnId = activeSheetView.visibleColumns[endColumnIndex]
       const nextIsOneEntireColumnSelected = nextRangeStartColumnId === nextRangeEndColumnId
+
+      const nextRangeColumnIds = new Set() as Set<ISheetColumn['id']>
+      for(let i = startColumnIndex; i <= endColumnIndex; i++) {
+        const currentColumnId = activeSheetView.visibleColumns[i]
+        if(currentColumnId !== 'COLUMN_BREAK') {
+          nextRangeColumnIds.add(currentColumnId)
+        }
+      }
   
       const nextRangeStartRow = allSheetRows[visibleRows[0]]
       const nextRangeEndRowIndex = visibleRows[visibleRows.length - 1] === 'ROW_BREAK' ? visibleRows.length - 2 : visibleRows.length - 1
@@ -70,6 +82,7 @@ export const selectSheetColumns = (sheetId: ISheet['id'], startColumnId: ISheetC
           ...selections,
           isOneEntireColumnSelected: nextIsOneEntireColumnSelected,
           isOneEntireRowSelected: false,
+          rangeColumnIds: nextRangeColumnIds,
           rangeCellIds: nextRangeCellIds,
           rangeStartCellId: nextRangeStartCellId,
           rangeStartColumnId: nextRangeStartColumnId,

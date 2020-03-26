@@ -79,6 +79,12 @@ class SheetColumnController extends Controller
           // Restore the column
           $column->restore();
   
+          // Restore the rows
+          SheetRow::withTrashed()
+            ->where('sheetId', $column->sheetId)
+            ->where('deleted_at', $deletedAt)
+            ->restore();
+  
           // Restore the cells 
           SheetCell::withTrashed()
             ->where('columnId', $columnId)
@@ -104,9 +110,9 @@ class SheetColumnController extends Controller
             ->restore();
         }
         else {
-          return response(false, 404);
+          return response(null, 404);
         }
       }
-      return response(true, 200);
+      return response(null, 200);
     }
 }

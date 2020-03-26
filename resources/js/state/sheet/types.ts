@@ -434,6 +434,7 @@ export interface ISheetSelections {
   isOneEntireRowSelected: boolean
   isSelectedCellEditingPrevented: boolean
   isSelectedCellNavigationPrevented: boolean
+  rangeColumnIds: Set<ISheetColumn['id']> // The entire column must be selected
   rangeCellIds: Set<ISheetCell['id']>
   rangeStartColumnId: ISheetColumn['id']
   rangeStartRowId: ISheetRow['id']

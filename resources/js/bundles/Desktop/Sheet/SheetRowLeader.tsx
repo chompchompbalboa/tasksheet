@@ -29,7 +29,7 @@ export const SheetRowLeader = memo(({
   const rangeStartRowId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeStartRowId)
   
   const handleMouseDown = (e: MouseEvent) => {
-    if(e.button !== 2) {
+    if(e.button !== 2) { // If not right clicked
       if(rowId !== 'ROW_BREAK') {
         if(e.shiftKey) {
           const nextRangeStartRowId = rangeStartRowId || rowId
