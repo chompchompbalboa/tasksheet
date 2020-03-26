@@ -33,7 +33,7 @@ import { defaultCell, defaultColumn } from '@/state/sheet/defaults'
 //-----------------------------------------------------------------------------
 export const createSheetColumns = (
   sheetId: ISheet['id'],
-  insertAtVisibleColumnIndex: number,
+  visibleColumnsIndex: number,
   numberOfColumnsToCreate: number = 1
 ): IThunkAction => {
   return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
@@ -59,6 +59,10 @@ export const createSheetColumns = (
     const newColumns: ISheetColumn[] = []
     const newColumnIds: ISheetColumn['id'][] = []
     const newCells: ISheetCell[] = []
+    const isMultipleColumnsSelected = sheet.selections.rangeColumnIds.size > 1 && sheet.selections.rangeColumnIds.has(activeSheetView.visibleColumns[visibleColumnsIndex])
+    const insertAtVisibleColumnsIndex = isMultipleColumnsSelected
+      ? activeSheetView.visibleColumns.indexOf(sheet.selections.rangeStartColumnId)
+      : visibleColumnsIndex
 
     // For each new column
     for(let i = 0; i < numberOfColumnsToCreate; i++) {
@@ -68,7 +72,7 @@ export const createSheetColumns = (
 
       // Add the new columns to the sheet
       nextAllSheetColumns[newColumn.id] = newColumn
-      nextSheetViewVisibleColumns.splice(insertAtVisibleColumnIndex + i, 0, newColumn.id)
+      nextSheetViewVisibleColumns.splice(insertAtVisibleColumnsIndex + i, 0, newColumn.id)
       nextSheetColumns.push(newColumn.id)
       newColumns.push(newColumn)
       newColumnIds.push(newColumn.id)
