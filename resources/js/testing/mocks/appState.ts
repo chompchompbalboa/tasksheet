@@ -154,7 +154,8 @@ export const appStateFactory = ({
           cellType: columns[currentColumnNumber - 1] as ISheetCellType,
           trackCellChanges: false,
           showCellChanges: false,
-          allCellValues: new Set() as Set<string>
+          allCellValues: new Set() as Set<string>,
+          isRenaming: false
         }
         
         allSheetColumns[newSheetColumn.id] = newSheetColumn

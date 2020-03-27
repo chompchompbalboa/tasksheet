@@ -47,9 +47,15 @@ export const moveSheetColumns = (
 
     // Get the next visibleColumns
     const nextVisibleColumns = [
-      ...activeSheetView.visibleColumns.filter((currentColumnId, index) => index < moveToColumnIndex && !columnIdsToMove.includes(currentColumnId)),
+      ...activeSheetView.visibleColumns.filter((currentColumnId, index) => 
+        index < moveToColumnIndex && 
+        (!columnIdsToMove.includes(currentColumnId) || currentColumnId === 'COLUMN_BREAK')
+      ),
       ...columnIdsToMove,
-      ...activeSheetView.visibleColumns.filter((currentColumnId, index) => index >= moveToColumnIndex && !columnIdsToMove.includes(currentColumnId))
+      ...activeSheetView.visibleColumns.filter((currentColumnId, index) => 
+         index >= moveToColumnIndex && 
+         (!columnIdsToMove.includes(currentColumnId) || currentColumnId === 'COLUMN_BREAK')
+      )
     ]
 
     // Actions

@@ -163,7 +163,8 @@ export const createDemoSheet = (): IThunkAction => {
           defaultValue: null,
           trackCellChanges: sheetColumnSource.trackCellChanges,
           showCellChanges: sheetColumnSource.showCellChanges,
-          allCellValues: new Set()
+          allCellValues: new Set(),
+          isRenaming: false
         }
       }
     })

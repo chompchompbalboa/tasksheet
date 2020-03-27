@@ -13,7 +13,6 @@ import {
   ISheetCellType
 } from '@/state/sheet/types'
 import { 
-  updateSheetActive,
   updateSheetColumn
 } from '@/state/sheet/actions'
 
@@ -25,6 +24,7 @@ import SheetColumnContextMenuHideColumns from '@/bundles/Desktop/Sheet/SheetColu
 import SheetColumnContextMenuInsertColumnBreak from '@/bundles/Desktop/Sheet/SheetColumnContextMenuInsertColumnBreak'
 import SheetColumnContextMenuInsertColumns from '@/bundles/Desktop/Sheet/SheetColumnContextMenuInsertColumns'
 import SheetColumnContextMenuMoveColumns from '@/bundles/Desktop/Sheet/SheetColumnContextMenuMoveColumns'
+import SheetColumnContextMenuRenameColumn from '@/bundles/Desktop/Sheet/SheetColumnContextMenuRenameColumn'
 import SheetColumnContextMenuShowColumns from '@/bundles/Desktop/Sheet/SheetColumnContextMenuShowColumns'
 import SheetColumnContextMenuSettings from '@desktop/Sheet/SheetColumnContextMenuSettings'
 
@@ -126,9 +126,10 @@ export const SheetColumnContextMenu = ({
             columnIndex={columnIndex}
             closeContextMenu={closeContextMenu}/>
           <ContextMenuDivider />
-          <ContextMenuItem 
-            text="Rename" 
-            onClick={() => closeContextMenuOnClick(() => dispatch(updateSheetActive({ columnRenamingId: columnId })))}/>
+          <SheetColumnContextMenuRenameColumn
+            sheetId={sheetId}
+            columnId={columnId}
+            closeContextMenu={closeContextMenu}/>
           <ContextMenuItem 
             text="Type">
             {sheetCellTypesKeys.map((sheetCellType, index) => {

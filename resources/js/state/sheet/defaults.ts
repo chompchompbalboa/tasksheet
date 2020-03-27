@@ -18,13 +18,14 @@ export const defaultColumn = (sheetId: string): ISheetColumn => {
   return {
     id: createUuid(),
     sheetId: sheetId, 
-    name: 'Column',
+    name: '-',
     width: 100,
     cellType: 'STRING',
     defaultValue: '',
     trackCellChanges: false,
     showCellChanges: true,
-    allCellValues: new Set() as Set<string>
+    allCellValues: new Set() as Set<string>,
+    isRenaming: false
   }
 }
 

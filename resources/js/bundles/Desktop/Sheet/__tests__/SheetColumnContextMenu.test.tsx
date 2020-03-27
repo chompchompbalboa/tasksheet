@@ -56,11 +56,13 @@ describe('SheetColumnContextMenu', () => {
       store: {
         dispatch
       },
-      queryByTestId
+      queryByTestId,
+      queryByText
     } = renderWithRedux(<SheetColumnContextMenu {...props} />, { store: createMockStore(appState) })
     return {
       dispatch,
-      queryByTestId
+      queryByTestId,
+      queryByText
     }
   }
   
@@ -90,6 +92,11 @@ describe('SheetColumnContextMenu', () => {
     dispatch(selectSheetColumns(sheetId, sheetColumnId))
     dispatch(hideSheetColumns(sheetId))
     expect(queryByTestId("SheetColumnContextMenuShowColumns")).toBeTruthy()
+  })
+  
+  it("displays a menu item to rename the column", () => {
+    const { queryByText } = sheetColumnContextMenu()
+    expect(queryByText("Rename")).toBeTruthy()
   })
 
 })

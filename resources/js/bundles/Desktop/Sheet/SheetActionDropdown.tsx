@@ -41,7 +41,7 @@ const SheetActionDropdown = ({
   const getVisibleOptions = (value: string) => {
     return options && options.filter(option => {
       const searchString = value.toLowerCase().replace(/ /g, "")
-      return option.label.toLowerCase().replace(/ /g, "").includes(searchString)
+      return (option.label || "").toLowerCase().replace(/ /g, "").includes(searchString)
     })
   }
   

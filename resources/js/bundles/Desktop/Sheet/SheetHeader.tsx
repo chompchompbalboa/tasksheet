@@ -16,17 +16,18 @@ import {
   preventSelectedCellEditing,
   preventSelectedCellNavigation,
   selectSheetColumns,
-  updateSheetActive,
   updateSheetColumn
 } from '@/state/sheet/actions'
 
-import AutosizeInput from 'react-input-autosize'
+import { defaultColumn } from '@/state/sheet/defaults'
+
 import SheetHeaderResizeContainer from '@desktop/Sheet/SheetHeaderResizeContainer'
+
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 export const SheetHeader = ({
-  sheetId,
+  sheetId, 
   columnId,
   gridContainerRef,
   handleContextMenu,
@@ -40,7 +41,6 @@ export const SheetHeader = ({
   const sheetColumn = useSelector((state: IAppState) => state.sheet.allSheetColumns && state.sheet.allSheetColumns[columnId])
   const rangeColumnIds = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeColumnIds)
   const rangeStartColumnId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeStartColumnId)
-  const columnRenamingId = useSelector((state: IAppState) => state.sheet.active.columnRenamingId)
 
   // Local State
   const [ isRenaming, setIsRenaming ] = useState(false)
@@ -52,7 +52,7 @@ export const SheetHeader = ({
 
   // Effects 
   useEffect(() => {
-    if(sheetColumn && columnRenamingId === sheetColumn.id) { 
+    if(sheetColumn && sheetColumn.isRenaming) { 
       setIsRenaming(true)
       batch(() => {
         dispatch(preventSelectedCellEditing(sheetId))
@@ -64,7 +64,7 @@ export const SheetHeader = ({
       removeEventListener('keypress', handleKeypressWhileColumnIsRenaming)
     }
     return () => removeEventListener('keypress', handleKeypressWhileColumnIsRenaming)
-  }, [ sheetColumn, columnName, columnRenamingId ])
+  }, [ sheetColumn, columnName ])
 
   useEffect(() => {
     if(sheetColumn) {
@@ -104,9 +104,9 @@ export const SheetHeader = ({
     batch(() => {
       dispatch(allowSelectedCellEditing(sheetId))
       dispatch(allowSelectedCellNavigation(sheetId))
-      dispatch(updateSheetActive({ columnRenamingId: null }))
+      dispatch(updateSheetColumn(sheetColumn.id, { isRenaming: false }, null, true))
     })
-    setTimeout(() => dispatch(updateSheetColumn(sheetColumn.id, { name: columnName }, { name: sheetColumn.name })), 250)
+    dispatch(updateSheetColumn(sheetColumn.id, { name: columnName || defaultColumn.name }, { name: sheetColumn.name }))
   }
 
   // Handle Column Resize End
@@ -124,33 +124,20 @@ export const SheetHeader = ({
       isNextColumnAColumnBreak={isNextColumnAColumnBreak}
       isResizing={isResizing}
       onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'COLUMN', sheetColumn && sheetColumn.id || 'COLUMN_BREAK', visibleColumnsIndex)}>
-      {!isRenaming
+      {!(sheetColumn && sheetColumn.isRenaming)
         ? <NameContainer
             data-testid="SheetHeaderNameContainer"
             isColumnBreak={isColumnBreak}
             onMouseDown={(e: MouseEvent) => handleContainerMouseDown(e)}>
             {columnName}
           </NameContainer>
-        : <AutosizeInput
+        : <NameInput
+            data-testid="SheetHeaderNameInput"
             autoFocus
             placeholder="Name..."
             onChange={e => setColumnName(e.target.value)}
-            onBlur={() => handleAutosizeInputBlur()}
-            onSubmit={() => handleAutosizeInputBlur()}
-            value={columnName === null ? "" : columnName}
-            inputStyle={{
-              margin: '0',
-              paddingLeft: '0.14rem',
-              width: '100%',
-              height: '100%',
-              border: 'none',
-              borderRadius: '5px',
-              backgroundColor: 'transparent',
-              color: 'black',
-              outline: 'none',
-              fontFamily: 'inherit',
-              fontSize: '0.8rem',
-              fontWeight: 'bold'}}/>
+            onBlur={handleAutosizeInputBlur}
+            value={columnName || ""}/>
       }
       {!isColumnBreak && 
         <SheetHeaderResizeContainer
@@ -223,6 +210,20 @@ const NameContainer = styled.div`
 interface NameContainerProps {
   isColumnBreak: boolean
 }
+
+const NameInput = styled.input`
+  margin: 0;
+  padding-left: 0.14rem;
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: black;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: bold;
+`
 
 //-----------------------------------------------------------------------------
 // Export

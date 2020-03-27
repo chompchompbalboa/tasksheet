@@ -148,6 +148,7 @@ export interface ISheetColumn {
   trackCellChanges: boolean
   showCellChanges: boolean
   allCellValues: Set<string>
+  isRenaming: boolean
 }
 
 export interface ISheetColumnUpdates {
@@ -158,6 +159,7 @@ export interface ISheetColumnUpdates {
   trackCellChanges?: boolean
   showCellChanges?: boolean
   allCellValues?: Set<string>
+  isRenaming?: boolean
 }
 
 export interface ISheetColumnToDatabase {
