@@ -74,9 +74,7 @@ export const SheetHeader = ({
 
   // Handle Autosize Input Blur
   const handleAutosizeInputBlur = () => {
-    if(columnName !== null) {
-      handleColumnRenamingFinish()
-    }
+    handleColumnRenamingFinish()
   }
   
   // Handle Container Mouse Down
@@ -100,13 +98,15 @@ export const SheetHeader = ({
   
   // Handle Column Renaming Finish
   const handleColumnRenamingFinish = () => {
+    const nextColumnName = columnName || defaultColumn(sheetId).name
     setIsRenaming(false)
+    setColumnName(nextColumnName)
     batch(() => {
       dispatch(allowSelectedCellEditing(sheetId))
       dispatch(allowSelectedCellNavigation(sheetId))
       dispatch(updateSheetColumn(sheetColumn.id, { isRenaming: false }, null, true))
     })
-    dispatch(updateSheetColumn(sheetColumn.id, { name: columnName || defaultColumn.name }, { name: sheetColumn.name }))
+    dispatch(updateSheetColumn(sheetColumn.id, { name: nextColumnName }, { name: sheetColumn.name }))
   }
 
   // Handle Column Resize End
@@ -134,7 +134,7 @@ export const SheetHeader = ({
         : <NameInput
             data-testid="SheetHeaderNameInput"
             autoFocus
-            placeholder="Name..."
+            placeholder={defaultColumn(sheetId).name}
             onChange={e => setColumnName(e.target.value)}
             onBlur={handleAutosizeInputBlur}
             value={columnName || ""}/>
