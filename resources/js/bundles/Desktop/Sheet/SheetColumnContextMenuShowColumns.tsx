@@ -19,11 +19,11 @@ import ContextMenuItem from '@desktop/ContextMenu/ContextMenuItem'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-export const SheetColumnContextMenu = ({
+export const SheetColumnContextMenuShowColumns = ({
   sheetId,
   columnIndex,
   closeContextMenu
-}: ISheetColumnContextMenuProps) => {
+}: ISheetColumnContextMenuShowColumnsProps) => {
   
   // Redux
   const dispatch = useDispatch()
@@ -55,6 +55,7 @@ export const SheetColumnContextMenu = ({
   if(hiddenSheetColumns.length > 0) {
     return (
       <ContextMenuItem 
+        testId="SheetColumnContextMenuShowColumns"
         text="Show">
         {hiddenSheetColumns.map(columnId => {
           const column = allSheetColumns[columnId]
@@ -74,7 +75,7 @@ export const SheetColumnContextMenu = ({
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-export interface ISheetColumnContextMenuProps {
+export interface ISheetColumnContextMenuShowColumnsProps {
   sheetId: ISheet['id']
   columnIndex: number
   closeContextMenu(): void
@@ -83,4 +84,4 @@ export interface ISheetColumnContextMenuProps {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetColumnContextMenu
+export default SheetColumnContextMenuShowColumns

@@ -2,8 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import 'jest-styled-components'
-import '@testing-library/jest-dom/extend-expect'
+import axiosMock from 'axios'
 
 import { renderWithRedux } from '@/testing/library'
 import { 
@@ -14,6 +13,7 @@ import {
 } from '@/testing/mocks'
 
 import { IAppState } from '@/state'
+import { hideSheetColumns, selectSheetColumns } from '@/state/sheet/actions'
 
 import SheetColumnContextMenu, { ISheetColumnContextMenuProps } from '@desktop/Sheet/SheetColumnContextMenu'
 
@@ -53,9 +53,13 @@ describe('SheetColumnContextMenu', () => {
 
   const sheetColumnContextMenu = (appState: IAppState = mockAppState) => {
     const {
+      store: {
+        dispatch
+      },
       queryByTestId
     } = renderWithRedux(<SheetColumnContextMenu {...props} />, { store: createMockStore(appState) })
     return {
+      dispatch,
       queryByTestId
     }
   }
@@ -78,6 +82,14 @@ describe('SheetColumnContextMenu', () => {
   it("displays a menu item to hide columns", () => {
     const { queryByTestId } = sheetColumnContextMenu()
     expect(queryByTestId("SheetColumnContextMenuHideColumns")).toBeTruthy()
+  })
+  
+  it("displays a menu item to show columns", () => {
+    (axiosMock.patch as jest.Mock).mockResolvedValueOnce({})
+    const { dispatch, queryByTestId } = sheetColumnContextMenu()
+    dispatch(selectSheetColumns(sheetId, sheetColumnId))
+    dispatch(hideSheetColumns(sheetId))
+    expect(queryByTestId("SheetColumnContextMenuShowColumns")).toBeTruthy()
   })
 
 })
