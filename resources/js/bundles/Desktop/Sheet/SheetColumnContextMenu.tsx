@@ -13,7 +13,6 @@ import {
   ISheetCellType
 } from '@/state/sheet/types'
 import { 
-  showSheetColumn,
   updateSheetActive,
   updateSheetColumn
 } from '@/state/sheet/actions'
@@ -26,6 +25,7 @@ import SheetColumnContextMenuHideColumns from '@/bundles/Desktop/Sheet/SheetColu
 import SheetColumnContextMenuInsertColumnBreak from '@/bundles/Desktop/Sheet/SheetColumnContextMenuInsertColumnBreak'
 import SheetColumnContextMenuInsertColumns from '@/bundles/Desktop/Sheet/SheetColumnContextMenuInsertColumns'
 import SheetColumnContextMenuMoveColumns from '@/bundles/Desktop/Sheet/SheetColumnContextMenuMoveColumns'
+import SheetColumnContextMenuShowColumns from '@/bundles/Desktop/Sheet/SheetColumnContextMenuShowColumns'
 import SheetColumnContextMenuSettings from '@desktop/Sheet/SheetColumnContextMenuSettings'
 
 //-----------------------------------------------------------------------------
@@ -44,9 +44,6 @@ export const SheetColumnContextMenu = ({
   // Redux
   const dispatch = useDispatch()
   const allSheetColumns = useSelector((state: IAppState) => state.sheet.allSheetColumns)
-  const sheetColumns = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].columns)
-  const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].activeSheetViewId)
-  const sheetViewVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].visibleColumns)
   const sheetColumn = allSheetColumns[columnId]
 
   // Cell Types
@@ -98,9 +95,6 @@ export const SheetColumnContextMenu = ({
     closeContextMenu()
     setTimeout(() => thenCallThis(), 10)
   }
-  
-  // Hidden sheet columns
-  const hiddenSheetColumns = sheetColumns.filter(columnId => !sheetViewVisibleColumns.includes(columnId))
 
   return (
     <ContextMenu
@@ -127,20 +121,10 @@ export const SheetColumnContextMenu = ({
           <SheetColumnContextMenuHideColumns
             sheetId={sheetId}
             closeContextMenu={closeContextMenu}/>
-          {hiddenSheetColumns.length > 0 &&
-            <ContextMenuItem 
-              text="Show">
-              {hiddenSheetColumns.map(columnId => {
-                const column = allSheetColumns[columnId]
-                return (
-                  <ContextMenuItem
-                    key={column.id}
-                    text={column.name}
-                    onClick={() => closeContextMenuOnClick(() => dispatch(showSheetColumn(sheetId, columnIndex, column.id)))}/>
-                )
-              })}
-            </ContextMenuItem>
-          }
+          <SheetColumnContextMenuShowColumns 
+            sheetId={sheetId}
+            columnIndex={columnIndex}
+            closeContextMenu={closeContextMenu}/>
           <ContextMenuDivider />
           <ContextMenuItem 
             text="Rename" 
