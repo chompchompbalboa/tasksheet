@@ -77,6 +77,7 @@ export interface IFile {
 
 export interface IFileUpdates {
   folderId?: string
+  userId?: IFile['userId']
   name?: string
   type?: IFileType
   isPreventedFromSelecting?: boolean

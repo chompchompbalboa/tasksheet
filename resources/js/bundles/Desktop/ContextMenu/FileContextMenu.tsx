@@ -45,8 +45,6 @@ const FileContextMenu = ({
           <ContextMenuItem 
             text="Cut"
             onClick={() => closeOnClick(() => updateClipboard({ itemId: fileId, folderOrFile: 'FILE', cutOrCopy: 'CUT' }))}/>
-          <ContextMenuItem text="Copy"/>
-          <ContextMenuDivider />
           <ContextMenuItem 
             text="Rename"
             onClick={() => closeOnClick(() => setIsRenaming(true))}/>

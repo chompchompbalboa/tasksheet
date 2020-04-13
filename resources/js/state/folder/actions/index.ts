@@ -43,6 +43,8 @@ export { deleteFolderPermissions } from '@/state/folder/actions/deleteFolderPerm
 export { createFilePermissions } from '@/state/folder/actions/createFilePermissions'
 export { deleteFilePermissions } from '@/state/folder/actions/deleteFilePermissions'
 
+export { pasteFromClipboard } from '@/state/folder/actions/pasteFromClipboard'
+
 //-----------------------------------------------------------------------------
 // Set All Folder Permissions
 //-----------------------------------------------------------------------------
@@ -183,62 +185,6 @@ export const updateClipboard = (updates: IFolderClipboardUpdates): IFolderAction
 		type: UPDATE_CLIPBOARD,
 		updates
 	}
-}
-
-//-----------------------------------------------------------------------------
-// Paste From Clipboard
-//-----------------------------------------------------------------------------
-export const pasteFromClipboard = (nextFolderId: string) => {
-  return (dispatch: IThunkDispatch, getState: () => IAppState) => {
-    const {
-      clipboard: {
-        itemId,
-        cutOrCopy,
-        folderOrFile
-      },
-      allFiles,
-      allFolders
-    } = getState().folder
-    const nextFolder = allFolders[nextFolderId]
-    // File
-    if(folderOrFile === 'FILE') {
-      const file = allFiles[itemId]
-      const previousFolder = allFolders[file.folderId]
-      if(previousFolder.id !== nextFolder.id) {
-        // Cut
-        if(cutOrCopy === 'CUT') {
-          dispatch(updateFile(file.id, {
-            folderId: nextFolderId
-          }))
-          dispatch(updateFolder(nextFolderId, {
-            files: [ ...nextFolder.files, file.id ]
-          }, true))
-          dispatch(updateFolder(previousFolder.id, {
-            files: previousFolder.files.filter(fileId => fileId !== file.id) 
-          }, true))
-        }
-      }
-    }
-    // Folder
-    else if(folderOrFile === 'FOLDER') {
-      const folder = allFolders[itemId]
-      const previousFolder = allFolders[folder.folderId]
-      if(previousFolder.id !== nextFolder.id) {
-        // Cut
-        if(cutOrCopy === 'CUT') {
-          dispatch(updateFolder(folder.id, {
-            folderId: nextFolder.id
-          }))
-          dispatch(updateFolder(previousFolder.id, {
-            folders: previousFolder.folders.filter(folderId => folderId !== folder.id) 
-          }, true))
-          dispatch(updateFolder(nextFolder.id, {
-            folders: [ ...nextFolder.folders, folder.id ]
-          }, true))
-        }
-      }
-    }
-  }
 }
 
 //-----------------------------------------------------------------------------
