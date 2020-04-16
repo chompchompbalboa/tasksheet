@@ -5,7 +5,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { TAB_CLOSE } from '@/assets/icons'
+import { CLOSE } from '@/assets/icons'
 
 import { IAppState } from '@/state'
 
@@ -38,8 +38,8 @@ const Tab = ({
         <CloseTab
           onClick={() => closeTab(fileId)}>
           <Icon
-            icon={TAB_CLOSE}
-            size="1rem"/>
+            icon={CLOSE}
+            size="0.85rem"/>
         </CloseTab>
       </Content>
     </Container>
@@ -68,7 +68,10 @@ const Container = styled.div`
   background-color: rgb(250, 250, 250);
   border-left: none;
   border-bottom: none;
-  border-radius: 4px 4px 0 0;
+  border-radius: 3px 3px 0 0;
+  &:hover {
+    opacity: ${ ({ isActiveTab }: ContainerProps) => isActiveTab ? '1' : '0.8'};
+  }
   @media (max-width: 480px) {
     width: 25%;
   }
@@ -111,15 +114,18 @@ interface NameProps {
 }
 
 const CloseTab = styled.div`
-  width: 1.1rem;
-  cursor: pointer;
-  padding-right: 0.2rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-right: 0.3rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: rgb(100, 100, 100);
+  color: rgb(125, 125, 125);
+  border-radius: 0.45rem;
+  transition: all 0.1s;
   &:hover {
-    color: rgb(200, 0, 0);
+    color: rgb(255, 255, 255);
+    background-color: rgb(200, 0, 0);
   }
 `
 

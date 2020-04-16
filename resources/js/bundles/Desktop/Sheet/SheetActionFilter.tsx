@@ -411,11 +411,11 @@ interface IContainer {
 }
 
 const Wrapper = styled.div`
-  padding: 0.225rem 0.25rem;
+  padding: 0.25rem;
   border: 0.5px solid rgb(180, 180, 180);
   display: flex;
   align-items: center;
-  border-radius: 5px;
+  border-radius: 4px;
 `
 
 const ExistingFilters = styled.div`

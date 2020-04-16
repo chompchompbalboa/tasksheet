@@ -110,7 +110,7 @@ const SheetActionSearch = ({
         height: '100%',
         minWidth: '6.5rem',
         border: '0.5px solid rgb(180, 180, 180)',
-        borderRadius: '5px',
+        borderRadius: '4px',
         backgroundColor: 'transparent',
         outline: 'none',
         fontFamily: 'inherit',

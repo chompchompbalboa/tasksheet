@@ -125,14 +125,14 @@ const Container = styled.div`
   width: 100%;
   position: sticky;
   top: 0;
-  padding: 0.25rem 0.125rem;
+  padding: 0.2rem 0.125rem;
   padding-left: 0.5rem;
   display: flex;
   flex-flow: row-wrap;
   align-items: center;
   min-height: 2.75rem;
   background-color: rgb(250, 250, 250);
-  border-bottom: 1px solid rgb(175, 175, 175);
+  border-bottom: 1px solid rgb(150, 150, 150);
 `
 
 const Divider = styled.div`

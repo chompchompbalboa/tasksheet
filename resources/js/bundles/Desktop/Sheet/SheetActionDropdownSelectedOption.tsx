@@ -61,7 +61,7 @@ const Container = styled.div`
   margin-right: 0.25rem;
   background-color: ${ ({ optionBackgroundColor }: ContainerProps ) => optionBackgroundColor };
   color: white;
-  border-radius: 7px;
+  border-radius: 5px;
   font-size: 0.75rem;
   display: flex;
   align-items: center;

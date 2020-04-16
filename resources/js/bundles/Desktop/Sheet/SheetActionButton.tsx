@@ -18,8 +18,8 @@ import SheetActionTooltip from '@desktop/Sheet/SheetActionTooltip'
 const SheetActionButton = ({
   children,
   closeDropdown,
-  containerBackgroundColor = 'rgb(220, 220, 220)',
-  containerColor = 'rgb(80, 80, 80)',
+  containerBackgroundColor = 'rgb(225, 225, 225)',
+  containerColor = 'rgb(50, 50, 50)',
   containerHoverBackgroundColor,
   containerHoverColor = 'rgb(240, 240, 240)',
   dropdownToggleBackgroundColor = 'rgb(220, 220, 220)',
@@ -169,7 +169,6 @@ const Container = styled.div`
   color: rgb(80, 80, 80);
   border-radius: 3px;
   transition: all 0.05s;
-  border: 1px solid rgb(175, 175, 175);
 `
 interface IContainer {
   containerMarginLeft: string
@@ -190,6 +189,7 @@ const IconContainer = styled.div`
   border-bottom-right-radius: ${ ({ hasDropdown }: IIconContainer) => hasDropdown ? '0' : '3px' };
   background-color: ${ ({ containerBackgroundColor }: IIconContainer) => containerBackgroundColor };
   color: ${ ({ containerColor }: IIconContainer) => containerColor };
+  border: 1px solid rgb(165, 165, 165);
   &:hover {
     background-color: ${ ({ containerHoverBackgroundColor }: IIconContainer) => containerHoverBackgroundColor };
     color: ${ ({ containerHoverColor }: IIconContainer) => containerHoverColor };
@@ -219,7 +219,6 @@ interface IIconText {
 const DropdownToggle = styled.div`
   cursor: pointer;
   padding: 0.45rem 0.1rem;
-  border-left: 1px solid rgb(175, 175, 175);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -227,7 +226,9 @@ const DropdownToggle = styled.div`
   transition: all 0.05s;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
-    background-color: ${ ({ dropdownToggleBackgroundColor }: IDropdownToggle) => dropdownToggleBackgroundColor};
+  border: 1px solid rgb(165, 165, 165);
+  border-left: none;
+  background-color: ${ ({ dropdownToggleBackgroundColor }: IDropdownToggle) => dropdownToggleBackgroundColor};
   &:hover {
     background-color: ${ ({ dropdownToggleHoverBackgroundColor }: IDropdownToggle) => dropdownToggleHoverBackgroundColor};
     color: rgb(240, 240, 240);
