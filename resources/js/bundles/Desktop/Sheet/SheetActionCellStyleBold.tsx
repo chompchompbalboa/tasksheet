@@ -25,7 +25,7 @@ const SheetActionCellStyleBold = ({
   
   const sheetStyles = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].styles)
   
-  const updateSheetStylesSet = (nextSheetStylesSet: Set<string>) => {
+  const updateSheetStyles = (nextSheetStylesSet: Set<string>) => {
     dispatch(updateSheetStylesAction(sheetId, {
       bold: nextSheetStylesSet 
     }))
@@ -37,7 +37,7 @@ const SheetActionCellStyleBold = ({
       icon={BOLD}
       marginLeft="0"
       sheetStylesSet={sheetStyles && sheetStyles.bold}
-      updateSheetStylesSet={updateSheetStylesSet}
+      updateSheetStyles={updateSheetStyles}
       tooltip="Bold"/>
   )
 }

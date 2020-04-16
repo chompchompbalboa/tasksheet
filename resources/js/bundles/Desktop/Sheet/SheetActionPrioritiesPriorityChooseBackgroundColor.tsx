@@ -39,6 +39,7 @@ const SheetActionPrioritiesPriorityChooseBackgroundColor = ({
     userHasPermissionToEditSheetErrorMessage
   } = useSheetEditingPermissions(sheetId)
 
+  // Handle Sheet Priority Color Change
   const handleSheetPriorityColorChange = (nextColor: string) => {
     if(!userHasPermissionToEditSheet) {
       dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))

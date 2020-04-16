@@ -21,10 +21,11 @@ const SheetActionCellStyleColor = ({
   sheetId
 }: SheetActionCellStyleColorProps) => {
   
+  // Redux
   const dispatch = useDispatch()
-  
   const sheetStyles = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].styles)
   
+  // Update Sheet Styles
   const updateSheetStyles = (nextSheetStylesSet: Set<string>, nextSheetStylesColorReference: { [cellId: string]: string }) => {
     dispatch(updateSheetStylesAction(sheetId, {
       color: nextSheetStylesSet,

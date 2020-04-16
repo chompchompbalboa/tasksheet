@@ -2,15 +2,18 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { colorPickerColors } from '@/components/ColorPicker'
-
 import { ARROW_DOWN, RESET_COLOR } from '@/assets/icons'
+
+import { useSheetEditingPermissions } from '@/hooks'
 
 import { IAppState } from '@/state'
 import { ISheet } from '@/state/sheet/types'
+
+import { createMessengerMessage } from '@/state/messenger/actions'
 
 import Icon from '@/components/Icon'
 
@@ -26,74 +29,103 @@ const SheetActionCellStyleColorPicker = ({
   sheetStylesColorReference,
   updateSheetStyles,
 }: SheetActionCellStyleColorPickerProps) => {
+
+  // Refs
+  const dropdown = useRef(null)
   
   // Redux
+  const dispatch = useDispatch()
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   const selections = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections)
-  
-  // Dropdown
-  const dropdown = useRef(null)
+
+  // State
+  const [ localColor, setLocalColor ] = useState(initialColor || 'black')
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
+
+  // Permissions
+  const {
+    userHasPermissionToEditSheet,
+    userHasPermissionToEditSheetErrorMessage
+  } = useSheetEditingPermissions(sheetId)
+  
+  // Add event listeners to close the dropdown on click outside
   useEffect(() => {
-    if(isDropdownVisible) { addEventListener('click', closeOnClickOutside) }
-    else { removeEventListener('click', closeOnClickOutside) }
-    return () => removeEventListener('click', closeOnClickOutside)
+    if(isDropdownVisible) { addEventListener('click', closeDropdownOnClickOutside) }
+    else { removeEventListener('click', closeDropdownOnClickOutside) }
+    return () => removeEventListener('click', closeDropdownOnClickOutside)
   })
-  const closeOnClickOutside = (e: MouseEvent) => {
+
+  // Close Dropdown On Click Outside
+  const closeDropdownOnClickOutside = (e: MouseEvent) => {
     if(!dropdown.current.contains(e.target)) {
       setIsDropdownVisible(false)
     }
   }
 
-  // Local Color
-  const [ localColor, setLocalColor ] = useState(initialColor || 'black')
-
+  // Handle Container Click
   const handleContainerClick = (color?: string) => {
-    const {
-      rangeCellIds,
-      rangeStartCellId
-    } = selections
+    if(!userHasPermissionToEditSheet) {
+      dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
+    }
+    else {
+      const {
+        rangeCellIds,
+        rangeStartCellId
+      } = selections
 
-    const nextColor = color || localColor
-    const nextSheetStylesSet = new Set([ ...sheetStylesSet ])
-    const nextSheetStylesColorReference = { ...sheetStylesColorReference }
-
-    // Ranges
-    rangeCellIds.forEach(cellId => {
-      nextSheetStylesSet.add(cellId)
-      nextSheetStylesColorReference[cellId] = nextColor
-    })
-    // Cells
-    nextSheetStylesSet.add(rangeStartCellId)
-    nextSheetStylesColorReference[rangeStartCellId] = nextColor
-
-    updateSheetStyles(nextSheetStylesSet, nextSheetStylesColorReference)
+      const nextColor = color || localColor
+      const nextSheetStylesSet = new Set([ ...sheetStylesSet ])
+      const nextSheetStylesColorReference = { ...sheetStylesColorReference }
+  
+      // Ranges
+      rangeCellIds.forEach(cellId => {
+        nextSheetStylesSet.add(cellId)
+        nextSheetStylesColorReference[cellId] = nextColor
+      })
+      // Cells
+      nextSheetStylesSet.add(rangeStartCellId)
+      nextSheetStylesColorReference[rangeStartCellId] = nextColor
+  
+      updateSheetStyles(nextSheetStylesSet, nextSheetStylesColorReference)
+    }
   }
 
+  // Handle Color Change
   const handleColorChange = (nextColor: string) => {
-    setLocalColor(nextColor)
-    handleContainerClick(nextColor)
+    if(!userHasPermissionToEditSheet) {
+      dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
+    }
+    else {
+      setLocalColor(nextColor)
+      handleContainerClick(nextColor)
+    }
   }
 
-  const handleResetClick = () => {
-    const {
-      rangeCellIds,
-      rangeStartCellId
-    } = selections
+  // Handle Color Reset
+  const handleColorReset = () => {
+    if(!userHasPermissionToEditSheet) {
+      dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
+    }
+    else {
+      const {
+        rangeCellIds,
+        rangeStartCellId
+      } = selections
 
-    const nextSheetStylesSet = new Set([ ...sheetStylesSet ])
-    const nextSheetStylesColorReference = { ...sheetStylesColorReference }
+      const nextSheetStylesSet = new Set([ ...sheetStylesSet ])
+      const nextSheetStylesColorReference = { ...sheetStylesColorReference }
 
-    // Ranges
-    rangeCellIds.forEach(cellId => {
-      nextSheetStylesSet.delete(cellId)
-      nextSheetStylesColorReference[cellId] = null
-    })
-    // Cells
-    nextSheetStylesSet.delete(rangeStartCellId)
-    nextSheetStylesColorReference[rangeStartCellId] = null
+      // Ranges
+      rangeCellIds.forEach(cellId => {
+        nextSheetStylesSet.delete(cellId)
+        nextSheetStylesColorReference[cellId] = null
+      })
+      // Cells
+      nextSheetStylesSet.delete(rangeStartCellId)
+      nextSheetStylesColorReference[rangeStartCellId] = null
 
-    updateSheetStyles(nextSheetStylesSet, nextSheetStylesColorReference)
+      updateSheetStyles(nextSheetStylesSet, nextSheetStylesColorReference)
+    }
   }
 
   return (
@@ -117,7 +149,7 @@ const SheetActionCellStyleColorPicker = ({
         ref={dropdown}
         isDropdownVisible={isDropdownVisible}>
         <ResetColor
-          onClick={handleResetClick}>
+          onClick={handleColorReset}>
           <Icon 
             icon={RESET_COLOR}
             size="1.125rem"/>
