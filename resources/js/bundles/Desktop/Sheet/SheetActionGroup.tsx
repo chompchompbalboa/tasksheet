@@ -8,6 +8,7 @@ import { v4 as createUuid } from 'uuid'
 
 import { IAppState } from '@/state'
 import { ISheetGroup } from '@/state/sheet/types'
+
 import { 
   createSheetGroup,
   deleteSheetGroup,
@@ -27,10 +28,8 @@ const SheetActionGroup = ({
 
   // Redux
   const dispatch = useDispatch()
-
   const allSheetColumns = useSelector((state: IAppState) => state.sheet.allSheetColumns)
   const allSheetGroups = useSelector((state: IAppState) => state.sheet.allSheetGroups)
-
   const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
   const activeSheetViewVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].visibleColumns)
   const activeSheetViewGroups = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].groups)
@@ -48,6 +47,7 @@ const SheetActionGroup = ({
     return { label: allSheetColumns[group.columnId].name, value: group.id, isLocked: group.isLocked }
   })
 
+  // New Sheet Group From Selected Option
   const newSheetGroupFromSelectedOption = (selectedOption: SheetActionDropdownOption): ISheetGroup => {
     return { 
       id: createUuid(), 

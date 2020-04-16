@@ -5,7 +5,11 @@ import React, { ChangeEvent, FocusEvent, useEffect, useRef, useState } from 'rea
 import { batch, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
+import { useSheetEditingPermissions } from '@/hooks'
+
 import { ISheet } from '@/state/sheet/types'
+
+import { createMessengerMessage } from '@/state/messenger/actions'
 import { 
   allowSelectedCellEditing,
   preventSelectedCellEditing,
@@ -33,11 +37,14 @@ const SheetActionDropdown = ({
   value = ""
 }: SheetActionDropdownProps) => {
 
+  // Refs
   const container = useRef(null)
   const dropdown = useRef(null)
   
+  // Redux
   const dispatch = useDispatch()
 
+  // Get visible options
   const getVisibleOptions = (value: string) => {
     return options && options.filter(option => {
       const searchString = value.toLowerCase().replace(/ /g, "")
@@ -45,12 +52,20 @@ const SheetActionDropdown = ({
     })
   }
   
+  // State
   const [ autosizeInputValue, setAutosizeInputValue ] = useState(value)
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
   const [ visibleOptions, setVisibleOptions ] = useState(getVisibleOptions(value))
   const [ highlightedOptionIndex, setHighlightedOptionIndex ] = useState(null)
   const [ visibleSelectedOptions, setVisibleSelectedOptions ] = useState(selectedOptions || [])
 
+  // Permissions
+  const {
+    userHasPermissionToEditSheet,
+    userHasPermissionToEditSheetErrorMessage
+  } = useSheetEditingPermissions(sheetId)
+
+  // Add event listeners when the dropdown is visible
   useEffect(() => {
     if(isDropdownVisible) {
       !visibleOptions && setVisibleOptions(options)
@@ -67,21 +82,25 @@ const SheetActionDropdown = ({
     }
   }, [ highlightedOptionIndex, isDropdownVisible, visibleOptions ])
 
+  // Update the visible options when the options are updateed
   useEffect(() => {
     setVisibleOptions(getVisibleOptions(value))
     value === '' && setIsDropdownVisible(false)
   }, [ options ])
 
+  // Update the visible selected options when the selected options are updated
   useEffect(() => {
     setVisibleSelectedOptions(selectedOptions)
     setAutosizeInputValue("")
   }, [ selectedOptions ])
 
+  // Update the input value as needed
   useEffect(() => {
     setAutosizeInputValue(value)
     setVisibleOptions(getVisibleOptions(value))
   }, [ value ])
 
+  // Close Dropdown On Click Outside
   const closeDropdownOnClickOutside = (e: Event) => {
     if(!dropdown.current.contains(e.target) && !container.current.contains(e.target)) {
       setIsDropdownVisible(false)
@@ -89,6 +108,7 @@ const SheetActionDropdown = ({
     }
   }
 
+  // Handle Autosize Input Blur
   const handleAutosizeInputBlur = (e: FocusEvent<HTMLInputElement>) => {
     setTimeout(() => batch(() => {
       dispatch(allowSelectedCellEditing(sheetId))
@@ -96,6 +116,7 @@ const SheetActionDropdown = ({
     }), 10)
   }
 
+  // Handle Autosize Input Change
   const handleAutosizeInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const nextAutosizeInputValue = e.target.value
     const nextVisibleOptions = getVisibleOptions(nextAutosizeInputValue)
@@ -106,6 +127,7 @@ const SheetActionDropdown = ({
     nextVisibleOptions && nextVisibleOptions.length === 1 && setHighlightedOptionIndex(0)
   }
 
+  // Handle Autosize Input Focus
   const handleAutosizeInputFocus = (e: FocusEvent<HTMLInputElement>) => {
     e.preventDefault()
     setIsDropdownVisible(true)
@@ -115,21 +137,34 @@ const SheetActionDropdown = ({
     }), 10)
   }
   
+  // Handle Option Delete
   const handleOptionDelete = (option: SheetActionDropdownOption) => {
-    const nextVisibleSelectedOptions = visibleSelectedOptions.filter(visibleSelectedOption => visibleSelectedOption.value !== option.value)
-    setVisibleSelectedOptions(nextVisibleSelectedOptions)
-    setTimeout(() => onOptionDelete(option), 50)
+    if(!userHasPermissionToEditSheet) {
+      dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
+    }
+    else {
+      const nextVisibleSelectedOptions = visibleSelectedOptions.filter(visibleSelectedOption => visibleSelectedOption.value !== option.value)
+      setVisibleSelectedOptions(nextVisibleSelectedOptions)
+      setTimeout(() => onOptionDelete(option), 50)
+    }
   }
   
+  // Handle Option Select
   const handleOptionSelect = (option: SheetActionDropdownOption) => {
     setIsDropdownVisible(false)
-    setHighlightedOptionIndex(null)
-    setVisibleSelectedOptions([...visibleSelectedOptions, { ...option, isLocked: false }])
-    setAutosizeInputValue("")
-    setVisibleOptions(options)
-    setTimeout(() => onOptionSelect(option), 50)
+    if(!userHasPermissionToEditSheet) {
+      dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
+    }
+    else {
+      setHighlightedOptionIndex(null)
+      setVisibleSelectedOptions([...visibleSelectedOptions, { ...option, isLocked: false }])
+      setAutosizeInputValue("")
+      setVisibleOptions(options)
+      setTimeout(() => onOptionSelect(option), 50)
+    }
   }
 
+  // Handle Keydown While Dropdown Is Visible
   const handleKeydownWhileDropdownIsVisible = (e: KeyboardEvent) => {
     if(e.key === "Enter") {
       if(visibleOptions && visibleOptions[highlightedOptionIndex || 0]) {

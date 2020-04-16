@@ -11,6 +11,7 @@ import {
   ISheet,
   ISheetSort
 } from '@/state/sheet/types'
+
 import { 
   createSheetSort,
   deleteSheetSort,
@@ -30,10 +31,8 @@ const SheetActionSort = ({
 
   // Redux
   const dispatch = useDispatch()
-
   const allSheetColumns = useSelector((state: IAppState) => state.sheet.allSheetColumns)
   const allSheetSorts = useSelector((state: IAppState) => state.sheet.allSheetSorts)
-  
   const sheetActiveSheetViewId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].activeSheetViewId)
   const activeSheetViewVisibleColumns = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].visibleColumns)
   const activeSheetViewSorts = useSelector((state: IAppState) => state.sheet.allSheetViews && state.sheet.allSheetViews[sheetActiveSheetViewId] && state.sheet.allSheetViews[sheetActiveSheetViewId].sorts)
@@ -51,6 +50,7 @@ const SheetActionSort = ({
     return { label: allSheetColumns[sort.columnId].name, value: sortId, isLocked: sort.isLocked }
   })
 
+  // New Sheet Sort From Selected Option
   const newSheetSortFromSelectedOption = (selectedOption: SheetActionDropdownOption): ISheetSort => {
     return { 
       id: createUuid(), 

@@ -7,12 +7,17 @@ import { batch, useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { v4 as createUuid } from 'uuid'
 
+import { useSheetEditingPermissions } from '@/hooks'
+
 import clone from '@/utils/clone'
+
 import { IAppState } from '@/state'
 import { 
   ISheet, 
   ISheetFilter, ISheetFilterType, ISheetFilterUpdates 
 } from '@/state/sheet/types'
+
+import { createMessengerMessage } from '@/state/messenger/actions'
 import { 
   allowSelectedCellEditing,
   allowSelectedCellNavigation,
@@ -62,6 +67,12 @@ const SheetActionFilter = ({
   const [ filterColumnId, setFilterColumnId ] = useState(null)
   const [ filterFilterType, setFilterFilterType ] = useState(null)
   const [ filterValue, setFilterValue ] = useState(null)
+
+  // Permissions
+  const {
+    userHasPermissionToEditSheet,
+    userHasPermissionToEditSheetErrorMessage
+  } = useSheetEditingPermissions(sheetId)
   
   // Update local filters as needed
   useEffect(() => {
@@ -169,29 +180,34 @@ const SheetActionFilter = ({
   
   // Handle creating a sheet filter
   const handleCreateSheetFilter = (columnId: string, filterType: ISheetFilterType, value: string) => {
-    // Reset state
-    setAutosizeInputValue('')
-    setIsDropdownVisible(false)
-    setIsColumnNameValid(false)
-    setIsFilterTypeValid(false)
-    setIsFilterValid(false)
-    setFilterColumnId(null)
-    setFilterFilterType(null)
-    setFilterValue(null)
-    // New Filter
-    const newSheetFilter: ISheetFilter = {
-      id: createUuid(), 
-      createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
-      sheetId: sheetId,
-      sheetViewId: sheetActiveSheetViewId,
-      columnId: columnId, 
-      value: value, 
-      type: filterType,
-      isLocked: false
+    if(!userHasPermissionToEditSheet) {
+      dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
     }
-    setLocalAllSheetFilters({ ...localAllSheetFilters, [newSheetFilter.id]: newSheetFilter })
-    setLocalSheetFilters([ ...localSheetFilters, newSheetFilter.id ])
-    setTimeout(() => dispatch(createSheetFilter(sheetId, newSheetFilter)), 10)
+    else {
+      // Reset state
+      setAutosizeInputValue('')
+      setIsDropdownVisible(false)
+      setIsColumnNameValid(false)
+      setIsFilterTypeValid(false)
+      setIsFilterValid(false)
+      setFilterColumnId(null)
+      setFilterFilterType(null)
+      setFilterValue(null)
+      // New Filter
+      const newSheetFilter: ISheetFilter = {
+        id: createUuid(), 
+        createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+        sheetId: sheetId,
+        sheetViewId: sheetActiveSheetViewId,
+        columnId: columnId, 
+        value: value, 
+        type: filterType,
+        isLocked: false
+      }
+      setLocalAllSheetFilters({ ...localAllSheetFilters, [newSheetFilter.id]: newSheetFilter })
+      setLocalSheetFilters([ ...localSheetFilters, newSheetFilter.id ])
+      setTimeout(() => dispatch(createSheetFilter(sheetId, newSheetFilter)), 10)
+    }
   }
   
   // Handle the input value changing
@@ -225,11 +241,16 @@ const SheetActionFilter = ({
   
   // Handle a filter delete
   const handleDeleteSheetFilter = (filterId: string) => {
-    const { [filterId]: deletedFilter, ...nextLocalFilters } = localAllSheetFilters
-    const nextLocalSheetFilters = localSheetFilters.filter(localSheetFilterId => localSheetFilterId !== filterId)
-    setLocalAllSheetFilters(nextLocalFilters)
-    setLocalSheetFilters(nextLocalSheetFilters)
-    setTimeout(() => dispatch(deleteSheetFilter(sheetId, filterId)), 10)
+    if(!userHasPermissionToEditSheet) {
+      dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
+    }
+    else {
+      const { [filterId]: deletedFilter, ...nextLocalFilters } = localAllSheetFilters
+      const nextLocalSheetFilters = localSheetFilters.filter(localSheetFilterId => localSheetFilterId !== filterId)
+      setLocalAllSheetFilters(nextLocalFilters)
+      setLocalSheetFilters(nextLocalSheetFilters)
+      setTimeout(() => dispatch(deleteSheetFilter(sheetId, filterId)), 10)
+    }
   }
   
   // Handle dropdown option click
