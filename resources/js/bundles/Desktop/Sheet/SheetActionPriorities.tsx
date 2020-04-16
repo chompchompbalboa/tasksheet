@@ -4,8 +4,11 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useSheetEditingPermissions } from '@/hooks'
+
 import { IAppState } from '@/state'
 
+import { createMessengerMessage } from '@/state/messenger/actions'
 import {
   createSheetPriority,
   updateSheetCellPriorities
@@ -23,20 +26,62 @@ const SheetActionSheetCellPriorities = ({
   sheetId
 }: ISheetActionSheetCellPriorities) => {
 
+  // Redux
   const dispatch = useDispatch()
   const allSheetPriorities = useSelector((state: IAppState) => state.sheet.allSheetPriorities)
   const sheetPriorities = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].priorities)
 
+  // State
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
   const [ activeSheetPriorityId, setActiveSheetPriorityId ] = useState(sheetPriorities && sheetPriorities[0] ? sheetPriorities[0] : null)
 
+  // Permissions
+  const {
+    userHasPermissionToEditSheet,
+    userHasPermissionToEditSheetErrorMessage
+  } = useSheetEditingPermissions(sheetId)
+
+  // Get the active sheet priority
   const activeSheetPriority = allSheetPriorities && allSheetPriorities[activeSheetPriorityId]
 
+  // On load, set the active priority to the first sheet priority
   useEffect(() => {
     if(sheetPriorities && sheetPriorities.length > 0 && activeSheetPriorityId === null) {
       setActiveSheetPriorityId(sheetPriorities[0])
     }
   }, [ sheetPriorities ])
+
+  // Handle Create Sheet Cell Priority
+  const handleCreateSheetCellPriority = () => {
+    if(!userHasPermissionToEditSheet) {
+      dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
+    }
+    else {
+      dispatch(updateSheetCellPriorities(sheetId, activeSheetPriorityId))
+    }
+  }
+
+  // Handle Create Sheet Priority
+  const handleCreateSheetPriority = () => {
+    if(!userHasPermissionToEditSheet) {
+      setIsDropdownVisible(false)
+      dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
+    }
+    else {
+      dispatch(createSheetPriority(sheetId))
+    }
+  }
+
+  // Handle Delete Sheet Cell Priority
+  const handleDeleteSheetCellPriority = () => {
+    setIsDropdownVisible(false)
+    if(!userHasPermissionToEditSheet) {
+      dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
+    }
+    else {
+      dispatch(updateSheetCellPriorities(sheetId, null))
+    }
+  }
 
   return (
     <SheetActionButton
@@ -47,7 +92,7 @@ const SheetActionSheetCellPriorities = ({
       isDropdownVisible={isDropdownVisible}
       marginLeft="0"
       marginRight="0"
-      onClick={() => dispatch(updateSheetCellPriorities(sheetId, activeSheetPriorityId))}
+      onClick={() => handleCreateSheetCellPriority()}
       openDropdown={() => setIsDropdownVisible(true)}
       text={activeSheetPriorityId 
         ? sheetPriorities && allSheetPriorities[activeSheetPriorityId].name
@@ -76,10 +121,7 @@ const SheetActionSheetCellPriorities = ({
             sheetId={sheetId}
             containerBackgroundColor="transparent"
             containerColor="black"
-            onClick={() => {
-              setIsDropdownVisible(false)
-              dispatch(updateSheetCellPriorities(sheetId, null))
-            }}
+            onClick={() => handleDeleteSheetCellPriority()}
             text="No Priority"
             textPrefix={sheetPriorities.length + 1 + '. '}>
           </SheetActionButtonDropdownItem>
@@ -87,7 +129,7 @@ const SheetActionSheetCellPriorities = ({
         <SheetActionButtonDropdownItem
           isLast
           sheetId={sheetId}
-          onClick={() => dispatch(createSheetPriority(sheetId))}
+          onClick={() => handleCreateSheetPriority()}
           text="Create New Priority..."
           textFontStyle="italic">
         </SheetActionButtonDropdownItem>
@@ -102,10 +144,6 @@ const SheetActionSheetCellPriorities = ({
 interface ISheetActionSheetCellPriorities {
   sheetId: string
 }
-
-//-----------------------------------------------------------------------------
-// Styled Components
-//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 // Export

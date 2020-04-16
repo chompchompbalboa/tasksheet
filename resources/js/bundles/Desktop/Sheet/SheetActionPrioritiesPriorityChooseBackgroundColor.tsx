@@ -7,8 +7,14 @@ import styled from 'styled-components'
 
 import { BACKGROUND_COLOR } from '@/assets/icons'
 
-import { ISheetPriority } from '@/state/sheet/types'
+import { useSheetEditingPermissions } from '@/hooks'
 
+import { 
+  ISheet,
+  ISheetPriority 
+} from '@/state/sheet/types'
+
+import { createMessengerMessage } from '@/state/messenger/actions'
 import { updateSheetPriority } from '@/state/sheet/actions'
 
 import ColorPicker from '@/components/ColorPicker'
@@ -18,12 +24,29 @@ import Icon from '@/components/Icon'
 // Component
 //-----------------------------------------------------------------------------
 const SheetActionPrioritiesPriorityChooseBackgroundColor = ({
+  sheetId,
   isColorPickerVisible,
   setIsColorPickerVisible,
   sheetPriority
 }: ISheetActionPrioritiesPriorityChooseBackgroundColor) => {
 
+  // Redux
   const dispatch = useDispatch()
+
+  // Permissions
+  const {
+    userHasPermissionToEditSheet,
+    userHasPermissionToEditSheetErrorMessage
+  } = useSheetEditingPermissions(sheetId)
+
+  const handleSheetPriorityColorChange = (nextColor: string) => {
+    if(!userHasPermissionToEditSheet) {
+      dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
+    }
+    else {
+      dispatch(updateSheetPriority(sheetPriority.id, { backgroundColor: nextColor || 'white' }))
+    }
+  }
 
   return (
     <Container>
@@ -37,7 +60,7 @@ const SheetActionPrioritiesPriorityChooseBackgroundColor = ({
         isColorPickerVisible={isColorPickerVisible}>
         <ColorPicker
           activeColor={sheetPriority.backgroundColor}
-          onColorChange={(nextColor: string) => dispatch(updateSheetPriority(sheetPriority.id, { backgroundColor: nextColor || 'white' }))}/>
+          onColorChange={(nextColor: string) => handleSheetPriorityColorChange(nextColor)}/>
       </ColorPickerContainer>
     </Container>
   ) 
@@ -47,6 +70,7 @@ const SheetActionPrioritiesPriorityChooseBackgroundColor = ({
 // Props
 //-----------------------------------------------------------------------------
 interface ISheetActionPrioritiesPriorityChooseBackgroundColor {
+  sheetId: ISheet['id']
   isColorPickerVisible: boolean
   setIsColorPickerVisible(nextIsColorPickerVisible: boolean): void
   sheetPriority: ISheetPriority
