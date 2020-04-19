@@ -2,94 +2,72 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { MouseEvent, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { SUBITEM_ARROW } from '@/assets/icons'
 
-import { IThunkDispatch } from '@/state/types'
+import { IAppState } from '@/state'
+import { IFolder } from '@/state/folder/types'
+
 import { 
-  IFolder, IFolderUpdates,
-  IFolderClipboardUpdates 
-} from '@/state/folder/types'
-import { 
-  createFolder as createFolderAction,
-  deleteFolder as deleteFolderAction,
-  pasteFromClipboard as pasteFromClipboardAction,
-  updateClipboard as updateClipboardAction,  
-  updateFolder as updateFolderAction,
+  updateActiveFolderPath,
+  updateFolder 
 } from '@/state/folder/actions' 
-import { IModalUpdates } from '@/state/modal/types'
-import { updateModal as updateModalAction } from '@/state/modal/actions'
-import { createSheet as createSheetAction } from '@/state/sheet/actions' 
 
 import AutosizeInput from 'react-input-autosize'
-import FolderContextMenu from '@desktop/ContextMenu/FolderContextMenu'
+import FoldersFolderFolderContextMenu from '@desktop/Folders/FoldersFolderFolderContextMenu'
 import Icon from '@/components/Icon'
-
-//-----------------------------------------------------------------------------
-// Redux
-//-----------------------------------------------------------------------------
-const mapDispatchToProps = (dispatch: IThunkDispatch) => ({
-  createFolder: (folderId: string) => dispatch(createFolderAction(folderId)),
-  createSheet: (folderId: string) => dispatch(createSheetAction(folderId)),
-  deleteFolder: (folderId: string) => dispatch(deleteFolderAction(folderId)),
-  pasteFromClipboard: (folderId: string) => dispatch(pasteFromClipboardAction(folderId)),
-  updateModal: (updates: IModalUpdates) => dispatch(updateModalAction(updates)),
-  updateClipboard: (updates: IFolderClipboardUpdates) => dispatch(updateClipboardAction(updates)),
-  updateFolder: (folderId: string, updates: IFolderUpdates) => dispatch(updateFolderAction(folderId, updates))
-})
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const FoldersFolderFolder = ({
-  activeFolderPath,
-  createFolder,
-  createSheet,
-  deleteFolder,
-  folder,
-  level,
-  pasteFromClipboard,
-  updateActiveFolderPath,
-  updateModal,
-  updateClipboard,
-  updateFolder
+  folderId,
+  level
 }: FoldersFolderFolderProps) => {
+
+  // Redux
+  const dispatch = useDispatch()
+  const activeFolderPath = useSelector((state: IAppState) => state.folder.activeFolderPath)
+  const folder = useSelector((state: IAppState) => state.folder.allFolders && state.folder.allFolders[folderId])
   
+  // State
   const [ contextMenuTop, setContextMenuTop ] = useState(null)
   const [ contextMenuLeft, setContextMenuLeft ] = useState(null)
   const [ folderName, setFolderName ] = useState(folder.name)
   const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
   const [ isRenaming, setIsRenaming ] = useState(folder.name === null)
   
+  // Add event listeners when folder is renaming
   useEffect(() => {
-    if(isRenaming) {
-      addEventListener('keypress', blurAutosizeInputOnEnter)
-    }
-    else {
-      removeEventListener('keypress', blurAutosizeInputOnEnter)
-    }
+    if(isRenaming) { addEventListener('keypress', blurAutosizeInputOnEnter) }
+    else { removeEventListener('keypress', blurAutosizeInputOnEnter) }
     return () => removeEventListener('keypress', blurAutosizeInputOnEnter)
-  })
+  }, [ folderName, isRenaming ])
+
+  // Blur Autosize Input On Enter
+  const blurAutosizeInputOnEnter = (e: KeyboardEvent) => {
+    if(e.key === "Enter") {
+      handleAutosizeInputBlur()
+    }
+  }
   
+  // Handle Autosize Input Blur
   const handleAutosizeInputBlur = () => {
     if(folderName !== null) {
-      updateFolder(folder.id, { name: folderName })
+      dispatch(updateFolder(folderId, { name: folderName }))
     }
     setIsRenaming(false)
   }
   
+  // Handle Context Menu
   const handleContextMenu = (e: MouseEvent) => {
     e.preventDefault()
-    setIsContextMenuVisible(true)
-    setContextMenuTop(e.clientY)
-    setContextMenuLeft(e.clientX)
-  }
-
-  const blurAutosizeInputOnEnter = (e: KeyboardEvent) => {
-    if(e.key === "Enter") {
-      handleAutosizeInputBlur()
+    if((folder && ['OWNER', 'EDITOR'].includes(folder.role)) || folderId === 'ROOT') {
+      setIsContextMenuVisible(true)
+      setContextMenuTop(e.clientY)
+      setContextMenuLeft(e.clientX)
     }
   }
 
@@ -98,7 +76,7 @@ const FoldersFolderFolder = ({
       <Container
         isHighlighted={activeFolderPath.includes(folder.id)}
         isRenaming={isRenaming}
-        onClick={!isRenaming ? () => updateActiveFolderPath(level, folder.id) : null}
+        onClick={!isRenaming ? () => dispatch(updateActiveFolderPath(level, folder.id)) : null}
         onContextMenu={e => handleContextMenu(e)}>
         {!isRenaming
           ? <NameContainer>
@@ -108,7 +86,7 @@ const FoldersFolderFolder = ({
               autoFocus
               placeholder="Name..."
               onChange={e => setFolderName(e.target.value)}
-              onBlur={() => handleAutosizeInputBlur()}
+              onBlur={handleAutosizeInputBlur}
               value={folderName === null ? "" : folderName}
               inputStyle={{
                 margin: '0',
@@ -130,19 +108,12 @@ const FoldersFolderFolder = ({
         </IconContainer>
       </Container>
       {isContextMenuVisible && 
-        <FolderContextMenu
-          folderId={folder.id}
+        <FoldersFolderFolderContextMenu
+          folderId={folderId}
           closeContextMenu={() => setIsContextMenuVisible(false)}
           contextMenuLeft={contextMenuLeft}
           contextMenuTop={contextMenuTop}
-          createFolder={createFolder}
-          createSheet={createSheet}
-          deleteFolder={deleteFolder}
-          pasteFromClipboard={pasteFromClipboard}
-          role={folder.role}
-          setIsRenaming={setIsRenaming}
-          updateModal={updateModal}
-          updateClipboard={updateClipboard}/>
+          setIsRenaming={setIsRenaming}/>
       }
     </>
   )
@@ -152,17 +123,8 @@ const FoldersFolderFolder = ({
 // Props
 //-----------------------------------------------------------------------------
 interface FoldersFolderFolderProps {
-  activeFolderPath: string[]
-  createFolder?(folderId: string): void
-  createSheet?(folderId: string): void
-  deleteFolder?(folderId: string): void
-  folder: IFolder
+  folderId: IFolder['id']
   level: number
-  pasteFromClipboard(folderId: string): void
-  updateActiveFolderPath(level: number, nextActiveFolderId: string): void
-  updateModal(updates: IModalUpdates): void
-  updateClipboard(updates: IFolderClipboardUpdates): void
-  updateFolder?(folderId: string, updates: IFolderUpdates): void
 }
 
 //-----------------------------------------------------------------------------
@@ -206,7 +168,4 @@ interface IconProps {
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default connect(
-  null,
-  mapDispatchToProps
-)(FoldersFolderFolder)
+export default FoldersFolderFolder

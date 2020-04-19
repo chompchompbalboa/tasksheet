@@ -5,11 +5,12 @@ import { mutation } from '@/api'
 
 import { IAppState } from '@/state'
 import { IThunkDispatch } from '@/state/types'
-import { IFolder, IFolderPermission } from '@/state/folder/types'
+import { IAllFolders, IFolder, IFolderPermission } from '@/state/folder/types'
 
 import { 
   createFolderPermissions,
-  setAllFolders
+  setAllFolders,
+  updateUserFolderIds
 } from '@/state/folder/actions'
 import { defaultFolder } from '@/state/folder/defaults'
 
@@ -20,18 +21,29 @@ export const createFolder = (parentFolderId: IFolder['id']) => {
 	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
 
     const {
-      allFolders
+      allFolders,
+      userFolderIds
     } = getState().folder
 
     const newFolder = defaultFolder(parentFolderId)
 
-    const nextAllFolders = {
-      ...allFolders,
-      [parentFolderId]: {
-        ...allFolders[parentFolderId],
-        folders: [ ...allFolders[parentFolderId].folders, newFolder.id],
-      },
-      [newFolder.id]: newFolder
+    let nextAllFolders: IAllFolders = null
+    if(parentFolderId !== null) {
+      nextAllFolders = {
+        ...allFolders,
+        [parentFolderId]: {
+          ...allFolders[parentFolderId],
+          folders: [ ...allFolders[parentFolderId].folders, newFolder.id],
+        },
+        [newFolder.id]: newFolder
+      }
+    }
+    else {
+      nextAllFolders = {
+        ...allFolders,
+        [newFolder.id]: newFolder
+      }
+      dispatch(updateUserFolderIds([ ...userFolderIds, newFolder.id ]))
     }
 
     dispatch(setAllFolders(nextAllFolders))
@@ -39,6 +51,5 @@ export const createFolder = (parentFolderId: IFolder['id']) => {
       .then(response => {
         dispatch(createFolderPermissions(response.data as IFolderPermission[], null))
       })
-      .catch(console.log.bind(console))
 	}
 }

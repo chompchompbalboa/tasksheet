@@ -18,7 +18,12 @@ import { openFileInNewTab } from '@/state/tab/actions'
 //-----------------------------------------------------------------------------
 // Create Sheet
 //-----------------------------------------------------------------------------
-export const createSheet = (folderId: IFolder['id'], newFileName?: string, openSheetAfterCreate: boolean = false, userId: IUser['id'] = null): IThunkAction => {
+export const createSheet = (
+  folderId: IFolder['id'], 
+  newFileName?: string, 
+  openSheetAfterCreate: boolean = false, 
+  userId: IUser['id'] = null
+): IThunkAction => {
   return async (dispatch: IThunkDispatch) => {
 
     const newSheetId = createUuid()

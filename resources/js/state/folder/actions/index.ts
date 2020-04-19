@@ -1,10 +1,8 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import { batch } from 'react-redux'
-
-import clone from '@/utils/clone'
 import { mutation } from '@/api'
+
 import { IAppState } from '@/state'
 import { IThunkAction, IThunkDispatch } from '@/state/types'
 import { 
@@ -15,8 +13,6 @@ import {
   IAllUserFilePermissionsByFileTypeId,
   IFolderClipboardUpdates, 
 } from '@/state/folder/types'
-import { createHistoryStep } from '@/state/history/actions'
-import { closeTab } from '@/state/tab/actions'
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -30,17 +26,20 @@ export type IFolderActions =
   IUpdateActiveFolderPath | 
   IUpdateActiveFileId | 
   IUpdateClipboard |
-  IUpdateUserFileIds
+  IUpdateUserFileIds |
+  IUpdateUserFolderIds
 
 //-----------------------------------------------------------------------------
-// Thunk Actions
+// Actions
 //-----------------------------------------------------------------------------
 export { createFolder } from '@/state/folder/actions/createFolder'
 export { createFile } from '@/state/folder/actions/createFile'
-
 export { createFolderPermissions } from '@/state/folder/actions/createFolderPermissions'
-export { deleteFolderPermissions } from '@/state/folder/actions/deleteFolderPermissions'
 export { createFilePermissions } from '@/state/folder/actions/createFilePermissions'
+
+export { deleteFolder } from '@/state/folder/actions/deleteFolder'
+export { deleteFile } from '@/state/folder/actions/deleteFile'
+export { deleteFolderPermissions } from '@/state/folder/actions/deleteFolderPermissions'
 export { deleteFilePermissions } from '@/state/folder/actions/deleteFilePermissions'
 
 export { pasteFromClipboard } from '@/state/folder/actions/pasteFromClipboard'
@@ -125,7 +124,6 @@ export const setAllFiles = (nextAllFiles: IAllFiles): IFolderActions => {
 	}
 }
 
-
 //-----------------------------------------------------------------------------
 // Update Active Folder Path
 //-----------------------------------------------------------------------------
@@ -143,7 +141,6 @@ export const updateActiveFileId = (nextActiveFileId: IFile['id'], nextActiveFold
     nextActiveFolderPath: nextActiveFolderPath
 	}
 }
-
 
 //-----------------------------------------------------------------------------
 // Update Active Folder Path
@@ -184,96 +181,6 @@ export const updateClipboard = (updates: IFolderClipboardUpdates): IFolderAction
 	return {
 		type: UPDATE_CLIPBOARD,
 		updates
-	}
-}
-
-//-----------------------------------------------------------------------------
-// Delete File
-//-----------------------------------------------------------------------------
-export const deleteFile = (fileId: string) => {
-	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
-    const {
-      folder: {
-        allFiles,
-        allFolders,
-        userFileIds
-      },
-      tab: {
-        tabs
-      }
-    } = getState()
-    const file = allFiles[fileId]
-    if(file) {
-      if(file.folderId) {
-        const folder = allFolders[file.folderId]
-        const folderFiles = clone(folder.files)
-        const nextFolderFiles = folder.files.filter(folderFileId => folderFileId !== fileId)
-        const actions = () => {
-          batch(() => {
-            if(tabs.includes(fileId)) {
-              dispatch(closeTab(fileId))
-            }
-            dispatch(updateFolder(folder.id, { files: nextFolderFiles }, true))
-          })
-          mutation.deleteFile(fileId)
-        }
-        const undoActions = () => {
-          dispatch(updateFolder(folder.id, { files: folderFiles }, true))
-          mutation.restoreFile(fileId)
-        }
-        dispatch(createHistoryStep({actions, undoActions}))
-        actions()
-      }
-      if(file.userId) {
-        const actions = () => {
-          batch(() => {
-            if(tabs.includes(fileId)) {
-              dispatch(closeTab(fileId))
-            }
-            dispatch(updateUserFileIds(userFileIds.filter(currentFileId => fileId !== currentFileId)))
-          })
-          mutation.deleteFile(fileId)
-        }
-        const undoActions = () => {
-          dispatch(updateUserFileIds(userFileIds))
-          mutation.restoreFile(fileId)
-        }
-        dispatch(createHistoryStep({actions, undoActions}))
-        actions()
-      }
-    }
-	}
-}
-
-//-----------------------------------------------------------------------------
-// Delete Folder
-//-----------------------------------------------------------------------------
-export const deleteFolder = (folderId: string) => {
-	return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
-    const {
-      folder: {
-        allFolders
-      }
-    } = getState()
-    const folder = allFolders[folderId]
-    if(folder) {
-      const parentFolder = allFolders[folder.folderId]
-      if(parentFolder) {
-        const nextParentFolderFolders = parentFolder.folders.filter(currentFolderId => currentFolderId !== folderId)
-      const actions = () => {
-        batch(() => {
-          dispatch(updateFolder(parentFolder.id, { folders: nextParentFolderFolders }, true))
-        })
-        mutation.deleteFolder(folderId)
-      }
-      const undoActions = () => {
-        dispatch(updateFolder(parentFolder.id, { folders: parentFolder.folders }, true))
-        mutation.restoreFolder(folderId)
-      }
-      dispatch(createHistoryStep({actions, undoActions}))
-      actions()
-      }
-    }
 	}
 }
 
@@ -365,7 +272,17 @@ interface IUpdateFolderPermission {
 }
 
 export const updateFolderPermission = (folderPermissionId: IFolderPermission['id'], updates: IFolderPermissionUpdates) => {	
-  return async (dispatch: IThunkDispatch) => {
+  return async (dispatch: IThunkDispatch, getState: () => IAppState) => {
+    const {
+      user,
+      folder: {
+        allFolderPermissions
+      }
+    } = getState()
+    const folderPermission = allFolderPermissions[folderPermissionId]
+    if(folderPermission.userId === user.id && updates.role) {
+      dispatch(updateFolder(folderPermission.folderId, { role: updates.role }))
+    }
     dispatch(updateFolderPermissionReducer(folderPermissionId, updates))
     mutation.updateFolderPermission(folderPermissionId, updates)
   }
@@ -392,5 +309,21 @@ export const updateUserFileIds = (nextUserFileIds: IFile['id'][]): IFolderAction
 	return {
 		type: UPDATE_USER_FILE_IDS,
 		nextUserFileIds
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update User Folder Ids
+//-----------------------------------------------------------------------------
+export const UPDATE_USER_FOLDER_IDS = 'UPDATE_USER_FOLDER_IDS'
+interface IUpdateUserFolderIds {
+	type: typeof UPDATE_USER_FOLDER_IDS
+  nextUserFolderIds: IFolder['id'][]
+}
+
+export const updateUserFolderIds = (nextUserFolderIds: IFolder['id'][]): IFolderActions => {
+	return {
+		type: UPDATE_USER_FOLDER_IDS,
+		nextUserFolderIds
 	}
 }

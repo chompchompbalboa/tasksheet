@@ -35,6 +35,7 @@ export interface IFolderUpdates {
   name?: string
   files?: string[]
   folders?: string[]
+  role?: IFolderPermission['role']
   permissions?: IFolderPermission['id'][]
 }
 

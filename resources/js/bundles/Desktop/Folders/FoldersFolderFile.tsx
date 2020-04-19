@@ -16,14 +16,14 @@ import {
   updateClipboard, 
 } from '@/state/folder/actions'
 
-import FileContextMenu from '@desktop/ContextMenu/FileContextMenu'
+import FoldersFolderFileContextMenu from '@desktop/Folders/FoldersFolderFileContextMenu'
 import FoldersFolderFileInfo from '@desktop/Folders/FoldersFolderFileInfo'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const FoldersFolderFile = ({
-  file,
+  fileId,
   handleFileOpen,
   level
 }: IFoldersFolderFile) => {
@@ -32,7 +32,7 @@ const FoldersFolderFile = ({
   const dispatch = useDispatch()
   const activeFileId = useSelector((state: IAppState) => state.folder.activeFileId)
   const activeFolderPath = useSelector((state: IAppState) => state.folder.activeFolderPath)
-  const activeFolderPathOnFileClick = level === 0 ? [] : [ ...activeFolderPath.slice(0, level - 1), file.folderId ]
+  const file = useSelector((state: IAppState) => state.folder.allFiles[fileId])
   
   // State
   const [ isRenaming, setIsRenaming ] = useState(file.name === null)
@@ -40,28 +40,33 @@ const FoldersFolderFile = ({
   const [ contextMenuTop, setContextMenuTop ] = useState(null)
   const [ contextMenuLeft, setContextMenuLeft ] = useState(null)
   
-  // Handle Container Mouse Down
+  // Handle Container Click
   const handleContainerClick = () => {
     if(activeFileId === file.id) {
       handleFileOpen(file.id)
     }
     else {
-      dispatch(updateActiveFileId(file.id, activeFolderPathOnFileClick))
+      const nextActiveFolderPath = level === 0 
+        ? [] 
+        : [ ...activeFolderPath.slice(0, level - 1), file.folderId ]
+      dispatch(updateActiveFileId(file.id, nextActiveFolderPath))
     }
   }
   
   // Handle Context Menu
   const handleContextMenu = (e: MouseEvent) => {
     e.preventDefault()
-    setIsContextMenuVisible(true)
-    setContextMenuTop(e.clientY)
-    setContextMenuLeft(e.clientX)
+    if(file && ['OWNER', 'EDITOR'].includes(file.role)) {
+      setIsContextMenuVisible(true)
+      setContextMenuTop(e.clientY)
+      setContextMenuLeft(e.clientX)
+    }
   }
   
   return (
     <>
       <Container
-        isHighlighted={activeFileId === file.id}
+        isHighlighted={activeFileId === fileId}
         isPreventedFromSelecting={file.isPreventedFromSelecting}
         isRenaming={isRenaming}
         onContextMenu={e => handleContextMenu(e)}
@@ -72,12 +77,12 @@ const FoldersFolderFile = ({
         setIsRenaming={setIsRenaming}/>
       </Container>
       {isContextMenuVisible && 
-        <FileContextMenu
+        <FoldersFolderFileContextMenu
           fileId={file.id}
           closeContextMenu={() => setIsContextMenuVisible(false)}
           contextMenuLeft={contextMenuLeft}
           contextMenuTop={contextMenuTop}
-          deleteFile={(fileId: IFile['id']) => dispatch(deleteFile(file.id))}
+          deleteFile={() => dispatch(deleteFile(fileId))}
           handleFileOpen={handleFileOpen}
           role={file.role}
           setIsRenaming={setIsRenaming}
@@ -91,7 +96,7 @@ const FoldersFolderFile = ({
 // Props
 //-----------------------------------------------------------------------------
 interface IFoldersFolderFile {
-  file: IFile
+  fileId: IFile['id']
   handleFileOpen(nextActiveTabId: string): void
   level: number
 }

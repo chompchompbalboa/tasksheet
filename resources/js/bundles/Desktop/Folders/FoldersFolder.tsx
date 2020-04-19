@@ -1,14 +1,13 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React from 'react'
+import React, { MouseEvent, useState } from 'react'
 import styled from 'styled-components'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import { IAppState } from '@/state'
 
-import { updateActiveFolderPath } from '@/state/folder/actions'
-
+import FoldersFolderContextMenu from '@desktop/Folders/FoldersFolderContextMenu'
 import FoldersFolderFile from '@desktop/Folders/FoldersFolderFile'
 import FoldersFolderFolder from '@desktop/Folders/FoldersFolderFolder'
 
@@ -22,42 +21,61 @@ const FoldersFolder = ({
 }: FoldersFolderProps) => {
 
   // Redux
-  const dispatch = useDispatch()
-  const activeFolderPath = useSelector((state: IAppState) => state.folder.activeFolderPath)
   const allFolders = useSelector((state: IAppState) => state.folder.allFolders)
-  const allFiles = useSelector((state: IAppState) => state.folder.allFiles)
   const userFolderIds = useSelector((state: IAppState) => state.folder.userFolderIds)
   const userFileIds = useSelector((state: IAppState) => state.folder.userFileIds)
 
+  // State
+  const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
+  const [ contextMenuTop, setContextMenuTop ] = useState(null)
+  const [ contextMenuLeft, setContextMenuLeft ] = useState(null)
+
+  // Local Variables
   const folder = allFolders[folderId]
   const folderIds: string[] = folderId !== "ROOT" ? folder.folders : userFolderIds
   const fileIds: string[] = folderId !== "ROOT" ? folder.files : userFileIds
   
+  // Handle Context Menu
+  const handleContextMenu = (e: MouseEvent) => {
+    e.preventDefault()
+    if((folder && ['OWNER', 'EDITOR'].includes(folder.role)) || folderId === 'ROOT') {
+      setIsContextMenuVisible(true)
+      setContextMenuTop(e.clientY)
+      setContextMenuLeft(e.clientX)
+    }
+  }
+
   return (
     <Container>
       <ItemsContainer>
         {folderIds.map(folderId => {
-          const folder = allFolders[folderId]
           return (
             <FoldersFolderFolder
               key={folderId}
-              activeFolderPath={activeFolderPath}
-              folder={folder}
-              level={level}
-              updateActiveFolderPath={(level: number, nextActiveFolderId: string) => dispatch(updateActiveFolderPath(level, nextActiveFolderId))}/>
+              folderId={folderId}
+              level={level}/>
           )
         })}
         {fileIds.map(fileId => {
-          const file = allFiles[fileId]
           return (
             <FoldersFolderFile
               key={fileId}
+              fileId={fileId}
               handleFileOpen={handleFileOpen}
-              level={level}
-              file={file}/>
+              level={level}/>
           )
         })}
       </ItemsContainer>
+      <ContextMenuContainer
+        onContextMenu={e => handleContextMenu(e)}>
+        {isContextMenuVisible && 
+            <FoldersFolderContextMenu
+              folderId={folderId}
+              closeContextMenu={() => setIsContextMenuVisible(false)}
+              contextMenuLeft={contextMenuLeft}
+              contextMenuTop={contextMenuTop}/>
+        }
+      </ContextMenuContainer>
     </Container>
   )
 }
@@ -75,17 +93,20 @@ interface FoldersFolderProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  height: 100%;
   width: 13rem;
-  border-right: 1px solid rgb(175, 175, 175);
+  height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  border-right: 1px solid rgb(175, 175, 175);
 `
 
 const ItemsContainer = styled.div`
   width: 100%;
-  min-height: 100%;
+`
+
+const ContextMenuContainer = styled.div`
+  min-height: 5rem;
+  flex-grow: 1;
 `
 
 //-----------------------------------------------------------------------------

@@ -2,9 +2,18 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { IFolderPermission, IFolderClipboardUpdates } from '@/state/folder/types'
-import { IModalUpdates } from '@/state/modal/types'
+import { IAppState } from '@/state'
+
+import { 
+  createFolder,
+  deleteFolder,
+  pasteFromClipboard,
+  updateClipboard
+} from '@/state/folder/actions' 
+import { updateModal } from '@/state/modal/actions'
+import { createSheet } from '@/state/sheet/actions' 
 
 import ContextMenu from '@desktop/ContextMenu/ContextMenu'
 import ContextMenuDivider from '@desktop/ContextMenu/ContextMenuDivider'
@@ -14,20 +23,18 @@ import ContextMenuItem from '@desktop/ContextMenu/ContextMenuItem'
 // Component
 //-----------------------------------------------------------------------------
 const FolderContextMenu = ({
-  createFolder,
-  createSheet,
-  deleteFolder,
   folderId,
   closeContextMenu,
   contextMenuLeft,
   contextMenuTop,
-  pasteFromClipboard,
-  role,
-  updateModal,
-  updateClipboard,
   setIsRenaming
 }: FolderContextMenuProps) => {
 
+  // Redux
+  const dispatch = useDispatch()
+  const folderClipboard = useSelector((state: IAppState) => state.folder.clipboard)
+
+  // Close On Click
   const closeOnClick = (thenCallThis: (...args: any) => void) => {
     closeContextMenu()
     thenCallThis()
@@ -39,43 +46,42 @@ const FolderContextMenu = ({
       closeContextMenu={closeContextMenu}
       contextMenuTop={contextMenuTop}
       contextMenuLeft={contextMenuLeft}>
-      {['OWNER', 'ADMINISTRATOR'].includes(role) &&
-        <ContextMenuItem
-          isFirstItem
-          text="Cut"
-          onClick={() => closeOnClick(() => updateClipboard({ itemId: folderId, folderOrFile: 'FOLDER', cutOrCopy: 'CUT' }))}/>
-      }
       <ContextMenuItem
-        text="Paste"
-        onClick={() => closeOnClick(() => pasteFromClipboard(folderId))}/>
+        isFirstItem
+        text="Cut"
+        onClick={() => closeOnClick(() => dispatch(updateClipboard({ 
+          itemId: folderId, 
+          folderOrFile: 'FOLDER', 
+          cutOrCopy: 'CUT' 
+        })))}/>
+      {folderClipboard.itemId !== null &&
+        <ContextMenuItem
+          text="Paste"
+          onClick={() => closeOnClick(() => dispatch(pasteFromClipboard(folderId)))}/>
+      }
       <ContextMenuDivider />
       <ContextMenuItem 
         text="New Sheet"
-        onClick={() => closeOnClick(() => createSheet(folderId))}/>
+        onClick={() => closeOnClick(() => dispatch(createSheet(folderId)))}/>
       <ContextMenuItem 
         text="Upload CSV"
-        onClick={() => closeOnClick(() => updateModal({ activeModal: 'CREATE_SHEET_FROM_CSV', createSheetFolderId: folderId }))}/>
+        onClick={() => closeOnClick(() => dispatch(updateModal({ 
+          activeModal: 'CREATE_SHEET_FROM_CSV', 
+          createSheetFolderId: folderId 
+        })))}/>
       <ContextMenuDivider />
       <ContextMenuItem 
         text="New Folder"
-        onClick={() => closeOnClick(() => createFolder(folderId))}/>
-      {['OWNER', 'ADMINISTRATOR'].includes(role) && 
-        <>
-          <ContextMenuDivider />
-          <ContextMenuItem 
-            text="Rename"
-            onClick={() => closeOnClick(() => setIsRenaming(true))}/>
-        </>
-      }
-      {['OWNER', 'ADMINISTRATOR'].includes(role) && 
-        <>
-          <ContextMenuDivider />
-          <ContextMenuItem 
-            isLastItem
-            text="Delete" 
-            onClick={() => closeOnClick(() => deleteFolder(folderId))}/>
-        </>
-      }
+        onClick={() => closeOnClick(() => dispatch(createFolder(folderId)))}/>
+      <ContextMenuDivider />
+      <ContextMenuItem 
+        text="Rename"
+        onClick={() => closeOnClick(() => setIsRenaming(true))}/>
+      <ContextMenuDivider />
+      <ContextMenuItem 
+        isLastItem
+        text="Delete" 
+        onClick={() => closeOnClick(() => dispatch(deleteFolder(folderId)))}/>
     </ContextMenu>
   )
 }
@@ -84,18 +90,11 @@ const FolderContextMenu = ({
 // Props
 //-----------------------------------------------------------------------------
 interface FolderContextMenuProps {
-  createFolder(folderId: string): void
-  createSheet(folderId: string): void
-  deleteFolder(folderId: string): void
   folderId: string
   closeContextMenu(): void
   contextMenuLeft: number
   contextMenuTop: number
-  pasteFromClipboard(folderId: string): void
-  role: IFolderPermission['role']
-  setIsRenaming(isRenaming: boolean): void
-  updateModal(updates: IModalUpdates): void
-  updateClipboard(updates: IFolderClipboardUpdates): void
+  setIsRenaming?(isRenaming: boolean): void
 }
 
 //-----------------------------------------------------------------------------

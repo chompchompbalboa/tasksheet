@@ -20,7 +20,8 @@ import {
   UPDATE_ACTIVE_FILE_ID,
   UPDATE_ACTIVE_FOLDER_PATH,
   UPDATE_CLIPBOARD,
-  UPDATE_USER_FILE_IDS
+  UPDATE_USER_FILE_IDS,
+  UPDATE_USER_FOLDER_IDS
 } from '@/state/folder/actions'
 
 //-----------------------------------------------------------------------------
@@ -245,6 +246,14 @@ export const folderReducer = (state = initialFolderState, action: IFolderActions
 			return {
 				...state,
         userFileIds: nextUserFileIds
+			}
+		}
+
+		case UPDATE_USER_FOLDER_IDS: {
+      const { nextUserFolderIds } = action
+			return {
+				...state,
+        userFolderIds: nextUserFolderIds
 			}
 		}
 
