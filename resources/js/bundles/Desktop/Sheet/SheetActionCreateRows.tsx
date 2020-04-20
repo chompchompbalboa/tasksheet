@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { ARROW_DOWN, ARROW_UP } from '@/assets/icons'
+import { PLUS_SIGN } from '@/assets/icons'
 
 import { useSheetEditingPermissions } from '@/hooks'
 
@@ -124,29 +124,19 @@ const SheetActionCreateRows = ({
           onChange={e => !isNaN(Number(e.target.value)) && setInputValue(Math.min(Number(e.target.value), 25))}
           onFocus={() => handleAutosizeInputFocus()}/>
       </InputContainer>
-      <AboveOrBelowButtons>
-        <AboveButton
-          data-testid="SheetActionCreateRowsAboveButton"
-          isSelected={insertAboveOrBelowSelectedRow === 'ABOVE'}
+      <InsertButtonContainer>
+        <InsertButton
+          data-testid="SheetActionCreateRowsButton"
           onClick={() => createRows('ABOVE')}
           userColorPrimary={userColorPrimary}>
           <Icon
-            icon={ARROW_UP}
+            icon={PLUS_SIGN}
             size="0.95rem"/>
-        </AboveButton>
-        <BelowButton
-          data-testid="SheetActionCreateRowsBelowButton"
-          isSelected={insertAboveOrBelowSelectedRow === 'BELOW'}
-          onClick={() => createRows('BELOW')}
-          userColorPrimary={userColorPrimary}>
-          <Icon
-            icon={ARROW_DOWN}
-            size="0.95rem"/>
-        </BelowButton>
-      </AboveOrBelowButtons>
+        </InsertButton>
+      </InsertButtonContainer>
       <Tooltip
         isVisible={isTooltipVisible}>
-        Insert rows above or below the selected cell
+        Insert rows above the selected cell
       </Tooltip>
     </Container>
   )
@@ -168,27 +158,26 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: rgb(225, 225, 225);
+  border: 1px solid rgb(210, 210, 210);
+  border-radius: 4px;
 `
 
 const StyledInput = styled.input`
-  padding: 0.4rem 0.5rem;
-  width: 2rem;
+  padding: 0.3rem 0;
+  padding-left: 0.1rem;
+  width: 1.5rem;
   border: none;
-  border-top: 0.5px solid rgb(175, 175, 175);
-  border-bottom: 0.5px solid rgb(175, 175, 175);
-  border-left: 0.5px solid rgb(175, 175, 175);
-  border-top-left-radius: 3px;
-  border-bottom-left-radius: 3px;
   color: rgb(110, 110, 110);
-  background-color: transparent;
   outline: none;
   font-family: inherit;
   font-size: 0.9rem;
   font-weight: inherit;
   text-align: center;
+  background-color: transparent;
 `
 
-const AboveOrBelowButtons = styled.div`
+const InsertButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -199,9 +188,9 @@ const AboveOrBelowButton = styled.div`
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  background-color: ${ ({ isSelected, userColorPrimary }: IAboveOrBelowButton ) => isSelected ? userColorPrimary : 'rgb(220, 220, 220)' };
-  color: ${ ({ isSelected }: IAboveOrBelowButton ) => isSelected ? 'rgb(240, 240, 240)' : 'inherit' };
-  padding: 0.45rem 0.3rem;
+  color: inherit;
+  padding: 0.4rem 0.2rem;
+  padding-left: 0.1rem;
   transition: all 0.05s;
   &:hover {
     background-color: ${ ({ userColorPrimary }: IAboveOrBelowButton ) => userColorPrimary };
@@ -209,21 +198,12 @@ const AboveOrBelowButton = styled.div`
   }
 `
 interface IAboveOrBelowButton {
-  isSelected: boolean
   userColorPrimary: string
 }
 
-const AboveButton = styled(AboveOrBelowButton)`
-  border-top: 1px solid rgb(175, 175, 175);
-  border-bottom: 1px solid rgb(175, 175, 175);
-`
-
-const BelowButton = styled(AboveOrBelowButton)`
-  border-top: 1px solid rgb(175, 175, 175);
-  border-bottom: 1px solid rgb(175, 175, 175);
-  border-right: 1px solid rgb(175, 175, 175);
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
+const InsertButton = styled(AboveOrBelowButton)`
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
 `
 
 const InputContainer = styled.div`

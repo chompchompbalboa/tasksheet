@@ -35,7 +35,6 @@ const SheetActionCellStyleBold = ({
     <SheetActionCellStyleButton
       sheetId={sheetId}
       icon={BOLD}
-      marginLeft="0"
       sheetStylesSet={sheetStyles && sheetStyles.bold}
       updateSheetStyles={updateSheetStyles}
       tooltip="Bold"/>

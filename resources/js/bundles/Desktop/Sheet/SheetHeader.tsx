@@ -174,7 +174,7 @@ const Container = styled.div`
   width: ${ ({ containerWidth }: ContainerProps ) => containerWidth + 'px'};
   height: 100%;
   text-align: left;
-  background-color: ${({ isColumnBreak }: ContainerProps ) => isColumnBreak ? 'rgb(190, 190, 190)' : 'rgb(250, 250, 250)'};
+  background-color: ${({ isColumnBreak }: ContainerProps ) => isColumnBreak ? 'rgb(210, 210, 210)' : 'rgb(250, 250, 250)'};
   box-shadow: ${({ isNextColumnAColumnBreak }: ContainerProps ) => isNextColumnAColumnBreak ? 'inset 0 -1px 0px 0px rgba(190,190,190,1)' : 'inset 0 -1px 0px 0px rgba(180,180,180,1)'};
   border-right: ${ ({ isColumnBreak, isNextColumnAColumnBreak, isLast }: ContainerProps ) => 
     isColumnBreak || isNextColumnAColumnBreak 
@@ -184,7 +184,7 @@ const Container = styled.div`
         : '1px solid rgb(230, 230, 230)'
   };
   &:hover {
-    background-color: ${({ isColumnBreak }: ContainerProps ) => isColumnBreak ? 'rgb(190, 190, 190)' : 'rgb(243, 243, 243)'};
+    background-color: ${({ isColumnBreak }: ContainerProps ) => isColumnBreak ? 'rgb(210, 210, 210)' : 'rgb(243, 243, 243)'};
   }
 `
 interface ContainerProps {

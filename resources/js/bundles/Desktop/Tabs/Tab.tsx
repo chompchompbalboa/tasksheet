@@ -66,8 +66,7 @@ const Container = styled.div`
   margin-right: 1px;
   opacity: ${ ({ isActiveTab }: ContainerProps) => isActiveTab ? '1' : '0.75'};
   background-color: rgb(250, 250, 250);
-  border-left: none;
-  border-bottom: none;
+  border-bottom: ${ ({ isActiveTab }: ContainerProps) => isActiveTab ? '1px solid transparent' : '1px solid rgb(200, 200, 200)'};;
   border-radius: 3px 3px 0 0;
   &:hover {
     opacity: ${ ({ isActiveTab }: ContainerProps) => isActiveTab ? '1' : '0.8'};

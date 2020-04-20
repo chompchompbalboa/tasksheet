@@ -30,6 +30,7 @@ const SheetActionSheetCellPriorities = ({
   const dispatch = useDispatch()
   const allSheetPriorities = useSelector((state: IAppState) => state.sheet.allSheetPriorities)
   const sheetPriorities = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].priorities)
+  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 
   // State
   const [ isDropdownVisible, setIsDropdownVisible ] = useState(false)
@@ -85,9 +86,17 @@ const SheetActionSheetCellPriorities = ({
 
   return (
     <SheetActionButton
-      containerBackgroundColor={activeSheetPriority ? activeSheetPriority.backgroundColor : undefined}
+      containerBackgroundColor={activeSheetPriority ? activeSheetPriority.backgroundColor : "rgb(225, 225, 225)"}
+      containerBorderColor="rgb(210, 210, 210)"
+      containerHoverBackgroundColor={userColorPrimary}
       containerColor={activeSheetPriority ? activeSheetPriority.color : undefined}
+      containerHoverColor="white"
       containerWidth="5rem"
+      dropdownToggleBackgroundColor={activeSheetPriority ? activeSheetPriority.backgroundColor : "rgb(225, 225, 225)"}
+      dropdownToggleBorderColor="rgb(210, 210, 210)"
+      dropdownToggleColor={activeSheetPriority ? activeSheetPriority.color : undefined}
+      dropdownToggleHoverBackgroundColor={userColorPrimary}
+      dropdownToggleHoverColor="white"
       closeDropdown={() => setIsDropdownVisible(false)}
       isDropdownVisible={isDropdownVisible}
       marginLeft="0"

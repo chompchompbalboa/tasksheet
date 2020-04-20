@@ -4,7 +4,7 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { PLUS_SIGN } from '@/assets/icons'
+import { SHEET } from '@/assets/icons'
 
 import { IAppState } from '@/state'
 import {
@@ -36,11 +36,9 @@ const SheetActionCreateSheet = () => {
 
   return (
     <SheetActionButton
-      icon={PLUS_SIGN}
-      iconSize="0.85rem"
-      marginLeft="0"
+      icon={SHEET}
       onClick={() => handleButtonClick()}
-      text={ isSheetCurrentlyBeingCreated ? 'Creating...' : 'Sheet' }
+      text={ isSheetCurrentlyBeingCreated ? 'Creating...' : '' }
       tooltip='Create a new sheet'>
     </SheetActionButton>
   )

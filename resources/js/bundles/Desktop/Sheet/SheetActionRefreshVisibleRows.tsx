@@ -20,7 +20,7 @@ const SheetActionRefreshVisibleRows = ({
   return (
     <SheetActionButton
       icon={REFRESH}
-      marginRight="0"
+      marginLeft="0.25rem"
       onClick={() => dispatch(refreshSheetVisibleRows(sheetId))}
       tooltip="Refresh the view"/>
   )

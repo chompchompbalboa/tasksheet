@@ -57,11 +57,11 @@ interface SheetActionDropdownSelectedOptionProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   cursor: ${ ({ isLocked }: ContainerProps ) => isLocked ? 'not-allowed' : 'default' };
-  padding: 0.125rem 0.25rem;
+  padding: 0.1rem 0.25rem;
   margin-right: 0.25rem;
   background-color: ${ ({ optionBackgroundColor }: ContainerProps ) => optionBackgroundColor };
   color: white;
-  border-radius: 5px;
+  border-radius: 4px;
   font-size: 0.75rem;
   display: flex;
   align-items: center;

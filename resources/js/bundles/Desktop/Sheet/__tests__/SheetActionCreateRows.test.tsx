@@ -88,16 +88,14 @@ describe('SheetActionCreateRows', () => {
      })
     const container = getByTestId('SheetActionCreateRows')
     const input = getByTestId('SheetActionCreateRowsInput') as HTMLInputElement
-    const insertAboveButton = getByTestId('SheetActionCreateRowsAboveButton')
-    const insertBelowButton = getByTestId('SheetActionCreateRowsBelowButton')
+    const insertButton = getByTestId('SheetActionCreateRowsButton')
     const tooltip = getByTestId('Tooltip')
     return {
       container,
       dispatch,
       getState,
       input,
-      insertAboveButton,
-      insertBelowButton,
+      insertButton,
       queryByText,
       tooltip
     }
@@ -134,18 +132,8 @@ describe('SheetActionCreateRows', () => {
   })
   
   it("displays a button that will insert the new rows above the currently selected row", async () => {
-    const { insertAboveButton } = sheetActionCreateRows()
-    expect(insertAboveButton).toBeTruthy()
-  })
-  
-  it("displays a button that will insert the new rows below the currently selected row", async () => {
-    const { insertBelowButton } = sheetActionCreateRows()
-    expect(insertBelowButton).toBeTruthy()
-  })
-  
-  it("highlights the button that inserts rows above by default", async () => {
-    const { getState, insertAboveButton } = sheetActionCreateRows()
-    expect(insertAboveButton).toHaveStyleRule('background-color', getState().user.color.primary)
+    const { insertButton } = sheetActionCreateRows()
+    expect(insertButton).toBeTruthy()
   })
   
   it("displays a tooltip when the mouse hovers over the element", async () => {
@@ -159,7 +147,7 @@ describe('SheetActionCreateRows', () => {
   })
   
   it("correctly inserts rows above the selected cell when the insert above button is clicked", async () => {
-    const { dispatch, getState, input, insertAboveButton } = sheetActionCreateRows()
+    const { dispatch, getState, input, insertButton } = sheetActionCreateRows()
     const { cell: R1C1Cell } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1 })
     act(() => {
       dispatch(updateSheetSelectionFromCellClick(sheetId, R1C1Cell.id, false))
@@ -169,7 +157,7 @@ describe('SheetActionCreateRows', () => {
     const numberOfRowsToInsert = 5
     fireEvent.change(input, { target: { value: numberOfRowsToInsert } })
     await act(async() => {
-      insertAboveButton.click()
+      insertButton.click()
       jest.advanceTimersByTime(10)
       await flushPromises()
     })
@@ -177,55 +165,17 @@ describe('SheetActionCreateRows', () => {
     expect(getState().sheet.allSheets[sheetId].visibleRows.indexOf(R1C1Cell.rowId)).toBe(sheetSelectedRowVisibleRowsIndex + numberOfRowsToInsert)
   })
   
-  it("correctly inserts rows below the selected cell when the insert below button is clicked", async () => {
-    const { dispatch, getState, input, insertBelowButton } = sheetActionCreateRows()
-    const { cell: R1C1Cell } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1 })
-    act(() => {
-      dispatch(updateSheetSelectionFromCellClick(sheetId, R1C1Cell.id, false))
-    })
-    const sheetNumberOfRows = sheet.visibleRows.length
-    const sheetSelectedRowVisibleRowsIndex = sheet.visibleRows.indexOf(R1C1Cell.rowId)
-    const numberOfRowsToInsert = 5
-    fireEvent.change(input, { target: { value: numberOfRowsToInsert } })
-    await act(async() => {
-      insertBelowButton.click()
-      jest.advanceTimersByTime(10)
-      await flushPromises()
-    })
-    expect(getState().sheet.allSheets[sheetId].visibleRows.length).toBe(sheetNumberOfRows + numberOfRowsToInsert)
-    expect(getState().sheet.allSheets[sheetId].visibleRows.indexOf(R1C1Cell.rowId)).toBe(sheetSelectedRowVisibleRowsIndex)
-  })
-  
-  it("correctly inserts rows below the selected cell when the insert below button is clicked", async () => {
-    const { dispatch, getState, input, insertBelowButton } = sheetActionCreateRows()
-    const { cell: R1C1Cell } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1 })
-    act(() => {
-      dispatch(updateSheetSelectionFromCellClick(sheetId, R1C1Cell.id, false))
-    })
-    const sheetNumberOfRows = sheet.visibleRows.length
-    const sheetSelectedRowVisibleRowsIndex = sheet.visibleRows.indexOf(R1C1Cell.rowId)
-    const numberOfRowsToInsert = 5
-    fireEvent.change(input, { target: { value: numberOfRowsToInsert } })
-    await act(async() => {
-      insertBelowButton.click()
-      jest.advanceTimersByTime(10)
-      await flushPromises()
-    })
-    expect(getState().sheet.allSheets[sheetId].visibleRows.length).toBe(sheetNumberOfRows + numberOfRowsToInsert)
-    expect(getState().sheet.allSheets[sheetId].visibleRows.indexOf(R1C1Cell.rowId)).toBe(sheetSelectedRowVisibleRowsIndex)
-  })
-  
   it("displays an error message when a user with an expired subscription tries to create new rows", async () => {
     const appState = getMockAppStateByTasksheetSubscriptionType('TRIAL_EXPIRED')
-    const { insertBelowButton, queryByText } = sheetActionCreateRows(appState)
-    insertBelowButton.click()
+    const { insertButton, queryByText } = sheetActionCreateRows(appState)
+    insertButton.click()
     expect(queryByText(SUBSCRIPTION_EXPIRED_MESSAGE.message)).toBeTruthy()
   })
   
   it("displays an error message when a user without editing permission tries to create new rows", async () => {
     const appState = getMockAppStateByUsersFilePermissionRole('VIEWER')
-    const { insertBelowButton, queryByText } = sheetActionCreateRows(appState)
-    insertBelowButton.click()
+    const { insertButton, queryByText } = sheetActionCreateRows(appState)
+    insertButton.click()
     expect(queryByText(USER_DOESNT_HAVE_PERMISSION_TO_EDIT_SHEET_MESSAGE.message)).toBeTruthy()
   })
 

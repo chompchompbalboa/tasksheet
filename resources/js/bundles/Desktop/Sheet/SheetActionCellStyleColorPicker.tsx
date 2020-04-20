@@ -35,7 +35,6 @@ const SheetActionCellStyleColorPicker = ({
   
   // Redux
   const dispatch = useDispatch()
-  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
   const selections = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections)
 
   // State
@@ -130,9 +129,10 @@ const SheetActionCellStyleColorPicker = ({
 
   return (
     <Container
-      isBeforeDivider={isBeforeDivider}>
+      isBeforeDivider={isBeforeDivider}
+      isDropdownVisible={isDropdownVisible}>
       <CurrentColorContainer
-        containerBackgroundColor={userColorPrimary}
+        containerHoverBackgroundColor="rgb(220, 220, 220)"
         onClick={() => handleContainerClick()}>
         <Icon 
           icon={icon}/>
@@ -140,7 +140,7 @@ const SheetActionCellStyleColorPicker = ({
           currentColor={localColor}/>
       </CurrentColorContainer>
       <DropdownToggle
-        dropdownToggleBackgroundColor={userColorPrimary}
+        dropdownToggleBackgroundColor="rgb(220, 220, 220)"
         onClick={() => setIsDropdownVisible(true)}>
         <Icon 
           icon={ARROW_DOWN}/>
@@ -197,13 +197,16 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(220, 220, 220);
   color: rgb(80, 80, 80);
   text-decoration: none;
   border-radius: 3px;
-  border: 1px solid rgb(175, 175, 175);
+  background-color: ${ ({ isDropdownVisible }: IContainer ) => isDropdownVisible ? 'rgb(235, 235, 235)' : 'transparent' };
+  &:hover {
+    background-color: rgb(235, 235, 235);
+  }
 `
 interface IContainer {
+  isDropdownVisible: boolean
   isBeforeDivider: boolean
 }
 
@@ -217,12 +220,11 @@ const CurrentColorContainer = styled.div`
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
   &:hover {
-    background-color: ${ ({ containerBackgroundColor }: ICurrentColorContainer) => containerBackgroundColor};
-    color: rgb(240, 240, 240);
+    background-color: ${ ({ containerHoverBackgroundColor }: ICurrentColorContainer) => containerHoverBackgroundColor};
   }
 `
 interface ICurrentColorContainer {
-  containerBackgroundColor: string
+  containerHoverBackgroundColor: string
 }
 
 const CurrentColor = styled.div`
@@ -237,7 +239,6 @@ interface ICurrentColor {
 const DropdownToggle = styled.div`
   cursor: pointer;
   padding: 0.45rem 0.1rem;
-  border-left: 1px solid rgb(175, 175, 175);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -247,7 +248,6 @@ const DropdownToggle = styled.div`
   border-bottom-right-radius: 3px;
   &:hover {
     background-color: ${ ({ dropdownToggleBackgroundColor }: IDropdownToggle) => dropdownToggleBackgroundColor};
-    color: rgb(240, 240, 240);
   }
 `
 interface IDropdownToggle {

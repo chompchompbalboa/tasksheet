@@ -31,7 +31,7 @@ const Container = styled.div`
   padding: 0.15rem 0.25rem;
   font-size: 0.9rem;
   user-select: none;
-  background-color: rgb(190, 190, 190);
+  background-color: rgb(210, 210, 210);
 `
 
 //-----------------------------------------------------------------------------

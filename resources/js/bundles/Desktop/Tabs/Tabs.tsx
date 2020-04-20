@@ -175,6 +175,7 @@ const MiniTab = styled.div`
   margin-right: 1px;
   background-color: rgb(240,240,240);
   color: rgb(80, 80, 80);
+  border-bottom: 1px solid rgb(200, 200, 200);
   border-radius: 4px 4px 0 0;
   display: flex;
   justify-content: center;

@@ -336,13 +336,13 @@ const SheetActionFilter = ({
           <InputContainer>
             <AutosizeInput
               ref={autosizeInput}
-              placeholder="Filter By..."
+              placeholder="Filter..."
               value={autosizeInputValue}
               onChange={e => handleAutosizeInputChange(e.target.value)}
               onFocus={handleAutosizeInputFocus}
               inputStyle={{
                 marginRight: '0.25rem',
-                padding: '0.125rem 0',
+                padding: '0.1rem 0',
                 height: '100%',
                 minWidth: '4.25rem',
                 border: 'none',
@@ -426,17 +426,18 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   margin-right: 0.25rem;
+  background-color: rgb(225, 225, 225);
+  border: 1px solid rgb(210, 210, 210);
+  border-radius: 4px;
 `
 interface IContainer {
   isDropdownVisible: boolean
 }
 
 const Wrapper = styled.div`
-  padding: 0.25rem;
-  border: 0.5px solid rgb(180, 180, 180);
+  padding: 0.1875rem;
   display: flex;
   align-items: center;
-  border-radius: 4px;
 `
 
 const ExistingFilters = styled.div`
@@ -445,6 +446,7 @@ const ExistingFilters = styled.div`
 
 const InputContainer = styled.div`
   position: relative;
+  padding-left: 0.125rem;
 `
 
 const Dropdown = styled.div`

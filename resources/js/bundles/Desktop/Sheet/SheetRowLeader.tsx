@@ -78,10 +78,10 @@ const Container = styled.div`
   justify-content: center;
   user-select: none;
   height: 100%;
-  background-color: ${ ({ isRowBreak }: ContainerProps ) => isRowBreak ? 'rgb(190, 190, 190)' : 'rgb(250, 250, 250)'};
+  background-color: ${ ({ isRowBreak }: ContainerProps ) => isRowBreak ? 'rgb(210, 210, 210)' : 'rgb(250, 250, 250)'};
   box-shadow: inset -1px -1px 0px 0px rgba(180,180,180,1);
   &:hover {
-    background-color: ${ ({ isRowBreak }: ContainerProps ) => isRowBreak ? 'rgb(190, 190, 190)' : 'rgb(235, 235, 235)'};
+    background-color: ${ ({ isRowBreak }: ContainerProps ) => isRowBreak ? 'rgb(210, 210, 210)' : 'rgb(235, 235, 235)'};
   }
 `
 interface ContainerProps {

@@ -72,8 +72,7 @@ const SheetActions = ({
       <SheetActionRefreshVisibleRows sheetId={sheetId}/>
       <SheetActionButton
         icon={!isSheetViewLocked ? LOCK_CLOSED : LOCK_OPEN}
-        marginLeft="0.375rem"
-        marginRight={!isSheetViewLocked ? "0.4125rem" : "0"}
+        marginRight={!isSheetViewLocked ? "0.25rem" : "0"}
         onClick={() => toggleIsSheetViewLocked()}
         tooltip={!isSheetViewLocked ? 'Lock the view' : 'Unlock the view'}/>
       {!isSheetViewLocked &&
@@ -130,13 +129,14 @@ const Container = styled.div`
   display: flex;
   flex-flow: row-wrap;
   align-items: center;
-  min-height: 2.75rem;
+  min-height: 2.5rem;
   background-color: rgb(250, 250, 250);
+  border-bottom: 1px solid rgb(150, 150, 150);
   border-bottom: 1px solid rgb(150, 150, 150);
 `
 
 const Divider = styled.div`
-  margin: 0 0.75rem;
+  margin: 0 0.5rem;
   height: 1.5rem;
   width: 1px;
   min-width: 1px;

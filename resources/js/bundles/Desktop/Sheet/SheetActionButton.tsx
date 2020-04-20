@@ -2,12 +2,9 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { ARROW_DOWN } from '@/assets/icons'
-
-import { IAppState } from '@/state'
 
 import Icon from '@/components/Icon'
 import SheetActionTooltip from '@desktop/Sheet/SheetActionTooltip'
@@ -18,26 +15,29 @@ import SheetActionTooltip from '@desktop/Sheet/SheetActionTooltip'
 const SheetActionButton = ({
   children,
   closeDropdown,
-  containerBackgroundColor = 'rgb(225, 225, 225)',
+  containerBackgroundColor = 'transparent',
+  containerBorderColor = 'transparent',
   containerColor = 'rgb(50, 50, 50)',
   containerHoverBackgroundColor,
-  containerHoverColor = 'rgb(240, 240, 240)',
-  dropdownToggleBackgroundColor = 'rgb(220, 220, 220)',
+  containerHoverColor = 'rgb(50, 50, 50)',
+  dropdownToggleBackgroundColor = 'transparent',
+  dropdownToggleBorderColor = 'transparent',
+  dropdownToggleColor = 'inherit',
+  dropdownToggleHoverBackgroundColor = 'rgb(220, 220, 220)',
+  dropdownToggleHoverColor = 'inherit',
   containerWidth = 'auto',
   icon,
-  iconPadding = '0.4rem 0.4rem',
+  iconPadding = '0.35rem 0.4rem',
   iconSize = '1.1rem',
   iconTextSize = '0.78rem',
   isDropdownVisible,
-  marginLeft = '0.25rem',
-  marginRight = '0.25rem',
+  marginLeft = '0',
+  marginRight = '0',
   onClick = () =>  null,
   openDropdown,
   text,
   tooltip
 }: SheetActionButtonProps) => {
-
-  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 
   const tooltipTimer = useRef(null)
   const container = useRef(null)
@@ -77,9 +77,10 @@ const SheetActionButton = ({
       onMouseEnter={() => handleMouseEnter()}
       onMouseLeave={() => handleMouseLeave()}>
       <IconContainer
+        containerBorderColor={containerBorderColor}
         containerBackgroundColor={containerBackgroundColor}
         containerColor={containerColor}
-        containerHoverBackgroundColor={containerHoverBackgroundColor || userColorPrimary}
+        containerHoverBackgroundColor={containerHoverBackgroundColor || 'rgb(220, 220, 220)'}
         containerHoverColor={containerHoverColor}
         containerWidth={containerWidth}
         hasDropdown={typeof(children) !== 'undefined'}
@@ -105,7 +106,10 @@ const SheetActionButton = ({
         <>
           <DropdownToggle
             dropdownToggleBackgroundColor={dropdownToggleBackgroundColor}
-            dropdownToggleHoverBackgroundColor={userColorPrimary}
+            dropdownToggleBorderColor={dropdownToggleBorderColor}
+            dropdownToggleColor={dropdownToggleColor}
+            dropdownToggleHoverBackgroundColor={dropdownToggleHoverBackgroundColor}
+            dropdownToggleHoverColor={dropdownToggleHoverColor}
             onClick={() => {
               clearTimeout(tooltipTimer.current)
               setIsTooltipVisible(false)
@@ -137,12 +141,17 @@ const SheetActionButton = ({
 interface SheetActionButtonProps {
   children?: any // React Component,
   containerBackgroundColor?: string
+  containerBorderColor?: string
   containerColor?: string
   containerHoverBackgroundColor?: string
   containerHoverColor?: string
   containerWidth?: string
   closeDropdown?(): void
   dropdownToggleBackgroundColor?: string
+  dropdownToggleBorderColor?: string
+  dropdownToggleColor?: string
+  dropdownToggleHoverBackgroundColor?: string
+  dropdownToggleHoverColor?: string
   icon?: string
   iconPadding?: string
   iconSize?: string
@@ -151,7 +160,7 @@ interface SheetActionButtonProps {
   marginLeft?: string
   marginRight?: string
   onClick?(): void
-  openDropdown?(): void,
+  openDropdown?(): void
   text?: string
   tooltip?: string
 }
@@ -167,8 +176,11 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   color: rgb(80, 80, 80);
-  border-radius: 3px;
+  border-radius: 4px;
   transition: all 0.05s;
+  &:hover {
+    background-color: rgb(235, 235, 235);
+  }
 `
 interface IContainer {
   containerMarginLeft: string
@@ -183,13 +195,14 @@ const IconContainer = styled.div`
   align-items: center;
   padding: ${ ({ iconPadding }: IIconContainer ) => iconPadding };
   transition: all 0.05s;
-  border-top-left-radius: 3px;
-  border-bottom-left-radius: 3px;
-  border-top-right-radius: ${ ({ hasDropdown }: IIconContainer) => hasDropdown ? '0' : '3px' };
-  border-bottom-right-radius: ${ ({ hasDropdown }: IIconContainer) => hasDropdown ? '0' : '3px' };
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-top-right-radius: ${ ({ hasDropdown }: IIconContainer) => hasDropdown ? '0' : '4px' };
+  border-bottom-right-radius: ${ ({ hasDropdown }: IIconContainer) => hasDropdown ? '0' : '4px' };
   background-color: ${ ({ containerBackgroundColor }: IIconContainer) => containerBackgroundColor };
   color: ${ ({ containerColor }: IIconContainer) => containerColor };
-  border: 1px solid rgb(165, 165, 165);
+  border: 1px solid ${ ({ containerBorderColor }: IIconContainer) => containerBorderColor };
+  border-right: none;
   &:hover {
     background-color: ${ ({ containerHoverBackgroundColor }: IIconContainer) => containerHoverBackgroundColor };
     color: ${ ({ containerHoverColor }: IIconContainer) => containerHoverColor };
@@ -197,6 +210,7 @@ const IconContainer = styled.div`
 `
 interface IIconContainer {
   containerBackgroundColor: string
+  containerBorderColor: string
   containerColor: string
   containerHoverBackgroundColor: string
   containerHoverColor: string
@@ -218,26 +232,30 @@ interface IIconText {
 
 const DropdownToggle = styled.div`
   cursor: pointer;
-  padding: 0.45rem 0.1rem;
+  padding: 0.35rem 0.1rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   transition: all 0.05s;
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
-  border: 1px solid rgb(165, 165, 165);
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border: 1px solid ${ ({ dropdownToggleBorderColor }: IDropdownToggle) => dropdownToggleBorderColor};;
   border-left: none;
   background-color: ${ ({ dropdownToggleBackgroundColor }: IDropdownToggle) => dropdownToggleBackgroundColor};
+  color: ${ ({ dropdownToggleColor }: IDropdownToggle) => dropdownToggleColor};
   &:hover {
     background-color: ${ ({ dropdownToggleHoverBackgroundColor }: IDropdownToggle) => dropdownToggleHoverBackgroundColor};
-    color: rgb(240, 240, 240);
+    color: ${ ({ dropdownToggleHoverColor }: IDropdownToggle) => dropdownToggleHoverColor};
   }
 `
 
 interface IDropdownToggle {
   dropdownToggleBackgroundColor: string
+  dropdownToggleBorderColor: string
+  dropdownToggleColor: string
   dropdownToggleHoverBackgroundColor: string
+  dropdownToggleHoverColor: string
 }
 
 const DropdownContainer = styled.div`

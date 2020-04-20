@@ -72,7 +72,7 @@ const SheetActionSort = ({
         onOptionSelect={(selectedOption: SheetActionDropdownOption) => dispatch(createSheetSort(sheetId, newSheetSortFromSelectedOption(selectedOption)))}
         onOptionUpdate={(sortId, updates) => dispatch(updateSheetSort(sheetId, sortId, updates, true))}
         options={options}
-        placeholder={"Sort By..."}
+        placeholder={"Sort..."}
         selectedOptions={selectedOptions}
         selectedOptionComponent={({ option }: { option: SheetActionDropdownOption }) => <SheetActionSortSelectedOption option={option} allSheetSorts={allSheetSorts} updateSheetSort={(...args) => dispatch(updateSheetSort(sheetId, ...args))} />}/>
     </SheetAction>

@@ -106,12 +106,12 @@ const SheetActionSearch = ({
       onChange={e => handleInputChange(e.target.value)}
       onFocus={handleInputFocus}
       inputStyle={{
-        padding: '0.375rem',
+        padding: '0.325rem',
         height: '100%',
         minWidth: '6.5rem',
-        border: '0.5px solid rgb(180, 180, 180)',
-        borderRadius: '4px',
-        backgroundColor: 'transparent',
+        border: '1px solid rgb(210, 210, 210)',
+        borderRadius: '5px',
+        backgroundColor: 'rgb(225, 225, 225)',
         outline: 'none',
         fontFamily: 'inherit',
         fontSize: 'inherit',

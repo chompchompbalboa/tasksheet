@@ -68,7 +68,7 @@ const SheetActionGroup = ({
         onOptionSelect={(selectedOption: SheetActionDropdownOption) => dispatch(createSheetGroup(sheetId, newSheetGroupFromSelectedOption(selectedOption)))}
         onOptionUpdate={(groupId, updates) => dispatch(updateSheetGroup(sheetId, groupId, updates, true))}
         options={sheetColumnNames}
-        placeholder={"Group By..."}
+        placeholder={"Group..."}
         selectedOptions={sheetGroupSelectedOptions}
         selectedOptionComponent={({ option }: { option: SheetActionDropdownOption }) => <SheetActionGroupSelectedOption option={option} groups={allSheetGroups} updateSheetGroup={(...args) => dispatch(updateSheetGroup(sheetId, ...args))} />}/>
     </SheetAction>
