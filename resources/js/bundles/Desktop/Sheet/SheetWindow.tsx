@@ -228,6 +228,8 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
 
     const columnRenderHelper = _.times(Math.min(sheetViewVisibleColumns.length, numberOfColumnsToRender), String)
     const rowRenderHelper = _.times(Math.min(sheetVisibleRows.length, numberOfRowsToRender), String)
+    const lastVisibleColumnId = sheetViewVisibleColumns[sheetViewVisibleColumns.length - 1]
+    
     return (
 			<Container
         ref={this.container}
@@ -313,6 +315,8 @@ class SheetWindow extends PureComponent<ISheetWindowConnectedProps, ISheetWindow
                     return (
                       <SheetBreakCell
                         key={columnId === 'COLUMN_BREAK' ? columnId + columnRenderIndex : columnId}
+                        isLast={columnId === lastVisibleColumnId}
+                        isRowBreak
                         style={{
                           width: columnId === 'COLUMN_BREAK' ? '10px' : allSheetColumns[columnId].width,
                           height: this.ROW_HEIGHT + 'px'

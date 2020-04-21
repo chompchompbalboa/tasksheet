@@ -42,9 +42,11 @@ const SheetActionSheetViews = ({
       closeDropdown={() => setIsDropdownVisible(false)}
       containerWidth="9.5rem"
       containerBackgroundColor="rgb(225, 225, 225)"
+      containerHoverBackgroundColor="rgb(210, 210, 210)"
       containerBorderColor="rgb(210, 210, 210)"
       dropdownToggleBackgroundColor="rgb(225, 225, 225)"
       dropdownToggleBorderColor="rgb(210, 210, 210)"
+      dropdownToggleHoverBackgroundColor="rgb(210, 210, 210)"
       isDropdownVisible={isDropdownVisible}
       marginLeft="0"
       onClick={() => setIsDropdownVisible(true)}

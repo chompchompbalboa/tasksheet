@@ -8,17 +8,25 @@ import styled from 'styled-components'
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
-const SheetGroupCell = memo(({
+const SheetBreakCell = memo(({
+  isLast = false,
+  isRowBreak = false,
   style
-}: SheetGroupCellProps) => (
-    <Container style={style}/>
-), areEqual)
+}: SheetBreakCellProps) => {
+  return (
+    <Container 
+      isLast={isLast}
+      isRowBreak={isRowBreak}
+      style={style}/>
+)}, areEqual)
 
 //-----------------------------------------------------------------------------
 // Props
 //-----------------------------------------------------------------------------
-interface SheetGroupCellProps {
-  style: {}
+interface SheetBreakCellProps {
+  isLast?: boolean
+  isRowBreak?: boolean
+  style: any
 }
 
 //-----------------------------------------------------------------------------
@@ -32,9 +40,15 @@ const Container = styled.div`
   font-size: 0.9rem;
   user-select: none;
   background-color: rgb(210, 210, 210);
+  border-right: 0.5px solid ${ ({ isLast, isRowBreak }: IContainer ) => isRowBreak ? (isLast ? 'rgb(180, 180, 180)' : 'rgb(210, 210, 210)') : 'rgb(180, 180, 180)' };
+  border-bottom: 0.5px solid rgb(180, 180, 180);
 `
+interface IContainer {
+  isLast: boolean
+  isRowBreak: boolean
+}
 
 //-----------------------------------------------------------------------------
 // Export
 //-----------------------------------------------------------------------------
-export default SheetGroupCell
+export default SheetBreakCell

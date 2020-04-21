@@ -18,7 +18,7 @@ const SheetActionButton = ({
   containerBackgroundColor = 'transparent',
   containerBorderColor = 'transparent',
   containerColor = 'rgb(50, 50, 50)',
-  containerHoverBackgroundColor,
+  containerHoverBackgroundColor = 'rgb(220, 220, 220)',
   containerHoverColor = 'rgb(50, 50, 50)',
   dropdownToggleBackgroundColor = 'transparent',
   dropdownToggleBorderColor = 'transparent',
@@ -80,7 +80,7 @@ const SheetActionButton = ({
         containerBorderColor={containerBorderColor}
         containerBackgroundColor={containerBackgroundColor}
         containerColor={containerColor}
-        containerHoverBackgroundColor={containerHoverBackgroundColor || 'rgb(220, 220, 220)'}
+        containerHoverBackgroundColor={containerHoverBackgroundColor}
         containerHoverColor={containerHoverColor}
         containerWidth={containerWidth}
         hasDropdown={typeof(children) !== 'undefined'}

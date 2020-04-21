@@ -79,7 +79,10 @@ const Container = styled.div`
   user-select: none;
   height: 100%;
   background-color: ${ ({ isRowBreak }: ContainerProps ) => isRowBreak ? 'rgb(210, 210, 210)' : 'rgb(250, 250, 250)'};
-  box-shadow: inset -1px -1px 0px 0px rgba(180,180,180,1);
+  box-shadow: ${ ({ isRowBreak }: ContainerProps ) => isRowBreak 
+    ? 'inset 0px -1px 0px 0px rgb(180, 180, 180)' 
+    : 'inset -1px -1px 0px 0px rgb(180, 180, 180)'
+  };
   &:hover {
     background-color: ${ ({ isRowBreak }: ContainerProps ) => isRowBreak ? 'rgb(210, 210, 210)' : 'rgb(235, 235, 235)'};
   }
