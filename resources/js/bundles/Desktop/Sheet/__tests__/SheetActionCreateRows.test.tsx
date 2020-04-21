@@ -146,23 +146,23 @@ describe('SheetActionCreateRows', () => {
     expect(tooltip).toHaveStyleRule('display', 'block')
   })
   
-  it("correctly inserts rows above the selected cell when the insert above button is clicked", async () => {
-    const { dispatch, getState, input, insertButton } = sheetActionCreateRows()
-    const { cell: R1C1Cell } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1 })
-    act(() => {
-      dispatch(updateSheetSelectionFromCellClick(sheetId, R1C1Cell.id, false))
-    })
-    const sheetNumberOfRows = sheet.visibleRows.length
-    const sheetSelectedRowVisibleRowsIndex = sheet.visibleRows.indexOf(R1C1Cell.rowId)
-    const numberOfRowsToInsert = 5
-    fireEvent.change(input, { target: { value: numberOfRowsToInsert } })
-    await act(async() => {
-      insertButton.click()
-      jest.advanceTimersByTime(10)
-      await flushPromises()
-    })
-    expect(getState().sheet.allSheets[sheetId].visibleRows.length).toBe(sheetNumberOfRows + numberOfRowsToInsert)
-    expect(getState().sheet.allSheets[sheetId].visibleRows.indexOf(R1C1Cell.rowId)).toBe(sheetSelectedRowVisibleRowsIndex + numberOfRowsToInsert)
+  it("correctly inserts rows below the selected cell when the insert below button is clicked", async () => {	
+    const { dispatch, getState, input, insertButton } = sheetActionCreateRows()	
+    const { cell: R1C1Cell } = getCellAndCellProps({ sheetId: sheetId, row: 1, column: 1 })	
+    act(() => {	
+      dispatch(updateSheetSelectionFromCellClick(sheetId, R1C1Cell.id, false))	
+    })	
+    const sheetNumberOfRows = sheet.visibleRows.length	
+    const sheetSelectedRowVisibleRowsIndex = sheet.visibleRows.indexOf(R1C1Cell.rowId)	
+    const numberOfRowsToInsert = 5	
+    fireEvent.change(input, { target: { value: numberOfRowsToInsert } })	
+    await act(async() => {	
+      insertButton.click()	
+      jest.advanceTimersByTime(10)	
+      await flushPromises()	
+    })	
+    expect(getState().sheet.allSheets[sheetId].visibleRows.length).toBe(sheetNumberOfRows + numberOfRowsToInsert)	
+    expect(getState().sheet.allSheets[sheetId].visibleRows.indexOf(R1C1Cell.rowId)).toBe(sheetSelectedRowVisibleRowsIndex)	
   })
   
   it("displays an error message when a user with an expired subscription tries to create new rows", async () => {

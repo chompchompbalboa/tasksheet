@@ -40,7 +40,6 @@ const SheetActionCreateRows = ({
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 
   // State
-  const [ insertAboveOrBelowSelectedRow, setInsertAboveOrBelowSelectedRow ] = useState('ABOVE' as 'ABOVE' | 'BELOW')
   const [ isEditingInputValue, setIsEditingInputValue ] = useState(false)
   const [ inputValue, setInputValue ] = useState(1)
   const [ isTooltipVisible, setIsTooltipVisible ] = useState(false)
@@ -64,7 +63,6 @@ const SheetActionCreateRows = ({
       dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
     }
     else {
-      setInsertAboveOrBelowSelectedRow(aboveOrBelow)
       setTimeout(() => {
         dispatch(createSheetRows(
           sheetId, 
@@ -81,7 +79,7 @@ const SheetActionCreateRows = ({
     if(e.key === 'Enter') { 
       autosizeInput.current.blur()
       setIsEditingInputValue(false)
-      createRows(insertAboveOrBelowSelectedRow as 'ABOVE' | 'BELOW') 
+      createRows('BELOW') 
     } 
   }
 
@@ -127,7 +125,7 @@ const SheetActionCreateRows = ({
       <InsertButtonContainer>
         <InsertButton
           data-testid="SheetActionCreateRowsButton"
-          onClick={() => createRows('ABOVE')}
+          onClick={() => createRows('BELOW')}
           userColorPrimary={userColorPrimary}>
           <Icon
             icon={PLUS_SIGN}
