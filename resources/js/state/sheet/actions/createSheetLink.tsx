@@ -82,10 +82,12 @@ export const createSheetLink = (sheetId: ISheet['id'], folderId: IFolder['id'], 
       },
       null, // Changes
       null, // Files
+      null, // Labels
       null, // Photos
       null, // Priorities
       null, // Cell Changes
       null, // Cell Files
+      null, // Cell Labels
       null // Cell photos
     ))
 

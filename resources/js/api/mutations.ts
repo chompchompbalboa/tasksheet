@@ -19,7 +19,8 @@ import {
   ISheetSort, ISheetSortUpdates, 
   ISheetStylesDatabaseUpdates,
   ISheetViewToDatabase, ISheetViewUpdates,
-  ISheetChange,
+	ISheetChange,
+	ISheetLabel,
   ISheetPriority, ISheetPriorityUpdates, ISheetCellPriority
 } from '@/state/sheet/types'
 import { 
@@ -194,6 +195,22 @@ export const deleteSheetCellFile = async (sheetCellFileId: string) => {
 
 export const downloadSheetCellFile = async (sheetCellFileId: string) => {
 	return axios.post('/app/sheets/cells/files/download/' + sheetCellFileId)
+}
+
+export const createSheetCellLabel = async (newSheetLabel: ISheetLabel) => {
+	return axios.post('/app/sheets/cells/labels', newSheetLabel).then(response => {
+		return response.data
+	})
+}
+
+export const deleteSheetCellLabel = async (sheetLabelId: ISheetLabel['id']) => {
+	return axios.delete('/app/sheets/cells/labels/' + sheetLabelId).then(response => {
+		return response.data
+	})
+}
+
+export const restoreSheetCellLabel = async (sheetLabelId: ISheetLabel['id']) => {
+	return axios.post('/app/sheets/labels/restore/' + sheetLabelId)
 }
 
 export const createSheetCellPhoto = async (

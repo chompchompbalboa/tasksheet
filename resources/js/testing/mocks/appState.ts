@@ -57,7 +57,7 @@ export const appStateFactoryColumns = [
   'FILES',
   'PHOTOS',
   'BOOLEAN',
-  'STRING',
+  'LABELS',
   'STRING',
   'STRING'
 ]
@@ -144,6 +144,7 @@ export const appStateFactory = ({
 
         const sheetColumnSuffix = sheetSuffix + '.Column' + currentColumnNumber
         const sheetColumnId = sheetColumnPrefix + sheetColumnSuffix
+        const sheetColumnCellType = columns[currentColumnNumber - 1] as ISheetCellType
 
         const newSheetColumn: ISheetColumn = {
           id: sheetColumnId,
@@ -151,7 +152,7 @@ export const appStateFactory = ({
           name: sheetColumnId,
           width: 100,
           defaultValue: '',
-          cellType: columns[currentColumnNumber - 1] as ISheetCellType,
+          cellType: sheetColumnCellType,
           trackCellChanges: false,
           showCellChanges: false,
           allCellValues: new Set() as Set<string>,
@@ -182,7 +183,7 @@ export const appStateFactory = ({
             sheetId: sheetId,
             columnId: newSheetColumn.id,
             rowId: sheetRowId,
-            value: sheetCellId,
+            value: newSheetColumn.cellType !== 'LABELS' ? sheetCellId : '',
             isCellEditing: false,
             isCellSelectedSheetIds: new Set()
           }
@@ -271,6 +272,7 @@ export const appStateFactory = ({
         views: newSheetFromDatabaseViews,
         changes: [],
         files: [],
+        labels: [],
         photos: [],
         priorities: newSheetFromDatabasePriorities,
         cellPriorities: [],
@@ -346,7 +348,8 @@ export const appState: IAppState = {
     allSheetColumns,
     allSheetRows,
     allSheetCells,
-    allSheetViews
+    allSheetViews,
+    allSheetCellLabels: {}
   },
   sheetSettings: {
     activeSheetSetting: 'COLUMN_SETTINGS',

@@ -137,6 +137,7 @@ const SheetCellPhotos = ({
       testId="SheetCellPhotos"
       sheetId={sheetId}
       cell={cell}
+      cellType='PHOTOS'
       beginEditing={() => null}
       completeEditing={() => null}
       onlyRenderChildren

@@ -10,10 +10,12 @@ export interface IAllSheetGroups { [groupId: string]: ISheetGroup }
 export interface IAllSheetSorts { [sortId: string]: ISheetSort }
 export interface IAllSheetViews { [viewId: string]: ISheetView }
 export interface IAllSheetChanges { [changeId: string]: ISheetChange }
-export interface IAllSheetFiles { [changeId: string]: ISheetFile }
+export interface IAllSheetFiles { [fileId: string]: ISheetFile }
+export interface IAllSheetLabels { [labelId: string]: ISheetLabel }
 export interface IAllSheetPhotos { [photoId: string]: ISheetPhoto }
 export interface IAllSheetPriorities { [priorityId: string]: ISheetPriority }
 export interface IAllSheetCellChanges { [cellId: string]: ISheetChange['id'][] }
+export interface IAllSheetCellLabels { [cellId: string]: ISheetLabel['id'][] }
 export interface IAllSheetCellFiles { [cellId: string]: ISheetFile['id'][] }
 export interface IAllSheetCellPhotos { [cellId: string]: ISheetPhoto['id'][] }
 
@@ -62,6 +64,7 @@ export interface ISheetFromDatabase {
   views: ISheetViewFromDatabase[]
   changes: ISheetChange[]
   files: ISheetFile[]
+  labels: ISheetLabel[]
   photos: ISheetPhoto[]
 }
 
@@ -221,7 +224,8 @@ export type ISheetCellType =
 'BOOLEAN'|
 'NUMBER' | 
 'PHOTOS' | 
-'FILES'
+'FILES' |
+'LABELS'
 
 //-----------------------------------------------------------------------------
 // Sheet Filter
@@ -306,6 +310,18 @@ export interface ISheetFile {
   s3Key: string
   uploadedBy: string
   uploadedAt: string
+}
+
+//-----------------------------------------------------------------------------
+// Sheet Label
+//-----------------------------------------------------------------------------
+export interface ISheetLabel {
+  id: string
+  sheetId: ISheet['id']
+  columnId: ISheetColumn['id']
+  rowId: ISheetRow['id']
+  cellId: ISheetCell['id']
+  value: string
 }
 
 //-----------------------------------------------------------------------------

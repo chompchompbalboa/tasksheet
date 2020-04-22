@@ -83,6 +83,7 @@ export const SheetCellDatetime = ({
       testId="SheetCellDatetime"
       sheetId={sheetId}
       cell={cell}
+      cellType='DATETIME'
       beginEditing={beginEditing}
       completeEditing={completeEditing}
       value={cell.value}>

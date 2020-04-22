@@ -16,6 +16,7 @@ import {
   IAllSheetViews, ISheetViewUpdates,
   IAllSheetChanges, IAllSheetCellChanges,
   IAllSheetFiles, IAllSheetCellFiles,
+  IAllSheetLabels, IAllSheetCellLabels,
   IAllSheetPhotos, IAllSheetCellPhotos,
   IAllSheetPriorities, ISheetPriorityUpdates
 } from '@/state/sheet/types'
@@ -39,6 +40,7 @@ export { createSheetLink } from '@/state/sheet/actions/createSheetLink'
 export { createSheetView } from '@/state/sheet/actions/createSheetView'
 export { createSheetCellChange } from '@/state/sheet/actions/createSheetCellChange'
 export { createSheetCellFile } from '@/state/sheet/actions/createSheetCellFile'
+export { createSheetCellLabel } from '@/state/sheet/actions/createSheetCellLabel'
 export { createSheetCellPhoto } from '@/state/sheet/actions/createSheetCellPhoto'
 export { createSheetPriority } from '@/state/sheet/actions/createSheetPriority'
 
@@ -51,6 +53,7 @@ export { deleteSheetSort } from '@/state/sheet/actions/deleteSheetSort'
 export { deleteSheetView } from '@/state/sheet/actions/deleteSheetView'
 export { deleteSheetCellChange } from '@/state/sheet/actions/deleteSheetCellChange'
 export { deleteSheetCellFile } from '@/state/sheet/actions/deleteSheetCellFile'
+export { deleteSheetCellLabel } from '@/state/sheet/actions/deleteSheetCellLabel'
 export { deleteSheetCellPhoto } from '@/state/sheet/actions/deleteSheetCellPhoto'
 export { deleteSheetPriority } from '@/state/sheet/actions/deleteSheetPriority'
 
@@ -107,6 +110,7 @@ export type ISheetActions =
   IUpdateSheetView | ISetAllSheetViews |
   ISetAllSheetCellChanges | ISetAllSheetChanges |
   ISetAllSheetCellPhotos | ISetAllSheetPhotos |
+  ISetAllSheetCellLabels | ISetAllSheetLabels |
   ISetAllSheetCellFiles | ISetAllSheetFiles |
   IUpdateSheetPriority | ISetAllSheetPriorities
 
@@ -126,10 +130,12 @@ interface ILoadSheet {
   views: IAllSheetViews
   changes: IAllSheetChanges
   files: IAllSheetFiles
+  labels: IAllSheetLabels
   photos: IAllSheetPhotos
   priorities: IAllSheetPriorities
   cellChanges: IAllSheetCellChanges
   cellFiles: IAllSheetCellFiles
+  cellLabels: IAllSheetCellLabels
   cellPhotos: IAllSheetCellPhotos
 }
 
@@ -144,10 +150,12 @@ export const loadSheetReducer = (
   views: IAllSheetViews,
   changes: IAllSheetChanges,
   files: IAllSheetFiles,
+  labels: IAllSheetLabels,
   photos: IAllSheetPhotos,
   priorities: IAllSheetPriorities,
   cellChanges: IAllSheetCellChanges,
   cellFiles: IAllSheetCellFiles,
+  cellLabels: IAllSheetCellLabels,
   cellPhotos: IAllSheetCellPhotos,
 ): ISheetActions => {
   return {
@@ -162,10 +170,12 @@ export const loadSheetReducer = (
     views,
     changes,
     files,
+    labels,
     photos,
     priorities,
     cellChanges,
     cellFiles,
+    cellLabels,
     cellPhotos
   }
 }
@@ -361,6 +371,39 @@ export const setAllSheetFiles = (nextAllSheetFiles: IAllSheetFiles): ISheetActio
     nextAllSheetFiles,
 	}
 }
+
+//-----------------------------------------------------------------------------
+// Set All Sheet Cell Labels
+//-----------------------------------------------------------------------------
+export const SET_ALL_SHEET_CELL_LABELS = 'SET_ALL_SHEET_CELL_LABELS'
+interface ISetAllSheetCellLabels {
+  type: typeof SET_ALL_SHEET_CELL_LABELS,
+  nextAllSheetCellLabels: IAllSheetCellLabels
+}
+
+export const setAllSheetCellLabels = (nextAllSheetCellLabels: IAllSheetCellLabels): ISheetActions => {
+	return {
+		type: SET_ALL_SHEET_CELL_LABELS,
+    nextAllSheetCellLabels,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Set All Sheet Labels
+//-----------------------------------------------------------------------------
+export const SET_ALL_SHEET_LABELS = 'SET_ALL_SHEET_LABELS'
+interface ISetAllSheetLabels {
+  type: typeof SET_ALL_SHEET_LABELS,
+  nextAllSheetLabels: IAllSheetLabels
+}
+
+export const setAllSheetLabels = (nextAllSheetLabels: IAllSheetLabels): ISheetActions => {
+	return {
+		type: SET_ALL_SHEET_LABELS,
+    nextAllSheetLabels,
+	}
+}
+
 
 //-----------------------------------------------------------------------------
 // Set All Sheet Cell Photos

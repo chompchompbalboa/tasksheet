@@ -22,6 +22,7 @@ import {
 import SheetCellBoolean from '@desktop/Sheet/SheetCellBoolean'
 import SheetCellDatetime from '@desktop/Sheet/SheetCellDatetime'
 import SheetCellFiles from '@desktop/Sheet/SheetCellFiles'
+import SheetCellLabels from '@desktop/Sheet/SheetCellLabels'
 import SheetCellNumber from '@desktop/Sheet/SheetCellNumber'
 import SheetCellChanges from '@desktop/Sheet/SheetCellChanges'
 import SheetCellPhotos from '@desktop/Sheet/SheetCellPhotos'
@@ -55,6 +56,7 @@ export const SheetCell = memo(({
     const cellContainer = useRef(null)
 
     // Cell selection state
+    const isCellEditing = cell.isCellEditing
     const isCellSelected = cell.isCellSelectedSheetIds.has(sheetId)
     const isCellInRange = sheetSelectionsRangeCellIds.has(cellId)
 
@@ -70,7 +72,8 @@ export const SheetCell = memo(({
       BOOLEAN: SheetCellBoolean,
       DATETIME: SheetCellDatetime,
       PHOTOS: SheetCellPhotos,
-      FILES: SheetCellFiles
+      FILES: SheetCellFiles,
+      LABELS: SheetCellLabels
     }
     const SheetCellType = sheetCellTypes[cellType]
 
@@ -96,6 +99,7 @@ export const SheetCell = memo(({
           sheetId={sheetId}
           columnId={columnId}
           cell={cell}
+          isCellEditing={isCellEditing}
           isCellInRange={isCellInRange}
           isShowCellChanges={isShowCellChanges}
           isTrackCellChanges={isTrackCellChanges}/>
@@ -144,6 +148,7 @@ export interface ISheetCellTypesSharedProps {
   sheetId: ISheet['id']
   columnId: ISheetColumn['id']
   cell: ISheetCell
+  isCellEditing: boolean
   isCellInRange: boolean
   isShowCellChanges: boolean
   isTrackCellChanges: boolean

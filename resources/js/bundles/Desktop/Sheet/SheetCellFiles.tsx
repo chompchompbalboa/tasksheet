@@ -113,6 +113,7 @@ const SheetCellFiles = ({
       testId="SheetCellFiles"
       sheetId={sheetId}
       cell={cell}
+      cellType='FILES'
       beginEditing={() => null}
       completeEditing={() => null}
       onlyRenderChildren

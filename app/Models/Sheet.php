@@ -24,12 +24,13 @@ class Sheet extends Model
     'styles',
     'changes',
     'files',
+    'labels',
     'photos',
     'priorities',
   ];
   protected $fillable = ['id', 'sourceSheetId', 'activeSheetViewId'];
   protected $with = ['changes', 'files', 'photos', 'priorities', 'views'];
-  protected $appends = ['columns', 'rows', 'styles', 'cellPriorities'];
+  protected $appends = ['columns', 'rows', 'styles', 'cellPriorities', 'labels'];
   
   public function getColumnsAttribute() {
     $sheetId = is_null($this->sourceSheetId) ? $this->id : $this->sourceSheetId;
@@ -59,6 +60,10 @@ class Sheet extends Model
   
   public function files() {
     return $this->hasMany('App\Models\SheetCellFile', 'sheetId')->orderBy('createdAt', 'asc');
+  }
+  
+  public function getLabelsAttribute() {
+    return $this->hasMany('App\Models\SheetCellLabel', 'sheetId')->get();
   }
   
   public function photos() {

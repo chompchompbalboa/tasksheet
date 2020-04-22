@@ -12,6 +12,7 @@ import {
   IAllSheetViews,
   IAllSheetCellChanges, IAllSheetChanges,
   IAllSheetCellFiles, IAllSheetFiles,
+  IAllSheetCellLabels, IAllSheetLabels,
   IAllSheetCellPhotos, IAllSheetPhotos,
   IAllSheetPriorities,
   ISheetActive,
@@ -33,6 +34,7 @@ import {
   UPDATE_SHEET_VIEW, SET_ALL_SHEET_VIEWS,
   SET_ALL_SHEET_CELL_CHANGES, SET_ALL_SHEET_CHANGES,
   SET_ALL_SHEET_CELL_FILES, SET_ALL_SHEET_FILES,
+  SET_ALL_SHEET_CELL_LABELS, SET_ALL_SHEET_LABELS,
   SET_ALL_SHEET_CELL_PHOTOS, SET_ALL_SHEET_PHOTOS,
   UPDATE_SHEET_PRIORITY, SET_ALL_SHEET_PRIORITIES
 } from '@/state/sheet/actions'
@@ -51,10 +53,12 @@ export interface ISheetState {
   allSheetViews: IAllSheetViews
   allSheetChanges: IAllSheetChanges
   allSheetFiles: IAllSheetFiles
+  allSheetLabels: IAllSheetLabels
   allSheetPhotos: IAllSheetPhotos
   allSheetPriorities: IAllSheetPriorities
   allSheetCellChanges: IAllSheetCellChanges
   allSheetCellFiles: IAllSheetCellFiles
+  allSheetCellLabels: IAllSheetCellLabels
   allSheetCellPhotos: IAllSheetCellPhotos
   active: ISheetActive
   clipboard: ISheetClipboard
@@ -74,10 +78,12 @@ export const initialSheetState: ISheetState = {
   allSheetViews: null,
   allSheetChanges: null,
   allSheetFiles: null,
+  allSheetLabels: null,
   allSheetPhotos: null,
   allSheetPriorities: null,
   allSheetCellChanges: null,
   allSheetCellFiles: null,
+  allSheetCellLabels: null,
   allSheetCellPhotos: null,
   active: {
     columnRenamingId: null
@@ -118,10 +124,12 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
         sorts,
         changes,
         files,
+        labels,
         photos,
         priorities,
         cellPhotos,
         cellFiles,
+        cellLabels,
         cellChanges
       } = action
 			return {
@@ -136,10 +144,12 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
         allSheetSorts: { ...state.allSheetSorts, ...sorts },
         allSheetChanges: { ...state.allSheetChanges, ...changes },
         allSheetFiles: { ...state.allSheetFiles, ...files },
+        allSheetLabels: { ...state.allSheetLabels, ...labels },
         allSheetPhotos: { ...state.allSheetPhotos, ...photos },
         allSheetPriorities: { ...state.allSheetPriorities, ...priorities },
         allSheetCellChanges: { ...state.allSheetCellChanges, ...cellChanges },
         allSheetCellFiles: { ...state.allSheetCellFiles, ...cellFiles },
+        allSheetCellLabels: { ...state.allSheetCellLabels, ...cellLabels },
         allSheetCellPhotos: { ...state.allSheetCellPhotos, ...cellPhotos },
 			}
 		}
@@ -154,10 +164,12 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
 		case SET_ALL_SHEET_VIEWS: { return { ...state, allSheetViews: action.nextAllSheetViews } }
 		case SET_ALL_SHEET_CHANGES: { return { ...state, allSheetChanges: action.nextAllSheetChanges } }
 		case SET_ALL_SHEET_FILES: { return { ...state, allSheetFiles: action.nextAllSheetFiles } }
+		case SET_ALL_SHEET_LABELS: { return { ...state, allSheetLabels: action.nextAllSheetLabels } }
 		case SET_ALL_SHEET_PHOTOS: { return { ...state, allSheetPhotos: action.nextAllSheetPhotos } }
 		case SET_ALL_SHEET_PRIORITIES: { return { ...state, allSheetPriorities: action.nextAllSheetPriorities } }
 		case SET_ALL_SHEET_CELL_CHANGES: { return { ...state, allSheetCellChanges: action.nextAllSheetCellChanges } }
 		case SET_ALL_SHEET_CELL_FILES: { return { ...state, allSheetCellFiles: action.nextAllSheetCellFiles } }
+		case SET_ALL_SHEET_CELL_LABELS: { return { ...state, allSheetCellLabels: action.nextAllSheetCellLabels } }
 		case SET_ALL_SHEET_CELL_PHOTOS: { return { ...state, allSheetCellPhotos: action.nextAllSheetCellPhotos } }
       
 		case UPDATE_SHEET: {

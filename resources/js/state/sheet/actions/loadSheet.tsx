@@ -13,6 +13,7 @@ import {
   IAllSheetViews, ISheetView, ISheetViewFromDatabase,
   IAllSheetCellChanges, IAllSheetChanges,
   IAllSheetCellFiles, IAllSheetFiles,
+  IAllSheetCellLabels, IAllSheetLabels,
   IAllSheetCellPhotos, IAllSheetPhotos,
   IAllSheetPriorities, ISheetPriority, ISheetCellPriority
 } from '@/state/sheet/types'
@@ -45,9 +46,11 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
     const normalizedSheetViews: IAllSheetViews = {}
     const normalizedSheetChanges: IAllSheetChanges = {}
     const normalizedSheetFiles: IAllSheetFiles = {}
+    const normalizedSheetLabels: IAllSheetLabels = {}
     const normalizedSheetPhotos: IAllSheetPhotos = {}
     const normalizedSheetPriorities: IAllSheetPriorities = {}
     const normalizedSheetCellChanges: IAllSheetCellChanges = {}
+    const normalizedSheetCellLabels: IAllSheetCellLabels = {}
     const normalizedSheetCellFiles: IAllSheetCellFiles = {}
     const normalizedSheetCellPhotos: IAllSheetCellPhotos = {}
 
@@ -124,6 +127,15 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
       normalizedSheetCellFiles[sheetFile.cellId] = [
         ...(normalizedSheetCellFiles[sheetFile.cellId] || []),
         sheetFile.id
+      ]
+    })
+    
+    // Sheet Labels
+    sheetFromDatabase.labels.forEach(sheetLabel => { 
+      normalizedSheetLabels[sheetLabel.id] = sheetLabel
+      normalizedSheetCellLabels[sheetLabel.cellId] = [
+        ...(normalizedSheetCellLabels[sheetLabel.cellId] || []),
+        sheetLabel.id
       ]
     })
     
@@ -222,10 +234,12 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         normalizedSheetViews,
         normalizedSheetChanges,
         normalizedSheetFiles,
+        normalizedSheetLabels,
         normalizedSheetPhotos,
         normalizedSheetPriorities,
         normalizedSheetCellChanges,
         normalizedSheetCellFiles,
+        normalizedSheetCellLabels,
         normalizedSheetCellPhotos,
 			)
     )

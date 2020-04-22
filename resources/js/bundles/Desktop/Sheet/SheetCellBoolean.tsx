@@ -41,6 +41,7 @@ const SheetCellBoolean = ({
       testId="SheetCellBoolean"
       sheetId={sheetId}
       cell={cell}
+      cellType='BOOLEAN'
       beginEditing={() => null}
       completeEditing={() => null}
       onlyRenderChildren

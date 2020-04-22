@@ -83,6 +83,11 @@ export const SheetColumnContextMenu = ({
       label: 'Files',
       cellType: 'FILES',
       defaultValue: null
+    },
+    LABELS: {
+      label: 'Labels',
+      cellType: 'LABELS',
+      defaultValue: null
     }
   }
   const sheetCellTypesKeys = Object.keys(sheetCellTypes)

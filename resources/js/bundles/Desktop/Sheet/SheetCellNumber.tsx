@@ -92,6 +92,7 @@ const SheetCellNumber = ({
       testId="SheetCellNumber"
       sheetId={sheetId}
       cell={cell}
+      cellType='NUMBER'
       beginEditing={beginEditing}
       completeEditing={completeEditing}
       value={cell.value}>

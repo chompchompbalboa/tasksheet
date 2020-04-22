@@ -64,6 +64,7 @@ Route::group([
   Route::post('/sheets/groups/restore/{group}', 'SheetGroupController@restore');
   Route::post('/sheets/sorts/restore/{sort}', 'SheetSortController@restore');
   Route::post('/sheets/cells/priorities/restore', 'SheetCellPriorityController@restore');
+  Route::post('/sheets/labels/restore/{label}', 'SheetCellLabelController@restore');
 
   // Batch actions
   Route::patch('/sheets/cells/batch/update', 'SheetCellController@batchUpdate');
@@ -102,6 +103,7 @@ Route::group([
     'sheets/cells/photos' => 'SheetCellPhotoController',
     'sheets/cells/files' => 'SheetCellFileController',
     'sheets/cells/changes' => 'SheetCellChangeController',
+    'sheets/cells/labels' => 'SheetCellLabelController',
     'sheets/columns' => 'SheetColumnController',
     'sheets/filters' => 'SheetFilterController',
     'sheets/groups' => 'SheetGroupController',

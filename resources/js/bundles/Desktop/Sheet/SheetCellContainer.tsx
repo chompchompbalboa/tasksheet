@@ -11,7 +11,8 @@ import { IAppState } from '@/state'
 import { 
   ISheet,
   ISheetCell, 
-  ISheetStyles 
+  ISheetCellType,
+  ISheetStyles, 
 } from '@/state/sheet/types'
 import {
   createMessengerMessage
@@ -27,6 +28,7 @@ const SheetCellContainer = ({
   testId,
   sheetId,
   cell,
+  cellType,
   children,
   beginEditing,
   completeEditing,
@@ -129,7 +131,7 @@ const SheetCellContainer = ({
       && !e.ctrlKey 
       && !e.metaKey 
       && !isSelectedCellEditingPrevented
-      && !onlyRenderChildren
+      && !['BOOLEAN', 'FILES', 'PHOTOS'].includes(cellType)
     ) {
       e.preventDefault()
       if(!userHasPermissionToEditSheet) {
@@ -157,7 +159,7 @@ const SheetCellContainer = ({
         e.preventDefault()
         dispatch(updateSheetSelectionFromArrowKey(sheetId, cell.id, 'UP', e.shiftKey))
       }
-      if((e.key === 'Delete' || e.key === 'Backspace') && !onlyRenderChildren) {
+      if((e.key === 'Delete' || e.key === 'Backspace') && !['BOOLEAN', 'FILES', 'PHOTOS'].includes(cellType)) {
         e.preventDefault()
         if(!userHasPermissionToEditSheet) {
           dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
@@ -195,6 +197,7 @@ interface SheetCellContainerProps {
   testId: string
   sheetId: ISheet['id']
   cell: ISheetCell
+  cellType: ISheetCellType
   children?: any
   beginEditing(nextSheetCellValue?: string): void
   completeEditing(...args: any): void
