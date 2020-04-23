@@ -14,8 +14,7 @@ import {
   createSheetCellChange,
   createSheetCellLabel,
   updateSheet,
-  updateSheetCell,
-  updateSheetCellValues
+  updateSheetCell
 } from '@/state/sheet/actions'
 
 import SheetCellContainer from '@desktop/Sheet/SheetCellContainer'
@@ -28,7 +27,6 @@ const SheetCellLabels = ({
   sheetId,
   columnId,
   cell,
-  isCellInRange,
   isTrackCellChanges
 }: ISheetCellTypesSharedProps) => {
   
@@ -56,13 +54,7 @@ const SheetCellLabels = ({
     const nextSheetCellValue = value === null ? cell.value : value
     setSheetCellPreviousValue(cell.value)
     dispatch(updateSheet(sheetId, { isCellEditing: true }, true))
-    if(isCellInRange) {
-      dispatch(updateSheetCell(cell.id, { isCellEditing: true }, null, true ))
-      dispatch(updateSheetCellValues(sheetId, nextSheetCellValue))
-    }
-    else {
-      dispatch(updateSheetCell(cell.id, { isCellEditing: true, value: nextSheetCellValue }, null, true ))
-    }
+    dispatch(updateSheetCell(cell.id, { isCellEditing: true, value: nextSheetCellValue }, null, true ))
   }
   
   // Complete Editing
@@ -84,12 +76,7 @@ const SheetCellLabels = ({
   // Handle Editing
   const handleEditing = (e: ChangeEvent<HTMLInputElement>) => {
     const nextSheetCellValue = e.target.value
-    if(isCellInRange) {
-      dispatch(updateSheetCellValues(sheetId, nextSheetCellValue))
-    }
-    else {
-      dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }, null, true))
-    }
+    dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }, null, true))
   }
 
   // Get Full Cell Value
