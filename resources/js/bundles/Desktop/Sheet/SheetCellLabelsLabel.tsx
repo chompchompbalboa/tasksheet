@@ -14,7 +14,10 @@ import {
   ISheetLabel 
 } from '@/state/sheet/types'
 
-import { deleteSheetCellLabel } from '@/state/sheet/actions'
+import { 
+  createSheetCellChange,
+  deleteSheetCellLabel 
+} from '@/state/sheet/actions'
 
 import Icon from '@/components/Icon'
 
@@ -24,13 +27,22 @@ import Icon from '@/components/Icon'
 const SheetCellLabels = ({
   sheetId,
   cellId,
-  labelId
+  labelId,
+  isTrackCellChanges
 }: ISheetCellLabelsLabel) => {
 
   // Redux
   const dispatch = useDispatch()
   const label = useSelector((state: IAppState) => state.sheet.allSheetLabels && state.sheet.allSheetLabels[labelId])
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
+
+  // Handle Delete Sheet Cell Label
+  const handleDeleteSheetCellLabel = () => {
+    dispatch(deleteSheetCellLabel(sheetId, cellId, labelId))
+    if(isTrackCellChanges) {
+      dispatch(createSheetCellChange(sheetId, cellId, 'Removed Label: ' + label.value))
+    }
+  }
 
   return (
     <Label
@@ -40,7 +52,7 @@ const SheetCellLabels = ({
       </LabelValue>
       <DeleteButton
         data-testid="SheetCellLabelsLabelDeleteButton"
-        onClick={() => dispatch(deleteSheetCellLabel(sheetId, cellId, labelId))}>
+        onClick={() => handleDeleteSheetCellLabel()}>
         <Icon
           icon={CLOSE}
           size="0.75rem"/>
@@ -56,6 +68,7 @@ interface ISheetCellLabelsLabel {
   sheetId: ISheet['id']
   cellId: ISheetCell['id']
   labelId: ISheetLabel['id']
+  isTrackCellChanges: boolean
 }
 
 //-----------------------------------------------------------------------------

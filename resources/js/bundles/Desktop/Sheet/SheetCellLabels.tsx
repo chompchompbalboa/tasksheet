@@ -116,7 +116,8 @@ const SheetCellLabels = ({
               key={sheetLabel.id}
               sheetId={sheetId}
               cellId={cell.id}
-              labelId={sheetLabel.id}/>
+              labelId={sheetLabel.id}
+              isTrackCellChanges={isTrackCellChanges}/>
           ))}
         </LabelsContainer>
         <ValueContainer
