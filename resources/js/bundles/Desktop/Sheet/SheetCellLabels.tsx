@@ -40,7 +40,7 @@ const SheetCellLabels = ({
   }))
   
   // State
-  const [ sheetCellPreviousValue, setSheetCellPreviousValue ] = useState(null)
+  const [ inputValue, setInputValue ] = useState('')
 
   // Effects
   useEffect(() => {
@@ -51,32 +51,31 @@ const SheetCellLabels = ({
   
   // Begin Editing
   const beginEditing = (value: string = null) => {
-    const nextSheetCellValue = value === null ? cell.value : value
-    setSheetCellPreviousValue(cell.value)
     dispatch(updateSheet(sheetId, { isCellEditing: true }, true))
-    dispatch(updateSheetCell(cell.id, { isCellEditing: true, value: nextSheetCellValue }, null, true ))
+    dispatch(updateSheetCell(cell.id, { isCellEditing: true }, null, true ))
+    setInputValue(value)
   }
   
   // Complete Editing
   const completeEditing = () => {
     dispatch(updateSheetCell(cell.id, { isCellEditing: false }, null, true))
     dispatch(updateSheet(sheetId, { isCellEditing: false }, true))
+    setInputValue('')
     setTimeout(() => {
-      setSheetCellPreviousValue(null)
-      if(cell.value !== sheetCellPreviousValue && cell.value !== '') {
-        dispatch(addSheetColumnAllCellValue(columnId, cell.value))
-        dispatch(createSheetCellLabel(sheetId, cell.id, cell.value, sheetCellPreviousValue, getFullCellValue(cell.value)))
+      if(inputValue !== '' && inputValue !== cell.value) {
+        dispatch(addSheetColumnAllCellValue(columnId, inputValue))
+        dispatch(createSheetCellLabel(sheetId, cell.id, inputValue, cell.value, getFullCellValue(inputValue)))
         if(isTrackCellChanges) {
-          dispatch(createSheetCellChange(sheetId, cell.id, 'New Label: ' + cell.value))
+          dispatch(createSheetCellChange(sheetId, cell.id, 'New Label: ' + inputValue))
         }
       }
-    }, 25)
+    }, 10)
   }
   
   // Handle Editing
   const handleEditing = (e: ChangeEvent<HTMLInputElement>) => {
     const nextSheetCellValue = e.target.value
-    dispatch(updateSheetCell(cell.id, { value: nextSheetCellValue }, null, true))
+    setInputValue(nextSheetCellValue)
   }
 
   // Get Full Cell Value
@@ -89,15 +88,6 @@ const SheetCellLabels = ({
     return fullCellValue
   }
 
-  // Get Visible Cell Value
-  const getVisibleCellValue = (cellValue: string) => {
-    let visibleCellValue = cellValue || ''
-    sheetCellLabels && orderBy(sheetCellLabels, [ 'value' ]).forEach(sheetLabel => {
-      visibleCellValue = visibleCellValue.replace(sheetLabel.value + ";", '')
-    })
-    return visibleCellValue
-  }
-
   return (
     <SheetCellContainer
       testId="SheetCellLabels"
@@ -107,7 +97,7 @@ const SheetCellLabels = ({
       beginEditing={beginEditing}
       completeEditing={completeEditing}
       onlyRenderChildren
-      value={cell.value}>
+      value={inputValue}>
       <Container>
         <LabelsContainer
           data-testid="SheetCellLabelsLabelsContainer">
@@ -128,9 +118,9 @@ const SheetCellLabels = ({
                 ref={input}
                 onBlur={e => e.preventDefault()}
                 onChange={handleEditing}
-                value={getVisibleCellValue(cell.value)}/>
+                value={inputValue || ''}/>
             : <Value>
-                {getVisibleCellValue(cell.value)}
+                {inputValue}
               </Value>
           }
         </ValueContainer>
