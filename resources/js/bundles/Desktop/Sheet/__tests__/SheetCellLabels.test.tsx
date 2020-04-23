@@ -218,10 +218,11 @@ describe('SheetCellLabels', () => {
       jest.advanceTimersByTime(25)
     })
     expect(labelsContainer.textContent).toContain(newLabelValue)
+    expect(axiosMock.post).toHaveBeenCalledTimes(1) // Create the label
     expect(deleteButton()).toBeTruthy()
     fireEvent.click(deleteButton())
     expect(labelsContainer.textContent).not.toContain(newLabelValue)
-    expect(axiosMock.delete).toHaveBeenCalledTimes(1) // Delete the label
+    expect(axiosMock.post).toHaveBeenCalledTimes(2) // Delete the label
   })
   
   it("correctly undos and redos creating a label", async () => {
@@ -234,16 +235,16 @@ describe('SheetCellLabels', () => {
       jest.advanceTimersByTime(25)
     })
     expect(labelsContainer.textContent).toContain(newLabelValue)
-    expect(axiosMock.post).toHaveBeenCalledTimes(1)
-    expect(axiosMock.patch).toHaveBeenCalledTimes(1)
+    expect(axiosMock.post).toHaveBeenCalledTimes(1) // Create the label
+    expect(axiosMock.patch).toHaveBeenCalledTimes(1) // Update the cell value
     dispatch(historyUndo())
     expect(labelsContainer.textContent).not.toContain(newLabelValue)
-    expect(axiosMock.delete).toHaveBeenCalledTimes(1)
-    expect(axiosMock.patch).toHaveBeenCalledTimes(2)
+    expect(axiosMock.post).toHaveBeenCalledTimes(2) // Delete the label
+    expect(axiosMock.patch).toHaveBeenCalledTimes(2) // Update the cell value
     dispatch(historyRedo())
     expect(labelsContainer.textContent).toContain(newLabelValue)
-    expect(axiosMock.post).toHaveBeenCalledTimes(2)
-    expect(axiosMock.patch).toHaveBeenCalledTimes(3)
+    expect(axiosMock.post).toHaveBeenCalledTimes(3) // Create the label
+    expect(axiosMock.patch).toHaveBeenCalledTimes(3) // Update the cell value
   })
 
   it("correctly undos and redos deleting a label", async () => {
@@ -261,15 +262,15 @@ describe('SheetCellLabels', () => {
     expect(axiosMock.patch).toHaveBeenCalledTimes(1) // Update the cell value
     fireEvent.click(deleteButton())
     expect(labelsContainer.textContent).not.toContain(newLabelValue)
-    expect(axiosMock.delete).toHaveBeenCalledTimes(1) // Delete the label
+    expect(axiosMock.post).toHaveBeenCalledTimes(2) // Delete the label
     expect(axiosMock.patch).toHaveBeenCalledTimes(2) // Update the cell value
     dispatch(historyUndo())
     expect(labelsContainer.textContent).toContain(newLabelValue)
-    expect(axiosMock.post).toHaveBeenCalledTimes(2) // Restore the label
+    expect(axiosMock.post).toHaveBeenCalledTimes(3) // Restore the label
     expect(axiosMock.patch).toHaveBeenCalledTimes(3) // Update the cell value
     dispatch(historyRedo())
     expect(labelsContainer.textContent).not.toContain(newLabelValue)
-    expect(axiosMock.delete).toHaveBeenCalledTimes(2) // Delete the label
+    expect(axiosMock.post).toHaveBeenCalledTimes(4) // Delete the label
     expect(axiosMock.patch).toHaveBeenCalledTimes(4) // Update the cell value
   })
 })

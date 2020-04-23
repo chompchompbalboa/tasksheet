@@ -9,8 +9,11 @@ class SheetCellLabelController extends Controller
 {
     public function store(Request $request)
     {
-      $newSheetCellLabel = SheetCellLabel::create($request->all());
-      return response()->json($newSheetCellLabel, 200);
+      $newSheetCellLabels = $request->input('newSheetCellLabels');
+      foreach($newSheetCellLabels as $newSheetCellLabel) {
+        SheetCellLabel::create($newSheetCellLabel);
+      }
+      return response(null, 200);
     }
 
     public function destroy(SheetCellLabel $label)
@@ -19,13 +22,16 @@ class SheetCellLabelController extends Controller
       return response()->json(null, 204);
     }
 
-    public function restore(string $labelId)
-    {
-      $label = SheetCellLabel::withTrashed()->where('id', $labelId)->first();
-      if($label) {
-        $label->restore();
-        return response(null, 200);
-      }
-      return response(null, 404);
+    public function batchDelete(Request $request) {
+      SheetCellLabel::destroy($request->input('sheetCellLabelIds'));
+      return response(null, 200);
+    }
+  
+    public function restore(Request $request)
+    { 
+      SheetCellLabel::withTrashed()
+        ->whereIn('id', $request->input('sheetCellLabelIds'))
+        ->restore();
+      return response()->json(null, 200);
     }
 }

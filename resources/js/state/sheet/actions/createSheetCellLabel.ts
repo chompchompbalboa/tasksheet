@@ -91,10 +91,10 @@ export const createSheetCellLabel = (
       })) 
       mutation.updateSheetCell(cellId, { value: nextCellValue })
       if(!isHistoryStep) {
-        mutation.createSheetCellLabel(newSheetCellLabel)
+        mutation.createSheetCellLabels([ newSheetCellLabel ])
       }
       else {
-        mutation.restoreSheetCellLabel(newSheetCellLabel.id)
+        mutation.restoreSheetCellLabels([ newSheetCellLabel.id ])
       }
     }
 
@@ -117,7 +117,7 @@ export const createSheetCellLabel = (
         }
       })) 
       mutation.updateSheetCell(cellId, { value: previousCellValue })
-      mutation.deleteSheetCellLabel(newSheetCellLabel.id)
+      mutation.deleteSheetCellLabels([ newSheetCellLabel.id ])
     }
 
     // Create the history step

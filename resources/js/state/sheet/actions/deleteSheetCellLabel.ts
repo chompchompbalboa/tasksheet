@@ -19,7 +19,7 @@ import {
 } from '@/state/sheet/actions'
 
 //-----------------------------------------------------------------------------
-// Delete Sheet CellLabel
+// Delete Sheet Cell Label
 //-----------------------------------------------------------------------------
 export const deleteSheetCellLabel = (
   sheetId: ISheet['id'],
@@ -71,7 +71,7 @@ export const deleteSheetCellLabel = (
         }
       }))
       mutation.updateSheetCell(sheetCellId, { value: nextSheetCellValue })
-      mutation.deleteSheetCellLabel(sheetCellLabelId)
+      mutation.deleteSheetCellLabels([ sheetCellLabelId ])
     }
 
     // Undo Actions
@@ -86,7 +86,7 @@ export const deleteSheetCellLabel = (
         }
       }))
       mutation.updateSheetCell(sheetCellId, { value: sheetCell.value })
-      mutation.restoreSheetCellLabel(sheetCellLabelId)
+      mutation.restoreSheetCellLabels([ sheetCellLabelId ])
     }
 
     // Create the history step

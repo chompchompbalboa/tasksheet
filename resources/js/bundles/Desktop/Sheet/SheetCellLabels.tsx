@@ -62,7 +62,7 @@ const SheetCellLabels = ({
     dispatch(updateSheet(sheetId, { isCellEditing: false }, true))
     setInputValue('')
     setTimeout(() => {
-      if(inputValue !== '' && inputValue !== cell.value) {
+      if(inputValue && inputValue !== '' && inputValue !== cell.value) {
         dispatch(addSheetColumnAllCellValue(columnId, inputValue))
         dispatch(createSheetCellLabel(sheetId, cell.id, inputValue, cell.value, getFullCellValue(inputValue)))
         if(isTrackCellChanges) {

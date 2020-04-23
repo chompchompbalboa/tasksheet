@@ -197,20 +197,16 @@ export const downloadSheetCellFile = async (sheetCellFileId: string) => {
 	return axios.post('/app/sheets/cells/files/download/' + sheetCellFileId)
 }
 
-export const createSheetCellLabel = async (newSheetLabel: ISheetLabel) => {
-	return axios.post('/app/sheets/cells/labels', newSheetLabel).then(response => {
-		return response.data
-	})
+export const createSheetCellLabels = async (newSheetCellLabels: ISheetLabel[]) => {
+	return axios.post('/app/sheets/cells/labels', { newSheetCellLabels })
 }
 
-export const deleteSheetCellLabel = async (sheetLabelId: ISheetLabel['id']) => {
-	return axios.delete('/app/sheets/cells/labels/' + sheetLabelId).then(response => {
-		return response.data
-	})
+export const deleteSheetCellLabels = async (sheetCellLabelIds: ISheetLabel['id'][]) => {
+	return axios.post('/app/sheets/cells/labels/delete', { sheetCellLabelIds })
 }
 
-export const restoreSheetCellLabel = async (sheetLabelId: ISheetLabel['id']) => {
-	return axios.post('/app/sheets/labels/restore/' + sheetLabelId)
+export const restoreSheetCellLabels = async (sheetCellLabelIds: ISheetLabel['id'][]) => {
+	return axios.post('/app/sheets/cells/labels/restore', { sheetCellLabelIds })
 }
 
 export const createSheetCellPhoto = async (

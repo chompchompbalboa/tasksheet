@@ -64,12 +64,13 @@ Route::group([
   Route::post('/sheets/groups/restore/{group}', 'SheetGroupController@restore');
   Route::post('/sheets/sorts/restore/{sort}', 'SheetSortController@restore');
   Route::post('/sheets/cells/priorities/restore', 'SheetCellPriorityController@restore');
-  Route::post('/sheets/labels/restore/{label}', 'SheetCellLabelController@restore');
+  Route::post('/sheets/cells/labels/restore', 'SheetCellLabelController@restore');
 
   // Batch actions
   Route::patch('/sheets/cells/batch/update', 'SheetCellController@batchUpdate');
   Route::post('/sheets/cells/priorities', 'SheetCellPriorityController@batchCreate');
   Route::post('/sheets/cells/priorities/delete', 'SheetCellPriorityController@batchDelete');
+  Route::post('/sheets/cells/labels/delete', 'SheetCellLabelController@batchDelete');
   Route::post('/sheets/columns/delete', 'SheetColumnController@batchDestroy');
   Route::post('/sheets/rows/batch/delete', 'SheetRowController@batchDestroy');
 
