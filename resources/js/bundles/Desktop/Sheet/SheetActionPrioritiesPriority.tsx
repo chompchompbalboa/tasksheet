@@ -44,6 +44,7 @@ const SheetActionPrioritiesPriority = ({
   // State
   const [ isSheetPriorityRenaming, setIsSheetPriorityRenaming ] = useState(sheetPriority.name === null)
   const [ isColorPickerVisible, setIsColorPickerVisible ] = useState(false)
+  const [ sheetPriorityName, setSheetPriorityName ] = useState(sheetPriority.name)
 
   // Permissions
   const {
@@ -119,7 +120,7 @@ const SheetActionPrioritiesPriority = ({
   const handleSheetPriorityRenamingEnd = () => {
     setIsSheetPriorityRenaming(false)
     dispatch(updateSheetPriority(sheetPriority.id, {
-      name: sheetPriority.name
+      name: sheetPriorityName
     }))
   }
 
@@ -136,10 +137,10 @@ const SheetActionPrioritiesPriority = ({
       isTextUpdating={isSheetPriorityRenaming}
       onClick={() => handleSheetPriorityClick()}
       onUpdateTextEnd={() => handleSheetPriorityRenamingEnd()}
-      text={sheetPriority.name}
+      text={sheetPriorityName}
       textPrefix={sheetPriorityOrder + '. '}
       textPlaceholder="New Priority..."
-      updateText={nextSheetPriorityName => dispatch(updateSheetPriority(sheetPriority.id, { name: nextSheetPriorityName }, true))}>
+      updateText={nextSheetPriorityName => setSheetPriorityName(nextSheetPriorityName)}>
       <SheetActionPrioritiesPriorityChooseBackgroundColor
         sheetId={sheetId}
         isColorPickerVisible={isColorPickerVisible}
