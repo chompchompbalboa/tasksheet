@@ -77,6 +77,7 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         [columnId: string]: ISheetCell['id'] 
       } = {}
       sheetRow.cells.forEach(sheetRowCell => {
+        const sheetColumn = normalizedSheetColumns[sheetRowCell.columnId]
         normalizedSheetCells[sheetRowCell.id] = { 
           ...sheetRowCell, 
           isCellEditing: false,
@@ -84,7 +85,9 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         }
         sheetRowCells[sheetRowCell.columnId] = sheetRowCell.id
         if(sheetRowCell.value && ![null, ''].includes(sheetRowCell.value)) {
-          normalizedSheetColumns[sheetRowCell.columnId].allCellValues.add(sheetRowCell.value)
+          if(sheetColumn && sheetColumn.cellType !== 'LABELS') {
+            normalizedSheetColumns[sheetRowCell.columnId].allCellValues.add(sheetRowCell.value)
+          }
         }
       })
       normalizedSheetRows[sheetRow.id] = { 
@@ -137,6 +140,10 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         ...(normalizedSheetCellLabels[sheetLabel.cellId] || []),
         sheetLabel.id
       ]
+      const sheetColumn = normalizedSheetColumns[sheetLabel.columnId]
+      if(sheetColumn) {
+        normalizedSheetColumns[sheetColumn.id].allCellValues.add(sheetLabel.value)
+      }
     })
     
     // Sheet Photos
