@@ -46,6 +46,9 @@ export const resolveSheetFilter = (cell: ISheetCell, column: ISheetColumn, filte
     case '<=': {
       return filterValues.some(currentFilterValue => resolveSheetCellValue(cellValue, cellType) <= resolveSheetCellValue(currentFilterValue, cellType))
     }
+    case '<>': {
+      return filterValues.some(currentFilterValue => (resolveSheetCellValue(cellValue, cellType) + '').includes(resolveSheetCellValue(currentFilterValue, cellType) + ''))
+    }
   }
 }
 
@@ -60,7 +63,6 @@ export const resolveSheetCellValue = (value: string, cellType: ISheetCellType) =
     NUMBER: () => value && !isNaN(Number(value)) ? Number(value) : Number.MIN_SAFE_INTEGER,
     PHOTOS: () => value ? Number(value) : 0,
     FILES: () => value ? Number(value) : 0,
-    TEAM_MEMBERS: () => value ? value.toLowerCase() : '',
     LABELS: () => value ? value.split(';').join('').toLowerCase() : '',
   }
   return cellValueResolvers[cellType]()

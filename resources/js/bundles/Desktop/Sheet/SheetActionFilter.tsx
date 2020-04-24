@@ -93,7 +93,16 @@ const SheetActionFilter = ({
   }, [ autosizeInputValue, isFilterValid ])
 
   // Filter Types
-  const validFilterTypes: ISheetFilterType[] = ['!=', '>=', '<=', '=', '>', '<'] // The multicharacter items need to be before the single character items in this array for the validator to work correctly
+  const validFilterTypes: ISheetFilterType[] = ['<>', '<=', '>=', '!=', '<', '>', '=' ] // The multicharacter items need to be before the single character items in this array for the validator to work correctly
+  const filterNames = {
+    "<>": " (Includes)",
+    "!=": " (Does Not Equal)",
+    ">=": " (Greater Than Or Equal To)",
+    "<=": " (Less Than Or Equal To)",
+    "=": "  (Equals)",
+    ">": "  (Greater Than)",
+    "<": "  (Less Than)"
+  }
 
   // Column Names
   const sheetColumnNames = activeSheetViewVisibleColumns && activeSheetViewVisibleColumns.map(columnId => {
@@ -131,7 +140,8 @@ const SheetActionFilter = ({
       options = validFilterTypes.map(validFilterType => {
         return {
           id: validFilterType,
-          value: nextAutosizeInputValue.trim() + ' ' + validFilterType + ' '
+          value: nextAutosizeInputValue.trim() + ' ' + validFilterType + ' ',
+          suffix: filterNames[validFilterType]
         }
       })
     }
@@ -387,7 +397,7 @@ const SheetActionFilter = ({
                       key={index}
                       isHighlighted={dropdownHighlightedOptionIndex === index}
                       onClick={() => handleDropdownOptionClick(dropdownOption)}
-                      onMouseEnter={() => setDropdownHighlightedOptionIndex(index)}>{dropdownOption.value}</DropdownOption>
+                      onMouseEnter={() => setDropdownHighlightedOptionIndex(index)}>{dropdownOption.value}{dropdownOption.suffix || ''}</DropdownOption>
                   ))}
                 </DropdownOptions>
               </Dropdown>
@@ -415,6 +425,7 @@ interface SheetActionFilterProps {
 interface IDropdownOption {
   id: string
   value: string
+  suffix?: string
 }
 
 //-----------------------------------------------------------------------------
