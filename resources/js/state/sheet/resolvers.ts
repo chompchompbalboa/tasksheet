@@ -49,6 +49,9 @@ export const resolveSheetFilter = (cell: ISheetCell, column: ISheetColumn, filte
     case '<>': {
       return filterValues.some(currentFilterValue => (resolveSheetCellValue(cellValue, cellType) + '').includes(resolveSheetCellValue(currentFilterValue, cellType) + ''))
     }
+    case '!<>': {
+      return filterValues.some(currentFilterValue => !(resolveSheetCellValue(cellValue, cellType) + '').includes(resolveSheetCellValue(currentFilterValue, cellType) + ''))
+    }
   }
 }
 

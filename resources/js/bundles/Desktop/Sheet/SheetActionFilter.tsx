@@ -93,8 +93,9 @@ const SheetActionFilter = ({
   }, [ autosizeInputValue, isFilterValid ])
 
   // Filter Types
-  const validFilterTypes: ISheetFilterType[] = ['<>', '<=', '>=', '!=', '<', '>', '=' ] // The multicharacter items need to be before the single character items in this array for the validator to work correctly
+  const validFilterTypes: ISheetFilterType[] = ['!<>', '<>', '<=', '>=', '!=', '<', '>', '=' ] // The multicharacter items need to be before the single character items in this array for the validator to work correctly
   const filterNames = {
+    "!<>": "(Does Not Include)",
     "<>": " (Includes)",
     "!=": " (Does Not Equal)",
     ">=": " (Greater Than Or Equal To)",
@@ -160,16 +161,16 @@ const SheetActionFilter = ({
     const dropdownOptions = options && options.filter(option => {
       if(nextAutosizeInputValue) {
         const searchString = nextAutosizeInputValue.trim().toLowerCase().split(' ').join('')
+        const optionValueString = option.value.trim().toLowerCase().split(' ').join('')
         if(!isColumnNameValid) {
-          return option.value.toLowerCase().split(' ').join('').includes(searchString)
+          return optionValueString.includes(searchString)
         }
         else if(isColumnNameValid && !isFilterTypeValid) {
           return !validFilterTypes.some(validFilterType => validFilterType.split('').some(character => searchString.includes(character)))
         }
         else {
-          return option.value.trim().toLowerCase().split(' ').join('').includes(searchString)
+          return optionValueString.includes(searchString)
         }
-        return true
       }
       return true
     })

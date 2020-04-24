@@ -243,7 +243,7 @@ export interface ISheetFilter {
 
 export interface ISheetFilterUpdates {}
 
-export type ISheetFilterType = '=' | '!=' | '>' | '>=' | '<' | '<=' | '<>'
+export type ISheetFilterType = '=' | '!=' | '>' | '>=' | '<' | '<=' | '<>' | '!<>'
 
 //-----------------------------------------------------------------------------
 // Sheet Group
