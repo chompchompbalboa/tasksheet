@@ -8,11 +8,13 @@ import styled from 'styled-components'
 
 import { IAppState } from '@/state'
 import { 
+  IAllSheetPriorities,
   ISheet,
   ISheetColumn,
   ISheetRow,
   ISheetCell,
   ISheetCellType,
+  ISheetCellPriority,
   ISheetStyles 
 } from '@/state/sheet/types'
 import {
@@ -41,6 +43,8 @@ export const SheetCell = memo(({
 
   // Redux
   const dispatch = useDispatch()
+  const allSheetPriorities = useSelector((state: IAppState) => state.sheet.allSheetPriorities)
+  const sheetCellPriorities = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].cellPriorities)
   const cellId = useSelector((state: IAppState) => state.sheet.allSheetRows && state.sheet.allSheetRows[rowId] && state.sheet.allSheetRows[rowId].cells[columnId])
   const cell = useSelector((state: IAppState) => cellId && state.sheet.allSheetCells[cellId])
   const sheetSelectionsRangeCellIds = useSelector((state: IAppState) => state.sheet.allSheets[sheetId].selections.rangeCellIds)
@@ -87,6 +91,8 @@ export const SheetCell = memo(({
         isCellSelected={isCellSelected}
         isCellInRange={isCellInRange}
         onMouseDown={handleMouseDown}
+        allSheetPriorities={allSheetPriorities}
+        sheetCellPriorities={sheetCellPriorities}
         sheetStyles={sheetStyles}
         isShowCellChanges={isShowCellChanges}
         isTrackCellChanges={isTrackCellChanges}
@@ -123,6 +129,8 @@ export const SheetCell = memo(({
       highlightColor={userColorSecondary}
       isCellSelected={false}
       isCellInRange={false}
+      allSheetPriorities={allSheetPriorities}
+      sheetCellPriorities={sheetCellPriorities}
       sheetStyles={sheetStyles}
       isShowCellChanges={isShowCellChanges}
       isTrackCellChanges={isTrackCellChanges}
@@ -170,30 +178,36 @@ const Container = styled.div`
   border-right: 0.5px solid rgb(180, 180, 180);
   border-bottom: 0.5px solid rgb(180, 180, 180);
   user-select: none;
-  background-color: ${ ({ cellId, isCellSelected, sheetStyles }: IContainer ) => 
-    sheetStyles.backgroundColor.has(cellId)
-      ? sheetStyles.backgroundColorReference[cellId]
-      : isCellSelected
-        ? 'rgb(245, 245, 245)'
-        : 'white'
+  background-color: ${ ({ allSheetPriorities, cellId, isCellSelected, sheetCellPriorities, sheetStyles }: IContainer ) => 
+    sheetCellPriorities[cellId]
+    ? allSheetPriorities[sheetCellPriorities[cellId].priorityId].backgroundColor
+    : sheetStyles.backgroundColor.has(cellId)
+        ? sheetStyles.backgroundColorReference[cellId]
+        : isCellSelected
+          ? 'rgb(245, 245, 245)'
+          : 'white'
   };
   color: ${ ({ cellId, sheetStyles }: IContainer ) => sheetStyles.color.has(cellId) ? sheetStyles.colorReference[cellId] : 'black' };
   box-shadow: ${ ({ isCellSelected, highlightColor }: IContainer ) => isCellSelected ? 'inset 0px 0px 0px 2px ' + highlightColor : 'none' };
   overflow: ${ ({ isCellSelected, isCellInRange }: IContainer ) => isCellSelected || isCellInRange ? 'visible' : 'hidden' };
   &:hover {
-    background-color: ${ ({ cellId, sheetStyles }: IContainer ) => 
-      sheetStyles.backgroundColor.has(cellId)
-        ? sheetStyles.backgroundColorReference[cellId]
-        : 'rgb(245, 245, 245)'
+    background-color: ${ ({ allSheetPriorities, cellId, sheetCellPriorities, sheetStyles }: IContainer ) => 
+      sheetCellPriorities[cellId]
+      ? allSheetPriorities[sheetCellPriorities[cellId].priorityId].backgroundColor
+      : sheetStyles.backgroundColor.has(cellId)
+          ? sheetStyles.backgroundColorReference[cellId]
+          : 'rgb(245, 245, 245)'
     };
   }
 `
 interface IContainer {
   cellId: ISheetCell['id']
+  allSheetPriorities: IAllSheetPriorities
   cellType: ISheetCellType
   isCellSelected: boolean
   isCellInRange: boolean
   highlightColor: string
+  sheetCellPriorities: { [cellId: string]: ISheetCellPriority }
   sheetStyles: ISheetStyles
   isShowCellChanges: boolean
   isTrackCellChanges: boolean
