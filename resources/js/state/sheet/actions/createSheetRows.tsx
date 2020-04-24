@@ -77,6 +77,7 @@ export const createSheetRows = (
     
     // Get the unique column values for the group the row belongs to
     let columnCellValues: { [columnId: string]: Set<string> } = {}
+    let columnsWithUniqueValue: { [columnId: string]: string } = {}
     activeSheetView.visibleColumns.forEach(columnId => {
       columnCellValues[columnId] = new Set() as Set<string>
     })
@@ -100,26 +101,27 @@ export const createSheetRows = (
         groupEndIndex++
       }
     }
-    for(let i = groupStartIndex; i <= groupEndIndex; i++) { // Loop through each of the group rows and add the cell values to the columnCellValues
-      const currentRowId = sheet.visibleRows[i]
-      if(currentRowId !== 'ROW_BREAK') {
-        const currentRow = allSheetRows[currentRowId]
-        activeSheetView.visibleColumns.forEach(columnId => {
-          if(columnId !== 'COLUMN_BREAK') {
-            const currentCell = allSheetCells[currentRow.cells[columnId]]
-            columnCellValues[columnId].add(currentCell.value)
-          }
-        })
+    if(groupEndIndex - groupStartIndex > 2) { // Prevent unique values from being inserted if there is only one row in the group
+      for(let i = groupStartIndex; i <= groupEndIndex; i++) { // Loop through each of the group rows and add the cell values to the columnCellValues
+        const currentRowId = sheet.visibleRows[i]
+        if(currentRowId !== 'ROW_BREAK') {
+          const currentRow = allSheetRows[currentRowId]
+          activeSheetView.visibleColumns.forEach(columnId => {
+            if(columnId !== 'COLUMN_BREAK') {
+              const currentCell = allSheetCells[currentRow.cells[columnId]]
+              columnCellValues[columnId].add(currentCell.value)
+            }
+          })
+        }
       }
+      Object.keys(columnCellValues).forEach(columnId => { // Find the columns with a unique value
+        const currentColumn = allSheetColumns[columnId]
+        const currentColumnValues =  columnCellValues[columnId]
+        if(currentColumnValues.size === 1 && !['FILES', 'PHOTOS'].includes(currentColumn.cellType)) {
+          columnsWithUniqueValue[columnId] = columnCellValues[columnId].values().next().value
+        }
+      })
     }
-    let columnsWithUniqueValue: { [columnId: string]: string } = {}
-    Object.keys(columnCellValues).forEach(columnId => { // Find the columns with a unique value
-      const currentColumn = allSheetColumns[columnId]
-      const currentColumnValues =  columnCellValues[columnId]
-      if(currentColumnValues.size === 1 && !['FILES', 'PHOTOS'].includes(currentColumn.cellType)) {
-        columnsWithUniqueValue[columnId] = columnCellValues[columnId].values().next().value
-      }
-    })
     
     // Create the rows
     for(let i = 0; i < numberOfRowsToAdd; i++) {
