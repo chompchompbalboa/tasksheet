@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import { orderBy } from 'lodash'
  
 import { IAppState } from '@/state'
+import { ISheetLabel } from '@/state/sheet/types'
 import { ISheetCellTypesSharedProps } from '@desktop/Sheet/SheetCell'
 
 import { 
@@ -64,7 +65,7 @@ const SheetCellLabels = ({
     setTimeout(() => {
       if(inputValue && inputValue !== '' && inputValue !== cell.value) {
         dispatch(addSheetColumnAllCellValue(columnId, inputValue))
-        dispatch(createSheetCellLabel(sheetId, cell.id, inputValue, cell.value, getFullCellValue(inputValue)))
+        dispatch(createSheetCellLabel(sheetId, cell.id, inputValue, cell.value, getFullCellValue(sheetCellLabels, inputValue)))
         if(isTrackCellChanges) {
           dispatch(createSheetCellChange(sheetId, cell.id, 'New Label: ' + inputValue))
         }
@@ -76,16 +77,6 @@ const SheetCellLabels = ({
   const handleEditing = (e: ChangeEvent<HTMLInputElement>) => {
     const nextSheetCellValue = e.target.value
     setInputValue(nextSheetCellValue)
-  }
-
-  // Get Full Cell Value
-  const getFullCellValue = (cellValue: string) => {
-    let fullCellValue = ''
-    sheetCellLabels && orderBy(sheetCellLabels, [ 'value' ]).forEach(sheetLabel => {
-      fullCellValue = fullCellValue + (sheetLabel.value + ";")
-    })
-    fullCellValue = fullCellValue + (cellValue + ";")
-    return fullCellValue
   }
 
   return (
@@ -127,6 +118,21 @@ const SheetCellLabels = ({
       </Container>
     </SheetCellContainer>
   )
+}
+
+//-----------------------------------------------------------------------------
+// Get Full Cell Value
+//-----------------------------------------------------------------------------
+export const getFullCellValue = (
+  sheetCellLabels: ISheetLabel[],
+  cellValue: string
+) => {
+  let fullCellValue = ''
+  sheetCellLabels && orderBy(sheetCellLabels, [ 'value' ]).forEach(sheetLabel => {
+    fullCellValue = fullCellValue + (sheetLabel.value + ";")
+  })
+  fullCellValue = fullCellValue + (cellValue + ";")
+  return fullCellValue
 }
 
 //-----------------------------------------------------------------------------
