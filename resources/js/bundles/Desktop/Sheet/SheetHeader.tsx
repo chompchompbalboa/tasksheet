@@ -42,7 +42,7 @@ export const SheetHeader = ({
 }: ISheetHeaderProps) => {
 
   // Refs
-  const openContextMenuButton = useRef()
+  const openContextMenuButton = useRef(null)
   
   // Redux
   const dispatch = useDispatch()
@@ -124,9 +124,11 @@ export const SheetHeader = ({
   }
   
   // Handle Click While Context Menu Is Visible
-  const handleClickWhileContextMenuIsVisible = () => {
-    console.log('handleClickWhie')
-    setIsContextMenuVisible(false)
+  const handleClickWhileContextMenuIsVisible = (e: Event) => {
+    e.preventDefault()
+    if(!openContextMenuButton.current.contains(e.target)) {
+      setIsContextMenuVisible(false)
+    }
   }
   
   // Handle Column Renaming Finish
@@ -149,11 +151,13 @@ export const SheetHeader = ({
   }
 
   const handleOpenContextMenuButtonClick = (e: MouseEvent) => {
-    const windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
-    setIsContextMenuVisible(true)
-    setContextMenuTop(e.clientY)
-    setContextMenuLeft(e.clientX > (windowWidth * 0.75) ? null : e.clientX)
-    setContextMenuRight(e.clientX > (windowWidth * 0.75) ? windowWidth - e.clientX : null)
+    if(!isContextMenuVisible) {
+      const windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+      setIsContextMenuVisible(true)
+      setContextMenuTop(e.clientY)
+      setContextMenuLeft(e.clientX > (windowWidth * 0.75) ? null : e.clientX)
+      setContextMenuRight(e.clientX > (windowWidth * 0.75) ? windowWidth - e.clientX : null)
+    }
   } 
 
   return (
