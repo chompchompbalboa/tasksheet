@@ -36,12 +36,18 @@ export const SheetHeaderResizeContainer = ({
   })
   
   const handleMouseDown = (e: MouseEvent) => {
-    e.preventDefault()
-    onResizeStart()
-    setIsResizing(true)
-    setStartClientX(e.clientX)
-    setCurrentClientX(e.clientX)
-    gridContainerRef && setGridContainerScrollLeft(gridContainerRef.current.scrollLeft)
+    if(!isResizing) {
+      e.preventDefault()
+      onResizeStart()
+      setIsResizing(true)
+      setStartClientX(e.clientX)
+      setCurrentClientX(e.clientX)
+      gridContainerRef && setGridContainerScrollLeft(gridContainerRef.current.scrollLeft)
+    }
+    else {
+      // @ts-ignore
+      handleMouseUp(e)
+    }
   }
   
   const handleMouseMove = (e: Event) => {
