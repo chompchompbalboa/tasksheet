@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SheetPriority extends Model
 {
   use Traits\UsesUuid;
+  use SoftDeletes;
 
   protected $table = 'sheetPriorities';
   
