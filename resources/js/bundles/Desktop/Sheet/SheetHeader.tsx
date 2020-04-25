@@ -1,15 +1,18 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
-import React, { MouseEvent, RefObject, useEffect, useState } from 'react'
+import React, { MouseEvent, RefObject, useEffect, useRef, useState } from 'react'
 import { batch, useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
+
+import { ARROW_DOWN } from '@/assets/icons'
 
 import { IAppState } from '@/state'
 import { 
   ISheet, 
   ISheetColumn,
 } from '@/state/sheet/types'
+
 import {
   allowSelectedCellEditing,
   allowSelectedCellNavigation,
@@ -21,7 +24,9 @@ import {
 
 import { defaultColumn } from '@/state/sheet/defaults'
 
+import Icon from '@/components/Icon'
 import SheetHeaderResizeContainer from '@desktop/Sheet/SheetHeaderResizeContainer'
+import SheetColumnContextMenu from './SheetColumnContextMenu'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -35,6 +40,9 @@ export const SheetHeader = ({
   isNextColumnAColumnBreak,
   visibleColumnsIndex
 }: ISheetHeaderProps) => {
+
+  // Refs
+  const openContextMenuButton = useRef()
   
   // Redux
   const dispatch = useDispatch()
@@ -43,9 +51,14 @@ export const SheetHeader = ({
   const rangeStartColumnId = useSelector((state: IAppState) => state.sheet.allSheets && state.sheet.allSheets[sheetId] && state.sheet.allSheets[sheetId].selections.rangeStartColumnId)
 
   // Local State
+  const [ contextMenuTop, setContextMenuTop ] = useState(null)
+  const [ contextMenuRight, setContextMenuRight ] = useState(null)
+  const [ contextMenuLeft, setContextMenuLeft ] = useState(null)
   const [ isRenaming, setIsRenaming ] = useState(false)
   const [ columnName, setColumnName ] = useState(sheetColumn && sheetColumn.name && sheetColumn.name.length > 0 ? sheetColumn.name : '?')
   const [ isResizing, setIsResizing ] = useState(false)
+  const [ isContextMenuVisible, setIsContextMenuVisible ] = useState(false)
+  const [ isOpenContextMenuButtonVisible, setIsOpenContextMenuButtonVisible ] = useState(false)
   
   // Local Variables
   const isColumnBreak = columnId === 'COLUMN_BREAK'
@@ -72,6 +85,20 @@ export const SheetHeader = ({
     }
   }, [ sheetColumn && sheetColumn.name ])
 
+  useEffect(() => {
+    if(isContextMenuVisible) {
+      setTimeout(() => addEventListener('click', handleClickWhileContextMenuIsVisible), 10)
+    }
+    else {
+      removeEventListener('click', handleClickWhileContextMenuIsVisible)
+    }
+    return () => removeEventListener('click', handleClickWhileContextMenuIsVisible)
+  }, [ isContextMenuVisible ])
+
+  useEffect(() => {
+    setIsContextMenuVisible(false)
+  }, [ visibleColumnsIndex ])
+
   // Handle Autosize Input Blur
   const handleAutosizeInputBlur = () => {
     handleColumnRenamingFinish()
@@ -96,6 +123,12 @@ export const SheetHeader = ({
     }
   }
   
+  // Handle Click While Context Menu Is Visible
+  const handleClickWhileContextMenuIsVisible = () => {
+    console.log('handleClickWhie')
+    setIsContextMenuVisible(false)
+  }
+  
   // Handle Column Renaming Finish
   const handleColumnRenamingFinish = () => {
     const nextColumnName = columnName || defaultColumn(sheetId).name
@@ -115,14 +148,25 @@ export const SheetHeader = ({
     setIsResizing(false)
   }
 
+  const handleOpenContextMenuButtonClick = (e: MouseEvent) => {
+    const windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+    setIsContextMenuVisible(true)
+    setContextMenuTop(e.clientY)
+    setContextMenuLeft(e.clientX > (windowWidth * 0.75) ? null : e.clientX)
+    setContextMenuRight(e.clientX > (windowWidth * 0.75) ? windowWidth - e.clientX : null)
+  } 
+
   return (
     <Container
       data-testid="SheetHeader"
       containerWidth={columnId === 'COLUMN_BREAK' ? 10 : sheetColumn.width}
       isColumnBreak={isColumnBreak}
+      isContextMenuVisible={isContextMenuVisible}
       isLast={isLast}
       isNextColumnAColumnBreak={isNextColumnAColumnBreak}
       isResizing={isResizing}
+      onMouseEnter={() => setIsOpenContextMenuButtonVisible(true)}
+      onMouseLeave={() => setIsOpenContextMenuButtonVisible(false)}
       onContextMenu={(e: MouseEvent) => handleContextMenu(e, 'COLUMN', sheetColumn && sheetColumn.id || 'COLUMN_BREAK', visibleColumnsIndex)}>
       {!(sheetColumn && sheetColumn.isRenaming)
         ? <NameContainer
@@ -140,10 +184,37 @@ export const SheetHeader = ({
             value={columnName || ""}/>
       }
       {!isColumnBreak && 
-        <SheetHeaderResizeContainer
-          gridContainerRef={gridContainerRef}
-          onResizeStart={() => setIsResizing(true)}
-          onResizeEnd={handleColumnResizeEnd}/>
+        <>
+          <OpenContextMenuButtonContainer
+            isResizing={isResizing}
+            isVisible={isOpenContextMenuButtonVisible || isContextMenuVisible}>
+            <OpenContextMenuButton
+              ref={openContextMenuButton}
+              isContextMenuVisible={isContextMenuVisible}
+              onClick={handleOpenContextMenuButtonClick}>
+              <Icon
+                icon={ARROW_DOWN}
+                size="0.75rem"/>
+            {isContextMenuVisible &&
+              <SheetColumnContextMenu
+                sheetId={sheetId}
+                columnId={columnId}
+                closeContextMenu={() => {
+                  setIsContextMenuVisible(false)
+                  setIsOpenContextMenuButtonVisible(false)
+                }}
+                columnIndex={visibleColumnsIndex}
+                contextMenuTop={contextMenuTop}
+                contextMenuLeft={contextMenuLeft}
+                contextMenuRight={contextMenuRight}/>
+            }
+          </OpenContextMenuButton>
+          </OpenContextMenuButtonContainer>
+          <SheetHeaderResizeContainer
+            gridContainerRef={gridContainerRef}
+            onResizeStart={() => setIsResizing(true)}
+            onResizeEnd={handleColumnResizeEnd}/>
+        </>
       }
     </Container>
   )
@@ -166,7 +237,7 @@ export interface ISheetHeaderProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  z-index: ${ ({ isResizing }: ContainerProps) => isResizing ? '1000' : '10' };
+  z-index: ${ ({ isContextMenuVisible, isResizing }: ContainerProps) => (isContextMenuVisible || isResizing) ? '1000' : '10' };
   position: relative;
   cursor: ${ ({ isResizing }: ContainerProps) => isResizing ? 'col-resize' : 'default' };
   display: inline-flex;
@@ -189,6 +260,7 @@ const Container = styled.div`
 `
 interface ContainerProps {
   containerWidth: number
+  isContextMenuVisible: boolean
   isColumnBreak: boolean
   isLast: boolean
   isNextColumnAColumnBreak: boolean
@@ -224,6 +296,35 @@ const NameInput = styled.input`
   font-size: 0.8rem;
   font-weight: bold;
 `
+
+const OpenContextMenuButtonContainer = styled.div`
+  margin-right: ${({ isResizing }: IOpenContextMenu ) => isResizing ? '4px' : '0'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: ${({ isVisible }: IOpenContextMenu ) => isVisible ? '1' : '0'};
+`
+interface IOpenContextMenu {
+  isResizing: boolean
+  isVisible: boolean
+}
+
+const OpenContextMenuButton = styled.div`
+  padding: 0.05rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${ ({ isContextMenuVisible }: IOpenContextMenuButton ) => isContextMenuVisible ? 'rgb(200, 200, 200)' : 'transparent' };
+  color: ${ ({ isContextMenuVisible }: IOpenContextMenuButton ) => isContextMenuVisible ? 'black' : 'rgb(180, 180, 180)' };
+  border-radius: 2px;
+  &:hover {
+    background-color: rgb(200, 200, 200);
+    color: black;
+  }
+`
+interface IOpenContextMenuButton {
+  isContextMenuVisible: boolean
+}
 
 //-----------------------------------------------------------------------------
 // Export
