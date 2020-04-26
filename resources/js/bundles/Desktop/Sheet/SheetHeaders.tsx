@@ -78,7 +78,7 @@ const Container = styled.div`
   top: 0;
   left: 0;
   width: ${ ({ containerWidth }: IContainer ) => containerWidth };
-  height: 1.6rem;
+  height: 1.8rem;
 `
 interface IContainer {
   containerWidth: string
