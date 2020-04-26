@@ -305,7 +305,7 @@ const OpenContextMenuButtonContainer = styled.div`
   position: absolute;
   right: 0;
   height: 100%;
-  margin-right: ${({ isResizing }: IOpenContextMenu ) => isResizing ? '8px' : '4px'};
+  margin-right: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
