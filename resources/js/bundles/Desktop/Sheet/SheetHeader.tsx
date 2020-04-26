@@ -279,7 +279,7 @@ const NameContainer = styled.div`
   white-space: nowrap;
   display: flex;
   align-items: center;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: bold;
   color: ${({ isColumnBreak }: NameContainerProps ) => isColumnBreak ? 'transparent' : 'rgb(50, 50, 50)'};
 `
@@ -297,12 +297,15 @@ const NameInput = styled.input`
   background-color: transparent;
   color: black;
   font-family: inherit;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: bold;
 `
 
 const OpenContextMenuButtonContainer = styled.div`
-  margin-right: ${({ isResizing }: IOpenContextMenu ) => isResizing ? '4px' : '0'};
+  position: absolute;
+  right: 0;
+  height: 100%;
+  margin-right: ${({ isResizing }: IOpenContextMenu ) => isResizing ? '8px' : '4px'};
   display: flex;
   align-items: center;
   justify-content: center;
