@@ -23,6 +23,7 @@ import {
 
 import SheetCellBoolean from '@desktop/Sheet/SheetCellBoolean'
 import SheetCellDatetime from '@desktop/Sheet/SheetCellDatetime'
+import SheetCellGantt from '@desktop/Sheet/SheetCellGantt'
 import SheetCellFiles from '@desktop/Sheet/SheetCellFiles'
 import SheetCellLabels from '@desktop/Sheet/SheetCellLabels'
 import SheetCellNumber from '@desktop/Sheet/SheetCellNumber'
@@ -77,7 +78,8 @@ export const SheetCell = memo(({
       DATETIME: SheetCellDatetime,
       PHOTOS: SheetCellPhotos,
       FILES: SheetCellFiles,
-      LABELS: SheetCellLabels
+      LABELS: SheetCellLabels,
+      GANTT: SheetCellGantt
     }
     const SheetCellType = sheetCellTypes[cellType]
 
@@ -104,9 +106,11 @@ export const SheetCell = memo(({
         <SheetCellType
           sheetId={sheetId}
           columnId={columnId}
+          rowId={rowId}
           cell={cell}
           isCellEditing={isCellEditing}
           isCellInRange={isCellInRange}
+          isCellSelected={isCellSelected}
           isShowCellChanges={isShowCellChanges}
           isTrackCellChanges={isTrackCellChanges}/>
         <SheetCellChanges
@@ -155,9 +159,11 @@ export interface ISheetCellProps {
 export interface ISheetCellTypesSharedProps {
   sheetId: ISheet['id']
   columnId: ISheetColumn['id']
+  rowId: ISheetRow['id']
   cell: ISheetCell
   isCellEditing: boolean
   isCellInRange: boolean
+  isCellSelected: boolean
   isShowCellChanges: boolean
   isTrackCellChanges: boolean
 }
@@ -167,7 +173,7 @@ export interface ISheetCellTypesSharedProps {
 //-----------------------------------------------------------------------------
 const Container = styled.div`
   z-index: ${ ({ cellType, isCellSelected, isShowCellChanges, isTrackCellChanges }: IContainer ) => 
-    (['DATETIME', 'FILES', 'PHOTOS'].includes(cellType) || (isTrackCellChanges && isShowCellChanges))
+    (['DATETIME', 'FILES', 'GANTT', 'PHOTOS'].includes(cellType) || (isTrackCellChanges && isShowCellChanges))
     && isCellSelected 
       ? '20' 
       : '10' 

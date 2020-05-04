@@ -13,6 +13,7 @@ import {
   ISheetCellType
 } from '@/state/sheet/types'
 import { 
+  createSheetGantt,
   updateSheetColumn
 } from '@/state/sheet/actions'
 
@@ -51,43 +52,48 @@ export const SheetColumnContextMenu = ({
     [sheetCellType: string]: { 
       label: string
       cellType: ISheetCellType
-      defaultValue: string
+      updateCellType(...args: any): void
     }
   } = {
     STRING: {
       label: 'Text',
       cellType: 'STRING',
-      defaultValue: null
+      updateCellType:() => dispatch(updateSheetColumn(columnId, { cellType: 'STRING', defaultValue: null }))
     },
     NUMBER: {
       label: 'Number',
       cellType: 'NUMBER',
-      defaultValue: null
+      updateCellType:() => dispatch(updateSheetColumn(columnId, { cellType: 'NUMBER', defaultValue: null }))
     },
     DATETIME: {
       label: 'Date',
       cellType: 'DATETIME',
-      defaultValue: null
+      updateCellType:() => dispatch(updateSheetColumn(columnId, { cellType: 'DATETIME', defaultValue: null }))
     },
     BOOLEAN: {
       label: 'Checkbox',
       cellType: 'BOOLEAN',
-      defaultValue: 'Unchecked'
+      updateCellType:() => dispatch(updateSheetColumn(columnId, { cellType: 'BOOLEAN', defaultValue: 'Unchecked' }))
     },
     PHOTOS: {
       label: 'Photos',
       cellType: 'PHOTOS',
-      defaultValue: null
+      updateCellType:() => dispatch(updateSheetColumn(columnId, { cellType: 'PHOTOS', defaultValue: null }))
     },
     FILES: {
       label: 'Files',
       cellType: 'FILES',
-      defaultValue: null
+      updateCellType:() => dispatch(updateSheetColumn(columnId, { cellType: 'FILES', defaultValue: null }))
     },
     LABELS: {
       label: 'Labels',
       cellType: 'LABELS',
-      defaultValue: null
+      updateCellType:() => dispatch(updateSheetColumn(columnId, { cellType: 'LABELS', defaultValue: null }))
+    },
+    GANTT: {
+      label: 'Gantt',
+      cellType: 'GANTT',
+      updateCellType:() => dispatch(createSheetGantt(sheetId, columnId))
     }
   }
   const sheetCellTypesKeys = Object.keys(sheetCellTypes)
@@ -145,7 +151,11 @@ export const SheetColumnContextMenu = ({
                   isFirstItem={index === 0}
                   isLastItem={index === (sheetCellTypesKeys.length - 1)}
                   logo={sheetColumnCellType === currentCellType.cellType ? CHECKMARK : null}
-                  onClick={() => closeContextMenuOnClick(() => dispatch(updateSheetColumn(columnId, { cellType: currentCellType.cellType, defaultValue: currentCellType.defaultValue })))}
+                  onClick={() => {
+                    if(sheetColumnCellType !== currentCellType.cellType) {
+                      closeContextMenuOnClick(() => currentCellType.updateCellType())
+                    }
+                  }}
                   text={currentCellType.label}
                   />)})}
             </ContextMenuItem>

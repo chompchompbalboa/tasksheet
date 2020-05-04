@@ -83,9 +83,11 @@ const sheetProps: ISheetProps = {
 const sheetCellDatetimeProps: ISheetCellTypesSharedProps = {
   sheetId: sheetId,
   columnId: sheetColumnId,
+  rowId: sheetRowId,
   cell: sheetCell,
   isCellEditing: false,
   isCellInRange: false,
+  isCellSelected: false,
   isShowCellChanges: false,
   isTrackCellChanges: false
 }
@@ -195,8 +197,8 @@ describe('SheetCellDatetime', () => {
     expect(SheetCellDatetime).toBeTruthy()
     fireEvent.doubleClick(SheetCellDatetime)
 
-    const GoToPreviousMonth = await waitForElement(() => getByTestId('SheetCellDatetimeDatepickerGoToPreviousMonth'))
-    const GoToNextMonth = await waitForElement(() => getByTestId('SheetCellDatetimeDatepickerGoToNextMonth'))
+    const GoToPreviousMonth = await waitForElement(() => getByTestId('DatepickerGoToPreviousMonth'))
+    const GoToNextMonth = await waitForElement(() => getByTestId('DatepickerGoToNextMonth'))
     const CurrentMonth = await waitForElement(() => getByText(currentDate.format('MMMM YYYY')))
     expect(GoToPreviousMonth).toBeTruthy()
     expect(GoToNextMonth).toBeTruthy()
@@ -228,7 +230,7 @@ describe('SheetCellDatetime', () => {
     expect(SheetCellDatetime).toBeTruthy()
     fireEvent.doubleClick(SheetCellDatetime)
 
-    const DatepickerDates = await waitForElement(() => getByTestId('SheetCellDatetimeDatepickerDates'))
+    const DatepickerDates = await waitForElement(() => getByTestId('DatepickerDates'))
     const SheetCellDatetimeDatepickerInput = await waitForElement(() => getByTestId('SheetCellDatetimeDatepickerInput'))
     expect(DatepickerDates).toBeTruthy()
     expect(SheetCellDatetimeDatepickerInput).toBeTruthy()

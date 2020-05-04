@@ -97,6 +97,8 @@ export const defaultSheet: ISheet = {
   activeSheetViewId: null,
   columns: [],
   rows: [],
+  gantts: {},
+  ganttRanges: {},
   priorities: [],
   cellPriorities: {},
   styles: defaultSheetStyles,

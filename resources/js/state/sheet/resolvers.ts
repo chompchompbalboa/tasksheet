@@ -67,6 +67,7 @@ export const resolveSheetCellValue = (value: string, cellType: ISheetCellType) =
     PHOTOS: () => value ? Number(value) : 0,
     FILES: () => value ? Number(value) : 0,
     LABELS: () => value ? value.split(';').join('').toLowerCase() : '',
+    GANTT: () => value ? value.toLowerCase() : ''
   }
   return cellValueResolvers[cellType]()
 }

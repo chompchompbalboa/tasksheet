@@ -7,7 +7,14 @@ import '@testing-library/jest-dom/extend-expect'
 import axiosMock from 'axios'
 
 import { fireEvent, renderWithRedux, waitForElement, within } from '@/testing/library'
-import { appState as mockAppState, appStateFactory, IAppStateFactoryInput, getCellAndCellProps } from '@/testing/mocks/appState'
+
+import { 
+  getCellAndCellProps,
+  IMockAppStateFactoryInput,
+  mockAppState,
+  mockAppStateFactory,
+  mockAppStateColumnTypes
+} from '@/testing/mocks'
 
 import { ISheetCell } from '@/state/sheet/types'
 import { Sheet, ISheetProps } from '@desktop/Sheet/Sheet'
@@ -23,7 +30,7 @@ const {
   allSheets,
   allSheetsFromDatabase,
   allSheetViews
-} = appStateFactory({} as IAppStateFactoryInput)
+} = mockAppStateFactory({} as IMockAppStateFactoryInput)
 
 const {
   user: {
@@ -158,6 +165,18 @@ describe('SheetHeader', () => {
     fireEvent.keyDown(getByTestId('SheetContainer'), { key: 'ArrowRight' })
     expect(R1C3SheetCellSheetRange).toHaveStyleRule('background-color', userColorSecondary)
     expect(RLastC3SheetCellSheetRange).toHaveStyleRule('background-color', userColorSecondary)
+  })
+
+  it("displays SheetHeaderGantt when the column's cell type is 'GANTT'", () => {
+    const ganttColumnIndex = mockAppStateColumnTypes.findIndex(columnType => columnType === 'GANTT')
+    const ganttColumnId = activeSheetView.visibleColumns[ganttColumnIndex]
+    const ganttProps: ISheetHeaderProps = {
+      ...sheetHeaderProps,
+      columnId: ganttColumnId,
+      visibleColumnsIndex: ganttColumnIndex
+    }
+    const { queryByTestId } = renderWithRedux(<SheetHeader {...ganttProps}/>)
+    expect(queryByTestId('SheetHeaderGantt')).toBeTruthy()
   })
 
 })

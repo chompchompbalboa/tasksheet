@@ -11,6 +11,8 @@ export interface IAllSheetSorts { [sortId: string]: ISheetSort }
 export interface IAllSheetViews { [viewId: string]: ISheetView }
 export interface IAllSheetChanges { [changeId: string]: ISheetChange }
 export interface IAllSheetFiles { [fileId: string]: ISheetFile }
+export interface IAllSheetGantts { [ganttId: string]: ISheetGantt }
+export interface IAllSheetGanttRanges { [ganttRangeId: string]: ISheetGanttRange }
 export interface IAllSheetLabels { [labelId: string]: ISheetLabel }
 export interface IAllSheetPhotos { [photoId: string]: ISheetPhoto }
 export interface IAllSheetPriorities { [priorityId: string]: ISheetPriority }
@@ -30,6 +32,8 @@ export interface ISheet {
 	rows: ISheetRow['id'][]
   priorities: ISheetPriority['id'][]
   cellPriorities: { [cellId: string]: ISheetCellPriority }
+  gantts: { [columnId: string]: ISheetGantt['id'] }
+  ganttRanges: { [ganttId: string]: ISheetGanttRange['id'][] }
   styles: ISheetStyles
   selections: ISheetSelections
   views: ISheetView['id'][]
@@ -44,6 +48,8 @@ export interface ISheetUpdates {
   rows?: ISheetRow['id'][]
   priorities?: ISheetPriority['id'][]
   cellPriorities?: { [cellId: string]: ISheetCellPriority }
+  gantts?: ISheet['gantts']
+  ganttRanges?: ISheet['ganttRanges']
   styles?: ISheetStyles
   selections?: ISheetSelections
   views?: ISheetView['id'][]
@@ -64,6 +70,8 @@ export interface ISheetFromDatabase {
   views: ISheetViewFromDatabase[]
   changes: ISheetChange[]
   files: ISheetFile[]
+  gantts: ISheetGantt[]
+  ganttRanges: ISheetGanttRange[]
   labels: ISheetLabel[]
   photos: ISheetPhoto[]
 }
@@ -225,7 +233,8 @@ export type ISheetCellType =
 'NUMBER' | 
 'PHOTOS' | 
 'FILES' |
-'LABELS'
+'LABELS' |
+'GANTT' 
 
 //-----------------------------------------------------------------------------
 // Sheet Filter
@@ -337,6 +346,38 @@ export interface ISheetPhoto {
   s3Key: string
   uploadedBy: string
   uploadedAt: string
+}
+
+//-----------------------------------------------------------------------------
+// Sheet Gantt
+//-----------------------------------------------------------------------------
+export interface ISheetGantt {
+  id: string
+  sheetId: ISheet['id']
+  columnId: ISheetColumn['id']
+  startDate: string
+  endDate: string
+}
+
+export interface ISheetGanttUpdates {
+  startDate?: ISheetGantt['startDate']
+  endDate?: ISheetGantt['endDate']
+}
+
+export interface ISheetGanttRange {
+  id: string
+  sheetId: ISheet['id']
+  columnId: ISheetColumn['id']
+  sheetGanttId: ISheetGantt['id']
+  startDateColumnId: ISheetColumn['id']
+  endDateColumnId: ISheetColumn['id']
+  backgroundColor: string
+}
+
+export interface ISheetGanttRangeUpdates {
+  startDateColumnId?: ISheetGanttRange['startDateColumnId']
+  endDateColumnId?: ISheetGanttRange['endDateColumnId']
+  backgroundColor?: ISheetGanttRange['backgroundColor']
 }
 
 //-----------------------------------------------------------------------------

@@ -109,7 +109,7 @@ const SheetRowLeaderHeaderText = styled.div`
   white-space: nowrap;
   display: flex;
   align-items: center;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: bold;
   color: transparent;
 `

@@ -66,6 +66,8 @@ export const createSheetLink = (sheetId: ISheet['id'], folderId: IFolder['id'], 
         selections: defaultSheetSelections,
         styles: defaultSheetStyles,
         views: [],
+        gantts: {},
+        ganttRanges: {},
         priorities: [],
         cellPriorities: {},
         isCellEditing: false
@@ -82,6 +84,8 @@ export const createSheetLink = (sheetId: ISheet['id'], folderId: IFolder['id'], 
       },
       null, // Changes
       null, // Files
+      null, // Gantts
+      null, // Gantt Ranges
       null, // Labels
       null, // Photos
       null, // Priorities

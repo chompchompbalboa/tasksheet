@@ -10,6 +10,7 @@ export {
   appStateFactory as mockAppStateFactory,
   appStateFactoryColumns as mockAppStateColumnTypes, 
   getCellAndCellProps, 
+  getMockAppState,
   getMockAppStateByTasksheetSubscriptionType,
   getMockAppStateByUsersFilePermissionRole,
   IAppStateFactoryInput as IMockAppStateFactoryInput,

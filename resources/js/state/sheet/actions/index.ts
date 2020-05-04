@@ -16,6 +16,8 @@ import {
   IAllSheetViews, ISheetViewUpdates,
   IAllSheetChanges, IAllSheetCellChanges,
   IAllSheetFiles, IAllSheetCellFiles,
+  IAllSheetGantts, ISheetGanttUpdates,
+  IAllSheetGanttRanges, ISheetGanttRangeUpdates,
   IAllSheetLabels, IAllSheetCellLabels,
   IAllSheetPhotos, IAllSheetCellPhotos,
   IAllSheetPriorities, ISheetPriorityUpdates
@@ -43,6 +45,8 @@ export { createSheetCellFile } from '@/state/sheet/actions/createSheetCellFile'
 export { createSheetCellLabel } from '@/state/sheet/actions/createSheetCellLabel'
 export { createSheetCellPhoto } from '@/state/sheet/actions/createSheetCellPhoto'
 export { createSheetPriority } from '@/state/sheet/actions/createSheetPriority'
+export { createSheetGantt } from '@/state/sheet/actions/createSheetGantt'
+export { createSheetGanttRange } from '@/state/sheet/actions/createSheetGanttRange'
 
 export { deleteSheetColumns } from '@/state/sheet/actions/deleteSheetColumns'
 export { deleteSheetColumnBreak } from '@/state/sheet/actions/deleteSheetColumnBreak'
@@ -51,6 +55,7 @@ export { deleteSheetGroup } from '@/state/sheet/actions/deleteSheetGroup'
 export { deleteSheetRows } from '@/state/sheet/actions/deleteSheetRows'
 export { deleteSheetSort } from '@/state/sheet/actions/deleteSheetSort'
 export { deleteSheetView } from '@/state/sheet/actions/deleteSheetView'
+export { deleteSheetGanttRange } from '@/state/sheet/actions/deleteSheetGanttRange'
 export { deleteSheetCellChange } from '@/state/sheet/actions/deleteSheetCellChange'
 export { deleteSheetCellFile } from '@/state/sheet/actions/deleteSheetCellFile'
 export { deleteSheetCellLabel } from '@/state/sheet/actions/deleteSheetCellLabel'
@@ -61,6 +66,8 @@ export { updateSheetCell } from '@/state/sheet/actions/updateSheetCell'
 export { updateSheetCellValues } from '@/state/sheet/actions/updateSheetCellValues'
 export { updateSheetColumn } from '@/state/sheet/actions/updateSheetColumn'
 export { updateSheetFilter } from '@/state/sheet/actions/updateSheetFilter'
+export { updateSheetGantt } from '@/state/sheet/actions/updateSheetGantt'
+export { updateSheetGanttRange } from '@/state/sheet/actions/updateSheetGanttRange'
 export { updateSheetGroup } from '@/state/sheet/actions/updateSheetGroup'
 export { updateSheetCellPriorities } from '@/state/sheet/actions/updateSheetCellPriorities'
 export { updateSheetPriority } from '@/state/sheet/actions/updateSheetPriority'
@@ -112,6 +119,8 @@ export type ISheetActions =
   ISetAllSheetCellPhotos | ISetAllSheetPhotos |
   ISetAllSheetCellLabels | ISetAllSheetLabels |
   ISetAllSheetCellFiles | ISetAllSheetFiles |
+  IUpdateSheetGantt | ISetAllSheetGantts |
+  IUpdateSheetGanttRange | ISetAllSheetGanttRanges |
   IUpdateSheetPriority | ISetAllSheetPriorities
 
 //-----------------------------------------------------------------------------
@@ -130,6 +139,8 @@ interface ILoadSheet {
   views: IAllSheetViews
   changes: IAllSheetChanges
   files: IAllSheetFiles
+  gantts: IAllSheetGantts
+  ganttRanges: IAllSheetGanttRanges
   labels: IAllSheetLabels
   photos: IAllSheetPhotos
   priorities: IAllSheetPriorities
@@ -150,6 +161,8 @@ export const loadSheetReducer = (
   views: IAllSheetViews,
   changes: IAllSheetChanges,
   files: IAllSheetFiles,
+  gantts: IAllSheetGantts,
+  ganttRanges: IAllSheetGanttRanges,
   labels: IAllSheetLabels,
   photos: IAllSheetPhotos,
   priorities: IAllSheetPriorities,
@@ -170,6 +183,8 @@ export const loadSheetReducer = (
     views,
     changes,
     files,
+    gantts,
+    ganttRanges,
     labels,
     photos,
     priorities,
@@ -369,6 +384,38 @@ export const setAllSheetFiles = (nextAllSheetFiles: IAllSheetFiles): ISheetActio
 	return {
 		type: SET_ALL_SHEET_FILES,
     nextAllSheetFiles,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Set All Sheet Gantts
+//-----------------------------------------------------------------------------
+export const SET_ALL_SHEET_GANTTS = 'SET_ALL_SHEET_GANTTS'
+interface ISetAllSheetGantts {
+  type: typeof SET_ALL_SHEET_GANTTS,
+  nextAllSheetGantts: IAllSheetGantts
+}
+
+export const setAllSheetGantts = (nextAllSheetGantts: IAllSheetGantts): ISheetActions => {
+	return {
+		type: SET_ALL_SHEET_GANTTS,
+    nextAllSheetGantts,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Set All Sheet Gantt Ranges
+//-----------------------------------------------------------------------------
+export const SET_ALL_SHEET_GANTT_RANGES = 'SET_ALL_SHEET_GANTT_RANGES'
+interface ISetAllSheetGanttRanges {
+  type: typeof SET_ALL_SHEET_GANTT_RANGES,
+  nextAllSheetGanttRanges: IAllSheetGanttRanges
+}
+
+export const setAllSheetGanttRanges = (nextAllSheetGanttRanges: IAllSheetGanttRanges): ISheetActions => {
+	return {
+		type: SET_ALL_SHEET_GANTT_RANGES,
+    nextAllSheetGanttRanges,
 	}
 }
 
@@ -643,6 +690,42 @@ export const updateSheetPriorityReducer = (sheetPriorityId: string, updates: ISh
 	return {
 		type: UPDATE_SHEET_PRIORITY,
     sheetPriorityId,
+		updates,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Sheet Gantt
+//-----------------------------------------------------------------------------
+export const UPDATE_SHEET_GANTT = 'UPDATE_SHEET_GANTT'
+interface IUpdateSheetGantt {
+	type: typeof UPDATE_SHEET_GANTT
+  sheetGanttId: string
+	updates: ISheetGanttUpdates
+}
+
+export const updateSheetGanttReducer = (sheetGanttId: string, updates: ISheetGanttUpdates): ISheetActions => {
+	return {
+		type: UPDATE_SHEET_GANTT,
+    sheetGanttId,
+		updates,
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Update Sheet Gantt Range
+//-----------------------------------------------------------------------------
+export const UPDATE_SHEET_GANTT_RANGE = 'UPDATE_SHEET_GANTT_RANGE'
+interface IUpdateSheetGanttRange {
+	type: typeof UPDATE_SHEET_GANTT_RANGE
+  sheetGanttRangeId: string
+	updates: ISheetGanttRangeUpdates
+}
+
+export const updateSheetGanttRangeReducer = (sheetGanttRangeId: string, updates: ISheetGanttRangeUpdates): ISheetActions => {
+	return {
+		type: UPDATE_SHEET_GANTT_RANGE,
+    sheetGanttRangeId,
 		updates,
 	}
 }

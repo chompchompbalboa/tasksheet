@@ -12,6 +12,8 @@ import {
   IAllSheetViews,
   IAllSheetCellChanges, IAllSheetChanges,
   IAllSheetCellFiles, IAllSheetFiles,
+  IAllSheetGantts,
+  IAllSheetGanttRanges,
   IAllSheetCellLabels, IAllSheetLabels,
   IAllSheetCellPhotos, IAllSheetPhotos,
   IAllSheetPriorities,
@@ -34,6 +36,8 @@ import {
   UPDATE_SHEET_VIEW, SET_ALL_SHEET_VIEWS,
   SET_ALL_SHEET_CELL_CHANGES, SET_ALL_SHEET_CHANGES,
   SET_ALL_SHEET_CELL_FILES, SET_ALL_SHEET_FILES,
+  UPDATE_SHEET_GANTT, SET_ALL_SHEET_GANTTS,
+  UPDATE_SHEET_GANTT_RANGE, SET_ALL_SHEET_GANTT_RANGES,
   SET_ALL_SHEET_CELL_LABELS, SET_ALL_SHEET_LABELS,
   SET_ALL_SHEET_CELL_PHOTOS, SET_ALL_SHEET_PHOTOS,
   UPDATE_SHEET_PRIORITY, SET_ALL_SHEET_PRIORITIES
@@ -53,6 +57,8 @@ export interface ISheetState {
   allSheetViews: IAllSheetViews
   allSheetChanges: IAllSheetChanges
   allSheetFiles: IAllSheetFiles
+  allSheetGantts: IAllSheetGantts
+  allSheetGanttRanges: IAllSheetGanttRanges
   allSheetLabels: IAllSheetLabels
   allSheetPhotos: IAllSheetPhotos
   allSheetPriorities: IAllSheetPriorities
@@ -78,6 +84,8 @@ export const initialSheetState: ISheetState = {
   allSheetViews: null,
   allSheetChanges: null,
   allSheetFiles: null,
+  allSheetGantts: null,
+  allSheetGanttRanges: null,
   allSheetLabels: null,
   allSheetPhotos: null,
   allSheetPriorities: null,
@@ -124,6 +132,8 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
         sorts,
         changes,
         files,
+        gantts,
+        ganttRanges,
         labels,
         photos,
         priorities,
@@ -144,6 +154,8 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
         allSheetSorts: { ...state.allSheetSorts, ...sorts },
         allSheetChanges: { ...state.allSheetChanges, ...changes },
         allSheetFiles: { ...state.allSheetFiles, ...files },
+        allSheetGantts: { ...state.allSheetGantts, ...gantts },
+        allSheetGanttRanges: { ...state.allSheetGanttRanges, ...ganttRanges },
         allSheetLabels: { ...state.allSheetLabels, ...labels },
         allSheetPhotos: { ...state.allSheetPhotos, ...photos },
         allSheetPriorities: { ...state.allSheetPriorities, ...priorities },
@@ -164,6 +176,8 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
 		case SET_ALL_SHEET_VIEWS: { return { ...state, allSheetViews: action.nextAllSheetViews } }
 		case SET_ALL_SHEET_CHANGES: { return { ...state, allSheetChanges: action.nextAllSheetChanges } }
 		case SET_ALL_SHEET_FILES: { return { ...state, allSheetFiles: action.nextAllSheetFiles } }
+		case SET_ALL_SHEET_GANTTS: { return { ...state, allSheetGantts: action.nextAllSheetGantts } }
+		case SET_ALL_SHEET_GANTT_RANGES: { return { ...state, allSheetGanttRanges: action.nextAllSheetGanttRanges } }
 		case SET_ALL_SHEET_LABELS: { return { ...state, allSheetLabels: action.nextAllSheetLabels } }
 		case SET_ALL_SHEET_PHOTOS: { return { ...state, allSheetPhotos: action.nextAllSheetPhotos } }
 		case SET_ALL_SHEET_PRIORITIES: { return { ...state, allSheetPriorities: action.nextAllSheetPriorities } }
@@ -224,6 +238,26 @@ export const userReducer = (state: ISheetState = initialSheetState, action: IShe
         ...state,
         allSheetFilters: { ...state.allSheetFilters,
           [filterId]: { ...state.allSheetFilters[filterId], ...updates}
+        }
+      }
+		}
+
+		case UPDATE_SHEET_GANTT: {
+			const { sheetGanttId, updates } = action
+			return {
+        ...state,
+        allSheetGantts: { ...state.allSheetGantts,
+          [sheetGanttId]: { ...state.allSheetGantts[sheetGanttId], ...updates}
+        }
+      }
+		}
+
+		case UPDATE_SHEET_GANTT_RANGE: {
+			const { sheetGanttRangeId, updates } = action
+			return {
+        ...state,
+        allSheetGanttRanges: { ...state.allSheetGanttRanges,
+          [sheetGanttRangeId]: { ...state.allSheetGanttRanges[sheetGanttRangeId], ...updates}
         }
       }
 		}

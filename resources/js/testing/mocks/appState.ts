@@ -1,6 +1,9 @@
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
+import moment from 'moment'
+import { v4 as createUuid } from 'uuid'
+
 import { IAppState } from '@/state'
 import { 
   IFile, 
@@ -20,7 +23,8 @@ import {
   IAllSheetRows, ISheetRow, ISheetFromDatabaseRow,
   ISheetSort,
   IAllSheetViews, ISheetView, ISheetViewFromDatabase,
-  ISheetPriority
+  ISheetPriority,
+  ISheetGantt, IAllSheetGantts
 } from '@/state/sheet/types'
 import { IUserTasksheetSubscription } from '@/state/user/types'
 
@@ -58,7 +62,7 @@ export const appStateFactoryColumns = [
   'PHOTOS',
   'BOOLEAN',
   'LABELS',
-  'STRING',
+  'GANTT',
   'STRING'
 ]
 
@@ -83,6 +87,9 @@ export const appStateFactory = ({
   const allSheetColumns: IAllSheetColumns = {}
   const allSheetCells: IAllSheetCells = {}
   const allSheetViews: IAllSheetViews = {}
+  const allSheetGantts: IAllSheetGantts = {}
+
+  const newSheetGantts: ISheet['gantts'] = {}
 
   for(let currentFolderNumber = 1; currentFolderNumber <= numberOfFolders; currentFolderNumber++) {
 
@@ -163,6 +170,18 @@ export const appStateFactory = ({
         newSheetColumns.push(newSheetColumn.id)
         newSheetViewVisibleColumns.push(newSheetColumn.id)
         newSheetFromDatabaseColumns.push(newSheetColumn)
+
+        if(newSheetColumn.cellType === 'GANTT') {
+          const newSheetGantt: ISheetGantt = {
+            id: createUuid(),
+            sheetId: sheetId,
+            columnId: newSheetColumn.id,
+            startDate: moment().format('YYYY-MM-DD HH:mm:ss'),
+            endDate: moment().add(28, 'days').format('YYYY-MM-DD HH:mm:ss')
+          }
+          allSheetGantts[newSheetGantt.id] = newSheetGantt
+          newSheetGantts[newSheetColumn.id] = newSheetGantt.id
+        }
       }
 
       for(let currentRowNumber = 1; currentRowNumber <= numberOfRowsPerSheet; currentRowNumber++) {
@@ -183,10 +202,11 @@ export const appStateFactory = ({
             sheetId: sheetId,
             columnId: newSheetColumn.id,
             rowId: sheetRowId,
-            value: newSheetColumn.cellType !== 'LABELS' ? sheetCellId : '',
+            value: !['LABELS', 'GANTT'].includes(newSheetColumn.cellType) ? sheetCellId : '',
             isCellEditing: false,
             isCellSelectedSheetIds: new Set()
           }
+
           allSheetCells[newSheetCell.id] = newSheetCell
           sheetRowCells[newSheetColumn.id] = newSheetCell.id
           sheetRowFromDatabaseCells.push(newSheetCell)
@@ -240,7 +260,9 @@ export const appStateFactory = ({
         views: newSheetFromDatabaseViews.map(view => view.id),
         priorities: newSheetFromDatabasePriorities.map(priority => priority.id),
         cellPriorities: newSheetCellPriorities,
-        isCellEditing: false
+        isCellEditing: false,
+        gantts: newSheetGantts,
+        ganttRanges: {}
       }
 
       newSheet.visibleRows = resolveSheetVisibleRows(
@@ -272,6 +294,8 @@ export const appStateFactory = ({
         views: newSheetFromDatabaseViews,
         changes: [],
         files: [],
+        gantts: [],
+        ganttRanges: [],
         labels: [],
         photos: [],
         priorities: newSheetFromDatabasePriorities,
@@ -308,66 +332,78 @@ export const appStateFactory = ({
     allSheetRows,
     allSheetColumns,
     allSheetCells,
-    allSheetViews
+    allSheetViews,
+    allSheetGantts
+  }
+}
+
+//-----------------------------------------------------------------------------
+// Get mock app state
+//-----------------------------------------------------------------------------
+// This allows testers to build app states different from the default
+export const getMockAppState: (appStateFactoryInput: IAppStateFactoryInput) => IAppState = (appStateFactoryInput) => {
+  const {
+    allFiles,
+    allFileIds,
+    allFolders,
+    allFilePermissions,
+    allUserFilePermissionsByFileTypeId,
+    allSheets,
+    allSheetColumns,
+    allSheetRows,
+    allSheetCells,
+    allSheetViews,
+    allSheetGantts,
+  } = appStateFactory(appStateFactoryInput)
+
+  return {
+    active: initialActiveState,
+    history: initialHistoryState,
+    folder: {
+      ...initialFolderState,
+      allFiles: allFiles,
+      allFilePermissions: allFilePermissions,
+      allFolders: allFolders,
+      allUserFilePermissionsByFileTypeId: allUserFilePermissionsByFileTypeId
+    },
+    modal: initialModalState,
+    messenger: {
+      messages: []
+    },
+    sheet: {
+      ...initialSheetState,
+      allSheets,
+      allSheetColumns,
+      allSheetRows,
+      allSheetCells,
+      allSheetViews,
+      allSheetCellLabels: {},
+      allSheetGantts
+    },
+    sheetSettings: {
+      activeSheetSetting: 'COLUMN_SETTINGS',
+      activeSheetSettingColumnSetting: 'STRING',
+    },
+    tab: {
+      tabs: allFileIds.map(fileId => fileId),
+      activeTab: allFileIds[0]
+    },
+    user: {
+      ...initialUserState,
+      color: {
+        ...initialUserState.color,
+        primary: 'userColorPrimary',
+        secondary: 'userColorSecondary'
+      }
+    }
   }
 }
 
 //-----------------------------------------------------------------------------
 // Mock app state
 //-----------------------------------------------------------------------------
-const {
-  allFiles,
-  allFileIds,
-  allFolders,
-  allFilePermissions,
-  allUserFilePermissionsByFileTypeId,
-  allSheets,
-  allSheetColumns,
-  allSheetRows,
-  allSheetCells,
-  allSheetViews
-} = appStateFactory({} as IAppStateFactoryInput)
-
-export const appState: IAppState = {
-  active: initialActiveState,
-  history: initialHistoryState,
-  folder: {
-    ...initialFolderState,
-    allFiles: allFiles,
-    allFilePermissions: allFilePermissions,
-    allFolders: allFolders,
-    allUserFilePermissionsByFileTypeId: allUserFilePermissionsByFileTypeId
-  },
-  modal: initialModalState,
-  messenger: {
-    messages: []
-  },
-  sheet: {
-    ...initialSheetState,
-    allSheets,
-    allSheetColumns,
-    allSheetRows,
-    allSheetCells,
-    allSheetViews,
-    allSheetCellLabels: {}
-  },
-  sheetSettings: {
-    activeSheetSetting: 'COLUMN_SETTINGS',
-    activeSheetSettingColumnSetting: 'STRING',
-  },
-  tab: {
-    tabs: allFileIds.map(fileId => fileId),
-    activeTab: allFileIds[0]
-  },
-  user: {
-    ...initialUserState,
-    color: {
-      ...initialUserState.color,
-      primary: 'userColorPrimary',
-      secondary: 'userColorSecondary'
-    }
-  }
-}
+// This is the default mock app state
+export const appState = getMockAppState({} as IAppStateFactoryInput)
 
 //-----------------------------------------------------------------------------
 // Get cell and cell props

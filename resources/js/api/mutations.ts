@@ -20,6 +20,8 @@ import {
   ISheetStylesDatabaseUpdates,
   ISheetViewToDatabase, ISheetViewUpdates,
 	ISheetChange,
+	ISheetGantt, ISheetGanttUpdates,
+	ISheetGanttRange, ISheetGanttRangeUpdates,
 	ISheetLabel,
   ISheetPriority, ISheetPriorityUpdates, ISheetCellPriority
 } from '@/state/sheet/types'
@@ -195,6 +197,38 @@ export const deleteSheetCellFile = async (sheetCellFileId: string) => {
 
 export const downloadSheetCellFile = async (sheetCellFileId: string) => {
 	return axios.post('/app/sheets/cells/files/download/' + sheetCellFileId)
+}
+
+export const createSheetGantt = async (newSheetGantt: ISheetGantt, newSheetGanttRanges: ISheetGanttRange[]) => {
+	return axios.post('/app/sheets/gantts', { newSheetGantt, newSheetGanttRanges })
+}
+
+export const deleteSheetGantts = async (sheetGanttIds: ISheetGantt['id'][]) => {
+	return axios.post('/app/sheets/gantts/delete', { sheetGanttIds })
+}
+
+export const restoreSheetGantts = async (sheetGanttIds: ISheetGantt['id'][]) => {
+	return axios.post('/app/sheets/gantts/restore', { sheetGanttIds })
+}
+
+export const updateSheetGantt = async (sheetGanttId: ISheetGantt['id'], updates: ISheetGanttUpdates) => {
+	return axios.patch('/app/sheets/gantts/' + sheetGanttId, updates)
+}
+
+export const createSheetGanttRanges = async (newSheetGanttRanges: ISheetGanttRange[]) => {
+	return axios.post('/app/sheets/gantts/ranges', { newSheetGanttRanges })
+}
+
+export const deleteSheetGanttRanges = async (sheetGanttRangeIds: ISheetGanttRange['id'][]) => {
+	return axios.post('/app/sheets/gantts/ranges/delete', { sheetGanttRangeIds })
+}
+
+export const restoreSheetGanttRanges = async (sheetGanttRangeIds: ISheetGanttRange['id'][]) => {
+	return axios.post('/app/sheets/gantts/ranges/restore', { sheetGanttRangeIds })
+}
+
+export const updateSheetGanttRange = async (sheetGanttRangeId: ISheetGanttRange['id'], updates: ISheetGanttRangeUpdates) => {
+	return axios.patch('/app/sheets/gantts/ranges/' + sheetGanttRangeId, updates)
 }
 
 export const createSheetCellLabels = async (newSheetCellLabels: ISheetLabel[]) => {

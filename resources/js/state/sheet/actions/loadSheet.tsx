@@ -13,6 +13,8 @@ import {
   IAllSheetViews, ISheetView, ISheetViewFromDatabase,
   IAllSheetCellChanges, IAllSheetChanges,
   IAllSheetCellFiles, IAllSheetFiles,
+  IAllSheetGantts, ISheetGantt,
+  IAllSheetGanttRanges, ISheetGanttRange,
   IAllSheetCellLabels, IAllSheetLabels,
   IAllSheetCellPhotos, IAllSheetPhotos,
   IAllSheetPriorities, ISheetPriority, ISheetCellPriority
@@ -46,6 +48,8 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
     const normalizedSheetViews: IAllSheetViews = {}
     const normalizedSheetChanges: IAllSheetChanges = {}
     const normalizedSheetFiles: IAllSheetFiles = {}
+    const normalizedSheetGantts: IAllSheetGantts = {}
+    const normalizedSheetGanttRanges: IAllSheetGanttRanges = {}
     const normalizedSheetLabels: IAllSheetLabels = {}
     const normalizedSheetPhotos: IAllSheetPhotos = {}
     const normalizedSheetPriorities: IAllSheetPriorities = {}
@@ -58,6 +62,8 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
     const sheetRows: ISheetRow['id'][] = []
     const sheetViews: ISheetView['id'][] = []
     const sheetPriorities: ISheetPriority['id'][] = []
+    const sheetGantts: { [columnId: string]: ISheetGantt['id'] } = {}
+    const sheetGanttRanges: { [columnId: string]: ISheetGanttRange['id'][] } = {}
     const sheetCellPriorities: { [cellId: string]: ISheetCellPriority } = {}
 
     const activeSheetViewId = sheetFromDatabase.activeSheetViewId
@@ -90,7 +96,7 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
           }
         }
       })
-      normalizedSheetRows[sheetRow.id] = { 
+      normalizedSheetRows[sheetRow.id] = {
         id: sheetRow.id, 
         sheetId: sheetFromDatabase.id, 
         cells: sheetRowCells
@@ -131,6 +137,18 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         ...(normalizedSheetCellFiles[sheetFile.cellId] || []),
         sheetFile.id
       ]
+    })
+    
+    // Sheet Gantts
+    sheetFromDatabase.gantts.forEach(sheetGantt => { 
+      normalizedSheetGantts[sheetGantt.id] = sheetGantt
+      sheetGantts[sheetGantt.columnId] = sheetGantt.id
+    })
+    
+    // Sheet Gantts
+    sheetFromDatabase.ganttRanges.forEach(sheetGanttRange => { 
+      normalizedSheetGanttRanges[sheetGanttRange.id] = sheetGanttRange
+      sheetGanttRanges[sheetGanttRange.sheetGanttId] = [ ...(sheetGanttRanges[sheetGanttRange.sheetGanttId] || []), sheetGanttRange.id ]
     })
     
     // Sheet Labels
@@ -205,6 +223,8 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         italic: new Set(sheetFromDatabase.styles.italic) as Set<string>,
       },
       views: sheetViews,
+      gantts: sheetGantts,
+      ganttRanges: sheetGanttRanges,
       priorities: sheetPriorities,
       cellPriorities: sheetCellPriorities,
       isCellEditing: false
@@ -241,6 +261,8 @@ export const loadSheet = (sheetFromDatabase: ISheetFromDatabase): IThunkAction =
         normalizedSheetViews,
         normalizedSheetChanges,
         normalizedSheetFiles,
+        normalizedSheetGantts,
+        normalizedSheetGanttRanges,
         normalizedSheetLabels,
         normalizedSheetPhotos,
         normalizedSheetPriorities,

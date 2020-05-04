@@ -98,6 +98,8 @@ export const createDemoSheet = (): IThunkAction => {
       views: [ newActiveSheetViewId ],
       columns: [],
       rows: [],
+      gantts: {},
+      ganttRanges: {},
       priorities: [],
       cellPriorities: {},
       selections: defaultSheetSelections,

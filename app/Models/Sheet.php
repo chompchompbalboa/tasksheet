@@ -24,13 +24,15 @@ class Sheet extends Model
     'styles',
     'changes',
     'files',
+    'gantts',
+    'ganttRanges',
     'labels',
     'photos',
     'priorities',
   ];
   protected $fillable = ['id', 'sourceSheetId', 'activeSheetViewId'];
   protected $with = ['changes', 'files', 'photos', 'priorities', 'views'];
-  protected $appends = ['columns', 'rows', 'styles', 'cellPriorities', 'labels'];
+  protected $appends = ['columns', 'rows', 'styles', 'cellPriorities', 'labels', 'gantts', 'ganttRanges'];
   
   public function getColumnsAttribute() {
     $sheetId = is_null($this->sourceSheetId) ? $this->id : $this->sourceSheetId;
@@ -60,6 +62,20 @@ class Sheet extends Model
   
   public function files() {
     return $this->hasMany('App\Models\SheetCellFile', 'sheetId')->orderBy('createdAt', 'asc');
+  }
+  
+  public function getGanttsAttribute() {
+    $sheetId = is_null($this->sourceSheetId) ? $this->id : $this->sourceSheetId;
+    return SheetGantt::where('sheetId', '=', $sheetId)
+    ->orderBy('createdAt', 'ASC')
+    ->get();
+  }
+  
+  public function getGanttRangesAttribute() {
+    $sheetId = is_null($this->sourceSheetId) ? $this->id : $this->sourceSheetId;
+    return SheetGanttRange::where('sheetId', '=', $sheetId)
+    ->orderBy('createdAt', 'ASC')
+    ->get();
   }
   
   public function getLabelsAttribute() {

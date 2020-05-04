@@ -25,8 +25,9 @@ import {
 import { defaultColumn } from '@/state/sheet/defaults'
 
 import Icon from '@/components/Icon'
+import SheetColumnContextMenu from '@desktop/Sheet/SheetColumnContextMenu'
+import SheetHeaderGantt from '@desktop/Sheet/SheetHeaderGantt'
 import SheetHeaderResizeContainer from '@desktop/Sheet/SheetHeaderResizeContainer'
-import SheetColumnContextMenu from './SheetColumnContextMenu'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -146,7 +147,7 @@ export const SheetHeader = ({
 
   // Handle Column Resize End
   const handleColumnResizeEnd = (columnWidthChange: number) => {
-    dispatch(updateSheetColumn(sheetColumn.id, { width: Math.max(sheetColumn.width + columnWidthChange, 20) }))
+    dispatch(updateSheetColumn(sheetColumn.id, { width: Math.max(sheetColumn.width + columnWidthChange, 20) }, { width: sheetColumn.width }))
     setIsResizing(false)
   }
 
@@ -166,6 +167,7 @@ export const SheetHeader = ({
       containerWidth={columnId === 'COLUMN_BREAK' ? 10 : sheetColumn.width}
       isColumnBreak={isColumnBreak}
       isContextMenuVisible={isContextMenuVisible}
+      isGantt={sheetColumn && sheetColumn.cellType && sheetColumn.cellType === 'GANTT'}
       isLast={isLast}
       isNextColumnAColumnBreak={isNextColumnAColumnBreak}
       isResizing={isResizing}
@@ -186,6 +188,12 @@ export const SheetHeader = ({
             onChange={e => setColumnName(e.target.value)}
             onBlur={handleAutosizeInputBlur}
             value={columnName || ""}/>
+      }
+      {sheetColumn && sheetColumn.cellType === 'GANTT' &&
+        <SheetHeaderGantt
+          sheetId={sheetId}
+          columnId={columnId}
+          isResizing={isResizing}/>
       }
       {!isColumnBreak && 
         <>
@@ -241,10 +249,11 @@ export interface ISheetHeaderProps {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
-  z-index: ${ ({ isContextMenuVisible, isResizing }: ContainerProps) => (isContextMenuVisible || isResizing) ? '1000' : '10' };
+  z-index: ${ ({ isContextMenuVisible, isGantt, isResizing }: ContainerProps) => (isContextMenuVisible || isResizing) ? '1000' : (isGantt ? '500' : '10')};
   position: relative;
   cursor: ${ ({ isResizing }: ContainerProps) => isResizing ? 'col-resize' : 'default' };
   display: inline-flex;
+  align-items: center;
   user-select: none;
   width: ${ ({ containerWidth }: ContainerProps ) => containerWidth + 'px'};
   height: 100%;
@@ -266,6 +275,7 @@ interface ContainerProps {
   containerWidth: number
   isContextMenuVisible: boolean
   isColumnBreak: boolean
+  isGantt: boolean
   isLast: boolean
   isNextColumnAColumnBreak: boolean
   isResizing: boolean

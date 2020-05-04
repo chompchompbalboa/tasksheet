@@ -89,7 +89,6 @@ export const SheetCellDatetime = ({
       value={cell.value}>
       <SheetCellDatetimeDatepicker
         sheetId={sheetId}
-        dateValidator={dateValidator}
         handleEditing={handleEditing}
         value={cell.value}/>
     </SheetCellContainer>

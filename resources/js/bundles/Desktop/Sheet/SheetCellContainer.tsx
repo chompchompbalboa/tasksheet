@@ -30,8 +30,8 @@ const SheetCellContainer = ({
   cell,
   cellType,
   children,
-  beginEditing,
-  completeEditing,
+  beginEditing = () => null,
+  completeEditing = () => null,
   onlyRenderChildren = false,
   value
 }: SheetCellContainerProps) => {
@@ -199,8 +199,8 @@ interface SheetCellContainerProps {
   cell: ISheetCell
   cellType: ISheetCellType
   children?: any
-  beginEditing(nextSheetCellValue?: string): void
-  completeEditing(...args: any): void
+  beginEditing?(nextSheetCellValue?: string): void
+  completeEditing?(...args: any): void
   onlyRenderChildren?: boolean
   value: string
 }

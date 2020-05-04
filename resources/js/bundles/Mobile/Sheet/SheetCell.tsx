@@ -47,7 +47,8 @@ export const SheetCell = memo(({
       DATETIME: SheetCellDatetime,
       PHOTOS: SheetCellPlaceholder,
       FILES: SheetCellPlaceholder,
-      LABELS: SheetCellLabels
+      LABELS: SheetCellLabels,
+      GANTT: SheetCellPlaceholder
     }
     const SheetCellType = sheetCellTypes[sheetColumn.cellType]
 
