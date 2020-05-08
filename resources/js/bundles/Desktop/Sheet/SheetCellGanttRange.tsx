@@ -53,8 +53,8 @@ const SheetCellGanttRange = ({
   })
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 
+  // Local Variables
   const sheetGanttNumberOfDays = moment(sheetGantt.endDate).diff(moment(sheetGantt.startDate), 'days')
-
   const sheetGanttRangeNumberOfDays = sheetGanttRangeEndDate && moment(sheetGanttRangeEndDate).diff(moment(sheetGanttRangeStartDate), 'days')
   const sheetGanttRangeStartDay = moment(sheetGanttRangeStartDate).diff(moment(sheetGantt.startDate), 'days')
   const sheetGanttRangeEndDay = sheetGanttRangeEndDate && moment(sheetGanttRangeEndDate).diff(moment(sheetGantt.startDate), 'days')

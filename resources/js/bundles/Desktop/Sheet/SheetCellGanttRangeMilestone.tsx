@@ -53,6 +53,7 @@ const SheetCellGanttRangeMilestone = ({
 
   return (
     <GanttMilestone
+      data-testid="SheetCellGanttRangeMilestone"
       ref={container}
       left={left}>
       <GanttMilestoneDot

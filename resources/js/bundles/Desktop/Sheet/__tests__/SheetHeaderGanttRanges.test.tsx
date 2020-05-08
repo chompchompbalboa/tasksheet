@@ -13,8 +13,7 @@ import {
 import { 
   createMockStore, 
   getMockAppState,
-  IMockAppStateFactoryInput,
-  mockAppStateColumnTypes
+  IMockAppStateFactoryInput
 } from '@/testing/mocks'
 
 import { IAppState } from '@/state'
@@ -62,15 +61,14 @@ describe('SheetHeaderGanttRanges', () => {
       }
     } = appState
     
-    const ganttColumnIndex = mockAppStateColumnTypes.findIndex(columnType => columnType === 'GANTT')
-    const sheetGanttId = allSheetGantts[Object.keys(allSheetGantts)[0]].id
-    
     const folderId = Object.keys(allFolders)[0]
     const fileId = allFolders[folderId].files[0]
     const file = allFiles[fileId]
     const sheetId = file.typeId
     const sheet = allSheets[sheetId]
+    const sheetGanttId = allSheetGantts[Object.keys(allSheetGantts)[0]].id
     const activeSheetView = allSheetViews[sheet.activeSheetViewId]
+    const ganttColumnIndex = activeSheetView.visibleColumns.findIndex(columnType => columnType === 'GANTT')
     const sheetColumnId = activeSheetView.visibleColumns[ganttColumnIndex]
     const dateColumn1Id = activeSheetView.visibleColumns[0]
     const dateColumn2Id = activeSheetView.visibleColumns[1]

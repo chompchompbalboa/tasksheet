@@ -90,6 +90,20 @@ export const appStateFactory = ({
   const allSheetGantts: IAllSheetGantts = {}
 
   const newSheetGantts: ISheet['gantts'] = {}
+  
+  const getSheetCellValue = (sheetCellId: ISheetCell['id'], cellType: ISheetCellType, columnIndex: number) => {
+    const sheetCellValues = {
+      STRING: () => sheetCellId,
+      DATETIME: () => moment().add(columnIndex, 'days').format('MM/DD/YYYY'),
+      BOOLEAN: () => sheetCellId,
+      NUMBER: () => sheetCellId,
+      PHOTOS: () => sheetCellId,
+      FILES: () => sheetCellId,
+      LABELS: () => '',
+      GANTT: () => ''
+    }
+    return sheetCellValues[cellType]()
+  }
 
   for(let currentFolderNumber = 1; currentFolderNumber <= numberOfFolders; currentFolderNumber++) {
 
@@ -202,7 +216,7 @@ export const appStateFactory = ({
             sheetId: sheetId,
             columnId: newSheetColumn.id,
             rowId: sheetRowId,
-            value: !['LABELS', 'GANTT'].includes(newSheetColumn.cellType) ? sheetCellId : '',
+            value: getSheetCellValue(sheetCellId, newSheetColumn.cellType, currentColumnNumber),
             isCellEditing: false,
             isCellSelectedSheetIds: new Set()
           }
