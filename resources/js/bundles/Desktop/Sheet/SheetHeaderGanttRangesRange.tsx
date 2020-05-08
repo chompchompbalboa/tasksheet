@@ -40,6 +40,7 @@ const SheetHeaderGanttRangeDropdown = ({
       </ColumnNames>
       <ActionsContainer>
         <Action
+          data-testid="SheetHeaderGanttRangesRangeDeleteButton"
           onClick={() => dispatch(deleteSheetGanttRange(sheetId, columnId, sheetGanttRangeId))}>
           <Icon
             icon={TRASH_CAN}/>

@@ -82,6 +82,8 @@ describe('SheetHeaderGanttRanges', () => {
     }
 
     const {
+      getAllByText,
+      getAllByTestId,
       getByTestId,
       getByText,
       queryByText,
@@ -98,20 +100,27 @@ describe('SheetHeaderGanttRanges', () => {
     const dropdownButton = getByTestId('SheetHeaderGanttRangesDropdownButton')
     const startColumn = within(dropdown).getByText("Start Column")
     const endColumn = within(dropdown).getByText("End Column (Optional)")
-    const startColumnDateColumn1 = within(dropdown).getAllByText(allSheetColumns[dateColumn1Id].name)[0]
-    const endColumnDateColumn2 = within(dropdown).getAllByText(allSheetColumns[dateColumn2Id].name)[1]
+    const dateColumn1 = allSheetColumns[dateColumn1Id]
+    const dateColumn2 = allSheetColumns[dateColumn2Id]
+    const startColumnDateColumn1 = within(dropdown).getAllByText(dateColumn1.name)[0]
+    const endColumnDateColumn2 = within(dropdown).getAllByText(dateColumn2.name)[1]
     const createGanttRangeButton = within(dropdown).getByTestId("SheetHeaderGanttRangesCreateRangeButton")
+    const deleteButtons = () => getAllByTestId("SheetHeaderGanttRangesRangeDeleteButton")
     return {
       createGanttRangeButton,
-      startColumnDateColumn1, 
-      endColumnDateColumn2, 
+      dateColumn1,
+      dateColumn2,
+      deleteButtons,
       dropdown,
       dropdownButton,
       endColumn,
+      endColumnDateColumn2, 
+      getAllByText,
       getState,
       getByText,
       queryByText,
-      startColumn
+      startColumn,
+      startColumnDateColumn1, 
     }
   }
 
@@ -129,10 +138,11 @@ describe('SheetHeaderGanttRanges', () => {
     expect(createGanttRangeButton).toBeTruthy()
   })
 
-  it("correctly creates a new gantt range with only a start date", async () => {
+  it("correctly creates and displays a new gantt range with only a start date", async () => {
     (axiosMock.post as jest.Mock).mockResolvedValueOnce({})
-    const { createGanttRangeButton, getState, startColumnDateColumn1 } = sheetHeaderGanttRanges()
+    const { createGanttRangeButton, dateColumn1, getAllByText, getState, startColumnDateColumn1 } = sheetHeaderGanttRanges()
     expect(getState().sheet.allSheetGanttRanges).toBeNull()
+    expect(getAllByText(dateColumn1.name).length).toBe(2)
     fireEvent.click(startColumnDateColumn1)
     fireEvent.click(createGanttRangeButton)
     expect(getState().sheet.allSheetGanttRanges).not.toBeNull()
@@ -140,11 +150,12 @@ describe('SheetHeaderGanttRanges', () => {
     expect(axiosMock.post).toHaveBeenCalledTimes(1)
     expect(getState().sheet.allSheetGanttRanges[Object.keys(getState().sheet.allSheetGanttRanges)[0]].startDateColumnId).not.toBeNull()
     expect(getState().sheet.allSheetGanttRanges[Object.keys(getState().sheet.allSheetGanttRanges)[0]].endDateColumnId).toBeNull()
+    expect(getAllByText(dateColumn1.name).length).toBe(3)
   })
 
-  it("correctly creates a new gantt range with a start date and an end date", async () => {
+  it("correctly creates and displays a new gantt range with a start date and an end date", async () => {
     (axiosMock.post as jest.Mock).mockResolvedValueOnce({})
-    const { createGanttRangeButton, endColumnDateColumn2, getState, startColumnDateColumn1 } = sheetHeaderGanttRanges()
+    const { createGanttRangeButton, dateColumn1, dateColumn2, endColumnDateColumn2, getState, queryByText, startColumnDateColumn1 } = sheetHeaderGanttRanges()
     expect(getState().sheet.allSheetGanttRanges).toBeNull()
     fireEvent.click(startColumnDateColumn1)
     fireEvent.click(endColumnDateColumn2)
@@ -154,5 +165,24 @@ describe('SheetHeaderGanttRanges', () => {
     expect(axiosMock.post).toHaveBeenCalledTimes(1)
     expect(getState().sheet.allSheetGanttRanges[Object.keys(getState().sheet.allSheetGanttRanges)[0]].startDateColumnId).not.toBeNull()
     expect(getState().sheet.allSheetGanttRanges[Object.keys(getState().sheet.allSheetGanttRanges)[0]].endDateColumnId).not.toBeNull()
+    expect(queryByText(dateColumn1.name + ' - ' + dateColumn2.name)).toBeTruthy()
+  })
+
+  it("correctly deletes a gantt range", async () => {
+    (axiosMock.post as jest.Mock).mockResolvedValue({});
+    (axiosMock.patch as jest.Mock).mockResolvedValue({});
+    const { createGanttRangeButton, dateColumn1, dateColumn2, deleteButtons, endColumnDateColumn2, getState, queryByText, startColumnDateColumn1 } = sheetHeaderGanttRanges()
+    expect(getState().sheet.allSheetGanttRanges).toBeNull()
+    fireEvent.click(startColumnDateColumn1)
+    fireEvent.click(endColumnDateColumn2)
+    fireEvent.click(createGanttRangeButton)
+    expect(getState().sheet.allSheetGanttRanges).not.toBeNull()
+    expect(Object.keys(getState().sheet.allSheetGanttRanges).length).toBe(1)
+    expect(queryByText(dateColumn1.name + ' - ' + dateColumn2.name)).toBeTruthy()
+    const deleteButton = deleteButtons()[0]
+    fireEvent.click(deleteButton)
+    expect(Object.keys(getState().sheet.allSheetGanttRanges).length).toBe(0)
+    expect(axiosMock.post).toHaveBeenCalledTimes(2)
+    expect(queryByText(dateColumn1.name + ' - ' + dateColumn2.name)).not.toBeTruthy()
   })
 })
