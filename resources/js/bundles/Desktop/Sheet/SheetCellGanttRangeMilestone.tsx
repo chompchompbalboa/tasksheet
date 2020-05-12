@@ -2,32 +2,22 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-
-import { IAppState } from '@/state'
-import { 
-  ISheet,
-  ISheetColumn,
-  ISheetGanttRange 
-} from '@/state/sheet/types'
 
 //-----------------------------------------------------------------------------
 // Component
 //-----------------------------------------------------------------------------
 const SheetCellGanttRangeMilestone = ({
+  backgroundColor,
   left
 }: ISheetCellGanttRangeMilestone) => {
-
-  // Redux
-  const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 
   return (
     <GanttMilestone
       data-testid="SheetCellGanttRangeMilestone"
       left={left}>
       <GanttMilestoneDot
-        milestoneBackgroundColor={userColorPrimary}/>
+        milestoneBackgroundColor={backgroundColor}/>
     </GanttMilestone>
   )
 }
@@ -36,9 +26,7 @@ const SheetCellGanttRangeMilestone = ({
 // Props
 //-----------------------------------------------------------------------------
 interface ISheetCellGanttRangeMilestone {
-  sheetId: ISheet['id']
-  columnId: ISheetColumn['id']
-  sheetGanttRangeId: ISheetGanttRange['id']
+  backgroundColor: string
   left: number
 }
 

@@ -27,11 +27,13 @@ import { flushPromises } from '@/testing/utils'
 //-----------------------------------------------------------------------------
 const {
   sheet: {
+    allSheets,
     allSheetGantts
   }
 } = mockAppState
 
-const sheetGanttId = allSheetGantts[Object.keys(allSheetGantts)[0]].id
+const sheetId = Object.keys(allSheets)[0]
+const sheetGanttId = Object.keys(allSheetGantts)[0]
 
 console.warn = jest.fn()
 
@@ -39,6 +41,7 @@ console.warn = jest.fn()
 // Props
 //-----------------------------------------------------------------------------
 const props: ISheetHeaderGanttDates = {
+  sheetId: sheetId,
   sheetGanttId
 }
 

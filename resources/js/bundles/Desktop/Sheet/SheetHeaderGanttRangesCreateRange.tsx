@@ -7,15 +7,16 @@ import styled from 'styled-components'
 
 import { PLUS_SIGN } from '@/assets/icons'
 
+import { useSheetEditingPermissions } from '@/hooks'
+
 import { 
   ISheet,
   ISheetColumn,
   ISheetGantt
 } from '@/state/sheet/types'
 
-import {
-  createSheetGanttRange
-} from '@/state/sheet/actions'
+import { createMessengerMessage } from '@/state/messenger/actions'
+import { createSheetGanttRange } from '@/state/sheet/actions'
 
 import Icon from '@/components/Icon'
 import SheetColumnsList from '@desktop/Sheet/SheetColumnsList'
@@ -34,6 +35,26 @@ const SheetHeaderGanttRangesCreateRange = ({
   // State
   const [ sheetGanttRangeStartColumnId, setSheetGanttRangeStartColumnId ] = useState(null)
   const [ sheetGanttRangeEndColumnId, setSheetGanttRangeEndColumnId ] = useState(null)
+
+  // Permissions
+  const {
+    userHasPermissionToEditSheet,
+    userHasPermissionToEditSheetErrorMessage
+  } = useSheetEditingPermissions(sheetId)
+
+  // Handle Create Sheet Gantt Range
+  const handleCreateSheetGanttRange = () => {
+    if(!userHasPermissionToEditSheet) {
+      dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
+    }
+    else {
+      if(sheetGanttRangeStartColumnId) {
+        dispatch(createSheetGanttRange(sheetId, sheetGanttId, sheetGanttRangeStartColumnId, sheetGanttRangeEndColumnId))
+        setSheetGanttRangeStartColumnId(null)
+        setSheetGanttRangeEndColumnId(null)
+      }
+    }
+  }
 
   return (
     <Container>
@@ -55,13 +76,7 @@ const SheetHeaderGanttRangesCreateRange = ({
       <CreateGanttRangeContainer>
         <CreateGanttRangeButton
           data-testid="SheetHeaderGanttRangesCreateRangeButton"
-          onClick={() => {
-            if(sheetGanttRangeStartColumnId) {
-              dispatch(createSheetGanttRange(sheetId, sheetGanttId, sheetGanttRangeStartColumnId, sheetGanttRangeEndColumnId))
-              setSheetGanttRangeStartColumnId(null)
-              setSheetGanttRangeEndColumnId(null)
-            }
-          }}>
+          onClick={handleCreateSheetGanttRange}>
           <Icon 
             icon={PLUS_SIGN}
             size="1rem"/>

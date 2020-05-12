@@ -2,10 +2,9 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { TRASH_CAN } from '@/assets/icons'
 
 import { IAppState } from '@/state'
 import { 
@@ -14,9 +13,8 @@ import {
   ISheetGanttRange 
 } from '@/state/sheet/types'
 
-import { deleteSheetGanttRange } from '@/state/sheet/actions'
-
-import Icon from '@/components/Icon'
+import SheetHeaderGanttRangesRangeBackgroundColor from '@desktop/Sheet/SheetHeaderGanttRangesRangeBackgroundColor'
+import SheetHeaderGanttRangesRangeDelete from '@desktop/Sheet/SheetHeaderGanttRangesRangeDelete'
 
 //-----------------------------------------------------------------------------
 // Component
@@ -28,7 +26,6 @@ const SheetHeaderGanttRangeDropdown = ({
 }: ISheetHeaderGanttRangeDropdown) => {
 
   // Redux
-  const dispatch = useDispatch()
   const sheetGanttRange = useSelector((state: IAppState) => state.sheet.allSheetGanttRanges[sheetGanttRangeId])
   const sheetGanttRangeStartColumn = useSelector((state: IAppState) => sheetGanttRange.startDateColumnId && state.sheet.allSheetColumns[sheetGanttRange.startDateColumnId])
   const sheetGanttRangeEndColumn = useSelector((state: IAppState) => sheetGanttRange.endDateColumnId && state.sheet.allSheetColumns[sheetGanttRange.endDateColumnId])
@@ -39,12 +36,13 @@ const SheetHeaderGanttRangeDropdown = ({
         {sheetGanttRangeStartColumn.name}{sheetGanttRangeEndColumn && ' - ' + sheetGanttRangeEndColumn.name}
       </ColumnNames>
       <ActionsContainer>
-        <Action
-          data-testid="SheetHeaderGanttRangesRangeDeleteButton"
-          onClick={() => dispatch(deleteSheetGanttRange(sheetId, columnId, sheetGanttRangeId))}>
-          <Icon
-            icon={TRASH_CAN}/>
-        </Action>
+        <SheetHeaderGanttRangesRangeBackgroundColor
+          sheetId={sheetId}
+          sheetGanttRangeId={sheetGanttRangeId}/>
+        <SheetHeaderGanttRangesRangeDelete
+          sheetId={sheetId}
+          columnId={columnId}
+          sheetGanttRangeId={sheetGanttRangeId}/>
       </ActionsContainer>
     </Container>
   )
@@ -73,15 +71,6 @@ const ColumnNames = styled.div``
 const ActionsContainer = styled.div`
   display: flex;
   align-items: center;
-`
-
-const Action = styled.div`
-  cursor: pointer;
-  padding: 0.125rem;
-  border-radius: 3px;
-  &:hover {
-    background-color: rgb(230, 230, 230);
-  }
 `
 
 //-----------------------------------------------------------------------------

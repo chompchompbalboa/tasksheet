@@ -2,7 +2,6 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
-import axiosMock from 'axios'
 
 import { 
   renderWithRedux
@@ -108,7 +107,15 @@ describe('SheetCellGantt', () => {
     expect(queryAllByTestId('SheetCellGanttRangeMilestone').length).toBe(0)
     dispatch(createSheetGanttRange(sheetId, sheetGanttId, dateColumn1.id, null))
     expect(queryAllByTestId('SheetCellGanttRangeMilestone').length).toBe(1)
-    expect(axiosMock.post).toHaveBeenCalledTimes(1)
+  })
+
+  it("displays a gantt range with a start date and end date correctly", async () => {
+    const { dateColumn1, dateColumn2, dispatch, queryAllByTestId, sheetId, sheetGanttId } = sheetCellGantt()
+    expect(queryAllByTestId('SheetCellGanttRangeMilestone').length).toBe(0)
+    expect(queryAllByTestId('SheetCellGanttRangeRange').length).toBe(0)
+    dispatch(createSheetGanttRange(sheetId, sheetGanttId, dateColumn1.id, dateColumn2.id))
+    expect(queryAllByTestId('SheetCellGanttRangeMilestone').length).toBe(2)
+    expect(queryAllByTestId('SheetCellGanttRangeRange').length).toBe(1)
   })
   
 })

@@ -34,6 +34,7 @@ export const SheetHeaderGantt = ({
         columnId={columnId}
         sheetGanttId={sheetGanttId}/>
       <SheetHeaderGanttDates
+        sheetId={sheetId}
         sheetGanttId={sheetGanttId}/>
     </Container>
   )

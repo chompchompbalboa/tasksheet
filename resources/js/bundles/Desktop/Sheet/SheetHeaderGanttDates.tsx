@@ -6,9 +6,16 @@ import moment from 'moment'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { IAppState } from '@/state'
-import { ISheetGantt } from '@/state/sheet/types'
+import { useSheetEditingPermissions } from '@/hooks'
 
+import { IAppState } from '@/state'
+import { 
+  ISheet,
+  ISheetGantt,
+  ISheetGanttUpdates
+} from '@/state/sheet/types'
+
+import { createMessengerMessage } from '@/state/messenger/actions'
 import { updateSheetGantt } from '@/state/sheet/actions'
 
 import SheetHeaderGanttDate from '@desktop/Sheet/SheetHeaderGanttDate'
@@ -17,6 +24,7 @@ import SheetHeaderGanttDate from '@desktop/Sheet/SheetHeaderGanttDate'
 // Component
 //-----------------------------------------------------------------------------
 export const SheetHeaderGanttDates = ({
+  sheetId,
   sheetGanttId
 }: ISheetHeaderGanttDates) => {
 
@@ -24,19 +32,38 @@ export const SheetHeaderGanttDates = ({
   const dispatch = useDispatch()
   const sheetGantt = useSelector((state: IAppState) => state.sheet.allSheetGantts[sheetGanttId])
 
+  // Permissions
+  const {
+    userHasPermissionToEditSheet,
+    userHasPermissionToEditSheetErrorMessage
+  } = useSheetEditingPermissions(sheetId)
+
+  // Handle Sheet Gantt Date Update
+  const handleSheetGanttDateUpdate = (
+    updates: ISheetGanttUpdates,
+    undoUpdates: ISheetGanttUpdates
+  ) => {
+    if(!userHasPermissionToEditSheet) {
+      dispatch(createMessengerMessage(userHasPermissionToEditSheetErrorMessage))
+    }
+    else {
+      dispatch(updateSheetGantt(sheetGantt.id, updates, undoUpdates))
+    }
+  }
+
   return (
     <Container
       data-testid="SheetHeaderGanttDates">
       {sheetGantt &&
         <>
           <SheetHeaderGanttDate
-            onDateChange={nextDate => dispatch(updateSheetGantt(sheetGantt.id, { startDate: moment(nextDate).format('YYYY-MM-DD HH:mm:ss') }, { startDate: sheetGantt.startDate }))}
+            onDateChange={nextDate => handleSheetGanttDateUpdate({ startDate: moment(nextDate).format('YYYY-MM-DD HH:mm:ss') }, { startDate: sheetGantt.startDate })}
             text={moment(sheetGantt.startDate).format('MM/DD/YY')}/>
           <Divider>
             -
           </Divider>
           <SheetHeaderGanttDate
-            onDateChange={nextDate => dispatch(updateSheetGantt(sheetGantt.id, { endDate: moment(nextDate).format('YYYY-MM-DD HH:mm:ss') }, { endDate: sheetGantt.endDate }))}
+            onDateChange={nextDate => handleSheetGanttDateUpdate({ endDate: moment(nextDate).format('YYYY-MM-DD HH:mm:ss') }, { endDate: sheetGantt.endDate })}
             text={moment(sheetGantt.endDate).format('MM/DD/YY')}/>
         </>
       }
@@ -48,6 +75,7 @@ export const SheetHeaderGanttDates = ({
 // Props
 //-----------------------------------------------------------------------------
 export interface ISheetHeaderGanttDates {
+  sheetId: ISheet['id']
   sheetGanttId: ISheetGantt['id']
 }
 

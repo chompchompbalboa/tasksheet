@@ -55,6 +55,7 @@ const SheetCellGanttRange = ({
   const userColorPrimary = useSelector((state: IAppState) => state.user.color.primary)
 
   // Local Variables
+  const isEndDateBeforeStartDate = moment(sheetGantt.endDate).isSameOrBefore(moment(sheetGantt.startDate))
   const sheetGanttNumberOfDays = moment(sheetGantt.endDate).diff(moment(sheetGantt.startDate), 'days')
   const sheetGanttRangeNumberOfDays = sheetGanttRangeEndDate && moment(sheetGanttRangeEndDate).diff(moment(sheetGanttRangeStartDate), 'days')
   const sheetGanttRangeStartDay = moment(sheetGanttRangeStartDate).diff(moment(sheetGantt.startDate), 'days')
@@ -64,23 +65,20 @@ const SheetCellGanttRange = ({
     <>
       {sheetGanttRangeStartDate && sheetGanttRangeStartDay >= 0 && sheetGanttRangeStartDay <= sheetGanttNumberOfDays &&
         <SheetCellGanttRangeMilestone
-          sheetId={sheetId}
-          columnId={columnId}
-          sheetGanttRangeId={sheetGanttRangeId}
+          backgroundColor={sheetGanttRangeBackgroundColor || userColorPrimary}
           left={sheetGanttRangeStartDay * (100 / (sheetGanttNumberOfDays + 1))}/>
       }
-      {sheetGanttRangeEndDate &&
-        <GanttRange 
+      {sheetGanttRangeEndDate && !isEndDateBeforeStartDate &&
+        <GanttRange
+          data-testid="SheetCellGanttRangeRange"
           left={sheetGanttRangeStartDay * (100 / (sheetGanttNumberOfDays + 1))}
           rangeBackgroundColor={sheetGanttRangeBackgroundColor || userColorPrimary}
           rangeWidth={sheetGanttRangeNumberOfDays * (100 / (sheetGanttNumberOfDays + 1))}/>
       }
       {sheetGanttRangeEndDate && sheetGanttRangeEndDay <= sheetGanttNumberOfDays &&
-          <SheetCellGanttRangeMilestone
-            sheetId={sheetId}
-            columnId={columnId}
-            sheetGanttRangeId={sheetGanttRangeId}
-            left={sheetGanttRangeEndDay * (100 / (sheetGanttNumberOfDays + 1))}/>
+        <SheetCellGanttRangeMilestone
+          backgroundColor={sheetGanttRangeBackgroundColor || userColorPrimary}
+          left={sheetGanttRangeEndDay * (100 / (sheetGanttNumberOfDays + 1))}/>
       }
     </>
   )
