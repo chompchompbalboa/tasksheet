@@ -134,7 +134,7 @@ const SheetActionCreateRows = ({
       </InsertButtonContainer>
       <Tooltip
         isVisible={isTooltipVisible}>
-        Insert rows above the selected cell
+        Insert rows below the selected cell
       </Tooltip>
     </Container>
   )

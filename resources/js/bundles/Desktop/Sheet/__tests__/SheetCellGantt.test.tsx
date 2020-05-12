@@ -2,6 +2,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 import React from 'react'
+import axiosMock from 'axios'
 
 import { 
   renderWithRedux
@@ -11,9 +12,6 @@ import {
   getMockAppState,
   IMockAppStateFactoryInput
 } from '@/testing/mocks'
-import {
-  flushPromises
-} from '@/testing/utils'
 
 import { IAppState } from '@/state'
 
@@ -96,7 +94,6 @@ describe('SheetCellGantt', () => {
     
     return {
       dateColumn1,
-      
       dateColumn2,
       debug,
       dispatch,
@@ -104,15 +101,14 @@ describe('SheetCellGantt', () => {
       sheetId,
       sheetGanttId
     }
-}
+  }
 
   it("displays a gantt range with only a start date correctly", async () => {
-    const { dateColumn1, debug, dispatch, queryAllByTestId, sheetId, sheetGanttId } = sheetCellGantt()
+    const { dateColumn1, dispatch, queryAllByTestId, sheetId, sheetGanttId } = sheetCellGantt()
     expect(queryAllByTestId('SheetCellGanttRangeMilestone').length).toBe(0)
-    dispatch(createSheetGanttRange(sheetId, sheetGanttId, dateColumn1.id))
-    await flushPromises()
-    debug()
+    dispatch(createSheetGanttRange(sheetId, sheetGanttId, dateColumn1.id, null))
     expect(queryAllByTestId('SheetCellGanttRangeMilestone').length).toBe(1)
+    expect(axiosMock.post).toHaveBeenCalledTimes(1)
   })
   
 })

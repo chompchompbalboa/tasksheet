@@ -30,6 +30,7 @@ const SheetCellContainer = ({
   cell,
   cellType,
   children,
+  containerPadding = '0.15rem 0.25rem',
   beginEditing = () => null,
   completeEditing = () => null,
   onlyRenderChildren = false,
@@ -175,6 +176,7 @@ const SheetCellContainer = ({
     <Container
       data-testid={testId}
       ref={container}
+      containerPadding={containerPadding}
       isCellEditing={isCellEditing}
       onDoubleClick={beginEditingOnDoubleClick}>
         {isCellEditing || onlyRenderChildren
@@ -199,6 +201,7 @@ interface SheetCellContainerProps {
   cell: ISheetCell
   cellType: ISheetCellType
   children?: any
+  containerPadding?: string
   beginEditing?(nextSheetCellValue?: string): void
   completeEditing?(...args: any): void
   onlyRenderChildren?: boolean
@@ -213,9 +216,10 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  padding: 0.15rem 0.25rem;
+  padding:  ${ ({ containerPadding }: IContainer ) => containerPadding };
 `
 interface IContainer {
+  containerPadding: string
   isCellEditing: boolean
 }
 

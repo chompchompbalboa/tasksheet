@@ -37,20 +37,21 @@ const SheetCellGantt = ({
       sheetId={sheetId}
       cell={cell}
       cellType='GANTT'
+      containerPadding="0.15rem 0"
       onlyRenderChildren
       value={cell.value}>
-      {sheetGantt &&
-        <Container>
-          {sheetGanttRanges && sheetGanttRanges.map(sheetGanttRangeId => (
-            <SheetCellGanttRange
-              key={sheetGanttRangeId}
-              sheetId={sheetId}
-              columnId={columnId}
-              rowId={rowId}
-              sheetGanttRangeId={sheetGanttRangeId}/>
-          ))}
-        </Container>
-      }
+        {sheetGantt &&
+          <Container>
+            {sheetGanttRanges && sheetGanttRanges.map(sheetGanttRangeId => (
+              <SheetCellGanttRange
+                key={sheetGanttRangeId}
+                sheetId={sheetId}
+                columnId={columnId}
+                rowId={rowId}
+                sheetGanttRangeId={sheetGanttRangeId}/>
+            ))}
+          </Container>
+        }
     </SheetCellContainer>
   )
 }
@@ -59,6 +60,8 @@ const SheetCellGantt = ({
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  position: relative;
+  width: 100%;
   height: 100%;
   display: flex;
   align-items: center;

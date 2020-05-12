@@ -31,6 +31,7 @@ const SheetCellGanttRange = ({
     const sheetGanttId = state.sheet.allSheets[sheetId]?.gantts[columnId]
     return state.sheet.allSheetGantts[sheetGanttId]
   })
+  const sheetGanttRangeBackgroundColor = useSelector((state: IAppState) => state.sheet.allSheetGanttRanges[sheetGanttRangeId] && state.sheet.allSheetGanttRanges[sheetGanttRangeId].backgroundColor)
   const sheetGanttRangeStartDate = useSelector((state: IAppState) => {
     const sheetGanttRange = state.sheet.allSheetGanttRanges[sheetGanttRangeId]
     const startDateColumnId = sheetGanttRange.startDateColumnId
@@ -66,20 +67,20 @@ const SheetCellGanttRange = ({
           sheetId={sheetId}
           columnId={columnId}
           sheetGanttRangeId={sheetGanttRangeId}
-          left={sheetGanttRangeStartDay * (100 / sheetGanttNumberOfDays)}/>
+          left={sheetGanttRangeStartDay * (100 / (sheetGanttNumberOfDays + 1))}/>
       }
       {sheetGanttRangeEndDate &&
         <GanttRange 
-          left={sheetGanttRangeStartDay * (100 / sheetGanttNumberOfDays)}
-          rangeBackgroundColor={userColorPrimary}
-          rangeWidth={sheetGanttRangeNumberOfDays * (100 / sheetGanttNumberOfDays)}/>
+          left={sheetGanttRangeStartDay * (100 / (sheetGanttNumberOfDays + 1))}
+          rangeBackgroundColor={sheetGanttRangeBackgroundColor || userColorPrimary}
+          rangeWidth={sheetGanttRangeNumberOfDays * (100 / (sheetGanttNumberOfDays + 1))}/>
       }
       {sheetGanttRangeEndDate && sheetGanttRangeEndDay <= sheetGanttNumberOfDays &&
           <SheetCellGanttRangeMilestone
             sheetId={sheetId}
             columnId={columnId}
             sheetGanttRangeId={sheetGanttRangeId}
-            left={sheetGanttRangeEndDay * (100 / sheetGanttNumberOfDays)}/>
+            left={sheetGanttRangeEndDay * (100 / (sheetGanttNumberOfDays + 1))}/>
       }
     </>
   )
@@ -101,7 +102,7 @@ interface ISheetCellGanttRange {
 const GanttRange = styled.div`
   z-index: 5;
   position: absolute;
-  left: calc(0.25rem + ${ ({ left }: IGanttRange ) => left + '%' });
+  left: calc(8.25px + ${ ({ left }: IGanttRange ) => left + '%' });
   width: ${ ({ rangeWidth }: IGanttRange ) => rangeWidth + '%' };
   height: 6px;
   background-color: ${ ({ rangeBackgroundColor }: IGanttRange ) => rangeBackgroundColor };
