@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
       $users = [
         'rocky@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'rocky@tasksheet.co', 'name' => 'Rocky Eastman', 'subscriptionType' => 'LIFETIME', 'billingDayOfMonth' => null ],
         'rocky@dillonworks.com' => [ 'id' => Str::uuid()->toString(), 'email' => 'rocky@dillonworks.com', 'name' => 'Rocky Eastman', 'subscriptionType' => 'LIFETIME', 'billingDayOfMonth' => null ],
+        'beta@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'beta@tasksheet.co', 'name' => 'Beta', 'subscriptionType' => 'BETA', 'billingDayOfMonth' => null ],
         'demo@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'demo@tasksheet.co', 'name' => 'Demo', 'subscriptionType' => 'DEMO', 'billingDayOfMonth' => null ],
         'trial@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'trial@tasksheet.co', 'name' => 'Trial', 'subscriptionType' => 'TRIAL', 'billingDayOfMonth' => null ],
         'trialexpired@tasksheet.co' => [ 'id' => Str::uuid()->toString(), 'email' => 'trialexpired@tasksheet.co', 'name' => 'Trial Expired', 'subscriptionType' => 'TRIAL_EXPIRED', 'billingDayOfMonth' => null ],
@@ -52,6 +53,7 @@ class DatabaseSeeder extends Seeder
         [ 'name' => 'Demos',
           'users' => [
             'rocky@tasksheet.co',
+            'beta@tasksheet.co',
             'demo@tasksheet.co',
             'trial@tasksheet.co',
             'trialexpired@tasksheet.co',

@@ -17,6 +17,7 @@ export interface IUserUpdates {
 export interface IUserTasksheetSubscription {
   id: string
   type: 
+    'BETA' |
     'DEMO' | 
     'TRIAL' | 
     'TRIAL_EXPIRED' |

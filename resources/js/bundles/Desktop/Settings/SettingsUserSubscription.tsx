@@ -7,6 +7,7 @@ import styled from 'styled-components'
 
 import { IAppState } from '@/state'
 
+import SettingsUserSubscriptionBeta from '@desktop/Settings/SettingsUserSubscriptionBeta'
 import SettingsUserSubscriptionDemo from '@desktop/Settings/SettingsUserSubscriptionDemo'
 import SettingsUserSubscriptionExpired from '@desktop/Settings/SettingsUserSubscriptionExpired'
 import SettingsUserSubscriptionTrial from '@desktop/Settings/SettingsUserSubscriptionTrial'
@@ -21,6 +22,7 @@ const SettingsUserSubscription = () => {
   const userSubscriptionType = useSelector((state: IAppState) => state.user.tasksheetSubscription.type)
   
   const userSubscriptionComponents = {
+    BETA: SettingsUserSubscriptionBeta,
     DEMO: SettingsUserSubscriptionDemo,
     TRIAL: SettingsUserSubscriptionTrial,
     TRIAL_EXPIRED: SettingsUserSubscriptionExpired,
