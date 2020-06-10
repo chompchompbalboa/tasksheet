@@ -11,7 +11,6 @@ import { TRASH_CAN } from '@/assets/icons'
 import { IAppState } from '@/state'
 import { 
   ISheetCell,
-  ISheetCellType,
   ISheetChange
 } from '@/state/sheet/types'
 import {
@@ -24,13 +23,7 @@ import Icon from '@/components/Icon'
 // Component
 //-----------------------------------------------------------------------------
 export const SheetCellChanges = ({
-  cellId,
-  cellType,
-  isCellEditing,
-  isCellInRange,
-  isCellSelected,
-  isShowCellChanges,
-  isTrackCellChanges
+  cellId
 }: ISheetCellChangesProps) => {
 
   const dispatch = useDispatch()
@@ -40,14 +33,9 @@ export const SheetCellChanges = ({
 
   return (
     <Container>
-      {isCellSelected 
-      && !isCellInRange 
-      && isTrackCellChanges 
-      && isShowCellChanges 
-      && sheetCellChanges 
+      {sheetCellChanges 
       && sheetCellChanges.length > 0 
-      && (cellType === 'DATETIME' ? !isCellEditing : true)
-      &&
+      && 
         <ChangesContainer>
           {sheetCellChanges.map(sheetCellChange => (
             <Change
@@ -86,12 +74,6 @@ export const SheetCellChanges = ({
 //-----------------------------------------------------------------------------
 export interface ISheetCellChangesProps {
   cellId: ISheetCell['id']
-  cellType: ISheetCellType
-  isCellEditing: boolean
-  isCellInRange: boolean
-  isCellSelected: boolean
-  isShowCellChanges: boolean
-  isTrackCellChanges: boolean
 }
 
 const Container = styled.div`

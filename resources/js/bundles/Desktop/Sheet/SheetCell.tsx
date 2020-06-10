@@ -113,14 +113,15 @@ export const SheetCell = memo(({
           isCellSelected={isCellSelected}
           isShowCellChanges={isShowCellChanges}
           isTrackCellChanges={isTrackCellChanges}/>
-        <SheetCellChanges
-          cellId={cell.id}
-          cellType={cellType}
-          isCellInRange={isCellInRange}
-          isCellSelected={isCellSelected}
-          isCellEditing={cell.isCellEditing}
-          isShowCellChanges={isShowCellChanges}
-          isTrackCellChanges={isTrackCellChanges}/>
+        {isCellSelected 
+          && !isCellInRange 
+          && isTrackCellChanges 
+          && isShowCellChanges 
+          && (cellType === 'DATETIME' ? !isCellEditing : true)
+          &&
+          <SheetCellChanges
+            cellId={cell.id}/>
+        }
       </Container>
     )
   }
