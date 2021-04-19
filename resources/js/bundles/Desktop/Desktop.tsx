@@ -52,6 +52,7 @@ export const Desktop = () => {
 // Styled Components
 //-----------------------------------------------------------------------------
 const Container = styled.div`
+  position: relative;
   background-color: ${ ({ containerBackgroundColor }: ContainerProps) => containerBackgroundColor };
 `
 interface ContainerProps {
