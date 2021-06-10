@@ -23,7 +23,7 @@ axiosWithToken?.interceptors?.request?.use(
     // open to hooking up here but feel this is a simpler solution), the best
     // way to figure out the type of user currently logged in is to access
     // it from the initial user data. 
-    const isDemoUser = initialData?.user?.tasksheetSubscription?.type === 'DEMO'
+    const isDemoUser = initialData?.user?.tasksheetSubscription?.type === 'TRIAL'
     
     if(isDemoUser 
       && config.method !== "get"
